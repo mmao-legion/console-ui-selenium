@@ -3015,6 +3015,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(shiftPopover)) {
                 WebElement convertToOpenOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canConvertToOpenShift() && !isTmView()\"]"));
                 if (isElementLoaded(convertToOpenOption)) {
+                    scrollToElement(convertToOpenOption);
                     click(convertToOpenOption);
                     if (isElementLoaded(convertToOpenYesBtn)) {
                         click(convertToOpenYesBtn);
@@ -3990,7 +3991,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                 }
                 clickTheElement(operatingHoursSaveBtn);
-                if (isElementEnabled(editBudgetBtn, 5)) {
+                if (isElementEnabled(editBudgetBtn, 10)) {
                     SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
                 }else {
                     SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
@@ -4284,6 +4285,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 clickTheElement(checkbox);
                             }
                             if (weekDay.getText().toLowerCase().contains(day.toLowerCase())){
+                                startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
                                 startNEndTimes.get(0).clear();
                                 startNEndTimes.get(1).clear();
                                 startNEndTimes.get(0).sendKeys(startTime);
@@ -6132,7 +6134,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
-            if (!firstName.equalsIgnoreCase("Open")) {
+            if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned")) {
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
                 String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
                 String jobTitle = weekShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
@@ -6157,7 +6159,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 //return shiftInfo;
                 //For open shift
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
-                String lastName = "open";
+                String lastName = "";
+                if (firstName.equalsIgnoreCase("Unassigned")){
+                    lastName = "unassigned";
+                } else
+                    lastName = "open";
                 String jobTitle = "";
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
@@ -12942,6 +12948,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             scrollToElement(shift);
             if(isScheduleDayViewActive()){
                 click(shift.findElement(By.cssSelector("img[ng-if=\"hasViolateCompliance(shift)\"]")));
+                waitForSeconds(2);
             } else
                 click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
             if (isElementLoaded(popOverContent, 5)){
@@ -14525,6 +14532,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("The required action smard card or the view shifts button on it loaded fail! ", false);
     }
 
+    public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception {
+        if (isElementLoaded(requiredActionSmartCard, 5) && isElementLoaded(viewShiftsBtnOnRequiredActionSmartCard, 5)) {
+            if (viewShiftsBtnOnRequiredActionSmartCard.getText().equalsIgnoreCase("Clear Filter")){
+                click(viewShiftsBtnOnRequiredActionSmartCard);
+                SimpleUtils.pass("Click Clear Filter button successfully! ");
+            } else if(viewShiftsBtnOnRequiredActionSmartCard.getText().equalsIgnoreCase("View Shifts")){
+                SimpleUtils.report("Clear Filter button alreay been clicked! ");
+            } else
+                SimpleUtils.fail("The button name on required action smart card display incorrectly! ", false);
+        } else
+            SimpleUtils.fail("The required action smard card or the view shifts button on it loaded fail! ", false);
+    }
 
     public void clickOnClearFilterOnFilterDropdownPopup() throws Exception {
         if(isElementLoaded(clearFilterOnFilterDropdownPopup, 5)){
@@ -14617,6 +14636,37 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.report("Drag and Drop confirm page is not display!");
         }
         return isConfirmPageDisplay;
+    }
+
+
+    @Override
+    public void deleteAllOOOHShiftInWeekView() throws Exception {
+
+        if (areListElementVisible(shiftsWeekView, 15) && isRequiredActionSmartCardLoaded()) {
+            clickOnViewShiftsBtnOnRequiredActionSmartCard();
+            for (WebElement shiftWeekView : shiftsWeekView) {
+                try {
+                    if (getComplianceMessageFromInfoIconPopup(shiftWeekView).contains("Outside Operating hours")) {
+                        WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
+                        clickTheElement(image);
+                        waitForSeconds(3);
+                        if (isElementLoaded(deleteShift, 5)) {
+                            clickTheElement(deleteShift);
+                            if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
+                                click(deleteBtnInDeleteWindows);
+                                SimpleUtils.pass("Schedule Week View: OOOH shift been deleted successfully");
+                            } else
+                                SimpleUtils.fail("delete confirm button load failed", false);
+                        } else
+                            SimpleUtils.fail("delete item for this OOOH shift load failed", false);
+                    }
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+            clickOnClearShiftsBtnOnRequiredActionSmartCard();
+        }else
+            SimpleUtils.report("Schedule Week View: there is no shifts or Action Required smart card in this week");
     }
 }
 

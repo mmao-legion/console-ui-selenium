@@ -1119,7 +1119,7 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-        if (!isSummerWeek){
+        if (isSummerWeek){
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
         }
@@ -1133,7 +1133,13 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        if(schedulePage.isRequiredActionSmartCardLoaded()){
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteAllOOOHShiftInWeekView();
+        }
         schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1265,12 +1271,12 @@ public class CinemarkMinorTest extends TestBase {
         if(schedulePage.ifWarningModeDisplay()){
             String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
             if (!warningMessage.contains("Minor ")){
-                SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting! ");
+                SimpleUtils.pass("There is no minor warning message display on the warning mode when shift is not avoid the minor setting! ");
             } else
-                SimpleUtils.fail("There should no minor warning message display when shift is not avoid the minor setting! ", false);
+                SimpleUtils.fail("There should no minor warning message display warning mode when shift is not avoid the minor setting! ", false);
             schedulePage.clickOnAssignAnywayButton();
         } else
-            SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting! ");
+            SimpleUtils.pass("There is no minor warning message display on search TM page shift is not avoid the minor setting! ");
 
         schedulePage.clickOnOfferOrAssignBtn();
         schedulePage.saveSchedule();
@@ -1278,7 +1284,7 @@ public class CinemarkMinorTest extends TestBase {
         //check the violation in i icon popup of new create shift
         newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
         if (newAddedShift != null) {
-            SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
+            SimpleUtils.assertOnFail("There should no minor warning message display on the i icon when shift is not avoid the minor setting! ",
                     !schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
