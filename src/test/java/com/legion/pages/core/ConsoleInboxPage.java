@@ -183,14 +183,19 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         List<String> valueSPG = DataFromSchedulingPolicyGroups.get("Shifts per week");
         if (valueGFE != null && valueSPG.get(0).equals(valueGFE)) {
             isConsistent = true;
-            SimpleUtils.report("Minimum Shifts in GFE --- " + valueGFE + ", Shifts per week in Scheduling Policy Groups --- " + valueSPG.get(0) + ". Are they consistent? " + isConsistent);
+            SimpleUtils.pass("Minimum Shifts in GFE --- " + valueGFE + ", Shifts per week in Scheduling Policy Groups --- " + valueSPG.get(0) + ". Are they consistent? " + isConsistent);
             valueGFE = theContentOfWeekSummaryInGFE.get("Average Hours");
             valueSPG = DataFromSchedulingPolicyGroups.get("Hours per week");
             if (valueGFE != null && valueSPG.get(0).equals(valueGFE)) {
                 isConsistent = true;
-                SimpleUtils.report("Average Hours in GFE --- " + valueGFE + ", Hours per week in Scheduling Policy Groups --- " + valueSPG.get(0) + ". Are they consistent? " + isConsistent);
-            } else
+                SimpleUtils.pass("Average Hours in GFE --- " + valueGFE + ", Hours per week in Scheduling Policy Groups --- " + valueSPG.get(0) + ". Are they consistent? " + isConsistent);
+            } else {
                 isConsistent = false;
+                SimpleUtils.fail("Average Hours in GFE --- " + valueGFE + ", Hours per week in Scheduling Policy Groups --- " + valueSPG.get(0) + ". Are they consistent? " + isConsistent,false);
+            }
+        } else {
+            isConsistent = false;
+            SimpleUtils.fail("Minimum Shifts in GFE --- " + valueGFE + ", Shifts per week in Scheduling Policy Groups --- " + valueSPG.get(0) + ". Are they consistent? " + isConsistent, false);
         }
         return isConsistent;
     }

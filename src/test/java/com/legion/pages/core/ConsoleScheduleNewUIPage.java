@@ -830,7 +830,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnScheduleConsoleMenuItem() {
         if (consoleNavigationMenuItems.size() != 0) {
             WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
-            activeConsoleName = analyticsConsoleName.getText();
             clickTheElement(consoleScheduleMenuElement);
             SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
         } else {
@@ -4595,7 +4594,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         });
         if (element) {
             click(checkOutTheScheduleButton);
-            SimpleUtils.pass("Schedule Generated Successfuly!");
+            SimpleUtils.pass("Schedule Generated Successfully!");
         } else {
             SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
         }
@@ -10655,7 +10654,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);
-                                if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
+                                if (isElementLoaded(deleteBtnInDeleteWindows, 20)) {
                                     click(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
                                 } else

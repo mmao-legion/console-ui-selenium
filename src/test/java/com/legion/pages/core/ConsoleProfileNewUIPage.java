@@ -2717,7 +2717,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void verifySMCanSelectACalendarForMinor() throws Exception {
-		if (isElementLoaded(schoolCalendar,5)) {
+		if (isElementLoaded(schoolCalendar,10)) {
 			SimpleUtils.pass("Profile Page: There should be \"School Calendar\" section loaded");
 			if (isElementLoaded(editBtnOfProfile,5)) {
 				click(editBtnOfProfile);
