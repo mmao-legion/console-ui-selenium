@@ -13576,7 +13576,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifySearchLocationInScheduleDMView(String location) throws Exception {
         boolean flag = true;
-        if (isElementLoaded(analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")),10)){
+        waitForSeconds(5);
+        if (isElementLoaded(analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")),60)){
             analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
             analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(location);
             for (String s: getLocationsInScheduleDMViewLocationsTable()){
