@@ -762,7 +762,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy (css = ".wm-ignore-css-reset path")
     private WebElement closeBtnInNewFeatureEnhancements;
 
-    @FindBy(css=".header-company-icon.fl-right .company-icon-img")
+    @FindBy(css=".header-right .header-company-icon .company-icon-img")
     private WebElement companyIcon;
 
     @Override
