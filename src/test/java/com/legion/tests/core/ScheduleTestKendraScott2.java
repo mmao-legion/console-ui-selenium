@@ -479,6 +479,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		//Search and select any TM,Click on the assign: new Tm is updated on the schedule table
 		//Select new TM from Search Team Member tab
+		schedulePage.clickOnFilterBtn();
+		schedulePage.selectShiftTypeFilterByText("MOD");
+		schedulePage.clickOnFilterBtn();
 		WebElement selectedShift = null;
 		selectedShift = schedulePage.clickOnProfileIcon();
 		String selectedShiftId= selectedShift.getAttribute("id").toString();
@@ -494,6 +497,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		String firstNameOfSelectedTM2 = schedulePage.selectTeamMembers();
 		schedulePage.clickOnOfferOrAssignBtn();
 		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM2.equals(schedulePage.getShiftById(selectedShiftId2).findElement(By.className("week-schedule-worker-name")).getText().trim()), false);
+		schedulePage.clickOnFilterBtn();
+		schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+		schedulePage.clickOnFilterBtn();
 
 		//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
 		//if checkbox is unselected then, shift is convert to open

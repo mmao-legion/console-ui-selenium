@@ -1119,8 +1119,8 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+        schedulePage.navigateToNextWeek();
         if (isSummerWeek){
-            schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
         }
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
