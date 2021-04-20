@@ -262,7 +262,7 @@ public abstract class TestBase {
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
             setDriver(new RemoteWebDriver(new URL(url),caps));
-
+            SimpleUtils.report("Remote Web Driver Session Id: " + new RemoteWebDriver(new URL(url),caps).getSessionId());
             pageFactory = createPageFactory();
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
             getDriver().register(webDriverEventListener);

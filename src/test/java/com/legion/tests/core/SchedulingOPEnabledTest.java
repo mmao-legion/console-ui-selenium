@@ -512,6 +512,9 @@ public class SchedulingOPEnabledTest  extends TestBase {
             //schedulePage.verifyAllShiftsAssigned();
             //schedulePage.clickOnEditButton();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
+            schedulePage.saveSchedule();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.clickOnProfileIcon();
             schedulePage.clickOnConvertToOpenShift();
             schedulePage.convertToOpenShiftDirectly();
