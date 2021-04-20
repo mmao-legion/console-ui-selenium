@@ -185,7 +185,7 @@ public class DragAndDropTest extends TestBase {
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            String anotherLocation = "NY CENTRAL";
+            String anotherLocation = "AUSTIN DOWNTOWN";
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeLocation(anotherLocation);
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
