@@ -522,7 +522,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	//Added by Julie
-	@FindBy( css = ".header-company-icon.fl-right .company-icon-img")
+	@FindBy( css = ".dif .header-company-icon .company-icon-img")
 	private WebElement companyIconImg;
 
 	@FindBy(css = ".user-profile-section__title.ng-binding")
@@ -658,7 +658,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateThePresenceOfLogo() throws Exception {
 		if (isElementLoaded(companyIconImg, 5)) {
 			if (companyIconImg.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[2]//img[contains(@class,'company-icon-img')]")).equals(companyIconImg)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'right')]/div[1]//img[contains(@class,'company-icon-img')]")).equals(companyIconImg)) {
 					SimpleUtils.pass("Dashboard Page: Logo is present at right corner of page successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Logo isn't present at right corner of page", true);
@@ -791,7 +791,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateTheVisibilityOfProfilePicture() throws Exception {
 		if (isElementLoaded(iconProfile, 5)) {
 			if (iconProfile.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]/img")).equals(iconProfile)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'right')]/div[2]/img")).equals(iconProfile)) {
 					SimpleUtils.pass("Profile picture is visible at right corner of the page successfully");
 				} else {
 					SimpleUtils.fail("Profile picture isn't visible at right corner of the page", true);
