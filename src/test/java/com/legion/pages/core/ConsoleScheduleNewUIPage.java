@@ -3752,8 +3752,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         float budgetHour = 0;
         String title = "Enter Budget";
         try {
-            if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
+            if (isElementLoaded(generateModalTitle, 10) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
+                    && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
                 editTheBudgetForNondgFlow();
                 waitForSeconds(5);
                 try {
@@ -3919,19 +3919,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String subTitle = "Confirm Operating Hours";
         waitForSeconds(3);
         if (isElementLoaded(generateSheduleButton,120)) {
-            waitForSeconds(5);
             clickTheElement(generateSheduleButton);
-            waitForSeconds(3);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
-                editTheOperatingHours(new ArrayList<>());
-                waitForSeconds(3);
+                if (MyThreadLocal.getIsNeedEditingOperatingHours()) {
+                    editTheOperatingHours(new ArrayList<>());
+                    waitForSeconds(3);
+                }
                 clickTheElement(nextButtonOnCreateSchedule);
                 checkEnterBudgetWindowLoadedForNonDG();
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 clickOnFinishButtonOnCreateSchedulePage();
-                switchToManagerViewToCheckForSecondGenerate();
+                //switchToManagerViewToCheckForSecondGenerate();
             }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
                 if (isElementEnabled(checkOutTheScheduleButton, 20)) {
@@ -4144,14 +4144,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(currentOperatingHours, 5) && currentOperatingHours.size() == 7) {
             for (WebElement operatingHour : currentOperatingHours) {
                 WebElement weekDay = operatingHour.findElement(By.className("operating-hours-day-list-item-day"));
-                WebElement time = operatingHour.findElement(By.className("operating-hours-day-list-item-hours"));
+                List<WebElement> times = operatingHour.findElements(By.cssSelector(".operating-hours-day-list-item-hours input"));
                 if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)){
-                    if (!propertyOperatingHoursLG.get(weekDay.getText()).equalsIgnoreCase(time.getText())) {
+                    if (!propertyOperatingHoursLG.get(weekDay.getText()).contains(times.get(0).getAttribute("value")) ||
+                            !propertyOperatingHoursLG.get(weekDay.getText()).contains(times.get(1).getAttribute("value"))) {
                         isConsistent = false;
                         break;
                     }
                 } else {
-                    if (!propertyOperatingHours.get(weekDay.getText()).equalsIgnoreCase(time.getText())) {
+                    if (!propertyOperatingHours.get(weekDay.getText()).contains(times.get(0).getAttribute("value")) ||
+                            !propertyOperatingHours.get(weekDay.getText()).contains(times.get(1).getAttribute("value"))) {
                         isConsistent = false;
                         break;
                     }

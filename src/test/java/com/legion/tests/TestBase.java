@@ -377,6 +377,7 @@ public abstract class TestBase {
         locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
+        MyThreadLocal.setIsNeedEditingOperatingHours(false);
     }
 
     private void changeUpperFieldsAccordingToEnterprise(LocationSelectorPage locationSelectorPage) throws Exception {
