@@ -1,6 +1,8 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleControlsNewUIPage;
+import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -83,6 +85,34 @@ public class PrepareSettingsTest extends TestBase {
             controlsPage.clickGlobalSettings();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Prepare the op template settings First")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void prepareSettingsInOPTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+
+            String option = "Yes, all unassigned shifts";
+            OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
+            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage("Operation Portal");
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            cinemarkMinorPage.findDefaulTemplate("Cinemark Base Template");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
+            configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+            configurationPage.publishNowTheTemplate();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
