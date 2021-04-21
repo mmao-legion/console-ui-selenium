@@ -11,6 +11,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -165,6 +166,45 @@ public class ScheduleCopyImprovementTest extends TestBase {
         }
     }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when generating schedule setting set as Yes, except opening/closing shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String option = "Yes, except opening/closing shifts";
+            changeConvertToOpenShiftsSettings(option);
+            validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(false, option);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+//    @Automated(automated = "Automated")
+//    @Owner(owner = "Mary")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when copying schedule setting set as Yes, except opening/closing shifts")
+//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+//    public void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+//        try {
+//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//
+//            String option = "Yes, except opening/closing shifts";
+//            changeConvertToOpenShiftsSettings(option);
+//            validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option);
+//
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(),false);
+//        }
+//    }
+
     private void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(boolean isCopySchedule, String option) throws Exception {
 
         //Go to schedule page and create new schedule
@@ -187,7 +227,21 @@ public class ScheduleCopyImprovementTest extends TestBase {
         if (isWeekGenerated) {
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        schedulePage.createScheduleForNonDGFlowNewUI();
+
+        if(!isCopySchedule && option.equalsIgnoreCase("Yes, except opening/closing shifts")) {
+            schedulePage.clickCreateScheduleBtn();
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "9:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "9:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "7:00AM", "1:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "7:00AM", "3:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
+            schedulePage.clickNextBtnOnCreateScheduleWindow();
+            schedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
+            schedulePage.clickOnFinishButtonOnCreateSchedulePage();
+        } else
+            schedulePage.createScheduleForNonDGFlowNewUI();
 
         // For copy schedule, select one TM -> create time off for TM -> create schedule by copy last week schedule
         if (isCopySchedule){
@@ -283,13 +337,15 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             schedulePage.clickCreateScheduleBtn();
-//            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "9:00PM");
-//            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "9:00PM");
-//            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "7:00AM", "4:00PM");
-//            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "7:00AM", "3:00PM");
-//            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "10:00AM", "9:00PM");
-//            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "8:00PM");
-//            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
+            if (option.equalsIgnoreCase("Yes, except opening/closing shifts")) {
+                schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "9:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "9:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "7:00AM", "1:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "7:00AM", "3:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "8:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "8:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
+            }
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();
@@ -310,6 +366,105 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 SimpleUtils.assertOnFail("The open shifts display incorrectly! ",
                         schedulePage.getOneDayShiftByName(0, "open").size()>0, false);
             }
+        } else if (option.equalsIgnoreCase("Yes, except opening/closing shifts")) {
+
+            //Check the tooltip of publish button
+            String tooltip = schedulePage.getTooltipOfPublishButton();
+            SimpleUtils.assertOnFail("The tooltip of publish button should display as: Please address required action(s)! But the actual tooltip is: "+ tooltip,
+                    tooltip.equalsIgnoreCase("Please address required action(s)"), false);
+            //Check the Action required smart card is display
+            SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
+                    schedulePage.isRequiredActionSmartCardLoaded(), false);
+            //Check the Unassigned shifts will display
+            int unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            SimpleUtils.assertOnFail("Unassigned shifts should display! ",unassignedShiftsCount >= 4, false);
+            //Check the message on the Action required smart card
+            HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+            SimpleUtils.assertOnFail("Unassigned shifts message display incorrectly! ",
+                    message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+" shifts\n" +"Unassigned") ||
+                            message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+ " unassigned shifts\n" +
+                                    "Manually assign or convert to Open"), false);
+
+            List<String> unassignedShiftTimes = new ArrayList<>();
+            List<String> openShiftTimes = new ArrayList<>();
+            List<WebElement> unassignedShifts = new ArrayList<>();
+            List<WebElement> openShifts = new ArrayList<>();
+            String unassignedShiftTime = "";
+            List<String> complianceMessage = new ArrayList<>();
+            for(int i = 0; i< 7; i++){
+                unassignedShiftTimes.clear();
+                openShiftTimes.clear();
+                unassignedShifts.clear();
+                openShifts.clear();
+                String weekDay = schedulePage.getWeekDayTextByIndex(i);
+                if(weekDay.equalsIgnoreCase("Sun")
+                        || weekDay.equalsIgnoreCase("Mon")
+                        || weekDay.equalsIgnoreCase("Tue")
+                        || weekDay.equalsIgnoreCase("Wed")) {
+
+                    unassignedShifts = schedulePage.getOneDayShiftByName(i, "unassigned");
+                    openShifts = schedulePage.getOneDayShiftByName(i, "open");
+                    SimpleUtils.assertOnFail("There should has at least 1 unassigned shifts in this day! ", unassignedShifts.size()>0, false);
+
+                    for (WebElement unassignedShift: unassignedShifts) {
+                        complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
+                        SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
+                                complianceMessage.contains("Unassigned Shift"), false);
+                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
+                    }
+                    for(WebElement openShift: openShifts){
+                        openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText()) ;
+                    }
+
+                    if(unassignedShiftTimes.contains("10am - 3pm") && !openShiftTimes.contains("10am - 3pm")) {
+                        SimpleUtils.pass("The opening/closing shifts display as unassigned! ");
+                    } else
+                        SimpleUtils.fail("The opening/closing shifts are not display as unassigned! ", false);
+                } else {
+                    unassignedShifts = schedulePage.getOneDayShiftByName(i, "unassigned");
+                    openShifts = schedulePage.getOneDayShiftByName(i, "open");
+
+                    SimpleUtils.assertOnFail("There should has at least 1 open shifts in this day! ", openShifts.size()>0, false);
+
+                    for (WebElement unassignedShift: unassignedShifts) {
+                        complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
+                        SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
+                                complianceMessage.contains("Unassigned Shift"), false);
+                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
+                    }
+                    for(WebElement openShift: openShifts){
+                        openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText()) ;
+                    }
+                    if(!unassignedShiftTimes.contains("10am - 3pm") && openShiftTimes.contains("10am - 3pm")) {
+                        SimpleUtils.pass("The opening/closing shifts display as open! ");
+                    } else
+                        SimpleUtils.fail("The opening/closing shifts are not display as open! ", false);
+                }
+            }
+
+            //Convert unassigned shifts to open
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteAllOOOHShiftInWeekView();
+            schedulePage.saveSchedule();
+
+            //Check all unassigned shifts convert to open
+//            SimpleUtils.assertOnFail("The open shifts should not display in this schedule! ",
+//                    schedulePage.getAllShiftsOfOneTM("open").size()==unassignedShiftsCount, false);
+            //Check there is no Unassigned shifts display
+            unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            SimpleUtils.assertOnFail("Unassigned shifts should display! ",
+                    unassignedShiftsCount == 0, false);
+            //Check the Action required smart card is display
+            SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
+                    !schedulePage.isRequiredActionSmartCardLoaded(), false);
+
+            //Check the publish button is enabled
+            SimpleUtils.assertOnFail("The tooltip of publish button should display as blank! But the actual tooltip is: "+ tooltip,
+                    schedulePage.getTooltipOfPublishButton().equalsIgnoreCase(""), false);
+            schedulePage.publishActiveSchedule();
+            SimpleUtils.assertOnFail("The schedule fail to publish! ", schedulePage.isCurrentScheduleWeekPublished(), false);
+
         } else {
             //Check the tooltip of publish button
             String tooltip = schedulePage.getTooltipOfPublishButton();

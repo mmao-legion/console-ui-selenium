@@ -442,7 +442,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //    @FindBy(css = "input-field[placeholder='None'] ng-form.input-form.ng-pristine.ng-valid-pattern")
 //    private WebElement filterButton;
 
-    @FindBy(css = "[label=\"Filter\"]")
+    @FindBy(css = "[ng-click=\"$ctrl.openFilter()\"]")
     private WebElement filterButton;
 
     @FindBy(css = "[ng-repeat=\"(key, opts) in $ctrl.displayFilters\"]")
@@ -2400,11 +2400,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isClearWorkRoleFilters)
             unCheckFilters(availableWorkRoleFilters);
         for (WebElement availableWorkRoleFilter : availableWorkRoleFilters) {
-            if (availableWorkRoleFilter.getText().equalsIgnoreCase(workRoleLabel)) {
+            if (availableWorkRoleFilter.getText().contains(workRoleLabel)) {
                 click(availableWorkRoleFilter);
                 SimpleUtils.pass("Schedule Work Role:'" + availableWorkRoleFilter.getText() + "' Filter selected Successfully!");
+                break;
             }
         }
+        if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+            click(filterButton);
     }
 
     @Override
