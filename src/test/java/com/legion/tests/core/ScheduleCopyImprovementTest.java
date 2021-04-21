@@ -98,6 +98,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             String option = "Yes, all unassigned shifts";
             changeConvertToOpenShiftsSettings(option);
+            if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
+                Thread.sleep(300000);
+            }
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(false, option);
 
         } catch (Exception e) {
@@ -138,6 +141,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option);
+            if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
+                Thread.sleep(300000);
+            }
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(false, option);
 
         } catch (Exception e) {
@@ -179,6 +185,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             String option = "Yes, except opening/closing shifts";
             changeConvertToOpenShiftsSettings(option);
+            if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
+                Thread.sleep(300000);
+            }
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(false, option);
 
         } catch (Exception e) {
@@ -186,24 +195,24 @@ public class ScheduleCopyImprovementTest extends TestBase {
         }
     }
 
-//    @Automated(automated = "Automated")
-//    @Owner(owner = "Mary")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
-//    @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when copying schedule setting set as Yes, except opening/closing shifts")
-//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-//    public void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
-//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//
-//            String option = "Yes, except opening/closing shifts";
-//            changeConvertToOpenShiftsSettings(option);
-//            validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option);
-//
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(),false);
-//        }
-//    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when copying schedule setting set as Yes, except opening/closing shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String option = "Yes, except opening/closing shifts";
+            changeConvertToOpenShiftsSettings(option);
+            validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
 
     private void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(boolean isCopySchedule, String option) throws Exception {
 
@@ -218,9 +227,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-        schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
@@ -269,7 +275,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
             schedulePage.selectWorkRole(workRoleOfTM);
-            schedulePage.moveSliderAtCertainPoint("4", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("3", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
@@ -327,9 +333,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             isWeekGenerated = schedulePage.isWeekGenerated();
