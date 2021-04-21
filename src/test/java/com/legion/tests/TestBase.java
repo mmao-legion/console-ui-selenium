@@ -265,7 +265,6 @@ public abstract class TestBase {
             pageFactory = createPageFactory();
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
             getDriver().register(webDriverEventListener);
-            SimpleUtils.report("Remote Web Driver Session Id: " + new RemoteWebDriver(new URL(url),caps).getCapabilities().getCapability("webdriver.remote.sessionid").toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

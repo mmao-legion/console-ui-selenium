@@ -29,7 +29,7 @@ import org.testng.Reporter;
 
 public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
-    @FindBy(css = "[ng-click='openSchedule()']")
+    @FindBy(css = "[ng-click=\"openSchedule()\"]")
     private WebElement goToTodayScheduleButton;
 
     @FindBy(css = "[ng-class = 'subNavigationViewLinkActiveClass(view)']")
