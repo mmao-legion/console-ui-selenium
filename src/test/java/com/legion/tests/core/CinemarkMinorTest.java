@@ -102,7 +102,9 @@ public class CinemarkMinorTest extends TestBase {
         Delete("Delete"),
         Save("Save"),
         EditTemplate("Edit template"),
-        Edit("Edit");
+        Edit("Edit"),
+        Yes("Yes"),
+        No("No");
         private final String value;
         buttonGroup(final String newValue) {
             value = newValue;
@@ -1589,4 +1591,5 @@ public class CinemarkMinorTest extends TestBase {
         } else
             SimpleUtils.fail("Get new added shift failed", false);
     }
+
 }

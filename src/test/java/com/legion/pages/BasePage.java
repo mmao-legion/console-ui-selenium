@@ -868,6 +868,17 @@ public class BasePage {
                 .build()
                 .perform();
     }
+
+    public void closeAuditLogDialog() throws Exception {
+        try {
+            if (isElementLoaded(getDriver().findElement(By.cssSelector(".lg-slider-pop__title-dismiss")), 10)) {
+                clickTheElement(getDriver().findElement(By.cssSelector(".lg-slider-pop__title-dismiss")));
+                SimpleUtils.pass("Cilck on Close button on Audit log dialog successfully!");
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
+    }
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){

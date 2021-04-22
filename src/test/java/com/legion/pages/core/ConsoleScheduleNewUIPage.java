@@ -6048,7 +6048,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyClickOnDeleteScheduleButton() throws Exception {
         try {
-            if (isElementLoaded(deleteScheduleButton, 5)) {
+            if (isElementLoaded(deleteScheduleButton, 10)) {
                 clickTheElement(deleteScheduleButton);
                 SimpleUtils.pass("Schedule: Click on Delete Schedule button Successfully!");
             } else {
