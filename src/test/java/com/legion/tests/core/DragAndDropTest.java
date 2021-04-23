@@ -185,7 +185,7 @@ public class DragAndDropTest extends TestBase {
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            String anotherLocation = "NY CENTRAL";
+            String anotherLocation = "AUSTIN DOWNTOWN";
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeLocation(anotherLocation);
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -943,7 +943,7 @@ public class DragAndDropTest extends TestBase {
             String firstNameOfTM1 = shiftInfo.get(0);
             String workRoleOfTM1 = shiftInfo.get(4);
             List<String> shiftInfo2 = new ArrayList<>();
-            while (shiftInfo2.size() == 0 || workRoleOfTM1.equals(shiftInfo2.get(4))) {
+            while (shiftInfo2.size() == 0 || workRoleOfTM1.equals(shiftInfo2.get(4)) || shiftInfo2.get(0).equalsIgnoreCase("Open")) {
                 shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
             }
             String firstNameOfTM2 = shiftInfo2.get(0);

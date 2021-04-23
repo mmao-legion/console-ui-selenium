@@ -228,24 +228,34 @@
                     <!-- blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" />-->
                     <!--                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>-->
                     <!-- blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" />-->
-                                    </methods>
-                                </class>
-                            </classes>
-                        </test>
+                </methods>
+            </class>
+        </classes>
+    </test>
 
-                        <test name="Drag And Drop Test">
-                            <classes>
-                                <class name="com.legion.tests.core.DragAndDropTest">
-                                    <methods>
-                                        <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
-<!--                                        <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" Blocked by SCH-3812/>-->
-                                        <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
-<!--                                        <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" Blocked by SCH-3812/>-->
-                                        <include name="verifyWarningModelForClopeningAsInternalAdmin" />
-                                        <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
-                                    </methods>
-                                </class>
-                            </classes>
-                        </test>
+    <test name="Drag And Drop Test">
+        <classes>
+            <class name="com.legion.tests.core.DragAndDropTest">
+                <methods>
+                    <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
+                    <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
+                    <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
+                    <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
+                    <include name="verifyWarningModelForClopeningAsInternalAdmin" />
+                    <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 
-                    </suite> <!-- Suite -->
+    <test name="Delete Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.DeleteScheduleTest">
+                <methods>
+                    <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite> <!-- Suite -->

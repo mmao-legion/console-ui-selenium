@@ -442,7 +442,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //    @FindBy(css = "input-field[placeholder='None'] ng-form.input-form.ng-pristine.ng-valid-pattern")
 //    private WebElement filterButton;
 
-    @FindBy(css = "[label=\"Filter\"]")
+    @FindBy(css = "[ng-click=\"$ctrl.openFilter()\"]")
     private WebElement filterButton;
 
     @FindBy(css = "[ng-repeat=\"(key, opts) in $ctrl.displayFilters\"]")
@@ -777,7 +777,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     //compliance elements
-    @FindBy(css = "[ng-if=\"scheduleSmartCard.complianceViolations && hasSchedule()\"] div.card-carousel-card")
+    @FindBy(css = "[ng-if=\"scheduleSmartCard.complianceViolations\"] div.card-carousel-card")
     private WebElement complianceSmartcardHeader;
 
     @FindBy(css = ".fa-flag.sch-red")
@@ -2400,11 +2400,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isClearWorkRoleFilters)
             unCheckFilters(availableWorkRoleFilters);
         for (WebElement availableWorkRoleFilter : availableWorkRoleFilters) {
-            if (availableWorkRoleFilter.getText().equalsIgnoreCase(workRoleLabel)) {
+            if (availableWorkRoleFilter.getText().contains(workRoleLabel)) {
                 click(availableWorkRoleFilter);
                 SimpleUtils.pass("Schedule Work Role:'" + availableWorkRoleFilter.getText() + "' Filter selected Successfully!");
+                break;
             }
         }
+        if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+            click(filterButton);
     }
 
     @Override
@@ -3748,9 +3751,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public float checkEnterBudgetWindowLoadedForNonDG() throws Exception {
         float budgetHour = 0;
         String title = "Enter Budget";
+        waitForSeconds(2);
         try {
-            if (isElementLoaded(generateModalTitle, 15) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
+            if (isElementLoaded(generateModalTitle, 10) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
+                    && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
                 editTheBudgetForNondgFlow();
                 waitForSeconds(5);
                 try {
@@ -3916,14 +3920,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String subTitle = "Confirm Operating Hours";
         waitForSeconds(3);
         if (isElementLoaded(generateSheduleButton,120)) {
-            waitForSeconds(5);
             clickTheElement(generateSheduleButton);
-            waitForSeconds(3);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
-                editTheOperatingHours(new ArrayList<>());
-                waitForSeconds(3);
+                if (MyThreadLocal.getIsNeedEditingOperatingHours()) {
+                    editTheOperatingHours(new ArrayList<>());
+                    waitForSeconds(3);
+                }
                 clickTheElement(nextButtonOnCreateSchedule);
                 checkEnterBudgetWindowLoadedForNonDG();
                 selectWhichWeekToCopyFrom("SUGGESTED");
@@ -4141,14 +4145,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(currentOperatingHours, 5) && currentOperatingHours.size() == 7) {
             for (WebElement operatingHour : currentOperatingHours) {
                 WebElement weekDay = operatingHour.findElement(By.className("operating-hours-day-list-item-day"));
-                WebElement time = operatingHour.findElement(By.className("operating-hours-day-list-item-hours"));
+                List<WebElement> times = operatingHour.findElements(By.cssSelector(".operating-hours-day-list-item-hours input"));
                 if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)){
-                    if (!propertyOperatingHoursLG.get(weekDay.getText()).equalsIgnoreCase(time.getText())) {
+                    if (!propertyOperatingHoursLG.get(weekDay.getText()).contains(times.get(0).getAttribute("value")) ||
+                            !propertyOperatingHoursLG.get(weekDay.getText()).contains(times.get(1).getAttribute("value"))) {
                         isConsistent = false;
                         break;
                     }
                 } else {
-                    if (!propertyOperatingHours.get(weekDay.getText()).equalsIgnoreCase(time.getText())) {
+                    if (!propertyOperatingHours.get(weekDay.getText()).contains(times.get(0).getAttribute("value")) ||
+                            !propertyOperatingHours.get(weekDay.getText()).contains(times.get(1).getAttribute("value"))) {
                         isConsistent = false;
                         break;
                     }
@@ -6043,7 +6049,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyClickOnDeleteScheduleButton() throws Exception {
         try {
-            if (isElementLoaded(deleteScheduleButton, 5)) {
+            if (isElementLoaded(deleteScheduleButton, 10)) {
                 clickTheElement(deleteScheduleButton);
                 SimpleUtils.pass("Schedule: Click on Delete Schedule button Successfully!");
             } else {
@@ -14559,17 +14565,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public List<WebElement> getAllShiftsOfOneTM(String name) throws Exception{
-        List<WebElement> allUnassignedShifts = new ArrayList<>();
+        List<WebElement> allShifts = new ArrayList<>();
         if (areListElementVisible(shiftsWeekView, 15)) {
             for (WebElement shiftWeekView : shiftsWeekView) {
                 WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
                 if (workerName != null && workerName.getText().toLowerCase().contains(name)) {
-                    allUnassignedShifts.add(shiftWeekView);
+                    allShifts.add(shiftWeekView);
                 }
             }
         }else
             SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week", false);
-        return allUnassignedShifts;
+        return allShifts;
     }
 
 
@@ -14667,6 +14673,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             clickOnClearShiftsBtnOnRequiredActionSmartCard();
         }else
             SimpleUtils.report("Schedule Week View: there is no shifts or Action Required smart card in this week");
+    }
+
+
+    @Override
+    public List<WebElement> getAllOOOHShifts() throws Exception {
+        List<WebElement> allOOOHShifts = new ArrayList<>();
+        WebElement iIcon = null;
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            for (WebElement shiftWeekView : shiftsWeekView) {
+                scrollToElement(shiftWeekView);
+                if(isScheduleDayViewActive()){
+                    iIcon = shiftWeekView.findElement(By.cssSelector("img[ng-if=\"hasViolateCompliance(shift)\"]"));
+                    waitForSeconds(2);
+                } else
+                    iIcon = shiftWeekView.findElement(By.cssSelector("img.week-schedule-shit-open-popover"));
+                if(iIcon.getAttribute("src").contains("danger")) {
+                    click(iIcon);
+                    if (isElementLoaded(popOverContent, 5)){
+                        if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
+                            List<String> complianceMessages = new ArrayList<>();
+                            for (WebElement message: complianceMessageInInfoIconPopup){
+                                complianceMessages.add(message.getText());
+                            }
+                            if(complianceMessages.contains("Outside Operating hours")) {
+                                allOOOHShifts.add(shiftWeekView);
+                            }
+                        } else
+                            SimpleUtils.report("There is no compliance message in info icon popup");
+                    } else
+                        SimpleUtils.fail("Info icon popup fail to load", false);
+                }
+            }
+        }else
+            SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week", false);
+        return allOOOHShifts;
     }
 }
 

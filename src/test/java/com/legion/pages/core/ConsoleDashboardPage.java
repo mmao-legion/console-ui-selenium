@@ -29,7 +29,7 @@ import org.testng.Reporter;
 
 public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
-    @FindBy(css = "[ng-click='openSchedule()']")
+    @FindBy(css = "[ng-click=\"openSchedule()\"]")
     private WebElement goToTodayScheduleButton;
 
     @FindBy(css = "[ng-class = 'subNavigationViewLinkActiveClass(view)']")
@@ -522,7 +522,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	//Added by Julie
-	@FindBy( css = ".dif .header-company-icon .company-icon-img")
+	@FindBy( css = ".header-right .header-company-icon .company-icon-img")
 	private WebElement companyIconImg;
 
 	@FindBy(css = ".user-profile-section__title.ng-binding")

@@ -53,6 +53,8 @@ public class DeleteScheduleTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
                 schedulePage.createScheduleForNonDGFlowNewUI();
+            } else {
+                schedulePage.createScheduleForNonDGFlowNewUI();
             }
 
             String deleteForWeekText = schedulePage.getDeleteScheduleForWhichWeekText();

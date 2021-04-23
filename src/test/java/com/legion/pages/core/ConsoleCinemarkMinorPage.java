@@ -226,6 +226,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
                             moveToElementAndClick(template.findElements(By.cssSelector("lg-button")).get(0));
                         }
                         waitForSeconds(5);
+                        closeAuditLogDialog();
                         break;
                     }
                 }
@@ -345,4 +346,31 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
             SimpleUtils.fail("No setting fields for minor rule",false);
         }
     }
+
+    @FindBy (css = "[question-title=\"Share school calendars across locations\"] .lg-question-input")
+    private WebElement shareSchoolCalendarSection;
+
+    @Override
+    public void turnOnOrOffSharingCalendars(String option) throws Exception {
+        try {
+            if (isElementLoaded(shareSchoolCalendarSection, 10)) {
+                List<WebElement> toggles = shareSchoolCalendarSection.findElements(By.tagName("span"));
+                if (toggles != null && toggles.size() == 2) {
+                    for (WebElement toggle : toggles) {
+                        if (toggle.getText().equalsIgnoreCase(option)) {
+                            clickTheElement(toggle);
+                            SimpleUtils.pass("Sharing School Calendar: set the toggle to: " + option + " Successfully!");
+                        }
+                    }
+                } else {
+                    SimpleUtils.fail("Sharing School Calendar: failed to get the toggles!", false);
+                }
+            } else {
+                SimpleUtils.fail("Sharing School Calendar failed to load!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }
