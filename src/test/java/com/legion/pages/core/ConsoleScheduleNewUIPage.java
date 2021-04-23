@@ -10654,7 +10654,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);
-                                if (isElementLoaded(deleteBtnInDeleteWindows, 20)) {
+                                if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
                                     click(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
                                 } else
