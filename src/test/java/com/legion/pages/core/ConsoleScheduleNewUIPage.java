@@ -777,7 +777,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     //compliance elements
-    @FindBy(css = "[ng-if=\"scheduleSmartCard.complianceViolations && hasSchedule()\"] div.card-carousel-card")
+    @FindBy(css = "[ng-if=\"scheduleSmartCard.complianceViolations\"] div.card-carousel-card")
     private WebElement complianceSmartcardHeader;
 
     @FindBy(css = ".fa-flag.sch-red")
@@ -3751,6 +3751,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public float checkEnterBudgetWindowLoadedForNonDG() throws Exception {
         float budgetHour = 0;
         String title = "Enter Budget";
+        waitForSeconds(2);
         try {
             if (isElementLoaded(generateModalTitle, 10) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
@@ -14564,17 +14565,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public List<WebElement> getAllShiftsOfOneTM(String name) throws Exception{
-        List<WebElement> allUnassignedShifts = new ArrayList<>();
+        List<WebElement> allShifts = new ArrayList<>();
         if (areListElementVisible(shiftsWeekView, 15)) {
             for (WebElement shiftWeekView : shiftsWeekView) {
                 WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
                 if (workerName != null && workerName.getText().toLowerCase().contains(name)) {
-                    allUnassignedShifts.add(shiftWeekView);
+                    allShifts.add(shiftWeekView);
                 }
             }
         }else
             SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week", false);
-        return allUnassignedShifts;
+        return allShifts;
     }
 
 
@@ -14672,6 +14673,37 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             clickOnClearShiftsBtnOnRequiredActionSmartCard();
         }else
             SimpleUtils.report("Schedule Week View: there is no shifts or Action Required smart card in this week");
+    }
+
+
+    @Override
+    public List<WebElement> getAllOOOHShifts() throws Exception {
+        List<WebElement> allOOOHShifts = new ArrayList<>();
+        WebElement iIcon = null;
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            for (WebElement shiftWeekView : shiftsWeekView) {
+                scrollToElement(shiftWeekView);
+                if(isScheduleDayViewActive()){
+                    iIcon = shiftWeekView.findElement(By.cssSelector("img[ng-if=\"hasViolateCompliance(shift)\"]"));
+                    waitForSeconds(2);
+                } else
+                    iIcon = shiftWeekView.findElement(By.cssSelector("img.week-schedule-shit-open-popover"));
+                if(iIcon.getAttribute("src").contains("danger")) {
+                    click(iIcon);
+                    if (isElementLoaded(popOverContent, 5)){
+                        if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
+                            if(complianceMessageInInfoIconPopup.contains("Outside Operating hours")) {
+                                allOOOHShifts.add(shiftWeekView);
+                            }
+                        } else
+                            SimpleUtils.report("There is no compliance message in info icon popup");
+                    } else
+                        SimpleUtils.fail("Info icon popup fail to load", false);
+                }
+            }
+        }else
+            SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week", false);
+        return allOOOHShifts;
     }
 }
 

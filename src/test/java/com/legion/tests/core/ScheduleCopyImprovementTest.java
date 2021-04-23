@@ -628,4 +628,149 @@ public class ScheduleCopyImprovementTest extends TestBase {
             opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
         }
     }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the Outside of Operating Hours shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTheOOOHShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            //Go to schedule page and create new schedule
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String userName = "";
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
+
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUI();
+            schedulePage.publishActiveSchedule();
+            //Get the info of this week for copy schedule
+            String firstWeekInfo = schedulePage.getActiveWeekText();
+            if (firstWeekInfo.length() > 11) {
+                firstWeekInfo = firstWeekInfo.trim().substring(10);
+                if (firstWeekInfo.contains("-")) {
+                    String[] temp = firstWeekInfo.split("-");
+                    if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
+                        firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
+                                + " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
+                    }
+                }
+            }
+            schedulePage.navigateToNextWeek();
+            isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+
+            schedulePage.clickCreateScheduleBtn();
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "11:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "11:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "11:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "11:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "11:00AM", "4:00PM");
+            schedulePage.clickNextBtnOnCreateScheduleWindow();
+            schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
+            schedulePage.clickOnFinishButtonOnCreateSchedulePage();
+
+            //Check the tooltip of publish button
+            String tooltip = schedulePage.getTooltipOfPublishButton();
+            SimpleUtils.assertOnFail("The tooltip of publish button should display as: Please address required action(s)! But the actual tooltip is: "+ tooltip,
+                    tooltip.equalsIgnoreCase("Please address required action(s)"), false);
+
+            //Check the Action required smart card is display
+            SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
+                    schedulePage.isRequiredActionSmartCardLoaded(), false);
+
+            //Check the message on the Action required smart card
+
+            List<WebElement> allOOOHShifts = schedulePage.getAllOOOHShifts();
+            int oOOHShiftsCount = allOOOHShifts.size();
+            HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+            SimpleUtils.assertOnFail("OOOH shifts message display incorrectly! ",
+                            message.get("unassigned").equalsIgnoreCase(oOOHShiftsCount+ " shifts\n" +
+                                    "Outside Operating Hours"), false);
+
+            //Verify view shifts button
+            schedulePage.clickOnViewShiftsBtnOnRequiredActionSmartCard();
+            SimpleUtils.assertOnFail("The OOOH shifts count is not correct after click View Shifts! ",
+                    schedulePage.getAllOOOHShifts().size() == oOOHShiftsCount, false);
+
+            ArrayList<WebElement> allShiftsInWeekView = schedulePage.getAllAvailableShiftsInWeekView();
+            List<String> complianceMessage = new ArrayList<>();
+            for (int i = 0; i< allShiftsInWeekView.size(); i ++) {
+                complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(allShiftsInWeekView.get(i));
+                SimpleUtils.assertOnFail("The OOOH violation message display incorrectly in i icon popup! ",
+                        complianceMessage.contains("Unassigned Shift") || complianceMessage.contains("Outside Operating hours"), false);
+            }
+
+            //Check OOOH shifts on day view
+            List<WebElement> allShiftsInDayView = new ArrayList<>();
+            schedulePage.clickOnDayView();
+
+            for (int i = 0; i< 7; i++) {
+                schedulePage.navigateDayViewWithIndex(i);
+                if (schedulePage.isRequiredActionSmartCardLoaded()){
+                    SimpleUtils.pass("The " +i+ " day has OOOH shifts! ");
+                    Thread.sleep(2000);
+                    allShiftsInDayView = schedulePage.getAvailableShiftsInDayView();
+                    if (allShiftsInDayView.size()>0){
+                        for (int j = 0; j< allShiftsInDayView.size(); j ++) {
+                            complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(allShiftsInDayView.get(j));
+                            SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
+                                    complianceMessage.contains("Unassigned Shift") || complianceMessage.contains("Outside Operating hours"), false);
+                        }
+                    } else
+                        SimpleUtils.fail("There is no shifts in that day! ", false);
+
+                } else
+                    SimpleUtils.fail("The " +i+ " day should has OOOH shifts! ", false);
+            }
+
+            //Convert unassigned shifts to open
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteAllOOOHShiftInWeekView();
+            schedulePage.saveSchedule();
+
+            //Check there is no OOOH shifts display
+            allOOOHShifts = schedulePage.getAllOOOHShifts();
+            oOOHShiftsCount = allOOOHShifts.size();
+            SimpleUtils.assertOnFail("OOOH shifts should not display! ",
+                    oOOHShiftsCount == 0, false);
+            //Check the Action required smart card is not display
+            SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
+                    !schedulePage.isRequiredActionSmartCardLoaded(), false);
+
+            //Check the publish button is enabled
+            SimpleUtils.assertOnFail("The tooltip of publish button should display as blank! But the actual tooltip is: "+ tooltip,
+                    schedulePage.getTooltipOfPublishButton().equalsIgnoreCase(""), false);
+            schedulePage.publishActiveSchedule();
+            SimpleUtils.assertOnFail("The schedule fail to publish! ", schedulePage.isCurrentScheduleWeekPublished(), false);
+
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
 }
