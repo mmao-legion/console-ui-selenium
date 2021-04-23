@@ -2538,7 +2538,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				}
 			}
 		}else {
-			SimpleUtils.fail("Availability Tabs failed to load!", true);
+			SimpleUtils.fail("Availability Tabs failed to load!", false);
 		}
 		return index;
 	}
@@ -2551,7 +2551,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				SimpleUtils.fail("The index is out of bound!", true);
 			}
 		}else {
-			SimpleUtils.fail("Availability Tabs failed to load!", true);
+			SimpleUtils.fail("Availability Tabs failed to load!", false);
 		}
 	}
 
