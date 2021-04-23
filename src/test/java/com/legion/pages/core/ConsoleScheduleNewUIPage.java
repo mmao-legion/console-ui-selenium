@@ -14692,7 +14692,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     click(iIcon);
                     if (isElementLoaded(popOverContent, 5)){
                         if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
-                            if(complianceMessageInInfoIconPopup.contains("Outside Operating hours")) {
+                            List<String> complianceMessages = new ArrayList<>();
+                            for (WebElement message: complianceMessageInInfoIconPopup){
+                                complianceMessages.add(message.getText());
+                            }
+                            if(complianceMessages.contains("Outside Operating hours")) {
                                 allOOOHShifts.add(shiftWeekView);
                             }
                         } else

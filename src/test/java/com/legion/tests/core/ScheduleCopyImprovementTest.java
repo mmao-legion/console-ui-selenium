@@ -88,7 +88,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the unassigned shifts when 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -111,7 +111,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the unassigned shifts convert to open shifts when copying schedule setting set as Yes, all unassigned shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -131,7 +131,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the unassigned shifts convert to open shifts when generating schedule setting set as No, keep as unassigned")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -155,7 +155,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the unassigned shifts convert to open shifts when copying schedule setting set as No, keep as unassigned")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -175,7 +175,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when generating schedule setting set as Yes, except opening/closing shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -197,7 +197,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when copying schedule setting set as Yes, except opening/closing shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -633,7 +633,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the Outside of Operating Hours shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheOOOHShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -643,9 +643,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Go to schedule page and create new schedule
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String userName = "";
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
@@ -679,13 +676,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
             }
 
             schedulePage.clickCreateScheduleBtn();
-            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "11:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "11:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "11:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "11:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "11:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "8:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "4:00PM");
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();
@@ -704,8 +701,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             List<WebElement> allOOOHShifts = schedulePage.getAllOOOHShifts();
             int oOOHShiftsCount = allOOOHShifts.size();
             HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
-            SimpleUtils.assertOnFail("OOOH shifts message display incorrectly! ",
-                            message.get("unassigned").equalsIgnoreCase(oOOHShiftsCount+ " shifts\n" +
+            SimpleUtils.assertOnFail("OOOH shifts message display incorrectly! The actual message is: " + message.get("OOOH"),
+                            message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount+ " shifts\n" +
                                     "Outside Operating Hours"), false);
 
             //Verify view shifts button
