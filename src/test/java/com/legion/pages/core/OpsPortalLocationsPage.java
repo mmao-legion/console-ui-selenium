@@ -616,7 +616,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Export location page show well");
 			}else
 				SimpleUtils.fail("Export location page load failed",true);
-			waitForSeconds(2);
+			waitForSeconds(5);
 			click(exportAllRadio);
 			click(okBtnInExportLocationPage);
 			waitForSeconds(10);
@@ -652,7 +652,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void verifyExportSpecificLocationDistrict(String searchCharactor, int index) {
-		if (isElementEnabled(exportBtn,5)) {
+		if (isElementEnabled(exportBtn,20)) {
 			click(exportBtn);
 			if (verifyExportLocationsPageShow()) {
 				SimpleUtils.pass("Export location page show well");

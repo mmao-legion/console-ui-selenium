@@ -394,8 +394,8 @@ public abstract class TestBase {
         SimpleUtils.report(getDriver().getCurrentUrl());
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
-        boolean isLoginDone = loginPage.isLoginDone();
-        if (isLoginDone) {
+        boolean isLoginSuccess = loginPage.isLoginSuccess();
+        if (isLoginSuccess) {
             SimpleUtils.pass("Login legion without update upperfield successfully");
         }else
             SimpleUtils.fail("Login legion  failed",false);

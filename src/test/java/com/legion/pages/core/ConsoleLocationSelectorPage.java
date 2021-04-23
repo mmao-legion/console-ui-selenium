@@ -945,6 +945,43 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     private WebElement buSearchInput;
     @FindBy(css = "input[placeholder=\"Search Region\"]")
     private WebElement regionSearchInput;
-    
+
+
+    @Override
+    public void verifyDefaultLevelForBUOrAdmin() {
+        if (areListElementVisible(levelDisplay,5)) {
+            if (levelDisplay.size()==2) {
+                SimpleUtils.pass("The default location navigation level for BU ,admin or communication role is correct");
+            }else 
+                SimpleUtils.fail("The default location navigation level for BU ,admin or communication role is wrong and the size is : "+levelDisplay.size(), false);
+        }else 
+            SimpleUtils.fail("Location navigation bar load failed",false);
+
+    }
+
+    @Override
+    public void searchSpecificBUAndNavigateTo(String buText) {
+       click(levelDisplay.get(0));
+        if (isElementEnabled(buSearchInput,5)) {
+            buSearchInput.sendKeys(buText);
+            buSearchInput.sendKeys(Keys.ENTER);
+        }
+
+    }
+
+    @Override
+    public void searchSpecificRegionAndNavigateTo(String regionText) {
+
+    }
+
+    @Override
+    public void searchSpecificDistrictAndNavigateTo(String districtText) {
+
+    }
+
+    @Override
+    public void searchSpecificLocationAndNavigateTo(String locationText) {
+
+    }
 
 }
