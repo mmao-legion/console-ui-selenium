@@ -38,7 +38,7 @@
        <classes>
            <class name="com.legion.tests.core.TeamTestKendraScott2">
                <methods>
-                   <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
+<!--                   <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by SCH-3934/>-->
                    <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                </methods>
            </class>
@@ -60,7 +60,7 @@
             <class name="com.legion.tests.core.ScheduleTest">
                 <methods>
                     <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" />
+<!--                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" Blocked by SCH-3909/>-->
                 </methods>
             </class>
         </classes>
@@ -177,10 +177,10 @@
                 <methods>
                     <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
                     <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
+<!--                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" Blocked by SCH-3942/>-->
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
-                    <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
+<!--                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" Blocked by SCH-3942/>-->
+<!--                    <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" Blocked by SCH-3942/>-->
                 </methods>
             </class>
         </classes>
@@ -241,7 +241,7 @@
                     <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
                     <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
                     <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
-                    <include name="verifyWarningModelForClopeningAsInternalAdmin" />
+<!--                    <include name="verifyWarningModelForClopeningAsInternalAdmin" Blocked by SCH-3943/>-->
                     <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
                 </methods>
             </class>
