@@ -17,11 +17,16 @@
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
 
-                    <!--                    District test cases-->
-                    <include name="verifyDistrictListPageLoading" />
-                    <include name="verifySearchDistrictFunction" />
-<!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
-                    <include name="verifyDisableEnableDistrictFunction" />
+                    <!--                    Upperfield test cases-->
+                    <include name="verifyDefaultOrganizationHierarchyShow"/>
+                    <include name="verifyAddEditRemoveOrganizationHierarchy"/>
+                    <include name="verifyAbnormalCasesOfOrganizationHierarchy"/>
+                    <include name="verifyUpperFieldsListPageAndSearchFunction" />
+                    <include name="verifyAddUpperFieldsWithDiffLevel" />
+                    <include name="verifyDisableEnableUpperFieldFunction"/>
+                    <include name="verifyUpperFieldSmartCardData" />
+                    <include name="verifyUpdateUpperFieldFunction" />
+                    <include name="verifyCancelCreatingUpperfieldFunction" />
                 </methods>
             </class>
         </classes>

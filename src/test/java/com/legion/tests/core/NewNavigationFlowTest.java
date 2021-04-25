@@ -34,32 +34,7 @@ public class NewNavigationFlowTest extends TestBase {
     public void firstTest(Method testMethod, Object[] params) throws Exception{
         this.createDriver((String)params[0],"83","Window");
         visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
-    }
-
-
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate location profile page in controls")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationProfilePageInControls(String browser, String username, String password, String location) throws Exception {
-
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.selectLocationByIndex(1);
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsNewUIPage.clickOnControlsConsoleMenu();
-        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
-
-        // Validate Controls Location Profile Section
-        controlsNewUIPage.clickOnControlsLocationProfileSection();
-        boolean isLocationProfile = controlsNewUIPage.isControlsLocationProfileLoaded();
-        SimpleUtils.assertOnFail("Controls Page: Location Profile Section not Loaded.", isLocationProfile, true);
-
-
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
     }
 
     @Automated(automated = "Automated")
@@ -84,6 +59,72 @@ public class NewNavigationFlowTest extends TestBase {
         //Validate manager location for one user
         controlsNewUIPage.verifyUpdateUserAndRolesOneUserLocationInfo(userFirstName);
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate navigation bar for SM user")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDashboardViewAsStoreManager(String browser, String username, String password, String location) throws Exception {
+
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
+        locationSelectorPage.isSMView();
+    }
+
+
+
+    //add new upperfield test cases
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate location navigation function for BU manager")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationNavigationFunctionForBUManager(String browser, String username, String password, String location) throws Exception {
+
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.selectLocationByIndex(1);
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+
+        // Validate Controls Location Profile Section
+        controlsNewUIPage.clickOnControlsLocationProfileSection();
+        boolean isLocationProfile = controlsNewUIPage.isControlsLocationProfileLoaded();
+        SimpleUtils.assertOnFail("Controls Page: Location Profile Section not Loaded.", isLocationProfile, true);
+
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate location profile page in controls")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationProfilePageInControls(String browser, String username, String password, String location) throws Exception {
+
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.selectLocationByIndex(1);
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+
+        // Validate Controls Location Profile Section
+        controlsNewUIPage.clickOnControlsLocationProfileSection();
+        boolean isLocationProfile = controlsNewUIPage.isControlsLocationProfileLoaded();
+        SimpleUtils.assertOnFail("Controls Page: Location Profile Section not Loaded.", isLocationProfile, true);
+
+
+    }
+
+
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
@@ -211,19 +252,7 @@ public class NewNavigationFlowTest extends TestBase {
         locationSelectorPage.isDMView();
     }
 
-    @Automated(automated = "Automated")
-    @Owner(owner = "Fiona")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate navigation bar for SM user")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDashboardViewAsStoreManager(String browser, String username, String password, String location) throws Exception {
 
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
-        locationSelectorPage.isSMView();
-    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
@@ -250,7 +279,7 @@ public class NewNavigationFlowTest extends TestBase {
         //go to locations tab
         locationsPage.clickOnLocationsTab();
         //go to sub-district tab
-        locationsPage.goToSubDistrictsInLocationsPage();
+        locationsPage.goToUpperFieldsPage();
 
         //get the count of all enabled status districts in location-district smart card
         int alldistrictsCountOnDistrcitsPage = locationsPage.getTotalEnabledDistrictsCount();
@@ -297,7 +326,7 @@ public class NewNavigationFlowTest extends TestBase {
         //go to locations tab
         locationsPage.clickOnLocationsTab();
         //go to sub-district tab
-        locationsPage.goToSubDistrictsInLocationsPage();
+        locationsPage.goToUpperFieldsPage();
         //get all locations in specify district in OPS-District function
         locationsInDistrictPage = locationsPage.getLocationsInDistrict(currentDistrict);
         //compare these two list

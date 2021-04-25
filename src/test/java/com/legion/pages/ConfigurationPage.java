@@ -55,9 +55,14 @@ public interface ConfigurationPage {
     public void publishNowTheTemplate() throws Exception;
     public void selectShiftStartTimeEvent(String startEvent) throws Exception;
     public void selectShiftStartTimeUnit(String startTimeUnit) throws Exception;
+    public void selectShiftEndTimeEvent(String endEvent) throws Exception;
     public void createNewTemplate(String templateName) throws Exception;
     public void addAllTypeOfTemplate(String templateName) throws Exception;
     public void verifyConvertUnassignedShiftsToOpenSetting() throws Exception;
     public void updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(String option) throws Exception;
     public void updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(String option) throws Exception;
+    public void selectShiftEndTimeUnit(String endTimeUnit) throws Exception;
+    public void validateAdvanceStaffingRuleShowing(String startEvent,String startOffsetTime,String startEventPoint,String startTimeUnit,
+                                                             String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
+                                                             List<String> days,String shiftsNumber) throws Exception;
 }

@@ -11,23 +11,32 @@ import com.aventstack.extentreports.reporter.configuration.Theme;
 public class ExtentReportManager {
 	
 	public static ExtentReports extent;
+    private static final String OUTPUT_FOLDER = "test-output/";
+    private static final String FILE_NAME = "htmlReporter.html";
     
     public static ExtentReports getInstance() {
     	
 		if (extent == null)
-    		createInstance("test-output");
+    		createInstance(OUTPUT_FOLDER);
         return extent;
     }
     
     public static synchronized ExtentReports createInstance(String fileName) {
-        String reportPath = createReportPath(fileName);
-    	ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(reportPath);
+        //create output folder if the file not exist
+        File reportDir= new File(OUTPUT_FOLDER);
+        if(!reportDir.exists()&& !reportDir .isDirectory()){
+            reportDir.mkdir();
+        }
+//        String reportPath = createReportPath(fileName);
+        ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(OUTPUT_FOLDER + FILE_NAME);
+//        htmlReporter.config().setDocumentTitle("UI Automation Test Report");
+//        htmlReporter.config().setReportName("UI Automation Test Report");
       //  htmlReporter.config().setTestViewChartLocation(ChartLocation.BOTTOM);
        // htmlReporter.config().setChartVisibilityOnOpen(true);
         htmlReporter.config().setTheme(Theme.STANDARD);
         htmlReporter.config().setDocumentTitle(fileName);
         htmlReporter.config().setEncoding("utf-8");
-        htmlReporter.config().setReportName("Custom Report");
+        htmlReporter.config().setReportName("UI Automation Test Report");
      // add custom css
         htmlReporter.config().setCSS("css-string");
 
