@@ -25,8 +25,8 @@
                     <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />
 <!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" />
-<!--                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" Blocked by bug: SCH-3539/>-->
-<!--                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" Blocked by bug: SCH-3539/>-->
+                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
   <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
                     <include name="verifyComplianceSmartCardFunctionality" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard" />
@@ -37,11 +37,11 @@
  <!--                   <include name="verifySchedulesWidgetsAsStoreManager" />-->
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
                     <include name="verifyScheduleFunctionalityForecast" />
-<!--                    <include name="verifyScheduleLaborForeCastFunctionality" Blocked by bug: SCH-3539/>-->
+                    <include name="verifyScheduleLaborForeCastFunctionality" />
                     <include name="validateWeatherSmartCardOnForecastPage" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
  <!--                   <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />-->
-                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
+<!--                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by bug: SCH-3934/>-->
  <!--                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
                     <include name="verifyScheduleFunctionalityOverviewAsStoreManager" />-->
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
