@@ -37,8 +37,8 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class SimpleUtils {
 
-    static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
-//	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
+	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
+	//	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 	static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
@@ -160,7 +160,6 @@ public class SimpleUtils {
 				assertTrue(isAssert);
 			} catch (Throwable e) {
 				addVerificationFailure(e);
-				//TestBase.extentTest.log(Status.ERROR, message);
 				ExtentTestManager.getTest().log(Status.ERROR, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
 						+ "</div>");
 			}

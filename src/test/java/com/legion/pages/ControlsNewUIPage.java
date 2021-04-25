@@ -297,4 +297,7 @@ public interface ControlsNewUIPage {
 	public void updateCentralizedScheduleRelease(WebElement yesItem) throws Exception;
 	public String getDaysInAdvancePublishSchedulesInSchedulingPolicies() throws Exception;
 	public void updateDaysInAdvancePublishSchedulesInSchedulingPolicies(String days) throws Exception;
+	public void verifyConvertUnassignedShiftsToOpenSetting() throws Exception;
+	public String getConvertUnassignedShiftsToOpenSettingOption() throws Exception;
+	public void updateConvertUnassignedShiftsToOpenSettingOption(String option) throws Exception;
 }

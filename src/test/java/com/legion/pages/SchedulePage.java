@@ -430,7 +430,7 @@ public interface SchedulePage {
 	public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception;
 	public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception;
 	public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
-	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose) throws Exception;
+	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception;
 	public void clickCreateScheduleBtn() throws Exception;
 	public void clickBackBtnAndExitCreateScheduleWindow() throws Exception;
 	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
@@ -595,4 +595,25 @@ public interface SchedulePage {
 	public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
 	public void verifyConfirmStoreOpenCloseHours() throws Exception;
 	public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception;
+	public void verifyFilterDropdownList(boolean isLG) throws Exception;
+	public void clickOnViewShiftsBtnOnRequiredActionSmartCard() throws Exception;
+	public void clickOnClearFilterOnFilterDropdownPopup() throws Exception;
+	public boolean isRequiredActionSmartCardLoaded() throws Exception;
+	public List<WebElement> getAllShiftsOfOneTM(String name) throws Exception;
+	public String getWholeMessageFromActionRequiredSmartCard() throws Exception;
+	public String getTooltipOfPublishButton() throws Exception;
+	public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception;
+	public boolean isDragAndDropConfirmPageLoaded() throws Exception;
+	public void verifyUngenerateButtonIsRemoved() throws Exception;
+	public List<String> getYearsFromCalendarMonthYearText() throws Exception;
+	public boolean isDeleteScheduleButtonLoaded() throws Exception;
+	public void verifyClickOnDeleteScheduleButton() throws Exception;
+	public void verifyTheContentOnDeleteScheduleDialog(String confirmMessage, String week) throws Exception;
+	public String getDeleteScheduleForWhichWeekText() throws Exception;
+	public void verifyDeleteBtnDisabledOnDeleteScheduleDialog() throws Exception;
+	public void verifyDeleteButtonEnabledWhenClickingCheckbox() throws Exception;
+	public void verifyClickOnCancelBtnOnDeleteScheduleDialog() throws Exception;
+	public void deleteAllOOOHShiftInWeekView() throws Exception;
+	public List<WebElement> getAllOOOHShifts() throws Exception;
+	public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception;
 }

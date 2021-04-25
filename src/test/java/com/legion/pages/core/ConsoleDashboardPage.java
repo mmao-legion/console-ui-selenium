@@ -29,205 +29,203 @@ import org.testng.Reporter;
 
 public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
-	@FindBy(css = "[ng-click='openSchedule()']")
-	private WebElement goToTodayScheduleButton;
+    @FindBy(css = "[ng-click=\"openSchedule()\"]")
+    private WebElement goToTodayScheduleButton;
 
-	@FindBy(css = "[ng-class = 'subNavigationViewLinkActiveClass(view)']")
-	private WebElement goToTodayScheduleView;
+    @FindBy(css = "[ng-class = 'subNavigationViewLinkActiveClass(view)']")
+    private WebElement goToTodayScheduleView;
 
-	@FindBy(css = "[ng-if=\"scheduleForToday($index) && !scheduleForToday($index).length\"]")
-	private WebElement publishedShiftForTodayDiv;
+    @FindBy(css = "[ng-if=\"scheduleForToday($index) && !scheduleForToday($index).length\"]")
+    private WebElement publishedShiftForTodayDiv;
 
-	@FindBy(css = "[ng-if=\"daySummary($index) && weeklyScheduleData($index) && canViewGuidance()\"]")
-	private WebElement dashboardTodaysForecastDiv;
+    @FindBy(css = "[ng-if=\"daySummary($index) && weeklyScheduleData($index) && canViewGuidance()\"]")
+    private WebElement dashboardTodaysForecastDiv;
 
-	@FindBy(css = "[ng-if=\"canViewProjectedSales()\"]")
-	private WebElement dashboardTodaysProjectedDemandGraphDiv;
+    @FindBy(css = "[ng-if=\"canViewProjectedSales()\"]")
+    private WebElement dashboardTodaysProjectedDemandGraphDiv;
 
-	@FindBy(className = "welcome-text")
-	private WebElement dashboardWelcomeSection;
+    @FindBy(className = "welcome-text")
+    private WebElement dashboardWelcomeSection;
 
-	@FindBy(className = "upcoming-shift-container")
-	private WebElement dashboardUpcomingShiftContainer;
+    @FindBy(className = "upcoming-shift-container")
+    private WebElement dashboardUpcomingShiftContainer;
 
-	@FindBy(css = "div[ng-if*='daySummary($index)) && weeklyScheduleData($index) && canViewGuidance()']")
-	private WebElement dashboardTodaysForecastSection;
+    @FindBy(css = "div[ng-if*='daySummary($index)) && weeklyScheduleData($index) && canViewGuidance()']")
+    private WebElement dashboardTodaysForecastSection;
 
-	@FindBy(css = "[ng-if=\"graphData($index)\"]")
-	private WebElement dashboardProjectedDemandGraph;
+    @FindBy(css = "[ng-if=\"graphData($index)\"]")
+    private WebElement dashboardProjectedDemandGraph;
 
-	@FindBy(className = "home-dashboard")
-	private WebElement dashboardSection;
+    @FindBy(className = "home-dashboard")
+    private WebElement dashboardSection;
 
-	@FindBy(className = "console-navigation-item")
-	private List<WebElement> consoleNavigationMenuItems; //fiona will using
+    @FindBy(className = "console-navigation-item")
+    private List<WebElement> consoleNavigationMenuItems; //fiona will using
 
-	@FindBy(css = "#legion-app navigation div:nth-child(4)")//fiona using
-	private WebElement scheduleConsoleName;
+    @FindBy(css = "#legion-app navigation div:nth-child(4)")//fiona using
+    private WebElement scheduleConsoleName;
 
-	@FindBy(className = "home-dashboard")
-	private WebElement legionDashboardSection;
+    @FindBy(className = "home-dashboard")
+    private WebElement legionDashboardSection;
 
-	@FindBy(css = "div.console-navigation-item-label.Dashboard")  //fiona will using
-	private WebElement dashboardConsoleName;
+    @FindBy(css = "div.console-navigation-item-label.Dashboard")  //fiona will using
+    private WebElement dashboardConsoleName;
 
-	@FindBy(css = "div.console-navigation-item-label.Controls")//fiona using
-	private WebElement controlsConsoleName;
+    @FindBy(css = "div.console-navigation-item-label.Controls")//fiona using
+    private WebElement controlsConsoleName;
 
-	@FindBy(css = ".lg-location-chooser__global.ng-scope")
-	private WebElement globalIconControls;
+    @FindBy(css = ".lg-location-chooser__global.ng-scope")
+    private WebElement globalIconControls;
 
-	@FindBy(css = ".center.ng-scope")//fiona using
-	private WebElement controlsPage;
+    @FindBy(css = ".center.ng-scope")//fiona using
+    private WebElement controlsPage;
 
-	@FindBy(css = "div.col-sm-8.text-left")
-	private WebElement todaysForecast;
+    @FindBy(css = "div.col-sm-8.text-left")
+    private WebElement todaysForecast;
 
-	@FindBy(css = "div.col-sm-4.text-left")
-	private WebElement startingSoon;
+    @FindBy(css = "div.col-sm-4.text-left")
+    private WebElement startingSoon;
 
-	@FindBy(css = ".header-avatar>img")
-	private WebElement iconProfile;
+    @FindBy(css = ".header-avatar>img")
+    private WebElement iconProfile;
 
-	@FindBy(css = "li[ng-if='canShowTimeoffs']")
-	private WebElement timeOffLink;
+    @FindBy(css = "li[ng-if='canShowTimeoffs']")
+    private WebElement timeOffLink;
 
-	@FindBy(css = "[ng-src*='t-m-time-offs']")
-	private WebElement iconImage;
+    @FindBy(css = "[ng-src*='t-m-time-offs']")
+    private WebElement iconImage;
 
-	@FindBy(css = ".col-sm-6.text-right")
-	private WebElement currentTime;
+    @FindBy(css = ".col-sm-6.text-right")
+    private WebElement currentTime;
 
-	@FindBy(css = "div.fx-center.welcome-text h1")
-	private WebElement detailWelcomeText;
+    @FindBy(css = "div.fx-center.welcome-text h1")
+    private WebElement detailWelcomeText;
 
-	public ConsoleDashboardPage() {
-		PageFactory.initElements(getDriver(), this);
-	}
+    public ConsoleDashboardPage() {
+        PageFactory.initElements(getDriver(), this);
+    }
 
-	@Override
-	public boolean isToday() throws Exception {
+    @Override
+    public boolean isToday() throws Exception {
 
-		//boolean bol = true;
-		if (isElementLoaded(publishedShiftForTodayDiv)) {
-			SimpleUtils.pass("Today's published Shifts loaded Successfully on Dashboard!");
-		} else {
-			return false;
-		}
-		if (isElementLoaded(dashboardTodaysForecastDiv)) {
-			SimpleUtils.pass("Today's ForeCast Labels loaded Successfully on Dashboard!");
-		} else {
-			return false;
-		}
-		if (isElementLoaded(dashboardTodaysProjectedDemandGraphDiv)) {
-			SimpleUtils.pass("Today's Projected Demand Graph loaded Successfully on Dashboard!");
-		} else {
-			return false;
-		}
+        //boolean bol = true;
+        if (isElementLoaded(publishedShiftForTodayDiv)) {
+            SimpleUtils.pass("Today's published Shifts loaded Successfully on Dashboard!");
+        } else {
+            return false;
+        }
+        if (isElementLoaded(dashboardTodaysForecastDiv)) {
+            SimpleUtils.pass("Today's ForeCast Labels loaded Successfully on Dashboard!");
+        } else {
+            return false;
+        }
+        if (isElementLoaded(dashboardTodaysProjectedDemandGraphDiv)) {
+            SimpleUtils.pass("Today's Projected Demand Graph loaded Successfully on Dashboard!");
+        } else {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public void verifyDashboardPageLoadedProperly() throws Exception {
-		/*
-		 *  Check whether Welcome Text Section appear or not on Dashboard.
-		 */
-		if (isElementLoaded(dashboardWelcomeSection))
-			SimpleUtils.pass("Dashboard Page Welcome Text Section Loaded Successfully!");
-		else
-			SimpleUtils.fail("Dashboard Page Welcome Text Section not loaded Successfully!", true);
+    @Override
+    public void verifyDashboardPageLoadedProperly() throws Exception {
+        /*
+         *  Check whether Welcome Text Section appear or not on Dashboard.
+         */
+        if (isElementLoaded(dashboardWelcomeSection))
+            SimpleUtils.pass("Dashboard Page Welcome Text Section Loaded Successfully!");
+        else
+            SimpleUtils.fail("Dashboard Page Welcome Text Section not loaded Successfully!", true);
 
-		/*
-		 *  Check whether 'VIEW TODAY'S SCHEDULE' Button appear or not on Dashboard.
-		 */
-		if (isElementLoaded(goToTodayScheduleButton))
-			SimpleUtils.pass("Dashboard Page 'VIEW TODAY'S SCHEDULE' Button Loaded Successfully!");
-		else
-			SimpleUtils.fail("Dashboard Page 'VIEW TODAY'S SCHEDULE' Button not loaded Successfully!", true);
+        /*
+         *  Check whether 'VIEW TODAY'S SCHEDULE' Button appear or not on Dashboard.
+         */
+        if (isElementLoaded(goToTodayScheduleButton))
+            SimpleUtils.pass("Dashboard Page 'VIEW TODAY'S SCHEDULE' Button Loaded Successfully!");
+        else
+            SimpleUtils.fail("Dashboard Page 'VIEW TODAY'S SCHEDULE' Button not loaded Successfully!", true);
 
-		/*
-		 *  Check whether 'Upcoming Shift Container' Section appear or not on Dashboard.
-		 */
-		if (isElementLoaded(dashboardUpcomingShiftContainer))
-			SimpleUtils.pass("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!");
-		else
-			SimpleUtils.fail("Dashboard Page 'Upcoming Shift Container' Section not Loaded Successfully!", true);
+        /*
+         *  Check whether 'Upcoming Shift Container' Section appear or not on Dashboard.
+         */
+        if (isElementLoaded(dashboardUpcomingShiftContainer))
+            SimpleUtils.pass("Dashboard Page 'Upcoming Shift Container' Section Loaded Successfully!");
+        else
+            SimpleUtils.fail("Dashboard Page 'Upcoming Shift Container' Section not Loaded Successfully!", true);
 
-		/*
-		 *  Check whether 'Today's Forecast' Section appear or not on Dashboard.
-		 */
-		if (isElementLoaded(dashboardTodaysForecastSection))
-			SimpleUtils.pass("Dashboard Page 'Today's Forecast' Section Loaded Successfully!");
-		else
-			SimpleUtils.fail("Dashboard Page 'Today's Forecast' Section not Loaded Successfully!", true);
+        /*
+         *  Check whether 'Today's Forecast' Section appear or not on Dashboard.
+         */
+        if (isElementLoaded(dashboardTodaysForecastSection))
+            SimpleUtils.pass("Dashboard Page 'Today's Forecast' Section Loaded Successfully!");
+        else
+            SimpleUtils.fail("Dashboard Page 'Today's Forecast' Section not Loaded Successfully!", true);
 
-		/*
-		 *  Check whether 'Projected Demand Graph' Section appear or not on Dashboard.
-		 */
-		if (isElementLoaded(dashboardProjectedDemandGraph))
-			SimpleUtils.pass("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!");
-		else
-			SimpleUtils.fail("Dashboard Page 'Projected Demand Graph' Section not Loaded Successfully!", true);
+        /*
+         *  Check whether 'Projected Demand Graph' Section appear or not on Dashboard.
+         */
+        if (isElementLoaded(dashboardProjectedDemandGraph))
+            SimpleUtils.pass("Dashboard Page 'Projected Demand Graph' Section Loaded Successfully!");
+        else
+            SimpleUtils.fail("Dashboard Page 'Projected Demand Graph' Section not Loaded Successfully!", true);
 
-	}
+    }
 
-	@Override
-	public SchedulePage goToToday() throws Exception {
-		waitForPageLoaded(getDriver());
-		checkElementVisibility(goToTodayScheduleButton);
-		SimpleUtils.pass("Dashboard Page Loaded Successfully!");
-		activeConsoleName = scheduleConsoleName.getText();
-		click(goToTodayScheduleButton);
-		return new ConsoleSchedulePage();
-	}
+    @Override
+    public SchedulePage goToToday() throws Exception {
+        waitForPageLoaded(getDriver());
+        checkElementVisibility(goToTodayScheduleButton);
+        SimpleUtils.pass("Dashboard Page Loaded Successfully!");
+        activeConsoleName = scheduleConsoleName.getText();
+        click(goToTodayScheduleButton);
+        return new ConsoleScheduleNewUIPage();
+    }
 
-	@Override
-	public SchedulePage goToTodayForNewUI() throws Exception {
-		waitForPageLoaded(getDriver());
-		checkElementVisibility(goToTodayScheduleButton);
-		SimpleUtils.pass("Dashboard Page Loaded Successfully!");
-		activeConsoleName = scheduleConsoleName.getText();
-		clickTheElement(goToTodayScheduleButton);
-		return new ConsoleScheduleNewUIPage();
-	}
-	@FindBy(css = "lg-upperfield-chooser > div > div > lg-select > div > lg-picker-input > div > input-field > ng-form > div[title=\"HQ\"]")
-	private WebElement textOfHQ;
-	@FindBy(css = "div.no-data-to-show")
-	private WebElement emptyPage;
+    @Override
+    public SchedulePage goToTodayForNewUI() throws Exception {
+        waitForPageLoaded(getDriver());
+        checkElementVisibility(goToTodayScheduleButton);
+        SimpleUtils.pass("Dashboard Page Loaded Successfully!");
+        activeConsoleName = scheduleConsoleName.getText();
+        clickTheElement(goToTodayScheduleButton);
+        return new ConsoleScheduleNewUIPage();
+    }
+    
 
-	public Boolean isDashboardPageLoaded() throws Exception
-	{
-		if(isElementLoaded(dashboardSection,5))
-		{
-			SimpleUtils.pass("Dashboard loaded successfully");
-			return true;
-		}else if(isElementLoaded(textOfHQ,5)&& isElementLoaded(emptyPage,5)){
-			SimpleUtils.pass("HQ view with empty page show well");
-			return true;
-		}else
-			SimpleUtils.fail("Dashboard not Loaded",false);
-			return false;
-	}
+    public Boolean isDashboardPageLoaded() throws Exception
+    {
+    	if(isElementLoaded(dashboardSection))
+    	{
+    		SimpleUtils.pass("Dashboard loaded successfully");
+    		return true;
+       	}else{
+    		SimpleUtils.fail("Dashboard not Loaded",false);
+    		return false;
+       	}
+    }
+    
+
+
 
 	@Override//fiona using
 	public void navigateToDashboard() throws Exception {
 		// TODO Auto-generated method stub
 		if(isElementLoaded(dashboardConsoleName)){
 			dashboardConsoleName.click();
-		}else{
-			SimpleUtils.fail("Dashboard menu in left navigation is not loaded!",false);
-		}
+    	}else{
+    		SimpleUtils.fail("Dashboard menu in left navigation is not loaded!",false);
+    	}
 	}
 
 	@Override
 	public void verifySuccessfulNavToDashboardnLoading() throws Exception {
 		// TODO Auto-generated method stub
 		navigateToDashboard();
-		isDashboardPageLoaded();
+    	isDashboardPageLoaded();
 	}
 
-
+	
 	@FindBy(css = "div.forecast.row-fx")
 	private List<WebElement> forecastDataElements;
 	@Override
@@ -247,12 +245,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 						String[] forecastHoursString = forecastHour.getText().replace("\n", " ").split("Hrs");
 						if(forecastHoursString.length > 1)
 						{
-
+							
 							float hours = Float.valueOf(forecastHoursString[0].trim());
 							String hoursType = forecastHoursString[1].trim();
 							locationHours.put(hoursType, hours);
 						}
-					}
+					}	
 					forecastDataForAllLocations.add(locationHours);
 				}
 				else {
@@ -268,7 +266,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy(css = "div.forecast")
 	private WebElement todaysForecastDataDiv;
-
+	
 	@Override
 	public HashMap<String, Float> getTodaysForcastData() throws Exception
 	{
@@ -291,12 +289,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			else
 				SimpleUtils.fail("Dashboard Page: Unable to fetch Guidance Hours.", true);
 
-			if(todaysForecastString[5].toLowerCase().contains(scheduledHoursLabel.toLowerCase()))
+			if(todaysForecastString[5].toLowerCase().contains(scheduledHoursLabel.toLowerCase())) 
 				todaysForcastData.put("scheduledHours" , Float.valueOf(todaysForecastString[4].split(" ")[0]));
 			else
 				SimpleUtils.fail("Dashboard Page: Unable to fetch schedule Hours.", true);
 
-			if(todaysForecastString[7].toLowerCase().contains(otherHoursLabel.toLowerCase()))
+			if(todaysForecastString[7].toLowerCase().contains(otherHoursLabel.toLowerCase())) 
 				todaysForcastData.put("otherHours" , Float.valueOf(todaysForecastString[6].split(" ")[0]));
 			else
 				SimpleUtils.fail("Dashboard Page: Unable to fetch Other Hours.", true);
@@ -524,7 +522,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	//Added by Julie
-	@FindBy( css = ".header-company-icon.fl-right .company-icon-img")
+	@FindBy( css = ".header-right .header-company-icon .company-icon-img")
 	private WebElement companyIconImg;
 
 	@FindBy(css = ".user-profile-section__title.ng-binding")
@@ -533,10 +531,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "div.console-navigation-item-label.Schedule")
 	private WebElement scheduleConsoleNameInTM;
 
-	@FindBy(css = "[ng-show*=\"showLocation()\"]")
+	@FindBy(css = "[ng-if*=\"showLocation()\"]")
 	private WebElement showLocation;
 
-	@FindBy(css = "[search-hint=\"Search Location\"] input-field[placeholder=\"Select...\"] div.input-faked")
+	@FindBy(css = "[search-hint=\"Search Location\"]")
 	private WebElement currentLocation;
 
 	@FindBy(css = ".lg-search-options__option")
@@ -611,7 +609,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateThePresenceOfLocation() throws Exception {
 		if (isElementEnabled(showLocation, 20)) {
 			if (currentLocation.isDisplayed() && !currentLocation.getText().isEmpty() && currentLocation.getText() != null) {
-				if (getDriver().findElement(By.xpath("//header//*[@class=\"location\"]")).equals(showLocation)) {
+				if (getDriver().findElement(By.xpath("//header//*[contains(@ng-if,\"showLocation()\")]")).equals(showLocation)) {
 					SimpleUtils.pass("Dashboard Page: Location shows at top of the page successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Location is not at top of the page", true);
@@ -620,7 +618,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				SimpleUtils.fail("Dashboard Page: Location isn't present", true);
 			}
 		} else {
-			SimpleUtils.fail("Dashboard Page: Location failed to load", true);
+			SimpleUtils.fail("Dashboard Page: Location isn't present", false);
 		}
 	}
 
@@ -660,7 +658,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateThePresenceOfLogo() throws Exception {
 		if (isElementLoaded(companyIconImg, 5)) {
 			if (companyIconImg.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[2]//img[contains(@class,'company-icon-img')]")).equals(companyIconImg)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'right')]/div[1]//img[contains(@class,'company-icon-img')]")).equals(companyIconImg)) {
 					SimpleUtils.pass("Dashboard Page: Logo is present at right corner of page successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Logo isn't present at right corner of page", true);
@@ -754,22 +752,22 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public void validateTheUpcomingSchedules(String userName) throws Exception {
+	public void validateTheUpcomingSchedules(String location) throws Exception {
 		if (isElementLoaded(dashboardUpcomingShiftContainer, 20)) {
 			SimpleUtils.pass("Today's published Shifts loaded Successfully on Dashboard!");
 			if (dashboardUpcomingShiftContainer.getText().contains("No Published Shifts for today")) {
 				SimpleUtils.pass("No Published Shifts for today");
 			} else {
 				for (WebElement us : upcomingShifts) {
-					if (us.getText().contains(userName) && us.getText().contains("am") || us.getText().contains("pm")) {
+					if (us.getText().contains(location) && (us.getText().contains("am") || us.getText().contains("pm"))) {
 						SimpleUtils.pass("All the upcoming schedules are present with shift timings successfully");
 					} else {
-						SimpleUtils.fail("Shifts don't display on Dashboard", true);
+						SimpleUtils.fail("Shifts don't display on Dashboard", false);
 					}
 				}
 			}
 		} else {
-			SimpleUtils.fail("Today's Published Shifts failed to load on Dashboard!", true);
+			SimpleUtils.fail("Today's Published Shifts failed to load on Dashboard!", false);
 		}
 	}
 
@@ -793,7 +791,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateTheVisibilityOfProfilePicture() throws Exception {
 		if (isElementLoaded(iconProfile, 5)) {
 			if (iconProfile.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]/img")).equals(iconProfile)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'right')]/div[2]/img")).equals(iconProfile)) {
 					SimpleUtils.pass("Profile picture is visible at right corner of the page successfully");
 				} else {
 					SimpleUtils.fail("Profile picture isn't visible at right corner of the page", true);
@@ -960,7 +958,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return null;
 	}
 
-	@FindBy(css = "[ng-if=\"$ctrl.parentLocation\"]")
+	@FindBy(css = "lg-select[search-hint=\"Search District\"]")
 	private WebElement currentDistrict;
 	@Override
 	public String getCurrentDistrict() throws Exception {
@@ -984,14 +982,14 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public List<String> getLocationListInDashboard() {
 		click(currentLocation);
 		waitForSeconds(3);
-		if (locationsListInDashboardPage.size()>0) {
-			List<String> locationList = new ArrayList<String>();
-			for (WebElement location: locationsListInDashboardPage
-			) {
-				locationList.add(location.getText().split("\n")[0]);
+			if (locationsListInDashboardPage.size()>0) {
+				List<String> locationList = new ArrayList<String>();
+				for (WebElement location: locationsListInDashboardPage
+					 ) {
+					locationList.add(location.getText().split("\n")[0]);
+				}
+				return locationList;
 			}
-			return locationList;
-		}
 		return null;
 	}
 
@@ -1076,22 +1074,22 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 
-	@FindBy(css = "div.console-navigation-item-label.Analytics")
-	private WebElement analyticsConsoleMenu;
+	@FindBy(css = "div.console-navigation-item-label.Report")
+	private WebElement reportConsoleMenu;
 
 	@Override
-	public boolean isAnalyticsConsoleMenuDisplay() throws Exception {
-		boolean isAnalyticsConsoleMenuDisplay = false;
+	public boolean isReportConsoleMenuDisplay() throws Exception {
+		boolean isReportConsoleMenuDisplay = false;
 		try{
-			if(isElementLoaded(analyticsConsoleMenu, 5)) {
-				isAnalyticsConsoleMenuDisplay = true;
-				SimpleUtils.report("Analytics Console Menu is loaded Successfully!");
+			if(isElementLoaded(reportConsoleMenu, 5)) {
+				isReportConsoleMenuDisplay = true;
+				SimpleUtils.report("Report Console Menu is loaded Successfully!");
 			} else
-				SimpleUtils.report("Analytics Console Menu not loaded Successfully!");
+				SimpleUtils.report("Report Console Menu not loaded Successfully!");
 		} catch(Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
-		return isAnalyticsConsoleMenuDisplay;
+		return isReportConsoleMenuDisplay;
 	}
 
 
@@ -1680,7 +1678,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private WebElement complianceViolationsWidgetTitle;
 
 	@FindBy (css = "[ng-repeat=\"cv in scheduleComplianceKPI\"]")
-	private List<WebElement> scheduleComplianceKPIOnComplianceViolationsWidget;
+    private List<WebElement> scheduleComplianceKPIOnComplianceViolationsWidget;
 
 	@FindBy (className = "timesheet-approval-chart__svg")
 	private WebElement timesheetApprovalRateWidget;
@@ -1905,10 +1903,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		if (weekOnPayrollProjectionWidget.contains(" - ")) {
 			if (weekOnPayrollProjectionWidget.split(" - ")[0].contains(" ") && weekOnPayrollProjectionWidget.split(" - ")[1].contains(" ")) {
 				weekOnPayrollProjectionWidget = weekOnPayrollProjectionWidget.split(" - ")[0].split(" ")[0] + " " + weekOnPayrollProjectionWidget.split(" - ")[0].split(" ")[1].replaceFirst("^(0*)", "") + " - "
-						+ weekOnPayrollProjectionWidget.split(" - ")[1].split(" ")[0] + " " + weekOnPayrollProjectionWidget.split(" - ")[1].split(" ")[1].replaceFirst("^(0*)", "");
+				+ weekOnPayrollProjectionWidget.split(" - ")[1].split(" ")[0] + " " + weekOnPayrollProjectionWidget.split(" - ")[1].split(" ")[1].replaceFirst("^(0*)", "");
 			}
 		}
-		SimpleUtils.report("Dashboard Page: The week on Payroll Projection widget is \"" + weekOnPayrollProjectionWidget + "\"");
+        SimpleUtils.report("Dashboard Page: The week on Payroll Projection widget is \"" + weekOnPayrollProjectionWidget + "\"");
 		if (currentWeekInScheduleTab.contains("\n")) {
 			currentWeekInScheduleTab = currentWeekInScheduleTab.split("\n")[1];
 		}
@@ -1943,7 +1941,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				SimpleUtils.pass("Dashboard Page: The budget surplus on Payroll Projection widget is consistent with the hours in Schedule tab");
 			else
 				//SimpleUtils.fail("Dashboard Page: The budget surplus on Payroll Projection widget is inconsistent with the hours in Schedule tab",false);
-				SimpleUtils.warn("SCH-2767: [DM View] Data accuracy is inconsistent on Dashboard");
+			SimpleUtils.warn("SCH-2767: [DM View] Data accuracy is inconsistent on Dashboard");
 		} else if (budgetSurplusOnPayrollProjectionWidget.contains("Over") && budgetSurplusInScheduleTab.contains("▲")) {
 			budgetSurplusOnPayrollProjectionWidget = budgetSurplusOnPayrollProjectionWidget.contains(" ")? budgetSurplusOnPayrollProjectionWidget.split(" ")[0]:budgetSurplusOnPayrollProjectionWidget;
 			budgetSurplusInScheduleTab = budgetSurplusInScheduleTab.contains(" ")? budgetSurplusInScheduleTab.split(" ")[0]:budgetSurplusInScheduleTab;
@@ -2017,277 +2015,277 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Dashboard Page: Hours on Timesheet Approval Rate widget failed to load",false);
 	}
 
-	@Override
-	public void validateTheDataOfMyProfile() throws Exception {
-		clickOnSubMenuOnProfile("My Profile");
-		if (isElementLoaded(personalDetails, 20) && isElementLoaded(hrProfileInfo, 20) && isElementLoaded(legionInfo, 20)) {
-			if (personalDetails.isDisplayed() && hrProfileInfo.isDisplayed())
-				SimpleUtils.pass("My Profile: It shows the TM's profile information details successfully");
-		} else {
-			SimpleUtils.fail("My Profile: Failed to show the TM's profile information", true);
-		}
-	}
+    @Override
+    public void validateTheDataOfMyProfile() throws Exception {
+        clickOnSubMenuOnProfile("My Profile");
+        if (isElementLoaded(personalDetails, 20) && isElementLoaded(hrProfileInfo, 20) && isElementLoaded(legionInfo, 20)) {
+            if (personalDetails.isDisplayed() && hrProfileInfo.isDisplayed())
+                SimpleUtils.pass("My Profile: It shows the TM's profile information details successfully");
+        } else {
+            SimpleUtils.fail("My Profile: Failed to show the TM's profile information", true);
+        }
+    }
 
-	@Override
-	public void clickOnSubMenuOnProfile(String subMenu) throws Exception {
-		if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
-			clickOnProfileIconOnDashboard();
-		}
-		if (areListElementVisible(goToProfile, 10) && goToProfile.size() != 0) {
-			for (WebElement e : goToProfile) {
-				if (e.getText().toLowerCase().contains(subMenu.toLowerCase())) {
-					clickTheElement(e);
-					if (isElementLoaded(alertDialog, 5))
-						click(OKButton);
-					else clickTheElement(companyIconImg);
-					SimpleUtils.pass("Able to click on '" + subMenu + "' link Successfully!!");
-					break;
-				}
-			}
-		} else {
-			SimpleUtils.fail("'" + subMenu + "' failed to load", true);
-		}
-	}
+    @Override
+    public void clickOnSubMenuOnProfile(String subMenu) throws Exception {
+        if (isElementEnabled(switchMenu, 5) && switchMenu.getAttribute("class").contains("ng-hide")) {
+            clickOnProfileIconOnDashboard();
+        }
+        if (areListElementVisible(goToProfile, 10) && goToProfile.size() != 0) {
+            for (WebElement e : goToProfile) {
+                if (e.getText().toLowerCase().contains(subMenu.toLowerCase())) {
+                    clickTheElement(e);
+                    if (isElementLoaded(alertDialog, 5))
+                        click(OKButton);
+                    else clickTheElement(companyIconImg);
+                    SimpleUtils.pass("Able to click on '" + subMenu + "' link Successfully!!");
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("'" + subMenu + "' failed to load", true);
+        }
+    }
 
-	@Override
-	public void validateTheDataOfMyWorkPreferences(String date) throws Exception {
-		SimpleUtils.report(date);
-		clickOnSubMenuOnProfile("My Work Preferences");
-		if (areListElementVisible(userProfileSection, 10) && userProfileSection.size() == 3) {
-			SimpleUtils.pass("My Work Preferences: It shows the Availability,  Availability Change Requests and Shift Preferences successfully");
-			if (date.contains(",") && date.contains(" ")) {
-				date = date.split(",")[1].trim().split(" ")[1];
-				SimpleUtils.report("Current date is " + date);
-			}
-			//currentWeek.getText() is Apr 6-Apr 12
-			String weekDefaultEnd = "";
-			String weekDefaultBegin = "";
-			if (currentWeek.getText().contains("-") && currentWeek.getText().contains(" ")) {
-				try {
-					weekDefaultBegin = currentWeek.getText().split("-")[0].split(" ")[1];
-					SimpleUtils.report("weekDefaultBegin is:" + weekDefaultBegin);
-					weekDefaultEnd = currentWeek.getText().split("-")[1].split(" ")[1];
-					SimpleUtils.report("weekDefaultEnd is:" + weekDefaultEnd);
-				} catch (Exception e) {
-					SimpleUtils.fail("Active week text doesn't have enough length", true);
-				}
-			}
-			if ((Integer.parseInt(weekDefaultBegin) <= Integer.parseInt(date) && Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd))
-					|| (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && (weekDefaultBegin.length() == 2 && date.length() == 1))
-					|| (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) && (weekDefaultBegin.length() == 2 && date.length() == 2))) {
-				SimpleUtils.pass("My Work Preferences: Current week availability shows by default successfully");
-			} else
-				SimpleUtils.fail("My Work Preferences: Current week availability shows incorrectly", true);
-		} else {
-			SimpleUtils.fail("Failed to show the Availability and Shift Preferences on My Work Preferences", true);
-		}
-	}
+    @Override
+    public void validateTheDataOfMyWorkPreferences(String date) throws Exception {
+        SimpleUtils.report(date);
+        clickOnSubMenuOnProfile("My Work Preferences");
+        if (areListElementVisible(userProfileSection, 10) && userProfileSection.size() == 3) {
+            SimpleUtils.pass("My Work Preferences: It shows the Availability,  Availability Change Requests and Shift Preferences successfully");
+            if (date.contains(",") && date.contains(" ")) {
+                date = date.split(",")[1].trim().split(" ")[1];
+                SimpleUtils.report("Current date is " + date);
+            }
+            //currentWeek.getText() is Apr 6-Apr 12
+            String weekDefaultEnd = "";
+            String weekDefaultBegin = "";
+            if (currentWeek.getText().contains("-") && currentWeek.getText().contains(" ")) {
+                try {
+                    weekDefaultBegin = currentWeek.getText().split("-")[0].split(" ")[1];
+                    SimpleUtils.report("weekDefaultBegin is:" + weekDefaultBegin);
+                    weekDefaultEnd = currentWeek.getText().split("-")[1].split(" ")[1];
+                    SimpleUtils.report("weekDefaultEnd is:" + weekDefaultEnd);
+                } catch (Exception e) {
+                    SimpleUtils.fail("Active week text doesn't have enough length", true);
+                }
+            }
+            if ((Integer.parseInt(weekDefaultBegin) <= Integer.parseInt(date) && Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd))
+                    || (Integer.parseInt(date) <= Integer.parseInt(weekDefaultEnd) && (weekDefaultBegin.length() == 2 && date.length() == 1))
+                    || (Integer.parseInt(date) >= Integer.parseInt(weekDefaultBegin) && (weekDefaultBegin.length() == 2 && date.length() == 2))) {
+                SimpleUtils.pass("My Work Preferences: Current week availability shows by default successfully");
+            } else
+                SimpleUtils.fail("My Work Preferences: Current week availability shows incorrectly", true);
+        } else {
+            SimpleUtils.fail("Failed to show the Availability and Shift Preferences on My Work Preferences", true);
+        }
+    }
 
-	@Override
-	public void validateTheDataOfMyTimeOff() throws Exception {
-		clickOnSubMenuOnProfile("My Time Off");
-		if (isElementLoaded(pending, 10) && isElementLoaded(approved, 10) && isElementLoaded(rejected, 10)) {
-			SimpleUtils.pass("A summary of all pending, approved and rejected shows successfully on My Time Off");
-			if (Integer.valueOf(pending.getText().substring(0, 1)) != 0 || Integer.valueOf(approved.getText().substring(0, 1)) != 0 || Integer.valueOf(rejected.getText().substring(0, 1)) != 0) {
-				if (areListElementVisible(timeoffRequests, 10) && timeoffRequests.size() > 1) {
-					SimpleUtils.pass("My Time Off: All the leaves of employee are visible successfully");
-				} else {
-					SimpleUtils.fail("My Time Off: No leaves of employee are visible", true);
-				}
-			} else {
-				SimpleUtils.report("My Time Off: All the leaves of employee aren't visible since request count is 0");
-			}
-		} else {
-			SimpleUtils.fail("My Time Off: A summary of all pending, approved and rejected doesn't show", true);
-		}
-	}
+    @Override
+    public void validateTheDataOfMyTimeOff() throws Exception {
+        clickOnSubMenuOnProfile("My Time Off");
+        if (isElementLoaded(pending, 10) && isElementLoaded(approved, 10) && isElementLoaded(rejected, 10)) {
+            SimpleUtils.pass("A summary of all pending, approved and rejected shows successfully on My Time Off");
+            if (Integer.valueOf(pending.getText().substring(0, 1)) != 0 || Integer.valueOf(approved.getText().substring(0, 1)) != 0 || Integer.valueOf(rejected.getText().substring(0, 1)) != 0) {
+                if (areListElementVisible(timeoffRequests, 10) && timeoffRequests.size() > 1) {
+                    SimpleUtils.pass("My Time Off: All the leaves of employee are visible successfully");
+                } else {
+                    SimpleUtils.fail("My Time Off: No leaves of employee are visible", true);
+                }
+            } else {
+                SimpleUtils.report("My Time Off: All the leaves of employee aren't visible since request count is 0");
+            }
+        } else {
+            SimpleUtils.fail("My Time Off: A summary of all pending, approved and rejected doesn't show", true);
+        }
+    }
 
-	@Override
-	public void verifyTheWelcomeMessageOfDM(String userName) throws Exception {
-		String time = dmsTimeStamp.getText().contains(",") ? dmsTimeStamp.getText().split(",")[1] : dmsTimeStamp.getText();
-		String greetingTime = getTimePeriod(time.toLowerCase());
-		String expectedText = "Good " + greetingTime + ", " + userName + "." + "\n" + "Welcome to Legion" + "\n" + "Your Complete Workforce Engagement Solution";
-		String actualText = "";
-		if (isElementLoaded(detailWelcomeText, 5)) {
-			actualText = detailWelcomeText.getText();
-			if (actualText.equals(expectedText)) {
-				SimpleUtils.pass("Dashboard Page: Verified Welcome Text is as expected!");
-			} else {
-				SimpleUtils.fail("Dashboard Page: Verify Welcome Text failed! Expected is: " + expectedText + "\n" + "Actual is: " + actualText, true);
-			}
-		} else {
-			SimpleUtils.fail("Dashboard Page: Welcome Text Section doesn't Load successfully!", true);
-		}
-	}
+    @Override
+    public void verifyTheWelcomeMessageOfDM(String userName) throws Exception {
+        String time = dmsTimeStamp.getText().contains(",") ? dmsTimeStamp.getText().split(",")[1] : dmsTimeStamp.getText();
+        String greetingTime = getTimePeriod(time.toLowerCase());
+        String expectedText = "Good " + greetingTime + ", " + userName + "." + "\n" + "Welcome to Legion" + "\n" + "Your Complete Workforce Engagement Solution";
+        String actualText = "";
+        if (isElementLoaded(detailWelcomeText, 5)) {
+            actualText = detailWelcomeText.getText();
+            if (actualText.equals(expectedText)) {
+                SimpleUtils.pass("Dashboard Page: Verified Welcome Text is as expected!");
+            } else {
+                SimpleUtils.fail("Dashboard Page: Verify Welcome Text failed! Expected is: " + expectedText + "\n" + "Actual is: " + actualText, true);
+            }
+        } else {
+            SimpleUtils.fail("Dashboard Page: Welcome Text Section doesn't Load successfully!", true);
+        }
+    }
 
-	@Override
-	public void validateRefreshWhenNavigationBack() throws Exception {
-		String timestamp1 = "";
-		String timestamp2 = "";
-		if (isElementLoaded(lastUpdated, 5)) {
-			timestamp1 = lastUpdated.getText();
-		} else if (isElementLoaded(justUpdated, 5)) {
-			timestamp1 = justUpdated.getText();
-		} else
-			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
-		click(scheduleConsoleNameInTM);
-		navigateToDashboard();
-		if (isElementLoaded(lastUpdated, 5)) {
-			timestamp2 = lastUpdated.getText();
-		} else if (isElementLoaded(justUpdated, 5)) {
-			timestamp2 = justUpdated.getText();
-		} else
-			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
-		if (timestamp2.equals(timestamp1) && !timestamp1.equals("") && !refreshButton.getAttribute("label").equals("Refreshing...")) {
-			SimpleUtils.pass("Dashboard Page: It keeps the previous Last Updated time, not refreshing every time");
-		} else {
-			SimpleUtils.fail("Dashboard Page: It doesn't keep the previous Last Updated time", false);
-		}
-	}
-
-
-	@FindBy(css = "div.dms-row221")
-	private WebElement schedulePublishStatusWidget;
-
-	@FindBy(css = "div.dms-not-started")
-	private WebElement notStartedLegend;
-
-	@FindBy(css = "div.dms-in-progress")
-	private WebElement inProgressLegend;
-
-	@FindBy(css = "div.dms-published")
-	private WebElement publishedLegend;
-
-	@FindBy(css = "svg.schedule-publish-status-chart__svg")
-	private WebElement schedulePublishStatusChart;
-
-	@FindBy(css = "svg.schedule-publish-status-chart__svg rect")
-	private List<WebElement> schedulePublishStatus;
-
-	@FindBy(css = "div[class=\"dms-box-title dms-box-item-title-row ng-binding ng-scope\"]")
-	private WebElement schedulePublishStatusWidgetTitle;
+    @Override
+    public void validateRefreshWhenNavigationBack() throws Exception {
+        String timestamp1 = "";
+        String timestamp2 = "";
+        if (isElementLoaded(lastUpdated, 5)) {
+            timestamp1 = lastUpdated.getText();
+        } else if (isElementLoaded(justUpdated, 5)) {
+            timestamp1 = justUpdated.getText();
+        } else
+            SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
+        click(scheduleConsoleNameInTM);
+        navigateToDashboard();
+        if (isElementLoaded(lastUpdated, 5)) {
+            timestamp2 = lastUpdated.getText();
+        } else if (isElementLoaded(justUpdated, 5)) {
+            timestamp2 = justUpdated.getText();
+        } else
+            SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
+        if (timestamp2.equals(timestamp1) && !timestamp1.equals("") && !refreshButton.getAttribute("label").equals("Refreshing...")) {
+            SimpleUtils.pass("Dashboard Page: It keeps the previous Last Updated time, not refreshing every time");
+        } else {
+            SimpleUtils.fail("Dashboard Page: It doesn't keep the previous Last Updated time", false);
+        }
+    }
 
 
-	public Map<String, Integer> getAllScheduleStatusFromSchedulePublishStatusWidget() {
+    @FindBy(css = "div.dms-row221")
+    private WebElement schedulePublishStatusWidget;
 
-		int scheduleNumber = Integer.parseInt(schedulePublishStatusWidget.findElements(By.cssSelector("[class=\"tick\"]")).get(1).getText());
-		int notStartedNumberForCurrentWeek = Integer.parseInt(schedulePublishStatus.get(1).getAttribute("height").toString());
-		int inProgressForCurrentWeek = Integer.parseInt(schedulePublishStatus.get(2).getAttribute("height").toString());
-		int publishedForCurrentWeek = Integer.parseInt(schedulePublishStatus.get(3).getAttribute("height").toString());
-		int notStartedNumberForNextWeek = Integer.parseInt(schedulePublishStatus.get(4).getAttribute("height").toString());
-		int inProgressForNextWeek = Integer.parseInt(schedulePublishStatus.get(5).getAttribute("height").toString());
-		int publishedForNextWeek = Integer.parseInt(schedulePublishStatus.get(6).getAttribute("height").toString());
-		int notStartedNumberForTheWeekAfterNext = Integer.parseInt(schedulePublishStatus.get(7).getAttribute("height").toString());
-		int inProgressForTheWeekAfterNext = Integer.parseInt(schedulePublishStatus.get(8).getAttribute("height").toString());
-		int publishedForTheWeekAfterNext = Integer.parseInt(schedulePublishStatus.get(9).getAttribute("height").toString());
+    @FindBy(css = "div.dms-not-started")
+    private WebElement notStartedLegend;
 
-		Map<String, Integer> scheduleStatusFromSchedulePublisStatusWidget = new HashMap<>();
-		int r = 10;
-		r = rate(scheduleNumber, notStartedNumberForCurrentWeek, inProgressForCurrentWeek, publishedForCurrentWeek);
-		scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForCurrentWeek", notStartedNumberForCurrentWeek / r);
-		scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForCurrentWeek", inProgressForCurrentWeek / r);
-		scheduleStatusFromSchedulePublisStatusWidget.put("publishedForCurrentWeek", publishedForCurrentWeek / r);
+    @FindBy(css = "div.dms-in-progress")
+    private WebElement inProgressLegend;
 
-		r = rate(scheduleNumber, notStartedNumberForNextWeek, inProgressForNextWeek, publishedForNextWeek);
-		scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForNextWeek", notStartedNumberForNextWeek / r);
-		scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForNextWeek", inProgressForNextWeek / r);
-		scheduleStatusFromSchedulePublisStatusWidget.put("publishedForNextWeek", publishedForNextWeek / r);
+    @FindBy(css = "div.dms-published")
+    private WebElement publishedLegend;
 
-		r = rate(scheduleNumber, notStartedNumberForTheWeekAfterNext, inProgressForTheWeekAfterNext, publishedForTheWeekAfterNext);
-		scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForTheWeekAfterNext", notStartedNumberForTheWeekAfterNext / r);
-		scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForTheWeekAfterNext", inProgressForTheWeekAfterNext / r);
-		scheduleStatusFromSchedulePublisStatusWidget.put("publishedForTheWeekAfterNext", publishedForTheWeekAfterNext / r);
+    @FindBy(css = "svg.schedule-publish-status-chart__svg")
+    private WebElement schedulePublishStatusChart;
 
-		return scheduleStatusFromSchedulePublisStatusWidget;
+    @FindBy(css = "svg.schedule-publish-status-chart__svg rect")
+    private List<WebElement> schedulePublishStatus;
 
-	}
-
-	private int rate(int sum, int a, int b, int c) {
-		int r = 10;
-		while (a / r + b / r + c / r != sum)
-			r++;
-		return r;
-	}
-
-	public void clickOnViewSchedulesLinkInSchedulePublishStatusWidget() throws Exception {
-		if (isElementLoaded(schedulePublishStatusWidget, 5)) {
-			WebElement viewSchedulesLink = schedulePublishStatusWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
-			if (isElementLoaded(viewSchedulesLink, 5)) {
-				scrollToElement(viewSchedulesLink);
-				click(viewSchedulesLink);
-				SimpleUtils.pass("View Schedules link successfully");
-			} else {
-				SimpleUtils.fail("View Schedules link not loaded successfully", false);
-			}
-		}
-	}
-
-	public boolean isSchedulePublishStatusWidgetDisplay() throws Exception {
-		boolean isSchedulePublishStatusWidgetDisplay = false;
-		if (isElementLoaded(schedulePublishStatusWidget, 5)) {
-			isSchedulePublishStatusWidgetDisplay = true;
-			SimpleUtils.report("Schedule Publish Status Widget is loaded Successfully!");
-		} else
-			SimpleUtils.report("Schedule Publish Status Widget not loaded Successfully!");
-		return isSchedulePublishStatusWidgetDisplay;
-	}
-
-	public void verifyTheContentInSchedulePublishStatusWidget() throws Exception {
-		if (isElementLoaded(schedulePublishStatusWidget, 5)) {
-
-			List<String> weekTextsFromSchedulePage = getThreeWeeksInfoFromSchedulePage();
-			List<WebElement> legendTexts = schedulePublishStatusWidget.findElements(By.className("dms-legend-text"));
-			List<WebElement> weekTexts = schedulePublishStatusChart.findElements(By.cssSelector("text[text-anchor=\"middle\"]"));
-			String test1 = weekTexts.get(0).getText().replace(" 0", " ");
-			String test2 = weekTextsFromSchedulePage.get(0);
-			WebElement viewSchedulesLink = schedulePublishStatusWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
-			if (schedulePublishStatusWidgetTitle.getText().equalsIgnoreCase("Schedule Publish Status")
-					&& isElementLoaded(schedulePublishStatusWidgetTitle, 5)
-					&& isElementLoaded(notStartedLegend, 5)
-					&& isElementLoaded(inProgressLegend, 5)
-					&& isElementLoaded(publishedLegend, 5)
-					&& areListElementVisible(legendTexts) && legendTexts.size() == 3
-					&& legendTexts.get(0).getText().equalsIgnoreCase("Not Started")
-					&& legendTexts.get(1).getText().equalsIgnoreCase("In Progress")
-					&& legendTexts.get(2).getText().equalsIgnoreCase("Published")
-					&& isElementLoaded(schedulePublishStatusChart, 5)
-					&& areListElementVisible(weekTexts, 5) && weekTexts.size() == 3
-					&& weekTexts.get(0).getText().replace(" 0", " ").equalsIgnoreCase(weekTextsFromSchedulePage.get(0))
-					&& weekTexts.get(1).getText().replace(" 0", " ").equalsIgnoreCase(weekTextsFromSchedulePage.get(1))
-					&& weekTexts.get(2).getText().replace(" 0", " ").equalsIgnoreCase(weekTextsFromSchedulePage.get(2))
-					&& isElementLoaded(viewSchedulesLink, 5)) {
-				SimpleUtils.pass("The content in Schedule Publish Status widget display correctly");
-			} else {
-				SimpleUtils.fail("The content in Schedule Publish Status widget display incorrectly", false);
-			}
-		} else
-			SimpleUtils.report("Schedule Publish Status widget not loaded Successfully!");
-	}
+    @FindBy(css = "div[class=\"dms-box-title dms-box-item-title-row ng-binding ng-scope\"]")
+    private WebElement schedulePublishStatusWidgetTitle;
 
 
-	@FindBy(css = "[ng-click=\"selectPeriod(p)\"] [class=\"ng-binding\"]")
-	private List<WebElement> weeksInfoInWeekPicker;
+    public Map<String, Integer> getAllScheduleStatusFromSchedulePublishStatusWidget() {
 
-	@FindBy(className = "day-week-picker-arrow-right")
-	private WebElement calendarNavigationNextWeekArrow;
+        int scheduleNumber = Integer.parseInt(schedulePublishStatusWidget.findElements(By.cssSelector("[class=\"tick\"]")).get(1).getText());
+        int notStartedNumberForCurrentWeek = Integer.parseInt(schedulePublishStatus.get(1).getAttribute("height").toString());
+        int inProgressForCurrentWeek = Integer.parseInt(schedulePublishStatus.get(2).getAttribute("height").toString());
+        int publishedForCurrentWeek = Integer.parseInt(schedulePublishStatus.get(3).getAttribute("height").toString());
+        int notStartedNumberForNextWeek = Integer.parseInt(schedulePublishStatus.get(4).getAttribute("height").toString());
+        int inProgressForNextWeek = Integer.parseInt(schedulePublishStatus.get(5).getAttribute("height").toString());
+        int publishedForNextWeek = Integer.parseInt(schedulePublishStatus.get(6).getAttribute("height").toString());
+        int notStartedNumberForTheWeekAfterNext = Integer.parseInt(schedulePublishStatus.get(7).getAttribute("height").toString());
+        int inProgressForTheWeekAfterNext = Integer.parseInt(schedulePublishStatus.get(8).getAttribute("height").toString());
+        int publishedForTheWeekAfterNext = Integer.parseInt(schedulePublishStatus.get(9).getAttribute("height").toString());
 
-	public List<String> getThreeWeeksInfoFromSchedulePage() {
-		List<String> weeksInfo = new ArrayList<>();
-		click(scheduleConsoleMenu);
-		if (areListElementVisible(weeksInfoInWeekPicker, 10)) {
-			String currentWeek = weeksInfoInWeekPicker.get(1).getText().split("\n")[1];
-			String nextWeek = weeksInfoInWeekPicker.get(2).getText().split("\n")[1];
-			click(calendarNavigationNextWeekArrow);
-			String theWeekAfterNext = weeksInfoInWeekPicker.get(0).getText().split("\n")[1];
-			weeksInfo.add(currentWeek);
-			weeksInfo.add(nextWeek);
-			weeksInfo.add(theWeekAfterNext);
-		} else {
-			SimpleUtils.fail("Week picker loaded fail", false);
-		}
-		click(dashboardConsoleMenu);
-		return weeksInfo;
-	}
+        Map<String, Integer> scheduleStatusFromSchedulePublisStatusWidget = new HashMap<>();
+        int r = 10;
+        r = rate(scheduleNumber, notStartedNumberForCurrentWeek, inProgressForCurrentWeek, publishedForCurrentWeek);
+        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForCurrentWeek", notStartedNumberForCurrentWeek / r);
+        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForCurrentWeek", inProgressForCurrentWeek / r);
+        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForCurrentWeek", publishedForCurrentWeek / r);
+
+        r = rate(scheduleNumber, notStartedNumberForNextWeek, inProgressForNextWeek, publishedForNextWeek);
+        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForNextWeek", notStartedNumberForNextWeek / r);
+        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForNextWeek", inProgressForNextWeek / r);
+        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForNextWeek", publishedForNextWeek / r);
+
+        r = rate(scheduleNumber, notStartedNumberForTheWeekAfterNext, inProgressForTheWeekAfterNext, publishedForTheWeekAfterNext);
+        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForTheWeekAfterNext", notStartedNumberForTheWeekAfterNext / r);
+        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForTheWeekAfterNext", inProgressForTheWeekAfterNext / r);
+        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForTheWeekAfterNext", publishedForTheWeekAfterNext / r);
+
+        return scheduleStatusFromSchedulePublisStatusWidget;
+
+    }
+
+    private int rate(int sum, int a, int b, int c) {
+        int r = 10;
+        while (a / r + b / r + c / r != sum)
+            r++;
+        return r;
+    }
+
+    public void clickOnViewSchedulesLinkInSchedulePublishStatusWidget() throws Exception {
+        if (isElementLoaded(schedulePublishStatusWidget, 5)) {
+            WebElement viewSchedulesLink = schedulePublishStatusWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
+            if (isElementLoaded(viewSchedulesLink, 5)) {
+                scrollToElement(viewSchedulesLink);
+                click(viewSchedulesLink);
+                SimpleUtils.pass("View Schedules link successfully");
+            } else {
+                SimpleUtils.fail("View Schedules link not loaded successfully", false);
+            }
+        }
+    }
+
+    public boolean isSchedulePublishStatusWidgetDisplay() throws Exception {
+        boolean isSchedulePublishStatusWidgetDisplay = false;
+        if (isElementLoaded(schedulePublishStatusWidget, 5)) {
+            isSchedulePublishStatusWidgetDisplay = true;
+            SimpleUtils.report("Schedule Publish Status Widget is loaded Successfully!");
+        } else
+            SimpleUtils.report("Schedule Publish Status Widget not loaded Successfully!");
+        return isSchedulePublishStatusWidgetDisplay;
+    }
+
+    public void verifyTheContentInSchedulePublishStatusWidget() throws Exception {
+        if (isElementLoaded(schedulePublishStatusWidget, 5)) {
+
+            List<String> weekTextsFromSchedulePage = getThreeWeeksInfoFromSchedulePage();
+            List<WebElement> legendTexts = schedulePublishStatusWidget.findElements(By.className("dms-legend-text"));
+            List<WebElement> weekTexts = schedulePublishStatusChart.findElements(By.cssSelector("text[text-anchor=\"middle\"]"));
+            String test1 = weekTexts.get(0).getText().replace(" 0", " ");
+            String test2 = weekTextsFromSchedulePage.get(0);
+            WebElement viewSchedulesLink = schedulePublishStatusWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
+            if (schedulePublishStatusWidgetTitle.getText().equalsIgnoreCase("Schedule Publish Status")
+                    && isElementLoaded(schedulePublishStatusWidgetTitle, 5)
+                    && isElementLoaded(notStartedLegend, 5)
+                    && isElementLoaded(inProgressLegend, 5)
+                    && isElementLoaded(publishedLegend, 5)
+                    && areListElementVisible(legendTexts) && legendTexts.size() == 3
+                    && legendTexts.get(0).getText().equalsIgnoreCase("Not Started")
+                    && legendTexts.get(1).getText().equalsIgnoreCase("In Progress")
+                    && legendTexts.get(2).getText().equalsIgnoreCase("Published")
+                    && isElementLoaded(schedulePublishStatusChart, 5)
+                    && areListElementVisible(weekTexts, 5) && weekTexts.size() == 3
+                    && weekTexts.get(0).getText().replace(" 0", " ").equalsIgnoreCase(weekTextsFromSchedulePage.get(0))
+                    && weekTexts.get(1).getText().replace(" 0", " ").equalsIgnoreCase(weekTextsFromSchedulePage.get(1))
+                    && weekTexts.get(2).getText().replace(" 0", " ").equalsIgnoreCase(weekTextsFromSchedulePage.get(2))
+                    && isElementLoaded(viewSchedulesLink, 5)) {
+                SimpleUtils.pass("The content in Schedule Publish Status widget display correctly");
+            } else {
+                SimpleUtils.fail("The content in Schedule Publish Status widget display incorrectly", false);
+            }
+        } else
+            SimpleUtils.report("Schedule Publish Status widget not loaded Successfully!");
+    }
+
+
+    @FindBy(css = "[ng-click=\"selectPeriod(p)\"] [class=\"ng-binding\"]")
+    private List<WebElement> weeksInfoInWeekPicker;
+
+    @FindBy(className = "day-week-picker-arrow-right")
+    private WebElement calendarNavigationNextWeekArrow;
+
+    public List<String> getThreeWeeksInfoFromSchedulePage() {
+        List<String> weeksInfo = new ArrayList<>();
+        click(scheduleConsoleMenu);
+        if (areListElementVisible(weeksInfoInWeekPicker, 10)) {
+            String currentWeek = weeksInfoInWeekPicker.get(1).getText().split("\n")[1];
+            String nextWeek = weeksInfoInWeekPicker.get(2).getText().split("\n")[1];
+            click(calendarNavigationNextWeekArrow);
+            String theWeekAfterNext = weeksInfoInWeekPicker.get(0).getText().split("\n")[1];
+            weeksInfo.add(currentWeek);
+            weeksInfo.add(nextWeek);
+            weeksInfo.add(theWeekAfterNext);
+        } else {
+            SimpleUtils.fail("Week picker loaded fail", false);
+        }
+        click(dashboardConsoleMenu);
+        return weeksInfo;
+    }
 
 	@FindBy(css = "div[class=\"dms-row21\"]")
 	private WebElement scheduleVsGuidanceByDayWidget;
@@ -2479,13 +2477,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	public List<String> getTheDataOnLocationSummaryWidget() throws Exception {
 		/*
-		 *  0: budgeted Hrs
-		 *  1: scheduled Hrs
-		 *  2: projected Hrs
-		 *  3: projected Within Budget Locations
-		 *  4: projected Over Budget Locations
-		 *  5: the Hrs Over Or Under Budget
-		 * */
+		*  0: budgeted Hrs
+		*  1: scheduled Hrs
+		*  2: projected Hrs
+		*  3: projected Within Budget Locations
+		*  4: projected Over Budget Locations
+		*  5: the Hrs Over Or Under Budget
+		* */
 		List<String> dataOnLocationSummaryWidget = new ArrayList<>();
 		if(areListElementVisible(scheduledHours, 5)
 				&& scheduledHours.size()==3
@@ -2557,7 +2555,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return isLocationSummaryWidgetDisplay;
 	}
 
-	@FindBy(css = "div.dms-smart-card-4.fl-left")
+    @FindBy(css = "div.dms-smart-card-4.fl-left")
 	private WebElement openShiftsWidgetInDMView;
 	@Override
 	public boolean isOpenShiftsWidgetDisplay() throws Exception {

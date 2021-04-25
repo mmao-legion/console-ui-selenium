@@ -40,7 +40,8 @@ public class CinemarkMinorTest extends TestBase {
 
     //The template the location is using.
     public enum templateInUse{
-        TEMPLATE_NAME("clement-997");
+        TEMPLATE_NAME("New Hampshire Compliance"),
+        TEMPLATE_OP("clement-997");
         private final String value;
         templateInUse(final String newValue) {
             value = newValue;
@@ -101,7 +102,9 @@ public class CinemarkMinorTest extends TestBase {
         Delete("Delete"),
         Save("Save"),
         EditTemplate("Edit template"),
-        Edit("Edit");
+        Edit("Edit"),
+        Yes("Yes"),
+        No("No");
         private final String value;
         buttonGroup(final String newValue) {
             value = newValue;
@@ -113,25 +116,13 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Prepare the calendar for all the minors")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void prepareTheCalendarForAllMinorsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-
-            schedulePage.clickOnDayView();
-            int currentDayIndex = schedulePage.getTheIndexOfCurrentDayInDayView();
-            int nextSatIndex = 6 - currentDayIndex + 6;
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -146,8 +137,9 @@ public class CinemarkMinorTest extends TestBase {
 
             teamPage.deleteCalendarByName(calendarName);
             teamPage.clickOnCreateNewCalendarButton();
+            teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartNEndDate(nextSatIndex);
+            teamPage.selectSchoolSessionStartNEndDate();
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.inputCalendarName(calendarName);
             teamPage.clickOnSaveSchoolCalendarBtn();
@@ -169,7 +161,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify add dates for breaks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddDatesForBreaksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -281,7 +273,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify SM will have ability to select a calendar for the minor from a dropdown menu within the profile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySMCanSelectACalendarForMinorAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -322,7 +314,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the default value of a minor without a calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -381,9 +373,9 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
-            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.selectWorkRole("Associate");
+            schedulePage.moveSliderAtCertainPoint("10pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("6am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole("Team Member Corporate-Theatre");
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
@@ -442,7 +434,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify create calendar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateCalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -530,7 +522,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify school calendar list")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySchoolCalendarListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -558,7 +550,7 @@ public class CinemarkMinorTest extends TestBase {
 
             // Login as Store Manager
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("Op_Enterprise") + fileName;
+            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise") + fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
             loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -599,7 +591,7 @@ public class CinemarkMinorTest extends TestBase {
     //Haya
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify turn off minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOffMinorRuleAsInternalAdmin(String browser, String username, String password, String location) {
@@ -632,16 +624,32 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.minorRuleToggle("no","16N17");
             cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
+            Thread.sleep(3000);
 
             //Back to Console
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            String minorLocation = "Test For Minors";
-            locationSelectorPage.changeLocation(minorLocation);
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            String fileName = "UsersCredentials.json";
+            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
             SimpleUtils.assertOnFail("School Calendar tab should not be loaded when minor rule turned off", !teamPage.isCalendarTabLoad(), false);
+
+            loginPage.logOut();
+
+            // Login as Internal Admin
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             cinemarkMinorPage.clickConfigurationTabInOP();
@@ -661,7 +669,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "verify turn on minor rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -670,6 +678,9 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            String districtName = dashboardPage.getCurrentDistrict();
 
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -699,11 +710,12 @@ public class CinemarkMinorTest extends TestBase {
 
             //Back to Console
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            String minorLocation = "Test For Minors";
-            locationSelectorPage.changeLocation(minorLocation);
+//            locationSelectorPage.changeUpperFieldsByName("Business Unit", "BU1");
+//            locationSelectorPage.changeUpperFieldsByName("Region", "Region1");
+//            locationSelectorPage.changeDistrict(districtName);
+//            String minorLocation = "Test For Minors";
+//            locationSelectorPage.changeLocation(minorLocation);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
@@ -736,7 +748,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Admin can configure the access to edit calendars")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) {
@@ -766,7 +778,7 @@ public class CinemarkMinorTest extends TestBase {
 
             //Log in as SM to check
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("Op_Enterprise")+fileName;
+            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
             loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -872,17 +884,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the School today and school tomorrow settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "7,1";
-            String shiftTime2 = "9,4";
-            String shiftTime3 = "8,2";
-            String workRole = "MOD";
-            String scheduleFromToTime = "8AM - 4PM";
+            String shiftTime1 = "7am,1pm";
+            String shiftTime2 = "9am,4pm";
+            String shiftTime3 = "8am,2pm";
+            String workRole = "Team Member Corporate-Theatre";
+            String scheduleFromToTime = "8am - 4pm";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Mon";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -895,17 +907,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,13";
-            String shiftTime2 = "9,16";
-            String shiftTime3 = "9,14";
-            String workRole = "MOD";
-            String scheduleFromToTime = "8:30 - 16:00";
+            String shiftTime1 = "8am,1pm";
+            String shiftTime2 = "9am,4pm";
+            String shiftTime3 = "9am,2pm";
+            String workRole = "Team Member Corporate-Theatre";
+            String scheduleFromToTime = "8:30am - 4pm";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Mon";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -918,17 +930,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,15";
-            String shiftTime2 = "9,17";
-            String shiftTime3 = "11,16";
-            String workRole = "MOD";
-            String scheduleFromToTime = "8:30 - 17:00";
+            String shiftTime1 = "8am,3pm";
+            String shiftTime2 = "9am,5pm";
+            String shiftTime3 = "11am,4pm";
+            String workRole = "Team Member Corporate-Theatre";
+            String scheduleFromToTime = "8:30am - 5pm";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Fri";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -941,17 +953,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,13";
-            String shiftTime2 = "9,17";
-            String shiftTime3 = "9,14";
-            String workRole = "MOD";
-            String scheduleFromToTime = "9:00 - 17:00";
+            String shiftTime1 = "8am,1pm";
+            String shiftTime2 = "9am,5pm";
+            String shiftTime3 = "9am,2pm";
+            String workRole = "Team Member Corporate-Theatre";
+            String scheduleFromToTime = "9am - 5pm";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Fri";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -963,17 +975,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,15";
-            String shiftTime2 = "9,18";
-            String shiftTime3 = "9,15";
-            String workRole = "MOD";
-            String scheduleFromToTime = "9:00 - 18:00";
+            String shiftTime1 = "8am,3pm";
+            String shiftTime2 = "9am,6pm";
+            String shiftTime3 = "9am,3pm";
+            String workRole = "Team Member Corporate-Theatre";
+            String scheduleFromToTime = "9am - 6pm";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -987,17 +999,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the no School today and no school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,13";
-            String shiftTime2 = "10,19";
-            String shiftTime3 = "10,14";
-            String workRole = "MOD";
-            String scheduleFromToTime = "9:30 - 19:00";
+            String shiftTime1 = "8am,1pm";
+            String shiftTime2 = "10am,7pm";
+            String shiftTime3 = "10am,2pm";
+            String workRole = "Team Member Corporate-Theatre";
+            String scheduleFromToTime = "9:30am - 7pm";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -1011,17 +1023,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,15";
-            String shiftTime2 = "10,21";
-            String shiftTime3 = "10,16";
-            String workRole = "MOD";
-            String scheduleFromToTime = "9:30 - 21:00";
+            String shiftTime1 = "8am,3pm";
+            String shiftTime2 = "10am,9pm";
+            String shiftTime3 = "10am,4pm";
+            String workRole = "Team Member Corporate-Theatre";
+            String scheduleFromToTime = "9:30am - 9pm";
             String scheduleMaxHours = "9";
             String selectWeekDayName = "Sun";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
@@ -1034,17 +1046,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the no School today and school tomorrow  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,13";
-            String shiftTime2 = "10,20";
-            String shiftTime3 = "10,14";
-            String workRole = "MOD";
-            String scheduleFromToTime = "10:00 - 20:00";
+            String shiftTime1 = "8am,1pm";
+            String shiftTime2 = "10am,8pm";
+            String shiftTime3 = "10am,2pm";
+            String workRole = "Team Member Corporate-Theatre";
+            String scheduleFromToTime = "10am - 8pm";
             String scheduleMaxHours = "8";
             String selectWeekDayName = "Sun";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
@@ -1056,17 +1068,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the summer day settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "8,15";
-            String shiftTime2 = "10,22";
-            String shiftTime3 = "10,16";
-            String workRole = "MOD";
-            String scheduleFromToTime = "10:00 - 22:00";
+            String shiftTime1 = "8am,3pm";
+            String shiftTime2 = "10am,10pm";
+            String shiftTime3 = "10am,4pm";
+            String workRole = "Team Member Corporate-Theatre";
+            String scheduleFromToTime = "10am - 10pm";
             String scheduleMaxHours = "10";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
 
@@ -1078,17 +1090,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the summer day  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "8,13";
-            String shiftTime2 = "11,22";
-            String shiftTime3 = "11,19";
-            String workRole = "MOD";
-            String scheduleFromToTime = "10:30 - 22:00";
+            String shiftTime1 = "8am,1pm";
+            String shiftTime2 = "11am,10pm";
+            String shiftTime3 = "11am,7pm";
+            String workRole = "Team Member Corporate-Theatre";
+            String scheduleFromToTime = "10:30am - 10pm";
             String scheduleMaxHours = "9";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
 
@@ -1109,8 +1121,8 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-        if (!isSummerWeek){
-            schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
+        if (isSummerWeek){
             schedulePage.navigateToNextWeek();
         }
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
@@ -1118,12 +1130,18 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         List<String> toCloseDays = new ArrayList<>();
-        schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
-        schedulePage.createScheduleForNonDGFlowNewUI();
+        //schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
+        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        if(schedulePage.isRequiredActionSmartCardLoaded()){
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteAllOOOHShiftInWeekView();
+        }
         schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1255,12 +1273,12 @@ public class CinemarkMinorTest extends TestBase {
         if(schedulePage.ifWarningModeDisplay()){
             String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
             if (!warningMessage.contains("Minor ")){
-                SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting! ");
+                SimpleUtils.pass("There is no minor warning message display on the warning mode when shift is not avoid the minor setting! ");
             } else
-                SimpleUtils.fail("There should no minor warning message display when shift is not avoid the minor setting! ", false);
+                SimpleUtils.fail("There should no minor warning message display warning mode when shift is not avoid the minor setting! ", false);
             schedulePage.clickOnAssignAnywayButton();
         } else
-            SimpleUtils.pass("There is no minor warning message display when shift is not avoid the minor setting! ");
+            SimpleUtils.pass("There is no minor warning message display on search TM page shift is not avoid the minor setting! ");
 
         schedulePage.clickOnOfferOrAssignBtn();
         schedulePage.saveSchedule();
@@ -1268,7 +1286,7 @@ public class CinemarkMinorTest extends TestBase {
         //check the violation in i icon popup of new create shift
         newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
         if (newAddedShift != null) {
-            SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
+            SimpleUtils.assertOnFail("There should no minor warning message display on the i icon when shift is not avoid the minor setting! ",
                     !schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
@@ -1277,17 +1295,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the school week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "10,1";
-            String shiftTime2 = "10,4";
+            String shiftTime1 = "10am,1pm";
+            String shiftTime2 = "10am,4pm";
             int needCreateShiftsNumber1 = 4;
             int needCreateShiftsNumber2 = 2;
-            String workRole = "Associates";
+            String workRole = "Team Member Corporate-Theatre";
             String maxOfDays = "4";
             String maxOfScheduleHours = "15";
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
@@ -1301,17 +1319,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the non school week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "11,1";
-            String shiftTime2 = "10,4";
+            String shiftTime1 = "11am,1pm";
+            String shiftTime2 = "10am,4pm";
             int needCreateShiftsNumber1 = 5;
             int needCreateShiftsNumber2 = 2;
-            String workRole = "Associates";
+            String workRole = "Team Member Corporate-Theatre";
             String maxOfDays = "5";
             String maxOfScheduleHours = "16";
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
@@ -1325,17 +1343,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the summer week settings for the Minors of Age 14 or 15")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor14";
-            String shiftTime1 = "11,1";
-            String shiftTime2 = "10,5";
+            String shiftTime1 = "11am,1pm";
+            String shiftTime2 = "10am,5pm";
             int needCreateShiftsNumber1 = 6;
             int needCreateShiftsNumber2 = 2;
-            String workRole = "Associates";
+            String workRole = "Team Member Corporate-Theatre";
             String maxOfDays = "6";
             String maxOfScheduleHours = "17";
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
@@ -1348,17 +1366,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the school week  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "11,1";
-            String shiftTime2 = "11,4";
+            String shiftTime1 = "11am,1pm";
+            String shiftTime2 = "11am,4pm";
             int needCreateShiftsNumber1 = 6;
             int needCreateShiftsNumber2 = 3;
-            String workRole = "Mod";
+            String workRole = "Team Member Corporate-Theatre";
             String maxOfDays = "6";
             String maxOfScheduleHours = "18";
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
@@ -1371,17 +1389,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the non school week  settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "11,1";
-            String shiftTime2 = "11,4";
+            String shiftTime1 = "11am,1pm";
+            String shiftTime2 = "11am,4pm";
             int needCreateShiftsNumber1 = 4;
             int needCreateShiftsNumber2 = 3;
-            String workRole = "Mod";
+            String workRole = "Team Member Corporate-Theatre";
             String maxOfDays = "4";
             String maxOfScheduleHours = "16";
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
@@ -1394,17 +1412,17 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "OP_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the summer week settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String minorName = "Minor17";
-            String shiftTime1 = "11,1";
-            String shiftTime2 = "11,5";
+            String shiftTime1 = "11am,1pm";
+            String shiftTime2 = "11am,5pm";
             int needCreateShiftsNumber1 = 5;
             int needCreateShiftsNumber2 = 3;
-            String workRole = "Mod";
+            String workRole = "Team Member Corporate-Theatre";
             String maxOfDays = "5";
             String maxOfScheduleHours = "17";
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
@@ -1439,9 +1457,9 @@ public class CinemarkMinorTest extends TestBase {
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        List<String> toCloseDays = new ArrayList<>();
-        schedulePage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
-        schedulePage.createScheduleForNonDGFlowNewUI();
+//        List<String> toCloseDays = new ArrayList<>();
+        //schedulePage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
+        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
@@ -1573,4 +1591,5 @@ public class CinemarkMinorTest extends TestBase {
         } else
             SimpleUtils.fail("Get new added shift failed", false);
     }
+
 }

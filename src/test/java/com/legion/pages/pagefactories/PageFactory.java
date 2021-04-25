@@ -15,8 +15,6 @@ public interface PageFactory {
      * */
     TeamPage createConsoleTeamPage();
     
-    SchedulePage createConsoleSchedulePage();
-    
     UserAuthorizationPage createConsoleUserAuthorizationPage();
     
     AnalyticsPage createConsoleAnalyticsPage();

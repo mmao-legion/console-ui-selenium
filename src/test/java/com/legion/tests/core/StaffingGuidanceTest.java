@@ -47,7 +47,7 @@ public class StaffingGuidanceTest extends TestBase{
 //    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
-        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.isSchedule(),false);
         StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
         staffingGuidancePage.navigateToStaffingGuidanceTab();

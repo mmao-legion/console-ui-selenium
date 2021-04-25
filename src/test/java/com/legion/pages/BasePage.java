@@ -612,14 +612,14 @@ public class BasePage {
 
         for (int i = 0; i < numClicks; i++) {
             if(!listMonthText.get(0).equalsIgnoreCase(wanted.getMonth().toString())){
-                click(btnNextMonth);
+                clickTheElement(btnNextMonth);
             }
         }
 
         List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day:not(.can-not-select)"));
         for (WebElement mDate : mCalendarDates) {
             if (Integer.parseInt(mDate.getText()) == wanted.getDayOfMonth()) {
-                mDate.click();
+                clickTheElement(mDate);
                 return;
             }
         }
@@ -867,6 +867,17 @@ public class BasePage {
                 .release()
                 .build()
                 .perform();
+    }
+
+    public void closeAuditLogDialog() throws Exception {
+        try {
+            if (isElementLoaded(getDriver().findElement(By.cssSelector(".lg-slider-pop__title-dismiss")), 10)) {
+                clickTheElement(getDriver().findElement(By.cssSelector(".lg-slider-pop__title-dismiss")));
+                SimpleUtils.pass("Cilck on Close button on Audit log dialog successfully!");
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
     }
 //
 //

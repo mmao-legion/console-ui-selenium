@@ -76,7 +76,7 @@ public class DMViewTest extends TestBase {
             dashboardPage.verifyTheWelcomeMessageOfDM(nickName);
 
             // Validate changing districts on Dashboard
-            locationSelectorPage.changeAnotherDistrict();
+            locationSelectorPage.changeAnotherDistrictInDMView();
             districtName = dashboardPage.getCurrentDistrict();
             districtName = districtName.contains("\n")? districtName.split("\n")[0]:districtName;
             String districtOnDashboard = dashboardPage.getDistrictNameOnDashboard();
@@ -946,7 +946,7 @@ public class DMViewTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Schedule functionality in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyScheduleFunctionalityForDMViewAsInternalAdmin(String browser, String username, String password, String location) {
+    public void verifyScheduleFunctionalityForDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1010,22 +1010,20 @@ public class DMViewTest extends TestBase {
             schedulePage.clickOnLocationNameInDMView(location);
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-            //Validate go back from one location
-            locationSelectorPage.reSelectDistrictInDMView(districtName);
-            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            //Validate go back from one location---function changed: cannot go back to DM View in schedule page
+            //locationSelectorPage.reSelectDistrictInDMView(districtName);
+            //SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
 
             //Validate click given location and given week
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.reSelectDistrict(districtName);
+            schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             String weekInfo = schedulePage.getActiveWeekText();
             schedulePage.clickOnLocationNameInDMView(location);
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
             SimpleUtils.assertOnFail("Didn't go to the right week!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
-
-            //Validate go back from one location and one week
-            locationSelectorPage.reSelectDistrictInDMView(districtName);
-            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
-            SimpleUtils.assertOnFail("Didn't go back to the right week!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

@@ -133,7 +133,7 @@ public interface TeamPage {
 	public void clickOnSchoolSessionEnd() throws Exception;
 	public void inputCalendarName(String calendarName) throws Exception;
 	public void clickOnCreateNewCalendarButton() throws Exception;
-	public void selectSchoolSessionStartNEndDate(int nextSatIndex) throws Exception;
+	public void selectSchoolSessionStartNEndDate() throws Exception;
 	public void clickOnSaveSchoolSessionCalendarBtn() throws Exception;
 	public void clickOnSaveSchoolCalendarBtn() throws Exception;
 	public void deleteCalendarByName(String calendarName) throws Exception;
@@ -169,4 +169,5 @@ public interface TeamPage {
 	public void verifyTheColumnInRosterPage(boolean isLocationGroup) throws Exception;
 	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception;
 	public void selectARandomOnboardedOrNotTeamMemberToViewProfile(boolean selectOnboardedTM) throws Exception;
+	public void selectSchoolYear() throws Exception;
 }
