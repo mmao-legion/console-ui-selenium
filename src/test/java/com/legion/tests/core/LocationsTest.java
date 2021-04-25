@@ -59,7 +59,7 @@ public class LocationsTest extends TestBase {
         try {
           this.createDriver((String)params[0],"83","Window");
           visitPage(testMethod);
-          loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+          loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
 //          AdminPage adminPage = pageFactory.createConsoleAdminPage();
 //          adminPage.goToAdminTab();
 //          adminPage.rebuildSearchIndex();
@@ -137,18 +137,18 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.pass("Create new location successfully: "+locationName);
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+//            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+//            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
+//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//            schedulePage.clickOnScheduleConsoleMenuItem();
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+//                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -181,23 +181,23 @@ public class LocationsTest extends TestBase {
             //add one mock location，first create one new location and then to mock that -to avoid duplication
             locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
             locationsPage.addNewMockLocationWithAllFields(locationName,locationName,index);
-//            //search created location
-//            if (locationsPage.searchNewLocation(getLocationName())) {
-//                SimpleUtils.pass("Create new mock location successfully");
-//            }else
-//                SimpleUtils.fail("Create new location failed or can't search created location",true);
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-            locationSelectorPage.changeLocation(locationName+"-MOCK");
-           SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-           schedulePage.clickOnScheduleConsoleMenuItem();
-           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-           SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
-                   schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+            //search created location
+            if (locationsPage.searchNewLocation(getLocationName())) {
+                SimpleUtils.pass("Create new mock location successfully");
+            }else
+                SimpleUtils.fail("Create new location failed or can't search created location",true);
+//            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+//            locationSelectorPage.changeLocation(locationName+"-MOCK");
+//           SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//           schedulePage.clickOnScheduleConsoleMenuItem();
+//           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+//           SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+//                   schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
        } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -228,15 +228,15 @@ public class LocationsTest extends TestBase {
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.addNewNSOLocation(locationName,searchCharactor, index);
-//            if (locationsPage.searchNewLocation(getLocationName())) {
-//                SimpleUtils.pass("Create new mock location successfully");
-//            }else
-//                SimpleUtils.fail("Create new location failed or can't search created location",true);
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
+            if (locationsPage.searchNewLocation(getLocationName())) {
+                SimpleUtils.pass("Create new mock location successfully");
+            }else
+                SimpleUtils.fail("Create new location failed or can't search created location",true);
+//            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+//            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -936,14 +936,14 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
-            //add new MS location group-parent and child
+            //add new p2p location group-parent and child
             String  parentRelationship = "Parent location";
             String locationType = "Regular";
             locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.PTP.getValue());
             String childLocationName = "";
             try {
                 for (int i = 0; i <childLocationNum ; i++) {
-                    childLocationName = "childLocationForMS" + i +currentTime;
+                    childLocationName = "childLocationForP2P" + i +currentTime;
                     setLGPTPChildLocationName(childLocationName);
                     String  childRelationship = "Part of a location group";
                     locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
@@ -955,15 +955,15 @@ public class LocationsTest extends TestBase {
             locationsPage.searchLocation(locationName);
             //get search result location info
             ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            //verify to change MS child location to None
+            //verify to change P2P child location to None
             locationsPage.changeOneLocationToNone(childLocationName);
             //search this location group again
             ArrayList<HashMap<String, String>> locationInfoDetailsAftUpdate =locationsPage.getLocationInfo(locationName);
 
             if (locationInfoDetailsAftUpdate.size() < locationInfoDetails.size()) {
-                SimpleUtils.pass("Child location:"+locationInfoDetails.get(locationInfoDetails.size()-1).get("locationName") +" was removed from this location group:"+LGMSLocationName);
+                SimpleUtils.pass("Child location:"+locationInfoDetails.get(locationInfoDetails.size()-1).get("locationName") +" was removed from this location group:"+LGPTPLocationName.get());
             }else
-                SimpleUtils.fail("Update child location to None failed",true);
+                SimpleUtils.fail("Child location was not removed from parent location",true);
             //change MS parent location to None
             locationsPage.changeOneLocationToNone(locationName);
 
@@ -1145,7 +1145,7 @@ public class LocationsTest extends TestBase {
             //check locations item
             locationsPage.validateItemsInLocations();
             //go to sub-district tab
-            locationsPage.goToSubDistrictsInLocationsPage();
+            locationsPage.goToUpperFieldsPage();
             locationsPage.validateTheAddDistrictBtn();
 
         } catch (Exception e){
@@ -1224,11 +1224,12 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify district list function")
+    @TestName(description = "Verify UpperFields list page and search function")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDistrictListPageLoading(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpperFieldsListPageAndSearchFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
+            String[] searchInfo = {"BU1","Level: District","Level: Region","status:enabled","status: disabled"};
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1240,14 +1241,15 @@ public class LocationsTest extends TestBase {
             //check locations item
             locationsPage.validateItemsInLocations();
             //go to sub-district  tab
-            locationsPage.goToSubDistrictsInLocationsPage();
-            if (locationsPage.verifyDistrictListShowWellOrNot()) {
+            locationsPage.goToUpperFieldsPage();
+            if (locationsPage.verifyUpperFieldListShowWellOrNot()) {
                 locationsPage.verifyBackBtnFunction();
-                locationsPage.goToSubDistrictsInLocationsPage();
+                locationsPage.goToUpperFieldsPage();
                 locationsPage.verifyPaginationFunctionInDistrict();
-
             }else
-                SimpleUtils.fail("District list page loading failed",false);
+                SimpleUtils.fail("UpperFields list page loading failed",false);
+
+            locationsPage.verifySearchUpperFieldsFunction(searchInfo);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -1256,51 +1258,21 @@ public class LocationsTest extends TestBase {
     }
 
 
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify search district function")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifySearchDistrictFunction(String browser, String username, String password, String location) throws Exception {
-
-        try{
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-district  tab
-            locationsPage.goToSubDistrictsInLocationsPage();
-
-            String[] searchInfo = {"No Touch","status:enabled"};
-            locationsPage.verifySearchFunction(searchInfo);
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-
-    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify Add New District or update")
+    @TestName(description = "Verify Add New Upperfields with different level")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddOrUpdateDistrictFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddUpperFieldsWithDiffLevel(String browser, String username, String password, String location) throws Exception {
 
         try{
-                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
                 String currentTime =  dfs.format(new Date()).trim();
-                String districtName = currentTime;
-                String districtId = currentTime;
-                String searchChara = "Auto";
+                String upperfieldsName = currentTime;
+                String upperfieldsId = currentTime;
+                String searchChara = "test";
                 int index = 0;
-
 
                 DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
                 SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1312,11 +1284,16 @@ public class LocationsTest extends TestBase {
                 locationsPage.clickOnLocationsTab();
                 //check locations item
                 locationsPage.validateItemsInLocations();
-                //go to sub-district  tab
-                locationsPage.goToSubDistrictsInLocationsPage();
-                locationsPage.addNewDistrictWithoutLocation( districtName, districtId);
-                locationsPage.searchDistrict(districtName);
-                locationsPage.updateDistrict(districtName,districtId,searchChara,index);
+
+                //get organization hierarchy info
+                locationsPage.goToGlobalConfigurationInLocations();
+                ArrayList<HashMap<String ,String>> organizationHierarchyInfo = locationsPage.getOrganizationHierarchyInfo();
+                locationsPage.goBackToLocationsTab();
+                //go to sub-upperfield  tab
+                locationsPage.goToUpperFieldsPage();
+                locationsPage.verifyBackBtnInCreateNewUpperfieldPage();
+                locationsPage.addNewUpperfieldsWithoutParentAndChild( upperfieldsName, upperfieldsId,searchChara,index,organizationHierarchyInfo);
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1326,19 +1303,15 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify disable and enable district")
+    @TestName(description = "Verify disable and enable upperfield")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDisableEnableDistrictFunction(String browser, String username, String password, String location) throws Exception {
+    public void verifyDisableEnableUpperFieldFunction(String browser, String username, String password, String location) throws Exception {
 
        try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date()).trim();
-            String districtName = currentTime;
-            String districtId = currentTime;
-            String districtManager = "Estelle Yan";
             String disableAction = "Disable";
             String enableAction = "Enable";
-
+           String searchChara = "status:Disabled";
+           int index = 0;
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1351,19 +1324,146 @@ public class LocationsTest extends TestBase {
             //check locations item
             locationsPage.validateItemsInLocations();
             //go to sub-district  tab
-            locationsPage.goToSubDistrictsInLocationsPage();
-            locationsPage.addNewDistrictWithoutLocation( districtName, districtId);
-
-            //disable and enable district
-            locationsPage.disableEnableDistrict(districtName,disableAction);
-            locationsPage.disableEnableDistrict(districtName,enableAction);
+            locationsPage.goToUpperFieldsPage();
+           String upperfieldsName = "";
+           ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(searchChara);
+           for (int i = 0; i <upperfieldInfo.size() ; i++) {
+               if (upperfieldInfo.get(i).get("upperfieldStatus").equalsIgnoreCase("DISABLED") &&
+                       upperfieldInfo.get(i).get("numOfLocations").equals("0")) {
+                   upperfieldsName = upperfieldInfo.get(i).get("upperfieldName");
+                   break;
+               }
+           }
+            //disable and enable upperfield
+            locationsPage.disableEnableUpperfield(upperfieldsName,enableAction);
+            locationsPage.disableEnableUpperfield(upperfieldsName,disableAction);
 
        } catch (Exception e){
            SimpleUtils.fail(e.getMessage(), false);
        }
 
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify update upperfield")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpdateUpperFieldFunction(String browser, String username, String password, String location) throws Exception {
 
+        try{
+
+            String upperfieldsName = "Level:Region";
+            String searchChara = "reg";
+            int index = 1;
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-district  tab
+            locationsPage.goToUpperFieldsPage();
+
+            //update upperfield
+            String updateUpperfield = locationsPage.updateUpperfield(upperfieldsName, upperfieldsName,  searchChara, index);
+
+            ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(updateUpperfield);
+            if (upperfieldInfo.get(0).get("upperfieldLevel").equalsIgnoreCase("District")) {
+                SimpleUtils.pass("Upperfield update successfully");
+            }else
+                SimpleUtils.fail("Upperfield update failed",false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify cancel creating upperfield")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCancelCreatingUpperfieldFunction(String browser, String username, String password, String location) throws Exception {
+
+        try{
+
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =  dfs.format(new Date()).trim();
+            String upperfieldsName = currentTime;
+            String upperfieldsId = currentTime;
+            String level = "District";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-district  tab
+            locationsPage.goToUpperFieldsPage();
+
+            //cancel creating upperfield
+            locationsPage.cancelCreatingUpperfield(level,upperfieldsName,upperfieldsId);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify upperfield smartcard data")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpperFieldSmartCardData(String browser, String username, String password, String location) throws Exception {
+
+        try{
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-district  tab
+            locationsPage.goToUpperFieldsPage();
+
+            //get upperfield smart card data
+
+            HashMap<String, Integer> upperfieldSmartCardInfo = locationsPage.getUpperfieldsSmartCardInfo();
+            locationsPage.searchUpperFields("Status:Enabled");
+            int  searchResultNum = locationsPage.getSearchResultNum();
+            if (searchResultNum==upperfieldSmartCardInfo.get("Enabled")) {
+                SimpleUtils.pass("Enabled data in smart card is correct");
+            }else
+                SimpleUtils.fail("Enabled data in smart card not equals upperfield list data",false);
+            locationsPage.searchUpperFields("Status:Disabled");
+            int  searchResultNumforDisable = locationsPage.getSearchResultNum();
+            if (searchResultNumforDisable==upperfieldSmartCardInfo.get("Disabled")) {
+                SimpleUtils.pass("Disabled data in smart card is correct");
+            }else
+                SimpleUtils.fail("Disabled data in smart card not equals upperfield list data",false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
@@ -1627,4 +1727,80 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify default value of Organization Hierarchy")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDefaultOrganizationHierarchyShow(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.verifyDefaultOrganizationHierarchy();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate add edit remove organization hierarchy")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddEditRemoveOrganizationHierarchy(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            List<String> hierarchyNames = new ArrayList<String>(){{
+                add("AutoDistrcit");
+                add("AutoRegion");
+                add("AutoBU");
+            }};
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.addOrganizationHierarchy(hierarchyNames);
+            locationsPage.deleteOrganizationHierarchy(hierarchyNames);
+            locationsPage.updateOrganizationHierarchyDisplayName();
+            locationsPage.updateEnableUpperfieldViewOfHierarchy();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "abnormal cases of hierarchy")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAbnormalCasesOfOrganizationHierarchy(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.abnormalCaseOfEmptyDisplayNameForHierarchy();
+            locationsPage.abnormalCaseOfLongDisplayNameForHierarchy();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

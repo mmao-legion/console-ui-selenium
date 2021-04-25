@@ -40,7 +40,7 @@ public class SimpleUtils {
 	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
 	//	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
-
+	static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
 	public static String fileDownloadPath = parameterMap.get("Download_File_Default_Dir");
 
@@ -890,12 +890,26 @@ public class SimpleUtils {
 		List<Integer> testCasesToAdd = new ArrayList<>();
 //	    String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
 		String addResultString = "add_case/"+sectionID;
-		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
-		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
-		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-		String testRailSuiteID = MyThreadLocal.getTestSuiteID();
-		//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
+		String testRailURL =        "";
+		String testRailUser =       "";
+		String testRailPassword =   "";
+		String testRailProjectID =  "";
+		String testRailSuiteID =    "";
+		if (System.getProperty("enterprise")!="op") {
+			testRailURL = testRailConfig.get("TEST_RAIL_URL");
+			testRailUser = testRailConfig.get("TEST_RAIL_USER");
+			testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+			testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+			testRailSuiteID = MyThreadLocal.getTestSuiteID();
+			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
+		}else {
+			testRailURL = testRailCfgOp.get("TEST_RAIL_URL");
+			testRailUser = testRailCfgOp.get("TEST_RAIL_USER");
+			testRailPassword = testRailCfgOp.get("TEST_RAIL_PASSWORD");
+			testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
+			testRailSuiteID = MyThreadLocal.getTestSuiteID();
+			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
+		}
 		try {
 			// Make a connection with TestRail Server
 			APIClient client = new APIClient(testRailURL);

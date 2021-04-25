@@ -72,9 +72,9 @@ public interface LocationsPage {
 
     public void disableEnableLocation(String locationName, String action) throws Exception;
 
-    public void goToSubDistrictsInLocationsPage() throws Exception;
+    public void goToUpperFieldsPage() throws Exception;
 
-    public void searchDistrict(String searchInputText) throws Exception;
+    public void searchUpperFields(String searchInputText) throws Exception;
 
     public int getTotalEnabledDistrictsCount() throws Exception;
 
@@ -90,23 +90,23 @@ public interface LocationsPage {
 
     public void changeLGToMSOrP2P(String value) throws Exception;
 
-    public boolean verifyDistrictListShowWellOrNot() throws Exception;
+    public boolean verifyUpperFieldListShowWellOrNot() throws Exception;
 
     public void verifyBackBtnFunction() throws Exception;
 
     public void verifyPaginationFunctionInLocation() throws Exception;
 
-    public void verifySearchFunction(String[] searchInfo) throws Exception;
+    public void verifySearchUpperFieldsFunction(String[] searchInfo) throws Exception;
 
     public void addNewDistrict(String districtName, String districtId,String searchChara,int index) throws Exception;
 
-    public void updateDistrict(String districtName, String districtId, String searchChara, int index);
+    public String updateUpperfield(String districtName, String districtId, String searchChara, int index) throws Exception;
 
-    public ArrayList<HashMap<String, String>> getDistrictInfo(String districtName);
+    public ArrayList<HashMap<String, String>> getUpperfieldsInfo(String districtName);
 
     public void addNewDistrictWithoutLocation(String districtName, String districtId) throws Exception;
 
-    public void disableEnableDistrict(String districtName, String action) throws Exception;
+    public void disableEnableUpperfield(String districtName, String action) throws Exception;
 
     public HashMap<String, String> getEnterpriseLogoAndDefaultLocationInfo();
 
@@ -144,6 +144,38 @@ public interface LocationsPage {
 
     public List<String> getWFSGroupFromGlobalConfig();
 
+    public void addNewUpperfieldsWithoutParentAndChild(String upperfieldsName, String upperfieldsId, String searchChara, int index, ArrayList<HashMap<String, String>> organizationHierarchyInfo) throws Exception;
+
+    public ArrayList<HashMap<String, String>> getOrganizationHierarchyInfo();
+
+    public void goBackToLocationsTab();
+
+    public void verifyBackBtnInCreateNewUpperfieldPage();
+
+    public void verifyCancelBtnInCreateNewUpperfieldPage();
+
+    public void addNewUpperfieldsWithRandomLevel(String upperfieldsName, String upperfieldsId, String searchChara, int index) throws Exception;
 
 
+//
+//    public ArrayList<HashMap<String, String>> getWFSGroupForm();
+
+    public void verifyDefaultOrganizationHierarchy() throws Exception;
+
+    public void addOrganizationHierarchy(List<String> hierarchyNames) throws Exception;
+
+    public void deleteOrganizationHierarchy(List<String> hierarchyNames) throws Exception;
+
+    public void updateOrganizationHierarchyDisplayName() throws Exception;
+
+    public void updateEnableUpperfieldViewOfHierarchy() throws Exception;
+
+    public void abnormalCaseOfEmptyDisplayNameForHierarchy() throws Exception;
+
+    public void abnormalCaseOfLongDisplayNameForHierarchy() throws Exception;
+    public  HashMap<String, Integer> getUpperfieldsSmartCardInfo();
+
+    public int getSearchResultNum() throws Exception;
+
+    public void cancelCreatingUpperfield(String level, String upperfieldsName, String upperfieldsId) throws Exception;
 }
