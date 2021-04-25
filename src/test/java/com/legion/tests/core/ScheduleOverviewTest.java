@@ -43,7 +43,7 @@ public class ScheduleOverviewTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyCurrentWeekDateAndDayTest(String username, String password, String browser, String location) throws Exception { 
 //    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
-    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 	    schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
@@ -59,7 +59,7 @@ public class ScheduleOverviewTest extends TestBase{
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyDateAndDayForEachWeeksUntilNotAvailableTest(String username, String password, String browser, String location) throws Exception { 
 //    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
-    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 	    schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
@@ -77,7 +77,7 @@ public class ScheduleOverviewTest extends TestBase{
     	Boolean isCurrentWeekSelected = false;
     	int index = 0;
 //    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
-    	SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 	    schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();

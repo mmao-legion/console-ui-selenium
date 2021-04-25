@@ -97,8 +97,8 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	 @FindBy(css = "tr[ng-repeat=\"kpi in kpiReports\"]")
 	 private List<WebElement> kpiReportRows;
 
-	 @FindBy(css = "div.console-navigation-item-label.Analytics")
-	 private WebElement consoleNavigationAnalytics;
+	 @FindBy(css = "div.console-navigation-item-label.Report")
+	 private WebElement consoleNavigationReport;
 
 	 @FindBy(css = "div.lgnCheckBox")
 	 private List<WebElement> forecstAndScheduleCheckBoxes;
@@ -409,8 +409,8 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 
 	@Override
 	public void clickOnAnalyticsConsoleMenu() throws Exception {
-		if(isElementLoaded(consoleNavigationAnalytics))
-			click(consoleNavigationAnalytics);
+		if(isElementLoaded(consoleNavigationReport))
+			click(consoleNavigationReport);
 		else
 			SimpleUtils.fail("Unable to click on 'Analytics' console menu.", false);
 	}

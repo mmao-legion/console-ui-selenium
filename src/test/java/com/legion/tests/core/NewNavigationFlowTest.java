@@ -211,7 +211,7 @@ public class NewNavigationFlowTest extends TestBase {
 
         //Validated navigation bar show after switch to other tabs and then return to dashboard page
 
-        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         controlsNewUIPage.clickOnControlsConsoleMenu();
         TeamPage teamPage = pageFactory.createConsoleTeamPage();

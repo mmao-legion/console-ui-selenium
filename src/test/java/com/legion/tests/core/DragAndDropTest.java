@@ -185,7 +185,7 @@ public class DragAndDropTest extends TestBase {
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            String anotherLocation = "NY CENTRAL";
+            String anotherLocation = "AUSTIN DOWNTOWN";
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeLocation(anotherLocation);
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -237,6 +237,7 @@ public class DragAndDropTest extends TestBase {
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstName);
             schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
 
             // Save the Schedule
             schedulePage.saveSchedule();
@@ -333,6 +334,9 @@ public class DragAndDropTest extends TestBase {
 
             // Drag the TM's shift to the day that he/she has time off
             schedulePage.dragOneShiftToAnotherDay(indexes.get(0), firstName, endIndex);
+
+            // Verify if Confirm Store Operating hours dialog pops up
+            schedulePage.verifyConfirmStoreOpenCloseHours();
 
             // Verify the Warning model pops up with the message
             schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
@@ -622,16 +626,29 @@ public class DragAndDropTest extends TestBase {
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+
+            schedulePage.navigateToNextWeek();
+            isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
             // Edit the Schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             //Get two random TM name from shifts
-            List<String> shiftInfo1 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+            List<String> shiftInfo1 = new ArrayList<>();
+            while(shiftInfo1.size() == 0 || shiftInfo1.get(0).equalsIgnoreCase("open")
+                    || shiftInfo1.get(0).equalsIgnoreCase("unassigned")){
+                shiftInfo1 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+            }
             String firstNameOfTM1 = shiftInfo1.get(0);
             String workRoleOfTM1 = shiftInfo1.get(4);
             List<String> shiftInfo2 = new ArrayList<>();
-            while(shiftInfo2.size()==0 || shiftInfo2.get(0).equalsIgnoreCase(firstNameOfTM1) || !shiftInfo2.get(4).equalsIgnoreCase(workRoleOfTM1)){
+            while(shiftInfo2.size()==0 || shiftInfo2.get(0).equalsIgnoreCase("open")
+                    || shiftInfo2.get(0).equalsIgnoreCase("unassigned")
+                    || shiftInfo2.get(0).equalsIgnoreCase(firstNameOfTM1)
+                    || !shiftInfo2.get(4).equalsIgnoreCase(workRoleOfTM1)){
                 shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
             }
 
@@ -671,7 +688,12 @@ public class DragAndDropTest extends TestBase {
             // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday
             String clopeningWarningMessage = " will incur clopening";
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
+            int i=0;
+            while (!schedulePage.isDragAndDropConfirmPageLoaded() && i<5){
+                schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
+                i++;
+                Thread.sleep(2000);
+            }
             SimpleUtils.assertOnFail("Clopening message display incorrectly on swap section!",
                     schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
             SimpleUtils.assertOnFail("Clopening message display incorrectly on assign section!",
@@ -683,7 +705,6 @@ public class DragAndDropTest extends TestBase {
             schedulePage.verifyDayHasShiftByName(1, firstNameOfTM1);
             schedulePage.verifyDayHasShiftByName(0, firstNameOfTM2);
             schedulePage.saveSchedule();
-
             //check compliance smart card display
             SimpleUtils.assertOnFail("Compliance smart card display successfully!",
                     schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
@@ -705,7 +726,12 @@ public class DragAndDropTest extends TestBase {
             // Swap TM1 and TM2 back, check the TMs been swapped successfully
             schedulePage.clickViewShift();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM2,1,firstNameOfTM1);
+            i=0;
+            while (!schedulePage.isDragAndDropConfirmPageLoaded() && i<5){
+                schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM2,1,firstNameOfTM1);
+                i++;
+                Thread.sleep(2000);
+            }
 
             SimpleUtils.assertOnFail("Clopening message is not display because there should no clopening !",
                     !schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
@@ -717,10 +743,14 @@ public class DragAndDropTest extends TestBase {
             schedulePage.verifyDayHasShiftByName(0, firstNameOfTM1);
             schedulePage.verifyDayHasShiftByName(1, firstNameOfTM2);
             schedulePage.saveSchedule();
-
             // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday again
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
+            i=0;
+            while (!schedulePage.isDragAndDropConfirmPageLoaded() && i<5){
+                schedulePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM1,1,firstNameOfTM2);
+                i++;
+                Thread.sleep(2000);
+            }
             SimpleUtils.assertOnFail("Clopening message display successfully on swap section!",
                     schedulePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
             SimpleUtils.assertOnFail("Clopening message display successfully on assign section!",
@@ -913,7 +943,7 @@ public class DragAndDropTest extends TestBase {
             String firstNameOfTM1 = shiftInfo.get(0);
             String workRoleOfTM1 = shiftInfo.get(4);
             List<String> shiftInfo2 = new ArrayList<>();
-            while (shiftInfo2.size() == 0 || workRoleOfTM1.equals(shiftInfo2.get(4))) {
+            while (shiftInfo2.size() == 0 || workRoleOfTM1.equals(shiftInfo2.get(4)) || shiftInfo2.get(0).equalsIgnoreCase("Open")) {
                 shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
             }
             String firstNameOfTM2 = shiftInfo2.get(0);
@@ -930,6 +960,7 @@ public class DragAndDropTest extends TestBase {
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM1);
+            SimpleUtils.report("teammember1: "+ firstNameOfTM1);
             schedulePage.clickOnOfferOrAssignBtn();
 
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -940,6 +971,7 @@ public class DragAndDropTest extends TestBase {
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM2);
+            SimpleUtils.report("teammember2: "+ firstNameOfTM2);
             schedulePage.clickOnOfferOrAssignBtn();
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

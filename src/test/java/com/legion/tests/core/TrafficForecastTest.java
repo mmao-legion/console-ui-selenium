@@ -68,7 +68,7 @@ public class TrafficForecastTest extends TestBase{
 //    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
-        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.isSchedule(),false);
         TrafficForecastPage trafficForecastPage = pageFactory.createTrafficForecastPage(); 
         trafficForecastPage.navigateToSalesForecastTab();

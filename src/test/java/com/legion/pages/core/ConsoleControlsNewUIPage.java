@@ -1389,7 +1389,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 								+ isLaborBudgetToApply + "'.");
 					else
 						SimpleUtils.fail("Scheduling Policies: Apply Labor Budget to Schedules not updated with value: '"
-								+ isLaborBudgetToApply + "'.", true);
+								+ isLaborBudgetToApply + "'.", false);
 				} else
 					SimpleUtils.fail("Scheduling Policies: Apply Labor Budget to Schedules buttons not loaded.", true);
 			}
@@ -5954,5 +5954,78 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.report("Scheduling Policies: The days in advance publish schedules 'Disabled'");
 		} else
 			SimpleUtils.fail("Scheduling Policies: 'How many days in advance would you typically publish schedules?' not loaded", false);
+	}
+
+
+	//Added by Mary to check 'Automatically convert unassigned shifts to open shifts when generating and copying a schedule?'
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when generating and copying a schedule?\"]")
+	private WebElement convertUnassignedShiftsToOpenSetting;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when generating and copying a schedule?\"] .lg-question-input__text")
+	private WebElement convertUnassignedShiftsToOpenSettingMessage;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when generating and copying a schedule?\"] select[ng-change=\"$ctrl.handleChange()\"]")
+	private WebElement convertUnassignedShiftsToOpenSettingDropdown;
+
+	@Override
+	public void verifyConvertUnassignedShiftsToOpenSetting() throws Exception {
+		if (isElementLoaded(convertUnassignedShiftsToOpenSetting, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenSettingMessage, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenSettingDropdown, 10)) {
+
+			//Check the message
+			String message = "Automatically convert unassigned shifts to open shifts when generating and copying a schedule?";
+			if (convertUnassignedShiftsToOpenSettingMessage.getText().equalsIgnoreCase(message)){
+				SimpleUtils.pass("Controls - Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings message display correctly! ");
+			} else
+				SimpleUtils.fail("Controls - Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings message display incorrectly!  Expected message is :'"
+						+ message + "'. Actual message is : '" +convertUnassignedShiftsToOpenSettingMessage.getText()+ "'", false);
+
+			List<String> convertUnassignedShiftsToOpenSettingOptions = new ArrayList<>();
+			convertUnassignedShiftsToOpenSettingOptions.add("Yes, all unassigned shifts");
+			convertUnassignedShiftsToOpenSettingOptions.add("Yes, except opening/closing shifts");
+			convertUnassignedShiftsToOpenSettingOptions.add("No, keep as unassigned");
+
+			//Check the options
+			Select dropdown = new Select(convertUnassignedShiftsToOpenSettingDropdown);
+			List<WebElement> dropdownOptions = dropdown.getOptions();
+			for (int i = 0; i< dropdownOptions.size(); i++) {
+				if (dropdownOptions.get(i).getText().equalsIgnoreCase(convertUnassignedShiftsToOpenSettingOptions.get(i))) {
+					SimpleUtils.pass("Controls - Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings option: '" +dropdownOptions.get(i).getText()+ "' display correctly! ");
+				} else
+					SimpleUtils.fail("Controls - Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings option display incorrectly, expected is : '" +convertUnassignedShiftsToOpenSettingOptions.get(i)+
+							"' , the actual is : '"+ dropdownOptions.get(i).getText()+"'. ", false);
+			}
+
+		} else
+			SimpleUtils.fail("Controls Page: Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings not loaded.", false);
+	}
+
+
+	@Override
+	public String getConvertUnassignedShiftsToOpenSettingOption() throws Exception {
+		String selectedOptionLabel = "";
+		if (isElementLoaded(convertUnassignedShiftsToOpenSetting, 10)) {
+			if (isElementLoaded(convertUnassignedShiftsToOpenSettingDropdown, 10)) {
+				Select dropdown = new Select(convertUnassignedShiftsToOpenSettingDropdown);
+				selectedOptionLabel = dropdown.getFirstSelectedOption().getText();
+			} else
+				SimpleUtils.fail("Controls - Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings dropdown list not loaded.", false);
+		} else
+			SimpleUtils.fail("Controls Page: Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings not loaded.", false);
+		return selectedOptionLabel;
+	}
+
+	@Override
+	public void updateConvertUnassignedShiftsToOpenSettingOption(String option) throws Exception {
+		if (isElementLoaded(convertUnassignedShiftsToOpenSettingDropdown, 10)) {
+			Select dropdown = new Select(convertUnassignedShiftsToOpenSettingDropdown);
+			dropdown.selectByVisibleText(option);
+			displaySuccessMessage();
+			SimpleUtils.pass("Controls Page: Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings been changed successfully");
+		} else {
+			SimpleUtils.fail("Controls - Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings dropdown list not loaded.", false);
+		}
+
 	}
 }

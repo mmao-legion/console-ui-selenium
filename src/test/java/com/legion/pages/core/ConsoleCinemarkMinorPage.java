@@ -5,6 +5,7 @@ import com.legion.pages.CinemarkMinorPage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -79,8 +80,11 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
 
     @Override
     public void minorRuleToggle(String action, String witchOne) throws Exception {
+        waitForSeconds(2);
+        schedulingMinorRuleFor14N15 = getDriver().findElement(By.cssSelector("form-section[form-title=\"Scheduling Minors (Age 14 & 15)\"]"));
+        schedulingMinorRuleFor16N17 = getDriver().findElement(By.cssSelector("form-section[form-title=\"Scheduling Minors (Age 16 & 17)\"]"));
         if (witchOne.equalsIgnoreCase("14N15")){
-            if (isElementLoaded(schedulingMinorRuleFor14N15,10)
+            if (isElementLoaded(schedulingMinorRuleFor14N15,15)
                     && isElementLoaded(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-last")),10)
                     && isElementLoaded(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-first")),10)){
                 //WebElement yesBtn = schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-first"));
@@ -88,10 +92,14 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
                 if (action.equalsIgnoreCase("no")){
                     scrollToElement(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-last")));
                     click(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-last")));
+                    Actions actions = new Actions(getDriver());
+                    actions.moveByOffset(0, 0).click().build().perform();
                     SimpleUtils.pass("Minor Rule For 14N15 is OFF");
                 } else {
                     scrollToElement(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-first")));
                     click(schedulingMinorRuleFor14N15.findElement(By.cssSelector(" .lg-button-group-first")));
+                    Actions actions = new Actions(getDriver());
+                    actions.moveByOffset(0, 0).click().build().perform();
                     SimpleUtils.pass("Minor Rule For 14N15 is ON");
                 }
             }else{
@@ -106,10 +114,14 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
                 if (action.equalsIgnoreCase("no")){
                     scrollToElement(noBtn);
                     click(noBtn);
-                    SimpleUtils.pass("Minor Rule For 14N15 is OFF");
+                    Actions actions = new Actions(getDriver());
+                    actions.moveByOffset(0, 0).click().build().perform();
+                    SimpleUtils.pass("Minor Rule For 16N17 is OFF");
                 } else {
                     scrollToElement(yesBtn);
                     click(yesBtn);
+                    Actions actions = new Actions(getDriver());
+                    actions.moveByOffset(0, 0).click().build().perform();
                     SimpleUtils.pass("Minor Rule For 14N15 is ON");
                 }
             }else{
@@ -173,14 +185,14 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
         if (button.equalsIgnoreCase("edit template")){
             if(isElementLoaded(getDriver().findElement(By.cssSelector("lg-button[ng-click=\"editTemplate()\"]")), 15))
             {
-                click(getDriver().findElement(By.cssSelector("lg-button[ng-click=\"editTemplate()\"]")));
+                clickTheElement(getDriver().findElement(By.cssSelector("lg-button[ng-click=\"editTemplate()\"]")));
             }else{
                 SimpleUtils.fail("Cancel button does not present on the page",false);
             }
         } else {
-            if(isElementLoaded(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")), 20))
+            if(isElementLoaded(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")), 30))
             {
-                click(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")));
+                clickTheElement(getDriver().findElement(By.cssSelector("lg-button[label=\""+button+"\"]")));
             }else{
                 SimpleUtils.fail("Cancel button does not present on the page",false);
             }
@@ -196,20 +208,28 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
         if (isElementLoaded(searchInput,15)){
             searchInput.clear();
             searchInput.sendKeys(templateName);
+            waitForSeconds(2);
             //click(defaultTemplate);
+            templateList = getDriver().findElements(By.cssSelector("tbody[ng-repeat*=\"item\"]"));
             if (areListElementVisible(templateList,10) && templateList.size()>0){
-                WebElement template = templateList.get(0);
-                if (!template.findElement(By.tagName("tr")).getAttribute("class").contains("expanded")){
-                    waitForSeconds(3);
-                    moveToElementAndClick(getDriver().findElements(By.cssSelector("tbody[ng-repeat*=\"item\"] td.toggle")).get(0));
-                    //click(template.findElement(By.cssSelector("td.toggle")));
+                for (int i = 0; i < templateList.size(); i++) {
+                    WebElement template = getDriver().findElements(By.cssSelector("tbody[ng-repeat*=\"item\"]")).get(i);
+                    if (template.findElement(By.cssSelector("span.ng-binding")).getText().equalsIgnoreCase(templateName)) {
+                        if (!template.findElement(By.tagName("tr")).getAttribute("class").contains("expanded")) {
+                            waitForSeconds(3);
+                            moveToElementAndClick(template.findElements(By.cssSelector("td.toggle")).get(0));
+                            //click(template.findElement(By.cssSelector("td.toggle")));
+                        }
+                        if (isElementLoaded(childTemplate, 10)) {
+                            click(childTemplate);
+                        } else {
+                            moveToElementAndClick(template.findElements(By.cssSelector("lg-button")).get(0));
+                        }
+                        waitForSeconds(5);
+                        closeAuditLogDialog();
+                        break;
+                    }
                 }
-                if (isElementLoaded(childTemplate,10)){
-                    click(childTemplate);
-                } else {
-                    moveToElementAndClick(getDriver().findElements(By.cssSelector("tbody[ng-repeat*=\"item\"] lg-button")).get(0));
-                }
-                waitForSeconds(5);
             } else {
                 SimpleUtils.fail("There is no child template", false);
             }
@@ -259,7 +279,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
         clickTheElement(webElement);
         if (areListElementVisible(options, 15)){
             for (WebElement element: options){
-                if (element.getText().equalsIgnoreCase(value)){
+                if (element.getAttribute("title").equalsIgnoreCase(value)){
                     clickTheElement(element);
                 }
             }
@@ -326,4 +346,31 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
             SimpleUtils.fail("No setting fields for minor rule",false);
         }
     }
+
+    @FindBy (css = "[question-title=\"Share school calendars across locations\"] .lg-question-input")
+    private WebElement shareSchoolCalendarSection;
+
+    @Override
+    public void turnOnOrOffSharingCalendars(String option) throws Exception {
+        try {
+            if (isElementLoaded(shareSchoolCalendarSection, 10)) {
+                List<WebElement> toggles = shareSchoolCalendarSection.findElements(By.tagName("span"));
+                if (toggles != null && toggles.size() == 2) {
+                    for (WebElement toggle : toggles) {
+                        if (toggle.getText().equalsIgnoreCase(option)) {
+                            clickTheElement(toggle);
+                            SimpleUtils.pass("Sharing School Calendar: set the toggle to: " + option + " Successfully!");
+                        }
+                    }
+                } else {
+                    SimpleUtils.fail("Sharing School Calendar: failed to get the toggles!", false);
+                }
+            } else {
+                SimpleUtils.fail("Sharing School Calendar failed to load!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

@@ -161,7 +161,7 @@ public class AnalyticsTestKendraScott2 extends TestBase{
 		   }
 		   System.out.println("totalDaysStaffingGuidanceHours: "+totalDaysStaffingGuidanceHours);
 		   System.out.println("totalDaysProjectedSalesHours: "+totalDaysProjectedSalesHours);
-		   SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+		   SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		   schedulePage.clickOnScheduleConsoleMenuItem();
 		   SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.isSchedule(),false);
 		   StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();

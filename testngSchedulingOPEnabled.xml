@@ -8,6 +8,16 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
+    <test name="Prepare Settings Test">
+        <classes>
+            <class name="com.legion.tests.core.PrepareSettingsTest">
+                <methods>
+                    <include name="prepareSettingsInOPTemplateAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="Scheduling OP Enabled Test">
         <classes>
             <class name="com.legion.tests.core.SchedulingOPEnabledTest">
@@ -31,7 +41,7 @@
                     <include name="validateWeatherSmartCardOnForecastPage" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
  <!--                   <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />-->
-                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
+<!--                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by bug: SCH-3934/>-->
  <!--                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
                     <include name="verifyScheduleFunctionalityOverviewAsStoreManager" />-->
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
@@ -53,7 +63,6 @@
     <!--                <include name="verifyDashboardFunctionalityAsTeamMember" />-->
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verificationOfMySchedulePageAsTeamMember" />
-                    <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
@@ -65,6 +74,33 @@
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Schedule Copy Improvement Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
+                <methods>
+                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInOPAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
+                    <include name="validateTheOOOHShiftsAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Delete Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.DeleteScheduleTest">
+                <methods>
+                    <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

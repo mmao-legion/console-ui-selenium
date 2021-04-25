@@ -327,7 +327,7 @@ public class SanityTest extends TestBase{
 			}
 			System.out.println("totalDaysStaffingGuidanceHours: "+totalDaysStaffingGuidanceHours);
 			System.out.println("totalDaysProjectedSalesHours: "+totalDaysProjectedSalesHours);
-			SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.isSchedule(),false);
 			StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
@@ -737,7 +737,7 @@ public class SanityTest extends TestBase{
 		scheduleOverviewPage.loadScheduleOverview();
 //		int testRailId = (Integer) context.getAttribute("TestRailId");
 //		System.out.println("In Test1, Value stored in context is: "+testRailId);
-		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.One.getValue());
 	}
 
@@ -860,7 +860,7 @@ public class SanityTest extends TestBase{
 		salesForecastPage.loadSalesForecast();
 		StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
 		staffingGuidancePage.loadStaffingGuidance();
-		SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		schedulePage.loadSchedule();
 		AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
 		analyticsPage.loadAnalyticsTab();

@@ -3,7 +3,6 @@ package com.legion.pages.pagefactories.mobile;
 import com.legion.pages.core.ConsoleAnalyticsPage;
 import com.legion.pages.core.ConsoleControlsPage;
 import com.legion.pages.core.ConsoleLoginPage;
-import com.legion.pages.core.ConsoleSchedulePage;
 import com.legion.pages.core.ConsoleStaffingGuidancePage;
 import com.legion.pages.core.ConsoleSalesForecastPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;

@@ -270,7 +270,6 @@ public abstract class TestBase {
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
             setDriver(new RemoteWebDriver(new URL(url),caps));
-
             pageFactory = createPageFactory();
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
             getDriver().register(webDriverEventListener);
@@ -386,6 +385,7 @@ public abstract class TestBase {
         locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
+        MyThreadLocal.setIsNeedEditingOperatingHours(false);
     }
 
     public synchronized void loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String username, String Password, String location) throws Exception
@@ -481,6 +481,7 @@ public abstract class TestBase {
         String winHandleBefore =getDriver().getWindowHandle();
         for(String winHandle : getDriver().getWindowHandles()) {
             if (winHandle.equals(winHandleBefore)) {
+                getDriver().close();
                 continue;
             }
             getDriver().switchTo().window(winHandle);

@@ -416,8 +416,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Estelle/Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality - Week View - Context Menu")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyScheduleFunctionalityWeekView(String username, String password, String browser, String location)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyScheduleFunctionalityWeekViewAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -427,11 +427,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		schedulePage.navigateToNextWeek();
+
 		boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		if(isActiveWeekGenerated){
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
-			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
 		//In week view, Group by All filter have 4 filters:1.Group by all  2. Group by work role  3. Group by TM 4.Group by job title
 		schedulePage.validateGroupBySelectorSchedulePage(false);
 		//Selecting any of them, check the schedule table
@@ -479,6 +480,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		//Search and select any TM,Click on the assign: new Tm is updated on the schedule table
 		//Select new TM from Search Team Member tab
+		schedulePage.clickOnFilterBtn();
+		schedulePage.selectWorkRoleFilterByText("MOD", true);
 		WebElement selectedShift = null;
 		selectedShift = schedulePage.clickOnProfileIcon();
 		String selectedShiftId= selectedShift.getAttribute("id").toString();
@@ -494,6 +497,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		String firstNameOfSelectedTM2 = schedulePage.selectTeamMembers();
 		schedulePage.clickOnOfferOrAssignBtn();
 		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM2.equals(schedulePage.getShiftById(selectedShiftId2).findElement(By.className("week-schedule-worker-name")).getText().trim()), false);
+		schedulePage.clickOnFilterBtn();
+		schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+		schedulePage.clickOnFilterBtn();
 
 		//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
 		//if checkbox is unselected then, shift is convert to open
@@ -724,15 +730,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Job Title Filter Functionality > Week View")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void viewAndFilterScheduleWithGroupByJobTitleInWeekView(String username, String password, String browser, String location)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage = dashboardPage.goToTodayForNewUI();
-		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 
 		/*
 		 *  Navigate to Schedule Week view
@@ -755,15 +763,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Job Title Filter Functionality > Day View")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void viewAndFilterScheduleWithGroupByJobTitleInDayView(String username, String password, String browser, String location)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		schedulePage = dashboardPage.goToTodayForNewUI();
-		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 
 		/*
 		 *  Navigate to Schedule day view
@@ -784,8 +794,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "Coffee_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Job Title Filter Functionality > Combination")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1066,7 +1076,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			List<String> weekDaysToClose = new ArrayList<>();
-			schedulePage.createScheduleForNonDGByWeekInfo(firstWeekInfo, weekDaysToClose);
+			schedulePage.createScheduleForNonDGByWeekInfo(firstWeekInfo, weekDaysToClose, null);
 
 			HashMap<String, String> hoursNTMsCountSecondWeek = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
 			HashMap<String, List<String>> shiftsForEachDaySecondWeek = schedulePage.getTheContentOfShiftsForEachWeekDay();
@@ -1125,7 +1135,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			List<String> weekDaysToClose = new ArrayList<>(Arrays.asList("Sunday", "Tuesday"));
-			schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose);
+			schedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose, null);
 
 			// Verify that the closed week day should not have any shifts
 			schedulePage.verifyNoShiftsForSpecificWeekDay(weekDaysToClose);
@@ -1271,9 +1281,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
 			float budgetHoursInSchedule = Float.parseFloat(schedulePage.getBudgetNScheduledHoursFromSmartCard().get("Budget"));
-
+			dashboardPage.clickOnDashboardConsoleMenu();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 			locationSelectorPage.changeDistrictDirect();
+			schedulePage.clickOnScheduleConsoleMenuItem();
 
 			ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 			float budgetedHoursInDMViewSchedule = scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location);
@@ -1965,15 +1976,25 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//schedulePage.verifyAllShiftsAssigned();
 			//schedulePage.clickOnEditButton();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.deleteTMShiftInWeekView("open");
+			schedulePage.saveSchedule();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnProfileIcon();
 			schedulePage.clickOnConvertToOpenShift();
 			schedulePage.convertToOpenShiftDirectly();
 			int index = schedulePage.getTheIndexOfEditedShift();
 			schedulePage.saveSchedule();
 			schedulePage.publishActiveSchedule();
+			//debug log---start
+			for (String s: schedulePage.getTheShiftInfoByIndex(index)){
+				SimpleUtils.report(s);
+			}
+			//debug log---end
 			schedulePage.clickProfileIconOfShiftByIndex(index);
 			schedulePage.clickViewStatusBtn();
 			schedulePage.verifyListOfOfferNotNull();
+
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}

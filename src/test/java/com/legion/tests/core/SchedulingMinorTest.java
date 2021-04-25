@@ -164,8 +164,8 @@ public class SchedulingMinorTest extends TestBase {
 
             controlsNewUIPage.clickOnControlsComplianceSection();
             SimpleUtils.assertOnFail("collaboration page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
-            controlsNewUIPage.setSchedulingMinorRuleFor14N15("9:30 AM", "7:30 PM", "15", "6", "3", "5");
-            controlsNewUIPage.setSchedulingMinorRuleFor16N17("10:00 AM", "7:00 PM", "20", "7", "5", "6");
+            controlsNewUIPage.setSchedulingMinorRuleFor14N15("9:30 am", "7:30 pm", "15", "6", "3", "5");
+            controlsNewUIPage.setSchedulingMinorRuleFor16N17("10:00 am", "7:00 pm", "20", "7", "5", "6");
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -935,7 +935,7 @@ public class SchedulingMinorTest extends TestBase {
 
             //check the violation message in Status column
             SimpleUtils.assertOnFail("There should have minor warning message display as: Age < 14yr old! ",
-                    schedulePage.getTheMessageOfTMScheduledStatus().contains("Age < 14yr old"), false);
+                    schedulePage.getTheMessageOfTMScheduledStatus().contains("Age < 14 yr old"), false);
 
             schedulePage.clickOnOfferOrAssignBtn();
             schedulePage.saveSchedule();
@@ -944,7 +944,7 @@ public class SchedulingMinorTest extends TestBase {
             WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
-                        schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Age < 14yr old"), false);
+                        schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Age < 14 yr old"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed! ", false);
         } catch (Exception e){

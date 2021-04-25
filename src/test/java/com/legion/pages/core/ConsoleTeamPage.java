@@ -331,9 +331,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			return flag;
 		}
 
-
-
-
 		@Override
 		public String searchAndSelectTeamMemberByName(String username) throws Exception {
 	 		String selectedName = "";
@@ -342,6 +339,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				teamMemberSearchBox.clear();
 				teamMemberSearchBox.sendKeys(username);
 				waitForSeconds(2);
+				int i = 0;
+				while(teamMembers.size() == 0 && i< 5){
+					teamMemberSearchBox.clear();
+					teamMemberSearchBox.sendKeys(username);
+					waitForSeconds(3);
+					i++;
+				}
 				if (teamMembers.size() > 0){
 					for (WebElement teamMember : teamMembers){
 						WebElement tr = teamMember.findElement(By.className("tr"));
@@ -2534,7 +2538,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				}
 			}
 		}else {
-			SimpleUtils.fail("Availability Tabs failed to load!", true);
+			SimpleUtils.fail("Availability Tabs failed to load!", false);
 		}
 		return index;
 	}
@@ -2547,7 +2551,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				SimpleUtils.fail("The index is out of bound!", true);
 			}
 		}else {
-			SimpleUtils.fail("Availability Tabs failed to load!", true);
+			SimpleUtils.fail("Availability Tabs failed to load!", false);
 		}
 	}
 
@@ -2679,19 +2683,31 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void verifyCurrentShiftPrefIsConsistentWithTheChanged(List<String> shiftPrefs, List<String> changedShiftPrefs,
 																 List<String> status) throws Exception {
+		boolean isConsistent = false;
 		if (shiftPrefs != null && changedShiftPrefs != null && status != null) {
 			if (shiftPrefs.size() == (changedShiftPrefs.size() + status.size())) {
-				changedShiftPrefs.addAll(status);
-				if (shiftPrefs.containsAll(changedShiftPrefs) && changedShiftPrefs.containsAll(shiftPrefs)) {
+				if (shiftPrefs.containsAll(changedShiftPrefs)) {
+					if (shiftPrefs.size() == 4) {
+						if (shiftPrefs.get(3).equalsIgnoreCase(status.get(0))) {
+							isConsistent = true;
+						}
+					} else if (shiftPrefs.size() == 5) {
+						if ((shiftPrefs.get(3).contains(status.get(0)) && shiftPrefs.get(4).contains(status.get(1))) ||
+								(shiftPrefs.get(3).contains(status.get(1)) && shiftPrefs.get(4).contains(status.get(0)))) {
+							isConsistent = true;
+						}
+					}
+				}
+				if (isConsistent) {
 					SimpleUtils.pass("Current shift preferences are consistent with the changed one.");
-				}else {
-					SimpleUtils.fail("Current shift preferences are inconsistent with the changed one.", true);
+				} else {
+					SimpleUtils.fail("Current shift preferences are inconsistent with the changed one.", false);
 				}
 			}else {
-				SimpleUtils.fail("Current shift preferences are inconsistent with the changed one.", true);
+				SimpleUtils.fail("Current shift preferences are inconsistent with the changed one.", false);
 			}
 		}else {
-			SimpleUtils.fail("Shift preferences are null!", true);
+			SimpleUtils.fail("Shift preferences are null!", false);
 		}
 	}
 
@@ -3808,10 +3824,22 @@ private WebElement locationColumn;
 
 	@Override
 	public void checkPriorYearInEditMode() throws Exception {
-		if (priorYearArrow.getAttribute("class").contains("invisible")) {
-			SimpleUtils.pass("School Calendars Page: Prior year arrow is invisible in edit mode as expected");
-		} else
-			SimpleUtils.fail("School Calendars Page: Prior year arrow is displayed unexpectedly",false);
+		Calendar calder = Calendar.getInstance();
+		calder.setTime(new Date());
+		int month = calder.get(Calendar.MONTH);
+		// If month is before August, previous year should show
+		if (month < 7) {
+			if (isElementLoaded(priorYearArrow, 5)) {
+				SimpleUtils.pass("School Calendars Page: Prior year arrow is visible in edit mode when it is before August current year");
+			} else {
+				SimpleUtils.fail("School Calendars Page: Prior year arrow is invisible when it is before August current year, which is unexpected!", false);
+			}
+		} else {
+			if (priorYearArrow.getAttribute("class").contains("invisible")) {
+				SimpleUtils.pass("School Calendars Page: Prior year arrow is invisible in edit mode as expected");
+			} else
+				SimpleUtils.fail("School Calendars Page: Prior year arrow is displayed unexpectedly", false);
+		}
 	}
 
 	@Override
@@ -4175,10 +4203,38 @@ private WebElement locationColumn;
 	}
 
 	@Override
-	public void selectSchoolSessionStartNEndDate(int nextSatIndex) throws Exception {
-		goToTheCurrentMonth();
-		selectDate(nextSatIndex);
-		selectDate(100);
+	public void selectSchoolSessionStartNEndDate() throws Exception {
+		if (areListElementVisible(realDays, 10) && realDays.size() > 57) {
+			clickTheElement(realDays.get(0));
+			waitForSeconds(1);
+			clickTheElement(realDays.get(realDays.size() - 1));
+		} else {
+			SimpleUtils.fail("School Calendar: Session start and end date calendar failed to loade!", false);
+		}
+	}
+
+	@FindBy (css = ".school-calendars-year-switcher .fa-chevron-left")
+	private WebElement yearSwitchLeft;
+
+	@Override
+	public void selectSchoolYear() throws Exception {
+		try {
+			Calendar calder = Calendar.getInstance();
+			calder.setTime(new Date());
+			int month = calder.get(Calendar.MONTH);
+			// If month is before August, need to switch to the previous year
+			if (month < 7) {
+				if (isElementLoaded(yearSwitchLeft, 5)) {
+					clickTheElement(yearSwitchLeft);
+					waitForSeconds(2);
+					SimpleUtils.pass("School Calendar: Click on previous year switch successfully!");
+				} else {
+					SimpleUtils.fail("School Calendar: Previous Year Switch button not loaded Successfully!", false);
+				}
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 	@Override
