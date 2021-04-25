@@ -238,8 +238,8 @@ public class ForecastTest extends TestBase{
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
 		@TestName(description = "Verify the Schedule functionality > Labor Forecast")
-		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-		public void verifyScheduleLaborForeCastFunctionality(String username, String password, String browser, String location)
+		@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+		public void verifyScheduleLaborForeCastFunctionalityAsInternalAdmin(String username, String password, String browser, String location)
 				throws Exception {
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 			scheduleOverviewPage.loadScheduleOverview();

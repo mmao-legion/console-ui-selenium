@@ -245,7 +245,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
-	@FindBy(xpath = "//table/tbody/tr[2]/td[1]/div/lg-button/button/span/span")
+	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]:nth-child(2) > td.one-line-overflow > div > lg-button > button > span > span")
 	private WebElement locationsName;
 
 	@Override
@@ -616,7 +616,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Export location page show well");
 			}else
 				SimpleUtils.fail("Export location page load failed",true);
-			waitForSeconds(2);
+			waitForSeconds(5);
 			click(exportAllRadio);
 			click(okBtnInExportLocationPage);
 			waitForSeconds(10);
@@ -652,7 +652,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void verifyExportSpecificLocationDistrict(String searchCharactor, int index) {
-		if (isElementEnabled(exportBtn,5)) {
+		if (isElementEnabled(exportBtn,20)) {
 			click(exportBtn);
 			if (verifyExportLocationsPageShow()) {
 				SimpleUtils.pass("Export location page show well");
@@ -1158,7 +1158,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				click(locationDetailsLinks.get(0));
 				click(editLocationBtn);
 				selectByVisibleText(locationGroupSelect, "None");
-				waitForSeconds(5);
+				waitForSeconds(10);
 				click(okBtnInLocationGroupConfirmPage);
 				scrollToBottom();
 				click(saveBtnInUpdateLocationPage);
@@ -1880,9 +1880,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					waitForSeconds(3);
 					searchWFSDynamicGroup(groupName);
 					if (groupRows.size()>0) {
-						SimpleUtils.pass("Dynamic group create successfully");
+						SimpleUtils.pass("WFS Dynamic group create successfully");
 					}else
-						SimpleUtils.fail("Dynamic group create failed",false);
+						SimpleUtils.fail("WFS Dynamic group create failed",false);
 					return testInfo;
 				}else
 					formulaInputBox.sendKeys("Parent(1)");
@@ -1957,11 +1957,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			String testInfo = testBtnInfo.getText().trim();
 			click(okBtnInSelectLocation);
 			waitForSeconds(3);
-			searchWFSDynamicGroup(groupName);
+			searchWFSDynamicGroup(groupName+"Update");
 			if (groupRows.size()>0) {
-				SimpleUtils.pass("Dynamic group create successfully");
+				SimpleUtils.pass("WFS Dynamic group update  successfully");
 			}else
-				SimpleUtils.fail("Dynamic group create failed",false);
+				SimpleUtils.fail("WFS Dynamic group create failed",false);
 			return testInfo;
 		}else
 			SimpleUtils.fail("Manager Dynamic Group win load failed",false);
@@ -2029,9 +2029,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				waitForSeconds(3);
 				searchClockInDynamicGroup(groupName);
 				if (groupRows.size()>0) {
-					SimpleUtils.pass("Dynamic group create successfully");
+					SimpleUtils.pass("Clock-in Dynamic group create successfully");
 				}else
-					SimpleUtils.fail("Dynamic group create failed",false);
+					SimpleUtils.fail("Clock-in Dynamic group create failed",false);
 				return testInfo;
 			}else
 				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
@@ -2055,11 +2055,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			String testInfo = testBtnInfo.getText().trim();
 			click(okBtnInSelectLocation);
 			waitForSeconds(3);
-			searchClockInDynamicGroup(groupNameForCloIn);
+			searchClockInDynamicGroup(groupNameForCloIn+"Update");
 			if (groupRows.size()>0) {
-				SimpleUtils.pass("Dynamic group create successfully");
+				SimpleUtils.pass("Clock-in Dynamic group update successfully");
 			}else
-				SimpleUtils.fail("Dynamic group create failed",false);
+				SimpleUtils.fail("Clock-in Dynamic group create failed",false);
 			return testInfo;
 		}else
 			SimpleUtils.fail("Manager Dynamic Group win load failed",false);
@@ -2088,11 +2088,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void searchWFSDynamicGroup(String searchText) {
-		String[] searchGroupText = searchText.split(",");
+	public void searchWFSDynamicGroup(String groupName) {
+		String[] searchGroupText = groupName.split(",");
 		if (areListElementVisible(dgSearchInput, 10) ) {
 			for (int i = 0; i < searchGroupText.length; i++) {
-				dgSearchInput.clear();
+				dgSearchInput.get(0).clear();
 				dgSearchInput.get(0).sendKeys(searchGroupText[0]);
 				dgSearchInput.get(0).sendKeys(Keys.ENTER);
 				waitForSeconds(3);
@@ -2387,6 +2387,34 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Pagination element load failed",false);
 		return 0;
 	}
+
+	@Override
+	public void cancelCreatingUpperfield(String level, String upperfieldsName, String upperfieldsId) throws Exception {
+		if (isElementEnabled(addUpperfieldsButton,5)) {
+			click(addUpperfieldsButton);
+			if (upperfieldCreateLandingPageShowWell()) {
+				selectByVisibleText(levelDropDownList,level);
+
+				upperfieldNameInput.sendKeys(upperfieldsName);
+				upperfieldIdInput.sendKeys(upperfieldsId);
+				click(cancelBtn);
+				if (isElementEnabled(leaveThisPageBtn,5)) {
+					click(leaveThisPageBtn);
+				}else
+					SimpleUtils.fail("Leave page window load failed",false);
+				waitForSeconds(15);
+				searchUpperFields(upperfieldsName);
+				if (upperfieldRows.size()==0) {
+					SimpleUtils.pass("User can cancel to create upperfield successfully");
+				}else
+					SimpleUtils.fail("The upperfield was created although canceled",false);
+			}else
+				SimpleUtils.fail("Upperfield create landing page load failed",true);
+		}else
+			SimpleUtils.fail("Upperfield list page load failed",true);
+
+	}
+
 	public void clickOnAddHierarchyBTN(){
 		if(isElementEnabled(addHierarchyBTN)){
 			clickTheElement(addHierarchyBTN);

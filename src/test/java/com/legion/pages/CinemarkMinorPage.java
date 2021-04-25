@@ -10,4 +10,5 @@ public interface CinemarkMinorPage {
     public void findDefaulTemplate(String templateName) throws Exception;
     public void setMinorRuleByWeek(String minorType, String weekType, String maxOfDay, String maxOfHrs) throws Exception;
     public void setMinorRuleByDay(String minorType, String dayType, String from, String to, String maxOfHrs) throws Exception;
+    public void turnOnOrOffSharingCalendars(String option) throws Exception;
 }

@@ -176,4 +176,6 @@ public interface LocationsPage {
     public  HashMap<String, Integer> getUpperfieldsSmartCardInfo();
 
     public int getSearchResultNum() throws Exception;
+
+    public void cancelCreatingUpperfield(String level, String upperfieldsName, String upperfieldsId) throws Exception;
 }

@@ -80,6 +80,20 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     		return false;
     	}
     }
+
+	@FindBy(className = "header-legion-icon")
+	private WebElement legionHeaderIcon;
+	@Override
+	public boolean isLoginSuccess() throws Exception {
+		WebDriverWait tempWait = new WebDriverWait(getDriver(), 20);
+		try {
+			tempWait.until(ExpectedConditions.visibilityOf(legionHeaderIcon));
+			return true;
+		}
+		catch (TimeoutException te) {
+			return false;
+		}
+	}
     
     public void logOut() throws Exception
     {
@@ -261,6 +275,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			SimpleUtils.report("Create Account page fail to loaded!");
 		return isCreateAccountPageLoaded;
 	}
+
 
 
 }

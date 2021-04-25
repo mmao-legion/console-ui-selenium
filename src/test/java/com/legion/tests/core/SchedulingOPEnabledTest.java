@@ -512,6 +512,9 @@ public class SchedulingOPEnabledTest  extends TestBase {
             //schedulePage.verifyAllShiftsAssigned();
             //schedulePage.clickOnEditButton();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
+            schedulePage.saveSchedule();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.clickOnProfileIcon();
             schedulePage.clickOnConvertToOpenShift();
             schedulePage.convertToOpenShiftDirectly();
@@ -799,7 +802,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             if (isShopperSelectedByDefaultAndLaborClickable){
                 SimpleUtils.pass("Forecast Functionality show well");
             } else {
-                SimpleUtils.warn("there is no shopper in this enterprise!");
+                SimpleUtils.report("there is no shopper in this enterprise!");
             }
         }else {
             SimpleUtils.warn("forecast default functionality work error");
@@ -2297,7 +2300,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            dashboardPage.validateDateAndTime();
 //
 //            //T1838586 Validate the upcoming schedules.
-//            dashboardPage.validateTheUpcomingSchedules(nickName);
+//            dashboardPage.validateTheUpcomingSchedules(location);
 //
 //            //T1838587 Validate the click ability of VIEW MY SCHEDULE button.
 //            dashboardPage.validateVIEWMYSCHEDULEButtonClickable();
@@ -2880,15 +2883,15 @@ public class SchedulingOPEnabledTest  extends TestBase {
 
         //Check Analytics console menu is display or not
         if (userRole.contains("TeamLead") || userRole.contains("TeamMember")) {
-            SimpleUtils.assertOnFail("Analytics console menu should not be loaded Successfully!",
-                    !dashboardPage.isAnalyticsConsoleMenuDisplay(), false);
+            SimpleUtils.assertOnFail("Report console menu should not be loaded Successfully!",
+                    !dashboardPage.isReportConsoleMenuDisplay(), false);
         } else {
-            SimpleUtils.assertOnFail("Analytics console menu not loaded Successfully!", dashboardPage.isAnalyticsConsoleMenuDisplay(), false);
+            SimpleUtils.assertOnFail("Report console menu not loaded Successfully!", dashboardPage.isReportConsoleMenuDisplay(), false);
             //Check Analytics page is display after click Analytics tab
             AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
             analyticsPage.clickOnAnalyticsConsoleMenu();
-            SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
-            dashboardPage.verifyHeaderNavigationMessage("Analytics");
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+            dashboardPage.verifyHeaderNavigationMessage("Report");
         }
 
 

@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -1543,7 +1544,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void updateMyAvailability(String hoursType, int sliderIndex,
 										String leftOrRightSliderArrow, double durationhours, String repeatChanges) throws Exception
 	{
-		if (isElementLoaded(editBtn,15)){
+		if (isElementLoaded(editBtn,30)){
 			click(editBtn);
 			updatePreferredOrBusyHoursDurationNew(sliderIndex,durationhours,leftOrRightSliderArrow, hoursType);
 			saveMyAvailabilityEditMode(repeatChanges);
@@ -2179,13 +2180,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				if(nickName != null && !nickName.isEmpty()){
 					SimpleUtils.pass("Get User's NickName: " + nickName + "Successfully");
 				}else{
-					SimpleUtils.fail("The NickName is null!", true);
+					SimpleUtils.fail("The NickName is null!", false);
 				}
 			}else{
-				SimpleUtils.fail("User Profile Image doesn't Load Successfully!", true);
+				SimpleUtils.fail("User Profile Image doesn't Load Successfully!", false);
 			}
 		}catch (Exception e){
-			SimpleUtils.fail("Get NickName of the logged in user failed", true);
+			SimpleUtils.fail("Get NickName of the logged in user failed", false);
 		}
 		return nickName;
 	}
@@ -2716,7 +2717,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void verifySMCanSelectACalendarForMinor() throws Exception {
-		if (isElementLoaded(schoolCalendar,5)) {
+		if (isElementLoaded(schoolCalendar,10)) {
 			SimpleUtils.pass("Profile Page: There should be \"School Calendar\" section loaded");
 			if (isElementLoaded(editBtnOfProfile,5)) {
 				click(editBtnOfProfile);
@@ -3494,5 +3495,33 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.report("Profile Page: Show Or Hide Invitation Code failed to load.");
 
 		return isShowOrHideInvitationCodeButtonLoaded;
+	}
+
+	public void createTimeOffOnSpecificDays(String timeOffReasonLabel, String timeOffExplanationText,String fromDay, int duration) throws Exception {
+		final int timeOffRequestCount = timeOffRequestRows.size();
+		clickOnCreateTimeOffBtn();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
+//		String d="2021 Apr 15";
+		String d= fromDay;
+		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT+8", dateFormat);
+		long to = dateFormat.parse(d).getTime();
+		long from = dateFormat.parse(today).getTime();
+		int days = (int) ((to - from)/(1000 * 60 * 60 * 24));
+		selectTimeOffReason(timeOffReasonLabel);
+		updateTimeOffExplanation(timeOffExplanationText);
+		selectDate(days);
+		selectDate(days+ duration);
+		HashMap<String, String> timeOffDate = getTimeOffDate(days, duration);
+		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
+		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
+		setTimeOffStartTime(timeOffStartDate);
+		setTimeOffEndTime(timeOffEndDate);
+		clickOnSaveTimeOffRequestBtn();
+		Thread.sleep(1000);
+		if(timeOffRequestRows.size() > timeOffRequestCount)
+			SimpleUtils.pass("Profile Page: New Time Off Save Successfully.");
+		else
+			SimpleUtils.fail("Profile Page: New Time Off not Save Successfully.", false);
+
 	}
 }

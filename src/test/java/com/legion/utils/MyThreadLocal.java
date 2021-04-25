@@ -78,6 +78,11 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> LGMSNsoLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGPTPNsoLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> job = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> isNeedUpdateOperatingHours = new ThreadLocal<>();
+
+	public static void setIsNeedEditingOperatingHours(Boolean value) { isNeedUpdateOperatingHours.set(value); }
+
+	public static Boolean getIsNeedEditingOperatingHours() { return isNeedUpdateOperatingHours.get(); }
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 

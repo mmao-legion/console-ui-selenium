@@ -29,7 +29,7 @@ import org.testng.Reporter;
 
 public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
-    @FindBy(css = "[ng-click='openSchedule()']")
+    @FindBy(css = "[ng-click=\"openSchedule()\"]")
     private WebElement goToTodayScheduleButton;
 
     @FindBy(css = "[ng-class = 'subNavigationViewLinkActiveClass(view)']")
@@ -179,7 +179,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         SimpleUtils.pass("Dashboard Page Loaded Successfully!");
         activeConsoleName = scheduleConsoleName.getText();
         click(goToTodayScheduleButton);
-        return new ConsoleSchedulePage();
+        return new ConsoleScheduleNewUIPage();
     }
 
     @Override
@@ -522,7 +522,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	//Added by Julie
-	@FindBy( css = ".header-company-icon.fl-right .company-icon-img")
+	@FindBy( css = ".header-right .header-company-icon .company-icon-img")
 	private WebElement companyIconImg;
 
 	@FindBy(css = ".user-profile-section__title.ng-binding")
@@ -531,10 +531,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "div.console-navigation-item-label.Schedule")
 	private WebElement scheduleConsoleNameInTM;
 
-	@FindBy(css = "[ng-show*=\"showLocation()\"]")
+	@FindBy(css = "[ng-if*=\"showLocation()\"]")
 	private WebElement showLocation;
 
-	@FindBy(css = "[search-hint=\"Search Location\"] input-field[placeholder=\"Select...\"] div.input-faked")
+	@FindBy(css = "[search-hint=\"Search Location\"]")
 	private WebElement currentLocation;
 
 	@FindBy(css = ".lg-search-options__option")
@@ -609,7 +609,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateThePresenceOfLocation() throws Exception {
 		if (isElementEnabled(showLocation, 20)) {
 			if (currentLocation.isDisplayed() && !currentLocation.getText().isEmpty() && currentLocation.getText() != null) {
-				if (getDriver().findElement(By.xpath("//header//*[@class=\"location\"]")).equals(showLocation)) {
+				if (getDriver().findElement(By.xpath("//header//*[contains(@ng-if,\"showLocation()\")]")).equals(showLocation)) {
 					SimpleUtils.pass("Dashboard Page: Location shows at top of the page successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Location is not at top of the page", true);
@@ -618,7 +618,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				SimpleUtils.fail("Dashboard Page: Location isn't present", true);
 			}
 		} else {
-			SimpleUtils.fail("Dashboard Page: Location failed to load", true);
+			SimpleUtils.fail("Dashboard Page: Location isn't present", false);
 		}
 	}
 
@@ -658,7 +658,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateThePresenceOfLogo() throws Exception {
 		if (isElementLoaded(companyIconImg, 5)) {
 			if (companyIconImg.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[2]//img[contains(@class,'company-icon-img')]")).equals(companyIconImg)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'right')]/div[1]//img[contains(@class,'company-icon-img')]")).equals(companyIconImg)) {
 					SimpleUtils.pass("Dashboard Page: Logo is present at right corner of page successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Logo isn't present at right corner of page", true);
@@ -752,22 +752,22 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public void validateTheUpcomingSchedules(String userName) throws Exception {
+	public void validateTheUpcomingSchedules(String location) throws Exception {
 		if (isElementLoaded(dashboardUpcomingShiftContainer, 20)) {
 			SimpleUtils.pass("Today's published Shifts loaded Successfully on Dashboard!");
 			if (dashboardUpcomingShiftContainer.getText().contains("No Published Shifts for today")) {
 				SimpleUtils.pass("No Published Shifts for today");
 			} else {
 				for (WebElement us : upcomingShifts) {
-					if (us.getText().contains(userName) && us.getText().contains("am") || us.getText().contains("pm")) {
+					if (us.getText().contains(location) && (us.getText().contains("am") || us.getText().contains("pm"))) {
 						SimpleUtils.pass("All the upcoming schedules are present with shift timings successfully");
 					} else {
-						SimpleUtils.fail("Shifts don't display on Dashboard", true);
+						SimpleUtils.fail("Shifts don't display on Dashboard", false);
 					}
 				}
 			}
 		} else {
-			SimpleUtils.fail("Today's Published Shifts failed to load on Dashboard!", true);
+			SimpleUtils.fail("Today's Published Shifts failed to load on Dashboard!", false);
 		}
 	}
 
@@ -791,7 +791,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateTheVisibilityOfProfilePicture() throws Exception {
 		if (isElementLoaded(iconProfile, 5)) {
 			if (iconProfile.isDisplayed()) {
-				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'text-right')]/div[1]/img")).equals(iconProfile)) {
+				if (getDriver().findElement(By.xpath("//header//div[contains(@class,'right')]/div[2]/img")).equals(iconProfile)) {
 					SimpleUtils.pass("Profile picture is visible at right corner of the page successfully");
 				} else {
 					SimpleUtils.fail("Profile picture isn't visible at right corner of the page", true);
@@ -958,7 +958,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return null;
 	}
 
-	@FindBy(css = "[ng-if=\"$ctrl.parentLocation\"]")
+	@FindBy(css = "lg-select[search-hint=\"Search District\"]")
 	private WebElement currentDistrict;
 	@Override
 	public String getCurrentDistrict() throws Exception {
@@ -1074,22 +1074,22 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 
-	@FindBy(css = "div.console-navigation-item-label.Analytics")
-	private WebElement analyticsConsoleMenu;
+	@FindBy(css = "div.console-navigation-item-label.Report")
+	private WebElement reportConsoleMenu;
 
 	@Override
-	public boolean isAnalyticsConsoleMenuDisplay() throws Exception {
-		boolean isAnalyticsConsoleMenuDisplay = false;
+	public boolean isReportConsoleMenuDisplay() throws Exception {
+		boolean isReportConsoleMenuDisplay = false;
 		try{
-			if(isElementLoaded(analyticsConsoleMenu, 5)) {
-				isAnalyticsConsoleMenuDisplay = true;
-				SimpleUtils.report("Analytics Console Menu is loaded Successfully!");
+			if(isElementLoaded(reportConsoleMenu, 5)) {
+				isReportConsoleMenuDisplay = true;
+				SimpleUtils.report("Report Console Menu is loaded Successfully!");
 			} else
-				SimpleUtils.report("Analytics Console Menu not loaded Successfully!");
+				SimpleUtils.report("Report Console Menu not loaded Successfully!");
 		} catch(Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
-		return isAnalyticsConsoleMenuDisplay;
+		return isReportConsoleMenuDisplay;
 	}
 
 

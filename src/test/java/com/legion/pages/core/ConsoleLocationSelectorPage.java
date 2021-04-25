@@ -67,7 +67,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy (css = ".lg-new-location-chooser__highlight [placeholder=\"Select...\"] .input-faked")
     private WebElement changeLocationButton;
 
-    @FindBy(css = "[search-hint='Search District'] div.input-faked")
+    @FindBy(css = "[search-hint='Search District'] div>input-field div.input-faked")
     private WebElement districtSelectorButton;
     @FindBy(css = "[search-hint=\"Search District\"] div.lg-search-options")
     private WebElement districtDropDownButton;
@@ -544,7 +544,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
-    @FindBy(css = "[search-hint=\"Search District\"] [placeholder=\"Select...\"] .input-faked")
+    @FindBy(css = "lg-select[search-hint=\"Search District\"]")
     private WebElement selectedDistrict;
 
     public void changeDistrictDirect() throws Exception {
@@ -573,8 +573,6 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                             }
                             SimpleUtils.fail("District does not matched with '" + districtName + "'", true);
                         }
-                        //to close the district dropdown list
-                        click(districtSelectorButton);
                     }
                 }
             }
@@ -764,7 +762,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy (css = ".wm-ignore-css-reset path")
     private WebElement closeBtnInNewFeatureEnhancements;
 
-    @FindBy(css=".header-company-icon.fl-right .company-icon-img")
+    @FindBy(css= ".dif .header-company-icon .company-icon-img")
     private WebElement companyIcon;
 
     @Override
@@ -782,7 +780,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         if (isDistrictSelected(districtName))
             SimpleUtils.pass("Dashboard Page: Display district is consistent with the selected district");
         else
-            SimpleUtils.fail("Dashboard Page: Display district is not consistent with the selected district", true);
+            SimpleUtils.fail("Dashboard Page: Display district is not consistent with the selected district", false);
     }
 
     @Override
@@ -797,7 +795,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         if (isElementLoaded(districtDropDownButton, 5)) {
             if (availableLocationCardsName.size() != 0) {
                 for (WebElement locationCardName : availableLocationCardsName) {
-                    if (locationCardName.getText().contains(districtName)) {
+                    if (locationCardName != null && locationCardName.getText() != null && !locationCardName.getText().isEmpty()
+                            && locationCardName.getText().contains(districtName)) {
                         isDistrictMatched = true;
                         clickTheElement(locationCardName);
                         if (isElementLoaded(windowNewFeatureEnhancements,5))
@@ -830,6 +829,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
+    @FindBy(css = "[search-hint=\"Search District\"] div.lg-search-options__option")
+    private List<WebElement> availableDistrictCardsName;
+
     @Override
     public void changeAnotherDistrict() throws Exception {
         waitForSeconds(4);
@@ -841,11 +843,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                             click(districtSelectorButton);
                         }
                         if (isElementLoaded(districtDropDownButton, 5)) {
-                            if (availableLocationCardsName.size() != 0) {
-                                for (WebElement locationCardName : availableLocationCardsName) {
-                                    if (!locationCardName.getText().contains(districtName)) {
-                                        clickTheElement(locationCardName);
-                                        SimpleUtils.pass("District changed successfully to '" + locationCardName.getText() + "'");
+                            if (availableDistrictCardsName.size() != 0) {
+                                for (WebElement districtCardName : availableDistrictCardsName) {
+                                    if (!districtCardName.getText().contains(districtName)) {
+                                        clickTheElement(districtCardName);
+                                        SimpleUtils.pass("District changed successfully to '" + districtCardName.getText() + "'");
                                         break;
                                     }
                                 }
@@ -875,11 +877,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                     click(districtSelectorButton);
                 }
                 if (isElementLoaded(districtDropDownButton, 5)) {
-                    if (availableLocationCardsName.size() != 0) {
-                        for (WebElement locationCardName : availableLocationCardsName) {
-                            if (!locationCardName.getText().contains(districtName)) {
-                                clickTheElement(locationCardName);
-                                SimpleUtils.pass("District changed successfully to '" + locationCardName.getText() + "'");
+                    if (availableDistrictCardsName.size() != 0) {
+                        for (WebElement districtCardName : availableDistrictCardsName) {
+                            if (!districtCardName.getText().contains(districtName)) {
+                                clickTheElement(districtCardName);
+                                SimpleUtils.pass("District changed successfully to '" + districtCardName.getText() + "'");
                                 waitForSeconds(1);
                                 break;
                             }
@@ -936,6 +938,52 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         } catch(Exception e) {
             SimpleUtils.fail("Unable to change District!", true);
         }
+    }
+
+    //added by Estelle for upperfield view
+    @FindBy(css = "div[ng-repeat-start=\"hierarchy in $ctrl.getNavHierarchy()\"]")
+    private List<WebElement> levelDisplay;
+    @FindBy(css = "input[placeholder=\"Search BU\"]")
+    private WebElement buSearchInput;
+    @FindBy(css = "input[placeholder=\"Search Region\"]")
+    private WebElement regionSearchInput;
+
+
+    @Override
+    public void verifyDefaultLevelForBUOrAdmin() {
+        if (areListElementVisible(levelDisplay,5)) {
+            if (levelDisplay.size()==2) {
+                SimpleUtils.pass("The default location navigation level for BU ,admin or communication role is correct");
+            }else 
+                SimpleUtils.fail("The default location navigation level for BU ,admin or communication role is wrong and the size is : "+levelDisplay.size(), false);
+        }else 
+            SimpleUtils.fail("Location navigation bar load failed",false);
+
+    }
+
+    @Override
+    public void searchSpecificBUAndNavigateTo(String buText) {
+       click(levelDisplay.get(0));
+        if (isElementEnabled(buSearchInput,5)) {
+            buSearchInput.sendKeys(buText);
+            buSearchInput.sendKeys(Keys.ENTER);
+        }
+
+    }
+
+    @Override
+    public void searchSpecificRegionAndNavigateTo(String regionText) {
+
+    }
+
+    @Override
+    public void searchSpecificDistrictAndNavigateTo(String districtText) {
+
+    }
+
+    @Override
+    public void searchSpecificLocationAndNavigateTo(String locationText) {
+
     }
 
 }

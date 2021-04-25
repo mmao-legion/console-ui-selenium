@@ -105,10 +105,13 @@ public abstract class TestBase {
             MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
             MyThreadLocal.setTestRailRunName(testRailRunName);
             MyThreadLocal.setIfAddNewTestRun(true);
-        }else
+        }else{
             MyThreadLocal.setTestSuiteID(testRailCfgOp.get("TEST_RAIL_SUITE_ID"));
-        MyThreadLocal.setTestRailRunName(testRailRunName);
-        MyThreadLocal.setIfAddNewTestRun(true);
+            MyThreadLocal.setTestRailRunName(testRailRunName);
+            MyThreadLocal.setIfAddNewTestRun(true);
+        }
+
+
         if (MyThreadLocal.getTestCaseIDList()==null){
             MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
         }
@@ -123,7 +126,7 @@ public abstract class TestBase {
         }else{
             Reporter.log("Script will be executing only for Web");
         }
-        if(testRail!=null && testRail.equalsIgnoreCase("yes")){
+        if(System.getProperty("testRail")!=null&& System.getProperty("testRail").equalsIgnoreCase("Yes")){
             setTestRailReporting("Y");
         }
     }
@@ -176,7 +179,6 @@ public abstract class TestBase {
         }
         List<Integer> testRailId =  new ArrayList<Integer>();
         setTestRailRun(testRailId);
-
         if(getTestRailReporting()!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         }
@@ -268,7 +270,6 @@ public abstract class TestBase {
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
             setDriver(new RemoteWebDriver(new URL(url),caps));
-
             pageFactory = createPageFactory();
             LegionWebDriverEventListener webDriverEventListener = new LegionWebDriverEventListener();
             getDriver().register(webDriverEventListener);
@@ -384,6 +385,7 @@ public abstract class TestBase {
         locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
+        MyThreadLocal.setIsNeedEditingOperatingHours(false);
     }
 
     public synchronized void loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String username, String Password, String location) throws Exception
@@ -392,8 +394,8 @@ public abstract class TestBase {
         SimpleUtils.report(getDriver().getCurrentUrl());
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyNewTermsOfServicePopUp();
-        boolean isLoginDone = loginPage.isLoginDone();
-        if (isLoginDone) {
+        boolean isLoginSuccess = loginPage.isLoginSuccess();
+        if (isLoginSuccess) {
             SimpleUtils.pass("Login legion without update upperfield successfully");
         }else
             SimpleUtils.fail("Login legion  failed",false);
@@ -479,6 +481,7 @@ public abstract class TestBase {
         String winHandleBefore =getDriver().getWindowHandle();
         for(String winHandle : getDriver().getWindowHandles()) {
             if (winHandle.equals(winHandleBefore)) {
+                getDriver().close();
                 continue;
             }
             getDriver().switchTo().window(winHandle);

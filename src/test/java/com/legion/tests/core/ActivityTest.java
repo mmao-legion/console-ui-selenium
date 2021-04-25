@@ -1139,7 +1139,7 @@ public class ActivityTest extends TestBase {
      }
 
     @Owner(owner = "Haya")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify the notification when TM is requesting time off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyTheNotificationForRequestTimeOffAsTeamMember(String browser, String username, String password, String location) {
@@ -1150,7 +1150,7 @@ public class ActivityTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
 
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+            fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();
@@ -1176,7 +1176,7 @@ public class ActivityTest extends TestBase {
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
             activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
-            activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
+            activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
             //activityPage.closeActivityWindow();
             loginPage.logOut();
 
@@ -1184,7 +1184,6 @@ public class ActivityTest extends TestBase {
             loginToLegionAndVerifyIsLoginDone(username, password, location);
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
-            profileNewUIPage.cancelAllTimeOff();
             profileNewUIPage.clickOnCreateTimeOffBtn();
             SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
             //select time off reason
@@ -1199,9 +1198,15 @@ public class ActivityTest extends TestBase {
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
             activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
-            activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
+            activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
             //activityPage.closeActivityWindow();
             loginPage.logOut();
+
+            // Login as Team Member to cancel time off
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
+            profileNewUIPage.cancelAllTimeOff();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1209,7 +1214,7 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify the notification when TM cancels time off request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyTheNotificationForCancelTimeOffAsTeamMember(String browser, String username, String password, String location) {
@@ -1218,7 +1223,7 @@ public class ActivityTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+            fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();

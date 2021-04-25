@@ -121,7 +121,6 @@
         <classes>
             <class name="com.legion.tests.core.CinemarkMinorTest">
                 <methods>
-                    <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
                     <include name="verifyMinorFieldIsDisplayedOnTMProfileAsInternalAdmin" />
  <!--                   <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />   bug:  SCH-2291:The minor violation for Non school week display incorrectly-->
  <!--                   <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />   bug:  SCH-2291:The minor violation for Non school week display incorrectly-->
@@ -147,32 +146,6 @@
                     <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
                     <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
                     <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Location Group Test">
-        <classes>
-            <class name="com.legion.tests.core.LocationGroupTest">
-                <methods>
-                    <include name="validateTheGenerationOfLGScheduleForMSAsInternalAdmin" />
-                    <include name="validateTheGenerationOfLGScheduleForP2PAsInternalAdmin" />
-                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForMSAsInternalAdmin" />
-                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PAsInternalAdmin" />
-                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForMSAsInternalAdmin" />
-                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForP2PAsInternalAdmin"/>
-                    <include name="validateTheButtonsOnSchedulePageForMSAsInternalAdmin" />
-                    <include name="validateTheButtonsOnSchedulePageForP2PAsInternalAdmin" />
-                    <include name="validateTheGroupByDropdownListForMSAsInternalAdmin" />
-                    <include name="validateTheGroupByDropdownListForP2PAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForP2PAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForMSAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForMSInDayViewAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForP2PInDayViewAsInternalAdmin" />
-                    <!--           <include name="validateTheFunctionOfManualOpenShiftForP2PAsInternalAdmin" />   P2P doesn't turn on travel time needed violation -->
-                    <include name="validateTheFunctionOfManualOpenShiftForMSAsInternalAdmin" />
-                    <include name="validateTheFunctionOfManualOpenShiftInDayViewForMSAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -232,12 +205,37 @@
                     <include name="validateTheGroupByDropdownListForP2PAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG" />
                     <include name="verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForP2PAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForMSAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForMSInDayViewAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForP2PInDayViewAsInternalAdmin" />
+                    <!--           <include name="validateTheFunctionOfManualOpenShiftForP2PAsInternalAdmin" />   P2P doesn't turn on travel time needed violation -->
+                    <include name="validateTheFunctionOfManualOpenShiftForMSAsInternalAdmin" />
+                    <include name="validateTheFunctionOfManualOpenShiftInDayViewForMSAsInternalAdmin" />
                     <include name="validateOperateLGScheduleByDifferentUserForMSAsInternalAdmin" />
                     <include name="validateOperateLGScheduleByDifferentUserForP2PAsInternalAdmin" />
                     <include name="validateUIPerformanceForLargeRosterForMSAsInternalAdmin" />
                     <include name="validateUIPerformanceForLargeRosterForP2PAsInternalAdmin" />
                     <include name="validatePrintScheduleForMSAsInternalAdmin" />
                     <include name="validatePrintScheduleForP2PAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Schedule Copy Improvement Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
+                <methods>
+                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />
+                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInOPAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
+                    <include name="validateTheOOOHShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

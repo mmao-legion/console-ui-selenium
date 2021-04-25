@@ -14,17 +14,15 @@
         <classes>
             <class name="com.legion.tests.core.NewNavigationFlowTest">
                 <methods>
-                    <include name="verifyLocationProfilePageInControls" />
-                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
-<!--                    <include name="verifyLocationListFunctionInTimesheet" />-->
-<!--                    <include name="verifyLegionBasicNavigationFunctionIn" />-->
-                    <include name="verifyDashboardViewAsInternalAdmin" />
-                    <include name="verifyDashboardViewAsDistrictManager" />
+                    <!--                    <include name="verifyLocationProfilePageInControls" />-->
+<!--                    <include name="verifyManagerLocationForOneUserInControlsInControls" />-->
+                    <!--                    <include name="verifyDashboardViewAsInternalAdmin" />-->
+                    <!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
                     <include name="verifyDashboardViewAsStoreManager" />
-                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />
-                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />
-                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>
-                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>
+                    <!--                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />-->
+                    <!--                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />-->
+                    <!--                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>-->
+                    <!--                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>-->
                 </methods>
             </class>
         </classes>

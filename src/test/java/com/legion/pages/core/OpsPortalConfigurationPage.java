@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ConfigurationPage;
+import com.legion.pages.ControlsNewUIPage;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -15,6 +16,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 
 import java.util.*;
@@ -228,7 +230,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public boolean isTemplateListPageShow() throws Exception {
 		boolean flag = false;
-			if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN) && isElementEnabled(searchField)){
+			if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
 				SimpleUtils.pass("Template landing page shows well");
 				flag = true;
 			}else{
@@ -246,7 +248,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(classValue!=null && classValue.contains("hasChildren")){
 				clickTheElement(templateToggleButton);
 				waitForSeconds(3);
-				clickTheElement(templatesList.get(0).findElement(By.cssSelector("button")));
+				clickTheElement(templatesList.get(1).findElement(By.cssSelector("button")));
 				waitForSeconds(20);
 				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 				&&isElementEnabled(templateDetailsPageForm)){
@@ -1452,14 +1454,41 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	}
 
+	@FindBy(css = "[ng-if=\"$ctrl.saveAsLabel\"]")
+	private WebElement publishTemplateButton;
+
+	@FindBy(css = "div.modal-dialog")
+	private WebElement publishTemplateConfirmModal;
+
+	@FindBy(css = "[ng-click=\"$ctrl.submit(true)\"]")
+	private WebElement okButtonOnPublishTemplateConfirmModal;
+
+	@FindBy(css = "div.lg-toast")
+	private WebElement successMsg;
+
+	public void displaySuccessMessage() throws Exception {
+		if (isElementLoaded(successMsg, 20) && successMsg.getText().contains("Success!")) {
+			SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
+			waitForSeconds(2);
+		} else {
+			SimpleUtils.report("Success pop up not displayed successfully.");
+			waitForSeconds(3);
+		}
+	}
+
 	@Override
 	public void publishNowTheTemplate() throws Exception {
-
 		if (isElementLoaded(dropdownArrowButton,5)) {
 			click(dropdownArrowButton);
 			click(publishNowButton);
+			click(publishTemplateButton);
+			if(isElementLoaded(publishTemplateConfirmModal, 5)){
+				click(okButtonOnPublishTemplateConfirmModal);
+				displaySuccessMessage();
+			} else
+				SimpleUtils.fail("Publish template confirm modal fail to load", false);
 		}else
-			SimpleUtils.fail("Workforce sharing group selector load failed",false);
+			SimpleUtils.fail("Publish template dropdown button load failed",false);
 	}
 
 	@Override
@@ -1624,5 +1653,102 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 	}
 
+	//Added by Mary to check 'Automatically convert unassigned shifts to open shifts when creating a new schedule?' and 'Automatically convert unassigned shifts to open shifts when coping a schedule?'
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when creating a new schedule?\"]")
+	private WebElement convertUnassignedShiftsToOpenWhenCreatingScheduleSetting;
 
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when creating a new schedule?\"] .lg-question-input__text")
+	private WebElement convertUnassignedShiftsToOpenWhenCreatingScheduleSettingMessage;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when creating a new schedule?\"] select[ng-change=\"$ctrl.handleChange()\"]")
+	private WebElement convertUnassignedShiftsToOpenWhenCreatingScheduleSettingDropdown;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when copying a schedule?\"]")
+	private WebElement convertUnassignedShiftsToOpenWhenCopyingScheduleSetting;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when copying a schedule?\"] .lg-question-input__text")
+	private WebElement convertUnassignedShiftsToOpenWhenCopyingScheduleSettingMessage;
+
+	@FindBy(css = "question-input[question-title=\"Automatically convert unassigned shifts to open shifts when copying a schedule?\"] select[ng-change=\"$ctrl.handleChange()\"]")
+	private WebElement convertUnassignedShiftsToOpenWhenCopyingScheduleSettingDropdown;
+
+	@Override
+	public void verifyConvertUnassignedShiftsToOpenSetting() throws Exception {
+		if (isElementLoaded(convertUnassignedShiftsToOpenWhenCreatingScheduleSetting, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenWhenCreatingScheduleSettingMessage, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenWhenCreatingScheduleSettingDropdown, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenWhenCopyingScheduleSetting, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenWhenCopyingScheduleSettingMessage, 10)
+				&& isElementLoaded(convertUnassignedShiftsToOpenWhenCopyingScheduleSettingDropdown, 10)) {
+
+			//Check the message
+			String createScheduleMessage = "Automatically convert unassigned shifts to open shifts when creating a new schedule?";
+			String copyScheduleMessage = "Automatically convert unassigned shifts to open shifts when copying a schedule?";
+			if (convertUnassignedShiftsToOpenWhenCreatingScheduleSettingMessage.getText().equalsIgnoreCase(createScheduleMessage)){
+				SimpleUtils.pass("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open settings creating schedule settings message display correctly! ");
+			} else
+				SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when creating schedule settings message display incorrectly!  Expected message is :'"
+						+ createScheduleMessage + "'. Actual message is : '" +convertUnassignedShiftsToOpenWhenCreatingScheduleSettingMessage.getText()+ "'", false);
+
+			if (convertUnassignedShiftsToOpenWhenCopyingScheduleSettingMessage.getText().equalsIgnoreCase(copyScheduleMessage)){
+				SimpleUtils.pass("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when coping schedule settings message display correctly! ");
+			} else
+				SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when coping schedule settings message display incorrectly!  Expected message is :'"
+						+ createScheduleMessage + "'. Actual message is : '" +convertUnassignedShiftsToOpenWhenCopyingScheduleSettingMessage.getText()+ "'", false);
+
+
+
+			List<String> convertUnassignedShiftsToOpenSettingOptions = new ArrayList<>();
+			convertUnassignedShiftsToOpenSettingOptions.add("Yes, all unassigned shifts");
+			convertUnassignedShiftsToOpenSettingOptions.add("Yes, except opening/closing shifts");
+			convertUnassignedShiftsToOpenSettingOptions.add("No, keep as unassigned");
+
+			//Check the options
+			Select dropdown = new Select(convertUnassignedShiftsToOpenWhenCreatingScheduleSettingDropdown);
+			List<WebElement> dropdownOptions = dropdown.getOptions();
+			for (int i = 0; i< dropdownOptions.size(); i++) {
+				if (dropdownOptions.get(i).getText().equalsIgnoreCase(convertUnassignedShiftsToOpenSettingOptions.get(i))) {
+					SimpleUtils.pass("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when creating schedule settings option: '" +dropdownOptions.get(i).getText()+ "' display correctly! ");
+				} else
+					SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when creating schedule settings option display incorrectly, expected is : '" +convertUnassignedShiftsToOpenSettingOptions.get(i)+
+							"' , the actual is : '"+ dropdownOptions.get(i).getText()+"'. ", false);
+			}
+
+			//Check the options
+			dropdown = new Select(convertUnassignedShiftsToOpenWhenCopyingScheduleSettingDropdown);
+			dropdownOptions = dropdown.getOptions();
+			for (int i = 0; i< dropdownOptions.size(); i++) {
+				if (dropdownOptions.get(i).getText().equalsIgnoreCase(convertUnassignedShiftsToOpenSettingOptions.get(i))) {
+					SimpleUtils.pass("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when coping schedule settings option: '" +dropdownOptions.get(i).getText()+ "' display correctly! ");
+				} else
+					SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when coping schedule settings option display incorrectly, expected is : '" +convertUnassignedShiftsToOpenSettingOptions.get(i)+
+							"' , the actual is : '"+ dropdownOptions.get(i).getText()+"'. ", false);
+			}
+
+		} else
+			SimpleUtils.fail("OP Configuration Page: Schedule Collaboration: Open Shift : Convert unassigned shifts to open when coping schedule settings not loaded.", false);
+	}
+
+
+	@Override
+	public void updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(String option) throws Exception {
+		if (isElementLoaded(convertUnassignedShiftsToOpenWhenCreatingScheduleSettingDropdown, 10)) {
+			Select dropdown = new Select(convertUnassignedShiftsToOpenWhenCreatingScheduleSettingDropdown);
+			dropdown.selectByVisibleText(option);
+			SimpleUtils.pass("OP Page: Schedule Collaboration: Open Shift : Convert unassigned shifts to open when creating schedule settings been changed successfully");
+		} else {
+			SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when creating schedule settings dropdown list not loaded.", false);
+		}
+	}
+
+	@Override
+	public void updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(String option) throws Exception {
+		if (isElementLoaded(convertUnassignedShiftsToOpenWhenCopyingScheduleSettingDropdown, 10)) {
+			Select dropdown = new Select(convertUnassignedShiftsToOpenWhenCopyingScheduleSettingDropdown);
+			dropdown.selectByVisibleText(option);
+			SimpleUtils.pass("OP Page: Schedule Collaboration: Open Shift : Convert unassigned shifts to open when copying schedule settings been changed successfully");
+		} else {
+			SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when copying schedule settings dropdown list not loaded.", false);
+		}
+	}
 }

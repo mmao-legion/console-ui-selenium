@@ -17,6 +17,7 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class DashboardTestKendraScott2 extends TestBase {
 
@@ -151,12 +152,12 @@ public class DashboardTestKendraScott2 extends TestBase {
 			//T1838584 Validate the visibility of Username.
 			dashboardPage.validateTheVisibilityOfUsername(nickName);
 
-			//T1838583 Validate the information after selecting different location.
+			// T1838583 Validate the information after selecting different location.
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 
 			String fileName = "UsersCredentials.json";
-			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
+			fileName = getEnterprise() + fileName;
 			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 			Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
 			loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
@@ -198,6 +199,8 @@ public class DashboardTestKendraScott2 extends TestBase {
 			SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePageTM.clickOnScheduleConsoleMenuItem();
 			schedulePageTM.navigateToNextWeek();
+			SimpleUtils.assertOnFail("My Schedule page failed to load!", schedulePageTM.isSchedule(), false);
+
 			List<String> scheduleListTM = new ArrayList<>();
 			if (schedulePageTM.getShiftHoursFromInfoLayout().size() > 0) {
 				for (String tmShiftTime : schedulePageTM.getShiftHoursFromInfoLayout()) {
@@ -219,7 +222,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 			dashboardPage.validateDateAndTime();
 
 			//T1838586 Validate the upcoming schedules.
-			dashboardPage.validateTheUpcomingSchedules(nickName);
+			dashboardPage.validateTheUpcomingSchedules(location);
 
 			//T1838587 Validate the click ability of VIEW MY SCHEDULE button.
 			dashboardPage.validateVIEWMYSCHEDULEButtonClickable();
@@ -483,17 +486,17 @@ public class DashboardTestKendraScott2 extends TestBase {
 			}
 		}
 
-		//Check Analytics console menu is display or not
+		//Check Report console menu is display or not
 		if (userRole.contains("TeamLead") || userRole.contains("TeamMember")) {
-			SimpleUtils.assertOnFail("Analytics console menu should not be loaded Successfully!",
-					!dashboardPage.isAnalyticsConsoleMenuDisplay(), false);
+			SimpleUtils.assertOnFail("Report console menu should not be loaded Successfully!",
+					!dashboardPage.isReportConsoleMenuDisplay(), false);
 		} else {
-			SimpleUtils.assertOnFail("Analytics console menu not loaded Successfully!", dashboardPage.isAnalyticsConsoleMenuDisplay(), false);
-			//Check Analytics page is display after click Analytics tab
+			SimpleUtils.assertOnFail("Report console menu not loaded Successfully!", dashboardPage.isReportConsoleMenuDisplay(), false);
+			//Check Report page is display after click Report tab
 			AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
 			analyticsPage.clickOnAnalyticsConsoleMenu();
-			SimpleUtils.assertOnFail("Analytics Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
-			dashboardPage.verifyHeaderNavigationMessage("Analytics");
+			SimpleUtils.assertOnFail("Report Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+			dashboardPage.verifyHeaderNavigationMessage("Report");
 		}
 
 
@@ -541,6 +544,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		SimpleUtils.assertOnFail("Logout console menu not loaded Successfully!", dashboardPage.isLogoutConsoleMenuDisplay(), false);
 		//Check Login page is display after click Logout tab
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		Thread.sleep(5000);
 		loginPage.logOut();
 		loginPage.verifyLoginPageIsLoaded();
 	}

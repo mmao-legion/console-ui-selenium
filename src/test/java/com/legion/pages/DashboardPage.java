@@ -40,7 +40,7 @@ public interface DashboardPage {
     public void validateDateAndTimeAfterSelectingDifferentLocation() throws Exception;
     public void validateTheVisibilityOfUsername(String userName) throws Exception;
     public void validateDateAndTime() throws Exception;
-    public void validateTheUpcomingSchedules(String userName) throws Exception;
+    public void validateTheUpcomingSchedules(String location) throws Exception;
     public void validateVIEWMYSCHEDULEButtonClickable() throws Exception;
     public void validateTheVisibilityOfProfilePicture() throws Exception;
     public void validateProfilePictureIconClickable() throws Exception;
@@ -71,7 +71,7 @@ public interface DashboardPage {
     public boolean isDashboardConsoleMenuDisplay() throws Exception;
     public boolean isTeamConsoleMenuDisplay() throws Exception;
     public boolean isScheduleConsoleMenuDisplay() throws Exception;
-    public boolean isAnalyticsConsoleMenuDisplay() throws Exception;
+    public boolean isReportConsoleMenuDisplay() throws Exception;
     public boolean isInboxConsoleMenuDisplay() throws Exception;
     public boolean isAdminConsoleMenuDisplay() throws Exception;
     public void clickOnAdminConsoleMenu() throws Exception;
