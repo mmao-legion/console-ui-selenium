@@ -76,12 +76,11 @@ public abstract class TestBase {
     protected PageFactory pageFactory = null;
     protected MobilePageFactory mobilePageFactory = null;
     String TestID = null;
-    //  public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+//  public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
     public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpperfieldsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
     static HashMap<String,String> testRailCfg = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
-    static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
@@ -101,17 +100,9 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        if (System.getProperty("enterprise")!="op") {
-            MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
-            MyThreadLocal.setTestRailRunName(testRailRunName);
-            MyThreadLocal.setIfAddNewTestRun(true);
-        }else{
-            MyThreadLocal.setTestSuiteID(testRailCfgOp.get("TEST_RAIL_SUITE_ID"));
-            MyThreadLocal.setTestRailRunName(testRailRunName);
-            MyThreadLocal.setIfAddNewTestRun(true);
-        }
-
-
+        MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
+        MyThreadLocal.setTestRailRunName(testRailRunName);
+        MyThreadLocal.setIfAddNewTestRun(true);
         if (MyThreadLocal.getTestCaseIDList()==null){
             MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
         }
@@ -126,7 +117,7 @@ public abstract class TestBase {
         }else{
             Reporter.log("Script will be executing only for Web");
         }
-        if(System.getProperty("testRail")!=null&& System.getProperty("testRail").equalsIgnoreCase("Yes")){
+        if(testRail!=null && testRail.equalsIgnoreCase("yes")){
             setTestRailReporting("Y");
         }
     }
@@ -179,6 +170,7 @@ public abstract class TestBase {
         }
         List<Integer> testRailId =  new ArrayList<Integer>();
         setTestRailRun(testRailId);
+
         if(getTestRailReporting()!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         }
@@ -250,7 +242,7 @@ public abstract class TestBase {
             // Launch remote browser and set it as the current thread
             createRemoteChrome(url);
         }
-    }
+        }
 
 
     private void createRemoteChrome(String url){
@@ -388,18 +380,6 @@ public abstract class TestBase {
         MyThreadLocal.setIsNeedEditingOperatingHours(false);
     }
 
-    public synchronized void loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String username, String Password, String location) throws Exception
-    {
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        SimpleUtils.report(getDriver().getCurrentUrl());
-        loginPage.loginToLegionWithCredential(username, Password);
-        loginPage.verifyNewTermsOfServicePopUp();
-        boolean isLoginDone = loginPage.isLoginDone();
-        if (isLoginDone) {
-            SimpleUtils.pass("Login legion without update upperfield successfully");
-        }else
-            SimpleUtils.fail("Login legion  failed",false);
-    }
     private void changeUpperFieldsAccordingToEnterprise(LocationSelectorPage locationSelectorPage) throws Exception {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
             locationSelectorPage.changeUpperFields(districtsMap.get("Coffee_Enterprise"));

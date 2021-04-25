@@ -49,18 +49,18 @@ public interface SchedulePage {
 	public void clickOnCreateOrNextBtn() throws Exception;
 	public HashMap<List<String>,List<String>> calculateTeamCount()throws Exception;
 	public List<String> calculatePreviousTeamCount(
-			HashMap<String, String> previousTeamCount, HashMap<List<String>,List<String>>
+			HashMap<String, String> previousTeamCount, HashMap<List<String>,List<String>> 
 			gridDayHourPrevTeamCount)throws Exception;
 	public List<String> calculateCurrentTeamCount(HashMap<String, String> shiftTiming)throws Exception;
 	public void clickSaveBtn() throws Exception;
 	public void clickOnVersionSaveBtn() throws Exception;
 	public void clickOnPostSaveBtn() throws Exception;
-	public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) throws Exception;
-	public void selectGroupByFilter(String optionVisibleText);
-	public String getActiveWeekText() throws Exception;
-	public ArrayList<WebElement> getAllAvailableShiftsInWeekView();
-	public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception;
-	public ArrayList<Float> getAllVesionLabels() throws Exception;
+    public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) throws Exception;
+    public void selectGroupByFilter(String optionVisibleText);
+    public String getActiveWeekText() throws Exception;
+    public ArrayList<WebElement> getAllAvailableShiftsInWeekView();
+    public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception;
+    public ArrayList<Float> getAllVesionLabels() throws Exception;
 	public void publishActiveSchedule()throws Exception;
 	public boolean isPublishButtonLoaded();
 	public HashMap<String, Float> getScheduleLabelHours() throws Exception;
@@ -90,7 +90,7 @@ public interface SchedulePage {
 	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
 	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount);
 	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount);
-	//	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView, int weekCount);
+//	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView, int weekCount);
 //	public void budgetHourByWagesInScheduleNBudgetedSmartCard(String nextWeekView,int weekCount);
 	public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount, int tolerance);
 	public void disableNextWeekArrow() throws Exception;
@@ -219,7 +219,7 @@ public interface SchedulePage {
 	public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception;
 
 
-	//	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception;
+//	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception;
 	public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
 	public void clickOnCreateNewShiftButton() throws Exception;
 	public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception;
@@ -408,7 +408,7 @@ public interface SchedulePage {
 	List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
 
 	void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception;
-
+	
 	void navigateToNextWeek() throws Exception;
 
 	public void navigateToPreviousWeek() throws Exception;
@@ -498,10 +498,10 @@ public interface SchedulePage {
 	public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
 	public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception;
 	public int getTheIndexOfTheDayInWeekView(String date) throws Exception;
-	public HashMap<String,Integer> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception;
-	public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception;
-	public void selectSwapOrAssignOption(String action) throws Exception;
-	public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
+    public HashMap<String,Integer> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception;
+    public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception;
+    public void selectSwapOrAssignOption(String action) throws Exception;
+    public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
 	public WebElement getShiftById(String id) throws Exception;
 	public List<String> getShiftSwapDataFromConfirmPage(String action) throws Exception;
 	public int verifyDayHasShiftByName(int indexOfDay, String name) throws Exception;
