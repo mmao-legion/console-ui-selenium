@@ -43,7 +43,7 @@ public class JobTest extends TestBase {
 
         this.createDriver((String)params[0],"83","Window");
         visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
+        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -130,7 +130,7 @@ public class JobTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate check each type of job details page")
+    @TestName(description = "Validate check create schedule  job details page")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCheckJobDetailsFunction(String browser, String username, String password, String location) throws Exception {
 

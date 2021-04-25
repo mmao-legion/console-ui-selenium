@@ -18,13 +18,13 @@
                     <include name="verifyCreateMockLocationAndNavigate" />
                     <include name="verifyCreateNSOLocationAndNavigate" />
                     <include name="verifyDisableEnableLocationFunction" />
-<!--                    <include name="verifyImportLocationDistrict" />-->
+                    <include name="verifyImportLocationDistrict" />
                     <include name="verifyExportLocationDistrict" />
                     <!--                    Global dynamic group test cases-->
                     <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
                     <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
                     <include name="verifyGlobalDynamicGroupInClockInFunction" />
-<!--                    <include name="verifyGlobalDynamicGroupInWFS" />-->
+                    <include name="verifyGlobalDynamicGroupInWFS" />
 
 
                 </methods>
