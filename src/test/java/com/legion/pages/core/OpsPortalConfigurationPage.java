@@ -297,12 +297,24 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		clickOnTemplateName(templateType);
 	}
 
+	@FindBy(css="input[placeholder=\"You can search by template name, status and creator.\"]")
+	private WebElement searchTemplateInputBox;
 
-//open the specify template to edit or view details
+	public void searchTemplate(String templateName) throws Exception{
+		if(isElementEnabled(searchTemplateInputBox,5)){
+			clickTheElement(searchTemplateInputBox);
+			searchTemplateInputBox.sendKeys(templateName);
+			searchTemplateInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(2);
+		}
+	}
+
+	//open the specify template to edit or view details
 	@Override
 	public void clickOnSpecifyTemplateName(String templateName,String editOrViewMode) throws Exception {
 
 		if(isTemplateListPageShow()){
+			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
 					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
@@ -1339,10 +1351,43 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	
+	@FindBy(css="div.settings-work-rule-container")
+	private WebElement scheduleRulesList;
 
+	@Override
+	public void deleteAllScheduleRules() throws Exception{
+		if(staffingRulesList.size()!=0){
+			for(WebElement staffingRule:staffingRulesList){
+				WebElement deleteButton = staffingRule.findElement(By.cssSelector("span.settings-work-rule-edit-delete-icon"));
+				if(isElementEnabled(deleteButton,2)){
+					clickTheElement(deleteButton);
+					waitForSeconds(2);
+					clickTheElement(deleteButtonOnDialogPage);
+					if(staffingRule.findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size()==1){
+						SimpleUtils.pass("User can delete staffing rules successfully!");
+					}else {
+						SimpleUtils.fail("User failed to delete staffing rules.",false);
+					}
+				}
+			}
+		}else {
+			SimpleUtils.report("There is not staffing rule so far.");
+		}
+	}
 
-
+	@Override
+	public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception{
+		if(isElementEnabled(saveButton,3)){
+			clickTheElement(saveButton);
+			waitForSeconds(5);
+			if (isElementEnabled(dropdownArrowButton,5)) {
+				SimpleUtils.pass("User click on save button on schedule rule list page successfully!");
+			}else
+				SimpleUtils.fail("User failed to click on save button on schedule rule list page!",false);
+		}else {
+			SimpleUtils.fail("No save button displayed on page",false);
+		}
+	}
 
 	//added by Estelle to verify ClockIn
 	@FindBy(css="input-field[options=\"$ctrl.dynamicGroupList\"] > ng-form > div.select-wrapper>select")

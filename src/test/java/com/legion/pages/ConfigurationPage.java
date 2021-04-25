@@ -62,4 +62,7 @@ public interface ConfigurationPage {
     public void validateAdvanceStaffingRuleShowing(String startEvent,String startOffsetTime,String startEventPoint,String startTimeUnit,
                                                              String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
                                                              List<String> days,String shiftsNumber) throws Exception;
+    public void deleteAllScheduleRules() throws Exception;
+    public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception;
+    public void searchTemplate(String templateName) throws Exception;
 }
