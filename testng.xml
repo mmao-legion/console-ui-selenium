@@ -420,6 +420,7 @@
                     <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
                     <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
                     <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
+                    <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

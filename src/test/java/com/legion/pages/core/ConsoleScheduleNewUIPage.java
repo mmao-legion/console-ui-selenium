@@ -476,7 +476,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.tab.ng-scope")
     private List<WebElement> selectTeamMembersOption;
 
-    @FindBy(xpath = ".tab-set .select .tab-label-text")
+    @FindBy(css = ".tab-set .select .tab-label-text")
     private WebElement selectRecommendedOption;
 
     @FindBy(css = "div.tma-scroll-table tr")
@@ -2856,7 +2856,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(dayViewAvailableShifts,10)){
             int count = dayViewAvailableShifts.size();
             for (int i = 0; i < count; i++) {
-                List<WebElement> tempShifts = getDriver().findElements(By.className("sch-day-view-shift-outer"));
+                List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift-outer .right-shift-box"));
+                scrollToElement(tempShifts.get(i));
                 moveToElementAndClick(tempShifts.get(i));
                 deleteShift();
             }
@@ -5110,6 +5111,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement assignTM;
     @FindBy(xpath = "//span[contains(text(),'YES')]")
     private WebElement openPopYesButton;
+    @FindBy(css = "div[ng-class*='OfferTMs']")
+    private WebElement OfferTMS;
 
     public void beforeEdit() {
         if (areListElementVisible(imageSize, 5)) {
@@ -10021,6 +10024,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail(" Convert to open shift is disabled or not available to Click ", false);
     }
 
+    @Override
+    public void verifyOfferTMOptionIsAvailable() throws Exception{
+        if(isConvertToOpenEnable())
+        {
+            clickTheElement(convertOpen);
+            SimpleUtils.pass("Clicked on Convert to open shift successfully ");
+        } else
+            SimpleUtils.fail(" Convert to open shift is disabled or not available to Click ", false);
+    }
 
     @Override
     public void clickOnEditMeaLBreakTime() throws Exception{
@@ -10208,6 +10220,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         else{
             SimpleUtils.fail("Convert To Open option is not enable/available on Pop Over Style ",true);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isOfferTMOptionVisible() throws Exception {
+        if(isElementEnabled(OfferTMS,5)){
+            SimpleUtils.pass("Offer Team Members option is visible on Pop Over Style!");
+            return true;
+        } else{
+            SimpleUtils.fail("Offer Team Members option is not visible on Pop Over Style ",true);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isOfferTMOptionEnabled() throws Exception {
+        if(isElementEnabled(OfferTMS,5) && !OfferTMS.getAttribute("ng-class").toLowerCase().contains("graded-out")){
+            SimpleUtils.pass("Offer Team Members option is enabled on Pop Over Style!");
+            return true;
+        } else{
+            SimpleUtils.fail("Offer Team Members option is not enabled on Pop Over Style ",true);
             return false;
         }
     }

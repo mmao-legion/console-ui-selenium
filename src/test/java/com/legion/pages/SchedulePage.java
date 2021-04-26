@@ -616,4 +616,7 @@ public interface SchedulePage {
 	public void deleteAllOOOHShiftInWeekView() throws Exception;
 	public List<WebElement> getAllOOOHShifts() throws Exception;
 	public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception;
+	public boolean isOfferTMOptionVisible() throws Exception;
+	public boolean isOfferTMOptionEnabled() throws Exception;
+	public void verifyOfferTMOptionIsAvailable() throws Exception;
 }
