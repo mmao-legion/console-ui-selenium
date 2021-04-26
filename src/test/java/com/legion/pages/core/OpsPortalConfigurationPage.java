@@ -805,7 +805,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void inputShiftDuartionMinutes(String duringTime) throws Exception{
+	public void inputShiftDurationMinutes(String duringTime) throws Exception{
 		waitForSeconds(5);
 		clickTheElement(shiftDuartionMinutes);
 		shiftDuartionMinutes.clear();
@@ -819,12 +819,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void validateShiftDuartionTimeUnit() throws Exception{
+	public void validateShiftDurationTimeUnit() throws Exception{
 		String unit = "minutes";
 		if(shiftDuartionMinutesUnit.getText().trim()!=null && shiftDuartionMinutesUnit.getText().equals(unit)){
-			SimpleUtils.pass("The shift Duartion Minutes Unit is: " + shiftDuartionMinutesUnit.getText().trim());
+			SimpleUtils.pass("The shift Duration Minutes Unit is: " + shiftDuartionMinutesUnit.getText().trim());
 		}else{
-			SimpleUtils.fail("The The shift Duartion Minutes Unit is not correct.",false);
+			SimpleUtils.fail("The The shift Duration Minutes Unit is not correct.",false);
 		}
 
 	}
@@ -1288,7 +1288,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 	
 	@Override
-	public void addMutipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception{
+	public void addMultipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception{
 		//get the staffing rules count before add one new rule
 		int countBeforeSaving = Integer.valueOf(getCountOfStaffingRules(workRole));
 		selectWorkRoleToEdit(workRole);
@@ -1641,6 +1641,42 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css="lg-button[ng-click=\"deleteTemplate()\"] button")
+	private WebElement deleteTemplateButton;
+
+	@FindBy(css="modal[modal-title=\"Deleting Template\"]")
+	private WebElement deleteTemplateDialog;
+
+	@FindBy(css="modal[modal-title=\"Deleting Template\"] lg-button[label=\"OK\"] button")
+	private WebElement okButtonOnDeleteTemplateDialog;
+
+	@Override
+	public void deleteNewCreatedTemplate(String templateName) throws Exception{
+		String newTemplateName = templateNameList.get(0).getText().trim();
+		if(templateName.equals(newTemplateName)){
+			clickTheElement(templateNameList.get(0));
+			waitForSeconds(5);
+			if(isElementEnabled(deleteTemplateButton,3)){
+				clickTheElement(deleteTemplateButton);
+				if(isElementEnabled(deleteTemplateDialog,3)){
+					clickTheElement(okButtonOnDeleteTemplateDialog);
+					waitForSeconds(5);
+					String firstTemplateName = templateNameList.get(0).getText().trim();
+					if(!firstTemplateName.equals(templateName)){
+						SimpleUtils.pass("User has deleted new created template successfully!");
+					}else {
+						SimpleUtils.fail("User failed to delete new created template!",false);
+					}
+				}
+			}else {
+				SimpleUtils.fail("Clicking the template failed.",false);
+			}
+		}else {
+			SimpleUtils.fail("Create new template failed.",false);
+		}
+
+	}
+
     @Override
 	public void addAllTypeOfTemplate(String templateName) throws Exception {
 			for(int i = 0 ;i < configurationCardsList.size(); i++){
@@ -1648,6 +1684,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					clickTheElement(configurationCardsList.get(i));
 					waitForSeconds(1);
 					createNewTemplate(templateName);
+					deleteNewCreatedTemplate(templateName);
 					goToConfigurationPage();
 				}
 			}
