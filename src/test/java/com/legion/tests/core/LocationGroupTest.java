@@ -398,7 +398,7 @@ public class LocationGroupTest extends TestBase {
 
             //Check Schedule not published smart card is display
             SimpleUtils.assertOnFail("Schedule not published smart card should display for new generate schedule! ",
-                    schedulePage.verifyScheduleNotPublishedSmartCardShowing(),false);
+                    schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
 
             schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyLocation.getValue());
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -482,7 +482,7 @@ public class LocationGroupTest extends TestBase {
 
             //Check Schedule not published smart card is display
             SimpleUtils.assertOnFail("Schedule not published smart card should display for new generate schedule! ",
-                    schedulePage.verifyScheduleNotPublishedSmartCardShowing(),false);
+                    schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
 
             schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyLocation.getValue());
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

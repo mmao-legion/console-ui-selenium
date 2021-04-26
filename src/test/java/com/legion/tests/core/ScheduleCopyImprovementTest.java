@@ -710,7 +710,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
     }
 
 
-
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
@@ -843,6 +842,122 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     schedulePage.getTooltipOfPublishButton().equalsIgnoreCase(""), false);
             schedulePage.publishActiveSchedule();
             SimpleUtils.assertOnFail("The schedule fail to publish! ", schedulePage.isCurrentScheduleWeekPublished(), false);
+
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the hierarchy/priority order for all smart cards")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String option = "No, keep as unassigned";
+            changeConvertToOpenShiftsSettings(option);
+
+            //Go to schedule page and create new schedule
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
+
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUI();
+
+            //Check the tooltip of publish button
+            String tooltip = schedulePage.getTooltipOfPublishButton();
+            SimpleUtils.assertOnFail("The tooltip of publish button should display as: Please address required action(s)! But the actual tooltip is: "+ tooltip,
+                    tooltip.equalsIgnoreCase("Please address required action(s)"), false);
+
+            //Check the Action required smart card is display
+            SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
+                    schedulePage.isRequiredActionSmartCardLoaded(), false);
+
+            //Check the message on the Action required smart card
+            int unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+            SimpleUtils.assertOnFail("Unassigned shifts message display incorrectly! ",
+                    message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+" shifts\n" +"Unassigned") ||
+                            message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+ " unassigned shifts\n" +
+                                    "Manually assign or convert to Open"), false);
+
+            //Convert unassigned shifts to open
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteAllOOOHShiftInWeekView();
+            schedulePage.saveSchedule();
+
+            //Check the Action required smart card is not display
+            SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
+                    !schedulePage.isRequiredActionSmartCardLoaded(), false);
+            //Check the Schedule Not Publish smart card will display
+            SimpleUtils.assertOnFail("Schedule not published smart card should display for new generate schedule! ",
+                    schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
+
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Check the Schedule Not Publish smart card will not display on edit mode
+            SimpleUtils.assertOnFail("Schedule not published smart card should not display on edit mode! ",
+                    !schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
+            schedulePage.saveSchedule();
+            //Check the Schedule Not Publish smart card will display
+            SimpleUtils.assertOnFail("Schedule not published smart card should display for new generate schedule! ",
+                    schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
+
+            schedulePage.publishActiveSchedule();
+            SimpleUtils.assertOnFail("The schedule fail to publish! ", schedulePage.isCurrentScheduleWeekPublished(), false);
+            //Check the Schedule Not Publish smart card will not display after publish
+            SimpleUtils.assertOnFail("Schedule not published smart card should not display after publish! ",
+                    !schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
+            //Check the Action required smart card is not display
+            SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
+                    !schedulePage.isRequiredActionSmartCardLoaded(), false);
+
+            //Edit the schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("GENERAL MANAGER"));
+            }
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.saveSchedule();
+
+            schedulePage.verifyChangesNotPublishSmartCard(1);
+
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Check the Change Not Publish smart card will not display after publish
+            SimpleUtils.assertOnFail("Change not published smart card should not display after publish! ",
+                    !schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
+
+            schedulePage.saveSchedule();
+            //Check the Schedule Not Publish smart card will display
+            SimpleUtils.assertOnFail("Schedule not published smart card should display for new generate schedule! ",
+                    schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
+            schedulePage.publishActiveSchedule();
+            //Check the Change Not Publish smart card will not display after publish
+            SimpleUtils.assertOnFail("Change not published smart card should not display after publish! ",
+                    !schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
 
 
         } catch (Exception e) {

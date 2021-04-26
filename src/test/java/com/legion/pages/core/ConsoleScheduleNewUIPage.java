@@ -13975,11 +13975,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    @FindBy(css = "[ng-if=\"controlPanel.fns.getVisibility('PUBLISH') && hasSchedule()\"] div.card-carousel-card")
+    @FindBy(css = "[ng-if=\"controlPanel.editMode !== 'edit' || controlPanel.isPublished\"] .card-carousel-card-smart-card-required")
     private WebElement scheduleNotPublishedSmartCard;
 
     @Override
-    public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception {
+    public boolean isScheduleNotPublishedSmartCardLoaded() throws Exception {
         if (isElementLoaded(scheduleNotPublishedSmartCard,15)) {
             SimpleUtils.pass("Schedule Not Published SmartCard is show ");
             return true;

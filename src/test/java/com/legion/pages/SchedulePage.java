@@ -572,7 +572,7 @@ public interface SchedulePage {
 	public void selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(String locationName) throws Exception;
 	public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception;
 	public void clickExitBtnToExitCreateScheduleWindow() throws Exception;
-	public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception;
+	public boolean isScheduleNotPublishedSmartCardLoaded() throws Exception;
 	public void clickToggleSummaryViewButton() throws Exception;
 	public boolean isHourFormat24Hour() throws Exception;
 	public boolean isLocationLoaded() throws Exception;
