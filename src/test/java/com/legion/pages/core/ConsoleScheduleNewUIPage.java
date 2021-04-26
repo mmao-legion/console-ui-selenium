@@ -14568,7 +14568,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<WebElement> allShifts = new ArrayList<>();
         if (areListElementVisible(shiftsWeekView, 15)) {
             for (WebElement shiftWeekView : shiftsWeekView) {
-                WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                WebElement workerName = null;
+                if(isScheduleDayViewActive()){
+                    workerName = shiftWeekView.findElement(By.className("sch-day-view-shift-worker-name"));
+                } else
+                    workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
                 if (workerName != null && workerName.getText().toLowerCase().contains(name)) {
                     allShifts.add(shiftWeekView);
                 }
