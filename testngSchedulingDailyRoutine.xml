@@ -60,7 +60,7 @@
             <class name="com.legion.tests.core.ScheduleTest">
                 <methods>
                     <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
-<!--                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" Blocked by SCH-3909/>-->
+                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" />
                 </methods>
             </class>
         </classes>
