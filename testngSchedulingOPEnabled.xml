@@ -103,6 +103,7 @@
             <class name="com.legion.tests.core.DeleteScheduleTest">
                 <methods>
                     <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
+                    <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

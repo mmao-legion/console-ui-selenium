@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.DashboardPage;
+import com.legion.pages.LoginPage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -8,6 +9,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -91,6 +93,70 @@ public class DeleteScheduleTest extends TestBase {
             // Verify the functionality of Cancel button when schedule is published
             schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
             // Verify the functionality of Delete button when schedule is published
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Store Manger can delete an unpublished schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyDeleteUnPublishedScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            } else {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            // Login as SM
+            String fileName = "UsersCredentials.json";
+            fileName = MyThreadLocal.getEnterprise() +fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+            dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+
+            String deleteForWeekText = schedulePage.getDeleteScheduleForWhichWeekText();
+            String unPublishedMessage = "This action can’t be undone.";
+
+            // Verify the visibility of Delete button
+            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", schedulePage.isDeleteScheduleButtonLoaded(), false);
+            // Verify the functionality of Delete button
+            schedulePage.verifyClickOnDeleteScheduleButton();
+            // Verify the content on Delete Schedule confirm window
+            schedulePage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
+            // Verify the Delete button is disabled by default
+            schedulePage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
+            // Verify the Delete button is enabled when clicking the check box
+            schedulePage.verifyDeleteButtonEnabledWhenClickingCheckbox();
+            // Verify the functionality of Cancel button
+            schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
+            // Verify the functionality of Delete button when schedule is unpublished
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
