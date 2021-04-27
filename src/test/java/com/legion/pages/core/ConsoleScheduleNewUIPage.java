@@ -9232,14 +9232,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public boolean checkEditButton() throws Exception {
-        if(isElementEnabled(editScheduleButton,10))
+        if(isElementLoaded(editScheduleButton,10))
         {
 
             SimpleUtils.pass("Edit button is Editable");
             return true;
         }
         else {
-            SimpleUtils.fail("Edit button is not Enable on screen",true);
+            SimpleUtils.fail("Edit button is not Enable on screen", false);
             return false;
         }
     }
