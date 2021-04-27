@@ -8,7 +8,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.legion.api.ApiList;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.ProxyUtils;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -477,7 +479,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));
             if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
                 if (isElementLoaded(upperFieldSelectorButton, 5)) {
-                    if (upperFieldSelectorButton.getText().contains(upperFieldName)) {
+                    if (upperFieldSelectorButton.getText().equalsIgnoreCase(upperFieldName)) {
                         SimpleUtils.pass("Given '" + upperFieldType + " " + upperFieldName + "' already selected!");
                     } else {
                         if(isElementLoaded(upperFieldSelectorButton, 10)){
@@ -488,7 +490,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                         if (isElementLoaded(upperFieldDropDownButton, 5)) {
                             if (availableLocationCardsName.size() != 0) {
                                 for (WebElement upperFieldCardName : availableLocationCardsName) {
-                                    if (upperFieldCardName.getText().contains(upperFieldName)) {
+                                    if (upperFieldCardName.getText().equalsIgnoreCase(upperFieldName)) {
                                         isUpperFieldMatched = true;
                                         clickTheElement(upperFieldCardName);
                                         SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
@@ -507,7 +509,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                     availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
                                     if (availableLocationCardsName.size() > 0) {
                                         for (WebElement upperFieldCardName : availableLocationCardsName) {
-                                            if (upperFieldCardName.getText().contains(upperFieldName)) {
+                                            if (upperFieldCardName.getText().equalsIgnoreCase(upperFieldName)) {
                                                 isUpperFieldMatched = true;
                                                 click(upperFieldCardName);
                                                 SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
@@ -954,9 +956,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         if (areListElementVisible(levelDisplay,5)) {
             if (levelDisplay.size()==2) {
                 SimpleUtils.pass("The default location navigation level for BU ,admin or communication role is correct");
-            }else 
+            }else
                 SimpleUtils.fail("The default location navigation level for BU ,admin or communication role is wrong and the size is : "+levelDisplay.size(), false);
-        }else 
+        }else
             SimpleUtils.fail("Location navigation bar load failed",false);
 
     }
@@ -983,6 +985,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
     @Override
     public void searchSpecificLocationAndNavigateTo(String locationText) {
+
+    }
+
+    @Override
+    public void verifyMagnifyGlassIconShowOrNot() {
 
     }
 

@@ -3055,7 +3055,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		return editableOrNonEditableFields;
 	}
 
-	@FindBy(css = "input[placeholder=\"You can search by name, job title, and status.\"]")
+	@FindBy(css = "input[placeholder=\"You can search by name, job title, location, etc.\"]")
 	private WebElement usersAndRolesUserSearchBox;
 
 	public void searchUserByFirstName(String userFirstName) throws Exception {
@@ -3063,12 +3063,12 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			if (usersAndRolesUserSearchBox.isDisplayed() && usersAndRolesUserSearchBox.isEnabled()) {
 				usersAndRolesUserSearchBox.clear();
 				usersAndRolesUserSearchBox.sendKeys(userFirstName);
-				Thread.sleep(2000);
-
+				waitForSeconds(10);
 				SimpleUtils.pass("Users and Roles: '" + usersAndRolesAllUsersRows.size() + "' user(s) found with name '"
 						+ userFirstName + "'");
 			}
-		}
+		}else
+			SimpleUtils.fail("Search filed in global model in controls load failed",false);
 	}
 
 	//added by Estelle for update one user's location info
