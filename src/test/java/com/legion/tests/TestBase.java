@@ -101,7 +101,7 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        if (System.getProperty("enterprise")!="op") {
+        if (!System.getProperty("enterprise").equalsIgnoreCase("op")) {
             MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
             MyThreadLocal.setTestRailRunName(testRailRunName);
             MyThreadLocal.setIfAddNewTestRun(true);
@@ -158,6 +158,7 @@ public abstract class TestBase {
         Date date=new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
         String testName = ExtentTestManager.getTestName(method);
+        List<String> testName1 = getTestName();
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
         String enterpriseName =  SimpleUtils.getEnterprise(method);
@@ -263,6 +264,7 @@ public abstract class TestBase {
         caps.setCapability("visual", true);
         caps.setCapability("video", true);
         caps.setCapability("console", true);
+        caps.setCapability("name", getTestName().get(0));
         caps.setCapability("idleTimeout", 600);
 
 //        caps.setCapability("selenium_version","3.141.59");
