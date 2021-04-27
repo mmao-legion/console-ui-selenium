@@ -73,10 +73,24 @@ public class NewNavigationFlowTest extends TestBase {
         locationSelectorPage.isSMView();
     }
 
-
-
     //add new upperfield test cases
+    //added by Estelle for magnifying glass icon
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "New console global navigation location picker")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyGlobalSearchFunctionOnNavigator(String browser, String username, String password, String location) throws Exception {
 
+        String LocationText = "";
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.verifyMagnifyGlassIconShowOrNot();
+
+
+
+    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
