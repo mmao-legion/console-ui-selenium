@@ -619,7 +619,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			waitForSeconds(5);
 			click(exportAllRadio);
 			click(okBtnInExportLocationPage);
-			waitForSeconds(10);
+			waitForSeconds(20);
 
 //			TimeZone timeZone = TimeZone.getTimeZone("America/Chicago");
 //			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM");
