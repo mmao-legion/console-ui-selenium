@@ -3055,7 +3055,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		return editableOrNonEditableFields;
 	}
 
-	@FindBy(css = "input[placeholder=\"You can search by name, job title, location, etc.\"]")
+	@FindBy(css = "input[placeholder*=\"You can search by name, job title\"]")
 	private WebElement usersAndRolesUserSearchBox;
 
 	public void searchUserByFirstName(String userFirstName) throws Exception {
