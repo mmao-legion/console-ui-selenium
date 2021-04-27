@@ -895,7 +895,7 @@ public class SimpleUtils {
 		String testRailPassword =   "";
 		String testRailProjectID =  "";
 		String testRailSuiteID =    "";
-		if (System.getProperty("enterprise")!="op") {
+		if (!System.getProperty("enterprise").equalsIgnoreCase("op")) {
 			testRailURL = testRailConfig.get("TEST_RAIL_URL");
 			testRailUser = testRailConfig.get("TEST_RAIL_USER");
 			testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
@@ -926,7 +926,7 @@ public class SimpleUtils {
 				MyThreadLocal.setTestCaseIDList(testCaseIDList);
 			}
 //				addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
-			addNUpdateTestCaseIntoTestRunSample(testName,context,testCaseIDList);
+			addNUpdateTestCaseIntoTestRunSample(testRailProjectID,testRailURL,testRailUser,testRailPassword,testName,context,testCaseIDList);
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}
@@ -1689,13 +1689,13 @@ public class SimpleUtils {
 	}
 
 
-	public static int addNUpdateTestCaseIntoTestRunSample(String testName, ITestContext context, List<Integer> testCaseIDList)
+	public static int addNUpdateTestCaseIntoTestRunSample(String testRailProjectID,String testRailURL,String testRailUser,String testRailPassword,String testName, ITestContext context, List<Integer> testCaseIDList)
 	{
-		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
-		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
-		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
+//		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+//		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+//		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+//		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+//		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
 		int suiteId = Integer.valueOf(MyThreadLocal.getTestSuiteID());
 //		int suiteId = Integer.valueOf(testRailConfig.get("TEST_CASE_SUITE_ID"));
 		int TestRailRunId = 0;
