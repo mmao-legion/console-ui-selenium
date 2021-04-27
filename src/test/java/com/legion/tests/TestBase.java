@@ -158,7 +158,6 @@ public abstract class TestBase {
         Date date=new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
         String testName = ExtentTestManager.getTestName(method);
-        List<String> testName1 = getTestName();
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
         String enterpriseName =  SimpleUtils.getEnterprise(method);
@@ -255,6 +254,7 @@ public abstract class TestBase {
 
 
     private void createRemoteChrome(String url){
+        MyThreadLocal myThreadLocal = new MyThreadLocal();
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("browserName", "chrome");
 //        caps.setCapability("version", "5.4.0-1029-aws");
@@ -264,7 +264,7 @@ public abstract class TestBase {
         caps.setCapability("visual", true);
         caps.setCapability("video", true);
         caps.setCapability("console", true);
-        caps.setCapability("name", getTestName().get(0));
+        caps.setCapability("name", ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()));
         caps.setCapability("idleTimeout", 600);
 
 //        caps.setCapability("selenium_version","3.141.59");
