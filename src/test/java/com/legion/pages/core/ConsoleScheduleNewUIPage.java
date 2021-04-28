@@ -13101,7 +13101,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (ifMoveAnywayDialogDisplay()) {
                 if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")), 10)) {
                     if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().equals("OK")) {
-                        click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
+                        clickTheElement(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
                         SimpleUtils.pass("CONFIRM button clicked!");
                     }
                 }

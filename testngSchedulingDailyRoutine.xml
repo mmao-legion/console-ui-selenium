@@ -238,11 +238,11 @@
             <class name="com.legion.tests.core.DragAndDropTest">
                 <methods>
                     <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
-                    <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
-                    <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
-                    <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
+<!--                    <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />-->
+<!--                    <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />-->
+<!--                    <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" Blocked by SCH-3993/>-->
 <!--                    <include name="verifyWarningModelForClopeningAsInternalAdmin" Blocked by SCH-3943/>-->
-                    <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
+<!--                    <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" Blocked by SCH-3993/>-->
                 </methods>
             </class>
         </classes>
