@@ -101,12 +101,12 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        if (!System.getProperty("enterprise").equalsIgnoreCase("op")) {
-            MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
+        if (System.getProperty("enterprise") !=null && !System.getProperty("enterprise").equalsIgnoreCase("op")) {
+            MyThreadLocal.setTestSuiteID(testRailCfgOp.get("TEST_RAIL_SUITE_ID"));
             MyThreadLocal.setTestRailRunName(testRailRunName);
             MyThreadLocal.setIfAddNewTestRun(true);
         }else{
-            MyThreadLocal.setTestSuiteID(testRailCfgOp.get("TEST_RAIL_SUITE_ID"));
+            MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
             MyThreadLocal.setTestRailRunName(testRailRunName);
             MyThreadLocal.setIfAddNewTestRun(true);
         }
