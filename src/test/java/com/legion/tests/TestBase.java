@@ -126,7 +126,7 @@ public abstract class TestBase {
         }else{
             Reporter.log("Script will be executing only for Web");
         }
-        if(System.getProperty("testRail")!=null&& System.getProperty("testRail").equalsIgnoreCase("Yes")){
+        if(System.getProperty("testRail") != null && System.getProperty("testRail").equalsIgnoreCase("Yes")){
             setTestRailReporting("Y");
         }
     }
