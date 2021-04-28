@@ -41,4 +41,7 @@ public interface ApiList {
     @GET(path = "/business/switches", description = "query ABSwitch by switch name")
     Response switches(@Header("sessionId") String sessionId);
 
+    @GET(path = "/configTemplate/getSingletonVersion", description = "query singleton version")
+    Response getSingletonVersion(@Header("sessionId") String sessionId,@Param("type ") String type);
+
 }

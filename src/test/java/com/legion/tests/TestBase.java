@@ -101,7 +101,7 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        if (System.getProperty("enterprise")!="op") {
+        if (!System.getProperty("enterprise").equalsIgnoreCase("op")) {
             MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
             MyThreadLocal.setTestRailRunName(testRailRunName);
             MyThreadLocal.setIfAddNewTestRun(true);
@@ -254,6 +254,7 @@ public abstract class TestBase {
 
 
     private void createRemoteChrome(String url){
+        MyThreadLocal myThreadLocal = new MyThreadLocal();
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("browserName", "chrome");
 //        caps.setCapability("version", "5.4.0-1029-aws");
@@ -263,6 +264,7 @@ public abstract class TestBase {
         caps.setCapability("visual", true);
         caps.setCapability("video", true);
         caps.setCapability("console", true);
+        caps.setCapability("name", ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()));
         caps.setCapability("idleTimeout", 600);
 
 //        caps.setCapability("selenium_version","3.141.59");
