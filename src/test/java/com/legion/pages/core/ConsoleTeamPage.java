@@ -822,7 +822,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				clickTheElement(timeOffRequest);
 				if(isElementLoaded(timeOffRejectBtn,5)) {
 					scrollToElement(timeOffRejectBtn);
-					click(timeOffRejectBtn);
+					clickTheElement(timeOffRejectBtn);
 					SimpleUtils.pass("My Time Off: Time off request Reject button clicked.");
 				}
 			}

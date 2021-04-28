@@ -12667,6 +12667,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 !endName.getText().equalsIgnoreCase("Open")) {
                             mouseHoverDragandDrop(startAvatar, endAvatar);
                             SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + endName.getText() + " Successfully!");
+                            verifyConfirmStoreOpenCloseHours();
                             isDragged = true;
                             break;
                         }
@@ -13018,6 +13019,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (startName != null && startName.getText().equalsIgnoreCase(firstName)) {
                     mouseHoverDragandDrop(start, endElements.get(0));
                     SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + weekDay.getText() + " days Successfully!");
+                    verifyConfirmStoreOpenCloseHours();
                     isDragged = true;
                     break;
                 }
@@ -13098,7 +13100,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         try {
             if (ifMoveAnywayDialogDisplay()) {
                 if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")), 10)) {
-                    if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().equals("CONFIRM")) {
+                    if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().equals("OK")) {
                         click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
                         SimpleUtils.pass("CONFIRM button clicked!");
                     }
