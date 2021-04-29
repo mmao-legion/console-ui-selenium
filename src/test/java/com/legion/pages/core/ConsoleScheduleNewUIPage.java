@@ -8292,7 +8292,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 index = cancelSwapOrCoverRequests(expectedRequests);
             }
         }else {
-            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", true);
+            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", false);
         }
         return index;
     }
@@ -8319,7 +8319,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
         }else {
-            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", true);
+            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", false);
         }
         if (index == 100) {
             SimpleUtils.fail("Failed to find a shift that can swap or cover!", false);
@@ -8631,7 +8631,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 index = cancelClaimRequest(claimShift);
             }
         }else {
-            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", true);
+            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", false);
         }
         return index;
     }
@@ -8656,7 +8656,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
         }else {
-            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", true);
+            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", false);
         }
         if (index == -1) {
             SimpleUtils.fail("Failed to find a shift that can swap or cover!", false);
