@@ -621,4 +621,8 @@ public interface SchedulePage {
 	public boolean isOfferTMOptionVisible() throws Exception;
 	public boolean isOfferTMOptionEnabled() throws Exception;
 	public void verifyOfferTMOptionIsAvailable() throws Exception;
+	public void clickOnOfferTMOption() throws Exception;
+	public void verifyRecommendedTableHasTM() throws Exception;
+	public void verifyTMInTheOfferList(String firstName, String expectedStatus) throws Exception;
+	public String getViewStatusShiftsInfo() throws Exception;
 }

@@ -10058,6 +10058,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Edit Shift Time is disabled or not available to Click ", false);
     }
 
+    @Override
+    public void clickOnOfferTMOption() throws Exception{
+        if(isElementLoaded(OfferTMS,5)) {
+            clickTheElement(OfferTMS);
+            SimpleUtils.pass("Clicked on Offer Team Members ");
+        } else {
+            SimpleUtils.fail("Offer Team Members is disabled or not available to Click ", false);
+        }
+    }
+
+
+    @Override
+    public void verifyRecommendedTableHasTM() throws Exception{
+        if (areListElementVisible(recommendedScrollTable, 15)){
+            SimpleUtils.pass("There is a recommended list!");
+        } else {
+            SimpleUtils.fail("No recommended team members!", false);
+        }
+    }
+
     @FindBy(css="div.edit-meal-break-time-modal")
     private WebElement editShiftTimePopUp;
 
@@ -11942,7 +11962,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 openShiftInfo.add(shiftTimeWeekView);
             }
             //To close the info popup
-            click(weekShifts.get(index));
+            moveToElementAndClick(weekShifts.get(index));
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
@@ -12340,6 +12360,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyListOfOfferNotNull() throws Exception {
         if (areListElementVisible(numberOfOffersMade,20)){
             SimpleUtils.pass("There is a offer list which is not null!");
+        } else {
+            SimpleUtils.fail("The offer list is null!",false);
+        }
+    }
+
+    @Override
+    public void verifyTMInTheOfferList(String firstName, String expectedStatus) throws Exception{
+        boolean flag = false;
+        if (areListElementVisible(numberOfOffersMade,20)){
+            for (WebElement element: numberOfOffersMade){
+                if (element.getText().toLowerCase().contains(firstName.toLowerCase()) && element.getText().toLowerCase().contains(expectedStatus.toLowerCase())){
+                    flag = true;
+                }
+            }
+            if (flag){
+                SimpleUtils.pass(firstName + " is in the offered list!");
+            } else {
+                SimpleUtils.fail(firstName + " is in the offered list!", false);
+            }
         } else {
             SimpleUtils.fail("The offer list is null!",false);
         }
@@ -14810,6 +14849,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
         }
+    }
+
+    @FindBy(css = ".modal-dialog .sch-day-view-shift-outer")
+    private WebElement shiftInViewStatusWindow;
+    @Override
+    public String getViewStatusShiftsInfo() throws Exception {
+        String result = "";
+        if (isElementLoaded(shiftInViewStatusWindow, 5)) {
+            result = shiftInViewStatusWindow.getText();
+        }
+        return result;
     }
 }
 
