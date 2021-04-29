@@ -11,6 +11,7 @@ import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -73,23 +74,39 @@ public class NewNavigationFlowTest extends TestBase {
         locationSelectorPage.isSMView();
     }
 
-    //add new upperfield test cases
+
     //added by Estelle for magnifying glass icon
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "New console global navigation location picker")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalSearchFunctionOnNavigator(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyGlobalSearchFunctionOnNavigatorAsInternalCustomerAdmin(String browser, String username, String password, String location) throws Exception {
 
-        String LocationText = "";
+        String[]  upperFieldList = {"HQ","OMLocation16","District-ForAutomation","Region-ForAutomation","BU-ForAutomation"};
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.verifyMagnifyGlassIconShowOrNot();
+        if (locationSelectorPage.verifyMagnifyGlassIconShowOrNot()) {
+            //navigate to different upperField via magnifying glass icon
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(upperFieldList[4]);
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(upperFieldList[3]);
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(upperFieldList[2]);
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(upperFieldList[1]);
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(upperFieldList[0]);
+            //verify recently viewed (5 items)
+            List<String> upperFieldNameInResentView = new ArrayList<>();
+            List<String> recentViewText = locationSelectorPage.getRecentlyViewedInfo();
 
-
-
+            for (String ss: recentViewText) {
+                 upperFieldNameInResentView.add(ss.split("\n")[0]);
+            }
+            String[] upperFieldNameInResentView1 = upperFieldNameInResentView.toArray(new String[]{});
+            if (Arrays.equals(upperFieldNameInResentView1,upperFieldList)) {
+                SimpleUtils.pass("Resent view list show well");
+            }else
+                SimpleUtils.fail("Resent view list is not the latest one",false);
+        }
     }
 
     @Automated(automated = "Automated")

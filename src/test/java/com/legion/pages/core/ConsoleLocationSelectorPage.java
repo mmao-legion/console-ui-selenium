@@ -8,10 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import com.legion.api.ApiList;
 import com.legion.utils.JsonUtil;
-import com.legion.utils.ProxyUtils;
-import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -987,10 +984,72 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     public void searchSpecificLocationAndNavigateTo(String locationText) {
 
     }
-
+    @FindBy(id = "id_upperfield-search")
+    private  WebElement magnifyGlassIcon;
+    @FindBy(css = "lg-search-options[search-hint=\"Search\"] .lg-search-options>div.lg-search-options__scroller>div")
+    private List<WebElement> resentViewDropDownList;
     @Override
-    public void verifyMagnifyGlassIconShowOrNot() {
-
+    public Boolean verifyMagnifyGlassIconShowOrNot() {
+        if (isElementEnabled(magnifyGlassIcon,5)) {
+            SimpleUtils.pass("Magnifying glass icon show well");
+            return true;
+        }else
+            SimpleUtils.fail("Magnifying glass icon load failed",false);
+            return false;
     }
 
+    @Override
+    public List<String> getRecentlyViewedInfo() {
+        List<String> resentViewList= new ArrayList<String>();
+        if (verifyMagnifyGlassIconShowOrNot()) {
+            click(magnifyGlassIcon);
+            if (areListElementVisible(upperFieldsInResentView,5) && upperFieldsInResentView.size()>0 ) {
+                for (WebElement each:upperFieldsInResentView
+                     ) {
+                    resentViewList.add(each.getText());
+                }
+                return resentViewList;
+            }else
+                SimpleUtils.fail("Resent View list load failed",false);
+        }
+        return null;
+    }
+
+    @Override
+    public void changeUpperFieldsFromResentViewList(int index) {
+
+
+    }
+    @FindBy(css="[search-hint=\"Search\"]>div>div>lg-search>input-field>ng-form>input")
+    private WebElement selectInputBoxForGlobalSearch;
+    @FindBy(css = "lg-search-options[search-hint='Search']>div> div.lg-search-options__scroller>div[ng-repeat]")
+    private List<WebElement> upperFieldsInResentView;
+    @Override
+    public void changeUpperFieldsByMagnifyGlassIcon(String upperfiledNavigaTo) {
+        try {
+            if (isElementEnabled(magnifyGlassIcon,5) ) {
+                click(magnifyGlassIcon);
+                if (isElementEnabled(selectInputBoxForGlobalSearch,5)) {
+                    SimpleUtils.pass("Magnifying glass icon is clickable");
+                    selectInputBoxForGlobalSearch.sendKeys(upperfiledNavigaTo);
+                    selectInputBoxForGlobalSearch.sendKeys(Keys.ENTER);
+                    waitForSeconds(5);
+                    if (areListElementVisible(upperFieldsInResentView,5)&& upperFieldsInResentView.size()>0) {
+                        for (WebElement each:upperFieldsInResentView) {
+                            String aaa = each.getText().split("\n")[0];
+                            if (each.getText().split("\n")[0].equalsIgnoreCase(upperfiledNavigaTo)) {
+                                click(each);
+                                break;
+                            }
+                        }
+                    }else
+                        SimpleUtils.fail("Resent View drop down list load failed",false);
+                }else
+                    SimpleUtils.fail("Global search select input box load failed",false);
+            }else
+                SimpleUtils.fail("Magnifying glass icon load failed",false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
