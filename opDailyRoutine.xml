@@ -72,6 +72,8 @@
 <!--                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />-->
 <!--                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>-->
 <!--                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>-->
+                    <include name="verifyGlobalSearchFunctionOnNavigatorAsInternalCustomerAdmin" />
+
                 </methods>
             </class>
         </classes>
