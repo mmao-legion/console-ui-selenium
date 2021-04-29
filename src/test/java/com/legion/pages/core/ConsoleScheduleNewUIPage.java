@@ -14713,5 +14713,67 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week", false);
         return allOOOHShifts;
     }
+
+
+    public void moveSliderAtCertainPointOnEditShiftTimePage(String shiftTime, String startingPoint) throws Exception {
+        WebElement element = null;
+        String time = "am";
+        if(areListElementVisible(noUiValues, 15) && noUiValues.size() >0){
+            for (WebElement noUiValue: noUiValues){
+                if (noUiValue.getAttribute("class").contains("pm")) {
+                    time = "pm";
+                } else if (noUiValue.getAttribute("class").contains("am")){
+                    time = "am";
+                }
+                if (time.equalsIgnoreCase(shiftTime.substring(shiftTime.length() - 2))) {
+                    if(noUiValue.getText().equals(shiftTime.substring(0, shiftTime.length() - 2))){
+                        element = noUiValue;
+                        break;
+                    }
+                }
+            }
+        }
+        if (element == null){
+            SimpleUtils.fail("Cannot found the operating hour on edit operating hour page! ", false);
+        }
+        if(startingPoint.equalsIgnoreCase("End")){
+            if(isElementLoaded(shiftEndTimeButton,10)){
+                SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
+                mouseHoverDragandDrop(shiftEndTimeButton,element);
+            } else{
+                SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
+            }
+        }else if(startingPoint.equalsIgnoreCase("Start")){
+            if(isElementLoaded(shiftStartTimeButton,10)){
+                SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
+                mouseHoverDragandDrop(shiftStartTimeButton,element);
+            } else{
+                SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
+            }
+        }
+    }
+
+
+    public void editTheShiftTimeForSpecificShift(WebElement shift, String startTime, String endTime) throws Exception {
+        By isUnAssignedShift = By.cssSelector(".rows .week-view-shift-image-optimized span");
+        WebElement shiftPlusBtn = shift.findElement(isUnAssignedShift);
+        if (isElementLoaded(shiftPlusBtn)) {
+            click(shiftPlusBtn);
+            if (isElementLoaded(shiftPopover)) {
+                WebElement editShiftTimeOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canEditShiftTime && !isTmView()\"]"));
+                if (isElementLoaded(editShiftTimeOption)) {
+                    scrollToElement(editShiftTimeOption);
+                    click(editShiftTimeOption);
+                    if (isElementEnabled(editShiftTimePopUp, 5)) {
+                        moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
+                        moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
+                        click(confirmBtnOnDragAndDropConfirmPage);
+                    } else {
+                        SimpleUtils.fail("Edit Shift Time PopUp window load failed", false);
+                    }
+                }
+            }
+        }
+    }
 }
 
