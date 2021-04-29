@@ -616,7 +616,13 @@ public interface SchedulePage {
 	public void deleteAllOOOHShiftInWeekView() throws Exception;
 	public List<WebElement> getAllOOOHShifts() throws Exception;
 	public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception;
+	public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception;
+	public void editTheShiftTimeForSpecificShift(WebElement shift, String startTime, String endTime) throws Exception;
 	public boolean isOfferTMOptionVisible() throws Exception;
 	public boolean isOfferTMOptionEnabled() throws Exception;
 	public void verifyOfferTMOptionIsAvailable() throws Exception;
+	public void clickOnOfferTMOption() throws Exception;
+	public void verifyRecommendedTableHasTM() throws Exception;
+	public void verifyTMInTheOfferList(String firstName, String expectedStatus) throws Exception;
+	public String getViewStatusShiftsInfo() throws Exception;
 }

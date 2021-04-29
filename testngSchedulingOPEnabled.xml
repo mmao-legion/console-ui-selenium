@@ -87,6 +87,7 @@
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                     <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
+                    <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />

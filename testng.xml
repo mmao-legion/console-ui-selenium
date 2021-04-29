@@ -421,6 +421,8 @@
                     <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
                     <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInEditModeAsTeamMember" />
                 </methods>
             </class>
         </classes>

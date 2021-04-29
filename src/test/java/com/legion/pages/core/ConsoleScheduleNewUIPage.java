@@ -10058,6 +10058,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Edit Shift Time is disabled or not available to Click ", false);
     }
 
+    @Override
+    public void clickOnOfferTMOption() throws Exception{
+        if(isElementLoaded(OfferTMS,5)) {
+            clickTheElement(OfferTMS);
+            SimpleUtils.pass("Clicked on Offer Team Members ");
+        } else {
+            SimpleUtils.fail("Offer Team Members is disabled or not available to Click ", false);
+        }
+    }
+
+
+    @Override
+    public void verifyRecommendedTableHasTM() throws Exception{
+        if (areListElementVisible(recommendedScrollTable, 15)){
+            SimpleUtils.pass("There is a recommended list!");
+        } else {
+            SimpleUtils.fail("No recommended team members!", false);
+        }
+    }
+
     @FindBy(css="div.edit-meal-break-time-modal")
     private WebElement editShiftTimePopUp;
 
@@ -11942,7 +11962,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 openShiftInfo.add(shiftTimeWeekView);
             }
             //To close the info popup
-            click(weekShifts.get(index));
+            moveToElementAndClick(weekShifts.get(index));
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
@@ -12340,6 +12360,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyListOfOfferNotNull() throws Exception {
         if (areListElementVisible(numberOfOffersMade,20)){
             SimpleUtils.pass("There is a offer list which is not null!");
+        } else {
+            SimpleUtils.fail("The offer list is null!",false);
+        }
+    }
+
+    @Override
+    public void verifyTMInTheOfferList(String firstName, String expectedStatus) throws Exception{
+        boolean flag = false;
+        if (areListElementVisible(numberOfOffersMade,20)){
+            for (WebElement element: numberOfOffersMade){
+                if (element.getText().toLowerCase().contains(firstName.toLowerCase()) && element.getText().toLowerCase().contains(expectedStatus.toLowerCase())){
+                    flag = true;
+                }
+            }
+            if (flag){
+                SimpleUtils.pass(firstName + " is in the offered list!");
+            } else {
+                SimpleUtils.fail(firstName + " is in the offered list!", false);
+            }
         } else {
             SimpleUtils.fail("The offer list is null!",false);
         }
@@ -14748,6 +14787,79 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else
             SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week", false);
         return allOOOHShifts;
+    }
+
+
+    public void moveSliderAtCertainPointOnEditShiftTimePage(String shiftTime, String startingPoint) throws Exception {
+        WebElement element = null;
+        String time = "am";
+        if(areListElementVisible(noUiValues, 15) && noUiValues.size() >0){
+            for (WebElement noUiValue: noUiValues){
+                if (noUiValue.getAttribute("class").contains("pm")) {
+                    time = "pm";
+                } else if (noUiValue.getAttribute("class").contains("am")){
+                    time = "am";
+                }
+                if (time.equalsIgnoreCase(shiftTime.substring(shiftTime.length() - 2))) {
+                    if(noUiValue.getText().equals(shiftTime.substring(0, shiftTime.length() - 2))){
+                        element = noUiValue;
+                        break;
+                    }
+                }
+            }
+        }
+        if (element == null){
+            SimpleUtils.fail("Cannot found the operating hour on edit operating hour page! ", false);
+        }
+        if(startingPoint.equalsIgnoreCase("End")){
+            if(isElementLoaded(shiftEndTimeButton,10)){
+                SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
+                mouseHoverDragandDrop(shiftEndTimeButton,element);
+            } else{
+                SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
+            }
+        }else if(startingPoint.equalsIgnoreCase("Start")){
+            if(isElementLoaded(shiftStartTimeButton,10)){
+                SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
+                mouseHoverDragandDrop(shiftStartTimeButton,element);
+            } else{
+                SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
+            }
+        }
+    }
+
+
+    public void editTheShiftTimeForSpecificShift(WebElement shift, String startTime, String endTime) throws Exception {
+        By isUnAssignedShift = By.cssSelector(".rows .week-view-shift-image-optimized span");
+        WebElement shiftPlusBtn = shift.findElement(isUnAssignedShift);
+        if (isElementLoaded(shiftPlusBtn)) {
+            click(shiftPlusBtn);
+            if (isElementLoaded(shiftPopover)) {
+                WebElement editShiftTimeOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canEditShiftTime && !isTmView()\"]"));
+                if (isElementLoaded(editShiftTimeOption)) {
+                    scrollToElement(editShiftTimeOption);
+                    click(editShiftTimeOption);
+                    if (isElementEnabled(editShiftTimePopUp, 5)) {
+                        moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
+                        moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
+                        click(confirmBtnOnDragAndDropConfirmPage);
+                    } else {
+                        SimpleUtils.fail("Edit Shift Time PopUp window load failed", false);
+                    }
+                }
+            }
+        }
+    }
+
+    @FindBy(css = ".modal-dialog .sch-day-view-shift-outer")
+    private WebElement shiftInViewStatusWindow;
+    @Override
+    public String getViewStatusShiftsInfo() throws Exception {
+        String result = "";
+        if (isElementLoaded(shiftInViewStatusWindow, 5)) {
+            result = shiftInViewStatusWindow.getText();
+        }
+        return result;
     }
 }
 
