@@ -35,4 +35,5 @@ public interface LocationSelectorPage {
 	public void searchSpecificRegionAndNavigateTo(String regionText);
 	public void searchSpecificDistrictAndNavigateTo(String districtText);
 	public void searchSpecificLocationAndNavigateTo(String locationText);
+	public void verifyMagnifyGlassIconShowOrNot();
 }

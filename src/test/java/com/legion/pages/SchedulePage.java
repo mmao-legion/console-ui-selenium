@@ -618,4 +618,7 @@ public interface SchedulePage {
 	public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception;
 	public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception;
 	public void editTheShiftTimeForSpecificShift(WebElement shift, String startTime, String endTime) throws Exception;
+	public boolean isOfferTMOptionVisible() throws Exception;
+	public boolean isOfferTMOptionEnabled() throws Exception;
+	public void verifyOfferTMOptionIsAvailable() throws Exception;
 }

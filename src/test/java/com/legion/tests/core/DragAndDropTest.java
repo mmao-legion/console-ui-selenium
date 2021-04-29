@@ -976,6 +976,7 @@ public class DragAndDropTest extends TestBase {
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.dragOneAvatarToAnotherSpecificAvatar(0, firstNameOfTM1, 1, firstNameOfTM2);
+            schedulePage.verifyConfirmStoreOpenCloseHours();
             String expectedViolationMessage = firstNameOfTM1+" should not take a "+workRoleOfTM2+" shift";
             schedulePage.verifyMessageInConfirmPage(expectedViolationMessage,expectedViolationMessage);
             List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
@@ -1009,6 +1010,7 @@ public class DragAndDropTest extends TestBase {
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.dragOneAvatarToAnotherSpecificAvatar(0, firstNameOfTM1, 1, firstNameOfTM2);
+            schedulePage.verifyConfirmStoreOpenCloseHours();
             schedulePage.selectSwapOrAssignOption("assign");
             schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (schedulePage.verifyDayHasShiftByName(0,firstNameOfTM1)==1 && schedulePage.verifyDayHasShiftByName(1,firstNameOfTM1)==1){

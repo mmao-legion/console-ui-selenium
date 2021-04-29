@@ -26,8 +26,8 @@ public interface ConfigurationPage {
     public void validateShiftStartTimeUnitList() throws Exception;
     public List<String> getShiftStartTimeEventList() throws Exception;
     public void verifyRadioButtonInTimeOfDayIsSingletonSelect() throws Exception;
-    public void inputShiftDuartionMinutes(String duringTime) throws Exception;
-    public void validateShiftDuartionTimeUnit() throws Exception;
+    public void inputShiftDurationMinutes(String duringTime) throws Exception;
+    public void validateShiftDurationTimeUnit() throws Exception;
     public void inputOffsetTimeForShiftEnd(String endOffsetTime,String endEventPoint) throws Exception;
     public void validateShiftEndTimeUnitList() throws Exception;
     public void tickOnCheckBoxOfTimeOfDay() throws Exception;
@@ -46,7 +46,7 @@ public interface ConfigurationPage {
     public void verifyCheckMarkButtonOnAdvanceStaffingRulePage() throws Exception;
     public void saveOneAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
     public void cancelSaveOneAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
-    public void addMutipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
+    public void addMultipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
     public void editAdvanceStaffingRule(String shiftsNumber) throws Exception;
     public void deleteAdvanceStaffingRule() throws Exception;
     public void verifyClockInDisplayAndSelect(List<String> clockInGroup) throws Exception;
@@ -57,6 +57,7 @@ public interface ConfigurationPage {
     public void selectShiftStartTimeUnit(String startTimeUnit) throws Exception;
     public void selectShiftEndTimeEvent(String endEvent) throws Exception;
     public void createNewTemplate(String templateName) throws Exception;
+    public void deleteNewCreatedTemplate(String templateName) throws Exception;
     public void addAllTypeOfTemplate(String templateName) throws Exception;
     public void verifyConvertUnassignedShiftsToOpenSetting() throws Exception;
     public void updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(String option) throws Exception;
@@ -65,4 +66,7 @@ public interface ConfigurationPage {
     public void validateAdvanceStaffingRuleShowing(String startEvent,String startOffsetTime,String startEventPoint,String startTimeUnit,
                                                              String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
                                                              List<String> days,String shiftsNumber) throws Exception;
+    public void deleteAllScheduleRules() throws Exception;
+    public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception;
+    public void searchTemplate(String templateName) throws Exception;
 }

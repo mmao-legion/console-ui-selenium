@@ -1135,6 +1135,7 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.saveSchedule();
         if(schedulePage.isRequiredActionSmartCardLoaded()){
             schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

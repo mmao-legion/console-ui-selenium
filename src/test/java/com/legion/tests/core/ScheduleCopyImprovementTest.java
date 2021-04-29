@@ -735,6 +735,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             schedulePage.createScheduleForNonDGFlowNewUI();
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.publishActiveSchedule();
             //Get the info of this week for copy schedule
             String firstWeekInfo = schedulePage.getActiveWeekText();

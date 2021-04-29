@@ -299,12 +299,24 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		clickOnTemplateName(templateType);
 	}
 
+	@FindBy(css="input[placeholder=\"You can search by template name, status and creator.\"]")
+	private WebElement searchTemplateInputBox;
 
-//open the specify template to edit or view details
+	public void searchTemplate(String templateName) throws Exception{
+		if(isElementEnabled(searchTemplateInputBox,5)){
+			clickTheElement(searchTemplateInputBox);
+			searchTemplateInputBox.sendKeys(templateName);
+			searchTemplateInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(2);
+		}
+	}
+
+	//open the specify template to edit or view details
 	@Override
 	public void clickOnSpecifyTemplateName(String templateName,String editOrViewMode) throws Exception {
 
 		if(isTemplateListPageShow()){
+			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
 					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
@@ -793,7 +805,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void inputShiftDuartionMinutes(String duringTime) throws Exception{
+	public void inputShiftDurationMinutes(String duringTime) throws Exception{
 		waitForSeconds(5);
 		clickTheElement(shiftDuartionMinutes);
 		shiftDuartionMinutes.clear();
@@ -807,12 +819,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void validateShiftDuartionTimeUnit() throws Exception{
+	public void validateShiftDurationTimeUnit() throws Exception{
 		String unit = "minutes";
 		if(shiftDuartionMinutesUnit.getText().trim()!=null && shiftDuartionMinutesUnit.getText().equals(unit)){
-			SimpleUtils.pass("The shift Duartion Minutes Unit is: " + shiftDuartionMinutesUnit.getText().trim());
+			SimpleUtils.pass("The shift Duration Minutes Unit is: " + shiftDuartionMinutesUnit.getText().trim());
 		}else{
-			SimpleUtils.fail("The The shift Duartion Minutes Unit is not correct.",false);
+			SimpleUtils.fail("The The shift Duration Minutes Unit is not correct.",false);
 		}
 
 	}
@@ -1276,7 +1288,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 	
 	@Override
-	public void addMutipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception{
+	public void addMultipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception{
 		//get the staffing rules count before add one new rule
 		int countBeforeSaving = Integer.valueOf(getCountOfStaffingRules(workRole));
 		selectWorkRoleToEdit(workRole);
@@ -1341,10 +1353,43 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	
+	@FindBy(css="div.settings-work-rule-container")
+	private WebElement scheduleRulesList;
 
+	@Override
+	public void deleteAllScheduleRules() throws Exception{
+		if(staffingRulesList.size()!=0){
+			for(WebElement staffingRule:staffingRulesList){
+				WebElement deleteButton = staffingRule.findElement(By.cssSelector("span.settings-work-rule-edit-delete-icon"));
+				if(isElementEnabled(deleteButton,2)){
+					clickTheElement(deleteButton);
+					waitForSeconds(2);
+					clickTheElement(deleteButtonOnDialogPage);
+					if(staffingRule.findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size()==1){
+						SimpleUtils.pass("User can delete staffing rules successfully!");
+					}else {
+						SimpleUtils.fail("User failed to delete staffing rules.",false);
+					}
+				}
+			}
+		}else {
+			SimpleUtils.report("There is not staffing rule so far.");
+		}
+	}
 
-
+	@Override
+	public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception{
+		if(isElementEnabled(saveButton,3)){
+			clickTheElement(saveButton);
+			waitForSeconds(5);
+			if (isElementEnabled(dropdownArrowButton,5)) {
+				SimpleUtils.pass("User click on save button on schedule rule list page successfully!");
+			}else
+				SimpleUtils.fail("User failed to click on save button on schedule rule list page!",false);
+		}else {
+			SimpleUtils.fail("No save button displayed on page",false);
+		}
+	}
 
 	//added by Estelle to verify ClockIn
 	@FindBy(css="input-field[options=\"$ctrl.dynamicGroupList\"] > ng-form > div.select-wrapper>select")
@@ -1596,6 +1641,42 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css="lg-button[ng-click=\"deleteTemplate()\"] button")
+	private WebElement deleteTemplateButton;
+
+	@FindBy(css="modal[modal-title=\"Deleting Template\"]")
+	private WebElement deleteTemplateDialog;
+
+	@FindBy(css="modal[modal-title=\"Deleting Template\"] lg-button[label=\"OK\"] button")
+	private WebElement okButtonOnDeleteTemplateDialog;
+
+	@Override
+	public void deleteNewCreatedTemplate(String templateName) throws Exception{
+		String newTemplateName = templateNameList.get(0).getText().trim();
+		if(templateName.equals(newTemplateName)){
+			clickTheElement(templateNameList.get(0));
+			waitForSeconds(5);
+			if(isElementEnabled(deleteTemplateButton,3)){
+				clickTheElement(deleteTemplateButton);
+				if(isElementEnabled(deleteTemplateDialog,3)){
+					clickTheElement(okButtonOnDeleteTemplateDialog);
+					waitForSeconds(5);
+					String firstTemplateName = templateNameList.get(0).getText().trim();
+					if(!firstTemplateName.equals(templateName)){
+						SimpleUtils.pass("User has deleted new created template successfully!");
+					}else {
+						SimpleUtils.fail("User failed to delete new created template!",false);
+					}
+				}
+			}else {
+				SimpleUtils.fail("Clicking the template failed.",false);
+			}
+		}else {
+			SimpleUtils.fail("Create new template failed.",false);
+		}
+
+	}
+
     @Override
 	public void addAllTypeOfTemplate(String templateName) throws Exception {
 			for(int i = 0 ;i < configurationCardsList.size(); i++){
@@ -1603,6 +1684,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					clickTheElement(configurationCardsList.get(i));
 					waitForSeconds(1);
 					createNewTemplate(templateName);
+					deleteNewCreatedTemplate(templateName);
 					goToConfigurationPage();
 				}
 			}
