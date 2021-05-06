@@ -26,7 +26,7 @@
                     <include name="verifyChangeP2PToMS" />
 
                     <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
-<!--                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />-->
+                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
                     <include name="verifyNoLocationGroupSettingForMock" />
 
                     <include name="verifyChangeNoneLocationToChild" />
@@ -44,7 +44,7 @@
                     <include name="verifyAddUpperFieldsWithDiffLevel" />
                     <include name="verifyDisableEnableUpperFieldFunction"/>
                     <include name="verifyUpperFieldSmartCardData" />
-                    <include name="verifyUpdateUpperFieldFunction" />
+<!--                    <include name="verifyUpdateUpperFieldFunction" />-->
                     <include name="verifyCancelCreatingUpperfieldFunction" />
 
 
