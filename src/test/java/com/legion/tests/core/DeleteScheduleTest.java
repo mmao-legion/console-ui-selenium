@@ -1,8 +1,6 @@
 package com.legion.tests.core;
 
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LoginPage;
-import com.legion.pages.SchedulePage;
+import com.legion.pages.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -194,6 +192,86 @@ public class DeleteScheduleTest extends TestBase {
 
             // Verify Store Manger cannot see the Delete button if schedule is published
             SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is published!", !schedulePage.isDeleteScheduleButtonLoaded(), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Store Manager cannot see the Delete button when schedule is not pulished")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Verify SM doesn't have "Schedule: Manage Schedule" permission
+            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            controlsPage.clickGlobalSettings();
+
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            String accessRoleTab = "Access Roles";
+            controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+            String permissionSection = "Schedule";
+            String permission = "Schedule: Manage Schedule";
+            String actionOff = "off";
+            String actionOn = "on";
+            cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+            controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission, actionOff);
+            cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            boolean isScheduleCreated = schedulePage.isWeekGenerated();
+            if (!isScheduleCreated) {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            boolean isSchedulePublished = schedulePage.isCurrentScheduleWeekPublished();
+            if (isSchedulePublished) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            // Login as SM
+            LoginAsDifferentRole("StoreManager");
+            dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            // Verify Store Manager cannot see the Delete button when schedule is not pulished
+            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is published!", !schedulePage.isDeleteScheduleButtonLoaded(), false);
+            loginPage.logOut();
+
+            // Login as Internal admin, add the permission back
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            controlsPage.gotoControlsPage();
+            controlsPage.clickGlobalSettings();
+            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+            cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+            controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission, actionOn);
+            cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

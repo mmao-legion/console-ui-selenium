@@ -1458,8 +1458,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     return false;
             } else if (isConsoleMessageError()) {
                 return false;
-            } else if (isElementLoaded(publishSheduleButton))
+            } else if (isElementLoaded(publishSheduleButton)) {
                 return false;
+            } else if (isElementLoaded(generateSheduleButton, 5)) {
+                return false;
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

@@ -420,6 +420,19 @@ public abstract class TestBase {
         }
     }
 
+    public void LoginAsDifferentRole(String roleName) throws Exception {
+        try {
+            String fileName = "UsersCredentials.json";
+            fileName = MyThreadLocal.getEnterprise() + fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] teamMemberCredentials = userCredentials.get(roleName);
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+        } catch (Exception e) {
+            SimpleUtils.fail("Login as: " + roleName + " failed!", false);
+        }
+    }
+
     public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
     // TODO Auto-generated method stub
 

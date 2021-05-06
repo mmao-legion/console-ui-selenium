@@ -2831,7 +2831,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void selectUsersAndRolesSubTabByLabel(String label) throws Exception {
 		boolean isTabFound = false;
-		if (areListElementVisible(subTabs,10) && subTabs.size() > 0) {
+		if (areListElementVisible(subTabs,15) && subTabs.size() > 0) {
 			for (WebElement subTab : subTabs) {
 				if (subTab.getText().toLowerCase().contains(label.toLowerCase())) {
 					click(subTab);

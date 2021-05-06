@@ -255,6 +255,7 @@
                     <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
                     <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
                     <include name="verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager" />
+                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
