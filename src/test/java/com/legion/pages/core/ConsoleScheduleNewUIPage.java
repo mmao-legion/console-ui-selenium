@@ -6595,6 +6595,47 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void searchTeamMemberByNameNLocation(String name, String location) throws Exception {
+        if(areListElementVisible(btnSearchteamMember,5)) {
+            if (btnSearchteamMember.size() == 2) {
+                //click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
+                    textSearch.clear();
+                    textSearch.sendKeys(name);
+                    click(searchIcon);
+                    if (areListElementVisible(searchResults, 15)) {
+                        for (WebElement searchResult : searchResults) {
+                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
+                            WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
+                            WebElement locationInfo = searchResult.findElement(By.className("tma-description-fields"));
+                            if (workerName != null && optionCircle != null) {
+                                if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.trim().toLowerCase()) && locationInfo.getText().toLowerCase().trim().replaceAll("\n"," ").contains(location.trim().toLowerCase())) {
+                                    click(optionCircle);
+                                    SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                    waitForSeconds(2);
+                                    if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().equalsIgnoreCase("ASSIGN ANYWAY")) {
+                                        click(btnAssignAnyway);
+                                        SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                    }
+                                    break;
+                                }
+                            }else {
+                                SimpleUtils.fail("Worker name or option circle not loaded Successfully!", false);
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        }
+    }
+
+    @Override
     public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception {
         boolean isFound = false;
         if (areListElementVisible(addedShiftIcons, 5)) {

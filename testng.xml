@@ -423,6 +423,7 @@
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
                     <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
                 </methods>
             </class>
         </classes>
