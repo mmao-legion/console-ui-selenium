@@ -21,10 +21,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.teamMemberName;
 
 public class ScheduleCopyImprovementTest extends TestBase {
 
     private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+    private static Map<String, String> newTMDetails1 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
+    private static Map<String, String> newTMDetails2 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember2.json");
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
@@ -1218,4 +1221,245 @@ public class ScheduleCopyImprovementTest extends TestBase {
         }
     }
 
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate that if an employee is on PTO, leave or terminated as of the new week, the shift day/time should be copied but will be unassigned")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String option = "No, keep as unassigned";
+            changeConvertToOpenShiftsSettings(option);
+
+            Thread.sleep(2000);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            //Get the date info of the week for create time off, leave and terminate
+            String activeWeek = schedulePage.getActiveWeekText();
+            List<String> year = schedulePage.getYearsFromCalendarMonthYearText();
+            String[] items = activeWeek.split(" ");
+            String fromDate = year.get(0)+ " " + items[3] + " " + items[4];
+
+            //To avoid one issue -- the schedule cannot be generated when directly go to Team tab
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            // Create new TM for terminate
+            String tm1 = "Nora6745";
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            if (teamPage.checkIfTMExists(tm1)) {
+                teamPage.searchAndSelectTeamMemberByName(tm1);
+                if(teamPage.isManualOnBoardButtonLoaded()) {
+                    teamPage.manualOnBoardTeamMember();
+                }
+                if (teamPage.isActivateButtonLoaded()) {
+                    teamPage.clickOnActivateButton();
+                    teamPage.isActivateWindowLoaded();
+                    teamPage.selectADateOnCalendarAndActivate();
+                }
+                if (teamPage.isCancelTerminateButtonLoaded()) {
+                    teamPage.cancelTMTerminate();
+                }
+                if (teamPage.isCancelDeactivateButtonLoaded()) {
+                    teamPage.cancelTMDeactivate();
+                }
+            } else {
+                tm1 = createAndOnboardNewTM(newTMDetails1);
+            }
+            teamPage.terminateOrDeactivateTheTeamMemberFromSpecificDate(true, fromDate);
+
+
+            //Create Tm for deactivation
+            String tm2 = "Mary19650";
+            teamPage.goToTeam();
+            if (teamPage.checkIfTMExists(tm2)) {
+                teamPage.searchAndSelectTeamMemberByName(tm2);
+                if(teamPage.isManualOnBoardButtonLoaded()) {
+                    teamPage.manualOnBoardTeamMember();
+                }
+                if (teamPage.isActivateButtonLoaded()) {
+                    teamPage.clickOnActivateButton();
+                    teamPage.isActivateWindowLoaded();
+                    teamPage.selectADateOnCalendarAndActivate();
+                }
+                if (teamPage.isCancelTerminateButtonLoaded()) {
+                    teamPage.cancelTMTerminate();
+                }
+                if (teamPage.isCancelDeactivateButtonLoaded()) {
+                    teamPage.cancelTMDeactivate();
+                }
+            } else {
+                tm2 = createAndOnboardNewTM(newTMDetails2);
+            }
+            teamPage.terminateOrDeactivateTheTeamMemberFromSpecificDate(false, fromDate);
+
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "8:00PM");
+
+            // Create new shift for TM1 on seven days
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            schedulePage.selectSpecificWorkDay(7);
+            schedulePage.selectWorkRole("MOD");
+            schedulePage.moveSliderAtCertainPoint("3", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(tm1);
+            schedulePage.clickOnOfferOrAssignBtn();
+
+            // Create new shift for TM2 on seven days
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            schedulePage.clearAllSelectedDays();
+            schedulePage.selectSpecificWorkDay(7);
+            schedulePage.selectWorkRole("MOD");
+            schedulePage.moveSliderAtCertainPoint("4", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.searchTeamMemberByName(tm2);
+            schedulePage.clickOnOfferOrAssignBtn();
+            schedulePage.deleteAllOOOHShiftInWeekView();
+            schedulePage.saveSchedule();
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            schedulePage.publishActiveSchedule();
+            SimpleUtils.assertOnFail("The schedule fail to publish! ", schedulePage.isCurrentScheduleWeekPublished(), false);
+
+            //Get the info of this week for copy schedule
+            String firstWeekInfo = schedulePage.getActiveWeekText();
+            if (firstWeekInfo.length() > 11) {
+                firstWeekInfo = firstWeekInfo.trim().substring(10);
+                if (firstWeekInfo.contains("-")) {
+                    String[] temp = firstWeekInfo.split("-");
+                    if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
+                        firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
+                                + " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
+                    }
+                }
+            }
+
+            schedulePage.navigateToNextWeek();
+            isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.clickCreateScheduleBtn();
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
+            schedulePage.clickNextBtnOnCreateScheduleWindow();
+            schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
+            schedulePage.clickOnFinishButtonOnCreateSchedulePage();
+
+
+            //Check the tooltip of publish button
+            String tooltip = schedulePage.getTooltipOfPublishButton();
+            SimpleUtils.assertOnFail("The tooltip of publish button should display as: Please address required action(s)! But the actual tooltip is: "+ tooltip,
+                    tooltip.equalsIgnoreCase("Please address required action(s)"), false);
+            //Check the Unassigned shifts will display
+            int unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            SimpleUtils.assertOnFail("Unassigned shifts should display! ",unassignedShiftsCount >= 14, false);
+            //Check the Action required smart card is display
+            SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
+                    schedulePage.isRequiredActionSmartCardLoaded(), false);
+
+            List<String> unassignedShiftTimes = new ArrayList<>();
+            List<String> openShiftTimes = new ArrayList<>();
+            List<WebElement> unassignedShifts = new ArrayList<>();
+            List<WebElement> openShifts = new ArrayList<>();
+            List<String> complianceMessage = new ArrayList<>();
+            for(int i = 0; i< 7; i++){
+                unassignedShiftTimes.clear();
+                openShiftTimes.clear();
+                unassignedShifts.clear();
+                openShifts.clear();
+
+                unassignedShifts = schedulePage.getOneDayShiftByName(i, "unassigned");
+//                openShifts = schedulePage.getOneDayShiftByName(i, "open");
+                SimpleUtils.assertOnFail("There should has at least 2 unassigned shifts in this day! ", unassignedShifts.size()>1, false);
+
+                for (WebElement unassignedShift: unassignedShifts) {
+                    complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
+                    SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
+                            complianceMessage.contains("Unassigned Shift"), false);
+                    unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
+                }
+//                for(WebElement openShift: openShifts){
+//                    openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText()) ;
+//                }
+
+                if(unassignedShiftTimes.contains("10am - 3pm") && unassignedShiftTimes.contains("11am - 4pm")) {
+                    SimpleUtils.pass("The opening/closing shifts display as unassigned! ");
+                } else
+                    SimpleUtils.fail("The opening/closing shifts are not display as unassigned! ", false);
+            }
+
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteAllOOOHShiftInWeekView();
+            schedulePage.saveSchedule();
+            schedulePage.publishActiveSchedule();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    private String createAndOnboardNewTM(Map<String, String> tmDetails) throws Exception {
+        String onBoarded = "Onboarded";
+        String active = "Active";
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+        String firstName = teamPage.addANewTeamMemberToInvite(tmDetails);
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.searchAndSelectTeamMemberByName(firstName);
+        if(teamPage.isManualOnBoardButtonLoaded()) {
+            teamPage.manualOnBoardTeamMember();
+        }
+        if (teamPage.isActivateButtonLoaded()) {
+            teamPage.clickOnActivateButton();
+            teamPage.isActivateWindowLoaded();
+            teamPage.selectADateOnCalendarAndActivate();
+        }
+        // Verify While activating team Member, On boarded date is updating to new one and Deactivate & terminate button is enabled
+        teamPage.verifyDeactivateAndTerminateEnabled();
+        return firstName;
+    }
 }

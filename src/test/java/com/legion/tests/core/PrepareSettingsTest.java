@@ -9,6 +9,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
@@ -86,6 +87,18 @@ public class PrepareSettingsTest extends TestBase {
             controlsPage.clickGlobalSettings();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
+
+            //Set buffer hours: before--2, after--3
+            controlsPage.gotoControlsPage();
+            controlsPage.clickGlobalSettings();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+            HashMap<String, String> schedulingPoliciesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
+            String beforeBufferCount = schedulingPoliciesData.get("Additional_Schedule_Hours_Before");
+            String afterBufferCount = schedulingPoliciesData.get("Additional_Schedule_Hours_After");
+            controlsNewUIPage.updateScheduleBufferHoursBefore(beforeBufferCount);
+            controlsNewUIPage.updateScheduleBufferHoursAfter(afterBufferCount);
+
 
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
