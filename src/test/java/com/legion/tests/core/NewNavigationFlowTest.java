@@ -123,12 +123,12 @@ public class NewNavigationFlowTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.verifyDefaultLevelForBUOrAdmin();
-        locationSelectorPage.searchSpecificBUAndNavigateTo(BUText);
-        locationSelectorPage.searchSpecificRegionAndNavigateTo(RegionText);
-        locationSelectorPage.searchSpecificDistrictAndNavigateTo(DistrictText);
-        locationSelectorPage.searchSpecificLocationAndNavigateTo(LocationText);
-        locationSelectorPage.searchSpecificBUAndNavigateTo(BUText);
+//        locationSelectorPage.verifyDefaultLevelForBUOrAdmin();
+//        locationSelectorPage.searchSpecificBUAndNavigateTo(BUText);
+//        locationSelectorPage.searchSpecificRegionAndNavigateTo(RegionText);
+//        locationSelectorPage.searchSpecificDistrictAndNavigateTo(DistrictText);
+//        locationSelectorPage.searchSpecificLocationAndNavigateTo(LocationText);
+//        locationSelectorPage.searchSpecificBUAndNavigateTo(BUText);
 
 
     }

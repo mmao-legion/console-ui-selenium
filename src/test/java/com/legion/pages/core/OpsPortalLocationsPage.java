@@ -1062,6 +1062,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (locationRows.size() > 0) {
 			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(0));
+			waitForSeconds(5);
 			click(editLocationBtn);
 			click(selectOneInChooseDistrict);
 			selectLocationOrDistrict(searchCharacter,index);

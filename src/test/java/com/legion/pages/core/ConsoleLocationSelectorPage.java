@@ -940,50 +940,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
 
     //added by Estelle for upperfield view
-    @FindBy(css = "div[ng-repeat-start=\"hierarchy in $ctrl.getNavHierarchy()\"]")
+    @FindBy(css = "input-field[required=\"$ctrl.required\"]")
     private List<WebElement> levelDisplay;
-    @FindBy(css = "input[placeholder=\"Search BU\"]")
-    private WebElement buSearchInput;
-    @FindBy(css = "input[placeholder=\"Search Region\"]")
-    private WebElement regionSearchInput;
-
-
-    @Override
-    public void verifyDefaultLevelForBUOrAdmin() {
-        if (areListElementVisible(levelDisplay,5)) {
-            if (levelDisplay.size()==2) {
-                SimpleUtils.pass("The default location navigation level for BU ,admin or communication role is correct");
-            }else
-                SimpleUtils.fail("The default location navigation level for BU ,admin or communication role is wrong and the size is : "+levelDisplay.size(), false);
-        }else
-            SimpleUtils.fail("Location navigation bar load failed",false);
-
-    }
-
-    @Override
-    public void searchSpecificBUAndNavigateTo(String buText) {
-       click(levelDisplay.get(0));
-        if (isElementEnabled(buSearchInput,5)) {
-            buSearchInput.sendKeys(buText);
-            buSearchInput.sendKeys(Keys.ENTER);
-        }
-
-    }
-
-    @Override
-    public void searchSpecificRegionAndNavigateTo(String regionText) {
-
-    }
-
-    @Override
-    public void searchSpecificDistrictAndNavigateTo(String districtText) {
-
-    }
-
-    @Override
-    public void searchSpecificLocationAndNavigateTo(String locationText) {
-
-    }
     @FindBy(id = "id_upperfield-search")
     private  WebElement magnifyGlassIcon;
     @FindBy(css = "lg-search-options[search-hint=\"Search\"] .lg-search-options>div.lg-search-options__scroller>div")
@@ -1036,14 +994,26 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                     waitForSeconds(5);
                     if (areListElementVisible(upperFieldsInResentView,5)&& upperFieldsInResentView.size()>0) {
                         for (WebElement each:upperFieldsInResentView) {
-                            String aaa = each.getText().split("\n")[0];
                             if (each.getText().split("\n")[0].equalsIgnoreCase(upperfiledNavigaTo)) {
                                 click(each);
                                 break;
                             }
                         }
+                        //check whether navigate success
+                        List<String> navigatorText = new ArrayList();
+
+                        if (areListElementVisible(levelDisplay,5)) {
+                            for (WebElement ss :levelDisplay) {
+                                navigatorText.add(ss.getText());
+                            }
+                            if (navigatorText.contains(upperfiledNavigaTo)) {
+                                SimpleUtils.pass("Can navigate to :" + upperfiledNavigaTo +"  successfully");
+                            }
+                        }else
+                            SimpleUtils.fail("Navigate to specific location failed",false);
+
                     }else
-                        SimpleUtils.fail("Resent View drop down list load failed",false);
+                        SimpleUtils.fail("Resent View drop down list load failed or There are no upperfields that match your criteria ",false);
                 }else
                     SimpleUtils.fail("Global search select input box load failed",false);
             }else
