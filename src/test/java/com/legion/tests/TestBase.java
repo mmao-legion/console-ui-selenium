@@ -160,7 +160,7 @@ public abstract class TestBase {
         String testName = ExtentTestManager.getTestName(method);
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
-        String enterpriseName =  SimpleUtils.getEnterprise(method);
+        enterpriseName =  SimpleUtils.getEnterprise(method);
         String platformName =  ExtentTestManager.getMobilePlatformName(method);
 //        int sectionId = ExtentTestManager.getTestRailSectionId(method);
         String testRunPhaseName = ExtentTestManager.getTestRunPhase(method);

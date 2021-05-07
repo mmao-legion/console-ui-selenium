@@ -639,23 +639,23 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement newTimeOffBtn;
 	@FindBy (css = ".user-profile-section")
 	private List<WebElement> userProfileSections;
-	@FindBy (css = "lgn-action-button[label=\"'ACTIVATE'\"] button")
+	@FindBy (css = "[ng-click=\"actionClicked('Activate')\"]")
 	private WebElement activateButton;
 	@FindBy (css = "div.activate")
 	private WebElement activateWindow;
 	@FindBy (css = "button.save-btn.pull-right")
 	private WebElement applyButton;
-	@FindBy (css = "lgn-action-button[label=\"'DEACTIVATE'\"] button")
+	@FindBy (css = "[ng-click=\"actionClicked('Deactivate')\"]")
 	private WebElement deactivateButton;
-	@FindBy (css = "lgn-action-button[label=\"'TERMINATE'\"] button")
+	@FindBy (css = "[ng-click=\"actionClicked('Terminate')\"]")
 	private WebElement terminateButton;
-	@FindBy (css = "lgn-action-button[label=\"'CANCEL TERMINATE'\"] button")
+	@FindBy (css = "[ng-click=\"actionClicked('CancelTerminate')\"]")
 	private WebElement cancelTerminateButton;
 	@FindBy (css = "div.legion-status div.invitation-status")
 	private WebElement onBoardedDate;
 	@FindBy (css = "div.legion-status>div:nth-child(2)")
 	private WebElement tmStatus;
-	@FindBy (css = "lgn-action-button[label=\"'CANCEL ACTIVATE'\"] button")
+	@FindBy (css = "[ng-click=\"actionClicked('CancelDeactivate')\"]")
 	private WebElement cancelActivateButton;
 	@FindBy (className = "modal-content")
 	private WebElement deactivateWindow;
@@ -667,7 +667,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement employeeID;
 	@FindBy (css = "i.next-month")
 	private WebElement nextMonthArrow;
-	@FindBy (css = "lgn-action-button[label=\"'MANUAL ONBOARD'\"] button")
+	@FindBy (css = "[ng-if=\"showManualOnboard()\"]")
 	private WebElement manualOnBoardButton;
 	@FindBy (css = "div.loan-to-calendar i.next-month")
 	private WebElement endDateNextMonthArrow;
@@ -2023,8 +2023,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void clickOnActivateButton() throws Exception {
-		if (isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Activate\"]")), 10)) {
-			click(profileSection.findElement(By.xpath("//span[text()=\"Activate\"]")));
+		if (isElementLoaded(activateButton, 10)) {
+			click(activateButton);
 		} else {
 			SimpleUtils.fail("Activate button failed to load on Profile Tab!", false);
 		}
@@ -2032,7 +2032,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void isActivateWindowLoaded() throws Exception {
-		if (isElementLoaded(activateWindow, 10)) {
+		if (isElementLoaded(removeWindow, 10)) {
 			SimpleUtils.pass("Activate window loaded successfully!");
 		} else {
 			SimpleUtils.fail("Activate window failed to load!", false);
@@ -2338,11 +2338,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public boolean isManualOnBoardButtonLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Manual Onboard\"]")), 15)) {
+		if (isElementLoaded(manualOnBoardButton)) {
 			isLoaded = true;
 			SimpleUtils.pass("Manual Onboard Button Loaded Successfully!");
 		}else{
-			SimpleUtils.fail("Manual Onboard Button failed to load!", false);
+			SimpleUtils.report("Manual Onboard Button failed to load!");
 		}
 		return isLoaded;
 	}
@@ -2353,8 +2353,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public void manualOnBoardTeamMember() throws Exception {
 		String successfulMsg = "Team member successfully On-boarded.";
 		String actualMsg = "";
-		if (isElementLoaded(profileSection.findElement(By.xpath("//span[text()=\"Manual Onboard\"]")), 5)) {
-			click(profileSection.findElement(By.xpath("//span[text()=\"Manual Onboard\"]")));
+		if (isElementLoaded(manualOnBoardButton, 5)) {
+			click(manualOnBoardButton);
 		}else {
 			SimpleUtils.fail("Manual OnBoard button failed to load!", true);
 		}
@@ -4352,5 +4352,172 @@ private WebElement locationColumn;
 		} else {
 			SimpleUtils.fail("Team Members are failed to load!", true);
 		}
+	}
+
+
+
+	@FindBy (css = "span.month-header")
+	private WebElement monthHeader;
+
+	@Override
+	public void terminateOrDeactivateTheTeamMemberFromSpecificDate(Boolean isTerminate,String fromDate) throws Exception {
+		String removeMsg = "Successfully scheduled removal of Team Member from Roster.";
+		String deactivationMsg = "Successfully scheduled deactivation of Team Member.";
+		String actualMsg = "";
+		scrollToBottom();
+		if (isElementLoaded(cancelActivateButton, 5) || isElementLoaded(cancelTerminateButton, 5)){
+			cancelTMDeactivate();
+			cancelTMTerminate();
+		}
+
+		if (isTerminate) {
+			click(terminateButton);
+			isTerminateWindowLoaded();
+		} else {
+			click(deactivateButton);
+			isActivateWindowLoaded();
+		}
+
+		if (isElementLoaded(monthHeader, 5)
+				&& isElementLoaded(nextMonthArrow, 5)
+				&& areListElementVisible(daysOnCalendar, 5)) {
+			String[] dates = fromDate.split(" ");
+			String year = dates[0];
+			String month = dates[1];
+			String day = dates[2];
+
+			String monthInCalendar = monthHeader.getText().split(" ")[0].substring(0, 3);
+			String yearInCalendar = monthHeader.getText().split(" ")[1];
+
+			int i =0;
+			while (i<10 && (!year.equalsIgnoreCase(yearInCalendar) || !month.equalsIgnoreCase(monthInCalendar))){
+				click(nextMonthArrow);
+				i ++;
+				monthInCalendar = monthHeader.getText().split(" ")[0].substring(0, 3);
+			}
+			boolean isCurrentWeek = false;
+			for (WebElement dayOnCalendar: daysOnCalendar){
+				if(!isCurrentWeek) {
+					if (dayOnCalendar.getText().equalsIgnoreCase("1")){
+						isCurrentWeek = true;
+					}
+				} else {
+					if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
+						click (dayOnCalendar);
+						break;
+					}
+				}
+			}
+			click(applyButton);
+			if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+				click(confirmButton);
+				if (isElementLoaded(popupMessage, 15))
+				{
+					actualMsg = popupMessage.getText();
+					if (isTerminate) {
+						if (removeMsg.equals(actualMsg)) {
+							SimpleUtils.pass("Terminate the team member successfully!");
+						}else {
+							SimpleUtils.fail("The pop up message is incorrect!", false);
+						}
+					} else {
+						if (deactivationMsg.equals(actualMsg)) {
+							SimpleUtils.pass("Deactivate the team member successfully!");
+						}else {
+							SimpleUtils.fail("The pop up message is incorrect!", false);
+						}
+					}
+				}
+			} else {
+				SimpleUtils.fail("Confirm window doesn't show!", false);
+			}
+		} else
+			SimpleUtils.fail("The items on calendar loaded fail!", false);
+
+	}
+
+
+	public boolean isCancelDeactivateButtonLoaded () throws Exception {
+		boolean isLoaded = false;
+		if (isElementLoaded(cancelActivateButton, 10)) {
+			SimpleUtils.pass("Cancel deactivate button is Loaded!");
+			isLoaded = true;
+		}
+		return isLoaded;
+	}
+
+	public void cancelTMDeactivate() throws Exception {
+		scrollToBottom();
+		if(isElementLoaded(cancelActivateButton, 5)){
+			click(cancelActivateButton);
+			if(isElementLoaded(confirmBtn, 5)) {
+				click(confirmBtn);
+			}
+			if (isElementLoaded(deactivateButton, 5)) {
+				SimpleUtils.report("Cancel deactivate successfully! ");
+			} else
+				SimpleUtils.fail("Cancel deactivate failed! ", false);
+
+		} else
+			SimpleUtils.report("Cancel deactivate button loaded fail! ");
+	}
+
+
+	public void cancelTMTerminate() throws Exception {
+		scrollToBottom();
+		if(isElementLoaded(cancelTerminateButton, 5)){
+			click(cancelTerminateButton);
+			if(isElementLoaded(confirmBtn, 5)) {
+				click(confirmBtn);
+			}
+			if (isElementLoaded(terminateButton, 5)) {
+				SimpleUtils.report("Cancel terminate successfully! ");
+			} else
+				SimpleUtils.fail("Cancel terminate failed! ", false);
+		} else
+			SimpleUtils.report("Cancel terminate button loaded fail! ");
+	}
+
+	public boolean checkIfTMExists(String tmName) throws Exception {
+		boolean isTMExists = false;
+		if(isElementLoaded(teamMemberSearchBox, 10)) {
+			teamMemberSearchBox.clear();
+			teamMemberSearchBox.sendKeys(tmName);
+			waitForSeconds(4);
+			int i = 0;
+			while(teamMembers.size() == 0 && i< 3){
+				teamMemberSearchBox.clear();
+				teamMemberSearchBox.sendKeys(tmName);
+				waitForSeconds(3);
+				i++;
+			}
+			if (teamMembers.size() > 0){
+				for (WebElement teamMember : teamMembers){
+					WebElement tr = teamMember.findElement(By.className("tr"));
+					if (tr != null) {
+						WebElement name = tr.findElement(By.cssSelector("span.name"));
+						List<WebElement> titles = tr.findElements(By.cssSelector("span.title"));
+						WebElement status = tr.findElement(By.cssSelector("span.status"));
+						String title = "";
+						if (name != null && titles != null && status != null && titles.size() > 0) {
+							for (WebElement titleElement : titles) {
+								title += titleElement.getText();
+							}
+							String nameJobTitleStatus = name.getText() + title + status.getText();
+							if (nameJobTitleStatus.contains(tmName)) {
+								isTMExists = true;
+								SimpleUtils.pass("Team Page: Team Member '" + tmName + "' can be found Successfully.");
+								break;
+							}
+						}else {
+							SimpleUtils.fail("Failed to find the name, title and Status!", true);
+						}
+					}else {
+						SimpleUtils.fail("Failed to find the tr element!", true);
+					}
+				}
+			}
+		}
+		return isTMExists;
 	}
 }
