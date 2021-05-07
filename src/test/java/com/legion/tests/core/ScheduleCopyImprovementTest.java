@@ -378,13 +378,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
             }
             if (ifVerifyOOOHShifts) {
-                schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "8:00AM", "5:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00AM", "5:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00AM", "5:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00AM", "500PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "5:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "5:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "5:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "8:00AM", "4:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00AM", "4:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00AM", "4:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00AM", "4:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "4:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "4:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "4:00PM");
             }
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
