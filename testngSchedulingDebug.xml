@@ -148,6 +148,7 @@
                     <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
                     <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
                 </methods>
             </class>
         </classes>
