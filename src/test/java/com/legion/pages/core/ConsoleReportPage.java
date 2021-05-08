@@ -25,6 +25,10 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class ConsoleReportPage extends BasePage implements ReportPage{
 
+	public ConsoleReportPage() {
+		PageFactory.initElements(getDriver(), this);
+	}
+
 	@FindBy(css = "div.console-navigation-item-label.Report")
 	private WebElement reportConsoleMenuDiv;
 
