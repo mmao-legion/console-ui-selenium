@@ -8,6 +8,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -112,23 +113,147 @@ public class NewNavigationFlowTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate location navigation function for BU manager")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationNavigationFunctionForBUManager(String browser, String username, String password, String location) throws Exception {
+    @TestName(description = "Make HQ the top node of the hierarchy")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEachTabIfSelectHQAsInternalCustomerAdmin(String browser, String username, String password, String location) throws Exception {
 
-        String BUText = "";
-        String RegionText = "";
-        String DistrictText = "";
-        String LocationText = "";
+
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-//        locationSelectorPage.verifyDefaultLevelForBUOrAdmin();
-//        locationSelectorPage.searchSpecificBUAndNavigateTo(BUText);
-//        locationSelectorPage.searchSpecificRegionAndNavigateTo(RegionText);
-//        locationSelectorPage.searchSpecificDistrictAndNavigateTo(DistrictText);
-//        locationSelectorPage.searchSpecificLocationAndNavigateTo(LocationText);
-//        locationSelectorPage.searchSpecificBUAndNavigateTo(BUText);
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("HQ");
+        if (locationSelectorPage.verifyHQViewShowOrNot()) {
+            locationSelectorPage.verifyGreyOutPageInHQView();
+            List<String> tabsName = locationSelectorPage.getConsoleTabs();
+            //check dashboard is empty or not
+            if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                SimpleUtils.pass("Dashboard tab show empty page successfully");
+            }else
+                SimpleUtils.fail("Dashboard tab show empty page failed",false);
+
+            //go to "Team" tab
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                SimpleUtils.pass("Team tab is grey out and show empty page successfully");
+            }else
+                SimpleUtils.fail("Team tab is not grey out and show empty page failed",false);
+
+
+            // Go to schedule page, schedule tab
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                SimpleUtils.pass("Schedule tab is grey out and show empty page successfully");
+            }else
+                SimpleUtils.fail("Schedule tab is not grey out and show empty page failed",false);
+
+
+            //Go to "Timesheet" option menu.
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                SimpleUtils.pass("TimeSheet tab is grey out and show empty page successfully");
+            }else
+                SimpleUtils.fail("TimeSheet tab is not grey out and show empty page failed",false);
+
+            //Go to "Compliance"  tab
+            if (tabsName.contains("Compliance")) {
+                CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+                compliancePage.clickOnComplianceConsoleMenu();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("Compliance tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("Compliance tab is not grey out and show empty page failed",false);
+            }else
+                SimpleUtils.fail("Compliance tab is disabled",false);
+
+
+
+//            Go to "Report"  tab
+            ReportPage reportPage = pageFactory.createConsoleReportPage();
+            reportPage.clickOnConsoleReportMenu();
+            if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                SimpleUtils.pass("Report tab is grey out and show empty page successfully");
+            }else
+                SimpleUtils.fail("Report tab is not grey out and show empty page failed",false);
+
+
+            //Go to "Insight" tab
+            if (tabsName.contains("Insights")) {
+                InsightPage insightPage = pageFactory.createConsoleInsightPage();
+                insightPage.clickOnConsoleInsightPage();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("Insight tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("Insight tab is not grey out and show empty page failed",false);
+
+            }else
+                SimpleUtils.report("Insight tab is disabled");
+
+            //Go to "Inbox" tab
+            if (tabsName.contains("Inbox")) {
+                InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+                inboxPage.clickOnInboxConsoleMenuItem();
+                if (inboxPage.isAnnouncementListPanelDisplay()) {
+                    SimpleUtils.pass("Inbox tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("Inbox tab is not grey out and show empty page failed",false);
+
+            }else
+                SimpleUtils.report("Inbox tab is disabled");
+
+
+            //Go to "News" tab
+             if (tabsName.contains("News")) {
+                 NewsPage newsPage = pageFactory.createConsoleNewsPage();
+                 newsPage.clickOnConsoleNewsMenu();
+                 if (newsPage.isNewsTabLoadWell()) {
+                     SimpleUtils.pass("News tab is grey out and show empty page successfully");
+                 }else
+                     SimpleUtils.fail("News tab is not grey out and show empty page failed",false);
+
+             }else
+                 SimpleUtils.report("News tab is disabled");
+
+            //Go to "Admin" tab
+            if (tabsName.contains("Admin")) {
+                AdminPage adminPage = pageFactory.createConsoleAdminPage();
+                adminPage.goToAdminTab();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("Admin tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("Admin tab is not grey out and show empty page failed",false);
+
+            }else
+                SimpleUtils.report("Admin tab is disabled");
+
+            //Go to "Integration" tab
+            if (tabsName.contains("Integration")) {
+                IntegrationPage integrationPage = pageFactory.createConsoleIntegrationPage();
+                integrationPage.clickOnConsoleIntegrationPage();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("Integration tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("Integration tab is not grey out and show empty page failed",false);
+
+            }else
+                SimpleUtils.report("Integration tab is disabled");
+
+            //Go to "Controls" tab
+            if (tabsName.contains("Controls")) {
+                ControlsPage controlsPage  = pageFactory.createConsoleControlsPage();
+                controlsPage.gotoControlsPage();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("Integration tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("Integration tab is not grey out and show empty page failed",false);
+
+            }else
+                SimpleUtils.report("Integration tab is disabled");
+
+        }else
+                SimpleUtils.fail("It's not HQ view",false);
 
 
     }

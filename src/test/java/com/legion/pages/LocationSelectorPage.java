@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface LocationSelectorPage {
@@ -34,4 +35,8 @@ public interface LocationSelectorPage {
 	public List<String> getRecentlyViewedInfo();
 	public void changeUpperFieldsFromResentViewList(int index);
 	public void changeUpperFieldsByMagnifyGlassIcon(String upperfiledNavigaTo);
+	public boolean verifyHQViewShowOrNot();
+	public List<String> getConsoleTabs();
+	public boolean isCurrentPageEmptyInHQView() throws Exception;
+	public void verifyGreyOutPageInHQView();
 }

@@ -502,7 +502,7 @@ public class ConfigurationTest extends TestBase {
     public void verifyCreateAllTypeTemplate(String browser, String username, String password, String location) throws Exception {
         try{
 
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
             String templateName="AutoCreate"+currentTime;
 

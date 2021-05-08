@@ -1022,4 +1022,58 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             e.printStackTrace();
         }
     }
+
+    @FindBy(css = "input-field[placeholder=\"All HQs\"]")
+    private WebElement hqNavigate;
+    @Override
+    public boolean verifyHQViewShowOrNot() {
+        if (isElementEnabled(hqNavigate,5)) {
+            SimpleUtils.pass("HQ view show well in navigation bar");
+            return true;
+        }else
+            SimpleUtils.fail("HQ view load failed in navigation bar",false);
+            return false;
+    }
+    @FindBy(css = "div.console-navigation>div")
+    private List<WebElement> tabsName;
+    @Override
+    public List<String> getConsoleTabs() {
+        List<String> tabsText = new ArrayList<String>();;
+
+        if (tabsName.size()>0) {
+            for (WebElement tab:tabsName) {
+                tabsText.add(tab.getText().trim());
+            }
+            return tabsText;
+        }else
+            SimpleUtils.fail("Login failed",false);
+            return null;
+    }
+
+    @FindBy(className = "nodata-content")
+    private WebElement noData;
+    @Override
+    public boolean isCurrentPageEmptyInHQView() throws Exception {
+        if (isElementLoaded(noData,5)) {
+            SimpleUtils.pass("Empty page show well");
+            return true;
+        }else
+            SimpleUtils.fail("It's not empty page",false);
+            return false;
+    }
+
+    @Override
+    public void verifyGreyOutPageInHQView() {
+        String enabledTabs = "Inbox, News, Moderation and Insights";
+        for (int i = 0; i <tabsName.size()-1 ; i++) {
+            String attribute = tabsName.get(i).getAttribute("class");
+            String text = tabsName.get(i).getText();
+            if (tabsName.get(i).getAttribute("class").contains("gray-item")|| tabsName.get(i).getAttribute("class").contains("active")) {
+                SimpleUtils.report(tabsName.get(i).getText()+": is gray out ");
+
+            }else if (enabledTabs.contains(tabsName.get(i).getText())) {
+                SimpleUtils.report(tabsName.get(i).getText()+": is enabled");
+            }
+        }
+    }
 }
