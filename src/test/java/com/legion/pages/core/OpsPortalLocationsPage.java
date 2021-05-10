@@ -310,7 +310,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isElementEnabled(selectALocationTitle,5)) {
 				searchInputInSelectALocation.sendKeys(searchCharactor);
 				searchInputInSelectALocation.sendKeys(Keys.ENTER);
-				waitForSeconds(20);
+				waitForSeconds(10);
 				if (locationRowsInSelectLocation.size()>0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"radio\"]"));
 				click(firstRow);
@@ -619,7 +619,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			waitForSeconds(5);
 			click(exportAllRadio);
 			click(okBtnInExportLocationPage);
-			waitForSeconds(10);
+			waitForSeconds(20);
 
 //			TimeZone timeZone = TimeZone.getTimeZone("America/Chicago");
 //			SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM");
@@ -1062,6 +1062,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (locationRows.size() > 0) {
 			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(0));
+			waitForSeconds(5);
 			click(editLocationBtn);
 			click(selectOneInChooseDistrict);
 			selectLocationOrDistrict(searchCharacter,index);
@@ -1157,8 +1158,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 				click(locationDetailsLinks.get(0));
 				click(editLocationBtn);
+				waitForSeconds(5);
 				selectByVisibleText(locationGroupSelect, "None");
-				waitForSeconds(10);
+				waitForSeconds(8);
 				click(okBtnInLocationGroupConfirmPage);
 				scrollToBottom();
 				click(saveBtnInUpdateLocationPage);
@@ -1284,7 +1286,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				upperfieldsSearchInputBox.clear();
 				upperfieldsSearchInputBox.sendKeys(searchInputText);
 				upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
-				waitForSeconds(3);
+				waitForSeconds(5);
 				if (upperfieldRows.size() > 0) {
 					SimpleUtils.pass("Can search out upperfield by using " + searchInputText);
 					break;
@@ -1653,7 +1655,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	public ArrayList<HashMap<String, String>> getUpperfieldsInfo(String districtName) {
-		waitForSeconds(10);
+		waitForSeconds(15);
 		ArrayList<HashMap<String,String>> upperfieldInfo = new ArrayList<>();
 
 		if (isElementEnabled(upperfieldsSearchInputBox, 10)) {
@@ -1707,6 +1709,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (upperfieldRows.size() > 0) {
 			List<WebElement> upperfieldDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(upperfieldDetailsLinks.get(0));
+			waitForSeconds(3);
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));
 			if (isElementEnabled(enabledDisableUpperfieldModal,10)) {
 				click(getDriver().findElement(By.cssSelector("lg-button[label=\""+action+"\"] ")));

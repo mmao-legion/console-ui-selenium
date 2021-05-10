@@ -1,7 +1,5 @@
 package com.legion.pages;
 
-import cucumber.api.java.it.Ma;
-import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;

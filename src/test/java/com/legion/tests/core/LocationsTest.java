@@ -851,7 +851,7 @@ public class LocationsTest extends TestBase {
     public void verifyChangeMSLocationsToNoneFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime =  dfs.format(new Date());
             String locationName = "LGMSAuto" +currentTime;
             setLGMSLocationName(locationName);

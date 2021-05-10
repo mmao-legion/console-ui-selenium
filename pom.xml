@@ -297,7 +297,7 @@
                     <systemPropertyVariables>
                         <env>${env}</env>
                         <enterprise>${enterprise}</enterprise>
-                        <testrail>${testRail}</testrail>
+                        <testRail>${testRail}</testRail>
                     </systemPropertyVariables>
 
                     <systemPropertyVariables>

@@ -26,7 +26,7 @@
                     <include name="verifyChangeP2PToMS" />
 
                     <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
-<!--                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />-->
+                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
                     <include name="verifyNoLocationGroupSettingForMock" />
 
                     <include name="verifyChangeNoneLocationToChild" />
@@ -44,7 +44,7 @@
                     <include name="verifyAddUpperFieldsWithDiffLevel" />
                     <include name="verifyDisableEnableUpperFieldFunction"/>
                     <include name="verifyUpperFieldSmartCardData" />
-                    <include name="verifyUpdateUpperFieldFunction" />
+<!--                    <include name="verifyUpdateUpperFieldFunction" />-->
                     <include name="verifyCancelCreatingUpperfieldFunction" />
 
 
@@ -64,7 +64,7 @@
             <class name="com.legion.tests.core.NewNavigationFlowTest">
                 <methods>
 <!--                    <include name="verifyLocationProfilePageInControls" />-->
-<!--                    <include name="verifyManagerLocationForOneUserInControlsInControls" />-->
+                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
 <!--                    <include name="verifyDashboardViewAsInternalAdmin" />-->
 <!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
                     <include name="verifyDashboardViewAsStoreManager" />
@@ -72,6 +72,8 @@
 <!--                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />-->
 <!--                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>-->
 <!--                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>-->
+                    <include name="verifyGlobalSearchFunctionOnNavigatorAsInternalCustomerAdmin" />
+
                 </methods>
             </class>
         </classes>
