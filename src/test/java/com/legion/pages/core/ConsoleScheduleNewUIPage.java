@@ -2716,8 +2716,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //		waitForSeconds(5);
         if(areListElementVisible(scheduleSearchTeamMemberStatus,5) || isElementLoaded(scheduleNoAvailableMatchStatus,5)){
             for(int i=0; i<scheduleSearchTeamMemberStatus.size();i++){
-                if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Available")
-                        || scheduleSearchTeamMemberStatus.get(i).getText().contains("Unknown")){
+                String statusText = scheduleSearchTeamMemberStatus.get(i).getText();
+                if((statusText.contains("Available") || statusText.contains("Unknown")) && !statusText.contains("Assigned to this shift")){
                     click(radionBtnSearchTeamMembers.get(i));
                     if (isElementEnabled(confirmWindow, 5)) {
                         click(okBtnOnConfirm);

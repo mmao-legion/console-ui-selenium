@@ -2124,7 +2124,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public boolean isActivateButtonLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(activateButton, 10)) {
+		if (isElementLoaded(activateButton, 5)) {
 			isLoaded = true;
 		}
 		return isLoaded;
@@ -2227,7 +2227,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public boolean isCancelTerminateButtonLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(cancelTerminateButton, 10)) {
+		if (isElementLoaded(cancelTerminateButton, 5)) {
 			SimpleUtils.pass("Cancel Terminate Button is Loaded!");
 			isLoaded = true;
 		}
@@ -4439,7 +4439,7 @@ private WebElement locationColumn;
 
 	public boolean isCancelDeactivateButtonLoaded () throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(cancelActivateButton, 10)) {
+		if (isElementLoaded(cancelActivateButton, 5)) {
 			SimpleUtils.pass("Cancel deactivate button is Loaded!");
 			isLoaded = true;
 		}
