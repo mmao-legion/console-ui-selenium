@@ -69,4 +69,5 @@ public interface ConfigurationPage {
     public void deleteAllScheduleRules() throws Exception;
     public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception;
     public void searchTemplate(String templateName) throws Exception;
+    public void publishNowTemplate() throws Exception;
 }
