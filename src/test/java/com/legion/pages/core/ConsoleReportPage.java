@@ -2,24 +2,13 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ReportPage;
-import com.legion.pages.TimeSheetPage;
-import com.legion.utils.MyThreadLocal;
+
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
