@@ -12,7 +12,7 @@
   "Reverted_Enterprise" : "LegionReverted",
   "KendraScott2_Enterprise" : "KendraScott2",
   "DGStage_Enterprise" : "dgstage",
-  "Op_Enterprise" : "op",
+  "Op_Enterprise" : "opauto",
   "CinemarkWkdy_Enterprise" : "cinemark-wkdy",
   "DEFAULT_USERNAME" : "admin2.a",
   "DEFAULT_PASSWORD" : "admin2.a",
@@ -22,7 +22,7 @@
   "CHROME" : "Chrome",
   "FIREFOX" : "Firefox",
   "console_logs" : "true",
-  "close_browser" : "true",
+  "close_browser" : "false",
   "show_report" : "true",
   "VERSION" : "68",
   "OS" : "WINDOW",
@@ -35,6 +35,6 @@
   "isParallelBrowser" : "false",
   "Download_File_Default_Dir" : "/var/lib/jenkins/workspace/createRemoteSeleniumGridForHydsoft/chinaQA",
   "isHeadlessBrowser" : "false",
-  "isGridEnabled" : "true",
+  "isGridEnabled" : "false",
   "URL" : "http://localhost:4455/wd/hub"
 }

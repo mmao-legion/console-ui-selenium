@@ -24,6 +24,7 @@
                     <!--                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />-->
                     <!--                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>-->
                     <!--                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>-->
+                    <include name="verifyEachTabIfSelectHQAsInternalCustomerAdmin" />
                 </methods>
             </class>
         </classes>

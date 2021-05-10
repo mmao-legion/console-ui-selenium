@@ -73,6 +73,8 @@
 <!--                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>-->
 <!--                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>-->
                     <include name="verifyGlobalSearchFunctionOnNavigatorAsInternalCustomerAdmin" />
+                    <include name="verifyEachTabIfSelectHQAsInternalCustomerAdmin" />
+
 
                 </methods>
             </class>
