@@ -8,8 +8,11 @@ import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
+
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class ConsoleNewsPage extends BasePage implements NewsPage {
 
@@ -19,14 +22,18 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 	private List<WebElement> newsSubTab;
 	@FindBy(css = "section.sc-kYrkKh")
 	private WebElement createPostPanel;
+
+	public ConsoleNewsPage() {
+		PageFactory.initElements(getDriver(), this);
+	}
 	@Override
 	public void clickOnConsoleNewsMenu() throws Exception {
 		if(isElementLoaded(newsConsoleMenuDiv,20)) {
 			click(newsConsoleMenuDiv);
 			if (newsConsoleMenuDiv.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
-				SimpleUtils.pass("News Page: Click on Compliance console menu successfully");
+				SimpleUtils.pass("News Page: Click on News console menu successfully");
 			else
-				SimpleUtils.fail("News Page: It doesn't navigate to Compliance console menu after clicking", false);
+				SimpleUtils.fail("News Page: It doesn't navigate to News console menu after clicking", false);
 		} else
 			SimpleUtils.fail("News Console Menu not loaded Successfully!", false);
 	}

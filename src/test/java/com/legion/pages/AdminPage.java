@@ -10,4 +10,5 @@ public interface AdminPage {
 
     public void rebuildSearchIndex() throws Exception;
 
+    public void clickOnConsoleAdminMenu() throws Exception;
 }

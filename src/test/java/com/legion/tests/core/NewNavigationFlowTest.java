@@ -150,12 +150,16 @@ public class NewNavigationFlowTest extends TestBase {
 
 
             //Go to "Timesheet" option menu.
-            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-            timeSheetPage.clickOnTimeSheetConsoleMenu();
-            if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
-                SimpleUtils.pass("TimeSheet tab is grey out and show empty page successfully");
+            if (tabsName.contains("TimeSheet")) {
+                TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+                timeSheetPage.clickOnTimeSheetConsoleMenu();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("TimeSheet tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("TimeSheet tab is not grey out and show empty page failed",false);
             }else
-                SimpleUtils.fail("TimeSheet tab is not grey out and show empty page failed",false);
+                SimpleUtils.report("TimeSheet tab is disabled");
+
 
             //Go to "Compliance"  tab
             if (tabsName.contains("Compliance")) {
@@ -166,7 +170,7 @@ public class NewNavigationFlowTest extends TestBase {
                 }else
                     SimpleUtils.fail("Compliance tab is not grey out and show empty page failed",false);
             }else
-                SimpleUtils.fail("Compliance tab is disabled",false);
+                SimpleUtils.report("Compliance tab is disabled");
 
 
 
@@ -183,10 +187,10 @@ public class NewNavigationFlowTest extends TestBase {
             if (tabsName.contains("Insights")) {
                 InsightPage insightPage = pageFactory.createConsoleInsightPage();
                 insightPage.clickOnConsoleInsightPage();
-                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
-                    SimpleUtils.pass("Insight tab is grey out and show empty page successfully");
+                if (insightPage.isInsightsPageDisplay()) {
+                    SimpleUtils.pass("Insight page load well ");
                 }else
-                    SimpleUtils.fail("Insight tab is not grey out and show empty page failed",false);
+                    SimpleUtils.fail("Insight page load failed",false);
 
             }else
                 SimpleUtils.report("Insight tab is disabled");
@@ -196,9 +200,9 @@ public class NewNavigationFlowTest extends TestBase {
                 InboxPage inboxPage = pageFactory.createConsoleInboxPage();
                 inboxPage.clickOnInboxConsoleMenuItem();
                 if (inboxPage.isAnnouncementListPanelDisplay()) {
-                    SimpleUtils.pass("Inbox tab is grey out and show empty page successfully");
+                    SimpleUtils.pass("Inbox page show well");
                 }else
-                    SimpleUtils.fail("Inbox tab is not grey out and show empty page failed",false);
+                    SimpleUtils.fail("Inbox page load failed",false);
 
             }else
                 SimpleUtils.report("Inbox tab is disabled");
@@ -219,7 +223,7 @@ public class NewNavigationFlowTest extends TestBase {
             //Go to "Admin" tab
             if (tabsName.contains("Admin")) {
                 AdminPage adminPage = pageFactory.createConsoleAdminPage();
-                adminPage.goToAdminTab();
+                adminPage.clickOnConsoleAdminMenu();
                 if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
                     SimpleUtils.pass("Admin tab is grey out and show empty page successfully");
                 }else
@@ -243,7 +247,7 @@ public class NewNavigationFlowTest extends TestBase {
             //Go to "Controls" tab
             if (tabsName.contains("Controls")) {
                 ControlsPage controlsPage  = pageFactory.createConsoleControlsPage();
-                controlsPage.gotoControlsPage();
+                controlsPage.clickOnConsoleInsightPage();
                 if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
                     SimpleUtils.pass("Integration tab is grey out and show empty page successfully");
                 }else

@@ -1069,7 +1069,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             String attribute = tabsName.get(i).getAttribute("class");
             String text = tabsName.get(i).getText();
             if (tabsName.get(i).getAttribute("class").contains("gray-item")|| tabsName.get(i).getAttribute("class").contains("active")) {
-                SimpleUtils.report(tabsName.get(i).getText()+": is gray out ");
+                SimpleUtils.report(tabsName.get(i).getText()+": is gray out or active");
 
             }else if (enabledTabs.contains(tabsName.get(i).getText())) {
                 SimpleUtils.report(tabsName.get(i).getText()+": is enabled");
