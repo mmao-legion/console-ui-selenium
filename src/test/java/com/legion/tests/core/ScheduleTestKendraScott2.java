@@ -1815,7 +1815,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (!isWeekGenerated) {
 				schedulePage.createScheduleForNonDGFlowNewUI();
 			}
-			List<String> firstShiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			List<String> firstShiftInfo = new ArrayList<>();
+			while(firstShiftInfo.size() == 0 || firstShiftInfo.get(0).equalsIgnoreCase("open")
+					|| firstShiftInfo.get(0).equalsIgnoreCase("unassigned")){
+				firstShiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+			}
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
