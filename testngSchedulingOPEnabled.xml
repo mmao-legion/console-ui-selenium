@@ -118,4 +118,14 @@
         </classes>
     </test>
 
+    <test name="Schedule Test KendraScott2">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                <methods>
+                    <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

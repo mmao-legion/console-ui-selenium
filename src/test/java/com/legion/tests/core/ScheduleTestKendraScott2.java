@@ -3303,4 +3303,59 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.fail(e.getMessage(),false);
 		}
 	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the buffer hours display in schedule")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheBufferHoursDisplayInScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			schedulePage.navigateToNextWeek();
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+			schedulePage.clickOnCreateNewShiftButton();
+			List<String> allOperatingHrsOnCreateShiftPage = schedulePage.getAllOperatingHrsOnCreateShiftPage();
+			SimpleUtils.assertOnFail("The operating hours on create shift page display incorrectly! ",
+					allOperatingHrsOnCreateShiftPage.get(0).equalsIgnoreCase("6am")
+							&& allOperatingHrsOnCreateShiftPage.get(allOperatingHrsOnCreateShiftPage.size()-1).equalsIgnoreCase("11pm"),false);
+			schedulePage.clickOnCloseButtonOnCustomizeShiftPage();
+
+			schedulePage.clickOnProfileIcon();
+			schedulePage.clickOnEditShiftTime();
+			schedulePage.verifyEditShiftTimePopUpDisplay();
+			List<String> startAndEndHrsOnEditShiftPage = schedulePage.getStartAndEndOperatingHrsOnEditShiftPage();
+			SimpleUtils.assertOnFail("The operating hours on create shift page display incorrectly! ",
+					startAndEndHrsOnEditShiftPage.get(0).equalsIgnoreCase("6")
+							&& startAndEndHrsOnEditShiftPage.get(1).equalsIgnoreCase("11"),false);
+			schedulePage.clickOnCancelEditShiftTimeButton();
+			schedulePage.clickOnCancelButtonOnEditMode();
+
+			schedulePage.clickOnDayView();
+			List<String> gridHeaderTimes = new ArrayList();
+			gridHeaderTimes = schedulePage.getScheduleDayViewGridTimeDuration();
+			SimpleUtils.assertOnFail("The grid header time should start as 6 AM, the actual time is: " +
+					gridHeaderTimes.get(0), gridHeaderTimes.get(0).contains("6 AM"), false);
+			SimpleUtils.assertOnFail("The grid header time should end with 10 PM, the actual time is: " +
+					gridHeaderTimes.get(gridHeaderTimes.size() - 1), gridHeaderTimes.get(gridHeaderTimes.size() - 1).contains("10 PM"), false);
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(),false);
+		}
+	}
 }

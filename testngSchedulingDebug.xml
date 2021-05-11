@@ -149,6 +149,7 @@
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
                     <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
