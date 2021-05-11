@@ -265,7 +265,7 @@ public abstract class TestBase {
         caps.setCapability("video", true);
         caps.setCapability("console", true);
         caps.setCapability("name", ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()));
-        caps.setCapability("idleTimeout", 600);
+        caps.setCapability("idleTimeout", 1200);
 
 //        caps.setCapability("selenium_version","3.141.59");
         caps.setCapability("chrome.driver","87.0");
