@@ -256,7 +256,7 @@ public abstract class TestBase {
     private void createRemoteChrome(String url){
         MyThreadLocal myThreadLocal = new MyThreadLocal();
         DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability("browserName", "chrome");
+//        caps.setCapability("browserName", "chrome");
 //        caps.setCapability("version", "5.4.0-1029-aws");
         caps.setCapability("platform", "LINUX");
         caps.setCapability("network", true);
@@ -267,7 +267,7 @@ public abstract class TestBase {
         caps.setCapability("idleTimeout", 1200);
 
 //        caps.setCapability("selenium_version","3.141.59");
-//        caps.setCapability("chrome.driver","87.0");
+        caps.setCapability("chrome.driver","87.0");
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
             setDriver(new RemoteWebDriver(new URL(url),caps));
