@@ -259,7 +259,6 @@ public abstract class TestBase {
         caps.setCapability("browserName", "chrome");
 //        caps.setCapability("version", "5.4.0-1029-aws");
         caps.setCapability("platform", "LINUX");
-        caps.setCapability("idleTimeout", 150);
         caps.setCapability("network", true);
         caps.setCapability("visual", true);
         caps.setCapability("video", true);
