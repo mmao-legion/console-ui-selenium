@@ -626,4 +626,5 @@ public interface SchedulePage {
 	public void verifyRecommendedTableHasTM() throws Exception;
 	public void verifyTMInTheOfferList(String firstName, String expectedStatus) throws Exception;
 	public String getViewStatusShiftsInfo() throws Exception;
+	public ArrayList<String> getScheduleDayViewGridTimeDuration();
 }

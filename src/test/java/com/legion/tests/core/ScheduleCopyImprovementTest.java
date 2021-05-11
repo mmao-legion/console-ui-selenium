@@ -1508,7 +1508,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate that if employee availability preference is set to unavailable, or the schedule has compliance violations such as overtime, the schedule should be copied as-is")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1718,6 +1718,93 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Get compliance shift failed",shifts.size()==1, false);
             SimpleUtils.assertOnFail("Clopening compliance message display failed",
                     schedulePage.getComplianceMessageFromInfoIconPopup(shifts.get(0)).contains("Clopening"), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the operating hours grid will automatically adjust to fit the full range if the copied schedule extend outside the operating hour")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "8:00PM");
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("unassigned");
+            schedulePage.saveSchedule();
+            schedulePage.publishActiveSchedule();
+
+            //Get the info of this week for copy schedule
+            String firstWeekInfo = schedulePage.getActiveWeekText();
+            if (firstWeekInfo.length() > 11) {
+                firstWeekInfo = firstWeekInfo.trim().substring(10);
+                if (firstWeekInfo.contains("-")) {
+                    String[] temp = firstWeekInfo.split("-");
+                    if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
+                        firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
+                                + " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
+                    }
+                }
+            }
+
+            schedulePage.navigateToNextWeek();
+            isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.clickCreateScheduleBtn();
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
+            schedulePage.clickNextBtnOnCreateScheduleWindow();
+            schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
+            schedulePage.clickOnFinishButtonOnCreateSchedulePage();
+
+            schedulePage.clickOnDayView();
+            List<String> gridHeaderTimes = new ArrayList();
+            for (int i = 0; i< 7; i++) {
+                schedulePage.navigateDayViewWithIndex(i);
+                String weekDay = schedulePage.getScheduleWeekStartDayMonthDate();
+                gridHeaderTimes = schedulePage.getScheduleDayViewGridTimeDuration();
+                if (weekDay.contains("Sun")) {
+                    SimpleUtils.assertOnFail("The grid header time should start as 8 AM, the actual time is: " +
+                            gridHeaderTimes.get(0), gridHeaderTimes.get(0).contains("8 AM"), false);
+
+                } else if (weekDay.contains("Mon")) {
+                    SimpleUtils.assertOnFail("The grid header time should end with 7 PM, the actual time is: " +
+                            gridHeaderTimes.get(gridHeaderTimes.size() - 1), gridHeaderTimes.get(gridHeaderTimes.size() - 1).contains("7 PM"), false);
+                } else {
+                    SimpleUtils.assertOnFail("The grid header time should start as 6 AM, the actual time is: " +
+                            gridHeaderTimes.get(0), gridHeaderTimes.get(0).contains("6 AM"), false);
+                    SimpleUtils.assertOnFail("The grid header time should end with 10 PM, the actual time is: " +
+                            gridHeaderTimes.get(gridHeaderTimes.size() - 1), gridHeaderTimes.get(gridHeaderTimes.size() - 1).contains("10 PM"), false);
+                }
+            }
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
