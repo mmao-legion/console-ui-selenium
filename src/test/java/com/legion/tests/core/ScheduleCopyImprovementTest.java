@@ -281,9 +281,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (teamPage.isCancelDeactivateButtonLoaded()) {
                 teamPage.cancelTMDeactivate();
             }
-//
-//                profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
-//                profileNewUIPage.approveAllPendingAvailabilityRequest();
 
             profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
             profileNewUIPage.rejectAllTimeOff();
@@ -291,9 +288,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
         } else
             SimpleUtils.fail("The team member '"+ firstNameOfTM +"' is not exists! ", false);
-
-
-
 
 
         //Go to schedule page and create new schedule
@@ -315,13 +309,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
         if(!isCopySchedule && option.equalsIgnoreCase("Yes, except opening/closing shifts")) {
             schedulePage.clickCreateScheduleBtn();
-            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "9:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "9:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "7:00AM", "1:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "7:00AM", "3:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "09:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "09:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "07:00AM", "01:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "07:00AM", "03:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "08:00AM", "08:00PM");
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();
@@ -411,22 +405,22 @@ public class ScheduleCopyImprovementTest extends TestBase {
             }
             schedulePage.clickCreateScheduleBtn();
             if (option.equalsIgnoreCase("Yes, except opening/closing shifts")) {
-                schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "9:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "9:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "7:00AM", "1:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "7:00AM", "3:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "8:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "8:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "09:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "09:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "07:00AM", "01:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "07:00AM", "03:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "08:00AM", "08:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Friday", "08:00AM", "08:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "08:00AM", "08:00PM");
             }
             if (ifVerifyOOOHShifts) {
-                schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "8:00AM", "4:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00AM", "4:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00AM", "4:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00AM", "4:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "4:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "4:00PM");
-                schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "4:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "08:00AM", "04:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Monday", "08:00AM", "04:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "08:00AM", "04:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "08:00AM", "04:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "08:00AM", "04:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Friday", "08:00AM", "04:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "08:00AM", "04:00PM");
             }
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
@@ -801,13 +795,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
             }
 
             schedulePage.clickCreateScheduleBtn();
-            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "8:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "4:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "08:00AM", "04:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "08:00AM", "04:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "08:00AM", "04:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "08:00AM", "04:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "08:00AM", "04:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "08:00AM", "04:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "08:00AM", "04:00PM");
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();
@@ -1027,10 +1021,47 @@ public class ScheduleCopyImprovementTest extends TestBase {
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option);
 
-            //Go to schedule page and create new schedule
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            HashMap<String, Object[][]> teamMembers = null;
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+                teamMembers = kendraScott2TeamMembers;
+            } else {
+                teamMembers = cinemarkWkdyTeamMembers;
+            }
+
+            String firstNameOfTM = teamMembers.get("TeamMember1")[0][0].toString();
+            String lastNameOfTM = teamMembers.get("TeamMember1")[0][1].toString();
+            String workRoleOfTM = teamMembers.get("TeamMember1")[0][2].toString();
+
+            teamPage.goToTeam();
+
+            if (teamPage.checkIfTMExists(firstNameOfTM)) {
+                teamPage.searchAndSelectTeamMemberByName(firstNameOfTM);
+                if(teamPage.isManualOnBoardButtonLoaded()) {
+                    teamPage.manualOnBoardTeamMember();
+                }
+                if (teamPage.isActivateButtonLoaded()) {
+                    teamPage.clickOnActivateButton();
+                    teamPage.isActivateWindowLoaded();
+                    teamPage.selectADateOnCalendarAndActivate();
+                }
+                if (teamPage.isCancelTerminateButtonLoaded()) {
+                    teamPage.cancelTMTerminate();
+                }
+                if (teamPage.isCancelDeactivateButtonLoaded()) {
+                    teamPage.cancelTMDeactivate();
+                }
+
+                profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
+                profileNewUIPage.rejectAllTimeOff();
+                profileNewUIPage.cancelAllTimeOff();
+
+            } else
+                SimpleUtils.fail("The team member '"+ firstNameOfTM +"' is not exists! ", false);
+
+            //Go to schedule page and create new schedule
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             String userName = "";
             Thread.sleep(2000);
             schedulePage.clickOnScheduleConsoleMenuItem();
@@ -1047,18 +1078,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
 
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "8:00PM");
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 
             // For copy schedule, select one TM -> create time off for TM -> create schedule by copy last week schedule
-            //Get one random TM name from shifts
-            List<String> shiftInfo = new ArrayList<>();
-            while(shiftInfo.size() == 0 || shiftInfo.get(0).equalsIgnoreCase("open")
-                    || shiftInfo.get(0).equalsIgnoreCase("unassigned")){
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
-            }
-            String firstNameOfTM = shiftInfo.get(0);
-            String workRoleOfTM = shiftInfo.get(4);
-            String lastNameOfTM = shiftInfo.get(5);
 
             // Delete all the shifts that are assigned to the team member
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1120,8 +1142,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
             profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
             String timeOffReasonLabel = "VACATION";
             String timeOffExplanationText = "Sample Explanation Text";
-            profileNewUIPage.rejectAllTimeOff();
-            profileNewUIPage.cancelAllTimeOff();
             profileNewUIPage.createTimeOffOnSpecificDays(timeOffReasonLabel, timeOffExplanationText, fromDate, 6);
 
             //Go to schedule page and create new schedule by copy last week schedule
@@ -1140,13 +1160,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             schedulePage.clickCreateScheduleBtn();
-            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "5:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "05:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "08:00AM", "08:00PM");
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();
@@ -1363,7 +1383,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "8:00PM");
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 
             // Create new shift for TM1 on seven days
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1416,13 +1436,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             schedulePage.clickCreateScheduleBtn();
-            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "08:00AM", "08:00PM");
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();
@@ -1599,7 +1619,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("5:00AM", "11:00PM");
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("05:00AM", "11:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(teamMember1);
 
@@ -1683,13 +1703,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             schedulePage.clickCreateScheduleBtn();
-            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "5:00AM", "11:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "5:00AM", "11:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "5:00AM", "11:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "5:00AM", "11:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "5:00AM", "11:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "5:00AM", "11:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "5:00AM", "11:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "05:00AM", "11:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "05:00AM", "11:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "05:00AM", "11:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "05:00AM", "11:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "05:00AM", "11:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "05:00AM", "11:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "05:00AM", "11:00PM");
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();
@@ -1749,7 +1769,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "8:00PM");
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("unassigned");
             schedulePage.saveSchedule();
@@ -1774,13 +1794,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             schedulePage.clickCreateScheduleBtn();
-            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00AM", "4:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00AM", "8:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00AM", "8:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "08:00AM", "04:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "08:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "08:00AM", "08:00PM");
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();

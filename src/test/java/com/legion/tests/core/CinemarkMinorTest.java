@@ -613,11 +613,11 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.verifyDefaultMinorRuleIsOff("14N15");
             cinemarkMinorPage.verifyDefaultMinorRuleIsOff("16N17");
             cinemarkMinorPage.saveOrPublishTemplate(templateAction.Save_As_Draft.getValue());
-            cinemarkMinorPage.findDefaulTemplate(templateName);
+            cinemarkMinorPage.findDefaultTemplate(templateName);
             cinemarkMinorPage.clickOnBtn(buttonGroup.Delete.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
 
-            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("no","14N15");
@@ -654,7 +654,7 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
-            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
@@ -691,7 +691,7 @@ public class CinemarkMinorTest extends TestBase {
             controlsNewUIPage.clickOnControlsComplianceSection();
 
             //Find the template
-            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
@@ -851,7 +851,7 @@ public class CinemarkMinorTest extends TestBase {
             controlsNewUIPage.clickOnControlsComplianceSection();
 
             //Find the template
-            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");

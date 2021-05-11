@@ -69,4 +69,6 @@ public interface ConfigurationPage {
     public void deleteAllScheduleRules() throws Exception;
     public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception;
     public void searchTemplate(String templateName) throws Exception;
+    public void selectOperatingBufferHours(String option) throws Exception;
+    public void setOpeningAndClosingBufferHours (int openingBufferHour, int closingBufferHour) throws Exception;
 }

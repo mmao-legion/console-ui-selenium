@@ -4295,10 +4295,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             }
                             if (weekDay.getText().toLowerCase().contains(day.toLowerCase())){
                                 startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                                startNEndTimes.get(0).clear();
-                                startNEndTimes.get(1).clear();
-                                startNEndTimes.get(0).sendKeys(startTime);
-                                startNEndTimes.get(1).sendKeys(endTime);
+                                String openTime = startNEndTimes.get(0).getAttribute("value");
+                                String closeTime = startNEndTimes.get(1).getAttribute("value");
+                                if (!openTime.equals(startTime) && !closeTime.equals(endTime)) {
+                                    startNEndTimes.get(0).clear();
+                                    startNEndTimes.get(1).clear();
+                                    startNEndTimes.get(0).sendKeys(startTime);
+                                    startNEndTimes.get(1).sendKeys(endTime);
+                                }
+
                             }
                         }else {
                             SimpleUtils.fail("Failed to find the checkbox, weekday or start and end time elements!", false);

@@ -54,6 +54,7 @@ public interface ControlsNewUIPage {
 	public void clickOnControlsComplianceSection() throws Exception;
 	public void clickOnControlsUsersAndRolesSection() throws Exception;
 	public void clickOnControlsTasksAndWorkRolesSection() throws Exception;
+	public void clickOnControlsOperatingHoursSection() throws Exception;
 	
 	public boolean isControlsLocationProfileLoaded() throws Exception;
 	public boolean isControlsScheduleCollaborationLoaded() throws Exception;
