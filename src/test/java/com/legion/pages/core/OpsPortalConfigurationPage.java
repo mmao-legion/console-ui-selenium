@@ -251,7 +251,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(classValue!=null && classValue.contains("hasChildren")){
 				clickTheElement(templateToggleButton);
 				waitForSeconds(3);
-				clickTheElement(templatesList.get(1).findElement(By.cssSelector("button")));
+				clickTheElement(templatesList.get(0).findElement(By.cssSelector("button")));
 				waitForSeconds(20);
 				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 				&&isElementEnabled(templateDetailsPageForm)){
