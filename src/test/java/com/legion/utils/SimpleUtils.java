@@ -895,7 +895,7 @@ public class SimpleUtils {
 		String testRailPassword =   "";
 		String testRailProjectID =  "";
 		String testRailSuiteID =    "";
-		if (!System.getProperty("enterprise").equalsIgnoreCase("op")) {
+		if (!System.getProperty("enterprise").equalsIgnoreCase("op")||!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
 			testRailURL = testRailConfig.get("TEST_RAIL_URL");
 			setTestRailURL(testRailURL);
 			testRailUser = testRailConfig.get("TEST_RAIL_USER");
