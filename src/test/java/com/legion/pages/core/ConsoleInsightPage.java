@@ -22,7 +22,7 @@ public class ConsoleInsightPage extends BasePage implements InsightPage {
 
 	@FindBy(css = ".console-navigation-item-label.Insights")
 	private WebElement insightConsoleMenuDiv;
-	@FindBy(css = "div[data-content=\"Legion Dashboard\"]")
+	@FindBy(css = "input-field[value=\"selectedDashboardOption\"]")
 	private WebElement calendarForDashboard;
 
 

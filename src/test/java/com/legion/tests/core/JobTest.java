@@ -279,7 +279,7 @@ public class JobTest extends TestBase {
             String jobTitle = "AutoCreateJob"+currentTime;
             setJobName(jobTitle);
             String commentText = "created by automation scripts";
-            String searchText = "OMLocation3";
+            String searchText = "OMLocation16";
             int index = 0;
 
 //            ArrayList<HashMap<String, String>> jobInfoDetails =jobsPage.iCanGetJobInfo(jobTitle);
@@ -361,7 +361,7 @@ public class JobTest extends TestBase {
             String jobTitle = "AutoCreateJob"+currentTime;
             setJobName(jobTitle);
             String commentText = "created by automation scripts";
-            String searchText = "OMLocation3";
+            String searchText = "OMLocation16";
             int index = 0;
 
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
@@ -408,7 +408,7 @@ public class JobTest extends TestBase {
             String jobTitle = "AutoReleaseJob"+currentTime;
             setJobName(jobTitle);
             String commentText = "created by automation scripts";
-            String searchText = "OMLocation3";
+            String searchText = "OMLocation16";
             int index = 0;
             String releaseDay = "10";
             String timeForRelease = "0";
@@ -450,8 +450,8 @@ public class JobTest extends TestBase {
             String jobTitle = "AutoAdjustBudgetJob"+currentTime;
             setJobName(jobTitle);
             String commentText = "created by automation scripts";
-            String searchText = "OMLocation3";
-            String searchTaskText = "OMLocation3";
+            String searchText = "OMLocation16";
+            String searchTaskText = "OMLocation16";
             int index = 0;
             String budgetAssignmentNum = "10";
             String workRole = "Lead Sales Associate";
@@ -504,8 +504,8 @@ public class JobTest extends TestBase {
             String jobTitle = "AutoAdjustForecastJob"+currentTime;
             setJobName(jobTitle);
             String commentText = "created by automation scripts";
-            String searchText = "OMLocation3";
-            String searchTaskText = "OMLocation3";
+            String searchText = "OMLocation16";
+            String searchTaskText = "OMLocation16";
             int index = 0;
             String adjustmentValue = "10";
             String directionChoices = "Decrease";
