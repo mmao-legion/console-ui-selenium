@@ -32,10 +32,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.SessionId;
+import org.openqa.selenium.remote.*;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -256,18 +253,19 @@ public abstract class TestBase {
     private void createRemoteChrome(String url){
         MyThreadLocal myThreadLocal = new MyThreadLocal();
         DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability("browserName", "chrome");
+        caps.setCapability(CapabilityType.BROWSER_NAME, BrowserType.CHROME);
 //        caps.setCapability("version", "5.4.0-1029-aws");
         caps.setCapability("platform", "LINUX");
+        caps.setCapability("idleTimeout", 150);
         caps.setCapability("network", true);
         caps.setCapability("visual", true);
         caps.setCapability("video", true);
         caps.setCapability("console", true);
         caps.setCapability("name", ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()));
-        caps.setCapability("idleTimeout", 600);
+
 
 //        caps.setCapability("selenium_version","3.141.59");
-//        caps.setCapability("chrome.driver","87.0");
+        caps.setCapability("chrome.driver","87.0");
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
             setDriver(new RemoteWebDriver(new URL(url),caps));
