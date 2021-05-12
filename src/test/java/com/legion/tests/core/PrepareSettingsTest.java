@@ -133,10 +133,19 @@ public class PrepareSettingsTest extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-            cinemarkMinorPage.findDefaulTemplate("Cinemark Base Template");
+            cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+            configurationPage.publishNowTheTemplate();
+
+            //Set buffer hours on OP: before--2, after--3
+            configurationPage.goToConfigurationPage();
+            controlsNewUIPage.clickOnControlsOperatingHoursSection();
+            cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template Updated");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectOperatingBufferHours("BufferHour");
+            configurationPage.setOpeningAndClosingBufferHours(2, 3);
             configurationPage.publishNowTheTemplate();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

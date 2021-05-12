@@ -9,6 +9,7 @@ import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.json.simple.JSONArray;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -2716,8 +2717,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //		waitForSeconds(5);
         if(areListElementVisible(scheduleSearchTeamMemberStatus,5) || isElementLoaded(scheduleNoAvailableMatchStatus,5)){
             for(int i=0; i<scheduleSearchTeamMemberStatus.size();i++){
-                if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Available")
-                        || scheduleSearchTeamMemberStatus.get(i).getText().contains("Unknown")){
+                String statusText = scheduleSearchTeamMemberStatus.get(i).getText();
+                if((statusText.contains("Available") || statusText.contains("Unknown")) && !statusText.contains("Assigned to this shift")){
                     click(radionBtnSearchTeamMembers.get(i));
                     if (isElementEnabled(confirmWindow, 5)) {
                         click(okBtnOnConfirm);
@@ -4295,10 +4296,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             }
                             if (weekDay.getText().toLowerCase().contains(day.toLowerCase())){
                                 startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                                startNEndTimes.get(0).clear();
-                                startNEndTimes.get(1).clear();
-                                startNEndTimes.get(0).sendKeys(startTime);
-                                startNEndTimes.get(1).sendKeys(endTime);
+                                String openTime = startNEndTimes.get(0).getAttribute("value");
+                                String closeTime = startNEndTimes.get(1).getAttribute("value");
+                                if (!openTime.equals(startTime) && !closeTime.equals(endTime)) {
+                                    startNEndTimes.get(0).clear();
+                                    startNEndTimes.get(1).clear();
+                                    startNEndTimes.get(0).sendKeys(startTime);
+                                    startNEndTimes.get(1).sendKeys(endTime);
+                                }
+
                             }
                         }else {
                             SimpleUtils.fail("Failed to find the checkbox, weekday or start and end time elements!", false);
@@ -5373,6 +5379,37 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy(css = "div.lgn-time-slider-notch-label")
     private List<WebElement> scheduleOperatingHrsOnEditPage;
+
+    @Override
+    public List<String> getAllOperatingHrsOnCreateShiftPage() throws Exception {
+        List<String> allOperatingHrs = new ArrayList<>();
+        if (areListElementVisible(scheduleOperatingHrsOnEditPage, 15)) {
+            for (WebElement operatingHour : scheduleOperatingHrsOnEditPage) {
+                if (operatingHour.getAttribute("class").contains("am")) {
+                    allOperatingHrs.add(operatingHour.getText() + "am");
+                } else {
+                    allOperatingHrs.add(operatingHour.getText() + "pm");
+                }
+            }
+        } else
+            SimpleUtils.fail("The operating hours on create shift page fail to load! ", false);
+        return allOperatingHrs;
+    }
+
+    @FindBy(css = "div.noUi-value-large")
+    private List<WebElement> startAndEndTimeOnEditShiftPage;
+
+    @Override
+    public List<String> getStartAndEndOperatingHrsOnEditShiftPage() throws Exception {
+        List<String> startAndEndOperatingHrs = new ArrayList<>();
+        if (areListElementVisible(startAndEndTimeOnEditShiftPage, 15)) {
+            for (WebElement operatingHour : startAndEndTimeOnEditShiftPage) {
+                startAndEndOperatingHrs.add(operatingHour.getText());
+            }
+        } else
+            SimpleUtils.fail("The operating hours on edit shift page fail to load! ", false);
+        return startAndEndOperatingHrs;
+    }
 
     @Override
     public boolean isHourFormat24Hour() throws Exception {
@@ -14915,6 +14952,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             result = shiftInViewStatusWindow.getText();
         }
         return result;
+    }
+
+
+    @Override
+    public void clickOnCloseButtonOnCustomizeShiftPage() throws Exception {
+        if (isElementLoaded(closeButtonOnCustomize, 5)) {
+            click(closeButtonOnCustomize);
+        } else
+            SimpleUtils.fail("The close button on custimize shift page fail to load! ", false);
     }
 }
 

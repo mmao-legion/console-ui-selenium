@@ -1788,4 +1788,43 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when copying schedule settings dropdown list not loaded.", false);
 		}
 	}
+
+	@FindBy(css="input-field[value=\"$ctrl.bufferHourMode\"]")
+	private List<WebElement> operatingBufferHoursOptions;
+
+	@FindBy(css="[value=\"$ctrl.openingBufferHours\"] input")
+	private WebElement openingBufferHours;
+
+	@FindBy(css="[value=\"$ctrl.closingBufferHours\"] input")
+	private WebElement closingBufferHours;
+
+	// Option: None, StartEnd, BufferHour, ContinuousOperation
+	public void selectOperatingBufferHours(String option) throws Exception {
+		if (areListElementVisible(operatingBufferHoursOptions, 10) && operatingBufferHoursOptions.size() == 4) {
+			for (WebElement operatingBufferHours: operatingBufferHoursOptions){
+				if(operatingBufferHours.getAttribute("assigned-value").contains(option)){
+					WebElement inputButton = operatingBufferHours.findElement(By.className("input-form"));
+					if (!inputButton.getAttribute("class").contains("ng-valid-parse")) {
+						click(inputButton);
+						SimpleUtils.pass("OP Page: Operating Hours: Operating / Buffer Hours : The '"+option+"' option been selected successfully! ");
+					} else
+						SimpleUtils.pass("OP Page: Operating Hours: Operating / Buffer Hours : The '"+option+"' option has been selected! ");
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("OP - Operating Hours: Operating / Buffer Hours : Operating hours options not loaded.", false);
+		}
+	}
+
+	public void setOpeningAndClosingBufferHours (int openingBufferHour, int closingBufferHour) throws Exception {
+
+		if (isElementLoaded(openingBufferHours, 5) && isElementLoaded(closingBufferHours, 5)){
+			openingBufferHours.clear();
+			closingBufferHours.clear();
+			openingBufferHours.sendKeys(String.valueOf(openingBufferHour));
+			closingBufferHours.sendKeys(String.valueOf(closingBufferHour));
+		} else
+			SimpleUtils.fail("OP - Operating Hours: Operating / Buffer Hours : Operating buffer hours and closing buffer hours are not loaded.", false);
+	}
 }

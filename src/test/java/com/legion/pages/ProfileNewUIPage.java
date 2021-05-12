@@ -242,4 +242,10 @@ public interface ProfileNewUIPage {
 	public boolean isShowOrHideInvitationCodeButtonLoaded() throws Exception;
 
 	public void createTimeOffOnSpecificDays(String timeOffReasonLabel, String timeOffExplanationText,String fromDay, int duration) throws Exception;
+
+	public void updatePreferredOrBusyHoursToAllDay(int dayIndex, String hoursType) throws Exception;
+
+	public void clickAvailabilityEditButton() throws Exception;
+
+	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception;
 }

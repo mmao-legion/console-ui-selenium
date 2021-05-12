@@ -145,6 +145,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "lg-dashboard-card[title=\"Tasks and Work Roles\"]")
 	private WebElement tasksAndWorkRolesSection;
 
+	@FindBy(css = "lg-dashboard-card[title=\"Operating Hours\"]")
+	private WebElement operatingHoursSection;
+
 	@FindBy(css = "lg-dashboard-card[title=\"Locations\"]")
 	private WebElement locationsSection;
 
@@ -723,6 +726,15 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			click(tasksAndWorkRolesSection);
 		else
 			SimpleUtils.fail("Controls Page: tasksAndWorkRolesSection Card not Loaded!", false);
+	}
+
+
+	@Override
+	public void clickOnControlsOperatingHoursSection() throws Exception {
+		if (isElementLoaded(operatingHoursSection))
+			click(operatingHoursSection);
+		else
+			SimpleUtils.fail("Controls Page: Operating Hours Card not Loaded!", false);
 	}
 
 
