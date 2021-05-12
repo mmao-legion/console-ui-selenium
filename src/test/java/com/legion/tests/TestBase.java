@@ -253,7 +253,7 @@ public abstract class TestBase {
     private void createRemoteChrome(String url){
         MyThreadLocal myThreadLocal = new MyThreadLocal();
         DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability(CapabilityType.BROWSER_NAME, BrowserType.CHROME);
+        caps.setCapability(CapabilityType.BROWSER_NAME, BrowserType.EDGE);
 //        caps.setCapability("version", "5.4.0-1029-aws");
         caps.setCapability("platform", "LINUX");
         caps.setCapability("idleTimeout", 150);
