@@ -133,7 +133,7 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
             SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                     teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-            String calendarName = "Start Next Saturday";
+            String calendarName = "Start Next Saturday1";
 
             teamPage.deleteCalendarByName(calendarName);
             teamPage.clickOnCreateNewCalendarButton();
@@ -1376,7 +1376,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime1 = "11am,1pm";
             String shiftTime2 = "11am,4pm";
             int needCreateShiftsNumber1 = 6;
-            int needCreateShiftsNumber2 = 3;
+            int needCreateShiftsNumber2 = 4;
             String workRole = "Team Member Corporate-Theatre";
             String maxOfDays = "6";
             String maxOfScheduleHours = "18";
