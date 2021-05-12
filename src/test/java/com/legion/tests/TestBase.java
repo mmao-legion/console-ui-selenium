@@ -21,10 +21,7 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.json.JSONException;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -253,10 +250,9 @@ public abstract class TestBase {
     private void createRemoteChrome(String url){
         MyThreadLocal myThreadLocal = new MyThreadLocal();
         DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability("browserName", "Edge");
-        caps.setCapability("browserName", "chrome");
+        caps.setCapability(CapabilityType.BROWSER_NAME, BrowserType.CHROME);
 //        caps.setCapability("version", "5.4.0-1029-aws");
-        caps.setCapability("platform", "LINUX");
+        caps.setCapability(CapabilityType.PLATFORM_NAME, Platform.LINUX);
         caps.setCapability("idleTimeout", 150);
         caps.setCapability("network", true);
         caps.setCapability("visual", true);
