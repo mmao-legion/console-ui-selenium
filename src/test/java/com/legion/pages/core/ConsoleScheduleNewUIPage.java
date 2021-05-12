@@ -10465,6 +10465,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return selectedTMName;
     }
 
+    @Override
+    public void selectConvertToOpenShiftAndOfferToASpecificTMOption() throws Exception {
+        if (isElementEnabled(radioBtnManualOpenShift, 5) && isElementEnabled(btnYesOpenSchedule)) {
+            click(radioBtnManualOpenShift);
+            click(btnYesOpenSchedule);
+            SimpleUtils.pass("convert to open shift and offer to Specific TM option selected!");
+        } else {
+            SimpleUtils.fail("Buttons on convert To Open PopUp windows load failed", false);
+        }
+    }
+
     public boolean isEditMealBreakEnabled() throws Exception {
         clickOnProfileIcon();
         boolean isEditMealBreakEnabled = false;
