@@ -455,7 +455,7 @@ public class JobTest extends TestBase {
             int index = 0;
             String budgetAssignmentNum = "10";
             String workRole = "Lead Sales Associate";
-            String taskName = "Cleaning";
+            String taskName = "Line Verification";
 
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
             jobsPage.iCanEnterJobsTab();

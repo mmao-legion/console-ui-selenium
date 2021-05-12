@@ -675,7 +675,6 @@ public class LocationsTest extends TestBase {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime =  dfs.format(new Date());
             String locationName = "LGMS_NSO_Auto" +currentTime;
-                    //"LGPTP_NSO_Auto20201020152818";
             setLGMSNsoLocationName(locationName);
             int index =0;
             int childLocationNum = 1;
@@ -1641,7 +1640,7 @@ public class LocationsTest extends TestBase {
             String templateName = "UsedByAuto_NoTouchNoDelete";
             String wfsMode = "Yes";
             String wfsName = "Same District";
-            String locationName = "OMLocation6";
+            String locationName = "OMLocation16";
             String districtName = "OMDistrict1";
             String criteria = "Custom";
 
