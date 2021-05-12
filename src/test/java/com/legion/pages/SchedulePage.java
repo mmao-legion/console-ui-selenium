@@ -466,6 +466,7 @@ public interface SchedulePage {
 	public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception;
 	public void switchSearchTMAndRecommendedTMsTab() throws Exception;
 	public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception;
+	public void selectConvertToOpenShiftAndOfferToASpecificTMOption() throws Exception;
 	public void clickOnEditShiftTime() throws Exception;
 	public void verifyEditShiftTimePopUpDisplay() throws Exception;
 	public List<String> editShiftTime() throws Exception;
