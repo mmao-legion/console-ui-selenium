@@ -4151,6 +4151,7 @@ private WebElement locationColumn;
 				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
 					clickTheElement(title);
 					if (areListElementVisible(calendarCells,  10) && isElementLoaded(deleteCalendarBtn, 10)) {
+						waitForSeconds(3);
 						clickTheElement(deleteCalendarBtn);
 						if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY")) {
 							clickTheElement(confirmButton);
@@ -4519,5 +4520,102 @@ private WebElement locationColumn;
 			}
 		}
 		return isTMExists;
+	}
+
+
+
+	@FindBy (css = "[ng-click=\"changeMonth(sessionStart, -1, true)\"]")
+	private WebElement sessionStartLeftArrow;
+
+	@FindBy (css = "[ng-click=\"changeMonth(sessionStart, 1)\"]")
+	private WebElement sessionStartRightArrow;
+
+	@FindBy (css = "ng-click=\"changeMonth(sessionEnd, -1)\"")
+	private WebElement sessionEndLeftArrow;
+
+	@FindBy (css = "[ng-click=\"changeMonth(sessionEnd, 1, true)\"]")
+	private WebElement sessionEndRightArrow;
+
+	// Date like: 2021 Jan 1
+	public void selectSchoolSessionStartAndEndDate(String startDate, String endDate) throws Exception{
+		String[] fullStartDate = startDate.split(" ");
+		String[] fullEndDate = endDate.split(" ");
+
+		String startYear = fullStartDate[0];
+		String startMonth = fullStartDate[1];
+		String startDay = fullStartDate[2];
+		String endYear = fullEndDate[0];
+		String endMonth = fullEndDate[1];
+		String endDay = fullEndDate[2];
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM");
+		String startYearAndMonth =startYear +" " +startMonth;
+		String endYearAndMonth = endYear +" "+endMonth;
+
+		String startYearAndMonthInCalendar= rangedCalendars.get(0).getText();
+		String startYearInCalendar = startYearAndMonthInCalendar.split(" ")[1];
+		String startMonthInCalendar = startYearAndMonthInCalendar.split(" ")[0].substring(0,3);
+		while(!startYearAndMonth.equalsIgnoreCase(startYearInCalendar+ " "+startMonthInCalendar)){
+			Date to = dateFormat.parse(startYearAndMonth);
+			Date from = dateFormat.parse(startYearInCalendar+ " "+startMonthInCalendar);
+			boolean needMoveForward = to.after(from);
+			if(needMoveForward && isElementLoaded(sessionStartRightArrow, 5)){
+				click(sessionStartRightArrow);
+			} else if (!needMoveForward && isElementLoaded(sessionStartLeftArrow, 5)) {
+				click(sessionStartLeftArrow);
+			} else
+				SimpleUtils.fail("The Session Start Arrows fail to load! ", false);
+			startYearAndMonthInCalendar= rangedCalendars.get(0).getText();
+			startYearInCalendar = startYearAndMonthInCalendar.split(" ")[1];
+			startMonthInCalendar = startYearAndMonthInCalendar.split(" ")[0].substring(0,3);
+		}
+
+		if (areListElementVisible(daysInSessionStart, 5)) {
+			boolean isDayExist = false;
+			for (WebElement day: daysInSessionStart) {
+				if (day.getText().equals(startDay)){
+					click(day);
+					isDayExist = true;
+					break;
+				}
+			}
+			if (!isDayExist){
+				SimpleUtils.fail("Cannot find the session start day! ", false);
+			}
+		} else
+			SimpleUtils.fail("Days in Session Start panel fail to load! ", false);
+
+		String endYearAndMonthInCalendar= rangedCalendars.get(1).getText();
+		String endYearInCalendar = endYearAndMonthInCalendar.split(" ")[1];
+		String endMonthInCalendar = endYearAndMonthInCalendar.split(" ")[0].substring(0,3);
+		while(!endYearAndMonth.equalsIgnoreCase(endYearInCalendar+ " "+endMonthInCalendar)){
+			Date to = dateFormat.parse(endYearAndMonth);
+			Date from = dateFormat.parse(endYearInCalendar+ " "+endMonthInCalendar);
+			boolean needMoveForward = to.after(from);
+			if(needMoveForward && isElementLoaded(sessionEndRightArrow, 5)){
+				click(sessionEndRightArrow);
+			} else if (!needMoveForward && isElementLoaded(sessionEndLeftArrow, 5)) {
+				click(sessionEndLeftArrow);
+			} else
+				SimpleUtils.fail("The Session End Arrows fail to load! ", false);
+			endYearAndMonthInCalendar= rangedCalendars.get(0).getText();
+			endYearInCalendar = endYearAndMonthInCalendar.split(" ")[1];
+			endMonthInCalendar = endYearAndMonthInCalendar.split(" ")[0].substring(0,3);
+		}
+
+		if (areListElementVisible(daysInSessionEnd, 5)) {
+			boolean isDayExist = false;
+			for (WebElement day: daysInSessionEnd) {
+				if (day.getText().equals(endDay)){
+					click(day);
+					isDayExist = true;
+					break;
+				}
+			}
+			if (!isDayExist){
+				SimpleUtils.fail("Cannot find the session end day! ", false);
+			}
+		} else
+			SimpleUtils.fail("Days in Session end panel fail to load! ", false);
 	}
 }

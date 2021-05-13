@@ -175,4 +175,5 @@ public interface TeamPage {
 	public void cancelTMTerminate() throws Exception;
 	public void cancelTMDeactivate() throws Exception;
 	public boolean isCancelDeactivateButtonLoaded () throws Exception;
+	public void selectSchoolSessionStartAndEndDate(String startDate, String endDate) throws Exception;
 }

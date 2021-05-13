@@ -3,6 +3,7 @@ package com.legion.pages;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.htmlunit.corejs.javascript.EcmaError;
 import org.openqa.selenium.WebElement;
@@ -631,4 +632,6 @@ public interface SchedulePage {
 	public List<String> getAllOperatingHrsOnCreateShiftPage() throws Exception;
 	public List<String> getStartAndEndOperatingHrsOnEditShiftPage() throws Exception;
 	public void clickOnCloseButtonOnCustomizeShiftPage() throws Exception;
+	public void navigateDayViewWithDayName(String dayName) throws Exception;
+	public Map<String, String> getActiveDayInfo() throws Exception;
 }

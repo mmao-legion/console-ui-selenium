@@ -15,6 +15,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.setTestSuiteID;
@@ -124,6 +125,22 @@ public class CinemarkMinorTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            schedulePage.navigateDayViewWithDayName("Sat");
+            Map<String, String> dayInfo = schedulePage.getActiveDayInfo();
+
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
@@ -139,7 +156,8 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartNEndDate();
+            teamPage.selectSchoolSessionStartAndEndDate(dayInfo.get("year") +" Jan 1",
+                    dayInfo.get("year") +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.inputCalendarName(calendarName);
             teamPage.clickOnSaveSchoolCalendarBtn();

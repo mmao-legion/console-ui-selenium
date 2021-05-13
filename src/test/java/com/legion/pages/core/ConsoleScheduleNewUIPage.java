@@ -2335,6 +2335,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void navigateDayViewWithDayName(String dayName) throws Exception {
+        // The day name should be: Fri, Sat, Sun, Mon, Tue, Wed, Thu
+        clickOnDayView();
+        List<WebElement> scheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+        if (scheduleCalendarDayLabels.size() == 7) {
+            boolean isDayNameExists = false;
+            for (WebElement day: scheduleCalendarDayLabels ){
+                if (day.getText().contains(dayName)) {
+                    click(day);
+                    isDayNameExists = true;
+                    break;
+                }
+            }
+            if(!isDayNameExists){
+                SimpleUtils.fail("The day name is not exists", false);
+            }
+        } else
+            SimpleUtils.fail("Week day picker display incorrectly! ", false);
+    }
+
+    @Override
     public String getActiveGroupByFilter() throws Exception {
         String selectedGroupByFilter = "";
         if (isElementLoaded(scheduleGroupByButton)) {
@@ -5329,6 +5350,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             activeDay = activeWeek.getText().replace("\n", " ").substring(0,3);
         }
         return activeDay;
+    }
+
+    public Map<String, String> getActiveDayInfo() throws Exception{
+
+        Map<String, String> dayInfo = new HashMap<>();
+        WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+        String[] activeDay = activeWeek.getText().replace("\n", " ").split(" ");
+
+        dayInfo.put("weekDay", activeDay[0].substring(0, 3));
+        dayInfo.put("month", activeDay[1]);
+        dayInfo.put("day", activeDay[2]);
+        dayInfo.put("year", getYearsFromCalendarMonthYearText().get(0));
+
+        return dayInfo;
     }
 
     @FindBy(css = "tr[ng-repeat='day in summary.workingHours'] td:nth-child(1)")
