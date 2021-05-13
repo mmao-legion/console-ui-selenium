@@ -94,6 +94,7 @@ public class ConfigurationTest extends TestBase {
             String templateName = "FionaUsing";
             String workRole = "New Work Role";
 
+
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.goToConfigurationPage();
                 configurationPage.clickOnConfigurationCrad(templateType);
@@ -446,7 +447,7 @@ public class ConfigurationTest extends TestBase {
             String mode = "edit";
             String templateName = "FionaUsing";
             String workRole1 = "New Work Role";
-            String workRole2 = "1223add";
+            String workRole2 = "Mgr on Duty";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
                 add("Friday");
@@ -579,7 +580,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E days of week and number of shift validation")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void daysOfWeekAndNumberOfShiftE2E(String browser, String username, String password, String location) throws Exception {
+    public void daysOfWeekE2E(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -599,6 +600,7 @@ public class ConfigurationTest extends TestBase {
             String endEventPoint = "before";
             String endEvent = "Closing Operating Hours";
             String locationName = "OMLocation95";
+
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -627,6 +629,22 @@ public class ConfigurationTest extends TestBase {
             locationSelectorPage.changeLocation(locationName);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            // Navigate to a week
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            // create the schedule if not created
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "08:00PM");
+            schedulePage.verifyDayHasShifts("Sunday");
+            schedulePage.verifyDayHasShifts("Monday");
+            schedulePage.verifyDayHasShifts("Tuesday");
+            schedulePage.verifyDayHasShifts("Wednesday");
+            schedulePage.verifyDayHasShifts("Thursday");
+            schedulePage.verifyDayHasShifts("Friday");
+            schedulePage.verifyDayHasShifts("Saturday");
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
