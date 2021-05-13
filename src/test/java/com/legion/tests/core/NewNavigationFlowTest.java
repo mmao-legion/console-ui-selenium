@@ -56,7 +56,7 @@ public class NewNavigationFlowTest extends TestBase {
 
         //search one user and to see edit
         controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-        String userFirstName = "a";
+        String userFirstName = "Level:Region";
 
         //Validate manager location for one user
         controlsNewUIPage.verifyUpdateUserAndRolesOneUserLocationInfo(userFirstName);
@@ -267,12 +267,36 @@ public class NewNavigationFlowTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate location profile page in controls")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyNavigationFunctionByDifferentRoles(String browser, String username, String password, String location) throws Exception {
+
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeLocation("OMLocation16");
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+
+        // Validate Controls Location Profile Section
+        controlsNewUIPage.clickOnControlsLocationProfileSection();
+        boolean isLocationProfile = controlsNewUIPage.isControlsLocationProfileLoaded();
+        SimpleUtils.assertOnFail("Controls Page: Location Profile Section not Loaded.", isLocationProfile, true);
+
+
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate location profile page in controls")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyLocationProfilePageInControls(String browser, String username, String password, String location) throws Exception {
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.selectLocationByIndex(1);
+        locationSelectorPage.changeLocation("OMLocation16");
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         controlsNewUIPage.clickOnControlsConsoleMenu();
         SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);

@@ -194,7 +194,7 @@ public class JobTest extends TestBase {
             jobsPage.inputJobComments(commentText);
             jobsPage.addLocationBtnIsClickable();
 //            jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
-            jobsPage.iCanSelectDistrictByAddLocation(searchText,index);
+            jobsPage.iCanSelectUpperFieldByAddLocation(searchText,index);
             jobsPage.createBtnIsClickable();
             jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
             jobsPage.iCanStopJob(jobTitle);
@@ -408,7 +408,7 @@ public class JobTest extends TestBase {
             String jobTitle = "AutoReleaseJob"+currentTime;
             setJobName(jobTitle);
             String commentText = "created by automation scripts";
-            String searchText = "OMLocation16";
+            String searchText = "UpperField";
             int index = 0;
             String releaseDay = "10";
             String timeForRelease = "0";
@@ -423,7 +423,7 @@ public class JobTest extends TestBase {
                     jobsPage.inputJobTitle(jobTitle);
                     jobsPage.inputJobComments(commentText);
                     jobsPage.addLocationBtnIsClickable();
-                    jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+                    jobsPage.iCanSelectLocationsViaDynamicGroupInAddLocation(searchText);
                     jobsPage.iCanClickOnCreatAndReleaseCheckBox();
                     jobsPage.iCanSetUpDaysBeforeRelease(releaseDay);
                     jobsPage.iCanSetUpTimeOfRelease(timeForRelease);

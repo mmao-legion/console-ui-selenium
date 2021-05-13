@@ -110,7 +110,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if(isElementLoaded(goToConfigurationButton,5)){
 			if (isElementLoaded(enterPriseProfileInLocations,5) && isElementLoaded(globalConfigurationInLocations,5)
 			&& isElementLoaded(locationsInLocations,5) && isElementLoaded(upperfieldsInLocations)) {
-				SimpleUtils.pass("Location overview page show well when OPview turn on");
+				SimpleUtils.pass("Location overview page show well when OPview turn on and have renamed District tile to Upperfield");
 			}else
 				SimpleUtils.fail("Location overview page load failed when OPview turn on",false);
 		}else {
