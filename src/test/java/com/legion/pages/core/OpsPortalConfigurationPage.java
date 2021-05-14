@@ -379,7 +379,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	@FindBy(css="table[ng-if*=\"template.workRoles\"] tbody")
+//	@FindBy(css="table[ng-if*=\"template.workRoles\"] tbody")
+//	private List<WebElement> workRoleList;
+
+	@FindBy(css="table[ng-if*=\"$ctrl.sortedRows.length\"] tbody")
 	private List<WebElement> workRoleList;
 
 	@Override
