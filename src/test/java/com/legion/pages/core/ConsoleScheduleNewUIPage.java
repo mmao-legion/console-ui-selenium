@@ -4319,7 +4319,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
                                 String openTime = startNEndTimes.get(0).getAttribute("value");
                                 String closeTime = startNEndTimes.get(1).getAttribute("value");
-                                if (!openTime.equals(startTime) && !closeTime.equals(endTime)) {
+                                if (!openTime.equals(startTime) || !closeTime.equals(endTime)) {
                                     startNEndTimes.get(0).clear();
                                     startNEndTimes.get(1).clear();
                                     startNEndTimes.get(0).sendKeys(startTime);
