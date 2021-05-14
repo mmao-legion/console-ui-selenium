@@ -265,7 +265,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate location profile page in controls")
+    @TestName(description = "Location navigation via different role")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationFunctionByDifRoleAsInternalCustomerAdmin(String browser, String username, String password, String location) throws Exception {
 
