@@ -25,6 +25,7 @@
                     <!--                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>-->
                     <!--                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>-->
                     <include name="verifyEachTabIfSelectHQAsInternalCustomerAdmin" />
+                    <include name="verifyNavigationFunctionByDifRoleAsInternalCustomerAdmin" />
                 </methods>
             </class>
         </classes>

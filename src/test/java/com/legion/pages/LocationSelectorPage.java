@@ -39,4 +39,6 @@ public interface LocationSelectorPage {
 	public List<String> getConsoleTabs();
 	public boolean isCurrentPageEmptyInHQView() throws Exception;
 	public void verifyGreyOutPageInHQView();
+	public List<String> getNavigatorValue();
+	public void refreshTheBrowser();
 }

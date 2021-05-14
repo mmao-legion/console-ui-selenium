@@ -11,6 +11,7 @@ import java.util.List;
 import com.legion.utils.JsonUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -1075,5 +1076,27 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                 SimpleUtils.report(tabsName.get(i).getText()+": is enabled");
             }
         }
+    }
+
+    @Override
+    public List<String> getNavigatorValue() {
+        List<String> navigatorText =new ArrayList<>() ;
+        if (areListElementVisible(levelDisplay,5)) {
+            for (WebElement each:levelDisplay) {
+                navigatorText.add(each.getText().trim());
+            }
+            return navigatorText;
+        }else
+            SimpleUtils.fail("Location navigator load failed",false);
+            return null;
+    }
+
+    @Override
+    public void refreshTheBrowser() {
+        try {
+            getDriver().navigate().refresh();
+        } catch (TimeoutException ignored) {
+        }
+
     }
 }

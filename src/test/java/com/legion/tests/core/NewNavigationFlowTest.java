@@ -266,22 +266,107 @@ public class NewNavigationFlowTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate location profile page in controls")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyNavigationFunctionByDifferentRoles(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyNavigationFunctionByDifRoleAsInternalCustomerAdmin(String browser, String username, String password, String location) throws Exception {
 
+        String firstLevel = "HQ";
+        String secondLevel = "All Business Units";
+        String bu = "BU-ForAutomation";
+        String region = "Region-ForAutomation";
+        String district ="District-ForAutomation";
+        String locationL ="OMLocation16";
+//
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeLocation("OMLocation16");
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        controlsNewUIPage.clickOnControlsConsoleMenu();
-        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(firstLevel);
+        List<String> navigateDefaultText = locationSelectorPage.getNavigatorValue();
+        if (navigateDefaultText.get(0).equalsIgnoreCase(firstLevel)&& navigateDefaultText.get(1).equalsIgnoreCase(secondLevel)) {
+            SimpleUtils.pass("Default navigate show well");
+        }
+          // Validate navigate down one or more level for internal admin
+         locationSelectorPage.changeUpperFields(bu);
+         locationSelectorPage.changeUpperFields(region);
+         locationSelectorPage.changeUpperFields(district);
+         locationSelectorPage.changeUpperFields(locationL);
+         //Validate User current location selection should persist upon browser refresh
+         List<String> navigateText = locationSelectorPage.getNavigatorValue();
+         locationSelectorPage.refreshTheBrowser();
+         List<String> navigateTextAftRefresh = locationSelectorPage.getNavigatorValue();
+         String[] navigateTextToStr = navigateText.toArray(new String[]{});
+         String[] navigateTextAftRefreshToStr = navigateTextAftRefresh.toArray(new String[]{});
+         if (Arrays.equals(navigateTextToStr,navigateTextAftRefreshToStr)) {
+             SimpleUtils.pass("current location selection persist upon browser refresh");
+         }else
+             SimpleUtils.fail("After refresh ,the navigator value doesn't persist upon browser refresh",false);
 
-        // Validate Controls Location Profile Section
-        controlsNewUIPage.clickOnControlsLocationProfileSection();
-        boolean isLocationProfile = controlsNewUIPage.isControlsLocationProfileLoaded();
-        SimpleUtils.assertOnFail("Controls Page: Location Profile Section not Loaded.", isLocationProfile, true);
+         //Validate navigate up one or more level for internal admin
+         locationSelectorPage.changeUpperFields(district);
+         locationSelectorPage.changeUpperFields(region);
+         locationSelectorPage.changeUpperFields(region);
+         locationSelectorPage.changeUpperFields(bu);
+         locationSelectorPage.changeUpperFields(firstLevel);
+         List<String> navigateTextAftNavigateUp = locationSelectorPage.getNavigatorValue();
+         String[] navigateTextAftNavigateUpToStr = navigateTextAftNavigateUp.toArray(new String[]{});
+         if (Arrays.equals(navigateTextToStr,navigateTextAftNavigateUpToStr)) {
+             SimpleUtils.pass("Internal admin can navigate up one or more level successfully");
+         }else
+             SimpleUtils.fail("Navigate up one or more level failed",false);
+         //logout
+         LoginPage loginPage = pageFactory.createConsoleLoginPage();
+         loginPage.logOut();
 
+         //verify navigation function by DM
+        String fileName="UsersCredentials.json";
+        fileName=SimpleUtils.getEnterprise("Op_Enterprise")+fileName;
+        HashMap<String,Object[][]>userCredentials=SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][]teamMemberCredentials=userCredentials.get("DistrictManager");
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String.valueOf(teamMemberCredentials[0][0]),String.valueOf(teamMemberCredentials[0][1])
+                ,String.valueOf(teamMemberCredentials[0][2]));
+
+        List<String> navigateDefaultTextForDM = locationSelectorPage.getNavigatorValue();
+        if (navigateDefaultTextForDM.get(0).equalsIgnoreCase(district)&& navigateDefaultTextForDM.get(1).equalsIgnoreCase("All Locations")) {
+            SimpleUtils.pass("Default navigate show well for DM");
+        }
+        // Validate navigate down one or more level for internal admin
+        locationSelectorPage.changeLocation(location);
+        List<String> navigateTextAftNavDownForDM = locationSelectorPage.getNavigatorValue();
+        locationSelectorPage.refreshTheBrowser();
+        List<String> navigateTextAftRefreshForDM = locationSelectorPage.getNavigatorValue();
+        String[] navigateTextAftNavDownForDMToStr = navigateTextAftNavDownForDM.toArray(new String[]{});
+        String[] navigateTextAftRefreshForDMToStr = navigateTextAftRefreshForDM.toArray(new String[]{});
+
+        if (Arrays.equals(navigateTextAftNavDownForDMToStr,navigateTextAftRefreshForDMToStr)) {
+            SimpleUtils.pass("current location selection persist upon browser refresh");
+        }else
+            SimpleUtils.fail("After refresh ,the navigator value doesn't persist upon browser refresh",false);
+        //Navigate up
+        locationSelectorPage.changeUpperFields(district);
+        List<String> navigateTextAftNavUpForDM = locationSelectorPage.getNavigatorValue();
+        String[] navigateTextAftNavUpForDMToStr = navigateTextAftNavUpForDM.toArray(new String[]{});
+        String[] navigateDefaultTextForDMToStr = navigateDefaultTextForDM.toArray(new String[]{});
+        if (Arrays.equals(navigateTextAftNavUpForDMToStr,navigateDefaultTextForDMToStr)) {
+            SimpleUtils.pass("DM can navigate up one or more level successfully");
+        }else
+            SimpleUtils.fail("Navigate up one or more level failed",false);
+
+        loginPage.logOut();
+
+        //verify navigation function by SM
+        Object[][]teamMemberCredentialsF=userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String.valueOf(teamMemberCredentialsF[0][0]),String.valueOf(teamMemberCredentialsF[0][1])
+                ,String.valueOf(teamMemberCredentialsF[0][2]));
+        dashboardPage.clickOnSubMenuOnProfile("My Profile");
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        HashMap<String, String> userHRProfileInfo  = profileNewUIPage.getOneUserHRProfileInfo();
+        String homeStore = userHRProfileInfo.get("home store");
+        dashboardPage.clickOnDashboardConsoleMenu();
+        List<String> navigateDefaultTextForSMTM = locationSelectorPage.getNavigatorValue();
+        locationSelectorPage.getNavigatorValue();
+        if (navigateDefaultTextForSMTM.get(0).equalsIgnoreCase(homeStore) ) {
+            SimpleUtils.pass("SM/TM navigation show well");
+        }else
+            SimpleUtils.report("Default navigation for SM/TM is not home store");
 
     }
 

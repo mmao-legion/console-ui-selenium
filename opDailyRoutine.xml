@@ -74,6 +74,7 @@
 <!--                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>-->
                     <include name="verifyGlobalSearchFunctionOnNavigatorAsInternalCustomerAdmin" />
                     <include name="verifyEachTabIfSelectHQAsInternalCustomerAdmin" />
+                    <include name="verifyNavigationFunctionByDifRoleAsInternalCustomerAdmin" />
 
 
                 </methods>
