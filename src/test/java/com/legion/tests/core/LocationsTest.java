@@ -7,18 +7,11 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
-import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
-import org.openqa.selenium.WebElement;
-import org.testng.ITestResult;
-import org.testng.Reporter;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -459,9 +452,8 @@ public class LocationsTest extends TestBase {
 
                 SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
                 String currentTime =  dfs.format(new Date());
-                String locationName = "LGMSAuto" +currentTime;
+                String locationName ="LGMSAuto" +currentTime;
                 setLGMSLocationName(locationName);
-
                 int index =0;
                 int childLocationNum = 1;
                 String searchCharactor = "No touch";
@@ -480,7 +472,6 @@ public class LocationsTest extends TestBase {
                 //add new MS location group-parent and child
                 String  parentRelationship = "Parent location";
                 String locationType = "Regular";
-                locationsPage.verifyTheFiledOfLocationSetting();
                 locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.MS.getValue());
 
                 //add child location by child number
@@ -498,7 +489,7 @@ public class LocationsTest extends TestBase {
                 ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
                 //Verify the location relationship
                 if (locationsPage.isItMSLG()) {
-                    locationsPage.changeLGToMSOrP2P(locationGroupSwitchOperation.PTP.getValue());
+                    locationsPage.changeLGToMSOrP2P(locationGroupSwitchOperation.PTP.getValue(),locationInfoDetails.get(0).get("locationName"));
                 }else
                     SimpleUtils.fail("It's not MS location group,select another one pls",false);
                 //search location again
@@ -1204,7 +1195,7 @@ public class LocationsTest extends TestBase {
             ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
             //Verify the location relationship
             if (!locationsPage.isItMSLG()) {
-                locationsPage.changeLGToMSOrP2P(locationGroupSwitchOperation.MS.getValue());
+                locationsPage.changeLGToMSOrP2P(locationGroupSwitchOperation.PTP.getValue(), locationGroupSwitchOperation.MS.getValue());
             }else
                 SimpleUtils.fail("It's not P2P location group,select another one pls",false);
             //search location again

@@ -310,7 +310,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isElementEnabled(selectALocationTitle,5)) {
 				searchInputInSelectALocation.sendKeys(searchCharactor);
 				searchInputInSelectALocation.sendKeys(Keys.ENTER);
-				waitForSeconds(10);
+				waitForSeconds(20);
 				if (locationRowsInSelectLocation.size()>0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"radio\"]"));
 				click(firstRow);
@@ -873,7 +873,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(firstDay.findElement(By.cssSelector("div:nth-child(8)")));
 			scrollToBottom();
 			click(createLocationBtn);
-			waitForSeconds(10);
+			waitForSeconds(15);
 			SimpleUtils.pass("location creation done");
 
 		}else
@@ -1111,11 +1111,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void changeLGToMSOrP2P(String value) throws Exception {
+	public void changeLGToMSOrP2P(String value, String locationName) throws Exception {
 		if (locationRows.size() > 0) {
 			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(0));
 			click(editLocationBtn);
+			displayNameInput.clear();
+			displayNameInput.sendKeys("Change "+locationName+" to P2P or MS group");
+			setLocationName(locationName);
 			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+value+"\"] ")));
 			scrollToBottom();
 			click(saveBtnInUpdateLocationPage);
