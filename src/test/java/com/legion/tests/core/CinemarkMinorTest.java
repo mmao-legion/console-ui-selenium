@@ -1158,8 +1158,8 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteAllOOOHShiftInWeekView();
+            schedulePage.saveSchedule();
         }
-        schedulePage.saveSchedule();
         schedulePage.publishActiveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM

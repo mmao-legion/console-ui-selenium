@@ -95,7 +95,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the unassigned shifts convert to open shifts when generating schedule setting set as Yes, all unassigned shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -118,7 +119,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the unassigned shifts convert to open shifts when copying schedule setting set as Yes, all unassigned shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -138,7 +140,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the unassigned shifts convert to open shifts when generating schedule setting set as No, keep as unassigned")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -162,7 +164,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the unassigned shifts convert to open shifts when copying schedule setting set as No, keep as unassigned")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -182,7 +185,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when generating schedule setting set as Yes, except opening/closing shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -204,7 +208,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when copying schedule setting set as Yes, except opening/closing shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -225,7 +230,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the schedule with both Uassigned and OOH shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -751,7 +757,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the Outside of Operating Hours shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheOOOHShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -892,7 +899,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the hierarchy/priority order for all smart cards")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1010,7 +1018,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate one shift which has both Unassigned and OOH violation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1287,7 +1296,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate that if an employee is on PTO, leave or terminated as of the new week, the shift day/time should be copied but will be unassigned")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1528,7 +1538,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate that if employee availability preference is set to unavailable, or the schedule has compliance violations such as overtime, the schedule should be copied as-is")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1748,7 +1759,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the operating hours grid will automatically adjust to fit the full range if the copied schedule extend outside the operating hour")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
