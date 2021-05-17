@@ -6278,6 +6278,69 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return shiftInfo;
     }
 
+    @Override
+    public List<String> getTheShiftInfoInDayViewByIndex(int index) throws Exception {
+        List<String> shiftInfo = new ArrayList<>();
+        if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+            String firstName = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-worker-name")).getText();
+            if (!firstName.equalsIgnoreCase("Open")) {
+                String lastName = getTMDetailNameFromProfilePage(dayViewAvailableShifts.get(index)).split(" ")[1].trim();
+                //String jobTitle = dayViewAvailableShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
+                String jobTitle = "";
+                String shiftTimeWeekView = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-time")).getText();
+                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
+                clickTheElement(infoIcon);
+                String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
+                if (isElementLoaded(shiftDuration, 10)) {
+                    String shiftTime = shiftDuration.getText();
+                    shiftInfo.add(firstName);
+                    shiftInfo.add("");
+                    shiftInfo.add(shiftTime);
+                    shiftInfo.add(jobTitle);
+                    shiftInfo.add(workRole);
+                    shiftInfo.add(lastName);
+                    shiftInfo.add(shiftTimeWeekView);
+                }
+                //To close the info popup
+                clickTheElement(dayViewAvailableShifts.get(index));
+            } else {
+                //SimpleUtils.report("This is an Open Shift");
+                //return shiftInfo;
+                //For open shift
+                //String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
+                String lastName = "";
+                if (firstName.equalsIgnoreCase("Unassigned")){
+                    lastName = "unassigned";
+                } else
+                    lastName = "open";
+                String jobTitle = "";
+                String shiftTimeWeekView = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-time")).getText();
+                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
+                clickTheElement(infoIcon);
+                String workRole = shiftJobTitleAsWorkRole.getText().trim();
+                if (isElementLoaded(shiftDuration, 10)) {
+                    String shiftTime = shiftDuration.getText();
+                    shiftInfo.add(firstName);
+                    //shiftInfo.add(dayIndex);
+                    shiftInfo.add("");
+                    shiftInfo.add(shiftTime);
+                    shiftInfo.add(jobTitle);
+                    shiftInfo.add(workRole);
+                    shiftInfo.add(lastName);
+                    shiftInfo.add(shiftTimeWeekView);
+                }
+                //To close the info popup
+                clickTheElement(dayViewAvailableShifts.get(index));
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
+        }
+        if (shiftInfo.size() != 7) {
+            SimpleUtils.fail("Failed to get the shift info!", false);
+        }
+        return shiftInfo;
+    }
+
     public String getTMDetailNameFromProfilePage(WebElement shift) throws Exception {
         String tmDetailName = null;
         clickTheElement(shift.findElement(By.cssSelector(".rows .worker-image-optimized img")));

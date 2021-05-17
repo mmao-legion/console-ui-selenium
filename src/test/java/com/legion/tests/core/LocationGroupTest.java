@@ -2877,4 +2877,114 @@ public class LocationGroupTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the filter on schedule page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTheFilterOnSchedulePageForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("Bay Area District");
+            locationSelectorPage.changeLocation("LocGroup2");
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isActiveWeekGenerated) {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            if (schedulePage.isPublishButtonLoadedOnSchedulePage()) {
+                schedulePage.publishActiveSchedule();
+            }
+
+            // Verify the filter UI display correctly
+            schedulePage.clickOnFilterBtn();
+            schedulePage.verifyFilterDropdownList(true);
+
+            // Verify the location filter has been moved to the left
+            schedulePage.verifyLocationFilterInLeft(true);
+
+            // Verify performance target < 3 seconds to load
+            schedulePage.verifyAllChildLocationsShiftsLoadPerformance();
+            String childLocation = schedulePage.selectRandomChildLocationToFilter();
+            schedulePage.verifyChildLocationShiftsLoadPerformance(childLocation);
+
+            // Verify shifts will display according to location filter
+            schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            schedulePage.clickOnFilterBtn();
+            String childLocation1 = schedulePage.selectRandomChildLocationToFilter();
+            schedulePage.verifyShiftsDisplayThroughLocationFilter(childLocation1);
+            schedulePage.clickOnFilterBtn();
+            String childLocation2 = schedulePage.selectRandomChildLocationToFilter();
+            schedulePage.verifyShiftsDisplayThroughLocationFilter(childLocation2);
+
+            // Verify budget smart cards default view will be able to show location aggregated
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectAllChildLocationsToFilter();
+            HashMap<String, String> budgetNScheduledHoursForAllLocations = schedulePage.getBudgetNScheduledHoursFromSmartCard();
+            schedulePage.selectRandomChildLocationToFilter();
+            HashMap<String, String> budgetNScheduledHoursForOneChild = schedulePage.getBudgetNScheduledHoursFromSmartCard();
+            if (budgetNScheduledHoursForAllLocations.equals(budgetNScheduledHoursForOneChild))
+                SimpleUtils.pass("Schedule Page: The numbers in compliance smart card change according to the filter ");
+            else
+                SimpleUtils.fail("Schedule Page: The numbers in compliance smart card don't change according to the filter ",false);
+
+            // Verify compliance smart cards default view will be able to show location aggregated
+            schedulePage.selectAllChildLocationsToFilter();
+            int complianceShiftCountForAllLocations = 0;
+            if (schedulePage.verifyComplianceShiftsSmartCardShowing())
+                complianceShiftCountForAllLocations = schedulePage.getComplianceShiftCountFromSmartCard("COMPLIANCE");
+            String location1 = schedulePage.selectRandomChildLocationToFilter();
+            int  complianceShiftCountForOneChild = 0;
+            if (schedulePage.verifyComplianceShiftsSmartCardShowing())
+                complianceShiftCountForOneChild = schedulePage.getComplianceShiftCountFromSmartCard("COMPLIANCE");
+            if (complianceShiftCountForAllLocations >= complianceShiftCountForOneChild)
+                SimpleUtils.pass("Schedule Page: The numbers in budget smart card change according to the filter ");
+            else
+                SimpleUtils.fail("Schedule Page: The numbers in budget smart card don't change according to the filter ",false);
+
+            // Verify changes not publish smart card default view will be able to show location aggregated
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.addOpenShiftWithDefaultTime("MOD", location1);
+            schedulePage.saveSchedule();
+            String changes1 = schedulePage.getChangesOnActionRequired().contains(" ")? schedulePage.getChangesOnActionRequired().split(" ")[0]: schedulePage.getChangesOnActionRequired();
+            schedulePage.clickOnFilterBtn();
+            String location2 = schedulePage.selectRandomChildLocationToFilter();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.addOpenShiftWithDefaultTime("MOD", location2);
+            schedulePage.saveSchedule();
+            String changes2 = schedulePage.getChangesOnActionRequired().contains(" ")? schedulePage.getChangesOnActionRequired().split(" ")[0]: schedulePage.getChangesOnActionRequired();
+            if (Integer.parseInt(changes2) > Integer.parseInt(changes1))
+                SimpleUtils.pass("Schedule Page: The numbers in changes not publish smart card change according to the filter");
+            else
+                SimpleUtils.fail("Schedule Page: The numbers in changes not publish smart card don't change according to the filter",false);
+
+            // Verify shifts, all smart cards are display according to the other filter options except locations
+            schedulePage.filterScheduleByJobTitle(true);
+            int shiftsCount1 = schedulePage.getShiftsCount();
+            int  complianceShiftCount1 = 0;
+            if (schedulePage.verifyComplianceShiftsSmartCardShowing())
+                complianceShiftCount1 = schedulePage.getComplianceShiftCountFromSmartCard("COMPLIANCE");
+            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            int shiftsCount2 = schedulePage.getShiftsCount();
+            int  complianceShiftCount2 = 0;
+            if (schedulePage.verifyComplianceShiftsSmartCardShowing())
+                schedulePage.getComplianceShiftCountFromSmartCard("COMPLIANCE");
+            if (shiftsCount1 != shiftsCount2 && complianceShiftCount1 != complianceShiftCount2)
+                SimpleUtils.pass("Schedule Page: The shifts and compliance smart card display according to the filter");
+            else
+                SimpleUtils.fail("Schedule Page: The shifts and compliance smart card don't change according to the filter",false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

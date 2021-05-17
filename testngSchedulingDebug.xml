@@ -152,6 +152,8 @@
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
                     <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin" />
+                    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
+                    <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
                 </methods>
             </class>
         </classes>
