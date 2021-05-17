@@ -505,6 +505,7 @@
                     <include name="validatePrintScheduleForMSAsInternalAdmin" />
                     <include name="validatePrintScheduleForP2PAsInternalAdmin" />
                     <include name="validateTheFilterOnSchedulePageForMSAsInternalAdmin" />
+                    <include name="validateTheFilterOnSchedulePageForP2PAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
