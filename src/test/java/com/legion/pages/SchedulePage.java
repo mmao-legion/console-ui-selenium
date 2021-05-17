@@ -616,4 +616,10 @@ public interface SchedulePage {
 	public void deleteAllOOOHShiftInWeekView() throws Exception;
 	public List<WebElement> getAllOOOHShifts() throws Exception;
 	public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception;
+	public void verifyLocationFilterInLeft(boolean isLG) throws Exception;
+	public void verifyChildLocationShiftsLoadPerformance(String childLocation) throws Exception;
+	public String selectRandomChildLocationToFilter() throws Exception;
+	public void verifyShiftsDisplayThroughLocationFilter(String childLocation) throws Exception;
+	public void verifyAllChildLocationsShiftsLoadPerformance() throws Exception;
+	public void selectAllChildLocationsToFilter() throws Exception;
 }

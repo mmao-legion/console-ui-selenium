@@ -497,6 +497,7 @@
                     <include name="validateUIPerformanceForLargeRosterForP2PAsInternalAdmin" />
                     <include name="validatePrintScheduleForMSAsInternalAdmin" />
                     <include name="validatePrintScheduleForP2PAsInternalAdmin" />
+                    <include name="validateTheFilterOnSchedulePageForMSAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

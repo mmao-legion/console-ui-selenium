@@ -2950,14 +2950,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
             if (isLocationLoaded())
                 selectLocation(location);
+            moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME_3"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME_3"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             clickOnCreateOrNextBtn();
-            if(ifWarningModeDisplay())
+            if (ifWarningModeDisplay() && isElementLoaded(okBtnInWarningMode,5))
                 click(okBtnInWarningMode);
             Thread.sleep(2000);
         } else
             SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" +
                     getActiveWeekText() + "'", false);
     }
+
+
 
     @Override
     public void addOpenShiftWithFirstDay(String workRole) throws Exception {
@@ -12000,25 +12004,133 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyFilterDropdownList(boolean isLG) throws Exception {
         if (isElementLoaded(filterPopup,5)) {
-            for (WebElement filterLabel: filterLabels) {
-                String label = filterLabel.getText();
-                HashMap<String, ArrayList<WebElement>> availableFilters= getAvailableFilters();
-                if (!availableFilters.get("location").isEmpty()) {
-                    if (isLG)
-                        SimpleUtils.pass("Schedule Page: 'LOCATION' is one label when current env is LG");
-                    else
-                        SimpleUtils.fail("Schedule Page: 'LOCATION' should not be one label when current env isn't LG",false);
-                }
-                if (availableFilters.get("shifttype").size() == 7 && availableFilters.get("jobtitle").size() >1 && availableFilters.get("workrole").size() >1 ) {
-                    if (isLG)
-                        SimpleUtils.pass("Schedule Page: 'SHIFT TYPE'/'JOB TITLE/'WORK ROLE' display as expected");
-                    else
-                        SimpleUtils.fail("Schedule Page: 'SHIFT TYPE'/'JOB TITLE/'WORK ROLE' display unexpectedly",false);
-                }
-            }
+            HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+            if (!availableFilters.get("location").isEmpty()) {
+                if (isLG)
+                    SimpleUtils.pass("Schedule Page: 'LOCATION' is one label when current env is LG");
+                else
+                    SimpleUtils.fail("Schedule Page: 'LOCATION' should not be one label when current env isn't LG", false);
+            } else
+                SimpleUtils.report("Schedule Page: 'LOCATION' isn't one label currently");
+            if (availableFilters.get("shifttype").size() == 7 && availableFilters.get("jobtitle").size() > 1 && availableFilters.get("workrole").size() > 1)
+                SimpleUtils.pass("Schedule Page: 'SHIFT TYPE'/'JOB TITLE/'WORK ROLE' display as expected");
+            else
+                SimpleUtils.fail("Schedule Page: 'SHIFT TYPE'/'JOB TITLE/'WORK ROLE' display unexpectedly", false);
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up", false);
+    }
 
+    @Override
+    public void verifyLocationFilterInLeft(boolean isLG) throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+                if (isLG) {
+                    if (filterLabels.size() == 4 && filterLabels.get(0).getText().equals("LOCATION"))
+                        SimpleUtils.pass("Schedule Page: 'LOCATION' displays in left when current env is LG");
+                    else
+                        SimpleUtils.fail("Schedule Page: 'LOCATION' is not in the left when current env is LG",false);
+                } else {
+                    if (filterLabels.size() == 3 && !filterLabels.get(0).getText().equals("LOCATION"))
+                        SimpleUtils.pass("Schedule Page: 'LOCATION' doesn't display when current env isn't LG");
+                    else
+                        SimpleUtils.fail("Schedule Page: Filter displays unexpectedly when current env isn't LG", false);
+                }
         } else
             SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+    }
+
+    @Override
+    public String selectRandomChildLocationToFilter() throws Exception {
+        String randomLocation = "";
+        int randomIndex = 0;
+        if (isElementLoaded(filterPopup,5)) {
+            HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+            if (!availableFilters.get("location").isEmpty()) {
+                randomIndex = (new Random()).nextInt(availableFilters.get("location").size());
+                randomLocation = availableFilters.get("location").get(randomIndex).getText();
+                randomLocation = randomLocation.contains(" ")? randomLocation.split(" ")[0]: "";
+            } else
+                SimpleUtils.report("Schedule Page: 'LOCATION' isn't one label currently");
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up", false);
+        return randomLocation;
+    }
+
+    @Override
+    public void selectAllChildLocationsToFilter() throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            String locationFilterKey = "location";
+            ArrayList<WebElement> locationFilters = getAvailableFilters().get(locationFilterKey);
+            unCheckFilters(locationFilters);
+            checkFilters(locationFilters);
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up", false);
+    }
+
+    @Override
+    public void verifyAllChildLocationsShiftsLoadPerformance() throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            String locationFilterKey = "location";
+            ArrayList<WebElement> locationFilters = getAvailableFilters().get(locationFilterKey);
+            unCheckFilters(locationFilters);
+            for (WebElement locationOption: locationFilters) {
+                click(locationOption);
+                if (areListElementVisible(weekScheduleShiftsOfWeekView,3))
+                    SimpleUtils.pass("Schedule Page: The performance target is < 3 seconds to load");
+                else
+                    SimpleUtils.fail("Schedule Page: The performance target is more than 3 seconds to load",false);
+            }
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up", false);
+    }
+
+    @Override
+    public void verifyChildLocationShiftsLoadPerformance(String childLocation) throws Exception {
+        String locationFilterKey = "location";
+        boolean isChildLocationPresent = false;
+        ArrayList<WebElement> locationFilters = getAvailableFilters().get(locationFilterKey);
+        unCheckFilters(locationFilters);
+        for (WebElement locationOption: locationFilters) {
+            if (locationOption.getText().contains(childLocation)) {
+                isChildLocationPresent = true;
+                click(locationOption);
+                if (areListElementVisible(weekScheduleShiftsOfWeekView,3))
+                    SimpleUtils.pass("Schedule Page: The performance target is < 3 seconds to load");
+                else
+                    SimpleUtils.fail("Schedule Page: The performance target is more than 3 seconds to load",false);
+                break;
+            }
+        }
+        if (!isChildLocationPresent)
+            SimpleUtils.fail("Schedule Page: The filtered child location does not exist",false);
+    }
+
+    @Override
+    public void verifyShiftsDisplayThroughLocationFilter(String childLocation) throws Exception {
+        String locationFilterKey = "location";
+        boolean isChildLocationPresent = false;
+        ArrayList<WebElement> locationFilters = getAvailableFilters().get(locationFilterKey);
+        unCheckFilters(locationFilters);
+        for (WebElement locationOption: locationFilters) {
+            if (locationOption.getText().contains(childLocation)) {
+                isChildLocationPresent = true;
+                click(locationOption);
+                if (areListElementVisible(scheduleShiftTitles,3)) {
+                    for (WebElement title: scheduleShiftTitles) {
+                        if (childLocation.toUpperCase().contains(title.getText())) {
+                            SimpleUtils.pass("Schedule Page: The shifts change successfully according to the filter");
+                            break;
+                        } else
+                            SimpleUtils.fail("Schedule Page: The shifts don't change according to the filter",false);
+                    }
+                } else
+                    SimpleUtils.fail("Schedule Page: The shifts of the child location failed to load or loaded slowly",false);
+                break;
+            }
+        }
+        if (!isChildLocationPresent)
+            SimpleUtils.fail("Schedule Page: The filtered child location does not exist",false);
+        if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+            click(filterButton);
     }
 
     //added by haya.  return a List has 4 week's data including last week
