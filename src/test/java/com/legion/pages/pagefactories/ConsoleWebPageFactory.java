@@ -138,4 +138,10 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public IntegrationPage createConsoleIntegrationPage() { return new ConsoleIntegrationPage(); }
+
+	@Override
+	public UserManagementPage createOpsPortalUserManagementPage() {
+		return new OpsPortalUserManagementPage();
+	}
+
 }

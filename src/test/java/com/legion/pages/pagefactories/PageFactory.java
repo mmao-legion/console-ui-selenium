@@ -70,4 +70,6 @@ public interface PageFactory {
     NewsPage createConsoleNewsPage();
 
     IntegrationPage createConsoleIntegrationPage();
+
+    UserManagementPage createOpsPortalUserManagementPage();
 }

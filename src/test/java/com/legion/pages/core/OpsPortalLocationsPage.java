@@ -493,7 +493,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			itemsAndTransactionInoutField.get(1).sendKeys("1");
 			scrollToBottom();
 			click(createLocationBtn);
-			waitForSeconds(20);
+			waitForSeconds(30);
 			SimpleUtils.pass("New location creation done");
 
 		}else
@@ -873,7 +873,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(firstDay.findElement(By.cssSelector("div:nth-child(8)")));
 			scrollToBottom();
 			click(createLocationBtn);
-			waitForSeconds(15);
+			waitForSeconds(30);
 			SimpleUtils.pass("location creation done");
 
 		}else
