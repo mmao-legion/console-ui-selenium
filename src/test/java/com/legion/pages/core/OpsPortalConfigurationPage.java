@@ -1140,7 +1140,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css="div.badges-edit-wrapper div.lg-button-group div")
 	private List<WebElement> badgeOptions;
-	@FindBy(css="div.badges-edit-wrapper-scroll tbody tr")
+	@FindBy(css="div.badges-edit-wrapper tbody tr")
 	private List<WebElement> badgesList;
 
 	@Override
