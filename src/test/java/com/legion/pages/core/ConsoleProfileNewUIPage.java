@@ -1646,7 +1646,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 	
 	//updated by Haya
-	private void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception {
+	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception {
 		if(isElementLoaded(myAvailabilityEditModeSaveBtn)) {
 			click(myAvailabilityEditModeSaveBtn);
 			if(availabilityChangesRepeat.toLowerCase().contains("repeat forward")) {
@@ -3524,4 +3524,69 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Profile Page: New Time Off not Save Successfully.", false);
 
 	}
+
+	@FindBy(css = "[ng-click=\"removeAvailability()\"]")
+	private WebElement removeAvailabilityIcon;
+
+	@FindBy(css = "div.cursor-empty")
+	private List<WebElement> emptyAvailabilities;
+
+	@FindBy(css = "span.tooltip-red")
+	private WebElement availabilityToolTip;
+
+
+	public void updatePreferredOrBusyHoursToAllDay(int dayIndex, String hoursType) throws Exception {
+
+		String preferredHoursTabText = "Preferred";
+		String busyHoursTabText = "Busy";
+		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
+			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
+		else
+			selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+
+		//Delete all availabilities in the day
+		WebElement dayRow = null;
+		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
+			dayRow = myAvailabilityDayOfWeekRows.get(dayIndex);
+			List<WebElement> availabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.cursor-resizableW"));
+			for (WebElement availability: availabilitiesInTheDay) {
+				moveToElementAndClick(availability);
+				clickTheElement(removeAvailabilityIcon);
+				SimpleUtils.report("Remove one availability successfully! ");
+			}
+		} else
+			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
+
+		//Click first two empty availabilities
+		List<WebElement> emptyAvailabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.cursor-empty"));
+		for (int i =0; i< 10; i++) {
+			click(emptyAvailabilitiesInTheDay.get(i));
+		}
+
+		WebElement rightCell = dayRow.findElement(By.cssSelector("div.cursor-resizableE"));
+		int i=0;
+		while (!availabilityToolTip.getText().contains("12:00am - 12:00am") && i<5){
+			//Drag the availability to the end of the day
+			scrollToElement(rightCell);
+			mouseHoverDragandDrop(rightCell,emptyAvailabilitiesInTheDay.get(emptyAvailabilitiesInTheDay.size()-1));
+			i++;
+			waitForSeconds(2);
+		}
+
+		if (!availabilityToolTip.getText().contains("12:00am - 12:00am")) {
+//			mouseHoverDragandDrop(rightCell,emptyAvailabilitiesInTheDay.get(emptyAvailabilitiesInTheDay.size()-1));
+			SimpleUtils.fail("Update availabilities fail! ", false);
+		} else
+			SimpleUtils.report("Update availabilities successfully! ");
+	}
+
+
+	public void clickAvailabilityEditButton() throws Exception{
+		if (isElementLoaded(editBtn,10)){
+			click(editBtn);
+		}else{
+			SimpleUtils.fail("Edit button is not loaded!", false);
+		}
+	}
+
 }

@@ -9,30 +9,54 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
+    <test name="Schedule Copy Improvement Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
+                <methods>
+                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInOPAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
+                    <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
+                    <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
+                    <include name="validateTheOOOHShiftsAsInternalAdmin" />
+                    <include name="validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin" />
+                    <!--                <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" />    Blocking by https://legiontech.atlassian.net/browse/SCH-4018       -->
+
+                    <include name="validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin" />
+                    <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />
+
+                </methods>
+            </class>
+        </classes>
+    </test>
     <test name="Cinemark Minor Test">
         <classes>
             <class name="com.legion.tests.core.CinemarkMinorTest">
                 <methods>
                     <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
-<!--                    <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />-->
+                    <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
                     <!--                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" Debug/>-->
-<!--                    <include name="verifySchoolCalendarListAsInternalAdmin" />-->
-<!--                    <include name="verifyCreateCalendarAsInternalAdmin" />-->
-<!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-<!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-<!--                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-<!--                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-<!--                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-<!--                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-<!--                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-<!--                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-<!--                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />-->
+                    <include name="verifySchoolCalendarListAsInternalAdmin" />
+                    <include name="verifyCreateCalendarAsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <!--  blocked by SCH-4105         <include name="verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
+                    <!--  blocked by SCH-4105                  <include name="verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
+                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                    <!--  blocked by SCH-4105                  <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
+                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <!--  blocked by SCH-4105                  <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
+                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />
                     <!-- blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" />-->
                     <!--                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>-->
                     <!-- blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" />-->
@@ -40,5 +64,6 @@
             </class>
         </classes>
     </test>
+
 
 </suite> 

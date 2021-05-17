@@ -42,7 +42,8 @@ public class ConfigurationTest extends TestBase {
 
         this.createDriver((String)params[0],"83","Window");
         visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+//        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -236,8 +237,8 @@ public class ConfigurationTest extends TestBase {
             configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
             configurationPage.verifyAdvancedStaffingRulePageShowWell();
             configurationPage.verifyRadioButtonInTimeOfDayIsSingletonSelect();
-            configurationPage.inputShiftDuartionMinutes(duringTime);
-            configurationPage.validateShiftDuartionTimeUnit();
+            configurationPage.inputShiftDurationMinutes(duringTime);
+            configurationPage.validateShiftDurationTimeUnit();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -485,7 +486,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnConfigurationCrad(templateType);
             configurationPage.clickOnSpecifyTemplateName(templateName,mode);
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.addMutipleAdvanceStaffingRule(workRole,days);
+            configurationPage.addMultipleAdvanceStaffingRule(workRole,days);
             configurationPage.editAdvanceStaffingRule(shiftsNumber);
             configurationPage.deleteAdvanceStaffingRule();
         } catch (Exception e){
@@ -514,5 +515,120 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate advance staffing rule should be shown correct")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAdvancedStaffingRulesShowWell(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Test";
+            String workRole = "New Work Role";
+            String shiftsNumber = "7";
+            List<String> days = new ArrayList<String>(){{
+                add("Sunday");
+                add("Friday");
+            }};
+            String startOffsetTime = "30";
+            String startTimeUnit = "minutes";
+            String startEventPoint = "after";
+            String startEvent = "Opening Operating Hours";
+            String endOffsetTime = "35";
+            String endTimeUnit = "minutes";
+            String endEventPoint = "before";
+            String endEvent = "Closing Operating Hours";
 
+            String shiftsNumber1 = "10";
+            List<String> days1 = new ArrayList<String>(){{
+                add("Tuesday");
+                add("Saturday");
+            }};
+            String startOffsetTime1 = "40";
+            String startTimeUnit1 = "minutes";
+            String startEventPoint1 = "after";
+            String startEvent1 = "Opening Business Hours";
+            String endOffsetTime1 = "55";
+            String endTimeUnit1 = "minutes";
+            String endEventPoint1 = "before";
+            String endEvent1 = "Closing Business Hours";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.validateAdvanceStaffingRuleShowing(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
+                    endEvent,endOffsetTime,endEventPoint,endTimeUnit,days,shiftsNumber);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.validateAdvanceStaffingRuleShowing(startEvent1,startOffsetTime1,startEventPoint1,startTimeUnit1,
+                    endEvent1,endOffsetTime1,endEventPoint1,endTimeUnit1,days1,shiftsNumber1);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "E2E days of week and number of shift validation")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void daysOfWeekAndNumberOfShiftE2E(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "OMLocation95";
+            String workRole = "Lead Sales Associate";
+            String shiftsNumber = "7";
+            List<String> days = new ArrayList<String>(){{
+                add("Sunday");
+                add("Friday");
+            }};
+            String startOffsetTime = "30";
+            String startTimeUnit = "minutes";
+            String startEventPoint = "after";
+            String startEvent = "Opening Operating Hours";
+            String endOffsetTime = "35";
+            String endTimeUnit = "minutes";
+            String endEventPoint = "before";
+            String endEvent = "Closing Operating Hours";
+            String locationName = "OMLocation95";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeLocation(locationName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.deleteAllScheduleRules();
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.validateAdvanceStaffingRuleShowing(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
+                    endEvent,endOffsetTime,endEventPoint,endTimeUnit,days,shiftsNumber);
+            configurationPage.clickOnSaveButtonOnScheduleRulesListPage();
+            configurationPage.publishNowTheTemplate();
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            SimpleUtils.assertOnFail("Console Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

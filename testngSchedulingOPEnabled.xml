@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
-    <parameter name="testRail" value="Yes"/>
+    <parameter name="testRail" value="No"/>
     <parameter name="testRailRunName" value="Scheduling OP Enabled Regression"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
@@ -25,8 +25,8 @@
                     <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />
 <!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" />
-<!--                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" Blocked by bug: SCH-3539/>-->
-<!--                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" Blocked by bug: SCH-3539/>-->
+                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
   <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
                     <include name="verifyComplianceSmartCardFunctionality" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard" />
@@ -37,11 +37,11 @@
  <!--                   <include name="verifySchedulesWidgetsAsStoreManager" />-->
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
                     <include name="verifyScheduleFunctionalityForecast" />
-<!--                    <include name="verifyScheduleLaborForeCastFunctionality" Blocked by bug: SCH-3539/>-->
+                    <include name="verifyScheduleLaborForeCastFunctionality" />
                     <include name="validateWeatherSmartCardOnForecastPage" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
  <!--                   <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />-->
-                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
+<!--                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by bug: SCH-3934/>-->
  <!--                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
                     <include name="verifyScheduleFunctionalityOverviewAsStoreManager" />-->
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
@@ -84,13 +84,21 @@
             <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
                 <methods>
                     <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInOPAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
+                    <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
+                    <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
                     <include name="validateTheOOOHShiftsAsInternalAdmin" />
+                    <include name="validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin" />
+<!--                <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" />    Blocking by https://legiontech.atlassian.net/browse/SCH-4018       -->
+
+                    <include name="validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin" />
+                    <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />
+
                 </methods>
             </class>
         </classes>
@@ -101,6 +109,20 @@
             <class name="com.legion.tests.core.DeleteScheduleTest">
                 <methods>
                     <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
+                    <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
+                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager" />
+                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />
+                    <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Schedule Test KendraScott2">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                <methods>
+                    <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>

@@ -25,6 +25,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.getWorkerRole;
 
 
 public class ScheduleTestKendraScott2 extends TestBase {
@@ -1318,6 +1319,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
 			//make edits
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
@@ -1367,6 +1369,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("Unassigned");
 			//make edits and publish
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
@@ -1378,6 +1381,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.publishActiveSchedule();
 			//make edits and save
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("Unassigned");
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
 			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
@@ -1813,7 +1817,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (!isWeekGenerated) {
 				schedulePage.createScheduleForNonDGFlowNewUI();
 			}
-			List<String> firstShiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			List<String> firstShiftInfo = new ArrayList<>();
+			while(firstShiftInfo.size() == 0 || firstShiftInfo.get(0).equalsIgnoreCase("open")
+					|| firstShiftInfo.get(0).equalsIgnoreCase("unassigned")){
+				firstShiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+			}
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
@@ -1995,6 +2003,662 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickViewStatusBtn();
 			schedulePage.verifyListOfOfferNotNull();
 
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify \"Offer Team Members\" option is available for Open shift")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+
+		//delete unassigned shifts and open shifts.
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("unassigned");
+		schedulePage.deleteTMShiftInWeekView("open");
+		schedulePage.saveSchedule();
+		List<String> shiftInfo = new ArrayList<>();
+		while (shiftInfo.size() == 0) {
+			shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+		}
+		String firstNameOfTM = shiftInfo.get(0);
+		String workRoleOfTM = shiftInfo.get(4);
+
+
+		//verify assigned shift in non-edit mode for week view and day view
+		schedulePage.clickOnProfileIcon();
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
+		schedulePage.clickOnDayView();
+		schedulePage.clickOnProfileIconOfShiftInDayView("no");
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
+		schedulePage.clickOnWeekView();
+
+		//verify assigned shift in edit mode for week view and day view
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnProfileIcon();
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
+		schedulePage.clickOnDayView();
+		schedulePage.clickOnProfileIconOfShiftInDayView("no");
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
+		schedulePage.saveSchedule();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+		//create auto open shifts.
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.selectWorkRole(workRoleOfTM);
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+
+		//verify auto open shift in edit mode.
+			//--verify in day view
+		schedulePage.clickOnProfileIconOfShiftInDayView("open");
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+		SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+			//--verify in week view
+		schedulePage.clickOnWeekView();
+		schedulePage.clickOnProfileIconOfOpenShift();
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+		SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+		schedulePage.saveSchedule();
+		//verify auto open shift in non-edit mode.
+			//--verify in day view
+		schedulePage.clickOnDayView();
+		schedulePage.clickOnProfileIconOfShiftInDayView("open");
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+		SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+			//--verify in week view
+		schedulePage.clickOnWeekView();
+		schedulePage.clickOnProfileIconOfOpenShift();
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+		SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+
+		//create manual open shifts.
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("open");
+		schedulePage.clickOnDayView();
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.customizeNewShiftPage();
+		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.selectWorkRole(workRoleOfTM);
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.verifySelectTeamMembersOption();
+		schedulePage.clickOnOfferOrAssignBtn();
+		//verify manual open shift in edit mode.
+			//--verify in day view
+		schedulePage.clickOnProfileIconOfShiftInDayView("open");
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+		SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+			//--verify in week view
+		schedulePage.clickOnWeekView();
+		schedulePage.clickOnProfileIconOfOpenShift();
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+		SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+		schedulePage.saveSchedule();
+		//verify manual open shifts in non-edit mode.
+			//--verify in day view
+		schedulePage.clickOnDayView();
+		schedulePage.clickOnProfileIconOfShiftInDayView("open");
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+		SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+			//--verify in week view
+		schedulePage.clickOnWeekView();
+		schedulePage.clickOnProfileIconOfOpenShift();
+		SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+		SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the functionality of \"Offer Team Members\" for Open Shift: Auto in non-Edit mode")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember(String browser, String username, String password, String location) throws Exception{
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
+			loginPage.logOut();
+
+			String fileName = "UsersCredentials.json";
+			String workRoleOfTM = "";
+			fileName = this.enterpriseName+fileName;
+			if (this.enterpriseName.contains("cinemark-wkdy")){
+				workRoleOfTM = "Team Member Corporate-Theatre";
+			} else {//KendraScott2_Enterprise by default
+				workRoleOfTM = scheduleWorkRoles.get("MOD");
+			}
+
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+
+			Object[][] adminCredentials = userCredentials.get("InternalAdmin");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
+					, String.valueOf(adminCredentials[0][2]));
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+
+			//delete unassigned shifts and open shifts.
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.deleteTMShiftInWeekView("open");
+
+
+
+			//create auto open shifts.
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkRole(workRoleOfTM);
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.saveSchedule();
+
+			//verify auto open shift in non-edit mode.
+			schedulePage.clickOnProfileIconOfOpenShift();
+			SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+			schedulePage.clickOnOfferTMOption();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.verifyRecommendedTableHasTM();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.searchTeamMemberByName(firstNameOfTM);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.clickOnProfileIconOfOpenShift();
+			schedulePage.clickViewStatusBtn();
+			schedulePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
+			schedulePage.closeViewStatusContainer();
+			loginPage.logOut();
+
+			//login with TM.
+			Object[][] TMCredentials = userCredentials.get("TeamMember");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
+					, String.valueOf(TMCredentials[0][2]));
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.navigateToNextWeek();
+			schedulePage.clickLinkOnSmartCardByName("View Shifts");
+			SimpleUtils.assertOnFail("Didn't get open shift offer!", schedulePage.getShiftsCount()==1, false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the functionality of \"Offer Team Members\" for Open Shift: Auto in Edit Mode")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyFunctionalityOfOfferTMForAutoOpenShiftsInEditModeAsTeamMember(String browser, String username, String password, String location) throws Exception{
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
+			loginPage.logOut();
+
+			String fileName = "UsersCredentials.json";
+			String workRoleOfTM = "";
+			fileName = this.enterpriseName+fileName;
+			if (this.enterpriseName.contains("cinemark-wkdy")){
+				workRoleOfTM = "Team Member Corporate-Theatre";
+			} else {//KendraScott2_Enterprise by default
+				workRoleOfTM = scheduleWorkRoles.get("MOD");
+			}
+
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+
+			Object[][] adminCredentials = userCredentials.get("InternalAdmin");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
+					, String.valueOf(adminCredentials[0][2]));
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+
+			//delete unassigned shifts and open shifts.
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("Unassigned");
+			schedulePage.deleteTMShiftInWeekView("Open");
+
+			//create auto open shifts.
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			//schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.moveSliderAtCertainPoint("8","8");
+			schedulePage.selectWorkRole(workRoleOfTM);
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.saveSchedule();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			WebElement selectedShift = schedulePage.clickOnProfileIconOfOpenShift();
+			String selectedShiftId= selectedShift.getAttribute("id");
+			int index = schedulePage.getShiftIndexById(selectedShiftId);
+
+			//verify auto open shift in edit mode.
+			List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(index);
+			schedulePage.clickOnProfileIconOfOpenShift();
+			SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+			schedulePage.clickOnOfferTMOption();
+			String shiftInfoInWindows = schedulePage.getViewStatusShiftsInfo();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.verifyRecommendedTableHasTM();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.searchTeamMemberByName(firstNameOfTM);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.clickOnProfileIconOfOpenShift();
+			schedulePage.clickViewStatusBtn();
+			schedulePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
+			schedulePage.closeViewStatusContainer();
+			SimpleUtils.assertOnFail("shift time is not consistent!", shiftInfoInWindows.toLowerCase().contains(shiftInfo.get(2).toLowerCase()), false);
+			SimpleUtils.assertOnFail("shift work role is not consistent!", shiftInfoInWindows.toLowerCase().contains(shiftInfo.get(4).toLowerCase()), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the functionality of \"Offer Team Members\" for Open Shift: Manual in non-Edit mode")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember(String browser, String username, String password, String location) throws Exception{
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
+			loginPage.logOut();
+
+			String fileName = "UsersCredentials.json";
+			String workRoleOfTM = "";
+			fileName = this.enterpriseName+fileName;
+			if (this.enterpriseName.contains("cinemark-wkdy")){
+				workRoleOfTM = "Team Member Corporate-Theatre";
+			} else {//KendraScott2_Enterprise by default
+				workRoleOfTM = scheduleWorkRoles.get("MOD");
+			}
+
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+
+			Object[][] adminCredentials = userCredentials.get("InternalAdmin");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
+					, String.valueOf(adminCredentials[0][2]));
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+
+			//delete unassigned shifts and open shifts.
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.deleteTMShiftInWeekView("open");
+
+
+
+			//create manual open shifts.
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.selectWorkRole(workRoleOfTM);
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.verifySelectTeamMembersOption();
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.saveSchedule();
+
+			//verify manual open shift in non-edit mode.
+			schedulePage.clickOnProfileIconOfOpenShift();
+			SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+			schedulePage.clickOnOfferTMOption();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.verifyRecommendedTableHasTM();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.clickOnProfileIconOfOpenShift();
+			schedulePage.clickViewStatusBtn();
+			schedulePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
+			schedulePage.closeViewStatusContainer();
+			loginPage.logOut();
+
+			//login with TM.
+			Object[][] TMCredentials = userCredentials.get("TeamMember");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
+					, String.valueOf(TMCredentials[0][2]));
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.navigateToNextWeek();
+			schedulePage.clickLinkOnSmartCardByName("View Shifts");
+			SimpleUtils.assertOnFail("Didn't get open shift offer!", schedulePage.getShiftsCount()==1, false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Verify the functionality of \"Offer Team Members\" for Open Shift: Manual in Edit Mode")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember(String browser, String username, String password, String location) throws Exception{
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
+			loginPage.logOut();
+
+			String fileName = "UsersCredentials.json";
+			String workRoleOfTM = "";
+			fileName = this.enterpriseName+fileName;
+			if (this.enterpriseName.contains("cinemark-wkdy")){
+				workRoleOfTM = "Team Member Corporate-Theatre";
+			} else {//KendraScott2_Enterprise by default
+				workRoleOfTM = scheduleWorkRoles.get("MOD");
+			}
+
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+
+			Object[][] adminCredentials = userCredentials.get("InternalAdmin");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
+					, String.valueOf(adminCredentials[0][2]));
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+
+			//delete unassigned shifts and open shifts.
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("Unassigned");
+			schedulePage.deleteTMShiftInWeekView("Open");
+
+			//create manual open shifts.
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			//schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.moveSliderAtCertainPoint("8","8");
+			schedulePage.selectWorkRole(workRoleOfTM);
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.verifySelectTeamMembersOption();
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.saveSchedule();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			WebElement selectedShift = schedulePage.clickOnProfileIconOfOpenShift();
+			String selectedShiftId= selectedShift.getAttribute("id");
+			int index = schedulePage.getShiftIndexById(selectedShiftId);
+
+			//verify manual open shift in edit mode.
+			List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(index);
+			schedulePage.clickOnProfileIconOfOpenShift();
+			SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+			schedulePage.clickOnOfferTMOption();
+			String shiftInfoInWindows = schedulePage.getViewStatusShiftsInfo();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.verifyRecommendedTableHasTM();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.clickOnProfileIconOfOpenShift();
+			schedulePage.clickViewStatusBtn();
+			schedulePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
+			schedulePage.closeViewStatusContainer();
+			SimpleUtils.assertOnFail("shift time is not consistent!", shiftInfoInWindows.toLowerCase().contains(shiftInfo.get(2).toLowerCase()), false);
+			SimpleUtils.assertOnFail("shift work role is not consistent!", shiftInfoInWindows.toLowerCase().contains(shiftInfo.get(4).toLowerCase()), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the functionality of \"Offer Team Members\" for converting assigned shift to open in non-Edit mode")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember(String browser, String username, String password, String location) throws Exception{
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
+			loginPage.logOut();
+
+			String fileName = "UsersCredentials.json";
+			String workRoleOfTM = "";
+			fileName = this.enterpriseName+fileName;
+			if (this.enterpriseName.contains("cinemark-wkdy")){
+				workRoleOfTM = "Team Member Corporate-Theatre";
+			} else {//KendraScott2_Enterprise by default
+				workRoleOfTM = scheduleWorkRoles.get("MOD");
+			}
+
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+
+			Object[][] adminCredentials = userCredentials.get("InternalAdmin");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
+					, String.valueOf(adminCredentials[0][2]));
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+
+			//delete unassigned shifts and open shifts.
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.deleteTMShiftInWeekView("open");
+			schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
+			schedulePage.saveSchedule();
+
+			//convert a shift to open shift
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnFilterBtn();
+			schedulePage.selectWorkRoleFilterByText(workRoleOfTM, true);
+			schedulePage.clickOnProfileIcon();
+			schedulePage.clickOnConvertToOpenShift();
+			schedulePage.convertToOpenShiftDirectly();
+			schedulePage.saveSchedule();
+
+			//verify the open shift in non-edit mode.
+			schedulePage.clickOnProfileIconOfOpenShift();
+			SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+			schedulePage.clickOnOfferTMOption();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.verifyRecommendedTableHasTM();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.clickOnProfileIconOfOpenShift();
+			schedulePage.clickViewStatusBtn();
+			schedulePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
+			schedulePage.closeViewStatusContainer();
+			loginPage.logOut();
+
+			//login with TM.
+			Object[][] TMCredentials = userCredentials.get("TeamMember");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
+					, String.valueOf(TMCredentials[0][2]));
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.navigateToNextWeek();
+			schedulePage.clickLinkOnSmartCardByName("View Shifts");
+			SimpleUtils.assertOnFail("Didn't get open shift offer!", schedulePage.getShiftsCount()==1, false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Verify the functionality of \"Offer Team Members\" for converting assigned shift to open in Edit mode")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember(String browser, String username, String password, String location) throws Exception{
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
+			loginPage.logOut();
+
+			String fileName = "UsersCredentials.json";
+			String workRoleOfTM = "";
+			fileName = this.enterpriseName+fileName;
+			if (this.enterpriseName.contains("cinemark-wkdy")){
+				workRoleOfTM = "Team Member Corporate-Theatre";
+			} else {//KendraScott2_Enterprise by default
+				workRoleOfTM = scheduleWorkRoles.get("MOD");
+			}
+
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+
+			Object[][] adminCredentials = userCredentials.get("InternalAdmin");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
+					, String.valueOf(adminCredentials[0][2]));
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+
+			//delete unassigned shifts and open shifts.
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.deleteTMShiftInWeekView("open");
+			schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
+			schedulePage.saveSchedule();
+
+			//convert a shift to open shift
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnFilterBtn();
+			schedulePage.selectWorkRoleFilterByText(workRoleOfTM, true);
+			schedulePage.clickOnProfileIcon();
+			schedulePage.clickOnConvertToOpenShift();
+			schedulePage.convertToOpenShiftDirectly();
+			schedulePage.saveSchedule();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			WebElement selectedShift = schedulePage.clickOnProfileIconOfOpenShift();
+			String selectedShiftId= selectedShift.getAttribute("id");
+			int index = schedulePage.getShiftIndexById(selectedShiftId);
+
+			//verify manual open shift in edit mode.
+			List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(index);
+			schedulePage.clickOnProfileIconOfOpenShift();
+			SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+			schedulePage.clickOnOfferTMOption();
+			String shiftInfoInWindows = schedulePage.getViewStatusShiftsInfo();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.verifyRecommendedTableHasTM();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			schedulePage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
+			schedulePage.clickOnOfferOrAssignBtn();
+			schedulePage.clickOnProfileIconOfOpenShift();
+			schedulePage.clickViewStatusBtn();
+			schedulePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
+			schedulePage.closeViewStatusContainer();
+			SimpleUtils.assertOnFail("shift time is not consistent!", shiftInfoInWindows.toLowerCase().contains(shiftInfo.get(2).toLowerCase()), false);
+			SimpleUtils.assertOnFail("shift work role is not consistent!", shiftInfoInWindows.toLowerCase().contains(shiftInfo.get(4).toLowerCase()), false);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
@@ -2811,6 +3475,61 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
 			SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
 			controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(),false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the buffer hours display in schedule")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheBufferHoursDisplayInScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			schedulePage.navigateToNextWeek();
+			schedulePage.navigateToNextWeek();
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+			schedulePage.clickOnCreateNewShiftButton();
+			List<String> allOperatingHrsOnCreateShiftPage = schedulePage.getAllOperatingHrsOnCreateShiftPage();
+			SimpleUtils.assertOnFail("The operating hours on create shift page display incorrectly! ",
+					allOperatingHrsOnCreateShiftPage.get(0).equalsIgnoreCase("6am")
+							&& allOperatingHrsOnCreateShiftPage.get(allOperatingHrsOnCreateShiftPage.size()-1).equalsIgnoreCase("11pm"),false);
+			schedulePage.clickOnCloseButtonOnCustomizeShiftPage();
+
+			schedulePage.clickOnProfileIcon();
+			schedulePage.clickOnEditShiftTime();
+			schedulePage.verifyEditShiftTimePopUpDisplay();
+			List<String> startAndEndHrsOnEditShiftPage = schedulePage.getStartAndEndOperatingHrsOnEditShiftPage();
+			SimpleUtils.assertOnFail("The operating hours on create shift page display incorrectly! ",
+					startAndEndHrsOnEditShiftPage.get(0).equalsIgnoreCase("6")
+							&& startAndEndHrsOnEditShiftPage.get(1).equalsIgnoreCase("11"),false);
+			schedulePage.clickOnCancelEditShiftTimeButton();
+			schedulePage.clickOnCancelButtonOnEditMode();
+
+			schedulePage.clickOnDayView();
+			List<String> gridHeaderTimes = new ArrayList();
+			gridHeaderTimes = schedulePage.getScheduleDayViewGridTimeDuration();
+			SimpleUtils.assertOnFail("The grid header time should start as 6 AM, the actual time is: " +
+					gridHeaderTimes.get(0), gridHeaderTimes.get(0).contains("6 AM"), false);
+			SimpleUtils.assertOnFail("The grid header time should end with 10 PM, the actual time is: " +
+					gridHeaderTimes.get(gridHeaderTimes.size() - 1), gridHeaderTimes.get(gridHeaderTimes.size() - 1).contains("10 PM"), false);
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(),false);
 		}

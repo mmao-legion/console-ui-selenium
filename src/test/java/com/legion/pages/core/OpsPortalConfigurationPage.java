@@ -19,10 +19,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.legion.tests.TestBase.flagForTestRun;
 import static com.legion.tests.TestBase.propertyMap;
@@ -302,12 +299,24 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		clickOnTemplateName(templateType);
 	}
 
+	@FindBy(css="input[placeholder=\"You can search by template name, status and creator.\"]")
+	private WebElement searchTemplateInputBox;
 
-//open the specify template to edit or view details
+	public void searchTemplate(String templateName) throws Exception{
+		if(isElementEnabled(searchTemplateInputBox,5)){
+			clickTheElement(searchTemplateInputBox);
+			searchTemplateInputBox.sendKeys(templateName);
+			searchTemplateInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(2);
+		}
+	}
+
+	//open the specify template to edit or view details
 	@Override
 	public void clickOnSpecifyTemplateName(String templateName,String editOrViewMode) throws Exception {
 
 		if(isTemplateListPageShow()){
+			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
 					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
@@ -647,7 +656,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-//below are operation hour element
+//below are operating hour element
 	@FindBy(css="div.dayparts span.add-circle")
 	private WebElement addDayPartsBTNInOH;
 	@FindBy(css="modal[modal-title=\"Manage Dayparts\"] div[class*=\"lg-modal__title-icon\"]")
@@ -689,10 +698,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			selectByVisibleText(shiftStartTimeEvent,startEvent);
 			waitForSeconds(2);
 			String shiftStartTimeEventVal = shiftStartTimeEventValue.getAttribute("innerText").trim();
-			if(shiftStartTimeEventVal.equals(startEvent)){
-				SimpleUtils.pass("User successfully select start event.");
-			}else {
-				SimpleUtils.fail("User failed to select start event.",false);
+			for(WebElement timeEvent:shiftStartTimeEventList){
+				String eventName = timeEvent.getText().trim();
+				String eventValue = timeEvent.getAttribute("value").trim();
+				if(startEvent.equals(eventName) && eventValue.contains(shiftStartTimeEventVal)){
+					SimpleUtils.pass("User can select start time event successfully.");
+					break;
+				}
 			}
 		}
 	}
@@ -716,13 +728,48 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"] select")
 	private WebElement shiftEndEventPoint;
 	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.eventPointOptions\"] select option")
-	private WebElement shiftEndEventPointList;
+	private List<WebElement> shiftEndEventPointList;
 	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] select")
 	private WebElement shiftEndTimeEvent;
 	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] select option")
-	private WebElement shiftEndTimeEventList;
+	private List<WebElement> shiftEndTimeEventList;
 	@FindBy(css="div.dif.duartion input-field[type=\"number\"]+span")
 	private WebElement shiftDuartionMinutesUnit;
+	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] div.input-faked")
+	private WebElement shiftEndTimeEventValue;
+
+	@Override
+	public void selectShiftEndTimeEvent(String endEvent) throws Exception{
+		if(isElementEnabled(shiftEndTimeEvent)){
+			selectByVisibleText(shiftEndTimeEvent,endEvent);
+			waitForSeconds(2);
+			String shiftEndTimeEventVal = shiftEndTimeEventValue.getAttribute("innerText").trim();
+            for(WebElement timeEvent:shiftEndTimeEventList){
+            	String eventName = timeEvent.getText().trim();
+            	String eventValue = timeEvent.getAttribute("value").trim();
+            	if(endEvent.equals(eventName) && eventValue.contains(shiftEndTimeEventVal)){
+            		SimpleUtils.pass("User can select end time event successfully.");
+            		break;
+				}
+			}
+		}
+	}
+
+	@FindBy(css="div[class=\"mt-20 dif\"] input-field[options*=\"timeUnitOptions\"] div.input-faked")
+	private WebElement endTimeUnitValue;
+	@Override
+	public void selectShiftEndTimeUnit(String endTimeUnit) throws Exception{
+		if(isElementEnabled(shiftEndTimeUnit)){
+			selectByVisibleText(shiftEndTimeUnit,endTimeUnit);
+			waitForSeconds(2);
+			String endTimeUnitVal = endTimeUnitValue.getAttribute("innerText").trim();
+			if(endTimeUnitVal.equals(endTimeUnit)){
+				SimpleUtils.pass("User successfully select start event: " + endTimeUnitVal);
+			}else {
+				SimpleUtils.fail("User failed to select start event: " + endTimeUnitVal,false);
+			}
+		}
+	}
 
 	@Override
 	public void verifyRadioButtonInTimeOfDayIsSingletonSelect() throws Exception{
@@ -758,7 +805,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void inputShiftDuartionMinutes(String duringTime) throws Exception{
+	public void inputShiftDurationMinutes(String duringTime) throws Exception{
 		waitForSeconds(5);
 		clickTheElement(shiftDuartionMinutes);
 		shiftDuartionMinutes.clear();
@@ -772,12 +819,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void validateShiftDuartionTimeUnit() throws Exception{
+	public void validateShiftDurationTimeUnit() throws Exception{
 		String unit = "minutes";
 		if(shiftDuartionMinutesUnit.getText().trim()!=null && shiftDuartionMinutesUnit.getText().equals(unit)){
-			SimpleUtils.pass("The shift Duartion Minutes Unit is: " + shiftDuartionMinutesUnit.getText().trim());
+			SimpleUtils.pass("The shift Duration Minutes Unit is: " + shiftDuartionMinutesUnit.getText().trim());
 		}else{
-			SimpleUtils.fail("The The shift Duartion Minutes Unit is not correct.",false);
+			SimpleUtils.fail("The The shift Duration Minutes Unit is not correct.",false);
 		}
 
 	}
@@ -1241,7 +1288,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 	
 	@Override
-	public void addMutipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception{
+	public void addMultipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception{
 		//get the staffing rules count before add one new rule
 		int countBeforeSaving = Integer.valueOf(getCountOfStaffingRules(workRole));
 		selectWorkRoleToEdit(workRole);
@@ -1306,10 +1353,43 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	
+	@FindBy(css="div.settings-work-rule-container")
+	private WebElement scheduleRulesList;
 
+	@Override
+	public void deleteAllScheduleRules() throws Exception{
+		if(staffingRulesList.size()!=0){
+			for(WebElement staffingRule:staffingRulesList){
+				WebElement deleteButton = staffingRule.findElement(By.cssSelector("span.settings-work-rule-edit-delete-icon"));
+				if(isElementEnabled(deleteButton,2)){
+					clickTheElement(deleteButton);
+					waitForSeconds(2);
+					clickTheElement(deleteButtonOnDialogPage);
+					if(staffingRule.findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size()==1){
+						SimpleUtils.pass("User can delete staffing rules successfully!");
+					}else {
+						SimpleUtils.fail("User failed to delete staffing rules.",false);
+					}
+				}
+			}
+		}else {
+			SimpleUtils.report("There is not staffing rule so far.");
+		}
+	}
 
-
+	@Override
+	public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception{
+		if(isElementEnabled(saveButton,3)){
+			clickTheElement(saveButton);
+			waitForSeconds(5);
+			if (isElementEnabled(dropdownArrowButton,5)) {
+				SimpleUtils.pass("User click on save button on schedule rule list page successfully!");
+			}else
+				SimpleUtils.fail("User failed to click on save button on schedule rule list page!",false);
+		}else {
+			SimpleUtils.fail("No save button displayed on page",false);
+		}
+	}
 
 	//added by Estelle to verify ClockIn
 	@FindBy(css="input-field[options=\"$ctrl.dynamicGroupList\"] > ng-form > div.select-wrapper>select")
@@ -1411,10 +1491,101 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
 	}
 
-	public void validateStartAfterEndBeforeOpertingHoursRule(String StartTimeEvent,String startOffsetTime,String startEventPoint,String startTimeUnit) throws Exception{
-		selectShiftStartTimeEvent(StartTimeEvent);
+	@Override
+	public void validateAdvanceStaffingRuleShowing(String startEvent,String startOffsetTime,String startEventPoint,String startTimeUnit,
+															 String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
+															 List<String> days,String shiftsNumber) throws Exception{
+		selectShiftStartTimeEvent(startEvent);
 		inputOffsetTimeForShiftStart(startOffsetTime,startEventPoint);
 		selectShiftStartTimeUnit(startTimeUnit);
+		selectShiftEndTimeEvent(endEvent);
+		inputOffsetTimeForShiftEnd(endOffsetTime,endEventPoint);
+		selectShiftEndTimeUnit(endTimeUnit);
+		selectDaysForDaysOfWeekSection(days);
+		inputNumberOfShiftsField(shiftsNumber);
+		verifyCheckMarkButtonOnAdvanceStaffingRulePage();
+		List<WebElement> staffingRuleText = staffingRulesList.get(staffingRulesList.size()-1).findElements(By.cssSelector("span[ng-bind-html=\"$ctrl.ruleLabelText\"] span"));
+		List<String> daysInRule = Arrays.asList(staffingRuleText.get(2).getText().trim().split(","));
+		List<String> newDaysInRule = new ArrayList<>();
+		for(String dayInRules:daysInRule){
+			String newDayInRule = dayInRules.trim().toLowerCase();
+			newDaysInRule.add(newDayInRule);
+		}
+		List<String> newDays = new ArrayList<>();
+		for(String day:days){
+			String newDay = day.substring(0,3).toLowerCase();
+			newDays.add(newDay);
+		}
+		if(ListUtils.isEqualList(newDaysInRule,newDays)){
+			SimpleUtils.pass("The days info in rule are correct");
+		}else{
+			SimpleUtils.fail("The days info in rule are NOT correct",false);
+		}
+		String shiftsNumberInRule = staffingRuleText.get(1).getText().trim();
+		if(shiftsNumberInRule.equals(shiftsNumber)){
+			SimpleUtils.pass("The shifts number info in rule is correct");
+		}else {
+			SimpleUtils.fail("The shifts number info in rule is NOT correct",false);
+		}
+
+		String startTimeInfo = staffingRuleText.get(0).getText().trim().split(",")[0];
+		String endTimeInfo = staffingRuleText.get(0).getText().trim().split(",")[1];
+		String startEventInRule = "";
+		for(int i = 5;i<startTimeInfo.split(" ").length;i++){
+			startEventInRule = startEventInRule + startTimeInfo.split(" ")[i] + " ";
+		}
+		startEventInRule.trim();
+		if(startEventInRule.contains(startEvent)){
+			SimpleUtils.pass("The start event info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start event info in rule is NOT correct",false);
+		}
+		String startOffsetTimeInRule = startTimeInfo.split(" ")[2].trim();
+		if(startOffsetTimeInRule.equals(startOffsetTime)){
+			SimpleUtils.pass("The start Offset Time info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start Offset Time info in rule is NOT correct",false);
+		}
+		String startEventPointInRule = startTimeInfo.split(" ")[4].trim();
+		if(startEventPointInRule.equals(startEventPoint)){
+			SimpleUtils.pass("The start Event Point info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start Event Point info in rule is NOT correct",false);
+		}
+		String startTimeUnitInRule = startTimeInfo.split(" ")[3].trim();
+		if(startTimeUnitInRule.equals(startTimeUnit)){
+			SimpleUtils.pass("The start Time Unit info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start Time Unit info in rule is NOT correct",false);
+		}
+		String endEventInRule = "";
+		for(int i = 5;i<endTimeInfo.split(" ").length;i++){
+			endEventInRule = endEventInRule + endTimeInfo.split(" ")[i] + " ";
+		}
+		endEventInRule.trim();
+		if(endEventInRule.contains(endEvent)){
+			SimpleUtils.pass("The end Event info in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Event info in rule is NOT correct",false);
+		}
+		String endOffsetTimeInRule = endTimeInfo.split(" ")[3].trim();
+		if(endOffsetTimeInRule.contains(endOffsetTime)){
+			SimpleUtils.pass("The end Offset Time in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Offset Time in rule is NOT correct",false);
+		}
+		String endEventPointInRule = endTimeInfo.split(" ")[5].trim();
+		if(endEventPointInRule.contains(endEventPoint)){
+			SimpleUtils.pass("The end Event Point in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Event Point in rule is NOT correct",false);
+		}
+		String endTimeUnitInRule = endTimeInfo.split(" ")[4].trim();
+		if(endTimeUnitInRule.contains(endTimeUnit)){
+			SimpleUtils.pass("The end Time Unit in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Time Unit in rule is NOT correct",false);
+		}
 	}
 
 	@FindBy(css="div.lg-modal")
@@ -1470,6 +1641,42 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css="lg-button[ng-click=\"deleteTemplate()\"] button")
+	private WebElement deleteTemplateButton;
+
+	@FindBy(css="modal[modal-title=\"Deleting Template\"]")
+	private WebElement deleteTemplateDialog;
+
+	@FindBy(css="modal[modal-title=\"Deleting Template\"] lg-button[label=\"OK\"] button")
+	private WebElement okButtonOnDeleteTemplateDialog;
+
+	@Override
+	public void deleteNewCreatedTemplate(String templateName) throws Exception{
+		String newTemplateName = templateNameList.get(0).getText().trim();
+		if(templateName.equals(newTemplateName)){
+			clickTheElement(templateNameList.get(0));
+			waitForSeconds(5);
+			if(isElementEnabled(deleteTemplateButton,3)){
+				clickTheElement(deleteTemplateButton);
+				if(isElementEnabled(deleteTemplateDialog,3)){
+					clickTheElement(okButtonOnDeleteTemplateDialog);
+					waitForSeconds(5);
+					String firstTemplateName = templateNameList.get(0).getText().trim();
+					if(!firstTemplateName.equals(templateName)){
+						SimpleUtils.pass("User has deleted new created template successfully!");
+					}else {
+						SimpleUtils.fail("User failed to delete new created template!",false);
+					}
+				}
+			}else {
+				SimpleUtils.fail("Clicking the template failed.",false);
+			}
+		}else {
+			SimpleUtils.fail("Create new template failed.",false);
+		}
+
+	}
+
     @Override
 	public void addAllTypeOfTemplate(String templateName) throws Exception {
 			for(int i = 0 ;i < configurationCardsList.size(); i++){
@@ -1477,8 +1684,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					clickTheElement(configurationCardsList.get(i));
 					waitForSeconds(1);
 					createNewTemplate(templateName);
+					deleteNewCreatedTemplate(templateName);
 					goToConfigurationPage();
-//					List<WebElement> configurationCardsList = getDriver().findElement(By.cssSelector("[class=\"tb-wrapper ng-scope\"] lg-dashboard-card h1"))
 				}
 			}
 	}
@@ -1580,5 +1787,44 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		} else {
 			SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when copying schedule settings dropdown list not loaded.", false);
 		}
+	}
+
+	@FindBy(css="input-field[value=\"$ctrl.bufferHourMode\"]")
+	private List<WebElement> operatingBufferHoursOptions;
+
+	@FindBy(css="[value=\"$ctrl.openingBufferHours\"] input")
+	private WebElement openingBufferHours;
+
+	@FindBy(css="[value=\"$ctrl.closingBufferHours\"] input")
+	private WebElement closingBufferHours;
+
+	// Option: None, StartEnd, BufferHour, ContinuousOperation
+	public void selectOperatingBufferHours(String option) throws Exception {
+		if (areListElementVisible(operatingBufferHoursOptions, 10) && operatingBufferHoursOptions.size() == 4) {
+			for (WebElement operatingBufferHours: operatingBufferHoursOptions){
+				if(operatingBufferHours.getAttribute("assigned-value").contains(option)){
+					WebElement inputButton = operatingBufferHours.findElement(By.className("input-form"));
+					if (!inputButton.getAttribute("class").contains("ng-valid-parse")) {
+						click(inputButton);
+						SimpleUtils.pass("OP Page: Operating Hours: Operating / Buffer Hours : The '"+option+"' option been selected successfully! ");
+					} else
+						SimpleUtils.pass("OP Page: Operating Hours: Operating / Buffer Hours : The '"+option+"' option has been selected! ");
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("OP - Operating Hours: Operating / Buffer Hours : Operating hours options not loaded.", false);
+		}
+	}
+
+	public void setOpeningAndClosingBufferHours (int openingBufferHour, int closingBufferHour) throws Exception {
+
+		if (isElementLoaded(openingBufferHours, 5) && isElementLoaded(closingBufferHours, 5)){
+			openingBufferHours.clear();
+			closingBufferHours.clear();
+			openingBufferHours.sendKeys(String.valueOf(openingBufferHour));
+			closingBufferHours.sendKeys(String.valueOf(closingBufferHour));
+		} else
+			SimpleUtils.fail("OP - Operating Hours: Operating / Buffer Hours : Operating buffer hours and closing buffer hours are not loaded.", false);
 	}
 }

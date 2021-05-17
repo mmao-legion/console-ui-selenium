@@ -170,4 +170,10 @@ public interface TeamPage {
 	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception;
 	public void selectARandomOnboardedOrNotTeamMemberToViewProfile(boolean selectOnboardedTM) throws Exception;
 	public void selectSchoolYear() throws Exception;
+	public void terminateOrDeactivateTheTeamMemberFromSpecificDate(Boolean isTerminate,String fromDate) throws Exception;
+	public boolean checkIfTMExists(String tmName) throws Exception;
+	public void cancelTMTerminate() throws Exception;
+	public void cancelTMDeactivate() throws Exception;
+	public boolean isCancelDeactivateButtonLoaded () throws Exception;
+	public void selectSchoolSessionStartAndEndDate(String startDate, String endDate) throws Exception;
 }

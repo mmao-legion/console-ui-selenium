@@ -3,6 +3,7 @@ package com.legion.pages;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.htmlunit.corejs.javascript.EcmaError;
 import org.openqa.selenium.WebElement;
@@ -49,18 +50,18 @@ public interface SchedulePage {
 	public void clickOnCreateOrNextBtn() throws Exception;
 	public HashMap<List<String>,List<String>> calculateTeamCount()throws Exception;
 	public List<String> calculatePreviousTeamCount(
-			HashMap<String, String> previousTeamCount, HashMap<List<String>,List<String>> 
+			HashMap<String, String> previousTeamCount, HashMap<List<String>,List<String>>
 			gridDayHourPrevTeamCount)throws Exception;
 	public List<String> calculateCurrentTeamCount(HashMap<String, String> shiftTiming)throws Exception;
 	public void clickSaveBtn() throws Exception;
 	public void clickOnVersionSaveBtn() throws Exception;
 	public void clickOnPostSaveBtn() throws Exception;
-    public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) throws Exception;
-    public void selectGroupByFilter(String optionVisibleText);
-    public String getActiveWeekText() throws Exception;
-    public ArrayList<WebElement> getAllAvailableShiftsInWeekView();
-    public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception;
-    public ArrayList<Float> getAllVesionLabels() throws Exception;
+	public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) throws Exception;
+	public void selectGroupByFilter(String optionVisibleText);
+	public String getActiveWeekText() throws Exception;
+	public ArrayList<WebElement> getAllAvailableShiftsInWeekView();
+	public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception;
+	public ArrayList<Float> getAllVesionLabels() throws Exception;
 	public void publishActiveSchedule()throws Exception;
 	public boolean isPublishButtonLoaded();
 	public HashMap<String, Float> getScheduleLabelHours() throws Exception;
@@ -90,7 +91,7 @@ public interface SchedulePage {
 	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
 	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount);
 	public void noBudgetDisplayWhenBudgetNotEntered(String nextWeekView, int weekCount);
-//	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView, int weekCount);
+	//	public void budgetHourInScheduleNBudgetedSmartCard(String nextWeekView, int weekCount);
 //	public void budgetHourByWagesInScheduleNBudgetedSmartCard(String nextWeekView,int weekCount);
 	public void budgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount, int tolerance);
 	public void disableNextWeekArrow() throws Exception;
@@ -219,12 +220,13 @@ public interface SchedulePage {
 	public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception;
 
 
-//	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception;
+	//	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception;
 	public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
 	public void clickOnCreateNewShiftButton() throws Exception;
 	public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception;
 	public void selectDaysFromCurrentDay(String currentDay) throws Exception;
 	public void searchTeamMemberByName(String name) throws Exception;
+	public void searchTeamMemberByNameNLocation(String name, String location) throws Exception;
 	public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception;
 	public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception;
 	public List<Integer> getAddedShiftIndexes(String name) throws Exception;
@@ -408,7 +410,7 @@ public interface SchedulePage {
 	List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
 
 	void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception;
-	
+
 	void navigateToNextWeek() throws Exception;
 
 	public void navigateToPreviousWeek() throws Exception;
@@ -465,6 +467,7 @@ public interface SchedulePage {
 	public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception;
 	public void switchSearchTMAndRecommendedTMsTab() throws Exception;
 	public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception;
+	public void selectConvertToOpenShiftAndOfferToASpecificTMOption() throws Exception;
 	public void clickOnEditShiftTime() throws Exception;
 	public void verifyEditShiftTimePopUpDisplay() throws Exception;
 	public List<String> editShiftTime() throws Exception;
@@ -498,10 +501,10 @@ public interface SchedulePage {
 	public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
 	public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception;
 	public int getTheIndexOfTheDayInWeekView(String date) throws Exception;
-    public HashMap<String,Integer> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception;
-    public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception;
-    public void selectSwapOrAssignOption(String action) throws Exception;
-    public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
+	public HashMap<String,Integer> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception;
+	public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception;
+	public void selectSwapOrAssignOption(String action) throws Exception;
+	public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
 	public WebElement getShiftById(String id) throws Exception;
 	public List<String> getShiftSwapDataFromConfirmPage(String action) throws Exception;
 	public int verifyDayHasShiftByName(int indexOfDay, String name) throws Exception;
@@ -572,7 +575,7 @@ public interface SchedulePage {
 	public void selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(String locationName) throws Exception;
 	public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception;
 	public void clickExitBtnToExitCreateScheduleWindow() throws Exception;
-	public boolean verifyScheduleNotPublishedSmartCardShowing() throws Exception;
+	public boolean isScheduleNotPublishedSmartCardLoaded() throws Exception;
 	public void clickToggleSummaryViewButton() throws Exception;
 	public boolean isHourFormat24Hour() throws Exception;
 	public boolean isLocationLoaded() throws Exception;
@@ -616,6 +619,21 @@ public interface SchedulePage {
 	public void deleteAllOOOHShiftInWeekView() throws Exception;
 	public List<WebElement> getAllOOOHShifts() throws Exception;
 	public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception;
+	public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception;
+	public void editTheShiftTimeForSpecificShift(WebElement shift, String startTime, String endTime) throws Exception;
+	public boolean isOfferTMOptionVisible() throws Exception;
+	public boolean isOfferTMOptionEnabled() throws Exception;
+	public void verifyOfferTMOptionIsAvailable() throws Exception;
+	public void clickOnOfferTMOption() throws Exception;
+	public void verifyRecommendedTableHasTM() throws Exception;
+	public void verifyTMInTheOfferList(String firstName, String expectedStatus) throws Exception;
+	public String getViewStatusShiftsInfo() throws Exception;
+	public ArrayList<String> getScheduleDayViewGridTimeDuration();
+	public List<String> getAllOperatingHrsOnCreateShiftPage() throws Exception;
+	public List<String> getStartAndEndOperatingHrsOnEditShiftPage() throws Exception;
+	public void clickOnCloseButtonOnCustomizeShiftPage() throws Exception;
+	public void navigateDayViewWithDayName(String dayName) throws Exception;
+	public Map<String, String> getActiveDayInfo() throws Exception;
 	public void verifyLocationFilterInLeft(boolean isLG) throws Exception;
 	public void verifyChildLocationShiftsLoadPerformance(String childLocation) throws Exception;
 	public String selectRandomChildLocationToFilter() throws Exception;

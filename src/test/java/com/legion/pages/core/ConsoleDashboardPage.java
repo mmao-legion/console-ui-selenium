@@ -2366,13 +2366,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				//compare the hours on widget and on schedule page
 				String budgetHoursFromDashboard = budgetHoursMessageSpan.getText().split(" ")[0];
 				click(scheduleConsoleMenu);
+				waitForSeconds(3);
 				ScheduleDMViewPage scheduleDMViewPage = new ConsoleScheduleDMViewPage();
 				String budgetHoursFromSchedulePage = scheduleDMViewPage.
 						getTextFromTheChartInLocationSummarySmartCard().get(4).split(" ")[0];
 				if (budgetHoursFromDashboard.equalsIgnoreCase(budgetHoursFromSchedulePage)) {
 					SimpleUtils.pass("Budget hrs display correctly on Schedule Vs Guidance By Day Widget!");
 				} else
-					SimpleUtils.fail("Budget hrs display incorrectly on Schedule Vs Guidance By Day Widget!", false);
+					SimpleUtils.fail("Budget hrs display incorrectly on Schedule Vs Guidance By Day Widget! The budget hours from dashboard is: " + budgetHoursFromDashboard
+							+ ". The budget hours from schedule page is: " +budgetHoursFromSchedulePage, false);
 			}
 		} else {
 			if (isElementLoaded(budgetHoursCaret, 5)&& !isElementLoaded(budgetHoursMessageSpan)){

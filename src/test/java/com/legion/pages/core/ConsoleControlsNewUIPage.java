@@ -145,6 +145,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "lg-dashboard-card[title=\"Tasks and Work Roles\"]")
 	private WebElement tasksAndWorkRolesSection;
 
+	@FindBy(css = "lg-dashboard-card[title=\"Operating Hours\"]")
+	private WebElement operatingHoursSection;
+
 	@FindBy(css = "lg-dashboard-card[title=\"Locations\"]")
 	private WebElement locationsSection;
 
@@ -723,6 +726,15 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			click(tasksAndWorkRolesSection);
 		else
 			SimpleUtils.fail("Controls Page: tasksAndWorkRolesSection Card not Loaded!", false);
+	}
+
+
+	@Override
+	public void clickOnControlsOperatingHoursSection() throws Exception {
+		if (isElementLoaded(operatingHoursSection))
+			click(operatingHoursSection);
+		else
+			SimpleUtils.fail("Controls Page: Operating Hours Card not Loaded!", false);
 	}
 
 
@@ -2831,7 +2843,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void selectUsersAndRolesSubTabByLabel(String label) throws Exception {
 		boolean isTabFound = false;
-		if (areListElementVisible(subTabs,10) && subTabs.size() > 0) {
+		if (areListElementVisible(subTabs,15) && subTabs.size() > 0) {
 			for (WebElement subTab : subTabs) {
 				if (subTab.getText().toLowerCase().contains(label.toLowerCase())) {
 					click(subTab);
@@ -3055,7 +3067,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		return editableOrNonEditableFields;
 	}
 
-	@FindBy(css = "input[placeholder=\"You can search by name, job title, and status.\"]")
+	@FindBy(css = "input[placeholder*=\"You can search by name, job title\"]")
 	private WebElement usersAndRolesUserSearchBox;
 
 	public void searchUserByFirstName(String userFirstName) throws Exception {
@@ -3063,12 +3075,12 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			if (usersAndRolesUserSearchBox.isDisplayed() && usersAndRolesUserSearchBox.isEnabled()) {
 				usersAndRolesUserSearchBox.clear();
 				usersAndRolesUserSearchBox.sendKeys(userFirstName);
-				Thread.sleep(2000);
-
+				waitForSeconds(10);
 				SimpleUtils.pass("Users and Roles: '" + usersAndRolesAllUsersRows.size() + "' user(s) found with name '"
 						+ userFirstName + "'");
 			}
-		}
+		}else
+			SimpleUtils.fail("Search filed in global model in controls load failed",false);
 	}
 
 	//added by Estelle for update one user's location info

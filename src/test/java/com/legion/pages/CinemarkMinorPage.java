@@ -7,7 +7,7 @@ public interface CinemarkMinorPage {
     public void verifyDefaultMinorRuleIsOff(String witchOne) throws Exception;
     public void saveOrPublishTemplate(String action) throws Exception;
     public void clickOnBtn(String button) throws Exception;
-    public void findDefaulTemplate(String templateName) throws Exception;
+    public void findDefaultTemplate(String templateName) throws Exception;
     public void setMinorRuleByWeek(String minorType, String weekType, String maxOfDay, String maxOfHrs) throws Exception;
     public void setMinorRuleByDay(String minorType, String dayType, String from, String to, String maxOfHrs) throws Exception;
     public void turnOnOrOffSharingCalendars(String option) throws Exception;

@@ -79,6 +79,11 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> LGPTPNsoLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> job = new ThreadLocal<>();
 	public static final ThreadLocal<Boolean> isNeedUpdateOperatingHours = new ThreadLocal<>();
+	//added by Estelle to catch up test rail login user info
+	public static final ThreadLocal<String> testRailURL = new ThreadLocal<>();
+	public static final ThreadLocal<String> testRailUser = new ThreadLocal<>();
+	public static final ThreadLocal<String> testRailPassword = new ThreadLocal<>();
+	public static final ThreadLocal<String> testRailProjectID = new ThreadLocal<>();
 
 	public static void setIsNeedEditingOperatingHours(Boolean value) { isNeedUpdateOperatingHours.set(value); }
 
@@ -482,4 +487,12 @@ public class MyThreadLocal {
 
 	public static String getJobName() { return job.get(); }
 
+	public static void setTestRailURL(String value) { testRailURL.set(value); }
+	public static String getTestRailURL() { return testRailURL.get(); }
+	public static void setTestRailUser(String value){ testRailUser.set(value); }
+	public static String getTestRailUser() { return testRailUser.get(); }
+	public static void setTestRailPassword(String value){ testRailPassword.set(value); }
+	public static String getTestRailPassword() { return testRailPassword.get(); }
+	public static void setTestRailProjectID(String value){ testRailProjectID.set(value); }
+	public static String getTestRailProjectID() { return testRailProjectID.get(); }
 }

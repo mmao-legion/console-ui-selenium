@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
-    <parameter name="testRail" value="yes"/>
+    <parameter name="testRail" value="No"/>
     <parameter name="testRailRunName" value="Automation Run - Debug"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
@@ -146,6 +146,12 @@
                     <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
                     <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
                     <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
+                    <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -223,19 +229,15 @@
         </classes>
     </test>
 
+
     <test name="Schedule Copy Improvement Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
                 <methods>
-                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />
-                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInOPAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
-                    <include name="validateTheOOOHShiftsAsInternalAdmin" />
+    <!--                <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" />    Blocking by https://legiontech.atlassian.net/browse/SCH-4018       -->
+
+                    <include name="validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin" />
+                    <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

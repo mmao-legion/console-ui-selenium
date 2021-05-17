@@ -76,11 +76,12 @@ public abstract class TestBase {
     protected PageFactory pageFactory = null;
     protected MobilePageFactory mobilePageFactory = null;
     String TestID = null;
-//  public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+    //  public static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
     public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpperfieldsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
     static HashMap<String,String> testRailCfg = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
+    static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
     public static AndroidDriver<MobileElement> driver;
     public static String versionString;
     public static int version;
@@ -100,9 +101,17 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
-        MyThreadLocal.setTestRailRunName(testRailRunName);
-        MyThreadLocal.setIfAddNewTestRun(true);
+        if (System.getProperty("enterprise") !=null && System.getProperty("enterprise").equalsIgnoreCase("op")) {
+            MyThreadLocal.setTestSuiteID(testRailCfgOp.get("TEST_RAIL_SUITE_ID"));
+            MyThreadLocal.setTestRailRunName(testRailRunName);
+            MyThreadLocal.setIfAddNewTestRun(true);
+        }else{
+            MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
+            MyThreadLocal.setTestRailRunName(testRailRunName);
+            MyThreadLocal.setIfAddNewTestRun(true);
+        }
+
+
         if (MyThreadLocal.getTestCaseIDList()==null){
             MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
         }
@@ -117,7 +126,7 @@ public abstract class TestBase {
         }else{
             Reporter.log("Script will be executing only for Web");
         }
-        if(testRail!=null && testRail.equalsIgnoreCase("yes")){
+        if(System.getProperty("testRail") != null && System.getProperty("testRail").equalsIgnoreCase("Yes")){
             setTestRailReporting("Y");
         }
     }
@@ -151,7 +160,7 @@ public abstract class TestBase {
         String testName = ExtentTestManager.getTestName(method);
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
-        String enterpriseName =  SimpleUtils.getEnterprise(method);
+        enterpriseName =  SimpleUtils.getEnterprise(method);
         String platformName =  ExtentTestManager.getMobilePlatformName(method);
 //        int sectionId = ExtentTestManager.getTestRailSectionId(method);
         String testRunPhaseName = ExtentTestManager.getTestRunPhase(method);
@@ -170,7 +179,6 @@ public abstract class TestBase {
         }
         List<Integer> testRailId =  new ArrayList<Integer>();
         setTestRailRun(testRailId);
-
         if(getTestRailReporting()!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         }
@@ -242,10 +250,11 @@ public abstract class TestBase {
             // Launch remote browser and set it as the current thread
             createRemoteChrome(url);
         }
-        }
+    }
 
 
     private void createRemoteChrome(String url){
+        MyThreadLocal myThreadLocal = new MyThreadLocal();
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("browserName", "chrome");
 //        caps.setCapability("version", "5.4.0-1029-aws");
@@ -255,6 +264,7 @@ public abstract class TestBase {
         caps.setCapability("visual", true);
         caps.setCapability("video", true);
         caps.setCapability("console", true);
+        caps.setCapability("name", ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()));
         caps.setCapability("idleTimeout", 600);
 
 //        caps.setCapability("selenium_version","3.141.59");
@@ -380,6 +390,18 @@ public abstract class TestBase {
         MyThreadLocal.setIsNeedEditingOperatingHours(false);
     }
 
+    public synchronized void loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String username, String Password, String location) throws Exception
+    {
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        SimpleUtils.report(getDriver().getCurrentUrl());
+        loginPage.loginToLegionWithCredential(username, Password);
+        loginPage.verifyNewTermsOfServicePopUp();
+        boolean isLoginSuccess = loginPage.isLoginSuccess();
+        if (isLoginSuccess) {
+            SimpleUtils.pass("Login legion without update upperfield successfully");
+        }else
+            SimpleUtils.fail("Login legion  failed",false);
+    }
     private void changeUpperFieldsAccordingToEnterprise(LocationSelectorPage locationSelectorPage) throws Exception {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
             locationSelectorPage.changeUpperFields(districtsMap.get("Coffee_Enterprise"));
@@ -395,6 +417,19 @@ public abstract class TestBase {
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
             locationSelectorPage.changeUpperFields(districtsMap.get("CinemarkWkdy_Enterprise"));
+        }
+    }
+
+    public void LoginAsDifferentRole(String roleName) throws Exception {
+        try {
+            String fileName = "UsersCredentials.json";
+            fileName = MyThreadLocal.getEnterprise() + fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] teamMemberCredentials = userCredentials.get(roleName);
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+        } catch (Exception e) {
+            SimpleUtils.fail("Login as: " + roleName + " failed!", false);
         }
     }
 
