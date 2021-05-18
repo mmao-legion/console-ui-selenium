@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -493,7 +494,7 @@ public class LocationsTest extends TestBase {
                 }else
                     SimpleUtils.fail("It's not MS location group,select another one pls",false);
                 //search location again
-                locationsPage.searchLocation(locationName);
+                locationsPage.searchLocation("Change "+locationName+" to P2P or MS");
                 if (!locationsPage.isItMSLG()) {
                     SimpleUtils.pass("Change MS location group to P2P successfully");
                     setLGPTPLocationName(locationName);
@@ -1629,34 +1630,36 @@ public class LocationsTest extends TestBase {
             String mode = "edit";
             String templateName = "UsedByAuto_NoTouchNoDelete";
             String wfsMode = "Yes";
-            String wfsName = "Same District";
+            String wfsName = "WFS";
             String locationName = "OMLocation16";
             String districtName = "OMDistrict1";
             String criteria = "Custom";
 
             List<String> wfsGroup = new ArrayList<>();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict(districtName);
+            locationSelectorPage.changeUpperFieldsByName("Business Unit", "BU-ForAutomation");
+            locationSelectorPage.changeUpperFieldsByName("Region", "Region-ForAutomation");
+            locationSelectorPage.changeUpperFieldsByName("District", "District-ForAutomation");
             locationSelectorPage.changeLocation(locationName);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-
+            schedulePage.navigateToNextWeek();
             boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
                 schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 schedulePage.clickOnDayViewAddNewShiftButton();
                 schedulePage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("Lead_Sales_Associate"));
+                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
                 } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
                 }
                 schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("summer");
+                schedulePage.searchTeamMemberByName("aglae");
                 if (!schedulePage.verifyWFSFunction()) {
                     //to check WFS group exist or not
                     LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1672,7 +1675,7 @@ public class LocationsTest extends TestBase {
                     wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
                     for (int i = 0; i <wfsGroup.size() ; i++) {
                         if (wfsGroup.get(i).contains(wfsName)) {
-                            SimpleUtils.report("Same District group existing");
+                            SimpleUtils.report("Workforce sharing group for automation existing");
                             break;
                         }else
                             locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName,"Used by auto",criteria);
@@ -1695,23 +1698,124 @@ public class LocationsTest extends TestBase {
                 }else
                     SimpleUtils.pass("Workforce sharing function work well");
 
+            } else {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                schedulePage.clickOnDayViewAddNewShiftButton();
+                schedulePage.customizeNewShiftPage();
+                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                }
+                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+                schedulePage.clickOnCreateOrNextBtn();
+                schedulePage.searchTeamMemberByName("Aglae");
+                if (!schedulePage.verifyWFSFunction()) {
+                    SimpleUtils.fail("Workforce sharing function work failed",false);
+                }else
+                    SimpleUtils.pass("Workforce sharing function work well");
             }
-//            else
-//                schedulePage.createScheduleForNonDGFlowNewUI();
-//                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//                schedulePage.clickOnDayViewAddNewShiftButton();
-//                schedulePage.customizeNewShiftPage();
-//                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-//                    schedulePage.selectWorkRole(scheduleWorkRoles.get("Lead_Sales_Associate"));
-//                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-//                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-//                }
-//                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-//                schedulePage.clickOnCreateOrNextBtn();
-//                schedulePage.searchTeamMemberByName("summer");
-//                if (schedulePage.verifyWFSFunction()) {
-//
-//                }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Parent formula in Workforce Sharing")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyParentFormulaInWFS(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Schedule Collaboration";
+            String mode = "edit";
+            String templateName = "ParentFormular";
+            String wfsMode = "Yes";
+            String wfsName = "WFS";
+            String locationName = "SeaTac AirportSEA";
+            String districtName = "OMDistrict1";
+            String criteria = "Custom";
+
+            List<String> wfsGroup = new ArrayList<>();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            schedulePage.navigateToNextWeek();
+            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                schedulePage.clickOnDayViewAddNewShiftButton();
+                schedulePage.customizeNewShiftPage();
+                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                }
+                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+                schedulePage.clickOnCreateOrNextBtn();
+                schedulePage.searchTeamMemberByName("Alysha");
+                if (!schedulePage.verifyWFSFunction()) {
+                    //to check WFS group exist or not
+                    LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+                    SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+                    //go to locations tab
+                    locationsPage.clickOnLocationsTab();
+                    //check dynamic group item
+                    locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
+                    //go to dynamic group
+                    locationsPage.goToDynamicGroup();
+                    wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
+                    for (int i = 0; i <wfsGroup.size() ; i++) {
+                        if (wfsGroup.get(i).contains(wfsName)) {
+                            SimpleUtils.report("Workforce sharing group for automation existing");
+                            break;
+                        }else
+                            locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName,"Used by auto",criteria);
+                    }
+
+                    //to check wfs is on or off in schedule collaboration configuration page
+                    ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                    configurationPage.goToConfigurationPage();
+                    configurationPage.clickOnConfigurationCrad(templateType);
+                    configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+                    configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                    configurationPage.setWFS(wfsMode);
+                    configurationPage.selectWFSGroup(wfsName);
+                    configurationPage.publishNowTheTemplate();
+
+                    //go to schedule to generate schedule
+
+                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+                    SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                }else
+                    SimpleUtils.pass("Workforce sharing function work well");
+
+            } else {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                schedulePage.clickOnDayViewAddNewShiftButton();
+                schedulePage.customizeNewShiftPage();
+                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                }
+                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+                schedulePage.clickOnCreateOrNextBtn();
+                schedulePage.searchTeamMemberByName("Alysha");
+                if (!schedulePage.verifyWFSFunction()) {
+                    SimpleUtils.fail("Workforce sharing function work failed",false);
+                }else
+                    SimpleUtils.pass("Workforce sharing function work well");
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

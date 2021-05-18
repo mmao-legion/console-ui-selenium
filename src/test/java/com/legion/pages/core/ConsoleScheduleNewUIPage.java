@@ -13356,7 +13356,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean verifyWFSFunction() {
         if (searchResults.size()!=0) {
-            SimpleUtils.pass("Can search team members in same district");
+            SimpleUtils.pass("Can search team members in Workforce sharing group");
             return true;
         }else
             SimpleUtils.fail("Workforce Sharing function work wrong",false);

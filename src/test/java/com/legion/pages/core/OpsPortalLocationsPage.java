@@ -1117,7 +1117,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(locationDetailsLinks.get(0));
 			click(editLocationBtn);
 			displayNameInput.clear();
-			displayNameInput.sendKeys("Change "+locationName+" MS group");
+			displayNameInput.sendKeys("Change "+locationName+" to P2P or MS");
 //			setLocationName(locationName);
 			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+value+"\"] ")));
 			scrollToBottom();
