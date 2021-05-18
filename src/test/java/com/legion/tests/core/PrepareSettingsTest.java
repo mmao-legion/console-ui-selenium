@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleControlsNewUIPage;
+import com.legion.pages.core.ConsoleIntegrationPage;
 import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -52,6 +53,19 @@ public class PrepareSettingsTest extends TestBase {
 //        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 //        teamPage.rejectAllTeamMembersTimeOffRequest(profileNewUIPage, 0);
 
+            dashboardPage.clickOnIntegrationConsoleMenu();
+            dashboardPage.verifyIntegrationPageIsLoaded();
+            IntegrationPage integrationPage = pageFactory.createIntegrationPage();
+            if(!integrationPage.checkIsConfigExists("custom", "HR")){
+                Map<String, String> configInfo = new HashMap<>();
+                configInfo.put("channel", "CUSTOM");
+                configInfo.put("applicationType", "HR");
+                configInfo.put("status", "ENABLED");
+                configInfo.put("timeZoneOption", "UTC");
+
+                integrationPage.createConfig(configInfo);
+            }
+
             // Set time off policy
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -100,6 +114,9 @@ public class PrepareSettingsTest extends TestBase {
             controlsNewUIPage.updateScheduleBufferHoursAfter(afterBufferCount);
 
 
+
+
+
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -124,6 +141,20 @@ public class PrepareSettingsTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            dashboardPage.clickOnIntegrationConsoleMenu();
+            dashboardPage.verifyIntegrationPageIsLoaded();
+            IntegrationPage integrationPage = pageFactory.createIntegrationPage();
+            if(!integrationPage.checkIsConfigExists("custom", "HR")){
+                Map<String, String> configInfo = new HashMap<>();
+                configInfo.put("channel", "CUSTOM");
+                configInfo.put("applicationType", "HR");
+                configInfo.put("status", "ENABLED");
+                configInfo.put("timeZoneOption", "UTC");
+
+                integrationPage.createConfig(configInfo);
+            }
+
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 

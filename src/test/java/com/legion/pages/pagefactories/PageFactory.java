@@ -62,4 +62,6 @@ public interface PageFactory {
 
     ConfigurationPage createOpsPortalConfigurationPage();
     CompliancePage createConsoleCompliancePage();
+
+    IntegrationPage createIntegrationPage();
 }

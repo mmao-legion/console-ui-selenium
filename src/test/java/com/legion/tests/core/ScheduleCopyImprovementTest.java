@@ -352,8 +352,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
             schedulePage.selectWorkRole(workRoleOfTM);
-            schedulePage.moveSliderAtCertainPoint("3", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("3pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("10am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM);
@@ -1132,8 +1132,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
             schedulePage.selectWorkRole(workRoleOfTM);
-            schedulePage.moveSliderAtCertainPoint("1", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("8", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("1pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM);
@@ -1407,7 +1407,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 tm2 = createAndOnboardNewTM(newTMDetails2);
             }
             teamPage.terminateOrDeactivateTheTeamMemberFromSpecificDate(false, fromDate);
-
+            Thread.sleep(3000);
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
@@ -1423,13 +1423,21 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             // Create new shift for TM1 on seven days
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView(tm1);
+            schedulePage.deleteTMShiftInWeekView(tm2);
+            schedulePage.saveSchedule();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
-            schedulePage.selectWorkRole("MOD");
-            schedulePage.moveSliderAtCertainPoint("3", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("GENERAL MANAGER"));
+            }
+            schedulePage.moveSliderAtCertainPoint("3pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("10am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(tm1);
@@ -1440,14 +1448,17 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
-            schedulePage.selectWorkRole("MOD");
-            schedulePage.moveSliderAtCertainPoint("4", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                schedulePage.selectWorkRole(scheduleWorkRoles.get("GENERAL MANAGER"));
+            }
+            schedulePage.moveSliderAtCertainPoint("4pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(tm2);
             schedulePage.clickOnOfferOrAssignBtn();
-            schedulePage.deleteAllOOOHShiftInWeekView();
             schedulePage.saveSchedule();
             schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.publishActiveSchedule();
@@ -1507,7 +1518,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 openShifts.clear();
 
                 unassignedShifts = schedulePage.getOneDayShiftByName(i, "unassigned");
-//                openShifts = schedulePage.getOneDayShiftByName(i, "open");
                 SimpleUtils.assertOnFail("There should has at least 2 unassigned shifts in this day! ", unassignedShifts.size()>1, false);
 
                 for (WebElement unassignedShift: unassignedShifts) {
@@ -1516,21 +1526,12 @@ public class ScheduleCopyImprovementTest extends TestBase {
                             complianceMessage.contains("Unassigned Shift"), false);
                     unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
                 }
-//                for(WebElement openShift: openShifts){
-//                    openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText()) ;
-//                }
 
                 if(unassignedShiftTimes.contains("10am - 3pm") && unassignedShiftTimes.contains("11am - 4pm")) {
                     SimpleUtils.pass("The opening/closing shifts display as unassigned! ");
                 } else
                     SimpleUtils.fail("The opening/closing shifts are not display as unassigned! ", false);
             }
-
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteAllOOOHShiftInWeekView();
-            schedulePage.saveSchedule();
-            schedulePage.publishActiveSchedule();
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);

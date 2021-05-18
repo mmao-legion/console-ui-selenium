@@ -128,4 +128,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public CompliancePage createConsoleCompliancePage() { return new ConsoleCompliancePage(); }
+
+	@Override
+	public IntegrationPage createIntegrationPage() { return new ConsoleIntegrationPage(); }
 }
