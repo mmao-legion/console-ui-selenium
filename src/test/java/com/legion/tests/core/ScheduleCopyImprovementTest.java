@@ -149,6 +149,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+            disableCopyRestriction();
+
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option);
             if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
@@ -269,32 +271,34 @@ public class ScheduleCopyImprovementTest extends TestBase {
             firstNameOfTM = teamMembers.get("TeamMember1")[0][0].toString();
             lastNameOfTM = teamMembers.get("TeamMember1")[0][1].toString();
             workRoleOfTM = teamMembers.get("TeamMember1")[0][2].toString();
+
+            teamPage.goToTeam();
+
+            if (teamPage.checkIfTMExists(firstNameOfTM)) {
+                teamPage.searchAndSelectTeamMemberByName(firstNameOfTM);
+                if(teamPage.isManualOnBoardButtonLoaded()) {
+                    teamPage.manualOnBoardTeamMember();
+                }
+                if (teamPage.isActivateButtonLoaded()) {
+                    teamPage.clickOnActivateButton();
+                    teamPage.isActivateWindowLoaded();
+                    teamPage.selectADateOnCalendarAndActivate();
+                }
+                if (teamPage.isCancelTerminateButtonLoaded()) {
+                    teamPage.cancelTMTerminate();
+                }
+                if (teamPage.isCancelDeactivateButtonLoaded()) {
+                    teamPage.cancelTMDeactivate();
+                }
+
+                profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
+                profileNewUIPage.rejectAllTimeOff();
+                profileNewUIPage.cancelAllTimeOff();
+
+            } else
+                SimpleUtils.fail("The team member '"+ firstNameOfTM +"' is not exists! ", false);
         }
-        teamPage.goToTeam();
 
-        if (teamPage.checkIfTMExists(firstNameOfTM)) {
-            teamPage.searchAndSelectTeamMemberByName(firstNameOfTM);
-            if(teamPage.isManualOnBoardButtonLoaded()) {
-                teamPage.manualOnBoardTeamMember();
-            }
-            if (teamPage.isActivateButtonLoaded()) {
-                teamPage.clickOnActivateButton();
-                teamPage.isActivateWindowLoaded();
-                teamPage.selectADateOnCalendarAndActivate();
-            }
-            if (teamPage.isCancelTerminateButtonLoaded()) {
-                teamPage.cancelTMTerminate();
-            }
-            if (teamPage.isCancelDeactivateButtonLoaded()) {
-                teamPage.cancelTMDeactivate();
-            }
-
-            profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
-            profileNewUIPage.rejectAllTimeOff();
-            profileNewUIPage.cancelAllTimeOff();
-
-        } else
-            SimpleUtils.fail("The team member '"+ firstNameOfTM +"' is not exists! ", false);
 
 
         //Go to schedule page and create new schedule
@@ -750,6 +754,29 @@ public class ScheduleCopyImprovementTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+            configurationPage.publishNowTheTemplate();
+            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+        }
+    }
+
+    private void disableCopyRestriction() throws Exception {
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            controlsPage.clickGlobalSettings();
+
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
+
+        } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+            OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
+            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.goToTemplateDetailsPage("Scheduling Policies");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.setScheduleCopyRestrictions("no");
             configurationPage.publishNowTheTemplate();
             opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
         }

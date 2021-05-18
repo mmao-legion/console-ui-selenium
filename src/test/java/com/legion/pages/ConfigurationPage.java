@@ -71,4 +71,5 @@ public interface ConfigurationPage {
     public void searchTemplate(String templateName) throws Exception;
     public void selectOperatingBufferHours(String option) throws Exception;
     public void setOpeningAndClosingBufferHours (int openingBufferHour, int closingBufferHour) throws Exception;
+    public void setScheduleCopyRestrictions(String yesOrNo) throws Exception;
 }

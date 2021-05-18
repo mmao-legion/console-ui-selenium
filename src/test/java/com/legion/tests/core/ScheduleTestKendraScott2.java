@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import java.awt.print.PrinterGraphics;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.*;
 
 import com.gargoylesoftware.htmlunit.html.HtmlListing;
@@ -491,11 +492,20 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.clickOnOfferOrAssignBtn();
 		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM.equals(schedulePage.getShiftById(selectedShiftId).findElement(By.className("week-schedule-worker-name")).getText().trim()), false);
 		//Select new TM from Recommended TMs tab
-		selectedShift = schedulePage.clickOnProfileIcon();
-		String selectedShiftId2 = selectedShift.getAttribute("id").toString();
-		schedulePage.clickonAssignTM();
-		schedulePage.switchSearchTMAndRecommendedTMsTab();
-		String firstNameOfSelectedTM2 = schedulePage.selectTeamMembers();
+		String firstNameOfSelectedTM2 = "";
+		String selectedShiftId2 = "";
+		int i = 0;
+		while (firstNameOfSelectedTM2.equals("") && i<10) {
+			selectedShift = schedulePage.clickOnProfileIcon();
+			selectedShiftId2  = selectedShift.getAttribute("id").toString();
+			schedulePage.clickonAssignTM();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			firstNameOfSelectedTM2 = schedulePage.selectTeamMembers();
+			i++;
+		}
+		if (firstNameOfSelectedTM2.equals("")) {
+			SimpleUtils.fail("Cannot found TMs in recommended TMs tab! ", false);
+		}
 		schedulePage.clickOnOfferOrAssignBtn();
 		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM2.equals(schedulePage.getShiftById(selectedShiftId2).findElement(By.className("week-schedule-worker-name")).getText().trim()), false);
 		schedulePage.clickOnFilterBtn();
@@ -1288,7 +1298,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnScheduleConsoleMenuItem();
 
 			ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-			float budgetedHoursInDMViewSchedule = scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location);
+			BigDecimal round = new BigDecimal(scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location));
+			float budgetedHoursInDMViewSchedule = round.setScale(1,   BigDecimal.ROUND_HALF_UP).floatValue();
 			if (budgetHoursInSchedule != 0 && budgetHoursInSchedule == budgetedHoursInDMViewSchedule) {
 				SimpleUtils.pass("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page!");
 			} else {
@@ -1632,6 +1643,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (!isWeekGenerated){
 				schedulePage.createScheduleForNonDGFlowNewUI();
 			}
+			schedulePage.convertAllUnAssignedShiftToOpenShift();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.addOpenShiftWithLastDay("MOD");
 			schedulePage.saveSchedule();

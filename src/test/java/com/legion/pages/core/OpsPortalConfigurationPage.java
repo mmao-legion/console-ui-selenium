@@ -1827,4 +1827,21 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		} else
 			SimpleUtils.fail("OP - Operating Hours: Operating / Buffer Hours : Operating buffer hours and closing buffer hours are not loaded.", false);
 	}
+
+
+	@FindBy(css ="question-input[question-title=\"Enable schedule copy restrictions\"] > div > div.lg-question-input__wrapper > ng-transclude > yes-no > ng-form > lg-button-group >div>div")
+	private List<WebElement> yesNoForScheduleCopyRestrictions;
+	@Override
+	public void setScheduleCopyRestrictions(String yesOrNo) throws Exception {
+		if (areListElementVisible(yesNoForScheduleCopyRestrictions,5)) {
+			for (WebElement option : yesNoForScheduleCopyRestrictions) {
+				if (option.getText().equalsIgnoreCase(yesOrNo)) {
+					click(option);
+					break;
+				}
+			}
+			SimpleUtils.pass("Set copy restriction to "+ yesOrNo + " successfully! ");
+		}else
+			SimpleUtils.fail("Set copy restriction setting fail to load!  ",false);
+	}
 }
