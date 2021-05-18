@@ -15,7 +15,7 @@
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
                     <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
-                    <include name="verifyCreateMockLocationAndNavigate" />
+<!--                    <include name="verifyCreateMockLocationAndNavigate" />-->
                     <include name="verifyCreateNSOLocationAndNavigate" />
                     <include name="verifyDisableEnableLocationFunction" />
                     <include name="verifyExportLocationDistrict" />
@@ -23,7 +23,7 @@
                     <include name="verifyMSLocationGroupFunctionForRegular" />
                     <include name="verifyChangeMSToP2P" />
                     <include name="verifyP2PLocationGroupFunctionForRegular" />
-                    <include name="verifyChangeP2PToMS" />
+<!--                    <include name="verifyChangeP2PToMS" />-->
 
                     <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
                     <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />

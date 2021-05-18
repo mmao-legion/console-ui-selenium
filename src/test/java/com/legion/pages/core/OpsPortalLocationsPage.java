@@ -1111,14 +1111,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void changeLGToMSOrP2P(String value, String locationName) throws Exception {
+	public void changeLGToMSOrP2P(String locationName, String value) throws Exception {
 		if (locationRows.size() > 0) {
 			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(0));
 			click(editLocationBtn);
 			displayNameInput.clear();
-			displayNameInput.sendKeys("Change "+locationName+" to P2P or MS group");
-			setLocationName(locationName);
+			displayNameInput.sendKeys("Change "+locationName+" MS group");
+//			setLocationName(locationName);
 			click(getDriver().findElement(By.cssSelector("input[aria-label=\""+value+"\"] ")));
 			scrollToBottom();
 			click(saveBtnInUpdateLocationPage);

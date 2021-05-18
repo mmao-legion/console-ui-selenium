@@ -88,7 +88,7 @@ public interface LocationsPage {
 
     public boolean isItMSLG();
 
-    public void changeLGToMSOrP2P(String value, String locationName) throws Exception;
+    public void changeLGToMSOrP2P(String locationName, String value) throws Exception;
 
     public boolean verifyUpperFieldListShowWellOrNot() throws Exception;
 

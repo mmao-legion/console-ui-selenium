@@ -175,7 +175,7 @@ public class LocationsTest extends TestBase {
             locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
             locationsPage.addNewMockLocationWithAllFields(locationName,locationName,index);
             //search created location
-            if (locationsPage.searchNewLocation(getLocationName())) {
+            if (locationsPage.searchNewLocation(locationName+"-MOCK")) {
                 SimpleUtils.pass("Create new mock location successfully");
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
@@ -1155,8 +1155,7 @@ public class LocationsTest extends TestBase {
 
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime =  dfs.format(new Date());
-            String locationName = "LGP2PAuto" +currentTime;
-            setLGMSLocationName(locationName);
+            String locationName ="LGP2PAuto" +currentTime;
 
             int index =0;
             int childLocationNum = 1;
@@ -1195,14 +1194,14 @@ public class LocationsTest extends TestBase {
             ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
             //Verify the location relationship
             if (!locationsPage.isItMSLG()) {
-                locationsPage.changeLGToMSOrP2P(locationGroupSwitchOperation.PTP.getValue(), locationGroupSwitchOperation.MS.getValue());
+                locationsPage.changeLGToMSOrP2P(locationName, locationGroupSwitchOperation.MS.getValue());
             }else
                 SimpleUtils.fail("It's not P2P location group,select another one pls",false);
             //search location again
-            locationsPage.searchLocation(locationName);
+            locationsPage.searchLocation("Change "+locationName+" to MS group");
             if (locationsPage.isItMSLG()) {
                 SimpleUtils.pass("Change P2P location group to MS successfully");
-                setLGMSLocationName(locationName);
+//                setLGMSLocationName(locationName);
             }else
                 SimpleUtils.fail("Change P2P location group to MS failed",true);
 
