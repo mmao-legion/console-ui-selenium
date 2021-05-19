@@ -331,7 +331,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();
         } else {
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "8:00PM");
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
         }
 
         // For copy schedule, select one TM -> create time off for TM -> create schedule by copy last week schedule
