@@ -21,8 +21,7 @@ import org.testng.Assert;
 
 import java.util.*;
 
-import static com.legion.tests.TestBase.flagForTestRun;
-import static com.legion.tests.TestBase.propertyMap;
+import static com.legion.tests.TestBase.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 
@@ -1348,6 +1347,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		if(countOfAdvancedStaffingRule!=0){
 			WebElement deleteButton = advancedStaffingRuleList.get(0).findElement(By.cssSelector("span.settings-work-rule-edit-delete-icon"));
 			clickTheElement(deleteButton);
+			if(isElementEnabled(deleteButtonOnDialogPage,2)){
+				clickTheElement(deleteButtonOnDialogPage);
+			}
 			waitForSeconds(2);
 			if(advancedStaffingRuleList.get(0).findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size()==1){
 				SimpleUtils.pass("User can delete advance staffing rule successfully!");
