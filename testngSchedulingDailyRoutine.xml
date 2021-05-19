@@ -144,7 +144,7 @@
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
                     <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
-                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
+<!--                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" Blocked by SCH-4155/>-->
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
