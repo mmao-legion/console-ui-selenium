@@ -335,9 +335,6 @@ public class DragAndDropTest extends TestBase {
             // Drag the TM's shift to the day that he/she has time off
             schedulePage.dragOneShiftToAnotherDay(indexes.get(0), firstName, endIndex);
 
-            // Verify if Confirm Store Operating hours dialog pops up
-            schedulePage.verifyConfirmStoreOpenCloseHours();
-
             // Verify the Warning model pops up with the message
             schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
 
