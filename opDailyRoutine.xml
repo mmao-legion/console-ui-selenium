@@ -131,6 +131,7 @@
                     <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRules"/>
                     <include name="verifyCreateAllTypeTemplate"/>
                     <include name="verifyAdvancedStaffingRulesShowWell"/>
+                    <include name="daysOfWeekE2E"/>
                 </methods>
             </class>
         </classes>

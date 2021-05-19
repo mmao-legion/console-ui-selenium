@@ -14709,5 +14709,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Schedule Week View: shifts load failed or there is no shift in this week", false);
         return allOOOHShifts;
     }
+    // added by Fiona
+    public List<String> verifyDaysHasShifts() throws Exception {
+        List<String> dayHasShifts = new ArrayList<String>();
+        if (areListElementVisible(scheduleDays, 10)) {
+            for(WebElement scheduleDay:scheduleDays){
+                String dayAbbr = scheduleDay.findElement(By.cssSelector("div.sch-calendar-day-label")).getText().trim();
+                String totalCalendarDaySummary = scheduleDay.findElement(By.cssSelector("div.sch-calendar-day-summary span")).getText().trim().split(" ")[0];
+                if(! totalCalendarDaySummary.equals("0")){
+                    dayHasShifts.add(dayAbbr);
+                    SimpleUtils.pass(dayAbbr + " has shifts!");
+                }else {
+                    SimpleUtils.fail(dayAbbr + " don't have shifts!",true);
+                }
+            }
+        }
+        return dayHasShifts;
+    }
 }
 

@@ -42,8 +42,8 @@ public class ConfigurationTest extends TestBase {
 
         this.createDriver((String)params[0],"83","Window");
         visitPage(testMethod);
-//        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
-        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
+        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+//        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -578,19 +578,21 @@ public class ConfigurationTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "E2E days of week and number of shift validation")
+    @TestName(description = "E2E days of week validation")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void daysOfWeekE2E(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "OMLocation95-UsingForAuto";
-            String workRole = "Lead Sales Associate";
+            String templateName = "FionaUsing";
+            String workRole = "New Work Role";
             String shiftsNumber = "7";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
                 add("Friday");
             }};
+            List<String> daysAbbr = new ArrayList<String>();
+            List<String> daysHasShifts = new ArrayList<String>();
             String startOffsetTime = "30";
             String startTimeUnit = "minutes";
             String startEventPoint = "after";
@@ -599,7 +601,7 @@ public class ConfigurationTest extends TestBase {
             String endTimeUnit = "minutes";
             String endEventPoint = "before";
             String endEvent = "Closing Operating Hours";
-            String locationName = "OMLocation95";
+            String locationName = "AutoUsingByFiona";
 
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -637,15 +639,20 @@ public class ConfigurationTest extends TestBase {
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "08:00PM");
-            schedulePage.verifyDayHasShifts("Sunday");
-            schedulePage.verifyDayHasShifts("Monday");
-            schedulePage.verifyDayHasShifts("Tuesday");
-            schedulePage.verifyDayHasShifts("Wednesday");
-            schedulePage.verifyDayHasShifts("Thursday");
-            schedulePage.verifyDayHasShifts("Friday");
-            schedulePage.verifyDayHasShifts("Saturday");
+            schedulePage.createScheduleForNonDGFlowNewUI();
+            daysHasShifts = schedulePage.verifyDaysHasShifts();
 
+            for(String day:days){
+                String dayAbbr = day.substring(0,3);
+                daysAbbr.add(dayAbbr);
+            }
+            if(days.size()==daysHasShifts.size()){
+                if(ListUtils.isEqualList(daysAbbr,daysHasShifts)){
+                    SimpleUtils.pass("User can create shifts correctly according to AVD staffing rule");
+                }else {
+                    SimpleUtils.fail("User can create shifts correctly according to AVD staffing rule",false);
+                }
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
