@@ -10,6 +10,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.net.SocketImpl;
+
 import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -26,6 +28,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     private String expectedCreateAccount = "Create Account";
     private String expectedLoginDescription = "Please enter your last name and the invitation code.";
     private String value = "value";
+    private String verifyText = "Verify";
 
     @FindBy (css = ".user-onboarding-top-ribbon span")
     private WebElement enterpriseInviteMsg;
@@ -40,7 +43,91 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     @FindBy (css = "#code")
     private WebElement invitationCodeInput;
     @FindBy (css = "[class=\"user-onboarding-content\"] .user-onboarding-login-button")
-    private WebElement verifyBtn;
+    private WebElement onboardingBtn;
+    @FindBy (id = "email")
+    private WebElement emailInput;
+    @FindBy (css = "[name=\"password\"]")
+    private WebElement passwordInput;
+    @FindBy (css = "[name=\"passwordRepeat\"]")
+    private WebElement confirmPasswordInput;
+    @FindBy (css = ".confirm-email-modal")
+    private WebElement confirmEmailDialog;
+    @FindBy (css = ".confirm-email-button.confirm")
+    private WebElement yesBtn;
+
+    @Override
+    public void clickYesBtnOnIsEmailCorrectDialog() throws Exception {
+        try {
+            if (isElementLoaded(yesBtn, 10)) {
+                clickTheElement(yesBtn);
+                SimpleUtils.pass("Click on Yes button on \"Is this email correct?\" dialog successfully!");
+            } else {
+                SimpleUtils.fail("Yes button failed to load on \"Is this email correct?\" dialog!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Get Exception: " + e.getMessage() + "in Method: clickYesBtnOnIsEmailCorrectDialog()", false);
+        }
+    }
+
+    @Override
+    public void verifyIsEmailCorrectDialogPopup() throws Exception {
+        try {
+            if (isElementLoaded(confirmEmailDialog, 10)) {
+                SimpleUtils.pass(" \"Is this email correct?\" dialog pops up!");
+            } else {
+                SimpleUtils.fail(" \"Is this email correct?\" dialog failed to pop up!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public void createAccountForNewHire(String password) throws Exception {
+        try {
+            if (isElementLoaded(emailInput, 10) && isElementLoaded(passwordInput, 10) && isElementLoaded(confirmPasswordInput, 10)) {
+                emailInput.sendKeys(getEmailAccount());
+                passwordInput.sendKeys(password);
+                confirmPasswordInput.sendKeys(password);
+                if (isElementLoaded(onboardingBtn, 10) && onboardingBtn.getText().equalsIgnoreCase(expectedCreateAccount)) {
+                    clickTheElement(onboardingBtn);
+                    SimpleUtils.pass("Click on " + expectedCreateAccount + " button successfully!");
+                } else {
+                    SimpleUtils.fail(expectedCreateAccount + failedLoad, false);
+                }
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public boolean isCreateAccountPageLoadedAfterVerifyingLastName() throws Exception {
+        boolean isLoaded = false;
+        try {
+            if (isElementLoaded(emailInput, 10)) {
+                isLoaded = true;
+            }
+        } catch (Exception e) {
+            isLoaded = false;
+        }
+        return isLoaded;
+    }
+
+    @Override
+    public void verifyLastName(String lastName) throws Exception {
+        try {
+            if (isElementLoaded(lastNameInput, 10) && isElementLoaded(onboardingBtn, 10)
+            && onboardingBtn.getText().equalsIgnoreCase(verifyText)) {
+                lastNameInput.sendKeys(lastName);
+                clickTheElement(onboardingBtn);
+            } else {
+                SimpleUtils.fail("Verify Last Name failed!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
     @Override
     public void openOnboardingPage(String invitationCode, String firstName, boolean isRehired, String enterpriseDisplayName) {
@@ -78,7 +165,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
             if (isElementLoaded(createAccount, 10) && createAccount.getText().equalsIgnoreCase(expectedCreateAccount) &&
             isElementLoaded(loginDescription, 10) && loginDescription.getText().equalsIgnoreCase(expectedLoginDescription) &&
             isElementLoaded(lastNameInput, 10) && isElementLoaded(invitationCodeInput, 10) &&
-            invitationCodeInput.getAttribute(value).equalsIgnoreCase(invitationCode) && isElementLoaded(verifyBtn, 10)) {
+            invitationCodeInput.getAttribute(value).equalsIgnoreCase(invitationCode) && isElementLoaded(onboardingBtn, 10) && onboardingBtn.getText().equalsIgnoreCase(verifyText)) {
                 SimpleUtils.pass(expectedCreateAccount + loadSuccessfully);
             } else {
                 SimpleUtils.fail(expectedCreateAccount + failedLoad, false);

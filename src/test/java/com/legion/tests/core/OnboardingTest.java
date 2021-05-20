@@ -25,6 +25,7 @@ public class OnboardingTest  extends TestBase {
     private String nonSSOEnterprise = propertyMap.get("KendraScott2_Enterprise");
     private String ssoEnterprise = propertyMap.get("Dgch_Enterprise");
     private String currentLocation = "";
+    private String newPassword = testDataMap.get("Password");
 
     @Override
     @BeforeMethod()
@@ -60,6 +61,32 @@ public class OnboardingTest  extends TestBase {
         try {
             verifyOnboardingFlow("Yes");
 
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the onboarding flow for New hire and status changed to Onboarded (Non-SSO)")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheOnboardingFlowForNewHireAndStatusChangeToOnboardedAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            verifyOnboardingFlow("No");
+            OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
+            String firstName = "test-automation-barista";
+            String invitationCode = "";
+            String lastName = "test";
+            onboardingPage.openOnboardingPage(invitationCode, firstName, false, "KendraScott2");
+            onboardingPage.verifyTheContentOfCreateAccountPage(firstName, invitationCode);
+            onboardingPage.verifyLastName(lastName);
+            SimpleUtils.assertOnFail("Create Account page failed to load after verifying last name!", onboardingPage.isCreateAccountPageLoadedAfterVerifyingLastName(), false);
+            onboardingPage.createAccountForNewHire(password);
+            // Verify "Is this email correct?" dialog pops up
+            onboardingPage.verifyIsEmailCorrectDialogPopup();
+            // Verify the functionality of YES button
+            onboardingPage.clickYesBtnOnIsEmailCorrectDialog();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

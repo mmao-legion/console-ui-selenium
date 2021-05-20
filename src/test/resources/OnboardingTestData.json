@@ -2,5 +2,6 @@
   "Non-SSO_Upperfields": "Region1 > Demo District",
   "SSO_Upperfields": "D004",
   "Non-SSO_Location": "Test_For_Onboarding",
-  "SSO_Location": "Test_For_SSO_Onboarding"
+  "SSO_Location": "Test_For_SSO_Onboarding",
+  "Password" : "legionco1"
 }

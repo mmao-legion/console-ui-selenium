@@ -84,6 +84,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> testRailUser = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailPassword = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailProjectID = new ThreadLocal<>();
+	public static final ThreadLocal<String> emailAccount = new ThreadLocal<>();
 
 	public static void setIsNeedEditingOperatingHours(Boolean value) { isNeedUpdateOperatingHours.set(value); }
 
@@ -495,4 +496,6 @@ public class MyThreadLocal {
 	public static String getTestRailPassword() { return testRailPassword.get(); }
 	public static void setTestRailProjectID(String value){ testRailProjectID.set(value); }
 	public static String getTestRailProjectID() { return testRailProjectID.get(); }
+	public static void setEmailAccount(String value) { emailAccount.set(value);}
+	public static String getEmailAccount() { return emailAccount.get();}
 }
