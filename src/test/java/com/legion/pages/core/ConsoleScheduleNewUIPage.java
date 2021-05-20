@@ -2667,6 +2667,42 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return newSelectedTM;
     }
 
+    @FindBy(css = "tr.table-row.ng-scope")
+    List<WebElement> recommendedTMs;
+    public String selectTeamMembers(int numOfTM) throws Exception {
+        String newSelectedTMs = "";
+        waitForSeconds(5);
+        if (areListElementVisible(recommendedScrollTable, 20)) {
+            if (isElementLoaded(selectRecommendedOption, 5)) {
+                String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}", "").split(" ");
+                int recommendedNum= Integer.parseInt(txtRecommendedOption[2]);
+                if (recommendedNum == 0) {
+                    SimpleUtils.report(txtRecommendedOption[0] + " Option no recommended TMs");
+                    click(btnSearchteamMember.get(0));
+                    newSelectedTMs = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
+                } else if (recommendedNum >= numOfTM){
+                    for (int i = 0; i < numOfTM; i++){
+                        click(recommendedTMs.get(i).findElement(By.cssSelector("td.table-field.action-field")));
+                        newSelectedTMs = newSelectedTMs + recommendedTMs.get(i).findElement(By.cssSelector(".worker-edit-search-worker-display-name")).getText() + " ";
+                    }
+                } else {
+                    for (int i = 0; i < recommendedNum; i++){
+                        click(recommendedTMs.get(i).findElement(By.cssSelector("td.table-field.action-field")));
+                        newSelectedTMs = newSelectedTMs + recommendedTMs.get(i).findElement(By.cssSelector(".worker-edit-search-worker-display-name")).getText() + " ";
+                    }
+                }
+            } else {
+                click(btnSearchteamMember.get(0));
+                newSelectedTMs = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
+                SimpleUtils.report("Recommended option not available on page");
+            }
+        } else if (isElementLoaded(textSearch, 5)) {
+            newSelectedTMs = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
+        } else {
+            SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
+        }
+        return newSelectedTMs;
+    }
 
 
     @FindBy(css = ".sch-day-view-shift-overtime-icon")
@@ -6218,6 +6254,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
+        waitForSeconds(3);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
@@ -8698,6 +8735,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception {
+        if (isElementLoaded(agreeClaimBtn, 5)) {
+            click(agreeClaimBtn);
+            String expectedMessage = "Success! This shift is yours, and has been added to your schedule.";
+            verifyThePopupMessageOnTop(expectedMessage);
+        }else {
+            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
+        }
+    }
+
+    @Override
     public void verifyThePopupMessageOnTop(String expectedMessage) throws Exception {
         if (isElementLoaded(msgOnTop, 20)) {
             String message = msgOnTop.getText();
@@ -10440,11 +10489,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public boolean isOfferTMOptionEnabled() throws Exception {
-        if(isElementEnabled(OfferTMS,5) && !OfferTMS.getAttribute("ng-class").toLowerCase().contains("graded-out")){
-            SimpleUtils.pass("Offer Team Members option is enabled on Pop Over Style!");
+        if(isElementEnabled(OfferTMS,5) && !OfferTMS.getAttribute("class").toLowerCase().contains("graded-out")){
             return true;
         } else{
-            SimpleUtils.fail("Offer Team Members option is not enabled on Pop Over Style ",true);
             return false;
         }
     }

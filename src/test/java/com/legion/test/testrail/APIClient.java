@@ -223,7 +223,7 @@ public class APIClient
 			}
 			
 			throw new APIException(
-				"TestRail API returned HTTP " + status +
+				"TestRail API" + uri + " returned HTTP " + status +
 				"(" + error + ")"
 			);
 		}
