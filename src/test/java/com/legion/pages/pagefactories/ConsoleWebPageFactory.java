@@ -131,4 +131,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public IntegrationPage createIntegrationPage() { return new ConsoleIntegrationPage(); }
+
+	@Override
+	public OnboardingPage createOnboardingPage() { return new ConsoleOnboardingPage(); }
 }

@@ -64,4 +64,6 @@ public interface PageFactory {
     CompliancePage createConsoleCompliancePage();
 
     IntegrationPage createIntegrationPage();
+
+    OnboardingPage createOnboardingPage();
 }
