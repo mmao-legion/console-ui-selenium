@@ -5391,20 +5391,19 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void searchAndSelectTeamMemberByName(String username) throws Exception {
 		boolean isTeamMemberFound = false;
-		if (isElementLoaded(teamMemberSearchBox, 10)) {
+		if (isElementLoaded(teamMemberSearchBox, 20)) {
 			teamMemberSearchBox.clear();
 			teamMemberSearchBox.sendKeys(username);
-			waitForSeconds(2);
+			teamMemberSearchBox.sendKeys(Keys.ENTER);
+			waitForSeconds(5);
 			if (usersAndRolesAllUsersRows.size() > 0) {
 				for (WebElement user : usersAndRolesAllUsersRows) {
 					WebElement name = user.findElement(By.cssSelector("lg-button button span span"));
-					if (name != null) {
-						if (name.getText().equalsIgnoreCase(username)) {
-							clickTheElement(name);
-							isTeamMemberFound = true;
-							SimpleUtils.pass("Users and Roles Page: User '" + username + "' selected successfully.");
-							break;
-						}
+					if (name != null && name.getText().contains(username)) {
+						clickTheElement(name);
+						isTeamMemberFound = true;
+						SimpleUtils.pass("Users and Roles Page: User '" + username + "' selected successfully.");
+						break;
 					}
 				}
 			}
@@ -6058,4 +6057,41 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}else
 			SimpleUtils.fail("Automatically set onboarded employees to active? setting fail to load!  ",false);
 	}
+
+	@FindBy(css ="div.lg-input-wrapper__wrapper input-field")
+	private List<WebElement> accessRoles;
+
+	@FindBy(css ="lg-button[label=\"Edit\"]")
+	private WebElement editButton;
+
+	@FindBy(css ="lg-button[label=\"Save\"]")
+	private WebElement saveButton;
+
+
+	public void selectAccessRoles (List<String> selectAccessRoles) throws Exception {
+		if (isElementLoaded(editButton, 5)) {
+			click(editButton);
+			if (areListElementVisible(accessRoles, 5) && selectAccessRoles.size()>0) {
+				for (WebElement accessRole : accessRoles){
+					String accessRoleName = accessRole.findElement(By.tagName("label")).getText();
+					for (String selectAccessRole: selectAccessRoles) {
+						if (accessRoleName.equalsIgnoreCase(selectAccessRole)){
+							WebElement checkBox = accessRole.findElement(By.tagName("input"));
+							if (checkBox.getAttribute("class").contains("ng-empty")){
+								click(checkBox);
+							}
+							break;
+						}
+					}
+				}
+			} else
+				SimpleUtils.fail("Access roles fail to load or select access roles are null! ", false);
+		} else
+			SimpleUtils.fail("Edit button fail to load! ", false);
+		scrollToElement(saveButton);
+		click(saveButton);
+		displaySuccessMessage();
+
+	}
+
 }

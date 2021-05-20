@@ -15,17 +15,21 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
-public class OnboardingTest  extends TestBase {
+public class OnboardingTest extends TestBase {
 
     private static HashMap<String, String> testDataMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/OnboardingTestData.json");
     private String nonSSOEnterprise = propertyMap.get("KendraScott2_Enterprise");
     private String ssoEnterprise = propertyMap.get("Dgch_Enterprise");
     private String currentLocation = "";
 
+    private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -56,7 +60,7 @@ public class OnboardingTest  extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the onboarding flow for New hire and status changed to Active (Non-SSO)")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyTheOnboardingFlowForNewHireAndStatusChangeToActiveAsInternalAdmin(String browser, String username, String password, String location) {
+    public void verifyTheOnboardingFlowForNewHireAndStatusChangeToActiveAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             verifyOnboardingFlow("Yes");
 
@@ -67,9 +71,11 @@ public class OnboardingTest  extends TestBase {
 
     private void verifyOnboardingFlow (String yesOrNo) throws Exception {
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
+        // Set "Automatically set onboarded employees to active?"
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
             controlsPage.gotoControlsPage();
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
@@ -89,5 +95,35 @@ public class OnboardingTest  extends TestBase {
             configurationPage.publishNowTheTemplate();
             opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
         }
+
+        //Create new TM
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+        teamPage.isProfilePageLoaded();
+        String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+//        String firstName = "Nora6459";
+
+        //If testing on rc, set "Preview User" for this user
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.searchAndSelectTeamMemberByName(firstName);
+            List<String> selectAccessRoles = new ArrayList<>();
+            selectAccessRoles.add("Preview User");
+            controlsNewUIPage.selectAccessRoles(selectAccessRoles);
+        }
+
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName(firstName);
+        //click Invite to Legion button
+        profileNewUIPage.userProfileInviteTeamMember();
+
+        //Get invitation code
+        profileNewUIPage.clickOnShowOrHideInvitationCodeButton(true);
+        String invitationCode = profileNewUIPage.getInvitationCode();
+
     }
 }
