@@ -6040,4 +6040,22 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 
 	}
+
+	@FindBy(css ="question-input[question-title=\"Automatically set onboarded employees to active?\"] > div > div.lg-question-input__wrapper > ng-transclude > yes-no > ng-form > lg-button-group >div>div")
+	private List<WebElement> yesNoForAutomaticallySetOnboardedEmployeesToActive;
+	@Override
+	public void setAutomaticallySetOnboardedEmployeesToActive(String yesOrNo) throws Exception {
+		if (areListElementVisible(yesNoForAutomaticallySetOnboardedEmployeesToActive,5)) {
+			for (WebElement option : yesNoForAutomaticallySetOnboardedEmployeesToActive) {
+				if (option.getText().equalsIgnoreCase(yesOrNo)) {
+					click(option);
+					overwriteTheSetting();
+					break;
+				}
+			}
+
+			SimpleUtils.pass("Set Automatically set onboarded employees to active? to "+ yesOrNo + " successfully! ");
+		}else
+			SimpleUtils.fail("Automatically set onboarded employees to active? setting fail to load!  ",false);
+	}
 }
