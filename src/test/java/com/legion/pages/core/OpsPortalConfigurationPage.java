@@ -1389,7 +1389,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception{
 		if(isElementEnabled(saveButton,3)){
 			clickTheElement(saveButton);
-			waitForSeconds(15);
+			waitForSeconds(20);
 			if (isElementEnabled(dropdownArrowButton,5)) {
 				SimpleUtils.pass("User click on save button on schedule rule list page successfully!");
 			}else
@@ -1538,6 +1538,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			String newDay = day.substring(0,3).toLowerCase();
 			newDays.add(newDay);
 		}
+		Collections.sort(newDaysInRule);
+		Collections.sort(newDays);
 		if(ListUtils.isEqualList(newDaysInRule,newDays)){
 			SimpleUtils.pass("The days info in rule are correct");
 		}else{

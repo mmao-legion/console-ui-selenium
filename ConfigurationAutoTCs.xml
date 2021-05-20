@@ -32,6 +32,7 @@
                     <include name="verifyCreateAllTypeTemplate"/>
                     <include name="verifyAdvancedStaffingRulesShowWell"/>
                     <include name="daysOfWeekE2E"/>
+                    <include name="numberOfShiftsInADVRuleE2E"/>
                 </methods>
             </class>
         </classes>
