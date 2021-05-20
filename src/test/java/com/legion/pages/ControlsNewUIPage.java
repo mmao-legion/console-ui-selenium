@@ -302,4 +302,5 @@ public interface ControlsNewUIPage {
 	public String getConvertUnassignedShiftsToOpenSettingOption() throws Exception;
 	public void updateConvertUnassignedShiftsToOpenSettingOption(String option) throws Exception;
 	public void setAutomaticallySetOnboardedEmployeesToActive(String yesOrNo) throws Exception;
+	public void selectAccessRoles (List<String> selectAccessRoles) throws Exception;
 }
