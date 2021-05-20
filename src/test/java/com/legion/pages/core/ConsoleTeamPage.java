@@ -1702,6 +1702,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	private String checkAndFillInTheFieldsToCreateInviteTM(Map<String, String> newTMDetails) throws Exception {
 		String firstName = newTMDetails.get("FIRST_NAME") + new Random().nextInt(200) + new Random().nextInt(200);
+		setFirstNameForNewHire(firstName);
 		isElementLoadedAndPrintTheMessage(firstNameInput, "FIRST NAME Input");
 		isElementLoadedAndPrintTheMessage(lastNameInput, "LAST NAME Input");
 		isElementLoadedAndPrintTheMessage(emailInputTM, "EMAIL Input");
@@ -1716,9 +1717,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		isElementLoadedAndPrintTheMessage(homeStoreLabel, "HOME STORE LOCATION");
 		firstNameInput.sendKeys(firstName);
 		lastNameInput.sendKeys(newTMDetails.get("LAST_NAME"));
+		setLastNameForNewHire(newTMDetails.get("LAST_NAME"));
 		String[] email = newTMDetails.get("EMAIL").split("@");
 		String emailInput = email[0]+"+"+(char)(new Random().nextInt(26) + 96) +(char)(new Random().nextInt(26) + 96)+ + new Random().nextInt(200) +"@"+email[1];
 		emailInputTM.sendKeys(emailInput);
+		setEmailAccount(emailInput);
 		phoneInput.sendKeys(newTMDetails.get("PHONE"));
 		click(dateHiredInput);
 		if (areListElementVisible(realDays, 5) && isElementLoaded(todayHighlighted, 5)) {

@@ -28,7 +28,10 @@ public class OnboardingTest extends TestBase {
     private String nonSSOEnterprise = propertyMap.get("KendraScott2_Enterprise");
     private String ssoEnterprise = propertyMap.get("Dgch_Enterprise");
     private String currentLocation = "";
+    private String invitationCode = "";
     private String newPassword = testDataMap.get("Password");
+    private String continueLabel = "Continue";
+    private String nextLabel = "Next";
 
     private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
     @Override
@@ -79,9 +82,8 @@ public class OnboardingTest extends TestBase {
         try {
             verifyOnboardingFlow("No");
             OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
-            String firstName = "test-automation-barista";
-            String invitationCode = "";
-            String lastName = "test";
+            String firstName = MyThreadLocal.getFirstNameForNewHire();
+            String lastName = MyThreadLocal.getLastNameForNewHire();
             onboardingPage.openOnboardingPage(invitationCode, firstName, false, "KendraScott2");
             onboardingPage.verifyTheContentOfCreateAccountPage(firstName, invitationCode);
             onboardingPage.verifyLastName(lastName);
@@ -91,6 +93,12 @@ public class OnboardingTest extends TestBase {
             onboardingPage.verifyIsEmailCorrectDialogPopup();
             // Verify the functionality of YES button
             onboardingPage.clickYesBtnOnIsEmailCorrectDialog();
+            // Verify Important Notice from your Employer page will load
+            // Verify the content on Important Notice from your Employer page
+            onboardingPage.verifyImportantNoticeFromYourEmployerPageLoaded();
+            onboardingPage.clickOnButtonByLabel(continueLabel);
+            // Verify the content on Verify Profile page
+            onboardingPage.validateVerifyProfilePageLoaded();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -130,7 +138,6 @@ public class OnboardingTest extends TestBase {
         teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
         teamPage.isProfilePageLoaded();
         String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
-//        String firstName = "Nora6459";
 
         //If testing on rc, set "Preview User" for this user
         if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
@@ -150,7 +157,7 @@ public class OnboardingTest extends TestBase {
 
         //Get invitation code
         profileNewUIPage.clickOnShowOrHideInvitationCodeButton(true);
-        String invitationCode = profileNewUIPage.getInvitationCode();
+        invitationCode = profileNewUIPage.getInvitationCode();
 
     }
 }

@@ -9,4 +9,8 @@ public interface OnboardingPage {
     public void createAccountForNewHire(String password) throws Exception;
     public void verifyIsEmailCorrectDialogPopup() throws Exception;
     public void clickYesBtnOnIsEmailCorrectDialog() throws Exception;
+    public void verifyPleaseVerifyYourEmailPageLoaded() throws Exception;
+    public void verifyImportantNoticeFromYourEmployerPageLoaded() throws Exception;
+    public void clickOnButtonByLabel(String label) throws Exception;
+    public void validateVerifyProfilePageLoaded() throws Exception;
 }
