@@ -301,4 +301,5 @@ public interface ControlsNewUIPage {
 	public void verifyConvertUnassignedShiftsToOpenSetting() throws Exception;
 	public String getConvertUnassignedShiftsToOpenSettingOption() throws Exception;
 	public void updateConvertUnassignedShiftsToOpenSettingOption(String option) throws Exception;
+	public void setAutomaticallySetOnboardedEmployeesToActive(String yesOrNo) throws Exception;
 }
