@@ -6043,6 +6043,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private List<WebElement> yesNoForAutomaticallySetOnboardedEmployeesToActive;
 	@Override
 	public void setAutomaticallySetOnboardedEmployeesToActive(String yesOrNo) throws Exception {
+		// wait for the value to be loaded
+		waitForSeconds(5);
 		if (areListElementVisible(yesNoForAutomaticallySetOnboardedEmployeesToActive,5)) {
 			for (WebElement option : yesNoForAutomaticallySetOnboardedEmployeesToActive) {
 				if (option.getText().equalsIgnoreCase(yesOrNo)) {

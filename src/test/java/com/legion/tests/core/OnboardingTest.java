@@ -41,20 +41,7 @@ public class OnboardingTest extends TestBase {
         try {
             this.createDriver((String) params[0], "83", "Window");
             visitPage(testMethod);
-            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String) params[1], (String) params[2], (String) params[3]);
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            if (MyThreadLocal.getEnterprise().equalsIgnoreCase(nonSSOEnterprise)) {
-                currentLocation = testDataMap.get("Non-SSO_Location");
-                locationSelectorPage.changeUpperFields(testDataMap.get("Non-SSO_Upperfields"));
-                locationSelectorPage.changeLocation(currentLocation);
-            } else if (MyThreadLocal.getEnterprise().equalsIgnoreCase(ssoEnterprise)) {
-                currentLocation = testDataMap.get("SSO_Location");
-                locationSelectorPage.changeUpperFields(testDataMap.get("SSO_Upperfields"));
-                locationSelectorPage.changeLocation(currentLocation);
-            }
-            boolean isLoginDone = loginPage.isLoginDone();
-            loginPage.verifyLoginDone(isLoginDone, currentLocation);
+            verifyLoginToTheSpecificLocation((String) params[1], (String) params[2], (String) params[3]);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -67,7 +54,7 @@ public class OnboardingTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheOnboardingFlowForNewHireAndStatusChangeToActiveAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            verifyOnboardingFlow("Yes");
+            verifyOnboardingFlow("Yes", username, password);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -81,13 +68,13 @@ public class OnboardingTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheOnboardingFlowForNewHireAndStatusChangeToOnboardedAsInternalAdmin(String browser, String username, String password, String location) {
         try {
-            verifyOnboardingFlow("No");
+            verifyOnboardingFlow("No", username, password);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-    private void verifyOnboardingFlow (String yesOrNo) throws Exception {
+    private void verifyOnboardingFlow (String yesOrNo, String username, String password) throws Exception {
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -190,5 +177,30 @@ public class OnboardingTest extends TestBase {
         } else
             SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Onboarded, but actual display as "+ status,
                     status.equalsIgnoreCase("Onboarded"), false);
+
+        // Logout and login as internal admin to terminate the user
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+        verifyLoginToTheSpecificLocation(username, password, currentLocation);
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName(firstName);
+        teamPage.terminateTheTeamMember(true);
+    }
+
+    private void verifyLoginToTheSpecificLocation(String username, String password, String location) throws Exception {
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(username, password, location);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        if (MyThreadLocal.getEnterprise().equalsIgnoreCase(nonSSOEnterprise)) {
+            currentLocation = testDataMap.get("Non-SSO_Location");
+            locationSelectorPage.changeUpperFields(testDataMap.get("Non-SSO_Upperfields"));
+            locationSelectorPage.changeLocation(currentLocation);
+        } else if (MyThreadLocal.getEnterprise().equalsIgnoreCase(ssoEnterprise)) {
+            currentLocation = testDataMap.get("SSO_Location");
+            locationSelectorPage.changeUpperFields(testDataMap.get("SSO_Upperfields"));
+            locationSelectorPage.changeLocation(currentLocation);
+        }
+        boolean isLoginDone = loginPage.isLoginDone();
+        loginPage.verifyLoginDone(isLoginDone, currentLocation);
     }
 }

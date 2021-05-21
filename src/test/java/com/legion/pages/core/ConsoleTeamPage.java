@@ -647,7 +647,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement applyButton;
 	@FindBy (css = "[ng-click=\"actionClicked('Deactivate')\"]")
 	private WebElement deactivateButton;
-	@FindBy (css = "[ng-click=\"actionClicked('Terminate')\"]")
+	@FindBy (css = "[ng-click=\"actionClicked('Terminate')\"] button")
 	private WebElement terminateButton;
 	@FindBy (css = "[ng-click=\"actionClicked('CancelTerminate')\"]")
 	private WebElement cancelTerminateButton;
@@ -2245,31 +2245,34 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		String removeMsg = "Successfully scheduled removal of Team Member from Roster.";
 		String actualMsg = "";
 		scrollToBottom();
-		click(terminateButton);
-		isTerminateWindowLoaded();
-		if (isElementLoaded(currentDay, 10) && isElementLoaded(applyButton)) {
-			if (isCurrentDay) {
-				click(currentDay);
-			}else {
-				selectAFutureDateFromCalendar();
-			}
-			click(applyButton);
-			if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
-				click(confirmButton);
-				if (isElementLoaded(popupMessage, 15))
-				{
-					actualMsg = popupMessage.getText();
-					if (removeMsg.equals(actualMsg)) {
-						SimpleUtils.pass("Terminate the team member successfully!");
-					}else {
-						SimpleUtils.fail("The pop up message is incorrect!", false);
+		if (isElementLoaded(terminateButton, 10)) {
+			click(terminateButton);
+			isTerminateWindowLoaded();
+			if (isElementLoaded(currentDay, 10) && isElementLoaded(applyButton)) {
+				if (isCurrentDay) {
+					click(currentDay);
+				} else {
+					selectAFutureDateFromCalendar();
+				}
+				click(applyButton);
+				if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+					click(confirmButton);
+					if (isElementLoaded(popupMessage, 15)) {
+						actualMsg = popupMessage.getText();
+						if (removeMsg.equals(actualMsg)) {
+							SimpleUtils.pass("Terminate the team member successfully!");
+						} else {
+							SimpleUtils.fail("The pop up message is incorrect!", false);
+						}
 					}
+				} else {
+					SimpleUtils.fail("Confirm window doesn't show!", false);
 				}
 			} else {
-				SimpleUtils.fail("Confirm window doesn't show!", false);
+				SimpleUtils.fail("Current day and apply button doesn't show!", false);
 			}
-		}else {
-			SimpleUtils.fail("Current day and apply button doesn't show!", false);
+		} else {
+			SimpleUtils.fail("Terminate button failed to load on Profile page!", false);
 		}
 	}
 
