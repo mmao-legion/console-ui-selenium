@@ -144,6 +144,7 @@
             <class name="com.legion.tests.core.UserManagementTest">
                 <methods>
                     <include name="verifyAddUpdateWorkRole"/>
+<!--                    <include name="verifyDynamicGroupFunctionInUserManagementTab"/>-->
                 </methods>
             </class>
         </classes>
