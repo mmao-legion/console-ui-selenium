@@ -44,8 +44,6 @@ public class UserManagementTest extends TestBase {
         this.createDriver((String)params[0],"83","Window");
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -92,6 +90,68 @@ public class UserManagementTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Common function for newsfeed group")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDynamicGroupFunctionInUserManagementTab(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =  dfs.format(new Date()).trim();
+            String groupNameForNewsFeed =   "AutoNewsFeed" +currentTime;
+            String groupNameForNewsFeed2 = "difName" +currentTime;
+            String description = "AutoCreate" +currentTime;
+            String criteria = "Work Role";
+            String criteriaUpdate = "Minor";
+            String searchText = "AutoNewsFeed";
+
+
+            //go to User Management tab
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            //check dynamic group item
+//            userManagementPage.iCanSeeDynamicGroupItemTileInUserManagementTab();
+            //go to dynamic group
+            userManagementPage.goToDynamicGroup();
+            if (userManagementPage.verifyLayoutOfDGDisplay()) {
+                List<HashMap<String,String>> groupRows =userManagementPage.getExistingGroups();
+                if (groupRows!=null) {
+                    userManagementPage.searchNewsFeedDynamicGroup(searchText);
+                    //remove existing dynamic group
+                    userManagementPage.iCanDeleteExistingWFSDG();
+                    userManagementPage.iCanGoToManageDynamicGroupPage();
+                    //verifyEachField
+                    userManagementPage.verifyNameInputField(groupNameForNewsFeed);
+                    userManagementPage.verifyCriteriaList();
+                    userManagementPage.testButtonIsClickable();
+                    userManagementPage.addMoreButtonIsClickable();
+                    userManagementPage.removeCriteriaBtnIsClickAble();
+                    userManagementPage.criteriaDescriptionDisplay();
+                    userManagementPage.cancelBtnIsClickable();
+                    //create new workforce sharing dynamic group
+                    String groupTestMess = userManagementPage.addNewsFeedGroupWithOneCriteria(groupNameForNewsFeed,description,criteria);
+
+                    //verify add group with existing group name
+                    userManagementPage.verifyAddNewsFeedGroupWithExistingGroupName(groupNameForNewsFeed,description);
+                    //verify existing criteria ,but group name is not same
+                    userManagementPage.verifyAddNewsFeedGroupWithDifNameSameCriterias(groupNameForNewsFeed2,description,criteria);
+
+                    String groupTestMessAftUpdate = userManagementPage.updateNewsFeedDynamicGroup(groupNameForNewsFeed,criteriaUpdate);
+                    if (!groupTestMessAftUpdate.equalsIgnoreCase(groupTestMess)) {
+                        SimpleUtils.pass("Update News Feed dynamic group successfully");
+                    }
+                }else
+                    userManagementPage.verifyDefaultMessageIfThereIsNoGroup();
+            }else
+                SimpleUtils.fail("Newsfeed group show wrong",false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
 
 
 }

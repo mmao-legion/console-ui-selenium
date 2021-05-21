@@ -1838,10 +1838,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "div.mappingLocation.mt-20.ng-scope > span")
 	private  WebElement testBtnInfo;
 
-
-
-
-
 	@Override
 	public void iCanSeeDynamicGroupItemInLocationsTab() {
 		if (isElementEnabled(dynamicGroupCard,5)) {

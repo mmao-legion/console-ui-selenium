@@ -3,11 +3,14 @@ package com.legion.pages.core;
 import com.legion.pages.BasePage;
 import com.legion.pages.UserManagementPage;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import java.net.SocketImpl;
 import java.util.*;
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -374,6 +377,418 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 
 		return null;
+	}
+	@FindBy(css = "lg-dashboard-card[title=\"Dynamic User Group\"]")
+	private  WebElement dynamicGroupCard;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"newsFeedDg\"]")
+	private  WebElement newsfeedDg;
+	@FindBy(css = "form-section[form-title=\"News Feed\"]")
+	private  WebElement newsFeedForm;
+	@FindBy(css = "lg-button[label=\"Test\"]")
+	private  WebElement testBtn;
+	@FindBy(css = "input[aria-label=\"Group Name\"]")
+	private  WebElement groupNameInput;
+	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
+	private  WebElement groupDescriptionInput;
+	@FindBy(css = "div.fl-left.groupField > input-field > ng-form > div.select-wrapper.ng-scope>select")
+	private  List<WebElement> criteriaSelect;
+	@FindBy(css = "div.fl-left.groupField > input-field > ng-form > div.select-wrapper.ng-scope>select>option")
+	private  List<WebElement> criteriaSelectItems;
+	@FindBy(css = "lg-button[label=\"Add More\"]")
+	private  WebElement addMoreBtn;
+
+	@FindBy(css = "i.deleteRule")
+	private  List<WebElement> deleteRuleIcon;
+	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
+	private  List<WebElement> addDynamicGroupBtn;
+	@FindBy(css = "input[placeholder=\"You can search by name and description\"]")
+	private  WebElement dgSearchInput;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"newsFeedDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr:nth-child(2) > td.tr > div > lg-button:nth-child(1)")
+	private  List<WebElement> editIconInNewsFeedGroup;
+	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"newsFeedDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope > td.tr > div > lg-button:nth-child(2)")
+	private  List<WebElement> deleteIconInNewsFeedGroup;
+
+
+	@FindBy(css = "tr[ng-repeat=\"group in filterdynamicGroups\"]")
+	private  List<WebElement> groupRows;
+	@FindBy(css = "lg-picker-input[value=\"group.values\"]")
+	private  WebElement criteriaValue;
+	@FindBy(css = "input[placeholder=\"Search \"")
+	private  WebElement searchBoxInCriteriaValue;
+	@FindBy(css = "input-field[type=\"checkbox\"]")
+	private  List<WebElement> checkboxInCriteriaValue;
+	@FindBy(css = "modal[modal-title=\"Remove Dynamic Group\"]")
+	private  WebElement removeDGPopup;
+	@FindBy(css = "ng-transclude.lg-modal__body")
+	private  WebElement removeDGPopupDes;
+	@FindBy(css = "lg-button[label=\"Remove\"]")
+	private  WebElement removeBtnInRemovDGPopup;
+	@FindBy(css = "div.mappingLocation.mt-20> span")
+	private  WebElement testBtnInfo;
+	@Override
+	public void iCanSeeDynamicGroupItemTileInUserManagementTab() {
+		if (isElementEnabled(dynamicGroupCard,5)) {
+			SimpleUtils.pass("Dynamic group card is shown");
+			String contextInfo = dynamicGroupCard.getText();
+			if (contextInfo.contains("Dynamic Group") && contextInfo.contains("Dynamic Group Configuration") &&
+					contextInfo.contains("Newsfeed Group") ) {
+				SimpleUtils.pass("Title and description show well");
+			}else
+				SimpleUtils.fail("Title and description are wrong",false);
+		}else
+			SimpleUtils.fail("There is no dynamic group card",false);
+	}
+
+	@Override
+	public void goToDynamicGroup() {
+		if (isElementEnabled(dynamicGroupCard,5)) {
+			click(dynamicGroupCard);
+			waitForSeconds(15);
+			if (isElementEnabled(newsfeedDg,5)) {
+				SimpleUtils.pass("Can go to dynamic group page successfully");
+			}else
+				SimpleUtils.fail("Go to dynamic group page failed",false);
+		}
+	}
+
+	@Override
+	public void searchNewsFeedDynamicGroup(String groupName) throws Exception {
+		String[] searchGroupText = groupName.split(",");
+		if (isElementLoaded(dgSearchInput, 10) ) {
+			for (int i = 0; i < searchGroupText.length; i++) {
+				dgSearchInput.clear();
+				dgSearchInput.sendKeys(searchGroupText[0]);
+				dgSearchInput.sendKeys(Keys.ENTER);
+				waitForSeconds(3);
+				if (groupRows.size()>0) {
+					SimpleUtils.pass("Dynamic group: " + groupRows.size() + " group(s) found  ");
+					break;
+				} else {
+					SimpleUtils.report("There is no groups which you searched");
+				}
+			}
+
+		} else {
+			SimpleUtils.fail("Search input is not clickable", true);
+		}
+	}
+
+	@Override
+	public void iCanDeleteExistingWFSDG() {
+		waitForSeconds(10);
+		if (groupRows.size()>0) {
+			if (areListElementVisible(deleteIconInNewsFeedGroup,30)) {
+				for (WebElement dg: deleteIconInNewsFeedGroup) {
+					click(dg);
+					if (isRemoveDynamicGroupPopUpShowing()) {
+						waitForSeconds(3);
+						click(removeBtnInRemovDGPopup);
+					}else
+						SimpleUtils.fail("loRemove dynamic group page load failed ",false);
+				}
+
+			}else
+				SimpleUtils.report("There is not dynamic group yet");
+		}else
+			SimpleUtils.report("There is no groups which selected");
+	}
+
+	@Override
+	public boolean verifyLayoutOfDGDisplay() throws Exception {
+		if (isElementLoaded(newsFeedForm,5)) {
+			if (newsFeedForm.getText().contains("News Feed") && newsFeedForm.getText().contains("Group")
+					&& newsFeedForm.getText().contains("Name") &&newsFeedForm.getText().contains("Description")) {
+				SimpleUtils.pass("News Feed Group form show well");
+				return true;
+			}else
+				SimpleUtils.fail("News Feed Group form show wrong",false);
+		}else
+			SimpleUtils.fail("News Feed form load failed",false);
+			return false;
+	}
+
+	@FindBy(css = " lg-global-dynamic-group-table > lg-paged-search-new > div > ng-transclude > div.no-record")
+	private WebElement noGroupsMessage;
+
+	@Override
+	public void verifyDefaultMessageIfThereIsNoGroup() throws Exception {
+		if (isElementLoaded(noGroupsMessage,5)) {
+			if (noGroupsMessage.getText().contains("There is no dynamic group created yet")) {
+				SimpleUtils.pass("Default message when there is no group show well");
+			}
+		}else
+			SimpleUtils.fail("Default message when there is no group load failed",false);
+	}
+
+	@Override
+	public List<HashMap<String, String>> getExistingGroups() {
+		List<HashMap<String,String>> groupsInfo = new ArrayList<HashMap<String,String>>();
+		HashMap<String,String> groupText = new HashMap<>();
+		if (groupRows.size()>0) {
+			for (WebElement groupRow : groupRows) {
+				groupText.put("Name",groupRow.findElement(By.cssSelector("td:nth-child(1)")).getText());
+				groupText.put("Description",groupRow.findElement(By.cssSelector("td:nth-child(2)")).getText());
+			}
+			groupsInfo.add(groupText);
+			return groupsInfo;
+		}else
+			return null;
+	}
+
+
+	@Override
+	public void iCanGoToManageDynamicGroupPage() {
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				SimpleUtils.pass("\"+\" button next to dynamic group is clickable ");
+				SimpleUtils.pass("Can go to manage dynamic group page successfully");
+			} else
+				SimpleUtils.fail("Manager Dynamic Group win load failed", false);
+		}
+	}
+
+	@Override
+	public void verifyCriteriaList() throws Exception {
+		if (areListElementVisible(criteriaSelect,5)) {
+			for (WebElement s : criteriaSelectItems) {
+				if(s.getText().contains("Exempt")) {
+					SimpleUtils.pass("Criteria include: Exempt");
+				}
+				else if(s.getText().contains("Work Role")) {
+					SimpleUtils.pass("Criteria include: Work Role");
+				}
+				else if(s.getText().contains("Employment Type")) {
+					SimpleUtils.pass("Criteria include: Employment Type");
+				}
+				else if(s.getText().contains("Employment Status")) {
+					SimpleUtils.pass("Criteria include: Employment Status");
+				}
+				else if(s.getText().contains("Minor")) {
+					SimpleUtils.pass("Criteria include: Minor");
+				}
+				else if(s.getText().contains("Badge")) {
+					SimpleUtils.pass("Criteria include: Badge");
+				}
+				else if(s.getText().contains("Custom")) {
+					SimpleUtils.pass("Criteria include: Custom");
+				}
+			}
+		}else
+			SimpleUtils.fail("Criteria select load failed",false);
+	}
+
+	@Override
+	public void testButtonIsClickable() throws Exception {
+		if (isElementLoaded(testBtn,5)) {
+			click(testBtn);
+			if (isElementLoaded(testBtnInfo,5)) {
+				SimpleUtils.pass("Test button is clickable");
+			}else
+				SimpleUtils.fail("Test Mapping info doesn't show",false);
+		}else
+			SimpleUtils.fail("Test button load failed",false);
+	}
+
+	@Override
+	public void addMoreButtonIsClickable() throws Exception {
+		int currentCriteriaNum = criteriaSelect.size();
+		if (isElementLoaded(addMoreBtn,5)) {
+			click(addMoreBtn);
+			int criteriaNumAftAddMore = criteriaSelect.size();
+			if (criteriaNumAftAddMore >currentCriteriaNum) {
+				SimpleUtils.pass("Add more button is clickable and can add one more criteria");
+			}else
+				SimpleUtils.fail("Add more button work failed",false);
+		}else
+			SimpleUtils.fail("Add more button load failed",false);
+	}
+	@FindBy(css="div.CodeMirror-scroll")
+	private WebElement DescriptionFormForCustom;
+	@Override
+	public void criteriaDescriptionDisplay() throws Exception {
+		if (areListElementVisible(criteriaSelect,5)) {
+			selectByVisibleText(criteriaSelect.get(0),"Custom");
+			if (isElementLoaded(DescriptionFormForCustom,5) && DescriptionFormForCustom.getText().contains("Enter your expression. The dynamic group will only be created if the expresion evaluates to be true.")) {
+				SimpleUtils.pass("Default description for custom criteria show well");
+			}else
+				SimpleUtils.fail("Default description for custom criteria show wrong",false);
+		}else
+			SimpleUtils.fail("Criteria selector load failed",false);
+	}
+
+	@FindBy(css = "div.fl-left>i.fa[ng-click=\"$ctrl.deleteRule($index)\"]")
+	private List<WebElement> removeCriteriaBtn;
+	@Override
+	public void removeCriteriaBtnIsClickAble() {
+		int beforeRemove = criteriaSelect.size();
+		if (areListElementVisible(removeCriteriaBtn,5)) {
+			click(removeCriteriaBtn.get(0));
+			int aftRemove = criteriaSelect.size();
+			if (aftRemove <beforeRemove) {
+				SimpleUtils.pass("X button next to criteria is clickable");
+			}
+		}else
+			SimpleUtils.fail("X button next to criteria load failed",false);
+	}
+
+	@Override
+	public void cancelBtnIsClickable() throws Exception {
+		if (isElementLoaded(cancelBtn,5)) {
+			click(cancelBtn);
+			if (isElementLoaded(newsFeedForm,5)) {
+				SimpleUtils.pass("Cancel Button is clickable");
+			}else
+				SimpleUtils.fail("Cancel creating failed",false);
+		}else
+			SimpleUtils.fail("Cancel Button load failed",false);
+	}
+	@FindBy(css="lg-button[label=\"OK\"]")
+	private WebElement  okBtnInCreateNewsFeedGroupPage;
+	@Override
+	public String addNewsFeedGroupWithOneCriteria(String groupNameForNewsFeed, String description, String criteria) throws Exception {
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				groupNameInput.sendKeys(groupNameForNewsFeed);
+				groupDescriptionInput.sendKeys(description);
+				selectByVisibleText(criteriaSelect.get(0),criteria);
+				click(criteriaValue);
+				click(checkboxInCriteriaValue.get(0));
+				click(criteriaValue);
+				click(testBtn);
+				waitForSeconds(25);
+				String testInfo = testBtnInfo.getText().trim();
+				click(okBtnInCreateNewsFeedGroupPage);
+				waitForSeconds(3);
+				if (isElementLoaded(newsFeedForm,5)) {
+					SimpleUtils.pass("Ok button in Dynamic group creating page is clickable");
+				}
+				searchNewsFeedDynamicGroup(groupNameForNewsFeed);
+				if (groupRows.size()>0) {
+					SimpleUtils.pass("News Feed Dynamic group create successfully");
+				}else
+					SimpleUtils.fail("News Feed  Dynamic group create failed",false);
+				return testInfo;
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		}else
+			SimpleUtils.fail("Global dynamic group page load failed",false);
+
+		return null;
+	}
+
+	@Override
+	public String updateNewsFeedDynamicGroup(String groupNameForNewsFeed, String criteriaUpdate) throws Exception {
+		dgSearchInput.clear();
+		dgSearchInput.sendKeys(groupNameForNewsFeed);
+		dgSearchInput.sendKeys(Keys.ENTER);
+		click(editIconInNewsFeedGroup.get(0));
+		if (isManagerDGpopShowWell()) {
+			groupNameInput.clear();
+			groupNameInput.sendKeys(groupNameForNewsFeed+"Update");
+			selectByVisibleText(criteriaSelect.get(0),criteriaUpdate);
+			click(criteriaValue);
+			click(checkboxInCriteriaValue.get(0));
+			click(criteriaValue);
+			click(testBtn);
+			waitForSeconds(25);
+			String testInfo = testBtnInfo.getText().trim();
+			click(okBtnInCreateNewsFeedGroupPage);
+			waitForSeconds(3);
+			searchNewsFeedDynamicGroup(groupNameForNewsFeed+"Update");
+			if (groupRows.size()>0) {
+				SimpleUtils.pass("News Feed Dynamic group update successfully");
+			}else
+				SimpleUtils.fail("News Feed Dynamic group create failed",false);
+			return testInfo;
+		}else
+			SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		return null;
+	}
+
+	@Override
+	public void verifyAddNewsFeedGroupWithExistingGroupName(String groupNameForNewsFeed, String description) throws Exception {
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				groupNameInput.sendKeys(groupNameForNewsFeed);
+				groupDescriptionInput.sendKeys(description);
+				click(okBtnInCreateNewsFeedGroupPage);
+				waitForSeconds(3);
+				click(cancelBtn);
+				searchNewsFeedDynamicGroup(groupNameForNewsFeed);
+				if (groupRows.size()==1) {
+					SimpleUtils.pass("Can not create Dynamic group with existing group name");
+				}else
+					SimpleUtils.fail("Should not create group with existing group name",false);
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		}else
+			SimpleUtils.fail("Global dynamic group page load failed",false);
+	}
+
+	@Override
+	public void verifyAddNewsFeedGroupWithDifNameSameCriterias(String groupNameForNewsFeed2, String description, String criteria) throws Exception {
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				groupNameInput.sendKeys(groupNameForNewsFeed2);
+				groupDescriptionInput.sendKeys(description);
+				selectByVisibleText(criteriaSelect.get(0),criteria);
+				click(criteriaValue);
+				click(checkboxInCriteriaValue.get(0));
+				click(criteriaValue);
+				click(okBtnInCreateNewsFeedGroupPage);
+				waitForSeconds(3);
+				click(cancelBtn);
+				searchNewsFeedDynamicGroup(groupNameForNewsFeed2);
+				if (groupRows.size()==0) {
+					SimpleUtils.pass("Can not create Dynamic group with different name and same criteria");
+				}else
+					SimpleUtils.fail("Should not create group with different name and same criteria",false);
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed",false);
+		}else
+			SimpleUtils.fail("Global dynamic group page load failed",false);
+	}
+
+	@FindBy(css = "modal[modal-title=\"Manage Dynamic Group\"]>div")
+	private WebElement managerDGpop;
+
+	private boolean isManagerDGpopShowWell() {
+		if (isElementEnabled(managerDGpop,5)&& isElementEnabled(groupNameInput,5)&&
+				isElementEnabled(groupDescriptionInput,5)&&areListElementVisible(criteriaSelect,5)
+				&& isElementEnabled(testBtn,5) && isElementEnabled(addMoreBtn,5)) {
+			SimpleUtils.pass("Manager Dynamic Group win show well");
+			return true;
+		}else
+			return false;
+	}
+
+	@FindBy(css = "div.fl-left.groupName > input-field[label=\"Group Name\"]> ng-form > lg-input-error > div > span")
+	private WebElement groupNameErrorInput;
+	@Override
+	public void verifyNameInputField(String groupNameForNewsFeed) throws Exception {
+		if (isElementLoaded(groupNameInput,5)) {
+			groupNameInput.sendKeys(groupNameForNewsFeed);
+			groupNameInput.clear();
+			if (groupNameErrorInput.getText().contains("Group Name is required")) {
+				SimpleUtils.pass("Group name blank validation show well");
+			}else
+				SimpleUtils.fail("Missing validation of group name when it's blank",false);
+		}else
+			SimpleUtils.fail("Group name input field load failed",false);
+	}
+
+
+	private boolean isRemoveDynamicGroupPopUpShowing() {
+		if (isElementEnabled(removeDGPopup,5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic group?")
+				&& isElementEnabled(removeBtnInRemovDGPopup,5)) {
+			SimpleUtils.pass("Remove dynamic group page show well");
+			return true;
+		}
+		return false;
 	}
 }
 
