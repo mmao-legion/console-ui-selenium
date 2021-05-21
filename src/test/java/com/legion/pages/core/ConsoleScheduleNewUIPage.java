@@ -12530,10 +12530,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
         String expectedMessageOnWarningModel1 = nickName.toLowerCase()+" is approved for time off";
         String expectedMessageOnWarningModel2 = "please cancel the approved time off before assigning";
+        waitForSeconds(1);
         if (isElementLoaded(alertMessage,15)) {
             String s = alertMessage.getText();
             if (s.toLowerCase().contains(expectedMessageOnWarningModel1) && s.toLowerCase().contains(expectedMessageOnWarningModel2)
                     && isElementLoaded(okButton,5) && okButton.getText().equalsIgnoreCase("OK")){
+                waitForSeconds(1);
                 clickTheElement(okButton);
                 SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
                 if (isElementLoaded(closeSelectTMWindowBtn,5)){
@@ -13407,7 +13409,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (startName != null && startName.getText().equalsIgnoreCase(firstName)) {
                     mouseHoverDragandDrop(start, endElements.get(0));
                     SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + weekDay.getText() + " days Successfully!");
-                    verifyConfirmStoreOpenCloseHours();
+                    //verifyConfirmStoreOpenCloseHours();
                     isDragged = true;
                     break;
                 }

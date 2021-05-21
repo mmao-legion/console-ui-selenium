@@ -1,8 +1,5 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.loc;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -18,6 +15,8 @@ import com.legion.pages.BasePage;
 import com.legion.pages.ControlsNewUIPage;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+
+import static com.legion.utils.MyThreadLocal.*;
 
 
 public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIPage {
@@ -6108,7 +6107,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.report("The company mobile policy URL is empty");
 		} else
 			SimpleUtils.fail("The company mobile policy fail to load! ", false);
-
+		setCompanyPolicy(hasCompanyMobilePolicyURL);
 		return hasCompanyMobilePolicyURL;
 	}
 

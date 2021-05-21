@@ -32,6 +32,7 @@ public class OnboardingTest extends TestBase {
     private String newPassword = testDataMap.get("Password");
     private String continueLabel = "Continue";
     private String nextLabel = "Next";
+    boolean hasCompanyMobilePolicyURL = false;
 
     private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
     @Override
@@ -95,8 +96,10 @@ public class OnboardingTest extends TestBase {
             onboardingPage.clickYesBtnOnIsEmailCorrectDialog();
             // Verify Important Notice from your Employer page will load
             // Verify the content on Important Notice from your Employer page
-            onboardingPage.verifyImportantNoticeFromYourEmployerPageLoaded();
-            onboardingPage.clickOnButtonByLabel(continueLabel);
+            if (hasCompanyMobilePolicyURL) {
+                onboardingPage.verifyImportantNoticeFromYourEmployerPageLoaded();
+                onboardingPage.clickOnButtonByLabel(continueLabel);
+            }
             // Verify the content on Verify Profile page
             onboardingPage.validateVerifyProfilePageLoaded();
         } catch (Exception e){
@@ -137,7 +140,7 @@ public class OnboardingTest extends TestBase {
         controlsNewUIPage.clickOnControlsComplianceSection();
         SimpleUtils.assertOnFail("Controls: Compliance page not loaded Successfully!", controlsNewUIPage.isControlsComplianceLoaded(), false);
         controlsNewUIPage.clickOnGlobalLocationButton();
-        boolean hasCompanyMobilePolicyURL = controlsNewUIPage.hasCompanyMobilePolicyURLOrNot();
+        hasCompanyMobilePolicyURL = controlsNewUIPage.hasCompanyMobilePolicyURLOrNot();
 
         //Create new TM
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
