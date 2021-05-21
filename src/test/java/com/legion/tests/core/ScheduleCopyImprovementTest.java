@@ -423,8 +423,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "08:00AM", "08:00PM");
                 schedulePage.editOperatingHoursWithGivingPrameters("Friday", "08:00AM", "08:00PM");
                 schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "08:00AM", "08:00PM");
-            }
-            if (ifVerifyOOOHShifts) {
+            } else if (ifVerifyOOOHShifts) {
                 schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "08:00AM", "04:00PM");
                 schedulePage.editOperatingHoursWithGivingPrameters("Monday", "08:00AM", "04:00PM");
                 schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "08:00AM", "04:00PM");
@@ -432,6 +431,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "08:00AM", "04:00PM");
                 schedulePage.editOperatingHoursWithGivingPrameters("Friday", "08:00AM", "04:00PM");
                 schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "08:00AM", "04:00PM");
+            } else {
+                schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "08:00AM", "08:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Monday", "08:00AM", "08:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "08:00AM", "08:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "08:00AM", "08:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "08:00AM", "08:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Friday", "08:00AM", "08:00PM");
+                schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "08:00AM", "08:00PM");
             }
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);

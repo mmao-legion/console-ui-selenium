@@ -3,6 +3,7 @@ package com.legion.pages.core;
 import com.legion.pages.BasePage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.OnboardingPage;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -12,6 +13,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.net.SocketImpl;
+import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -288,5 +290,99 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
         } catch (Exception e) {
             SimpleUtils.fail("The content on Create Account page is incorrect!", false);
         }
+    }
+
+
+    @Override
+    public void verifySetAvailabilityPageLoaded() throws Exception {
+        try {
+            if (isElementLoaded(blueHeader, 10) && blueHeader.getText().equalsIgnoreCase(onboarding)
+                    && isOnboardingStepsLoaded() && isElementLoaded(currentOnboardingStep, 10) &&
+                    currentOnboardingStep.getText().equalsIgnoreCase(onboardingStepsText.SetAvailability.getValue())) {
+                SimpleUtils.pass(onboarding +onboardingStepsText.SetAvailability.getValue() + " page " + loadSuccessfully);
+                verifyTheContentOnSetAvailabilityPage();
+            } else {
+                SimpleUtils.fail(onboarding +onboardingStepsText.SetAvailability.getValue() + " page " + failedLoad, false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Get Exception: " + e.getMessage() + "in Method: verifySetAvailabilityPageLoaded()", false);
+        }
+    }
+
+
+    @FindBy (css = "form-section[form-title=\"My Work Preferences\"]")
+    private WebElement myWorkPreferencesSection;
+
+    @FindBy (css = "form-section[form-title=\"My availability\"]")
+    private WebElement myAvailabilitySection;
+
+    @FindBy (css = "[ng-show=\"index === 2\"] lg-button[label=\"Back\"]")
+    private WebElement backButtonOnSetAvailabilityPage;
+
+    @FindBy (css = "[ng-show=\"index === 2\"] lg-button[label=\"Next\"]")
+    private WebElement nextButtonOnSetAvailabilityPage;
+
+    @FindBy (css = "div.text-center.user-onboarding-steps__final")
+    private List<WebElement> sectionsOnThatsItPage;
+
+    @FindBy (css = "lg-button[label=\"Go Back\"]")
+    private WebElement goBackButtonOnThatsItPage;
+
+    @FindBy (css = "lg-button[label=\"Done\"]")
+    private WebElement doneButtonOnThatsItPage;
+
+
+    private void verifyTheContentOnSetAvailabilityPage() throws Exception {
+
+        if (isElementLoaded(myAvailabilitySection, 5)
+                && isElementLoaded(myWorkPreferencesSection, 5)
+                && isElementLoaded(backButtonOnSetAvailabilityPage, 5)
+                && isElementLoaded(nextButtonOnSetAvailabilityPage, 5)){
+            SimpleUtils.pass("The content on set availability page display correctly ! ");
+        } else
+            SimpleUtils.fail("The content on set availability page display incorrectly! ", false);
+    }
+
+    public void clickOnNextButtonOnSetAvailabilityPage() throws Exception {
+        if (isElementLoaded(nextButtonOnSetAvailabilityPage, 5)) {
+            click(nextButtonOnSetAvailabilityPage);
+            SimpleUtils.pass("Click Next button on set availability page successfully! ");
+        } else
+            SimpleUtils.fail("Next button on set availability page fail to load! ", false);
+    }
+
+    @Override
+    public void verifyThatsItPageLoaded() throws Exception {
+        try {
+            if (isElementLoaded(blueHeader, 10) && blueHeader.getText().equalsIgnoreCase(onboarding)
+                    && isOnboardingStepsLoaded() && isElementLoaded(currentOnboardingStep, 10) &&
+                    currentOnboardingStep.getText().equalsIgnoreCase(onboardingStepsText.ThatsIt.getValue())) {
+                SimpleUtils.pass(onboarding +onboardingStepsText.ThatsIt.getValue() + " page " + loadSuccessfully);
+                verifyTheContentOnThatsItPage();
+            } else {
+                SimpleUtils.fail(onboarding +onboardingStepsText.ThatsIt.getValue() + " page " + failedLoad, false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Get Exception: " + e.getMessage() + "in Method: verifyThatIsItPageLoaded()", false);
+        }
+    }
+
+    private void verifyTheContentOnThatsItPage() throws Exception {
+
+        if (areListElementVisible(sectionsOnThatsItPage, 5)
+                && sectionsOnThatsItPage.size()==2
+                && isElementLoaded(goBackButtonOnThatsItPage, 5)
+                && isElementLoaded(doneButtonOnThatsItPage, 5)){
+            SimpleUtils.pass("The content on That's It page display correctly ! ");
+        } else
+            SimpleUtils.fail("The content on That's It page display incorrectly! ", false);
+    }
+
+    public void clickOnDoneOnThatsItPage() throws Exception {
+        if (isElementLoaded(doneButtonOnThatsItPage, 5)) {
+            click(doneButtonOnThatsItPage);
+            SimpleUtils.pass("Click Done button on That's It page successfully! ");
+        } else
+            SimpleUtils.fail("Done button on That's It page fail to load! ", false);
     }
 }

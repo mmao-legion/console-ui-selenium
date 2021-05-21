@@ -111,7 +111,7 @@ public class OnboardingTest extends TestBase {
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-
+        OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
         // Set "Automatically set onboarded employees to active?"
         if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
             controlsPage.gotoControlsPage();
@@ -170,9 +170,25 @@ public class OnboardingTest extends TestBase {
         profileNewUIPage.clickOnShowOrHideInvitationCodeButton(true);
         invitationCode = profileNewUIPage.getInvitationCode();
 
+
+        //Verify the content on Set Availability page
+        onboardingPage.verifySetAvailabilityPageLoaded();
+        onboardingPage.clickOnNextButtonOnSetAvailabilityPage();
+        onboardingPage.verifyThatsItPageLoaded();
+        onboardingPage.clickOnDoneOnThatsItPage();
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
         //Check user status from profile page
         profileNewUIPage.clickOnUserProfileImage();
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
         String status = profileNewUIPage.getStatusOnProfilePage();
+
+        if(yesOrNo.equalsIgnoreCase("Yes")){
+        SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Onboarded, but actual display as "+ status,
+                status.equalsIgnoreCase("Onboarded"), false);
+        } else
+            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Onboarded, but actual display as "+ status,
+                    status.equalsIgnoreCase("Active"), false);
     }
 }

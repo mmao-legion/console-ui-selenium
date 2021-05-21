@@ -13,4 +13,8 @@ public interface OnboardingPage {
     public void verifyImportantNoticeFromYourEmployerPageLoaded() throws Exception;
     public void clickOnButtonByLabel(String label) throws Exception;
     public void validateVerifyProfilePageLoaded() throws Exception;
+    public void verifySetAvailabilityPageLoaded() throws Exception;
+    public void clickOnNextButtonOnSetAvailabilityPage() throws Exception;
+    public void verifyThatsItPageLoaded() throws Exception;
+    public void clickOnDoneOnThatsItPage() throws Exception;
 }

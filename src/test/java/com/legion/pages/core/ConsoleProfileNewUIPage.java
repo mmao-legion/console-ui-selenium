@@ -3504,7 +3504,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
 //		String d="2021 Apr 15";
 		String d= fromDay;
-		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT+8", dateFormat);
+//		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT+8", dateFormat);
+		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("UTC-7", dateFormat);
+//		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT-4", dateFormat);
 		long to = dateFormat.parse(d).getTime();
 		long from = dateFormat.parse(today).getTime();
 		int days = (int) ((to - from)/(1000 * 60 * 60 * 24));

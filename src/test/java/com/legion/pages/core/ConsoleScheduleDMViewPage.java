@@ -398,7 +398,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         */
 
         List<String> textFromChart = new ArrayList<>();
-        if (areListElementVisible(textFromTheChartInLocationSummarySmartCard, 10)&&textFromTheChartInLocationSummarySmartCard.size()!=0){
+        if (areListElementVisible(textFromTheChartInLocationSummarySmartCard, 15)&&textFromTheChartInLocationSummarySmartCard.size()!=0){
             for(int i=0;i<textFromTheChartInLocationSummarySmartCard.size();i++){
                 textFromChart.add(textFromTheChartInLocationSummarySmartCard.get(i).getText());
             }
