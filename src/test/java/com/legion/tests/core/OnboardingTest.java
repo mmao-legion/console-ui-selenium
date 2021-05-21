@@ -131,6 +131,14 @@ public class OnboardingTest extends TestBase {
             opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
         }
 
+        //Check if there is the url set under Controls -> Compliance -> Company Mobile Policy
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        SimpleUtils.assertOnFail("Controls: Compliance page not loaded Successfully!", controlsNewUIPage.isControlsComplianceLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        boolean hasCompanyMobilePolicyURL = controlsNewUIPage.hasCompanyMobilePolicyURLOrNot();
+
         //Create new TM
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
@@ -159,5 +167,9 @@ public class OnboardingTest extends TestBase {
         profileNewUIPage.clickOnShowOrHideInvitationCodeButton(true);
         invitationCode = profileNewUIPage.getInvitationCode();
 
+        //Check user status from profile page
+        profileNewUIPage.clickOnUserProfileImage();
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+        String status = profileNewUIPage.getStatusOnProfilePage();
     }
 }

@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import com.google.inject.internal.cglib.reflect.$FastClass;
 import com.legion.utils.JsonUtil;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.openqa.selenium.By;
@@ -3587,6 +3588,19 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}else{
 			SimpleUtils.fail("Edit button is not loaded!", false);
 		}
+	}
+
+	@FindBy(tagName = "lg-eg-status")
+	private WebElement statusOnProfilePage;
+
+	public String getStatusOnProfilePage () throws Exception {
+		String status = "";
+		if (isElementLoaded(statusOnProfilePage, 10)){
+			status = statusOnProfilePage.getAttribute("type");
+			SimpleUtils.pass("Get status from profile page successfully! ");
+		} else
+			SimpleUtils.fail("Status on profile page fail to load! ", false);
+		return status;
 	}
 
 }

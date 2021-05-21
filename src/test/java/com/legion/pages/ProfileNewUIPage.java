@@ -248,4 +248,6 @@ public interface ProfileNewUIPage {
 	public void clickAvailabilityEditButton() throws Exception;
 
 	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception;
+
+	public String getStatusOnProfilePage () throws Exception;
 }

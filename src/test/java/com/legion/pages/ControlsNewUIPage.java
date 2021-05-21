@@ -303,4 +303,5 @@ public interface ControlsNewUIPage {
 	public void updateConvertUnassignedShiftsToOpenSettingOption(String option) throws Exception;
 	public void setAutomaticallySetOnboardedEmployeesToActive(String yesOrNo) throws Exception;
 	public void selectAccessRoles (List<String> selectAccessRoles) throws Exception;
+	public boolean hasCompanyMobilePolicyURLOrNot () throws Exception;
 }

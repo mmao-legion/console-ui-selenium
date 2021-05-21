@@ -6094,4 +6094,22 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	}
 
+	@FindBy(css ="input-field[label=\"Mobile Policy URL\"] input")
+	private WebElement companyMobilePolicyURL;
+
+	public boolean hasCompanyMobilePolicyURLOrNot () throws Exception {
+		boolean hasCompanyMobilePolicyURL = false;
+		waitForSeconds(10);
+		if (isElementLoaded(companyMobilePolicyURL, 5)){
+			String url = companyMobilePolicyURL.getAttribute("value");
+			if (!url.equals("")){
+				hasCompanyMobilePolicyURL = true;
+			} else
+				SimpleUtils.report("The company mobile policy URL is empty");
+		} else
+			SimpleUtils.fail("The company mobile policy fail to load! ", false);
+
+		return hasCompanyMobilePolicyURL;
+	}
+
 }
