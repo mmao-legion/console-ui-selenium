@@ -84,6 +84,12 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     private WebElement currentOnboardingStep;
     @FindBy (css = "[label=\"Continue\"] [type=\"submit\"]")
     private WebElement continueBtn;
+    @FindBy (css = "[form-title=\"My Profile\"]")
+    private WebElement myProfileSection;
+    @FindBy (css = "[label=\"Back\"] [type=\"button\"]")
+    private WebElement backBtn;
+    @FindBy (css = "[label=\"Next\"] [type=\"submit\"]")
+    private WebElement nextBtn;
 
     @Override
     public void validateVerifyProfilePageLoaded() throws Exception {
@@ -93,6 +99,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
                     currentOnboardingStep.getText().equalsIgnoreCase(onboardingStepsText.VerifyProfile.getValue())) {
                 SimpleUtils.pass(onboarding + loadSuccessfully);
                 verifyTheContentOnVerifyProfilePage();
+                verifyBackAndNextButtonsLoaded();
             } else {
                 SimpleUtils.fail(onboarding + failedLoad, false);
             }
@@ -102,7 +109,24 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     }
 
     private void verifyTheContentOnVerifyProfilePage() throws Exception {
+        if (isElementLoaded(myProfileSection, 10) && myProfileSection.getText().contains("My Profile") &&
+        myProfileSection.getText().contains("First Name*") && myProfileSection.getText().contains("Last Name*") && myProfileSection.getText().contains("Nickname") &&
+        myProfileSection.getText().contains("Phone Number") && myProfileSection.getText().contains("Email") && myProfileSection.getText().contains("This email cannot be edited during onboarding.")
+        && myProfileSection.getText().contains("Address") && myProfileSection.getText().contains("Apt, Suite, Unit #") &&
+                myProfileSection.getText().contains("Country") && myProfileSection.getText().contains("City") && myProfileSection.getText().contains("State")
+        && myProfileSection.getText().contains("Zip Code")) {
+            SimpleUtils.pass("My Profile section" + loadSuccessfully);
+        } else {
+            SimpleUtils.fail("My profile section" + failedLoad, false);
+        }
+    }
 
+    private void verifyBackAndNextButtonsLoaded() throws Exception {
+        if (isElementLoaded(backBtn, 5) && isElementLoaded(nextBtn, 5)) {
+            SimpleUtils.pass("Back and Next buttons are loaded successfully!");
+        } else {
+            SimpleUtils.fail("Back and Next buttons failed to load!", false);
+        }
     }
 
     @Override
