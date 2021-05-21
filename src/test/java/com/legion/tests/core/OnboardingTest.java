@@ -82,26 +82,6 @@ public class OnboardingTest extends TestBase {
     public void verifyTheOnboardingFlowForNewHireAndStatusChangeToOnboardedAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             verifyOnboardingFlow("No");
-            OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
-            String firstName = MyThreadLocal.getFirstNameForNewHire();
-            String lastName = MyThreadLocal.getLastNameForNewHire();
-            onboardingPage.openOnboardingPage(invitationCode, firstName, false, "KendraScott2");
-            onboardingPage.verifyTheContentOfCreateAccountPage(firstName, invitationCode);
-            onboardingPage.verifyLastName(lastName);
-            SimpleUtils.assertOnFail("Create Account page failed to load after verifying last name!", onboardingPage.isCreateAccountPageLoadedAfterVerifyingLastName(), false);
-            onboardingPage.createAccountForNewHire(password);
-            // Verify "Is this email correct?" dialog pops up
-            onboardingPage.verifyIsEmailCorrectDialogPopup();
-            // Verify the functionality of YES button
-            onboardingPage.clickYesBtnOnIsEmailCorrectDialog();
-            // Verify Important Notice from your Employer page will load
-            // Verify the content on Important Notice from your Employer page
-            if (hasCompanyMobilePolicyURL) {
-                onboardingPage.verifyImportantNoticeFromYourEmployerPageLoaded();
-                onboardingPage.clickOnButtonByLabel(continueLabel);
-            }
-            // Verify the content on Verify Profile page
-            onboardingPage.validateVerifyProfilePageLoaded();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -149,6 +129,7 @@ public class OnboardingTest extends TestBase {
         teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
         teamPage.isProfilePageLoaded();
         String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
         //If testing on rc, set "Preview User" for this user
         if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
@@ -170,6 +151,25 @@ public class OnboardingTest extends TestBase {
         profileNewUIPage.clickOnShowOrHideInvitationCodeButton(true);
         invitationCode = profileNewUIPage.getInvitationCode();
 
+        String lastName = MyThreadLocal.getLastNameForNewHire();
+        onboardingPage.openOnboardingPage(invitationCode, firstName, false, "KendraScott2");
+        onboardingPage.verifyTheContentOfCreateAccountPage(firstName, invitationCode);
+        onboardingPage.verifyLastName(lastName);
+        SimpleUtils.assertOnFail("Create Account page failed to load after verifying last name!", onboardingPage.isCreateAccountPageLoadedAfterVerifyingLastName(), false);
+        onboardingPage.createAccountForNewHire(newPassword);
+        // Verify "Is this email correct?" dialog pops up
+        onboardingPage.verifyIsEmailCorrectDialogPopup();
+        // Verify the functionality of YES button
+        onboardingPage.clickYesBtnOnIsEmailCorrectDialog();
+        // Verify Important Notice from your Employer page will load
+        // Verify the content on Important Notice from your Employer page
+        if (hasCompanyMobilePolicyURL) {
+            onboardingPage.verifyImportantNoticeFromYourEmployerPageLoaded();
+            onboardingPage.clickOnButtonByLabel(continueLabel);
+        }
+        // Verify the content on Verify Profile page
+        onboardingPage.validateVerifyProfilePageLoaded();
+        onboardingPage.clickOnButtonByLabel(nextLabel);
 
         //Verify the content on Set Availability page
         onboardingPage.verifySetAvailabilityPageLoaded();
@@ -185,10 +185,10 @@ public class OnboardingTest extends TestBase {
         String status = profileNewUIPage.getStatusOnProfilePage();
 
         if(yesOrNo.equalsIgnoreCase("Yes")){
-        SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Onboarded, but actual display as "+ status,
-                status.equalsIgnoreCase("Onboarded"), false);
+        SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Active, but actual display as "+ status,
+                status.equalsIgnoreCase("Active"), false);
         } else
             SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Onboarded, but actual display as "+ status,
-                    status.equalsIgnoreCase("Active"), false);
+                    status.equalsIgnoreCase("Onboarded"), false);
     }
 }

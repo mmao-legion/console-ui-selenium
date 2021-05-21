@@ -92,13 +92,15 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     private WebElement backBtn;
     @FindBy (css = "[label=\"Next\"] [type=\"submit\"]")
     private WebElement nextBtn;
+    @FindBy (css = ".wm-close-link")
+    private WebElement closeBtnOnWelcomeDialog;
 
     @Override
     public void validateVerifyProfilePageLoaded() throws Exception {
         try {
             if (isElementLoaded(blueHeader, 10) && blueHeader.getText().equalsIgnoreCase(onboarding)
                     && isOnboardingStepsLoaded() && isElementLoaded(currentOnboardingStep, 10) &&
-                    currentOnboardingStep.getText().equalsIgnoreCase(onboardingStepsText.VerifyProfile.getValue())) {
+                    currentOnboardingStep.getText().contains(onboardingStepsText.VerifyProfile.getValue())) {
                 SimpleUtils.pass(onboarding + loadSuccessfully);
                 verifyTheContentOnVerifyProfilePage();
                 verifyBackAndNextButtonsLoaded();
@@ -134,6 +136,11 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     @Override
     public void clickOnButtonByLabel(String label) throws Exception {
         try {
+            if (isElementLoaded(closeBtnOnWelcomeDialog, 5)) {
+                clickTheElement(closeBtnOnWelcomeDialog);
+            }
+            scrollToBottom();
+            waitForSeconds(1);
             String locator = "[label=\"" + label + "\"] [type=\"submit\"]";
             if (isElementLoaded(getDriver().findElement(By.cssSelector(locator)), 10)) {
                 clickTheElement(getDriver().findElement(By.cssSelector(locator)));
@@ -149,9 +156,11 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     @Override
     public void verifyImportantNoticeFromYourEmployerPageLoaded() throws Exception {
         try {
+            // Need to wait for seconds since first load, the page title will show "Onboarding", then it will show the "Important Notice from your Employer"
+            waitForSeconds(5);
             if (isElementLoaded(blueHeader, 10) && blueHeader.getText().equalsIgnoreCase(importantNotice)
                     && isOnboardingStepsLoaded() && isElementLoaded(currentOnboardingStep, 10) &&
-            currentOnboardingStep.getText().equalsIgnoreCase(onboardingStepsText.ReviewCompanyPolicy.getValue()) && isElementLoaded(continueBtn, 10)) {
+            currentOnboardingStep.getText().contains(onboardingStepsText.ReviewCompanyPolicy.getValue()) && isElementLoaded(continueBtn, 10)) {
                 SimpleUtils.pass(importantNotice + loadSuccessfully);
             } else {
                 SimpleUtils.fail(importantNotice + failedLoad, false);
@@ -322,7 +331,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
         try {
             if (isElementLoaded(blueHeader, 10) && blueHeader.getText().equalsIgnoreCase(onboarding)
                     && isOnboardingStepsLoaded() && isElementLoaded(currentOnboardingStep, 10) &&
-                    currentOnboardingStep.getText().equalsIgnoreCase(onboardingStepsText.SetAvailability.getValue())) {
+                    currentOnboardingStep.getText().contains(onboardingStepsText.SetAvailability.getValue())) {
                 SimpleUtils.pass(onboarding +onboardingStepsText.SetAvailability.getValue() + " page " + loadSuccessfully);
                 verifyTheContentOnSetAvailabilityPage();
             } else {
@@ -343,7 +352,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     @FindBy (css = "[ng-show=\"index === 2\"] lg-button[label=\"Back\"]")
     private WebElement backButtonOnSetAvailabilityPage;
 
-    @FindBy (css = "[ng-show=\"index === 2\"] lg-button[label=\"Next\"]")
+    @FindBy (css = "[ng-show=\"index === 2\"] lg-button[label=\"Next\"] button")
     private WebElement nextButtonOnSetAvailabilityPage;
 
     @FindBy (css = "div.text-center.user-onboarding-steps__final")
@@ -368,8 +377,8 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     }
 
     public void clickOnNextButtonOnSetAvailabilityPage() throws Exception {
-        if (isElementLoaded(nextButtonOnSetAvailabilityPage, 5)) {
-            click(nextButtonOnSetAvailabilityPage);
+        if (isElementLoaded(nextButtonOnSetAvailabilityPage, 10)) {
+            clickTheElement(nextButtonOnSetAvailabilityPage);
             SimpleUtils.pass("Click Next button on set availability page successfully! ");
         } else
             SimpleUtils.fail("Next button on set availability page fail to load! ", false);
@@ -380,7 +389,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
         try {
             if (isElementLoaded(blueHeader, 10) && blueHeader.getText().equalsIgnoreCase(onboarding)
                     && isOnboardingStepsLoaded() && isElementLoaded(currentOnboardingStep, 10) &&
-                    currentOnboardingStep.getText().equalsIgnoreCase(onboardingStepsText.ThatsIt.getValue())) {
+                    currentOnboardingStep.getText().contains(onboardingStepsText.ThatsIt.getValue())) {
                 SimpleUtils.pass(onboarding +onboardingStepsText.ThatsIt.getValue() + " page " + loadSuccessfully);
                 verifyTheContentOnThatsItPage();
             } else {
