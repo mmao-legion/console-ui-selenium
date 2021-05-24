@@ -204,7 +204,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement globalLocationButton;
 	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.publishDayWindowWeek\"]")
 	private WebElement schedulePublishWindowDiv;
-	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.finalizeDayWindow\"]")
+	@FindBy(css = "[question-title=\"How many days in advance would you finalize schedule?\"] div.lg-question-input")
 	private WebElement advanceFinalizeDaysDiv;
 	@FindBy(css = "lg-select[search-hint=\"Search Location\"]")
 	private WebElement SchedulingPoliciesActiveLocation;

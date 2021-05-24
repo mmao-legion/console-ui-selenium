@@ -7,6 +7,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
@@ -66,7 +67,7 @@ public class LiquidDashboardTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-            // Verifiy Edit mode Dashboard loaded
+            // Verify Edit mode Dashboard loaded
             liquidDashboardPage.enterEditMode();
 
             //verify switch off Todays_Forcast widget
@@ -710,15 +711,16 @@ public class LiquidDashboardTest extends TestBase {
     }
 
     @Automated(automated ="Automated")
-    @Owner(owner = "Haya")
+    @Owner(owner = "Julie/Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Schedules widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifySchedulesWidgetsAsStoreManager(String browser, String username, String password, String location) {
+    public void verifySchedulesWidgetAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+
             // Verify Edit mode Dashboard loaded
             liquidDashboardPage.enterEditMode();
             liquidDashboardPage.switchOnWidget(widgetType.Schedules.getValue());
@@ -730,10 +732,11 @@ public class LiquidDashboardTest extends TestBase {
             //verify view schedules link
             List<String> resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
             liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Schedules.getValue(),linkNames.View_Schedules.getValue());
+
             //verify value on widget
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             List<String> resultListInOverview = schedulePage.getOverviewData();
-            if (resultListOnWidget.size()==resultListInOverview.size()){
+            if (resultListOnWidget.size() == 4){
                 for (int i=0;i<resultListInOverview.size();i++){
                     boolean flag = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
                     if (flag){
@@ -745,6 +748,194 @@ public class LiquidDashboardTest extends TestBase {
             } else {
                 SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
             }
+
+            // Verify the schedule status is Guidance in Overview
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated && schedulePage.isDeleteScheduleButtonLoaded()) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            resultListInOverview = schedulePage.getOverviewData();
+            if (resultListInOverview.size() > 2 && resultListInOverview.get(1).contains(",")) {
+                if (resultListInOverview.get(1).split(",").length > 4) {
+                    String currentStatus = resultListInOverview.get(1).split(",")[3].replace(" ", "");
+                    if (currentStatus.equals("Guidance"))
+                        SimpleUtils.pass("Schedule Page: The current week's status in 'Overview' is Guidance as expected");
+                    else
+                        SimpleUtils.fail("Schedule Page: The current week's status in 'Overview' is " + currentStatus + ", not Guidance",false);
+                } else
+                    SimpleUtils.fail("Schedule Page: The result item's length in 'Overview' is incorrect",false);
+            } else
+                SimpleUtils.fail("Schedule Page: The results list's size in 'Overview' is incorrect",false);
+
+            // Verify the Refresh button functionality on SM dashboard
+            dashboardPage.navigateToDashboard();
+            dashboardPage.clickOnRefreshButton();
+            dashboardPage.validateRefreshPerformance();
+
+            // Verify the latest timestamp should be Just Updated
+            dashboardPage.validateRefreshTimestamp();
+
+            // Verify the status of the schedule is Guidance in Schedules widget
+            resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
+            if (resultListOnWidget.size() > 3 && resultListOnWidget.get(1).contains(",")) {
+                if (resultListOnWidget.get(1).split(",").length > 4) {
+                    String currentStatus = resultListOnWidget.get(1).split(",")[3].replace(" ", "");
+                    if (currentStatus.equals("Guidance"))
+                        SimpleUtils.pass("Liquid Dashboard: The current week's status in 'Schedules' widget is Guidance as expected");
+                    else
+                        SimpleUtils.fail("Liquid Dashboard: The current week's status in 'Schedules' widget is " + currentStatus + ", not Guidance",true);
+                } else
+                    SimpleUtils.fail("Liquid Dashboard: The result item's length in 'Schedules' widget  is incorrect",false);
+            } else
+                SimpleUtils.fail("Liquid Dashboard: The results list's size in 'Schedules' widget is incorrect",false);
+
+            // Verify the status of the schedule is Draft in Overview
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            isWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            resultListInOverview = schedulePage.getOverviewData();
+            if (resultListInOverview.size() > 2 && resultListInOverview.get(1).contains(",")) {
+                if (resultListInOverview.get(1).split(",").length > 4) {
+                    String currentStatus = resultListInOverview.get(1).split(",")[3].replace(" ", "");
+                    if (currentStatus.equals("Draft"))
+                        SimpleUtils.pass("Schedule Page: The current week's status in 'Overview' is Draft as expected");
+                    else
+                        SimpleUtils.fail("Schedule Page: The current week's status in 'Overview' is " + currentStatus + ", not Draft",false);
+                } else
+                    SimpleUtils.fail("Schedule Page: The result item's length in 'Overview' is incorrect",false);
+            } else
+                SimpleUtils.fail("Schedule Page: The results list's size in 'Overview' is incorrect",false);
+
+            // Verify the status of the schedule is Draft in Schedules widget
+            dashboardPage.navigateToDashboard();
+            dashboardPage.clickOnRefreshButton();
+            resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
+            if (resultListOnWidget.size() > 3 && resultListOnWidget.get(1).contains(",")) {
+                if (resultListOnWidget.get(1).split(",").length > 4) {
+                    String currentStatus = resultListOnWidget.get(1).split(",")[3].replace(" ", "");
+                    if (currentStatus.equals("Draft"))
+                        SimpleUtils.pass("Liquid Dashboard: The current week's status in 'Schedules' widget is Draft as expected");
+                    else
+                        SimpleUtils.fail("Liquid Dashboard: The current week's status in 'Schedules' widget is " + currentStatus + ", not Daft",true);
+                } else
+                    SimpleUtils.fail("Liquid Dashboard: The result item's length in 'Schedules' widget  is incorrect",false);
+            } else
+                SimpleUtils.fail("Liquid Dashboard: The results list's size in 'Schedules' widget is incorrect",false);
+
+            // Verify the status of the schedule is Finalized in Overview
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteAllOOOHShiftInWeekView();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
+            schedulePage.saveSchedule();
+            schedulePage.publishActiveSchedule();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            resultListInOverview = schedulePage.getOverviewData();
+            if (resultListInOverview.size() > 2 && resultListInOverview.get(1).contains(",")) {
+                if (resultListInOverview.get(1).split(",").length > 4) {
+                    String currentStatus = resultListInOverview.get(1).split(",")[3].replace(" ", "");
+                    if (currentStatus.equals("Finalized"))
+                        SimpleUtils.pass("Schedule Page: The current week's status in 'Overview' is Finalized as expected");
+                    else
+                        SimpleUtils.fail("Schedule Page: The current week's status in 'Overview' is " + currentStatus + ", not Finalized",false);
+                } else
+                    SimpleUtils.fail("Schedule Page: The result item's length in 'Overview' is incorrect",false);
+            } else
+                SimpleUtils.fail("Schedule Page: The results list's size in 'Overview' is incorrect",false);
+
+            // Verify the status of the schedule is Finalized in Schedules widget
+            dashboardPage.navigateToDashboard();
+            dashboardPage.clickOnRefreshButton();
+            dashboardPage.validateRefreshTimestamp();
+            resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
+            if (resultListOnWidget.size() > 3 && resultListOnWidget.get(1).contains(",")) {
+                if (resultListOnWidget.get(1).split(",").length > 4) {
+                    String currentStatus = resultListOnWidget.get(1).split(",")[3].replace(" ", "");
+                    if (currentStatus.equals("Finalized"))
+                        SimpleUtils.pass("Liquid Dashboard: The current week's status in 'Schedules' widget is Finalized as expected");
+                    else
+                        SimpleUtils.fail("Liquid Dashboard: The current week's status in 'Schedules' widget is " + currentStatus + ", not Finalized",true);
+                } else
+                    SimpleUtils.fail("Liquid Dashboard: The result item's length in 'Schedules' widget  is incorrect",false);
+            } else
+                SimpleUtils.fail("Liquid Dashboard: The results list's size in 'Schedules' widget is incorrect",false);
+
+            // Verify the status of the schedule is Published in Overview
+            liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Schedules.getValue(),linkNames.View_Schedules.getValue());
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            isWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isWeekGenerated)
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            if (!schedulePage.isWeekPublished()) {
+                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                schedulePage.deleteAllOOOHShiftInWeekView();
+                schedulePage.deleteTMShiftInWeekView("Unassigned");
+                schedulePage.saveSchedule();
+                schedulePage.publishActiveSchedule();
+            }
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            resultListInOverview = schedulePage.getOverviewData();
+            String finalizeByDate = "";
+            String scheduleStartDate = "";
+            if (resultListInOverview.size() > 5 && resultListInOverview.get(4).contains(",")) {
+                if (resultListInOverview.get(4).split(",").length > 5) {
+                    String nextStatus = resultListInOverview.get(4).split(",")[3].replace(" ", "");
+                    finalizeByDate = resultListInOverview.get(4).split(",")[4].trim();
+                    scheduleStartDate = resultListInOverview.get(4).split(",")[0].replace("[","");
+                    if (nextStatus.equals("Published"))
+                        SimpleUtils.pass("Schedule Page: The next next next week's status in 'Overview' is Published as expected");
+                    else
+                        SimpleUtils.fail("Schedule Page: The next next next week's status in 'Overview' is " + nextStatus + ", not Published",false);
+                } else
+                    SimpleUtils.fail("Schedule Page: The result item's length in 'Overview' is incorrect",false);
+            } else
+                SimpleUtils.fail("Schedule Page: The results list's size in 'Overview' is incorrect",false);
+
+            // Verify the Finalized Date is correct
+            SimpleUtils.report("The finalized date is " + finalizeByDate);
+            int days = schedulePage.getDaysBetweenFinalizeDateAndScheduleStartDate(finalizeByDate,scheduleStartDate);
+
+            /// Get 'How many days in advance would you finalize schedule' from controls
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            Thread.sleep(2000);
+            controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+            int advanceFinalizeScheduleDaysCount = controlsNewUIPage.getAdvanceScheduleDaysCountToBeFinalize();
+            SimpleUtils.report("Scheduling Policies : 'How many days in advance would you finalize schedule' is set to be '"+advanceFinalizeScheduleDaysCount+"' Days.");
+
+            if (days - advanceFinalizeScheduleDaysCount <= 3)
+                SimpleUtils.pass("Schedule page: The finalized date for the week '" + scheduleStartDate + "' is equal to the Scheduling Policies setting in Controls");
+            else
+                SimpleUtils.fail("Schedule page: The finalized date for the week '" + scheduleStartDate + "' isn't equal to the Scheduling Policies setting in Controls",false);
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

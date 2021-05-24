@@ -547,8 +547,8 @@ public class CinemarkMinorTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            int random1 = (new Random()).nextInt(100);
-            int random2 = (new Random()).nextInt(100);
+            int random1 = (new Random()).nextInt(1000);
+            int random2 = (new Random()).nextInt(1000);
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -574,8 +574,8 @@ public class CinemarkMinorTest extends TestBase {
             loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
                     , String.valueOf(storeManagerCredentials[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            int random3 = (new Random()).nextInt(100);
-            int random4 = (new Random()).nextInt(100);
+            int random3 = (new Random()).nextInt(1000);
+            int random4 = (new Random()).nextInt(1000);
 
             teamPage.goToTeam();
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();

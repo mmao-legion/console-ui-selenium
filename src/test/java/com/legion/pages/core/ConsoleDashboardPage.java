@@ -98,6 +98,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @FindBy(css = ".col-sm-6.text-right")
     private WebElement currentTime;
 
+	@FindBy(css = ".sc-lgWdIC.cRRXke")
+	private List<WebElement> districtTimeOnDashboard;
+
     @FindBy(css = "div.fx-center.welcome-text h1")
     private WebElement detailWelcomeText;
 
@@ -331,7 +334,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void verifyTheWelcomeMessage(String userName) throws Exception {
-		String greetingTime = getTimePeriod(currentTime.getText());
+		String greetingTime = getTimePeriod(districtTimeOnDashboard.get(1).getText());
 		String expectedText = "Good " + greetingTime + ", " + userName + "." + "\n" + "Welcome to Legion" + "\n" + "Your Complete Workforce Engagement Solution";
 		String actualText = "";
 		if(isElementLoaded(detailWelcomeText, 5)){
@@ -347,7 +350,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
-	@FindBy (css = "div.col-sm-6.text-left")
+	@FindBy (css = ".sc-lgWdIC.cRRXke")
 	private WebElement currentDate;
 	@FindBy (css = "div.forecast>div:nth-child(2)")
 	private WebElement budgetSection;
@@ -674,7 +677,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void validateDateAndTimeAfterSelectingDifferentLocation() throws Exception {
 		String dateFormat = "";
-		String dateFromDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
+		String dateFromDashboard = getCurrentDateFromDashboard() + " " + districtTimeOnDashboard.get(1).getText().toUpperCase();
 		if (dateFromDashboard.toLowerCase().contains("am") || dateFromDashboard.toLowerCase().contains("pm")) {
 			dateFormat = "EEEE, MMMM d h:mm a";
 		} else {
@@ -1325,10 +1328,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = ".dashboard-time .text-left")
 	private WebElement districtOnDashboardDM;
 
+	@FindBy (css = ".sc-lgWdIC.cRRXke")
+	private List<WebElement> districtWeekOnDashboardDM;
+
 	@FindBy (css = ".dashboard-time .text-right")
 	private WebElement weekOnDashboardDM;
 
-	@FindBy (css = ".dms-time-stamp")
+	@FindBy (css = ".sc-kLwonV.erBgkb")
 	private WebElement dmsTimeStamp;
 
 	@Override
@@ -1396,8 +1402,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public String getDistrictNameOnDashboard() throws Exception {
 		String districtName = "";
-		if (isElementEnabled(districtOnDashboardDM, 10)) {
-			districtName = districtOnDashboardDM.getText();
+		if (isElementEnabled(districtWeekOnDashboardDM.get(0), 10)) {
+			districtName = districtWeekOnDashboardDM.get(0).getText();
 			SimpleUtils.pass("Dashboard Page: District name is '" + districtName + "'");
 		} else {
 			SimpleUtils.fail("Dashboard Page: District failed to load", true);

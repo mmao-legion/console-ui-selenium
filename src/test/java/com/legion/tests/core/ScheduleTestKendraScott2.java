@@ -854,6 +854,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			dashboardPage.navigateToDashboard();
 			String currentDate = dashboardPage.getCurrentDateFromDashboard();
+			System.out.println(currentDate);
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			schedulePage.validateTheFocusOfWeek(currentDate);
 

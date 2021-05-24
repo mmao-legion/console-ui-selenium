@@ -640,4 +640,5 @@ public interface SchedulePage {
 	public void verifyShiftsDisplayThroughLocationFilter(String childLocation) throws Exception;
 	public void verifyAllChildLocationsShiftsLoadPerformance() throws Exception;
 	public void selectAllChildLocationsToFilter() throws Exception;
+	public int getDaysBetweenFinalizeDateAndScheduleStartDate(String finalizeByDate, String scheduleStartDate) throws Exception;
 }
