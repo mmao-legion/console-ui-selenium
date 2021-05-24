@@ -112,7 +112,7 @@ public class UserManagementTest extends TestBase {
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.clickOnUserManagementTab();
             //check dynamic group item
-//            userManagementPage.iCanSeeDynamicGroupItemTileInUserManagementTab();
+            userManagementPage.iCanSeeDynamicGroupItemTileInUserManagementTab();
             //go to dynamic group
             userManagementPage.goToDynamicGroup();
             if (userManagementPage.verifyLayoutOfDGDisplay()) {
@@ -153,5 +153,47 @@ public class UserManagementTest extends TestBase {
 
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Remove the condition from drop down list if it's selected")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRemoveTheConditionFromDropDownListIfItSelected(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            //go to User Management tab
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            //check dynamic group item
+            userManagementPage.iCanSeeDynamicGroupItemTileInUserManagementTab();
+            //go to dynamic group
+            userManagementPage.goToDynamicGroup();
+            userManagementPage.verifyRemoveTheConditionFromDropDownListIfItSelected();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify manage item in User Management access role tab")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyManageItemInUserManagementAccessRoleTab(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            //go to User Management tab
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            //go to dynamic group
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToAccessRolesTab();
+            userManagementPage.verifyManageItemInUserManagementAccessRoleTab();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
 
 }

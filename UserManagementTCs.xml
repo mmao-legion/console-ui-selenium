@@ -14,7 +14,9 @@
             <class name="com.legion.tests.core.UserManagementTest">
                 <methods>
                     <include name="verifyAddUpdateWorkRole"/>
-                    <!--                    <include name="verifyDynamicGroupFunctionInUserManagementTab"/>-->
+                    <include name="verifyDynamicGroupFunctionInUserManagementTab"/>
+                    <!--                    <include name="verifyRemoveTheConditionFromDropDownListIfItSelected"/>-->
+                    <include name="verifyManageItemInUserManagementAccessRoleTab"/>
                 </methods>
             </class>
         </classes>

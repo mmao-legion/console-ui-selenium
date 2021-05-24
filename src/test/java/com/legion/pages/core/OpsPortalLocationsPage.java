@@ -4,6 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LocationsPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -13,6 +14,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.tests.TestBase.switchToNewWindow;
@@ -2610,5 +2612,146 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		}
 	}
+
+	@Override
+	public void goToLocationDetailsPage(String locationName) throws Exception {
+		searchLocation(locationName);
+		if (locationRows.size() > 0) {
+			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			for (int i = 0; i < locationDetailsLinks.size(); i++) {
+				if (locationDetailsLinks.size() > 0) {
+					click(locationDetailsLinks.get(i));
+					if (isElementEnabled(displayNameInput,5)) {
+						SimpleUtils.pass("Go to location details page successfully");
+						break;
+					}
+				}
+			}
+		}else
+			SimpleUtils.report("There are no locations that match your criteria");
+	}
+	@FindBy(css = "div.lg-tabs__nav-item")
+	private List<WebElement> tabsInLocations;
+	@FindBy(css = "tr[ng-repeat=\"(key,value) in $ctrl.templates\"]")
+	private List<WebElement> rulesRowsInLocationLevel;
+	@Override
+	public void goToConfigurationTabInLocationLevel() {
+		if (areListElementVisible(tabsInLocations,5)) {
+			click(tabsInLocations.get(1));
+			if (areListElementVisible(rulesRowsInLocationLevel,5)) {
+				SimpleUtils.pass("Go to Configuration tab in locations level page successfully");
+			}else
+				SimpleUtils.fail("Failed go to Configuration tab in locations level page ",false);
+		}else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ",false);
+
+	}
+	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+	private List<WebElement> workRolesInLocationLevel;
+
+
+	@Override
+	public void canGoToAssignmentRoleInLocationLevel() {
+		List<WebElement> templateNameLinks = rulesRowsInLocationLevel.get(0).findElements(By.cssSelector("td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
+		if (areListElementVisible(templateNameLinks,5)) {
+			click(templateNameLinks.get(0));
+			if (areListElementVisible(workRolesInLocationLevel,5)) {
+				SimpleUtils.pass("Go to Assignment rules in locations level successfully");
+			}else
+				SimpleUtils.fail("Failed go to Assignment rules in locations page ",false);
+		}else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ",false);
+	}
+
+	@Override
+	public List<HashMap<String, String>> getAssignmentRolesInLocationLevel() {
+		List<HashMap<String,String>> assignmentRulesInfo = new ArrayList<>();
+		HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+		List<WebElement> locationDetailsLinks = workRolesInLocationLevel.get(0).findElements(By.cssSelector("button[type='button']"));
+		if (areListElementVisible(workRolesInLocationLevel,5)&& workRolesInLocationLevel.size()>0) {
+			for (WebElement s: workRolesInLocationLevel) {
+				String aa = s.findElement(By.cssSelector("button[type='button']")).getText().trim();
+				String bb = s.findElement(By.cssSelector("button[type='button']")).getText().trim();
+				workRoleInfoInEachRow.put(s.findElement(By.cssSelector("td:nth-child(i+1)")).getText().trim(),
+						s.findElement(By.cssSelector("td:nth-child(i+1)")).getText().trim());
+			}
+			assignmentRulesInfo.add(workRoleInfoInEachRow);
+			return assignmentRulesInfo;
+
+		}else
+			SimpleUtils.fail("Failed go to Assignment rules in locations level ",false);
+		    return null;
+	}
+
+	@Override
+	public void canGoToOperationHoursInLocationLevel() {
+
+	}
+
+	@Override
+	public String getOHTemplateValueInLocationLevel() {
+		return null;
+	}
+
+	@Override
+	public void canGoToSchedulingRulesInLocationLevel() {
+
+	}
+
+	@Override
+	public String getScheRulesTemplateValueInLocationLevel() {
+		return null;
+	}
+
+	@Override
+	public void canGoToScheduleCollaborationInLocationLevel() {
+
+	}
+
+	@Override
+	public String getScheCollTemplateValueInLocationLevel() {
+		return null;
+	}
+
+	@Override
+	public void canGoToTAInLocationLevel() {
+
+	}
+
+	@Override
+	public String getTATemplateValueInLocationLevel() {
+		return null;
+	}
+
+	@Override
+	public void canGoToSchedulingPoliciesInLocationLevel() {
+
+	}
+
+	@Override
+	public String getSchedulingPoliciesTemplateValueInLocationLevel() {
+		return null;
+	}
+
+	@Override
+	public void canGoToComplianceInLocationLevel() {
+
+	}
+
+	@Override
+	public String getComplianceTemplateValueInLocationLevel() {
+		return null;
+	}
+
+	@Override
+	public void canGoToLaborModelInLocationlevel() {
+
+	}
+
+	@Override
+	public List<HashMap<String, String>> getLaborModelInLocationLevel() {
+		return null;
+	}
+
 }
 

@@ -178,4 +178,40 @@ public interface LocationsPage {
     public int getSearchResultNum() throws Exception;
 
     public void cancelCreatingUpperfield(String level, String upperfieldsName, String upperfieldsId) throws Exception;
+
+    public void goToLocationDetailsPage(String locationName) throws Exception;
+
+    public void goToConfigurationTabInLocationLevel();
+
+    public void canGoToAssignmentRoleInLocationLevel();
+
+    public List<HashMap<String, String>> getAssignmentRolesInLocationLevel();
+
+    public void canGoToOperationHoursInLocationLevel();
+
+    public String getOHTemplateValueInLocationLevel();
+
+    public void canGoToSchedulingRulesInLocationLevel();
+
+    public String getScheRulesTemplateValueInLocationLevel();
+
+    public void canGoToScheduleCollaborationInLocationLevel();
+
+    public String getScheCollTemplateValueInLocationLevel();
+
+    public void canGoToTAInLocationLevel();
+
+    public String getTATemplateValueInLocationLevel();
+
+    public void canGoToSchedulingPoliciesInLocationLevel();
+
+    public String getSchedulingPoliciesTemplateValueInLocationLevel();
+
+    public void canGoToComplianceInLocationLevel();
+
+    public String getComplianceTemplateValueInLocationLevel();
+
+    public void canGoToLaborModelInLocationlevel();
+
+    public List<HashMap<String, String>> getLaborModelInLocationLevel();
 }

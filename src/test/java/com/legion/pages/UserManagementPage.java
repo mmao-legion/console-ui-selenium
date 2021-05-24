@@ -65,4 +65,12 @@ public interface UserManagementPage {
     public void verifyAddNewsFeedGroupWithExistingGroupName(String groupNameForNewsFeed, String description) throws Exception;
 
     public void verifyAddNewsFeedGroupWithDifNameSameCriterias(String groupNameForNewsFeed2, String description, String criteria) throws Exception;
+
+    public void goToUserAndRoles();
+
+    public void goToAccessRolesTab();
+
+    public void verifyManageItemInUserManagementAccessRoleTab() throws Exception;
+
+    public void verifyRemoveTheConditionFromDropDownListIfItSelected() throws Exception;
 }

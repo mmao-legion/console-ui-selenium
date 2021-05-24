@@ -378,7 +378,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 
 		return null;
 	}
-	@FindBy(css = "lg-dashboard-card[title=\"Dynamic User Group\"]")
+	@FindBy(css = "lg-dashboard-card[title=\"Dynamic Group\"]")
 	private  WebElement dynamicGroupCard;
 	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"newsFeedDg\"]")
 	private  WebElement newsfeedDg;
@@ -443,12 +443,13 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	public void goToDynamicGroup() {
 		if (isElementEnabled(dynamicGroupCard,5)) {
 			click(dynamicGroupCard);
-			waitForSeconds(15);
+			waitForSeconds(5);
 			if (isElementEnabled(newsfeedDg,5)) {
 				SimpleUtils.pass("Can go to dynamic group page successfully");
 			}else
 				SimpleUtils.fail("Go to dynamic group page failed",false);
-		}
+		}else
+			SimpleUtils.fail("Dynamic group tile load failed",false);
 	}
 
 	@Override
@@ -789,6 +790,83 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			return true;
 		}
 		return false;
+	}
+
+	@FindBy(css = "lg-dashboard-card[title=\"Users and Roles\"]")
+	private  WebElement usersAndRolesCard;
+	@FindBy(css = "lg-button[label=\"Add New User\"]")
+	private WebElement addNewUserBtn;
+	@Override
+	public void goToUserAndRoles() {
+		if (isElementEnabled(usersAndRolesCard,5)) {
+			click(usersAndRolesCard);
+			waitForSeconds(15);
+			if (isElementEnabled(addNewUserBtn,5)) {
+				SimpleUtils.pass("Can go to Users and Roles page successfully");
+			}else
+				SimpleUtils.fail("Go to Users and Roles page failed",false);
+		}
+	}
+	@FindBy(css = "div.lg-tabs__nav-item:nth-child(2)")
+	private WebElement accessRoleTab;
+	@FindBy(css = "div.group-header-row")
+	private List<WebElement> accessRolePermissions;
+	@Override
+	public void goToAccessRolesTab() {
+		if (isElementEnabled(accessRoleTab,5)) {
+			click(accessRoleTab);
+			if (areListElementVisible(accessRolePermissions,5)) {
+				SimpleUtils.pass("Can go to Access Role successfully");
+			}else
+				SimpleUtils.fail("Go to Access Role failed",false);
+		}
+
+	}
+	@FindBy(css = "div.table-row:nth-child(2)>div:nth-child(1)")
+	private WebElement templateLocalization;
+	@FindBy(css = "div.table-row:nth-child(3)>div:nth-child(1)")
+	private WebElement createEditTemplates;
+	@FindBy(css = "div.table-row:nth-child(4)>div:nth-child(1)")
+	private WebElement operationManagement;
+	@FindBy(css = "div.table-row:nth-child(5)>div:nth-child(1)")
+	private WebElement viewTemplate;
+	@Override
+	public void verifyManageItemInUserManagementAccessRoleTab() throws Exception {
+		if (areListElementVisible(accessRolePermissions,5)) {
+			click(accessRolePermissions.get(4));
+			if (templateLocalization.getText().contains("Template Localization")&& createEditTemplates.getText().contains("Create/Edit Templates")
+			&& operationManagement.getText().contains("Operation Management") &&viewTemplate.getText().contains("View Template") ) {
+				SimpleUtils.pass("Template Localization,Create/Edit Templates,Operation Management and View Template load successfully ");
+			}else
+				SimpleUtils.fail("Template Localization,Create/Edit Templates,Operation Management and View Template load failed",false);
+		}else
+			SimpleUtils.fail("Access Role Permissions items load failed",false);
+	}
+
+	@Override
+	public void verifyRemoveTheConditionFromDropDownListIfItSelected() throws Exception {
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				selectByVisibleText(criteriaSelect.get(0), "Work Role");
+				click(criteriaValue);
+				click(checkboxInCriteriaValue.get(0));
+				click(criteriaValue);
+				//add second criteria
+				click(addMoreBtn);
+				if (areListElementVisible(criteriaSelectItems, 5)) {
+					for (int i = 8; i < criteriaSelectItems.size(); i++) {
+						if (criteriaSelectItems.get(i).getText().contains("Work Role")) {
+							SimpleUtils.fail("Selected condition is still shown",false);
+							break;
+						}
+					}
+				} else
+					SimpleUtils.fail("Value list load failed", false);
+			} else
+				SimpleUtils.fail("Manager dynamic group page load failed", false);
+		}else
+			SimpleUtils.fail("Add Global dynamic group button load failed", false);
 	}
 }
 

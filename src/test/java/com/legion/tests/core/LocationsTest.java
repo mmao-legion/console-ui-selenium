@@ -1896,4 +1896,49 @@ public class LocationsTest extends TestBase {
         }
     }
 
+
+    //added by Estelle to verify overridden function in location level
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can see template value via click template name")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserCanSeeEachTpyeOfTemViaClickingTemName(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String locationName = "OMLocation16";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.canGoToAssignmentRoleInLocationLevel();
+            List<HashMap<String,String>> workRolesListInAssignmentRules = locationsPage.getAssignmentRolesInLocationLevel();
+            locationsPage.canGoToOperationHoursInLocationLevel();
+            String contextInOHTemplate = locationsPage.getOHTemplateValueInLocationLevel();
+            locationsPage.canGoToSchedulingRulesInLocationLevel();
+            String contextInScheRulesTemplate = locationsPage.getScheRulesTemplateValueInLocationLevel();
+            locationsPage.canGoToScheduleCollaborationInLocationLevel();
+            String contextInScheCollTemplate = locationsPage.getScheCollTemplateValueInLocationLevel();
+            locationsPage.canGoToTAInLocationLevel();
+            String contextInTATemplate = locationsPage.getTATemplateValueInLocationLevel();
+            locationsPage.canGoToSchedulingPoliciesInLocationLevel();
+            String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
+            locationsPage.canGoToComplianceInLocationLevel();
+            String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
+            locationsPage.canGoToLaborModelInLocationlevel();
+            List<HashMap<String,String>> workRolesListInLaborModel = locationsPage.getLaborModelInLocationLevel();
+
+
+
+
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }
