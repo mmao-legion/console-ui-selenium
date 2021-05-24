@@ -83,7 +83,7 @@ public class OnboardingTest extends TestBase {
     public void verifyTheOnboardingFlowForRehireAndStatusChangeToOnboardedAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             verifyOnboardingFlow("No", username, password);
-            verifyOnboardingFlowForRehire("No");
+            verifyOnboardingFlowForRehire("No", username, password);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -202,7 +202,7 @@ public class OnboardingTest extends TestBase {
         teamPage.terminateTheTeamMember(true);
     }
 
-    private void verifyOnboardingFlowForRehire(String yesOrNo) throws Exception {
+    private void verifyOnboardingFlowForRehire(String yesOrNo, String username, String password) throws Exception {
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -238,6 +238,43 @@ public class OnboardingTest extends TestBase {
         onboardingPage.openOnboardingPage(invitationCode, firstName, true, getEnterprise());
         // Verify the content of "Log in to your account" page
         onboardingPage.verifyTheContentOfLoginToYourAccountPage();
+
+        // Verify the content on Important Notice from your Employer page
+        if (hasCompanyMobilePolicyURL) {
+            onboardingPage.verifyImportantNoticeFromYourEmployerPageLoaded();
+            onboardingPage.clickOnButtonByLabel(continueLabel);
+        }
+        // Verify the content on Verify Profile page
+        onboardingPage.validateVerifyProfilePageLoaded();
+        onboardingPage.clickOnButtonByLabel(nextLabel);
+
+        //Verify the content on Set Availability page
+        onboardingPage.verifySetAvailabilityPageLoaded();
+        onboardingPage.clickOnNextButtonOnSetAvailabilityPage();
+        onboardingPage.verifyThatsItPageLoaded();
+        onboardingPage.clickOnDoneOnThatsItPage();
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        //Check user status from profile page
+        profileNewUIPage.clickOnUserProfileImage();
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+        String status = profileNewUIPage.getStatusOnProfilePage();
+
+        if(yesOrNo.equalsIgnoreCase("Yes")){
+            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Active, but actual display as "+ status,
+                    status.equalsIgnoreCase("Active"), false);
+        } else
+            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Onboarded, but actual display as "+ status,
+                    status.equalsIgnoreCase("Onboarded"), false);
+
+        // Logout and login as internal admin to terminate the user
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+        verifyLoginToTheSpecificLocation(username, password, currentLocation);
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName(firstName);
+        teamPage.terminateTheTeamMember(true);
     }
 
     private void verifyLoginToTheSpecificLocation(String username, String password, String location) throws Exception {
