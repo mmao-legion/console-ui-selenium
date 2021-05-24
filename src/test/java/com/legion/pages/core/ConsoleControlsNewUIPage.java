@@ -5394,7 +5394,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			teamMemberSearchBox.clear();
 			teamMemberSearchBox.sendKeys(username);
 			teamMemberSearchBox.sendKeys(Keys.ENTER);
-			waitForSeconds(5);
+			waitForSeconds(8);
 			if (usersAndRolesAllUsersRows.size() > 0) {
 				for (WebElement user : usersAndRolesAllUsersRows) {
 					WebElement name = user.findElement(By.cssSelector("lg-button button span span"));
@@ -6070,7 +6070,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 
 	public void selectAccessRoles (List<String> selectAccessRoles) throws Exception {
-		if (isElementLoaded(editButton, 5)) {
+		if (isElementLoaded(editButton, 10)) {
 			click(editButton);
 			if (areListElementVisible(accessRoles, 5) && selectAccessRoles.size()>0) {
 				for (WebElement accessRole : accessRoles){

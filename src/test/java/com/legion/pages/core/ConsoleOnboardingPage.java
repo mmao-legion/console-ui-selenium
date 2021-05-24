@@ -113,10 +113,10 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
             } else {
                 SimpleUtils.fail(invitingMessage + failedLoad, false);
             }
-            if (isElementLoaded(welcomeMsg, 10) && welcomeMsg.getText().equalsIgnoreCase(welcomeBackMsg + firstName + "!")) {
+            if (isElementLoaded(welcomeMsg, 10) && welcomeMsg.getText().equalsIgnoreCase(welcomeBackMsg + getFirstNameForNewHire() + "!")) {
                 SimpleUtils.pass(welcomeMsg.getText() + loadSuccessfully);
             } else {
-                SimpleUtils.fail(welcomeMessage + firstName + "!" + failedLoad, false);
+                SimpleUtils.fail(welcomeMessage + getFirstNameForNewHire() + "!" + failedLoad, false);
             }
             if (isElementLoaded(logInToYourAccount, 5) && logInToYourAccount.getText().equalsIgnoreCase(logInToYourAccountText) &&
             isElementLoaded(userNameInput, 5) && isElementLoaded(rehirePasswordInput, 5) && isElementLoaded(rehireSignInBtn, 5)) {

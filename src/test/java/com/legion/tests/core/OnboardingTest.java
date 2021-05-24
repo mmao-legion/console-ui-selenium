@@ -79,10 +79,25 @@ public class OnboardingTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the onboarding flow when the rehired user has an account and status change to Onboarded (Non-SSO)")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyTheOnboardingFlowForRehireAndStatusChangeToOnboardedAsInternalAdmin(String browser, String username, String password, String location) {
+    public void verifyTheOnboardingFlowForRehireAndStatusChangeToOnboardedAsInternalAdmin(String browser, String username, String password, String location){
         try {
             verifyOnboardingFlow("No", username, password);
             verifyOnboardingFlowForRehire("No", username, password);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the onboarding flow when the rehired user has an account and status change to Active (Non-SSO)")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheOnboardingFlowForRehireAndStatusChangeToActiveAsInternalAdmin(String browser, String username, String password, String location){
+        try {
+            verifyOnboardingFlow("Yes", username, password);
+            verifyOnboardingFlowForRehire("Yes", username, password);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -235,6 +250,7 @@ public class OnboardingTest extends TestBase {
 
         String lastName = MyThreadLocal.getLastNameForNewHire();
         onboardingPage.openOnboardingPage(invitationCode, firstName, true, getEnterprise());
+
         // Verify the content of "Log in to your account" page
         onboardingPage.verifyTheContentOfLoginToYourAccountPage();
         // Verify the rehire can login to the previous legion credential successfully
@@ -257,6 +273,9 @@ public class OnboardingTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.verifyNewTermsOfServicePopUp();
+
         //Check user status from profile page
         profileNewUIPage.clickOnUserProfileImage();
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -270,7 +289,6 @@ public class OnboardingTest extends TestBase {
                     status.equalsIgnoreCase("Onboarded"), false);
 
         // Logout and login as internal admin to terminate the user
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
         verifyLoginToTheSpecificLocation(username, password, currentLocation);
         teamPage.goToTeam();
