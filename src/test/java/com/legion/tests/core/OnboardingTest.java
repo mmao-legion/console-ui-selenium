@@ -20,8 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.getEnterprise;
+import static com.legion.utils.MyThreadLocal.*;
 
 public class OnboardingTest extends TestBase {
 
@@ -238,6 +237,8 @@ public class OnboardingTest extends TestBase {
         onboardingPage.openOnboardingPage(invitationCode, firstName, true, getEnterprise());
         // Verify the content of "Log in to your account" page
         onboardingPage.verifyTheContentOfLoginToYourAccountPage();
+        // Verify the rehire can login to the previous legion credential successfully
+        onboardingPage.verifyRehireLoginToPreviousCredential(getEmailAccount(), newPassword);
     }
 
     private void verifyLoginToTheSpecificLocation(String username, String password, String location) throws Exception {

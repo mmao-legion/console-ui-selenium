@@ -18,4 +18,5 @@ public interface OnboardingPage {
     public void verifyThatsItPageLoaded() throws Exception;
     public void clickOnDoneOnThatsItPage() throws Exception;
     public void verifyTheContentOfLoginToYourAccountPage() throws Exception;
+    public void verifyRehireLoginToPreviousCredential(String username, String password) throws Exception;
 }

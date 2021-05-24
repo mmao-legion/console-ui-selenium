@@ -40,6 +40,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
 
     private String invitingMessage = getEnterprise() + " has invited you to use Legion";
     private String welcomeMessage = "Welcome to Legion, ";
+    private String welcomeBackMsg = "Welcome Back to Legion, ";
     private String loadSuccessfully = " loaded successfully!";
     private String failedLoad = " failed to load!";
     private String expectedCreateAccount = "Create Account";
@@ -49,6 +50,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     private String verifyEmailText = "Please verify your email";
     private String importantNotice = "Important Notice from your Employer";
     private String onboarding = "Onboarding";
+    private String logInToYourAccountText = "Log in to your account";
 
     @FindBy (css = ".user-onboarding-top-ribbon span")
     private WebElement enterpriseInviteMsg;
@@ -94,10 +96,53 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     private WebElement nextBtn;
     @FindBy (css = ".wm-close-link")
     private WebElement closeBtnOnWelcomeDialog;
+    @FindBy (css = "[ng-if*=\"views.LOG_IN\"] .user-onboarding-login-heading")
+    private WebElement logInToYourAccount;
+    @FindBy (css = "[placeholder=\"Email or Username\"]")
+    private WebElement userNameInput;
+    @FindBy (css = "[ng-submit=\"rehireLogin()\"] [placeholder=\"Password\"]")
+    private WebElement rehirePasswordInput;
+    @FindBy (css = "[ng-click=\"rehireLogin()\"]")
+    private WebElement rehireSignInBtn;
 
     @Override
     public void verifyTheContentOfLoginToYourAccountPage() throws Exception {
-        
+        try {
+            if (isElementLoaded(enterpriseInviteMsg, 10) && enterpriseInviteMsg.getText().equalsIgnoreCase(invitingMessage)) {
+                SimpleUtils.pass(enterpriseInviteMsg.getText() + loadSuccessfully);
+            } else {
+                SimpleUtils.fail(invitingMessage + failedLoad, false);
+            }
+            if (isElementLoaded(welcomeMsg, 10) && welcomeMsg.getText().equalsIgnoreCase(welcomeBackMsg + firstName + "!")) {
+                SimpleUtils.pass(welcomeMsg.getText() + loadSuccessfully);
+            } else {
+                SimpleUtils.fail(welcomeMessage + firstName + "!" + failedLoad, false);
+            }
+            if (isElementLoaded(logInToYourAccount, 5) && logInToYourAccount.getText().equalsIgnoreCase(logInToYourAccountText) &&
+            isElementLoaded(userNameInput, 5) && isElementLoaded(rehirePasswordInput, 5) && isElementLoaded(rehireSignInBtn, 5)) {
+                SimpleUtils.pass(logInToYourAccountText + loadSuccessfully);
+            } else {
+                SimpleUtils.fail(logInToYourAccountText + failedLoad, false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Get Exception: " + e.getMessage() + "in Method: verifyTheContentOfLoginToYourAccountPage()", false);
+        }
+    }
+
+    @Override
+    public void verifyRehireLoginToPreviousCredential(String username, String password) throws Exception {
+        try {
+            if (isElementLoaded(userNameInput, 5) && isElementLoaded(rehirePasswordInput, 5) && isElementLoaded(rehireSignInBtn, 5)) {
+                userNameInput.sendKeys(username);
+                rehirePasswordInput.sendKeys(password);
+                clickTheElement(rehireSignInBtn);
+                SimpleUtils.pass("Rehire: Click on Sign In button successfully!");
+            } else {
+                SimpleUtils.fail(logInToYourAccountText + failedLoad, false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Get Exception: " + e.getMessage() + "in Method: verifyRehireLoginToPreviousCredential()", false);
+        }
     }
 
     @Override
