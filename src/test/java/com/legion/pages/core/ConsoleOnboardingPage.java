@@ -96,6 +96,11 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     private WebElement closeBtnOnWelcomeDialog;
 
     @Override
+    public void verifyTheContentOfLoginToYourAccountPage() throws Exception {
+        
+    }
+
+    @Override
     public void validateVerifyProfilePageLoaded() throws Exception {
         try {
             if (isElementLoaded(blueHeader, 10) && blueHeader.getText().equalsIgnoreCase(onboarding)

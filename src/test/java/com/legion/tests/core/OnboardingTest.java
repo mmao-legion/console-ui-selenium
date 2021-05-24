@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class OnboardingTest extends TestBase {
 
@@ -69,6 +70,20 @@ public class OnboardingTest extends TestBase {
     public void verifyTheOnboardingFlowForNewHireAndStatusChangeToOnboardedAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             verifyOnboardingFlow("No", username, password);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the onboarding flow when the rehired user has an account and status change to Onboarded (Non-SSO)")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheOnboardingFlowForRehireAndStatusChangeToOnboardedAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            verifyOnboardingFlow("No", username, password);
+            verifyOnboardingFlowForRehire("No");
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -185,6 +200,44 @@ public class OnboardingTest extends TestBase {
         teamPage.goToTeam();
         teamPage.searchAndSelectTeamMemberByName(firstName);
         teamPage.terminateTheTeamMember(true);
+    }
+
+    private void verifyOnboardingFlowForRehire(String yesOrNo) throws Exception {
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+        teamPage.isProfilePageLoaded();
+        String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        //If testing on rc, set "Preview User" for this user
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.searchAndSelectTeamMemberByName(firstName);
+            List<String> selectAccessRoles = new ArrayList<>();
+            selectAccessRoles.add("Preview User");
+            controlsNewUIPage.selectAccessRoles(selectAccessRoles);
+        }
+
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName(firstName);
+        // Verify manager can invite the user to use Legion, click Re invite to Legion button
+        profileNewUIPage.userProfileInviteTeamMember();
+        //Get invitation code
+        profileNewUIPage.clickOnShowOrHideInvitationCodeButton(true);
+        invitationCode = profileNewUIPage.getInvitationCode();
+
+        String lastName = MyThreadLocal.getLastNameForNewHire();
+        onboardingPage.openOnboardingPage(invitationCode, firstName, true, getEnterprise());
+        // Verify the content of "Log in to your account" page
+        onboardingPage.verifyTheContentOfLoginToYourAccountPage();
     }
 
     private void verifyLoginToTheSpecificLocation(String username, String password, String location) throws Exception {

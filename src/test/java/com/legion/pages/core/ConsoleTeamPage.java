@@ -1701,7 +1701,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	private String checkAndFillInTheFieldsToCreateInviteTM(Map<String, String> newTMDetails) throws Exception {
-		String firstName = newTMDetails.get("FIRST_NAME") + new Random().nextInt(200) + new Random().nextInt(200);
+		String firstName = "";
+		if (getFirstNameForNewHire() == null || getFirstNameForNewHire().isEmpty() || getFirstNameForNewHire().equalsIgnoreCase("")) {
+			firstName = newTMDetails.get("FIRST_NAME") + new Random().nextInt(200) + new Random().nextInt(200);
+		} else {
+			firstName = getFirstNameForNewHire();
+		}
 		setFirstNameForNewHire(firstName);
 		isElementLoadedAndPrintTheMessage(firstNameInput, "FIRST NAME Input");
 		isElementLoadedAndPrintTheMessage(lastNameInput, "LAST NAME Input");
@@ -1719,7 +1724,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		lastNameInput.sendKeys(newTMDetails.get("LAST_NAME"));
 		setLastNameForNewHire(newTMDetails.get("LAST_NAME"));
 		String[] email = newTMDetails.get("EMAIL").split("@");
-		String emailInput = email[0]+"+"+(char)(new Random().nextInt(26) + 96) +(char)(new Random().nextInt(26) + 96)+ + new Random().nextInt(200) +"@"+email[1];
+		String emailInput = "";
+		if (getEmailAccount() == null || getEmailAccount().isEmpty() || getEmailAccount().equals("")) {
+			emailInput = email[0] + "+" + (char) (new Random().nextInt(26) + 96) + (char) (new Random().nextInt(26) + 96) + +new Random().nextInt(200) + "@" + email[1];
+		} else {
+			emailInput = getEmailAccount();
+		}
 		emailInputTM.sendKeys(emailInput);
 		setEmailAccount(emailInput);
 		phoneInput.sendKeys(newTMDetails.get("PHONE"));
@@ -1728,7 +1738,14 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		if (areListElementVisible(realDays, 5) && isElementLoaded(todayHighlighted, 5)) {
 			click(todayHighlighted);
 		}
-		employeeIDInput.sendKeys( "E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200));
+		String employeeId = "";
+		if (getEmployeeIdForNewHire() == null || getEmployeeIdForNewHire().isEmpty() || getEmployeeIdForNewHire().equals("")) {
+			employeeId = "E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200);
+		} else {
+			employeeId = getEmployeeIdForNewHire();
+		}
+		setEmployeeIdForNewHire(employeeId);
+		employeeIDInput.sendKeys(employeeId);
 		selectByVisibleText(jobTitleSelect, newTMDetails.get("JOB_TITLE"));
 		selectByVisibleText(engagementStatusSelect, newTMDetails.get("ENGAGEMENT_STATUS"));
 		selectByVisibleText(hourlySelect, newTMDetails.get("HOURLY"));

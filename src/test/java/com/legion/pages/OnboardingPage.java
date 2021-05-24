@@ -17,4 +17,5 @@ public interface OnboardingPage {
     public void clickOnNextButtonOnSetAvailabilityPage() throws Exception;
     public void verifyThatsItPageLoaded() throws Exception;
     public void clickOnDoneOnThatsItPage() throws Exception;
+    public void verifyTheContentOfLoginToYourAccountPage() throws Exception;
 }
