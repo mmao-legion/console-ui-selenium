@@ -2834,7 +2834,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "div.user-readonly-details")
 	private List<WebElement> userProfileInfoInUserProfileSection;
 
-	@FindBy(css = ".quick-engagement .col-xs-6.label")
+	@FindBy(css = ".quick-engagement .label")
 	private List<WebElement> fieldsInHRProfileInformationSection;
 
 	@FindBy(css = "[box-title=\"Legion Information\"] .col-xs-6.label")
