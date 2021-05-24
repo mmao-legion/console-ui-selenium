@@ -4787,13 +4787,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = "lg-button[ng-click=\"deleteSchedule()\"]")
     private WebElement deleteScheduleButton;
 
-    @FindBy (css = "div.delete-schedule-modal")
+    @FindBy (css = "div.redesigned-modal")
     private WebElement deleteSchedulePopup;
 
-    @FindBy (css = ".delete-schedule-modal input")
+    @FindBy (css = ".redesigned-modal input")
     private WebElement deleteScheduleCheckBox;
 
-    @FindBy (css = "button.delete-schedule-modal-button-delete")
+    @FindBy (css = "button.redesigned-modal-button-ok")
     private WebElement deleteButtonOnDeleteSchedulePopup;
 
     @FindBy (css = "button.delete-schedule-modal-button-cancel")
