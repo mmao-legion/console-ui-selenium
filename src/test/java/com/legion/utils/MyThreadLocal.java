@@ -2,6 +2,7 @@ package com.legion.utils;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.testng.ITestResult;
@@ -84,6 +85,12 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> testRailUser = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailPassword = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailProjectID = new ThreadLocal<>();
+	public static final ThreadLocal<String> emailAccount = new ThreadLocal<>();
+	public static final ThreadLocal<String> firstName = new ThreadLocal<>();
+	public static final ThreadLocal<String> lastName = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> isCompanyPolicySet = new ThreadLocal<>();
+	public static final ThreadLocal<String> phone = new ThreadLocal<>();
+	public static final ThreadLocal<String> employeeId = new ThreadLocal<>();
 
 	public static void setIsNeedEditingOperatingHours(Boolean value) { isNeedUpdateOperatingHours.set(value); }
 
@@ -495,4 +502,16 @@ public class MyThreadLocal {
 	public static String getTestRailPassword() { return testRailPassword.get(); }
 	public static void setTestRailProjectID(String value){ testRailProjectID.set(value); }
 	public static String getTestRailProjectID() { return testRailProjectID.get(); }
+	public static void setEmailAccount(String value) { emailAccount.set(value);}
+	public static String getEmailAccount() { return emailAccount.get();}
+	public static void setFirstNameForNewHire(String value) { firstName.set(value);}
+	public static String getFirstNameForNewHire() { return firstName.get();}
+	public static void setLastNameForNewHire(String value) { lastName.set(value);}
+	public static String getLastNameForNewHire() { return lastName.get();}
+	public static void setCompanyPolicy(Boolean value) { isCompanyPolicySet.set(value);}
+	public static Boolean getCompanyPolicy() { return  isCompanyPolicySet.get();}
+	public static void setPhoneForNewHire(String value) { phone.set(value);}
+	public static String getPhoneForNewHire() { return  phone.get();}
+	public static void setEmployeeIdForNewHire(String value) { employeeId.set(value);}
+	public static String getEmployeeIdForNewHire() { return  employeeId.get();}
 }

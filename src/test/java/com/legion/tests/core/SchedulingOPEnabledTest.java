@@ -242,7 +242,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
             schedulePage.selectWorkRole(scheduleWorkRoles.get("GENERAL MANAGER"));
-            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount3.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            //schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount3.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.selectWorkingDaysOnNewShiftPageByIndex(Integer.parseInt(firstShiftInfo.get(1)));
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
@@ -271,6 +271,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUI();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             //make edits
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
@@ -321,6 +322,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUI();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             //make edits and publish
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
@@ -332,6 +334,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             schedulePage.publishActiveSchedule();
             //make edits and save
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
             schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount3.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());

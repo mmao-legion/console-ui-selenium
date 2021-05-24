@@ -16,6 +16,7 @@
  "DGStage_Enterprise" : "DGStage",
  "ChezAldo_Enterprise" : "ChezAldo",
  "CinemarkWkdy_Enterprise" : "cinemark-wkdy",
+ "Dgch_Enterprise" : "dgch",
  "ALL_LOCATIONS" : "false",
  "GreenTrailCafe_Enterprise" : "greentrailcafe",
  "DEFAULT_USERNAME" : "admin2.a",
@@ -47,5 +48,5 @@
  "legion.cucumber.extent.report.theme" : "dark",
  "legion.cucumber.extent.report.title" : "Legion Cucumber Report",
  "isGridEnabled" : "false",
- "URL" : "http://localhost:4455/wd/hub"
+ "URL" : "http://localhost:4466/wd/hub"
 }

@@ -354,6 +354,7 @@ public interface SchedulePage {
 	void verifyTheShiftHourOnPopupWithScheduleTable(String scheduleShiftTime, String weekDay) throws Exception;
 	String getSpecificShiftWeekDay(int index) throws Exception;
 	void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception;
+	public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception;
 	void verifyClickCancelBtnOnClaimShiftOffer() throws Exception;
 	void verifyTheColorOfCancelClaimRequest(String cancelClaim) throws Exception;
 	void verifyReConfirmDialogPopup() throws Exception;
@@ -442,6 +443,7 @@ public interface SchedulePage {
 	public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception;
 	public void verifyDayHasShifts(String day) throws Exception;
 	public List<String> getDayShifts(String index) throws Exception;
+	public void verifyThePopupMessageOnTop(String expectedMessage) throws Exception;
 	public void verifyNoShiftsForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
 	public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
 	public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception;
@@ -461,6 +463,7 @@ public interface SchedulePage {
 	public void selectAShiftToAssignTM(String username) throws Exception;
 	public void verifyInactiveMessageNWarning(String username, String date) throws Exception;
 	public List<String> getTheShiftInfoByIndex(int index) throws Exception;
+	public List<String> getTheShiftInfoInDayViewByIndex(int index) throws Exception;
 	public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
 	public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
 	public void validateScheduleTableWhenSelectAnyOfGroupByOptions(boolean isLocationGroup) throws Exception;
@@ -480,6 +483,7 @@ public interface SchedulePage {
 	public void verifyEditMealBreakTimeFunctionality(boolean isSavedChange) throws Exception;
 	public void editAndVerifyShiftTime(boolean isSaveChange) throws Exception;
 	public String selectTeamMembers() throws Exception;
+	public String selectTeamMembers(int numOfTM) throws Exception;
 	public void clickOnAnalyzeBtn() throws Exception;
 	public void verifyScheduleVersion(String version) throws Exception;
 	public void closeAnalyzeWindow() throws Exception;

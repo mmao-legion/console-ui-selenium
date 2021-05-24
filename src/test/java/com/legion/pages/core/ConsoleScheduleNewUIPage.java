@@ -2667,6 +2667,42 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return newSelectedTM;
     }
 
+    @FindBy(css = "tr.table-row.ng-scope")
+    List<WebElement> recommendedTMs;
+    public String selectTeamMembers(int numOfTM) throws Exception {
+        String newSelectedTMs = "";
+        waitForSeconds(5);
+        if (areListElementVisible(recommendedScrollTable, 20)) {
+            if (isElementLoaded(selectRecommendedOption, 5)) {
+                String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}", "").split(" ");
+                int recommendedNum= Integer.parseInt(txtRecommendedOption[2]);
+                if (recommendedNum == 0) {
+                    SimpleUtils.report(txtRecommendedOption[0] + " Option no recommended TMs");
+                    click(btnSearchteamMember.get(0));
+                    newSelectedTMs = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
+                } else if (recommendedNum >= numOfTM){
+                    for (int i = 0; i < numOfTM; i++){
+                        click(recommendedTMs.get(i).findElement(By.cssSelector("td.table-field.action-field")));
+                        newSelectedTMs = newSelectedTMs + recommendedTMs.get(i).findElement(By.cssSelector(".worker-edit-search-worker-display-name")).getText() + " ";
+                    }
+                } else {
+                    for (int i = 0; i < recommendedNum; i++){
+                        click(recommendedTMs.get(i).findElement(By.cssSelector("td.table-field.action-field")));
+                        newSelectedTMs = newSelectedTMs + recommendedTMs.get(i).findElement(By.cssSelector(".worker-edit-search-worker-display-name")).getText() + " ";
+                    }
+                }
+            } else {
+                click(btnSearchteamMember.get(0));
+                newSelectedTMs = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
+                SimpleUtils.report("Recommended option not available on page");
+            }
+        } else if (isElementLoaded(textSearch, 5)) {
+            newSelectedTMs = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
+        } else {
+            SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
+        }
+        return newSelectedTMs;
+    }
 
 
     @FindBy(css = ".sch-day-view-shift-overtime-icon")
@@ -4751,10 +4787,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = "lg-button[ng-click=\"deleteSchedule()\"]")
     private WebElement deleteScheduleButton;
 
-    @FindBy (css = "div.modal-content")
+    @FindBy (css = "div.redesigned-modal")
     private WebElement deleteSchedulePopup;
 
-    @FindBy (css = "input-field[type=\"checkbox\"][label*=\"Delete Schedule\"] ng-form")
+    @FindBy (css = ".redesigned-modal input")
     private WebElement deleteScheduleCheckBox;
 
     @FindBy (css = "button.redesigned-modal-button-ok")
@@ -6218,6 +6254,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
+        waitForSeconds(3);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
@@ -6268,6 +6305,69 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
                 //To close the info popup
                 clickTheElement(weekShifts.get(index));
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
+        }
+        if (shiftInfo.size() != 7) {
+            SimpleUtils.fail("Failed to get the shift info!", false);
+        }
+        return shiftInfo;
+    }
+
+    @Override
+    public List<String> getTheShiftInfoInDayViewByIndex(int index) throws Exception {
+        List<String> shiftInfo = new ArrayList<>();
+        if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+            String firstName = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-worker-name")).getText();
+            if (!firstName.equalsIgnoreCase("Open")) {
+                String lastName = getTMDetailNameFromProfilePage(dayViewAvailableShifts.get(index)).split(" ")[1].trim();
+                //String jobTitle = dayViewAvailableShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
+                String jobTitle = "";
+                String shiftTimeWeekView = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-time")).getText();
+                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
+                clickTheElement(infoIcon);
+                String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
+                if (isElementLoaded(shiftDuration, 10)) {
+                    String shiftTime = shiftDuration.getText();
+                    shiftInfo.add(firstName);
+                    shiftInfo.add("");
+                    shiftInfo.add(shiftTime);
+                    shiftInfo.add(jobTitle);
+                    shiftInfo.add(workRole);
+                    shiftInfo.add(lastName);
+                    shiftInfo.add(shiftTimeWeekView);
+                }
+                //To close the info popup
+                clickTheElement(dayViewAvailableShifts.get(index));
+            } else {
+                //SimpleUtils.report("This is an Open Shift");
+                //return shiftInfo;
+                //For open shift
+                //String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
+                String lastName = "";
+                if (firstName.equalsIgnoreCase("Unassigned")){
+                    lastName = "unassigned";
+                } else
+                    lastName = "open";
+                String jobTitle = "";
+                String shiftTimeWeekView = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-time")).getText();
+                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
+                clickTheElement(infoIcon);
+                String workRole = shiftJobTitleAsWorkRole.getText().trim();
+                if (isElementLoaded(shiftDuration, 10)) {
+                    String shiftTime = shiftDuration.getText();
+                    shiftInfo.add(firstName);
+                    //shiftInfo.add(dayIndex);
+                    shiftInfo.add("");
+                    shiftInfo.add(shiftTime);
+                    shiftInfo.add(jobTitle);
+                    shiftInfo.add(workRole);
+                    shiftInfo.add(lastName);
+                    shiftInfo.add(shiftTimeWeekView);
+                }
+                //To close the info popup
+                clickTheElement(dayViewAvailableShifts.get(index));
             }
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
@@ -8635,6 +8735,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception {
+        if (isElementLoaded(agreeClaimBtn, 5)) {
+            click(agreeClaimBtn);
+            String expectedMessage = "Success! This shift is yours, and has been added to your schedule.";
+            verifyThePopupMessageOnTop(expectedMessage);
+        }else {
+            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
+        }
+    }
+
+    @Override
     public void verifyThePopupMessageOnTop(String expectedMessage) throws Exception {
         if (isElementLoaded(msgOnTop, 20)) {
             String message = msgOnTop.getText();
@@ -10377,11 +10489,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public boolean isOfferTMOptionEnabled() throws Exception {
-        if(isElementEnabled(OfferTMS,5) && !OfferTMS.getAttribute("ng-class").toLowerCase().contains("graded-out")){
-            SimpleUtils.pass("Offer Team Members option is enabled on Pop Over Style!");
+        if(isElementEnabled(OfferTMS,5) && !OfferTMS.getAttribute("class").toLowerCase().contains("graded-out")){
             return true;
         } else{
-            SimpleUtils.fail("Offer Team Members option is not enabled on Pop Over Style ",true);
             return false;
         }
     }
@@ -11075,7 +11185,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(className = "sch-grid-container")
     private WebElement scheduleTable;
 
-    @FindBy(css = "div.lg-picker-input")
+    @FindBy(css = "ng-form.input-field-disabled")
     private WebElement currentLocationOnSchedulePage;
 
     @FindBy(css = ".sub-navigation-view-link")
@@ -12332,7 +12442,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         waitForSeconds(3);
         if (areListElementVisible(rowDataInOverviewPage,10)){
-            for (int i=0;i<rowDataInOverviewPage.size();i++){
+            for (int i=0;i<rowDataInOverviewPage.size() && i<4;i++){
                 String[] temp1 = rowDataInOverviewPage.get(i).getText().split("\n");
                 String[] temp2 = Arrays.copyOf(temp1,8);
                 resultList.add(Arrays.toString(temp2));
@@ -12420,10 +12530,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
         String expectedMessageOnWarningModel1 = nickName.toLowerCase()+" is approved for time off";
         String expectedMessageOnWarningModel2 = "please cancel the approved time off before assigning";
+        waitForSeconds(1);
         if (isElementLoaded(alertMessage,15)) {
             String s = alertMessage.getText();
             if (s.toLowerCase().contains(expectedMessageOnWarningModel1) && s.toLowerCase().contains(expectedMessageOnWarningModel2)
                     && isElementLoaded(okButton,5) && okButton.getText().equalsIgnoreCase("OK")){
+                waitForSeconds(1);
                 clickTheElement(okButton);
                 SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
                 if (isElementLoaded(closeSelectTMWindowBtn,5)){
@@ -13297,7 +13409,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (startName != null && startName.getText().equalsIgnoreCase(firstName)) {
                     mouseHoverDragandDrop(start, endElements.get(0));
                     SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + weekDay.getText() + " days Successfully!");
-                    verifyConfirmStoreOpenCloseHours();
+                    //verifyConfirmStoreOpenCloseHours();
                     isDragged = true;
                     break;
                 }
@@ -15108,35 +15220,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(closeButtonOnCustomize);
         } else
             SimpleUtils.fail("The close button on custimize shift page fail to load! ", false);
-    }
-
-    @FindBy(css = ".day-number")
-    private List<WebElement> daysInCalendar;
-
-    @FindBy(css = ".current-month")
-    private List<WebElement> monthsInCalendar;
-
-    @Override
-    public int getDaysBetweenFinalizeDateAndScheduleStartDate(String finalizeByDate, String scheduleStartDate) throws Exception {
-        int days = 0;
-        String finalizeByMonth = "";
-        String finalizeByDay = "";
-        String scheduleStartMonth = "";
-        String scheduleStartDay = "";
-        System.out.println(finalizeByDate);
-        if (finalizeByDate.contains(" ") && finalizeByDate.split(" ").length == 4) {
-            finalizeByMonth = finalizeByDate.split(" ")[2];
-            finalizeByDay = finalizeByDate.split(" ")[3];
-        }
-        if (scheduleStartDate.contains(" ") && scheduleStartDate.split(" ").length == 2) {
-            scheduleStartMonth = scheduleStartDate.split(" ")[0];
-            scheduleStartDay = scheduleStartDate.split(" ")[1];
-        }
-        if (finalizeByMonth.toUpperCase().equals(scheduleStartMonth))
-            days = Integer.valueOf(scheduleStartDay) - Integer.valueOf(finalizeByDay);
-        else
-            days = Integer.valueOf(scheduleStartDay) + 31 - Integer.valueOf(finalizeByDay);
-        return days;
     }
 }
 

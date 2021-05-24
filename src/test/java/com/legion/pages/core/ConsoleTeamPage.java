@@ -647,7 +647,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement applyButton;
 	@FindBy (css = "[ng-click=\"actionClicked('Deactivate')\"]")
 	private WebElement deactivateButton;
-	@FindBy (css = "[ng-click=\"actionClicked('Terminate')\"]")
+	@FindBy (css = "[ng-click=\"actionClicked('Terminate')\"] button")
 	private WebElement terminateButton;
 	@FindBy (css = "[ng-click=\"actionClicked('CancelTerminate')\"]")
 	private WebElement cancelTerminateButton;
@@ -1701,7 +1701,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	private String checkAndFillInTheFieldsToCreateInviteTM(Map<String, String> newTMDetails) throws Exception {
-		String firstName = newTMDetails.get("FIRST_NAME") + new Random().nextInt(200) + new Random().nextInt(200);
+		String firstName = "";
+		if (getFirstNameForNewHire() == null || getFirstNameForNewHire().isEmpty() || getFirstNameForNewHire().equalsIgnoreCase("")) {
+			firstName = newTMDetails.get("FIRST_NAME") + new Random().nextInt(200) + new Random().nextInt(200);
+		} else {
+			firstName = getFirstNameForNewHire();
+		}
+		setFirstNameForNewHire(firstName);
 		isElementLoadedAndPrintTheMessage(firstNameInput, "FIRST NAME Input");
 		isElementLoadedAndPrintTheMessage(lastNameInput, "LAST NAME Input");
 		isElementLoadedAndPrintTheMessage(emailInputTM, "EMAIL Input");
@@ -1716,13 +1722,30 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		isElementLoadedAndPrintTheMessage(homeStoreLabel, "HOME STORE LOCATION");
 		firstNameInput.sendKeys(firstName);
 		lastNameInput.sendKeys(newTMDetails.get("LAST_NAME"));
-		emailInputTM.sendKeys(newTMDetails.get("EMAIL"));
+		setLastNameForNewHire(newTMDetails.get("LAST_NAME"));
+		String[] email = newTMDetails.get("EMAIL").split("@");
+		String emailInput = "";
+		if (getEmailAccount() == null || getEmailAccount().isEmpty() || getEmailAccount().equals("")) {
+			emailInput = email[0] + "+" + (char) (new Random().nextInt(26) + 96) + (char) (new Random().nextInt(26) + 96) + +new Random().nextInt(200) + "@" + email[1];
+		} else {
+			emailInput = getEmailAccount();
+		}
+		emailInputTM.sendKeys(emailInput);
+		setEmailAccount(emailInput);
 		phoneInput.sendKeys(newTMDetails.get("PHONE"));
+		setPhoneForNewHire(newTMDetails.get("PHONE"));
 		click(dateHiredInput);
 		if (areListElementVisible(realDays, 5) && isElementLoaded(todayHighlighted, 5)) {
 			click(todayHighlighted);
 		}
-		employeeIDInput.sendKeys( "E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200));
+		String employeeId = "";
+		if (getEmployeeIdForNewHire() == null || getEmployeeIdForNewHire().isEmpty() || getEmployeeIdForNewHire().equals("")) {
+			employeeId = "E" + new Random().nextInt(200) + new Random().nextInt(200) + new Random().nextInt(200);
+		} else {
+			employeeId = getEmployeeIdForNewHire();
+		}
+		setEmployeeIdForNewHire(employeeId);
+		employeeIDInput.sendKeys(employeeId);
 		selectByVisibleText(jobTitleSelect, newTMDetails.get("JOB_TITLE"));
 		selectByVisibleText(engagementStatusSelect, newTMDetails.get("ENGAGEMENT_STATUS"));
 		selectByVisibleText(hourlySelect, newTMDetails.get("HOURLY"));
@@ -2239,31 +2262,34 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		String removeMsg = "Successfully scheduled removal of Team Member from Roster.";
 		String actualMsg = "";
 		scrollToBottom();
-		click(terminateButton);
-		isTerminateWindowLoaded();
-		if (isElementLoaded(currentDay, 10) && isElementLoaded(applyButton)) {
-			if (isCurrentDay) {
-				click(currentDay);
-			}else {
-				selectAFutureDateFromCalendar();
-			}
-			click(applyButton);
-			if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
-				click(confirmButton);
-				if (isElementLoaded(popupMessage, 15))
-				{
-					actualMsg = popupMessage.getText();
-					if (removeMsg.equals(actualMsg)) {
-						SimpleUtils.pass("Terminate the team member successfully!");
-					}else {
-						SimpleUtils.fail("The pop up message is incorrect!", false);
+		if (isElementLoaded(terminateButton, 10)) {
+			click(terminateButton);
+			isTerminateWindowLoaded();
+			if (isElementLoaded(currentDay, 10) && isElementLoaded(applyButton)) {
+				if (isCurrentDay) {
+					click(currentDay);
+				} else {
+					selectAFutureDateFromCalendar();
+				}
+				click(applyButton);
+				if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+					click(confirmButton);
+					if (isElementLoaded(popupMessage, 15)) {
+						actualMsg = popupMessage.getText();
+						if (removeMsg.equals(actualMsg)) {
+							SimpleUtils.pass("Terminate the team member successfully!");
+						} else {
+							SimpleUtils.fail("The pop up message is incorrect!", false);
+						}
 					}
+				} else {
+					SimpleUtils.fail("Confirm window doesn't show!", false);
 				}
 			} else {
-				SimpleUtils.fail("Confirm window doesn't show!", false);
+				SimpleUtils.fail("Current day and apply button doesn't show!", false);
 			}
-		}else {
-			SimpleUtils.fail("Current day and apply button doesn't show!", false);
+		} else {
+			SimpleUtils.fail("Terminate button failed to load on Profile page!", false);
 		}
 	}
 
@@ -4453,6 +4479,14 @@ private WebElement locationColumn;
 			click(cancelActivateButton);
 			if(isElementLoaded(confirmBtn, 5)) {
 				click(confirmBtn);
+				if (isElementLoaded(popupMessage, 10)) {
+					String actualMessage = popupMessage.getText();
+					if (actualMessage.equals("Successfully cancelled deactivation of Team Member.")) {
+						SimpleUtils.pass("Cancel terminate the Team Member successfully!");
+					} else {
+						SimpleUtils.fail("Failed to activate the Team member", false);
+					}
+				}
 			}
 			if (isElementLoaded(deactivateButton, 5)) {
 				SimpleUtils.report("Cancel deactivate successfully! ");
@@ -4470,6 +4504,14 @@ private WebElement locationColumn;
 			click(cancelTerminateButton);
 			if(isElementLoaded(confirmBtn, 5)) {
 				click(confirmBtn);
+				if (isElementLoaded(popupMessage, 10)) {
+					String actualMessage = popupMessage.getText();
+					if (actualMessage.equals("Successfully cancelled removal of Team Member from Roster.")) {
+						SimpleUtils.pass("Cancel terminate the Team Member successfully!");
+					} else {
+						SimpleUtils.fail("Failed to activate the Team member", false);
+					}
+				}
 			}
 			if (isElementLoaded(terminateButton, 5)) {
 				SimpleUtils.report("Cancel terminate successfully! ");

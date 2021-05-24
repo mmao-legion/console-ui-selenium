@@ -147,11 +147,6 @@
                     <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
                     <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
-                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
-                    <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -243,4 +238,24 @@
         </classes>
     </test>
 
+    <test name="Offer TM Test">
+        <classes>
+            <class name="com.legion.tests.core.OfferTMTest">
+                <methods>
+                    <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
+                    <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
+                    <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
+                    <include name="verifyTMCanBeOfferedAsTeamMember" />
+                    <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

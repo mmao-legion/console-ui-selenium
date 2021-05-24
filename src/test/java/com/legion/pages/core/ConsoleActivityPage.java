@@ -314,6 +314,32 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		}
 	}
 
+	@Override
+	public void verifyApproveShiftOfferRequestAndGetErrorOnActivity(String requestUserName) throws Exception {
+		if (activityCards.size()>0) {
+			for (int i = 0; i<activityCards.size(); i++){
+				WebElement shiftSwapCard = activityCards.get(i);
+				if (i>3){
+					SimpleUtils.fail("Didn't find the right notification!", false);
+				}
+				List<WebElement> actionButtons = shiftSwapCard.findElements(By.className("notification-buttons-button"));
+				WebElement message = shiftSwapCard.findElement(By.className("notification-content-message"));
+				if (actionButtons != null && actionButtons.size() == 2 && message.getText().contains(requestUserName)) {
+					for (WebElement button : actionButtons) {
+						if ("approve".equalsIgnoreCase(button.getText())) {
+							click(button);
+							break;
+						}
+					}
+					// check the status of the card.
+					waitForSeconds(2);
+					SimpleUtils.assertOnFail("Approve and Reject buttons should be there!", areListElementVisible(activityCards.get(i).findElements(By.className("notification-buttons-button"))), false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Failed to find a new Shift Offer activity!", false);
+		}
+	}
 
 
     @Override

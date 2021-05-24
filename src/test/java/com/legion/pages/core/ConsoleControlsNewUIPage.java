@@ -1,8 +1,5 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.loc;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -18,6 +15,8 @@ import com.legion.pages.BasePage;
 import com.legion.pages.ControlsNewUIPage;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+
+import static com.legion.utils.MyThreadLocal.*;
 
 
 public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIPage {
@@ -5391,20 +5390,19 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void searchAndSelectTeamMemberByName(String username) throws Exception {
 		boolean isTeamMemberFound = false;
-		if (isElementLoaded(teamMemberSearchBox, 10)) {
+		if (isElementLoaded(teamMemberSearchBox, 20)) {
 			teamMemberSearchBox.clear();
 			teamMemberSearchBox.sendKeys(username);
-			waitForSeconds(2);
+			teamMemberSearchBox.sendKeys(Keys.ENTER);
+			waitForSeconds(8);
 			if (usersAndRolesAllUsersRows.size() > 0) {
 				for (WebElement user : usersAndRolesAllUsersRows) {
 					WebElement name = user.findElement(By.cssSelector("lg-button button span span"));
-					if (name != null) {
-						if (name.getText().equalsIgnoreCase(username)) {
-							clickTheElement(name);
-							isTeamMemberFound = true;
-							SimpleUtils.pass("Users and Roles Page: User '" + username + "' selected successfully.");
-							break;
-						}
+					if (name != null && name.getText().contains(username)) {
+						clickTheElement(name);
+						isTeamMemberFound = true;
+						SimpleUtils.pass("Users and Roles Page: User '" + username + "' selected successfully.");
+						break;
 					}
 				}
 			}
@@ -6040,4 +6038,79 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 
 	}
+
+	@FindBy(css ="[question-title*=\"onboarded employees\"] span")
+	private List<WebElement> yesNoForAutomaticallySetOnboardedEmployeesToActive;
+	@Override
+	public void setAutomaticallySetOnboardedEmployeesToActive(String yesOrNo) throws Exception {
+		// wait for the value to be loaded
+		waitForSeconds(5);
+		if (areListElementVisible(yesNoForAutomaticallySetOnboardedEmployeesToActive,5)) {
+			for (WebElement option : yesNoForAutomaticallySetOnboardedEmployeesToActive) {
+				if (option.getText().equalsIgnoreCase(yesOrNo)) {
+					clickTheElement(option);
+					overwriteTheSetting();
+					break;
+				}
+			}
+
+			SimpleUtils.pass("Set Automatically set onboarded employees to active? to "+ yesOrNo + " successfully! ");
+		}else
+			SimpleUtils.fail("Automatically set onboarded employees to active? setting fail to load!  ",false);
+	}
+
+	@FindBy(css ="div.lg-input-wrapper__wrapper input-field")
+	private List<WebElement> accessRoles;
+
+	@FindBy(css ="lg-button[label=\"Edit\"]")
+	private WebElement editButton;
+
+	@FindBy(css ="lg-button[label=\"Save\"]")
+	private WebElement saveButton;
+
+
+	public void selectAccessRoles (List<String> selectAccessRoles) throws Exception {
+		if (isElementLoaded(editButton, 10)) {
+			click(editButton);
+			if (areListElementVisible(accessRoles, 5) && selectAccessRoles.size()>0) {
+				for (WebElement accessRole : accessRoles){
+					String accessRoleName = accessRole.findElement(By.tagName("label")).getText();
+					for (String selectAccessRole: selectAccessRoles) {
+						if (accessRoleName.equalsIgnoreCase(selectAccessRole)){
+							WebElement checkBox = accessRole.findElement(By.tagName("input"));
+							if (checkBox.getAttribute("class").contains("ng-empty")){
+								click(checkBox);
+							}
+							break;
+						}
+					}
+				}
+			} else
+				SimpleUtils.fail("Access roles fail to load or select access roles are null! ", false);
+		} else
+			SimpleUtils.fail("Edit button fail to load! ", false);
+		scrollToElement(saveButton);
+		click(saveButton);
+		displaySuccessMessage();
+
+	}
+
+	@FindBy(css ="input-field[label=\"Mobile Policy URL\"] input")
+	private WebElement companyMobilePolicyURL;
+
+	public boolean hasCompanyMobilePolicyURLOrNot () throws Exception {
+		boolean hasCompanyMobilePolicyURL = false;
+		waitForSeconds(10);
+		if (isElementLoaded(companyMobilePolicyURL, 5)){
+			String url = companyMobilePolicyURL.getAttribute("value");
+			if (!url.equals("")){
+				hasCompanyMobilePolicyURL = true;
+			} else
+				SimpleUtils.report("The company mobile policy URL is empty");
+		} else
+			SimpleUtils.fail("The company mobile policy fail to load! ", false);
+		setCompanyPolicy(hasCompanyMobilePolicyURL);
+		return hasCompanyMobilePolicyURL;
+	}
+
 }

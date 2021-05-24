@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import com.google.inject.internal.cglib.reflect.$FastClass;
 import com.legion.utils.JsonUtil;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.openqa.selenium.By;
@@ -3503,7 +3504,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
 //		String d="2021 Apr 15";
 		String d= fromDay;
-		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT+8", dateFormat);
+//		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT+8", dateFormat);
+		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("UTC-7", dateFormat);
+//		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT-4", dateFormat);
 		long to = dateFormat.parse(d).getTime();
 		long from = dateFormat.parse(today).getTime();
 		int days = (int) ((to - from)/(1000 * 60 * 60 * 24));
@@ -3587,6 +3590,19 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}else{
 			SimpleUtils.fail("Edit button is not loaded!", false);
 		}
+	}
+
+	@FindBy(tagName = "lg-eg-status")
+	private WebElement statusOnProfilePage;
+
+	public String getStatusOnProfilePage () throws Exception {
+		String status = "";
+		if (isElementLoaded(statusOnProfilePage, 10)){
+			status = statusOnProfilePage.getAttribute("type");
+			SimpleUtils.pass("Get status from profile page successfully! ");
+		} else
+			SimpleUtils.fail("Status on profile page fail to load! ", false);
+		return status;
 	}
 
 }
