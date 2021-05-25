@@ -21,10 +21,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
 public class DragAndDropTest extends TestBase {
 
     private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
-
+    private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -609,7 +611,19 @@ public class DragAndDropTest extends TestBase {
             //turn on clopening toggle and set hours
             controlsNewUIPage.selectClopeningHours(12);
 
-            // Go to Schedule page, Schedule tab
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            HashMap<String, Object[][]> teamMembers = kendraScott2TeamMembers;
+            String firstNameOfTM1 = teamMembers.get("TeamMember2")[0][0].toString();
+            String workRoleOfTM1 = teamMembers.get("TeamMember2")[0][2].toString();
+
+            teamPage.activeTMAndRejectAllTimeOff(firstNameOfTM1);
+            String firstNameOfTM2 = teamMembers.get("TeamMember3")[0][0].toString();
+            String workRoleOfTM2 = teamMembers.get("TeamMember3")[0][2].toString();
+
+            teamPage.activeTMAndRejectAllTimeOff(firstNameOfTM2);
+
+        // Go to Schedule page, Schedule tab
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -633,24 +647,6 @@ public class DragAndDropTest extends TestBase {
             // Edit the Schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
-            //Get two random TM name from shifts
-            List<String> shiftInfo1 = new ArrayList<>();
-            while(shiftInfo1.size() == 0 || shiftInfo1.get(0).equalsIgnoreCase("open")
-                    || shiftInfo1.get(0).equalsIgnoreCase("unassigned")){
-                shiftInfo1 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
-            }
-            String firstNameOfTM1 = shiftInfo1.get(0);
-            String workRoleOfTM1 = shiftInfo1.get(4);
-            List<String> shiftInfo2 = new ArrayList<>();
-            while(shiftInfo2.size()==0 || shiftInfo2.get(0).equalsIgnoreCase("open")
-                    || shiftInfo2.get(0).equalsIgnoreCase("unassigned")
-                    || shiftInfo2.get(0).equalsIgnoreCase(firstNameOfTM1)
-                    || !shiftInfo2.get(4).equalsIgnoreCase(workRoleOfTM1)){
-                shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
-            }
-
-            String firstNameOfTM2 = shiftInfo2.get(0);
-            String workRoleOfTM2 = shiftInfo2.get(4);
             // Delete all the shifts that are assigned to the team member
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);

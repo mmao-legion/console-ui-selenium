@@ -4660,4 +4660,34 @@ private WebElement locationColumn;
 		} else
 			SimpleUtils.fail("Days in Session end panel fail to load! ", false);
 	}
+
+	public void activeTMAndRejectAllTimeOff(String firstName) throws Exception{
+
+		ProfileNewUIPage profileNewUIPage = new ConsoleProfileNewUIPage();
+		goToTeam();
+
+		if (checkIfTMExists(firstName)) {
+			searchAndSelectTeamMemberByName(firstName);
+			if(isManualOnBoardButtonLoaded()) {
+				manualOnBoardTeamMember();
+			}
+			if (isActivateButtonLoaded()) {
+				clickOnActivateButton();
+				isActivateWindowLoaded();
+				selectADateOnCalendarAndActivate();
+			}
+			if (isCancelTerminateButtonLoaded()) {
+				cancelTMTerminate();
+			}
+			if (isCancelDeactivateButtonLoaded()) {
+				cancelTMDeactivate();
+			}
+
+			profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
+			profileNewUIPage.rejectAllTimeOff();
+			profileNewUIPage.cancelAllTimeOff();
+
+		} else
+			SimpleUtils.fail("The team member '"+ firstName +"' is not exists! ", false);
+	}
 }
