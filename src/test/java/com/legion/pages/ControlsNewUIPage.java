@@ -35,6 +35,8 @@ public interface ControlsNewUIPage {
 
 	public void enableOrDisableScheduleCopyRestriction(String yesOrNo) throws Exception;
 
+	public void setCopyConfig(boolean onOrOff, String toggleName) throws Exception;
+
 	public void setViolationLimit(String value) throws Exception;
 
 	public void setBudgetOverageLimit(String value) throws Exception;
