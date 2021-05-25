@@ -39,6 +39,10 @@ public interface SchedulePage {
 	public void isGenerateScheduleButton() throws Exception;
 	public void validatingScheduleRefreshButton() throws Exception;
 	public void clickOnSchedulePublishButton() throws Exception;
+	public void clickConfirmBtnOnPublishConfirmModal() throws Exception;
+	public boolean isComplianceWarningMsgLoad() throws Exception;
+	public void clickPublishBtn() throws Exception;
+	public String getMessageForComplianceWarningInPublishConfirmModal() throws Exception;
 	public void navigateDayViewToPast(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception;
 	public String clickNewDayViewShiftButtonLoaded() throws Exception;
 	public void customizeNewShiftPage() throws Exception;
@@ -331,6 +335,10 @@ public interface SchedulePage {
 	public void verifyWeeklyOverTimeAndFlag(String teamMemberName) throws Exception;
 
 	public void deleteTMShiftInWeekView(String teamMemberName) throws Exception;
+
+	public WebElement clickOnProfileOfUnassignedShift() throws Exception;
+
+	public void clickOnCancelPublishBtn() throws Exception;
 
 	public void filterScheduleByJobTitle(boolean isWeekView) throws Exception;
 

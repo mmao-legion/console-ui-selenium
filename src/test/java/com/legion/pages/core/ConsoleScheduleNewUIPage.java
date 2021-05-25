@@ -1510,6 +1510,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    @Override
+    public void clickPublishBtn() throws Exception {
+        if(isElementEnabled(publishSheduleButton)){
+            click(publishSheduleButton);
+        } else {
+            SimpleUtils.fail("Publish button is not loaded!", false);
+        }
+    }
+
     // Added by Nora
     @FindBy (css = "span.wm-close-link")
     private WebElement closeButton;
@@ -1638,6 +1647,48 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    @FindBy(css = ".modal-dialog ")
+    WebElement popUpDialog;
+    @FindBy(css = ".modal-dialog .publish-confirm-modal-message-container-compliance")
+    WebElement complianceWarningMsgInConfirmModal;
+    @Override
+    public String getMessageForComplianceWarningInPublishConfirmModal() throws Exception {
+        if (isElementLoaded(popUpDialog, 5)){
+            return popUpDialog.findElement(By.cssSelector(".publish-confirm-modal-message-container-compliance")).getText();
+        } else {
+            SimpleUtils.fail("No dialog pop up.", false);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isComplianceWarningMsgLoad() throws Exception {
+        if (isElementLoaded(complianceWarningMsgInConfirmModal, 10)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void clickConfirmBtnOnPublishConfirmModal() throws Exception {
+        if (isElementLoaded(publishConfirmBtn)) {
+            clickTheElement(publishConfirmBtn);
+            SimpleUtils.pass("Schedule published successfully for week: '" + getActiveWeekText() + "'");
+            // It will pop up a window: Welcome to Legion!
+            if (isElementLoaded(closeButton, 5)) {
+                clickTheElement(closeButton);
+            }
+            if (isElementLoaded(successfulPublishOkBtn)) {
+                clickTheElement(successfulPublishOkBtn);
+            }
+            if (isElementLoaded(publishSheduleButton, 5)) {
+                // Wait for the Publish button to disappear.
+                waitForSeconds(10);
+            }
+        } else {
+            SimpleUtils.fail("Comfirm button is not loaded successfully!", false);
+        }
+    }
 
     public void moveSliderAtSomePoint(String shiftTime, int shiftStartingCount, String startingPoint) throws Exception
     {
@@ -4786,7 +4837,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy (css = "lg-button[ng-click=\"deleteSchedule()\"]")
     private WebElement deleteScheduleButton;
-
+    
     @FindBy (css = "div.redesigned-modal")
     private WebElement deleteSchedulePopup;
 
@@ -8152,6 +8203,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else {
             SimpleUtils.fail("Shift Status not loaded Successfully!", false);
+        }
+    }
+
+    @FindBy(css = "button.sch-publish-cancel-btn")
+    WebElement cancelPublish;
+    @Override
+    public void clickOnCancelPublishBtn() throws Exception {
+        if (isElementLoaded(cancelPublish,10)){
+            clickTheElement(cancelPublish);
+            SimpleUtils.pass("cancel publish button clicked");
+        } else {
+            SimpleUtils.fail("Didn't find cancel button.", false);
         }
     }
 
@@ -14544,6 +14607,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
             int randomIndex = (new Random()).nextInt(profileIcons.size());
             while (!profileIcons.get(randomIndex).getAttribute("src").contains("openShiftImage")){
+                randomIndex = (new Random()).nextInt(profileIcons.size());
+            }
+            clickTheElement(profileIcons.get(randomIndex));
+            selectedShift = shifts.get(randomIndex);
+        } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
+            int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+            while (!dayViewAvailableShifts.get(randomIndex).findElement(By.className("sch-day-view-shift-worker-name")).getText().contains("Open")){
+                randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+            }
+            clickTheElement(scheduleTableWeekViewWorkerDetail.get(randomIndex));
+            selectedShift = dayViewAvailableShifts.get(randomIndex);
+        } else {
+            SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
+        }
+        return selectedShift;
+    }
+
+    @Override
+    public WebElement clickOnProfileOfUnassignedShift() throws Exception {
+        WebElement selectedShift = null;
+        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+            int randomIndex = (new Random()).nextInt(profileIcons.size());
+            while (!profileIcons.get(randomIndex).getAttribute("src").contains("unassignedShiftImage")){
                 randomIndex = (new Random()).nextInt(profileIcons.size());
             }
             clickTheElement(profileIcons.get(randomIndex));
