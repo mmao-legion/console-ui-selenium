@@ -169,14 +169,15 @@
             </class>
         </classes>
     </test>
-    <test name="Schedule Test KendraScott2">
+
+<!--    <test name="Schedule Test KendraScott2">
         <classes>
             <class name="com.legion.tests.core.SmartCopyConfigsInOP">
                 <methods>
-            <!-- template cache       <include name="verifySmartCopyConfigsInOPAsInternalAdmin"/>-->
+            &lt;!&ndash; template cache       <include name="verifySmartCopyConfigsInOPAsInternalAdmin"/>&ndash;&gt;
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
 </suite> <!-- Suite -->
