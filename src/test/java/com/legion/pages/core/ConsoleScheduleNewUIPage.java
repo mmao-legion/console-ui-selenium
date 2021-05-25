@@ -11185,7 +11185,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(className = "sch-grid-container")
     private WebElement scheduleTable;
 
-    @FindBy(css = "ng-form.input-field-disabled")
+    @FindBy(css = "div.lg-picker-input")
     private WebElement currentLocationOnSchedulePage;
 
     @FindBy(css = ".sub-navigation-view-link")
@@ -12358,6 +12358,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public int getDaysBetweenFinalizeDateAndScheduleStartDate(String finalizeByDate, String scheduleStartDate) throws Exception {
+        int days = 0;
+        String finalizeByMonth = "";
+        String finalizeByDay = "";
+        String scheduleStartMonth = "";
+        String scheduleStartDay = "";
+        if (finalizeByDate.contains(" ") && finalizeByDate.split(" ").length == 4) {
+            finalizeByMonth = finalizeByDate.split(" ")[2];
+            finalizeByDay = finalizeByDate.split(" ")[3];
+        }
+        if (scheduleStartDate.contains(" ") && scheduleStartDate.split(" ").length == 2) {
+            scheduleStartMonth = scheduleStartDate.split(" ")[0];
+            scheduleStartDay = scheduleStartDate.split(" ")[1];
+        }
+        if (finalizeByMonth.toUpperCase().equals(scheduleStartMonth))
+            days = Integer.valueOf(scheduleStartDay) - Integer.valueOf(finalizeByDay);
+        else
+            days = Integer.valueOf(scheduleStartDay) + 31 - Integer.valueOf(finalizeByDay);
+        return days;
+    }
+
+    @Override
     public void verifyAllChildLocationsShiftsLoadPerformance() throws Exception {
         if (isElementLoaded(filterPopup,5)) {
             String locationFilterKey = "location";
@@ -12442,7 +12464,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         waitForSeconds(3);
         if (areListElementVisible(rowDataInOverviewPage,10)){
-            for (int i=0;i<rowDataInOverviewPage.size() && i<4;i++){
+            for (int i=0;i<rowDataInOverviewPage.size();i++){
                 String[] temp1 = rowDataInOverviewPage.get(i).getText().split("\n");
                 String[] temp2 = Arrays.copyOf(temp1,8);
                 resultList.add(Arrays.toString(temp2));
