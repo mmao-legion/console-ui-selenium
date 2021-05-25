@@ -1667,9 +1667,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			upperfieldsSearchInputBox.clear();
 			upperfieldsSearchInputBox.sendKeys(districtName);
 			upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
-			waitForSeconds(5);
+			waitForSeconds(15);
 			if (upperfieldRows.size() > 0) {
-
 				for (WebElement upperfield : upperfieldRows) {
 					HashMap<String, String> upperfieldInfoInEachRow = new HashMap<>();
 					upperfieldInfoInEachRow.put("upperfieldName", upperfield.findElement(By.cssSelector("button[type='button']")).getText());
@@ -1837,7 +1836,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private  WebElement removeDGPopupDes;
 	@FindBy(css = "lg-button[label=\"Remove\"]")
 	private  WebElement removeBtnInRemovDGPopup;
-	@FindBy(css = "div.mappingLocation.mt-20.ng-scope > span")
+	@FindBy(css = "div.mappingLocation.mt-20 > span")
 	private  WebElement testBtnInfo;
 
 	@Override
@@ -1878,6 +1877,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				if (!isElementEnabled(formulaInputBox)) {
 					click(criteriaValue);
 					click(checkboxInCriteriaValue.get(0));
+					click(criteriaValue);
 					click(testBtn);
 					String testInfo = testBtnInfo.getText().trim();
 					click(okBtnInSelectLocation);
@@ -1904,7 +1904,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void iCanDeleteExistingWFSDG() {
-		waitForSeconds(20);
+		waitForSeconds(10);
 		if (groupRows.size()>0) {
 			if (areListElementVisible(deleteDGIconInWFS,30)) {
 				for (WebElement dg: deleteDGIconInWFS) {
@@ -2365,7 +2365,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement upperfieldSmartCard;
 	@Override
 	public HashMap<String, Integer> getUpperfieldsSmartCardInfo() {
-
+        waitForSeconds(15);
 		HashMap<String, Integer> upperfieldSmartCardText = new HashMap<>();
 		if (isElementEnabled(upperfieldSmartCard,5)) {
 			upperfieldSmartCardText.put("Enabled", Integer.valueOf(upperfieldSmartCard.findElement(By.cssSelector("div > ng-transclude > table > tbody > tr:nth-child(2)")).getText().split(" ")[1]));
@@ -2621,10 +2621,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			for (int i = 0; i < locationDetailsLinks.size(); i++) {
 				if (locationDetailsLinks.size() > 0) {
 					click(locationDetailsLinks.get(i));
-					if (isElementEnabled(displayNameInput,5)) {
+					if (isElementEnabled(editLocationBtn,5)) {
 						SimpleUtils.pass("Go to location details page successfully");
 						break;
-					}
+					}else
+						SimpleUtils.fail("Go to location details page failed",false);
 				}
 			}
 		}else
@@ -2647,15 +2648,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
-	private List<WebElement> workRolesInLocationLevel;
-
-
+	private List<WebElement> workRolesInAssignmentRulesInLocationLevel;
 	@Override
 	public void canGoToAssignmentRoleInLocationLevel() {
-		List<WebElement> templateNameLinks = rulesRowsInLocationLevel.get(0).findElements(By.cssSelector("td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
+		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
 		if (areListElementVisible(templateNameLinks,5)) {
 			click(templateNameLinks.get(0));
-			if (areListElementVisible(workRolesInLocationLevel,5)) {
+			if (areListElementVisible(workRolesInAssignmentRulesInLocationLevel,5)) {
 				SimpleUtils.pass("Go to Assignment rules in locations level successfully");
 			}else
 				SimpleUtils.fail("Failed go to Assignment rules in locations page ",false);
@@ -2667,90 +2666,219 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public List<HashMap<String, String>> getAssignmentRolesInLocationLevel() {
 		List<HashMap<String,String>> assignmentRulesInfo = new ArrayList<>();
 		HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
-		List<WebElement> locationDetailsLinks = workRolesInLocationLevel.get(0).findElements(By.cssSelector("button[type='button']"));
-		if (areListElementVisible(workRolesInLocationLevel,5)&& workRolesInLocationLevel.size()>0) {
-			for (WebElement s: workRolesInLocationLevel) {
-				String aa = s.findElement(By.cssSelector("button[type='button']")).getText().trim();
-				String bb = s.findElement(By.cssSelector("button[type='button']")).getText().trim();
-				workRoleInfoInEachRow.put(s.findElement(By.cssSelector("td:nth-child(i+1)")).getText().trim(),
-						s.findElement(By.cssSelector("td:nth-child(i+1)")).getText().trim());
+		if (areListElementVisible(workRolesInAssignmentRulesInLocationLevel,5)&& workRolesInAssignmentRulesInLocationLevel.size()>0) {
+			for (WebElement s: workRolesInAssignmentRulesInLocationLevel) {
+				workRoleInfoInEachRow.put(s.findElement(By.cssSelector("button[type='button']")).getText().trim(),
+						s.findElement(By.cssSelector("td:nth-child(2)")).getText().trim());
+				assignmentRulesInfo.add(workRoleInfoInEachRow);
 			}
-			assignmentRulesInfo.add(workRoleInfoInEachRow);
+
 			return assignmentRulesInfo;
 
 		}else
 			SimpleUtils.fail("Failed go to Assignment rules in locations level ",false);
 		    return null;
 	}
-
+    @FindBy(css ="div.collapse-container")
+    private WebElement opContainer;
+//	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+//	private List<WebElement> workRolesInLocationLevel;
 	@Override
 	public void canGoToOperationHoursInLocationLevel() {
-
+		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
+		if (areListElementVisible(templateNameLinks,5)) {
+			click(templateNameLinks.get(1));
+			if (isElementEnabled(opContainer,5)) {
+				SimpleUtils.pass("Go to Operating hours in locations level successfully");
+			}else
+				SimpleUtils.fail("Failed go to  Operating hours in locations page ",false);
+		}else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ",false);
 	}
 
 	@Override
 	public String getOHTemplateValueInLocationLevel() {
+		String templateValue = "";
+		if (isElementEnabled(opContainer,5)) {
+			templateValue = opContainer.getText();
+			return templateValue;
+		}else
+			SimpleUtils.fail("Go to operating hours template failed in location level via template name link",false);
 		return null;
 	}
 
+	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+	private List<WebElement> workRolesInSchedulingRulesInLocationLevel;
 	@Override
 	public void canGoToSchedulingRulesInLocationLevel() {
-
+		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
+		if (areListElementVisible(templateNameLinks,5)) {
+			click(templateNameLinks.get(2));
+			if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel,5)) {
+				SimpleUtils.pass("Go to Scheduling Rules in locations level successfully");
+			}else
+				SimpleUtils.fail("Failed go to  Scheduling Rules in locations page ",false);
+		}else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ",false);
 	}
 
 	@Override
-	public String getScheRulesTemplateValueInLocationLevel() {
-		return null;
-	}
+	public List<HashMap<String,String>> getScheRulesTemplateValueInLocationLevel() {
+		List<HashMap<String,String>> schedulingRulesInfo = new ArrayList<>();
+		HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+		if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel,5)) {
+			for (WebElement s: workRolesInSchedulingRulesInLocationLevel) {
+				String aa = s.findElement(By.cssSelector("button[type='button']")).getText().trim();
+				String bb = s.findElement(By.cssSelector("tr > td")).getText().trim();
+				workRoleInfoInEachRow.put(s.findElement(By.cssSelector("td:nth-child(1)")).getText().trim(),s.findElement(By.cssSelector("button[type='button']")).getText().trim());
+				schedulingRulesInfo.add(workRoleInfoInEachRow);
+			}
 
+			return schedulingRulesInfo;
+		}else
+			SimpleUtils.fail("Failed go to scheduling rules in locations level ",false);
+		    return null;
+	}
+@FindBy(css = "div.onboarding.templates-main-container.ng-scope")
+private  WebElement schedulingCollaborationContainer;
 	@Override
 	public void canGoToScheduleCollaborationInLocationLevel() {
-
+		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
+		if (areListElementVisible(templateNameLinks,5)) {
+			click(templateNameLinks.get(3));
+			if (isElementEnabled(schedulingCollaborationContainer,5)) {
+				SimpleUtils.pass("Go to Schedule Collaboration in locations level successfully");
+			}else
+				SimpleUtils.fail("Failed go to  Schedule Collaboration in locations page ",false);
+		}else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ",false);
 	}
 
 	@Override
 	public String getScheCollTemplateValueInLocationLevel() {
-		return null;
+		String templateValue = "";
+		if (isElementEnabled(schedulingCollaborationContainer,5)) {
+			templateValue = schedulingCollaborationContainer.getText();
+			return templateValue;
+		}else
+			SimpleUtils.fail("Go to Schedule Collaboration template failed in location level via template name link",false);
+		    return null;
+
 	}
 
 	@Override
 	public void canGoToTAInLocationLevel() {
-
+		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
+		if (areListElementVisible(templateNameLinks,5)) {
+			click(templateNameLinks.get(4));
+			if (isElementEnabled(schedulingCollaborationContainer,5)) {
+				SimpleUtils.pass("Go to Time and Attendance in locations level successfully");
+			}else
+				SimpleUtils.fail("Failed go to  Time and Attendance in locations page ",false);
+		}else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ",false);
 	}
 
 	@Override
 	public String getTATemplateValueInLocationLevel() {
-		return null;
+		String templateValue = "";
+		if (isElementEnabled(schedulingCollaborationContainer,5)) {
+			templateValue = schedulingCollaborationContainer.getText();
+			return templateValue;
+		}else
+			SimpleUtils.fail("Go to Time and Attendance template failed in location level via template name link",false);
+		    return null;
 	}
 
 	@Override
 	public void canGoToSchedulingPoliciesInLocationLevel() {
-
+		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
+		if (areListElementVisible(templateNameLinks,5)) {
+			click(templateNameLinks.get(5));
+			if (isElementEnabled(schedulingCollaborationContainer,5)) {
+				SimpleUtils.pass("Go to Scheduling Policies in locations level successfully");
+			}else
+				SimpleUtils.fail("Failed go to  Scheduling Policies in locations page ",false);
+		}else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ",false);
 	}
 
 	@Override
 	public String getSchedulingPoliciesTemplateValueInLocationLevel() {
+		String templateValue = "";
+		if (isElementEnabled(schedulingCollaborationContainer,5)) {
+			templateValue = schedulingCollaborationContainer.getText();
+			return templateValue;
+		}else
+			SimpleUtils.fail("Go to Scheduling Policies template failed in location level via template name link",false);
 		return null;
 	}
 
 	@Override
 	public void canGoToComplianceInLocationLevel() {
-
+		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
+		if (areListElementVisible(templateNameLinks,5)) {
+			click(templateNameLinks.get(6));
+			if (isElementEnabled(schedulingCollaborationContainer,5)) {
+				SimpleUtils.pass("Go to Compliance in locations level successfully");
+			}else
+				SimpleUtils.fail("Failed go to Compliance in locations page ",false);
+		}else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ",false);
 	}
 
 	@Override
 	public String getComplianceTemplateValueInLocationLevel() {
+		String templateValue = "";
+		if (isElementEnabled(schedulingCollaborationContainer,5)) {
+			templateValue = schedulingCollaborationContainer.getText();
+			return templateValue;
+		}else
+			SimpleUtils.fail("Go to Compliance template failed in location level via template name link",false);
 		return null;
 	}
 
 	@Override
-	public void canGoToLaborModelInLocationlevel() {
-
+	public void canGoToLaborModelInLocationLevel() {
+		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
+		if (areListElementVisible(templateNameLinks,5)) {
+			click(templateNameLinks.get(7));
+			if (isElementEnabled(schedulingCollaborationContainer,5)) {
+				SimpleUtils.pass("Go to Compliance in locations level successfully");
+			}else
+				SimpleUtils.fail("Failed go to Compliance in locations page ",false);
+		}else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ",false);
 	}
 
+	@FindBy(css="div.workRoleContainer")
+	private List<WebElement> workRolesInLobarModelInLocationLevel;
 	@Override
 	public List<HashMap<String, String>> getLaborModelInLocationLevel() {
+		List<HashMap<String,String>> assignmentRulesInfo = new ArrayList<>();
+		HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+		if (areListElementVisible(workRolesInLobarModelInLocationLevel,5)) {
+			for (WebElement s: workRolesInLobarModelInLocationLevel) {
+				workRoleInfoInEachRow.put(s.findElement(By.cssSelector("button[type='checkbox']")).getAttribute("class"),
+						s.findElement(By.cssSelector("div:nth-child(2)")).getText().trim());
+				assignmentRulesInfo.add(workRoleInfoInEachRow);
+			}
+			return assignmentRulesInfo;
+		}else
+			SimpleUtils.fail("Failed go to Assignment rules in locations level ",false);
 		return null;
+	}
+
+	@Override
+	public void backToConfigurationTabInLocationLevel() {
+		if (isElementEnabled(backBtnInLocationDetailsPage,5)) {
+			click(backBtnInLocationDetailsPage);
+			if (isElementEnabled(editLocationBtn,5)) {
+				SimpleUtils.pass("Back to location configuration page successfully");
+			}else
+				SimpleUtils.fail("Back to location configuration page failed",false);
+		}else
+			SimpleUtils.fail("Back button in each type of template load failed",false);
 	}
 
 }

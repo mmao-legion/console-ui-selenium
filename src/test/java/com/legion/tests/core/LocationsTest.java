@@ -1917,19 +1917,26 @@ public class LocationsTest extends TestBase {
             locationsPage.goToConfigurationTabInLocationLevel();
             locationsPage.canGoToAssignmentRoleInLocationLevel();
             List<HashMap<String,String>> workRolesListInAssignmentRules = locationsPage.getAssignmentRolesInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
             locationsPage.canGoToOperationHoursInLocationLevel();
             String contextInOHTemplate = locationsPage.getOHTemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
             locationsPage.canGoToSchedulingRulesInLocationLevel();
-            String contextInScheRulesTemplate = locationsPage.getScheRulesTemplateValueInLocationLevel();
+            List<HashMap<String,String>> contextInScheRulesTemplate = locationsPage.getScheRulesTemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
             locationsPage.canGoToScheduleCollaborationInLocationLevel();
             String contextInScheCollTemplate = locationsPage.getScheCollTemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
             locationsPage.canGoToTAInLocationLevel();
             String contextInTATemplate = locationsPage.getTATemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
             locationsPage.canGoToSchedulingPoliciesInLocationLevel();
             String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
             locationsPage.canGoToComplianceInLocationLevel();
             String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
-            locationsPage.canGoToLaborModelInLocationlevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.canGoToLaborModelInLocationLevel();
             List<HashMap<String,String>> workRolesListInLaborModel = locationsPage.getLaborModelInLocationLevel();
 
 

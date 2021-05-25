@@ -193,7 +193,7 @@ public interface LocationsPage {
 
     public void canGoToSchedulingRulesInLocationLevel();
 
-    public String getScheRulesTemplateValueInLocationLevel();
+    public List<HashMap<String,String>> getScheRulesTemplateValueInLocationLevel();
 
     public void canGoToScheduleCollaborationInLocationLevel();
 
@@ -211,7 +211,9 @@ public interface LocationsPage {
 
     public String getComplianceTemplateValueInLocationLevel();
 
-    public void canGoToLaborModelInLocationlevel();
+    public void canGoToLaborModelInLocationLevel();
 
     public List<HashMap<String, String>> getLaborModelInLocationLevel();
+
+    public void backToConfigurationTabInLocationLevel();
 }
