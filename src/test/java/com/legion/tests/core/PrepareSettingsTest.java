@@ -47,11 +47,11 @@ public class PrepareSettingsTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Team page, reject all the time off request
-//        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-//        teamPage.goToTeam();
-//        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-//        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-//        teamPage.rejectAllTeamMembersTimeOffRequest(profileNewUIPage, 0);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            teamPage.rejectAllTeamMembersTimeOffRequest(profileNewUIPage, 0);
 
             dashboardPage.clickOnIntegrationConsoleMenu();
             dashboardPage.verifyIntegrationPageIsLoaded();

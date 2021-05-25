@@ -2485,7 +2485,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void rejectAllTeamMembersTimeOffRequest(ProfileNewUIPage profileNewUIPage, int index) throws Exception {
 		if (areListElementVisible(teamMemberNames, 15)) {
-			while (index < teamMemberNames.size()) {
+			if (index < teamMemberNames.size()) {
 				clickTheElement(teamMemberNames.get(index));
 				String myTimeOffLabel = "Time Off";
 				profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
