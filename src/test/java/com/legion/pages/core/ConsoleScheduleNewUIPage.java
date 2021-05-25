@@ -15329,5 +15329,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else
             SimpleUtils.fail("The close button on custimize shift page fail to load! ", false);
     }
+
+
+    @Override
+    public void verifyShiftTypeInLeft() throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            if (filterLabels.size() == 3 && filterLabels.get(0).getText().equals("SHIFT TYPE"))
+                SimpleUtils.pass("Schedule Page: 'SHIFT TYPE' displays in left");
+            else
+                SimpleUtils.fail("Schedule Page: 'SHIFT TYPE' is not in the left",false);
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+    }
+
+    @Override
+    public void verifyShiftTypeFilters() throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            String shiftTypeFilterKey = "shifttype";
+            ArrayList<WebElement> shiftTypeFilters = getAvailableFilters().get(shiftTypeFilterKey);
+            if (shiftTypeFilters.size() == 7) {
+                if (shiftTypeFilters.get(0).getText().contains("Action Required")
+                        && shiftTypeFilters.get(1).getText().contains("Assigned")
+                        && shiftTypeFilters.get(2).getText().contains("Compliance Review")
+                        && shiftTypeFilters.get(3).getText().contains("Open")
+                        && shiftTypeFilters.get(4).getText().contains("Unavailable")
+                        && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
+                        && shiftTypeFilters.get(6).getText().contains("Unpublished changes")){
+                    SimpleUtils.pass("The shift types display correctly in Filter dropdown list! ");
+                } else
+                    SimpleUtils.fail("The shift types display incorrectly in Filter dropdown list! ", false);
+            } else
+                SimpleUtils.fail("The shift types count display incorrectly in Filter dropdown list! ", false);
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+    }
+
+
 }
 
