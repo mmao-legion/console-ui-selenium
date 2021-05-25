@@ -76,6 +76,15 @@ public class PrepareSettingsTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             controlsPage.gotoControlsPage();
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+
+            //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
+            controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
+            controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption("Yes, all unassigned shifts");
+
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
 
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
@@ -92,10 +101,6 @@ public class PrepareSettingsTest extends TestBase {
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
             SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
             controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
-
-            //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
-            controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
-            controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption("Yes, all unassigned shifts");
 
             controlsPage.gotoControlsPage();
             controlsPage.clickGlobalSettings();
