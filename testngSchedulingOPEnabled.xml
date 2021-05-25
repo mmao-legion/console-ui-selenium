@@ -160,12 +160,20 @@
         </classes>
     </test>
 
-
     <test name="Consolidating Filters Test">
         <classes>
             <class name="com.legion.tests.core.ConsolidatingFiltersTest">
                 <methods>
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Schedule Test KendraScott2">
+        <classes>
+            <class name="com.legion.tests.core.SmartCopyConfigsInOP">
+                <methods>
+            <!-- template cache       <include name="verifySmartCopyConfigsInOPAsInternalAdmin"/>-->
                 </methods>
             </class>
         </classes>

@@ -443,6 +443,7 @@ public interface SchedulePage {
 	public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
 	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception;
 	public void clickCreateScheduleBtn() throws Exception;
+	public boolean isPartialCopyOptionLoaded() throws Exception;
 	public void clickBackBtnAndExitCreateScheduleWindow() throws Exception;
 	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
 	public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
@@ -655,4 +656,6 @@ public interface SchedulePage {
 	public int getDaysBetweenFinalizeDateAndScheduleStartDate(String finalizeByDate, String scheduleStartDate) throws Exception;
 	public void verifyShiftTypeInLeft() throws Exception;
 	public void verifyShiftTypeFilters() throws Exception;
+	public float checkEnterBudgetWindowLoadedForNonDG() throws Exception;
+	public boolean isCopyScheduleWindow() throws Exception;
 }
