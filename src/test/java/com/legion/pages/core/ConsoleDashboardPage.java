@@ -1517,16 +1517,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
 	}
 
-	@FindBy (css = "div.fl-right.width-48.dms-smart-card-4")
+	@FindBy (css = "div.sc-jCPRHX.dUJIHI div")
 	private WebElement projectedComplianceWidget;
 
-	@FindBy (css = "div.dms-number-x-large")
+	@FindBy (css = "div.sc-jhDJEt.ciiXUl")
 	private WebElement totalViolationHrs;
 
-	@FindBy (css = "div.tc.dms-box-item-title-2.dms-box-item-title-color-light")
+	@FindBy (css = "div.sc-enrZtP.fzMHFO")
 	private WebElement totalViolationHrsMessage;
 
-	@FindBy (css = "div[ng-click=\"viewCompliance()\"]")
+	@FindBy (css = "div.sc-jCPRHX.dUJIHI div.sc-dHMioH.jeOpi")
 	private WebElement viewComplianceLink;
 
 
@@ -1542,7 +1542,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	public void verifyTheContentInProjectedComplianceWidget() throws Exception {
 		if(isElementLoaded(projectedComplianceWidget, 5)) {
-			WebElement projectedComplianceWidgetTitle = projectedComplianceWidget.findElement(By.cssSelector("div.dms-box-title.dms-box-item-title-row"));
+			WebElement projectedComplianceWidgetTitle = projectedComplianceWidget.findElement(By.tagName("h3"));
 			if (isElementLoaded(projectedComplianceWidgetTitle, 5)
 					&& projectedComplianceWidgetTitle.getText().equalsIgnoreCase("Projected Compliance")
 					&& isElementLoaded(totalViolationHrs, 5)
@@ -2293,31 +2293,31 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         return weeksInfo;
     }
 
-	@FindBy(css = "div[class=\"dms-row21\"]")
+	@FindBy(css = "div.sc-iuhXDa.dCgdGX")
 	private WebElement scheduleVsGuidanceByDayWidget;
 
-	@FindBy(css = "div[class=\"dms-box-title dms-box-item-title-row ng-binding col-sm-5\"]")
+	@FindBy(css = ".sc-iuhXDa.dCgdGX h3")
 	private WebElement scheduleVsGuidanceByDayWidgetTitle;
 
-	@FindBy(css = "div.dms-budgeted")
+	@FindBy(css = "div.sc-ByBTK.CJgYi")
 	private WebElement budgetedLegend;
 
-	@FindBy(css = "div.dms-scheduled")
+	@FindBy(css = "div.sc-ByBTK.bwdYaU")
 	private WebElement scheduledLegend;
 
 	@FindBy(css = "[class=\"payroll-projection-chart__svg\"] rect")
 	private List<WebElement> scheduleVsGuidanceChartBars;
 
-	@FindBy(css = "[class=\"payroll-projection-chart__svg\"]")
+	@FindBy(css = "div.sc-hfVBHA.cUtlan")
 	private WebElement scheduleVsGuidanceChart;
 
-	@FindBy(css = "div.text-right.dms-legend-text")
+	@FindBy(css = "text.grouped-bar-chart-bottom-label")
 	private WebElement weekInfoOnScheduleVsGuidanceByDayWidget;
 
-	@FindBy(css = "[class=\"dms-row21\"] .dms-caret-large")
+	@FindBy(css = "span.sc-irqbAE.emlRte")
 	private WebElement budgetHoursCaret;
 
-	@FindBy(css = "span.dms-box-item-title.dms-box-item-title-row")
+	@FindBy(css = "div.sc-eCbnUT.sc-kBqmDu.dyrrwW.joLJeQ")
 	private WebElement budgetHoursMessageSpan;
 
 	public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception {
@@ -2331,16 +2331,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception {
-		List<WebElement> legendTexts = scheduleVsGuidanceByDayWidget.findElements(By.cssSelector(".ml-10.dms-legend-text"));
-		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
-		if(isElementLoaded(scheduleVsGuidanceByDayWidgetTitle, 5)
+		List<WebElement> legendTexts = scheduleVsGuidanceByDayWidget.findElements(By.cssSelector(".sc-biHcxt.duZDU"));
+		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector(".sc-dHMioH.jeOpiX"));
+		if(isElementLoaded(scheduleVsGuidanceByDayWidgetTitle, 15)
+				&& areListElementVisible(legendTexts, 5) && legendTexts.size() ==2
 				&& isElementLoaded(budgetedLegend, 5)
 				&& isElementLoaded(scheduledLegend, 5)
-				&& areListElementVisible(legendTexts, 5) && legendTexts.size() ==2
 				&& isElementLoaded(scheduleVsGuidanceChart, 5)
 				&& isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)
 				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromDMView().substring(8))
-				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
+//				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
 				&& isElementLoaded(budgetHoursCaret, 5)
 				&& isElementLoaded(viewSchedulesLink, 5)){
 			SimpleUtils.pass("The content on Schedule Vs Guidance By Day Widget display correctly! ");
@@ -2444,7 +2444,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "i.dms-caret-small")
 	private WebElement budgetHoursCaretOnLocationSummaryWidget;
 
-	@FindBy(css = "span.dms-box-item-unit-trend")
+	@FindBy(css = "div.sc-hLyimJ.bSSXNe")
 	private WebElement budgetHoursMessageOnLocationSummaryWidget;
 
 	public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception {

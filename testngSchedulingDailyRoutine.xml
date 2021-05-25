@@ -176,9 +176,9 @@
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
                     <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
-                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <!--                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />  Blocking by SCH-3800 -->
+                    <!--                     <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800 -->
+                    <!--                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800 -->
                     <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
                 </methods>
