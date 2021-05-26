@@ -713,7 +713,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void clickOnControlsUsersAndRolesSection() throws Exception {
-		if (isElementLoaded(usersAndRolesSection))
+		if (isElementLoaded(usersAndRolesSection, 15))
 			click(usersAndRolesSection);
 		else
 			SimpleUtils.fail("Controls Page: Users and Roles Card not Loaded!", false);
@@ -2842,11 +2842,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void selectUsersAndRolesSubTabByLabel(String label) throws Exception {
 		boolean isTabFound = false;
+		waitForSeconds(3);
 		if (areListElementVisible(subTabs,15) && subTabs.size() > 0) {
 			for (WebElement subTab : subTabs) {
 				if (subTab.getText().toLowerCase().contains(label.toLowerCase())) {
 					click(subTab);
 					isTabFound = true;
+					break;
 				}
 			}
 			if (isTabFound)
@@ -4790,6 +4792,17 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private List<WebElement> weekDays;
 	@FindBy(css = "[value=\"sc.shiftSwapOfferPreference.approvalRequired\"] select")
 	private WebElement swapApprovalRequired;
+	@FindBy(css = "[ng-repeat=\"user in $ctrl.pagedUsers\"]")
+	private List<WebElement> usersInUsersNRoles;
+
+	@Override
+	public void verifyUsersAreLoaded() throws Exception {
+		if (areListElementVisible(usersInUsersNRoles, 60)) {
+			SimpleUtils.pass("Users and Roles: Users are loaded successfully!");
+		} else {
+			SimpleUtils.fail("Users and Roles: Users not loaded successfully!", false);
+		}
+	}
 
 	@Override
 	public void updateSwapAndCoverRequestIsApprovalRequired(String option) throws Exception {
@@ -5740,19 +5753,18 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 
-	@FindBy(css = "collapsible[block-title=\"key\"]")
+	@FindBy(css = ".group.ng-scope")
 	private List<WebElement> accessSections;
 	@Override
 	public void verifyRolePermissionExists(String section, String permission) throws Exception {
 		if (areListElementVisible(accessSections,10)){
 			for (WebElement accessSection : accessSections){
-				if (accessSection.findElement(By.cssSelector(".collapsible-title-text")).getText().equalsIgnoreCase(section)){
-					if (!accessSection.findElement(By.cssSelector(".collapsible")).getAttribute("class").contains("open")){
-						click(accessSection);
+				if (accessSection.findElement(By.tagName("span")).getText().equalsIgnoreCase(section)){
+					if (!accessSection.getAttribute("class").contains("expand")){
+						clickTheElement(accessSection);
 					}
-					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".lg-table tr.ng-scope"));
+					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".table-row"));
 					for (WebElement permissionTemp : permissions){
-						String s = permissionTemp.findElements(By.tagName("td")).get(0).getText();
 						if (permissionTemp.getText().toLowerCase().contains(permission.toLowerCase())){
 							SimpleUtils.pass("Found permission: "+ permission);
 						}
@@ -5768,31 +5780,33 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public void turnOnOrOffSpecificPermissionForSM(String section, String permission, String action) throws Exception {
 		if (areListElementVisible(accessSections,10)){
 			for (WebElement accessSection : accessSections){
-				if (accessSection.findElement(By.cssSelector(".collapsible-title-text")).getText().equalsIgnoreCase(section)){
-					if (!accessSection.findElement(By.cssSelector(".collapsible")).getAttribute("class").contains("open")){
-						click(accessSection);
+				if (accessSection.findElement(By.tagName("span")).getText().equalsIgnoreCase(section)){
+					if (!accessSection.getAttribute("class").contains("expand")){
+						clickTheElement(accessSection.findElement(By.tagName("span")));
 					}
-					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".lg-table tbody tr[ng-repeat=\"permission in value\"]"));
+					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".table-row"));
 					for (WebElement permissionTemp : permissions){
-						String s = permissionTemp.findElement(By.cssSelector("td.ng-binding")).getText();
-						//String a = accessSection.findElements(By.cssSelector(".lg-table tr.ng-scope td.ng-binding")).get(0).getAttribute("text");
+						String s = permissionTemp.getText();
 						if (s!=null && s.toLowerCase().contains(permission.toLowerCase())){
 							SimpleUtils.pass("Found permission: "+ permission);
-							List<WebElement> permissionInputs = permissionTemp.findElements(By.cssSelector("input[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
-							if (permissionInputs.size()>4 && permissionInputs.get(4).getAttribute("class").contains("ng-not-empty")){
-								if (action.equalsIgnoreCase("on")){
-									SimpleUtils.pass(permission + " already on!");
+							List<WebElement> permissionInputs = permissionTemp.findElements(By.tagName("input"));
+							if (permissionInputs.size()>5) {
+								if (permissionInputs.get(5).getAttribute("class").contains("ng-not-empty")) {
+									if (action.equalsIgnoreCase("on")) {
+										SimpleUtils.pass(permission + " already on!");
+									} else {
+										clickTheElement(permissionInputs.get(5));
+										SimpleUtils.pass(permission + " unChecked!");
+									}
 								} else {
-									click(permissionInputs.get(4));
-									SimpleUtils.pass(permission + " unChecked!");
+									if (action.equalsIgnoreCase("off")) {
+										SimpleUtils.pass(permission + " already off!");
+									} else {
+										clickTheElement(permissionInputs.get(5));
+										SimpleUtils.pass(permission + " Checked!");
+									}
 								}
-							} else {
-								if (action.equalsIgnoreCase("off")){
-									SimpleUtils.pass(permission + " already off!");
-								} else {
-									click(permissionInputs.get(4));
-									SimpleUtils.pass(permission + " Checked!");
-								}
+								break;
 							}
 						}
 					}
