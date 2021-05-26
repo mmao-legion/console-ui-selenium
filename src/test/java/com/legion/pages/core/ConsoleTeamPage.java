@@ -4640,7 +4640,7 @@ private WebElement locationColumn;
 				click(sessionEndLeftArrow);
 			} else
 				SimpleUtils.fail("The Session End Arrows fail to load! ", false);
-			endYearAndMonthInCalendar= rangedCalendars.get(0).getText();
+			endYearAndMonthInCalendar= rangedCalendars.get(1).getText();
 			endYearInCalendar = endYearAndMonthInCalendar.split(" ")[1];
 			endMonthInCalendar = endYearAndMonthInCalendar.split(" ")[0].substring(0,3);
 		}
