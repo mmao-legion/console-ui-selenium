@@ -3714,6 +3714,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public boolean isCopyScheduleWindow() throws Exception {
+        if (areListElementVisible(createModalWeeks,10)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception {
         if (weekDaysToClose != null && weekDaysToClose.size() > 0) {
             for (String weekDayToClose : weekDaysToClose) {
@@ -3865,6 +3873,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
     public float checkEnterBudgetWindowLoadedForNonDG() throws Exception {
         float budgetHour = 0;
         String title = "Enter Budget";
@@ -4374,6 +4383,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
             click(backBtnOnCreateScheduleWindow);
             click(backBtnOnCreateScheduleWindow);
+            if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
+                click(backBtnOnCreateScheduleWindow);
+            }
         }else {
             SimpleUtils.fail("Back button on create schedule popup window is not loaded Successfully!", false);
         }
@@ -4825,6 +4837,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return schedulePageBufferHours;
     }
 
+    @FindBy(css = "[ng-class=\"{'active': config.partialSchedule}\"]")
+    WebElement partialCopyOption;
+    @Override
+    public boolean isPartialCopyOptionLoaded() throws Exception {
+        if (isElementLoaded(partialCopyOption, 10)){
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public boolean isComlianceReviewRequiredForActiveWeek() throws Exception {
@@ -4837,7 +4858,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @FindBy (css = "lg-button[ng-click=\"deleteSchedule()\"]")
     private WebElement deleteScheduleButton;
-    
+
     @FindBy (css = "div.redesigned-modal")
     private WebElement deleteSchedulePopup;
 

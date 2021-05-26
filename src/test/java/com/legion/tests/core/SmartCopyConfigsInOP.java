@@ -168,7 +168,7 @@ public class SmartCopyConfigsInOP extends TestBase {
             schedulePage.clickCreateScheduleBtn();
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.checkEnterBudgetWindowLoadedForNonDG();
-            //SimpleUtils.assertOnFail("Partial copy option should load!", schedulePage.isPartialCopyOptionLoaded(), false);
+            SimpleUtils.assertOnFail("Partial copy option should load!", schedulePage.isPartialCopyOptionLoaded(), false);
             schedulePage.clickBackBtnAndExitCreateScheduleWindow();
 
             //Go to OP to turn off Full copy and Partial copy.
@@ -208,7 +208,7 @@ public class SmartCopyConfigsInOP extends TestBase {
             schedulePage.clickCreateScheduleBtn();
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.checkEnterBudgetWindowLoadedForNonDG();
-            //SimpleUtils.assertOnFail("Partial copy option should not load!", !schedulePage.isCopyScheduleWindow(), false);
+            SimpleUtils.assertOnFail("Partial copy option should not load!", !schedulePage.isCopyScheduleWindow(), false);
             schedulePage.clickBackBtnAndExitCreateScheduleWindow();
 
             //Go to OP to turn on Full copy and turn off Partial copy.
@@ -248,7 +248,7 @@ public class SmartCopyConfigsInOP extends TestBase {
             schedulePage.clickCreateScheduleBtn();
             schedulePage.clickNextBtnOnCreateScheduleWindow();
             schedulePage.checkEnterBudgetWindowLoadedForNonDG();
-            //SimpleUtils.assertOnFail("Partial copy option should not load!", !schedulePage.isCopyScheduleWindow(), false);
+            SimpleUtils.assertOnFail("Partial copy option should not load!", !schedulePage.isCopyScheduleWindow(), false);
             schedulePage.clickBackBtnAndExitCreateScheduleWindow();
 
         } catch (Exception e){
