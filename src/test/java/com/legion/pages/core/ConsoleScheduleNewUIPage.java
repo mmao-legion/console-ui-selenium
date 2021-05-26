@@ -14719,8 +14719,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if(! totalCalendarDaySummary.equals("0")){
                     dayHasShifts.add(dayAbbr);
                     SimpleUtils.pass(dayAbbr + " has shifts!");
-                }else {
-                    SimpleUtils.fail(dayAbbr + " don't have shifts!",true);
                 }
             }
         }

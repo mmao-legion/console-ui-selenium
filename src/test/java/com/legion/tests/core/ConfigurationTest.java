@@ -752,4 +752,99 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "E2E -> Verify the time of day setting in advance staffing rule")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void timeOfDayInADVRuleE2E(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "FionaUsing";
+            String workRole = "New Work Role";
+            String shiftsNumber = "7";
+            List<String> days = new ArrayList<String>(){{
+                add("Friday");
+                add("Sunday");
+            }};
+
+            List<String> daysAbbr = new ArrayList<String>();
+            List<String> daysHasShifts = new ArrayList<String>();
+            String startOffsetTime = "30";
+            String startTimeUnit = "minutes";
+            String startEventPoint = "after";
+            String startEvent = "Opening Operating Hours";
+            String endOffsetTime = "35";
+            String endTimeUnit = "minutes";
+            String endEventPoint = "before";
+            String endEvent = "Closing Operating Hours";
+            String locationName = "AutoUsingByFiona1";
+
+            HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
+
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeLocation(locationName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.deleteAllScheduleRules();
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.validateAdvanceStaffingRuleShowing(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
+                    endEvent,endOffsetTime,endEventPoint,endTimeUnit,days,shiftsNumber);
+            configurationPage.clickOnSaveButtonOnScheduleRulesListPage();
+            configurationPage.publishNowTemplate();
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            SimpleUtils.assertOnFail("Console Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            locationSelectorPage.changeLocation(locationName);
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            // Navigate to a week
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            // create the schedule if not created
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUI();
+            hoursNTeamMembersCount = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
+
+            List<String> numbersOfShifts = new ArrayList<String>();
+            //get abbr for each work day which have shifts
+            for(String day:days){
+                String dayAbbr = day.substring(0,3);
+                daysAbbr.add(dayAbbr);
+            }
+            //get TMs number for each work day which have shifts
+            for(String dayAbbr:daysAbbr){
+                String hoursAndTeamMembersCount = hoursNTeamMembersCount.get(dayAbbr);
+                String tms = hoursAndTeamMembersCount.trim().split(" ")[1];
+                String numberOfTM = tms.substring(3);
+                numbersOfShifts.add(numberOfTM);
+            }
+            for(String numbersOfShift:numbersOfShifts){
+                if(numbersOfShift.equals(shiftsNumber)){
+                    SimpleUtils.pass("Shifts number is aligned with advance staffing rule");
+                }else {
+                    SimpleUtils.fail("Shifts number is NOT aligned with advance staffing rule",false);
+                }
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

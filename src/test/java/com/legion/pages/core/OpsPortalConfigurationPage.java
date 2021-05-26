@@ -1387,10 +1387,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception{
-		if(isElementEnabled(saveButton,3)){
+		if(isElementEnabled(saveButton,5)){
 			clickTheElement(saveButton);
-			waitForSeconds(20);
-			if (isElementEnabled(dropdownArrowButton,5)) {
+			waitForSeconds(30);
+			if (isElementEnabled(dropdownArrowBTN,5) || isElementEnabled(dropdownArrowBTN,5)) {
 				SimpleUtils.pass("User click on save button on schedule rule list page successfully!");
 			}else
 				SimpleUtils.fail("User failed to click on save button on schedule rule list page!",false);
@@ -1496,6 +1496,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			} else
 				SimpleUtils.fail("Publish template confirm modal fail to load", false);
 		}else
+
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
 	}
 
@@ -1507,7 +1508,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			click(publishTemplateButton);
 			if(isElementLoaded(publishTemplateConfirmModal, 5)){
 				click(okButtonOnPublishTemplateConfirmModal);
-				displaySuccessMessage();
+//				displaySuccessMessage();
 			}
 		}else
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
