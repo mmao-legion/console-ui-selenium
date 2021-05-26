@@ -2648,10 +2648,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Profile Page: 'My Shift Preference' edit container 'Save' button not loaded.", false);
 	}
 
-	@FindBy(xpath = "//span[contains(text(),\"MINOR\")]")
+	@FindBy(xpath = "//div[contains(text(),\"MINOR\")]")
 	private WebElement minorField;
 
-	@FindBy(xpath = "//span[contains(text(),\"MINOR\")]/../../following-sibling::div[1]/div[2]")
+	@FindBy(xpath = "//div[contains(text(),\"MINOR\")]/../div[2]")
 	private WebElement minorValue;
 
 	@FindBy(css = ".lg-toast__highlight-text")

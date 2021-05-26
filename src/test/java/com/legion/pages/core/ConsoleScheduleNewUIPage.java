@@ -11320,12 +11320,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @FindBy (css = ".lg-picker-input__wrapper .lg-search-options")
+    private WebElement locationDropDown;
+
     @Override
     public void validateTheDisabilityOfLocationSelectorOnSchedulePage() throws Exception {
         if (isElementLoaded(currentLocationOnSchedulePage, 10)) {
             if (currentLocationOnSchedulePage.getCssValue("cursor").contains("not-allowed"))
                 SimpleUtils.pass("My Schedule Page: Location selector is in disable mode");
-            else SimpleUtils.fail("My Schedule Page: Location selector is still enabled", true);
+            else if (getDriver().findElement(By.cssSelector("lg-upperfield-navigation div.lg-picker-input")).equals(currentLocationOnSchedulePage)) {
+                click(currentLocationOnSchedulePage);
+                if (isElementLoaded(locationDropDown,5))
+                    SimpleUtils.pass("My Schedule Page: Location selector can be clicked since upperfield is enabled");
+                else
+                    SimpleUtils.fail("My Schedule Page: Location selector cannot be clicked when upperfield is enabled", true);
+            } else
+                SimpleUtils.fail("My Schedule Page: Location selector is still in enable mode",false);
         } else SimpleUtils.fail("My Schedule Page: Location failed to load", true);
     }
 

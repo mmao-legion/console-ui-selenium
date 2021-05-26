@@ -3823,7 +3823,7 @@ private WebElement locationColumn;
 	@Override
 	public void verifyDatesInCalendar(String startDate, String EndDate) throws Exception {
 		if (areListElementVisible(summerDays,5)) {
-			DateFormat df = new SimpleDateFormat( "MM-dd-yyyy");
+			DateFormat df = new SimpleDateFormat( "MM/dd/yyyy");
 			Date start = df.parse(startDate);
 			Date end = df.parse(EndDate);
 		    Long betweenDays = (end.getTime() - start.getTime()) / (1000L*3600L*24L);
