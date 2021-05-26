@@ -113,10 +113,6 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public void changeLocation(String locationName)
     {
-        // Avoid "New Feature Enhancement" pops up
-        waitForSeconds(6);
-        //getDriver().navigate().refresh();
-        //waitForSeconds(2);
         try {
             Boolean isLocationMatched = false;
             if (isElementLoaded(activeConsoleMenuItem, 10)) {
@@ -490,7 +486,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                         if (isElementLoaded(upperFieldDropDownButton, 5)) {
                             if (availableLocationCardsName.size() != 0) {
                                 for (WebElement upperFieldCardName : availableLocationCardsName) {
-                                    if (upperFieldCardName.getText().equalsIgnoreCase(upperFieldName)) {
+                                    if (upperFieldCardName.getText().trim().equalsIgnoreCase(upperFieldName)) {
                                         isUpperFieldMatched = true;
                                         clickTheElement(upperFieldCardName);
                                         SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
@@ -505,13 +501,13 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                     }else {
                                         SimpleUtils.fail("Search " + upperFieldType + "input failed to load!", false);
                                     }
-                                    waitForSeconds(3);
+                                    waitForSeconds(4);
                                     availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
                                     if (availableLocationCardsName.size() > 0) {
                                         for (WebElement upperFieldCardName : availableLocationCardsName) {
-                                            if (upperFieldCardName.getText().equalsIgnoreCase(upperFieldName)) {
+                                            if (upperFieldCardName.getText().trim().equalsIgnoreCase(upperFieldName)) {
                                                 isUpperFieldMatched = true;
-                                                click(upperFieldCardName);
+                                                clickTheElement(upperFieldCardName);
                                                 SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
                                                 break;
                                             }

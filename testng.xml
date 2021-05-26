@@ -420,6 +420,8 @@
                     <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
                     <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
                     <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
+                    <include name="verifyComplianceWarningInPublishConfirmModalAsInternalAdmin" />
+                    <include name="verifyHrsOverBudgetInPublishConfirmModalForNonDGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

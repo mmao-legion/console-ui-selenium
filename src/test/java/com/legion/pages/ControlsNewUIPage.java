@@ -35,6 +35,8 @@ public interface ControlsNewUIPage {
 
 	public void enableOrDisableScheduleCopyRestriction(String yesOrNo) throws Exception;
 
+	public void setCopyConfig(boolean onOrOff, String toggleName) throws Exception;
+
 	public void setViolationLimit(String value) throws Exception;
 
 	public void setBudgetOverageLimit(String value) throws Exception;
@@ -304,4 +306,5 @@ public interface ControlsNewUIPage {
 	public void setAutomaticallySetOnboardedEmployeesToActive(String yesOrNo) throws Exception;
 	public void selectAccessRoles (List<String> selectAccessRoles) throws Exception;
 	public boolean hasCompanyMobilePolicyURLOrNot () throws Exception;
+	public void verifyUsersAreLoaded() throws Exception;
 }

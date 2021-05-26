@@ -120,7 +120,7 @@
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                     <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
                     <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
-                    <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" />
+<!--                    <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" Blocked by SCH-4238/>-->
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
@@ -159,5 +159,25 @@
             </class>
         </classes>
     </test>
+
+    <test name="Consolidating Filters Test">
+        <classes>
+            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
+                <methods>
+                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+<!--    <test name="Schedule Test KendraScott2">
+        <classes>
+            <class name="com.legion.tests.core.SmartCopyConfigsInOP">
+                <methods>
+            &lt;!&ndash; template cache       <include name="verifySmartCopyConfigsInOPAsInternalAdmin"/>&ndash;&gt;
+                </methods>
+            </class>
+        </classes>
+    </test>-->
 
 </suite> <!-- Suite -->

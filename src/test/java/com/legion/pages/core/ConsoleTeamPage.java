@@ -2485,7 +2485,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void rejectAllTeamMembersTimeOffRequest(ProfileNewUIPage profileNewUIPage, int index) throws Exception {
 		if (areListElementVisible(teamMemberNames, 15)) {
-			while (index < teamMemberNames.size()) {
+			if (index < teamMemberNames.size()) {
 				clickTheElement(teamMemberNames.get(index));
 				String myTimeOffLabel = "Time Off";
 				profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
@@ -4659,5 +4659,35 @@ private WebElement locationColumn;
 			}
 		} else
 			SimpleUtils.fail("Days in Session end panel fail to load! ", false);
+	}
+
+	public void activeTMAndRejectAllTimeOff(String firstName) throws Exception{
+
+		ProfileNewUIPage profileNewUIPage = new ConsoleProfileNewUIPage();
+		goToTeam();
+
+		if (checkIfTMExists(firstName)) {
+			searchAndSelectTeamMemberByName(firstName);
+			if(isManualOnBoardButtonLoaded()) {
+				manualOnBoardTeamMember();
+			}
+			if (isActivateButtonLoaded()) {
+				clickOnActivateButton();
+				isActivateWindowLoaded();
+				selectADateOnCalendarAndActivate();
+			}
+			if (isCancelTerminateButtonLoaded()) {
+				cancelTMTerminate();
+			}
+			if (isCancelDeactivateButtonLoaded()) {
+				cancelTMDeactivate();
+			}
+
+			profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
+			profileNewUIPage.rejectAllTimeOff();
+			profileNewUIPage.cancelAllTimeOff();
+
+		} else
+			SimpleUtils.fail("The team member '"+ firstName +"' is not exists! ", false);
 	}
 }

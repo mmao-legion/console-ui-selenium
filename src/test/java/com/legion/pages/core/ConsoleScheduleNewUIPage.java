@@ -1510,6 +1510,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    @Override
+    public void clickPublishBtn() throws Exception {
+        if(isElementEnabled(publishSheduleButton)){
+            click(publishSheduleButton);
+        } else {
+            SimpleUtils.fail("Publish button is not loaded!", false);
+        }
+    }
+
     // Added by Nora
     @FindBy (css = "span.wm-close-link")
     private WebElement closeButton;
@@ -1638,6 +1647,48 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
+    @FindBy(css = ".modal-dialog ")
+    WebElement popUpDialog;
+    @FindBy(css = ".modal-dialog .publish-confirm-modal-message-container-compliance")
+    WebElement complianceWarningMsgInConfirmModal;
+    @Override
+    public String getMessageForComplianceWarningInPublishConfirmModal() throws Exception {
+        if (isElementLoaded(popUpDialog, 5)){
+            return popUpDialog.findElement(By.cssSelector(".publish-confirm-modal-message-container-compliance")).getText();
+        } else {
+            SimpleUtils.fail("No dialog pop up.", false);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isComplianceWarningMsgLoad() throws Exception {
+        if (isElementLoaded(complianceWarningMsgInConfirmModal, 10)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void clickConfirmBtnOnPublishConfirmModal() throws Exception {
+        if (isElementLoaded(publishConfirmBtn)) {
+            clickTheElement(publishConfirmBtn);
+            SimpleUtils.pass("Schedule published successfully for week: '" + getActiveWeekText() + "'");
+            // It will pop up a window: Welcome to Legion!
+            if (isElementLoaded(closeButton, 5)) {
+                clickTheElement(closeButton);
+            }
+            if (isElementLoaded(successfulPublishOkBtn)) {
+                clickTheElement(successfulPublishOkBtn);
+            }
+            if (isElementLoaded(publishSheduleButton, 5)) {
+                // Wait for the Publish button to disappear.
+                waitForSeconds(10);
+            }
+        } else {
+            SimpleUtils.fail("Comfirm button is not loaded successfully!", false);
+        }
+    }
 
     public void moveSliderAtSomePoint(String shiftTime, int shiftStartingCount, String startingPoint) throws Exception
     {
@@ -3663,6 +3714,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public boolean isCopyScheduleWindow() throws Exception {
+        if (areListElementVisible(createModalWeeks,10)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception {
         if (weekDaysToClose != null && weekDaysToClose.size() > 0) {
             for (String weekDayToClose : weekDaysToClose) {
@@ -3814,6 +3873,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
     public float checkEnterBudgetWindowLoadedForNonDG() throws Exception {
         float budgetHour = 0;
         String title = "Enter Budget";
@@ -4323,6 +4383,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
             click(backBtnOnCreateScheduleWindow);
             click(backBtnOnCreateScheduleWindow);
+            if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
+                click(backBtnOnCreateScheduleWindow);
+            }
         }else {
             SimpleUtils.fail("Back button on create schedule popup window is not loaded Successfully!", false);
         }
@@ -4774,6 +4837,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return schedulePageBufferHours;
     }
 
+    @FindBy(css = "[ng-class=\"{'active': config.partialSchedule}\"]")
+    WebElement partialCopyOption;
+    @Override
+    public boolean isPartialCopyOptionLoaded() throws Exception {
+        if (isElementLoaded(partialCopyOption, 10)){
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public boolean isComlianceReviewRequiredForActiveWeek() throws Exception {
@@ -4796,7 +4868,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = "button.redesigned-modal-button-ok")
     private WebElement deleteButtonOnDeleteSchedulePopup;
 
-    @FindBy (css = "button.delete-schedule-modal-button-cancel")
+    @FindBy (css = ".redesigned-modal-button-cancel")
     private WebElement cancelButtonOnDeleteSchedulePopup;
 
     @Override
@@ -6067,13 +6139,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> weekShifts;
     @FindBy(css = ".schedule-summary-search-dropdown [icon*=\"search.svg'\"]")
     private WebElement searchLocationBtn;
-    @FindBy(css = ".delete-schedule-modal")
-    private WebElement deleteScheduleDialog;
-    @FindBy(css = ".delete-schedule-modal-icon")
+    @FindBy(css = ".redesigned-modal-icon")
     private WebElement deleteScheduleIcon;
-    @FindBy(css = ".delete-schedule-modal-title")
+    @FindBy(css = ".redesigned-modal-title")
     private WebElement deleteScheduleTitle;
-    @FindBy(css = ".delete-schedule-modal-text")
+    @FindBy(css = ".redesigned-modal-text")
     private WebElement deleteScheduleText;
     @FindBy(css = "[label*=\"Delete Schedule\"]")
     private WebElement deleteScheduleWeek;
@@ -6084,7 +6154,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(cancelButtonOnDeleteSchedulePopup, 5)) {
                 clickTheElement(cancelButtonOnDeleteSchedulePopup);
                 waitForSeconds(2);
-                if (!isElementLoaded(deleteScheduleDialog, 5)) {
+                if (!isElementLoaded(deleteSchedulePopup, 5)) {
                     SimpleUtils.pass("Delete Schedule Dialog: Click on Cancel button successfully!");
                 } else {
                     SimpleUtils.fail("Delete Schedule Dialog: Click on Cancel button failed!", false);
@@ -6149,7 +6219,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyTheContentOnDeleteScheduleDialog(String confirmMessage, String week) throws Exception {
-        if (isElementLoaded(deleteScheduleDialog, 10)) {
+        if (isElementLoaded(deleteSchedulePopup, 10)) {
             if (isElementLoaded(deleteScheduleIcon, 5) && isElementLoaded(deleteScheduleTitle, 5)
                     && deleteScheduleTitle.getText().equalsIgnoreCase("Delete Schedule") && isElementLoaded(deleteScheduleTitle, 5)
                     && deleteScheduleText.getText().equalsIgnoreCase(confirmMessage) && isElementLoaded(deleteScheduleWeek, 5)
@@ -8152,6 +8222,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }else {
             SimpleUtils.fail("Shift Status not loaded Successfully!", false);
+        }
+    }
+
+    @FindBy(css = "button.sch-publish-cancel-btn")
+    WebElement cancelPublish;
+    @Override
+    public void clickOnCancelPublishBtn() throws Exception {
+        if (isElementLoaded(cancelPublish,10)){
+            clickTheElement(cancelPublish);
+            SimpleUtils.pass("cancel publish button clicked");
+        } else {
+            SimpleUtils.fail("Didn't find cancel button.", false);
         }
     }
 
@@ -14571,6 +14653,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return selectedShift;
     }
 
+    @Override
+    public WebElement clickOnProfileOfUnassignedShift() throws Exception {
+        WebElement selectedShift = null;
+        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+            int randomIndex = (new Random()).nextInt(profileIcons.size());
+            while (!profileIcons.get(randomIndex).getAttribute("src").contains("unassignedShiftImage")){
+                randomIndex = (new Random()).nextInt(profileIcons.size());
+            }
+            clickTheElement(profileIcons.get(randomIndex));
+            selectedShift = shifts.get(randomIndex);
+        } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
+            int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+            while (!dayViewAvailableShifts.get(randomIndex).findElement(By.className("sch-day-view-shift-worker-name")).getText().contains("Open")){
+                randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+            }
+            clickTheElement(scheduleTableWeekViewWorkerDetail.get(randomIndex));
+            selectedShift = dayViewAvailableShifts.get(randomIndex);
+        } else {
+            SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
+        }
+        return selectedShift;
+    }
+
     public WebElement clickOnProfileIconOfShiftInDayView(String openOrNot) throws Exception {
         WebElement selectedShift = null;
         if(isProfileIconsEnable()&& areListElementVisible(dayViewAvailableShifts, 10)) {
@@ -15253,5 +15358,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else
             SimpleUtils.fail("The close button on custimize shift page fail to load! ", false);
     }
+
+
+    @Override
+    public void verifyShiftTypeInLeft() throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            if (filterLabels.size() == 3 && filterLabels.get(0).getText().equals("SHIFT TYPE"))
+                SimpleUtils.pass("Schedule Page: 'SHIFT TYPE' displays in left");
+            else
+                SimpleUtils.fail("Schedule Page: 'SHIFT TYPE' is not in the left",false);
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+    }
+
+    @Override
+    public void verifyShiftTypeFilters() throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            String shiftTypeFilterKey = "shifttype";
+            ArrayList<WebElement> shiftTypeFilters = getAvailableFilters().get(shiftTypeFilterKey);
+            if (shiftTypeFilters.size() == 7) {
+                if (shiftTypeFilters.get(0).getText().contains("Action Required")
+                        && shiftTypeFilters.get(1).getText().contains("Assigned")
+                        && shiftTypeFilters.get(2).getText().contains("Compliance Review")
+                        && shiftTypeFilters.get(3).getText().contains("Open")
+                        && shiftTypeFilters.get(4).getText().contains("Unavailable")
+                        && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
+                        && shiftTypeFilters.get(6).getText().contains("Unpublished changes")){
+                    SimpleUtils.pass("The shift types display correctly in Filter dropdown list! ");
+                } else
+                    SimpleUtils.fail("The shift types display incorrectly in Filter dropdown list! ", false);
+            } else
+                SimpleUtils.fail("The shift types count display incorrectly in Filter dropdown list! ", false);
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+    }
+
+
 }
 

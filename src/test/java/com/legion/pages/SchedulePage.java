@@ -39,6 +39,10 @@ public interface SchedulePage {
 	public void isGenerateScheduleButton() throws Exception;
 	public void validatingScheduleRefreshButton() throws Exception;
 	public void clickOnSchedulePublishButton() throws Exception;
+	public void clickConfirmBtnOnPublishConfirmModal() throws Exception;
+	public boolean isComplianceWarningMsgLoad() throws Exception;
+	public void clickPublishBtn() throws Exception;
+	public String getMessageForComplianceWarningInPublishConfirmModal() throws Exception;
 	public void navigateDayViewToPast(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception;
 	public String clickNewDayViewShiftButtonLoaded() throws Exception;
 	public void customizeNewShiftPage() throws Exception;
@@ -332,6 +336,10 @@ public interface SchedulePage {
 
 	public void deleteTMShiftInWeekView(String teamMemberName) throws Exception;
 
+	public WebElement clickOnProfileOfUnassignedShift() throws Exception;
+
+	public void clickOnCancelPublishBtn() throws Exception;
+
 	public void filterScheduleByJobTitle(boolean isWeekView) throws Exception;
 
 	public void filterScheduleByWorkRoleAndJobTitle(boolean isWeekView) throws Exception;
@@ -435,6 +443,7 @@ public interface SchedulePage {
 	public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
 	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception;
 	public void clickCreateScheduleBtn() throws Exception;
+	public boolean isPartialCopyOptionLoaded() throws Exception;
 	public void clickBackBtnAndExitCreateScheduleWindow() throws Exception;
 	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
 	public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
@@ -645,4 +654,8 @@ public interface SchedulePage {
 	public void verifyAllChildLocationsShiftsLoadPerformance() throws Exception;
 	public void selectAllChildLocationsToFilter() throws Exception;
 	public int getDaysBetweenFinalizeDateAndScheduleStartDate(String finalizeByDate, String scheduleStartDate) throws Exception;
+	public void verifyShiftTypeInLeft() throws Exception;
+	public void verifyShiftTypeFilters() throws Exception;
+	public float checkEnterBudgetWindowLoadedForNonDG() throws Exception;
+	public boolean isCopyScheduleWindow() throws Exception;
 }

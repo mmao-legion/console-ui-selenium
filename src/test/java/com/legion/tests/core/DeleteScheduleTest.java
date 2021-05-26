@@ -210,15 +210,18 @@ public class DeleteScheduleTest extends TestBase {
             // Verify SM doesn't have "Schedule: Manage Schedule" permission
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-            controlsPage.gotoControlsPage();
-            controlsPage.clickGlobalSettings();
-
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+            SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
             controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.verifyUsersAreLoaded();
+            controlsPage.clickGlobalSettings();
             String accessRoleTab = "Access Roles";
             controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
             String permissionSection = "Schedule";
-            String permission = "Schedule: Manage Schedule";
+            String permission = "Manage Schedule";
             String actionOff = "off";
             String actionOn = "on";
             cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
@@ -234,15 +237,10 @@ public class DeleteScheduleTest extends TestBase {
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
             boolean isScheduleCreated = schedulePage.isWeekGenerated();
-            if (!isScheduleCreated) {
-                schedulePage.createScheduleForNonDGFlowNewUI();
-            }
-
-            boolean isSchedulePublished = schedulePage.isCurrentScheduleWeekPublished();
-            if (isSchedulePublished) {
+            if (isScheduleCreated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
-                schedulePage.createScheduleForNonDGFlowNewUI();
             }
+            schedulePage.createScheduleForNonDGFlowNewUI();
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
@@ -266,8 +264,9 @@ public class DeleteScheduleTest extends TestBase {
             // Login as Internal admin, add the permission back
             loginToLegionAndVerifyIsLoginDone(username, password, location);
             controlsPage.gotoControlsPage();
-            controlsPage.clickGlobalSettings();
             controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.verifyUsersAreLoaded();
+            controlsPage.clickGlobalSettings();
             controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
             cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
             controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission, actionOn);
@@ -291,15 +290,16 @@ public class DeleteScheduleTest extends TestBase {
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             controlsPage.gotoControlsPage();
-            controlsPage.clickGlobalSettings();
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.verifyUsersAreLoaded();
+            controlsPage.clickGlobalSettings();
             String accessRoleTab = "Access Roles";
             controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
             String permissionSection = "Schedule";
-            String permission1 = "Schedule: Manage Schedule";
-            String permission2 = "Schedule: Publish Schedule";
+            String permission1 = "Manage Schedule";
+            String permission2 = "Publish Schedule";
             String actionOff = "off";
             String actionOn = "on";
             cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
@@ -349,8 +349,9 @@ public class DeleteScheduleTest extends TestBase {
             // Login as Internal admin, add the permission back
             loginToLegionAndVerifyIsLoginDone(username, password, location);
             controlsPage.gotoControlsPage();
-            controlsPage.clickGlobalSettings();
             controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.verifyUsersAreLoaded();
+            controlsPage.clickGlobalSettings();
             controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
             cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
             controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission1, actionOn);

@@ -147,6 +147,8 @@
                     <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
                     <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyComplianceWarningInPublishConfirmModalAsInternalAdmin" />
+                    <include name="verifyHrsOverBudgetInPublishConfirmModalForNonDGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -254,6 +256,16 @@
                     <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
                     <include name="verifyTMCanBeOfferedAsTeamMember" />
                     <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Consolidating Filters Test">
+        <classes>
+            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
+                <methods>
+                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
