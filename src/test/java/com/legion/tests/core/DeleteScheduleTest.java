@@ -290,10 +290,11 @@ public class DeleteScheduleTest extends TestBase {
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             controlsPage.gotoControlsPage();
-            controlsPage.clickGlobalSettings();
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.verifyUsersAreLoaded();
+            controlsPage.clickGlobalSettings();
             String accessRoleTab = "Access Roles";
             controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
             String permissionSection = "Schedule";
@@ -348,8 +349,9 @@ public class DeleteScheduleTest extends TestBase {
             // Login as Internal admin, add the permission back
             loginToLegionAndVerifyIsLoginDone(username, password, location);
             controlsPage.gotoControlsPage();
-            controlsPage.clickGlobalSettings();
             controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.verifyUsersAreLoaded();
+            controlsPage.clickGlobalSettings();
             controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
             cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
             controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission1, actionOn);

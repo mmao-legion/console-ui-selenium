@@ -22,7 +22,7 @@
         <classes>
             <class name="com.legion.tests.core.DashboardTestKendraScott2">
                 <methods>
-                    <include name="verifyDashboardFunctionalityAsTeamMember" />
+<!--                    <include name="verifyDashboardFunctionalityAsTeamMember" Blocked by SCH-4019/>-->
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
@@ -138,7 +138,7 @@
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>
-                    <include name="verificationOfMySchedulePageAsTeamMember" />
+<!--                    <include name="verificationOfMySchedulePageAsTeamMember" Blocked by SCH-4019/>-->
                     <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
@@ -175,7 +175,7 @@
         <classes>
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
-                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
+<!--                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" Blocked by SCH-4071/>-->
                     <!--                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />  Blocking by SCH-3800 -->
                     <!--                     <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800 -->
                     <!--                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800 -->
