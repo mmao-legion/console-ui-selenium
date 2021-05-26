@@ -4847,7 +4847,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = "button.redesigned-modal-button-ok")
     private WebElement deleteButtonOnDeleteSchedulePopup;
 
-    @FindBy (css = "button.delete-schedule-modal-button-cancel")
+    @FindBy (css = ".redesigned-modal-button-cancel")
     private WebElement cancelButtonOnDeleteSchedulePopup;
 
     @Override
@@ -6118,13 +6118,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> weekShifts;
     @FindBy(css = ".schedule-summary-search-dropdown [icon*=\"search.svg'\"]")
     private WebElement searchLocationBtn;
-    @FindBy(css = ".delete-schedule-modal")
-    private WebElement deleteScheduleDialog;
-    @FindBy(css = ".delete-schedule-modal-icon")
+    @FindBy(css = ".redesigned-modal-icon")
     private WebElement deleteScheduleIcon;
-    @FindBy(css = ".delete-schedule-modal-title")
+    @FindBy(css = ".redesigned-modal-title")
     private WebElement deleteScheduleTitle;
-    @FindBy(css = ".delete-schedule-modal-text")
+    @FindBy(css = ".redesigned-modal-text")
     private WebElement deleteScheduleText;
     @FindBy(css = "[label*=\"Delete Schedule\"]")
     private WebElement deleteScheduleWeek;
@@ -6135,7 +6133,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(cancelButtonOnDeleteSchedulePopup, 5)) {
                 clickTheElement(cancelButtonOnDeleteSchedulePopup);
                 waitForSeconds(2);
-                if (!isElementLoaded(deleteScheduleDialog, 5)) {
+                if (!isElementLoaded(deleteSchedulePopup, 5)) {
                     SimpleUtils.pass("Delete Schedule Dialog: Click on Cancel button successfully!");
                 } else {
                     SimpleUtils.fail("Delete Schedule Dialog: Click on Cancel button failed!", false);
@@ -6200,7 +6198,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyTheContentOnDeleteScheduleDialog(String confirmMessage, String week) throws Exception {
-        if (isElementLoaded(deleteScheduleDialog, 10)) {
+        if (isElementLoaded(deleteSchedulePopup, 10)) {
             if (isElementLoaded(deleteScheduleIcon, 5) && isElementLoaded(deleteScheduleTitle, 5)
                     && deleteScheduleTitle.getText().equalsIgnoreCase("Delete Schedule") && isElementLoaded(deleteScheduleTitle, 5)
                     && deleteScheduleText.getText().equalsIgnoreCase(confirmMessage) && isElementLoaded(deleteScheduleWeek, 5)
