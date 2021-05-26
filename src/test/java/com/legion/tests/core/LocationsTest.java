@@ -1903,7 +1903,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can see template value via click template name")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUserCanSeeEachTpyeOfTemViaClickingTemName(String browser, String username, String password, String location) throws Exception {
+    public void verifyUserCanSeeEachTypeOfTemViaClickingTemName(String browser, String username, String password, String location) throws Exception {
 
         try{
             String locationName = "OMLocation16";
@@ -1915,34 +1915,78 @@ public class LocationsTest extends TestBase {
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            locationsPage.canGoToAssignmentRoleInLocationLevel();
-            List<HashMap<String,String>> workRolesListInAssignmentRules = locationsPage.getAssignmentRolesInLocationLevel();
-            locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToOperationHoursInLocationLevel();
-            String contextInOHTemplate = locationsPage.getOHTemplateValueInLocationLevel();
-            locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToSchedulingRulesInLocationLevel();
-            List<HashMap<String,String>> contextInScheRulesTemplate = locationsPage.getScheRulesTemplateValueInLocationLevel();
-            locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToScheduleCollaborationInLocationLevel();
-            String contextInScheCollTemplate = locationsPage.getScheCollTemplateValueInLocationLevel();
-            locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToTAInLocationLevel();
-            String contextInTATemplate = locationsPage.getTATemplateValueInLocationLevel();
-            locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToSchedulingPoliciesInLocationLevel();
-            String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
-            locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToComplianceInLocationLevel();
-            String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
-            locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToLaborModelInLocationLevel();
-            List<HashMap<String,String>> workRolesListInLaborModel = locationsPage.getLaborModelInLocationLevel();
+            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+//            locationsPage.canGoToAssignmentRoleInLocationLevel();
+//            List<HashMap<String,String>> workRolesListInAssignmentRules = locationsPage.getAssignmentRolesInLocationLevel();
+//            locationsPage.backToConfigurationTabInLocationLevel();
+//            locationsPage.canGoToOperationHoursInLocationLevel();
+//            String contextInOHTemplate = locationsPage.getOHTemplateValueInLocationLevel();
+//            locationsPage.backToConfigurationTabInLocationLevel();
+//            locationsPage.canGoToSchedulingRulesInLocationLevel();
+//            List<HashMap<String,String>> contextInScheRulesTemplate = locationsPage.getScheRulesTemplateValueInLocationLevel();
+//            locationsPage.backToConfigurationTabInLocationLevel();
+//            locationsPage.canGoToScheduleCollaborationInLocationLevel();
+//            String contextInScheCollTemplate = locationsPage.getScheCollTemplateValueInLocationLevel();
+//            locationsPage.backToConfigurationTabInLocationLevel();
+//            locationsPage.canGoToTAInLocationLevel();
+//            String contextInTATemplate = locationsPage.getTATemplateValueInLocationLevel();
+//            locationsPage.backToConfigurationTabInLocationLevel();
+//            locationsPage.canGoToSchedulingPoliciesInLocationLevel();
+//            String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
+//            locationsPage.backToConfigurationTabInLocationLevel();
+//            locationsPage.canGoToComplianceInLocationLevel();
+//            String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
+//            locationsPage.backToConfigurationTabInLocationLevel();
+//            locationsPage.canGoToLaborModelInLocationLevel();
+//            List<HashMap<String,String>> workRolesListInLaborModel = locationsPage.getLaborModelInLocationLevel();
+//            locationsPage.backToConfigurationTabInLocationLevel();
 
+//            //go to configuration tab to check each template value in template level
+//            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+//            userManagementPage.clickOnUserManagementTab();
+//            userManagementPage.goToWorkRolesTile();
+//            List<HashMap<String,String>> workRolesListInGlobal = locationsPage.getAssignmentRolesInLocationLevel();
+//            //get template level info of Operation hours
+//            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+//            configurationPage.goToConfigurationPage();
+//            configurationPage.clickOnConfigurationCrad(templateInfo.get(1).get("Template Type"));
+//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(1).get("Template Name"),"edit");
+//            String specificOHInTemplateLevel = locationsPage.getOHTemplateValueInLocationLevel();
+//            //get template level info of Scheduling rules
+//            configurationPage.goToConfigurationPage();
+//            configurationPage.clickOnConfigurationCrad(templateInfo.get(2).get("Template Type"));
+//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(2).get("Template Name"),"edit");
+//            List<HashMap<String,String>> specificSchPoInTemplateLevel = locationsPage.getScheRulesTemplateValueInLocationLevel();
+//
+//            //get template level info of Scheduling collaboration
+//            configurationPage.goToConfigurationPage();
+//            configurationPage.clickOnConfigurationCrad(templateInfo.get(3).get("Template Type"));
+//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(3).get("Template Name"),"edit");
+//            String specificSchCollInTemplateLevel = locationsPage.getScheCollTemplateValueInLocationLevel();
+//
+//            //get template level info of TA
+//            configurationPage.goToConfigurationPage();
+//            configurationPage.clickOnConfigurationCrad(templateInfo.get(4).get("Template Type"));
+//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(4).get("Template Name"),"edit");
+//            String specificTAInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
+//
+//            //get template level info of Schedule policy
+//            configurationPage.goToConfigurationPage();
+//            configurationPage.clickOnConfigurationCrad(templateInfo.get(5).get("Template Type"));
+//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(5).get("Template Name"),"edit");
+//            String specificSchPolicyInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
+//
+//            //get template level info of Compliance
+//            configurationPage.goToConfigurationPage();
+//            configurationPage.clickOnConfigurationCrad(templateInfo.get(6).get("Template Type"));
+//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(6).get("Template Name"),"edit");
+//            String specificComplianceInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
 
-
-
-
+            //go to labor model tab to get specific template value
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateInfo.get(7).get("Template Name"),"edit");
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

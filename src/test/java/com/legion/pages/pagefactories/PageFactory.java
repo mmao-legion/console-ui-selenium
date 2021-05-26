@@ -72,4 +72,6 @@ public interface PageFactory {
     IntegrationPage createConsoleIntegrationPage();
 
     UserManagementPage createOpsPortalUserManagementPage();
+
+    LaborModelPage createOpsPortalLaborModelPage();
 }

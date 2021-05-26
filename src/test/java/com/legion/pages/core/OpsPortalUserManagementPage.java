@@ -71,9 +71,10 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	public void goToWorkRolesTile() throws Exception {
 		if (isElementLoaded(workRoleTile,5)) {
 			click(workRoleTile);
-			if (userMagenementTab == null) {
-				
-			}
+			if (isElementLoaded(editBtnInWorkRole,5)) {
+				SimpleUtils.pass("Go to work roles tile successfully");
+			}else
+				SimpleUtils.fail("Failed to work roles tile",false);
 
 		}else
 			SimpleUtils.fail("Work Roles Tile load failed",false);

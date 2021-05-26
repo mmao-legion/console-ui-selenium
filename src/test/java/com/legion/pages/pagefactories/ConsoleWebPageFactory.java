@@ -144,4 +144,9 @@ public class ConsoleWebPageFactory implements PageFactory {
 		return new OpsPortalUserManagementPage();
 	}
 
+	@Override
+	public LaborModelPage createOpsPortalLaborModelPage() {
+		return new OpsPortalLaborModelPage();
+	}
+
 }

@@ -216,4 +216,6 @@ public interface LocationsPage {
     public List<HashMap<String, String>> getLaborModelInLocationLevel();
 
     public void backToConfigurationTabInLocationLevel();
+
+    public List<HashMap<String, String>> getLocationTemplateInfoInLocationLevel();
 }

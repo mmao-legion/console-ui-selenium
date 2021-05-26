@@ -15,6 +15,7 @@ import org.openqa.selenium.support.PageFactory;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.tests.TestBase.switchToNewWindow;
@@ -2859,13 +2860,13 @@ private  WebElement schedulingCollaborationContainer;
 		HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
 		if (areListElementVisible(workRolesInLobarModelInLocationLevel,5)) {
 			for (WebElement s: workRolesInLobarModelInLocationLevel) {
-				workRoleInfoInEachRow.put(s.findElement(By.cssSelector("button[type='checkbox']")).getAttribute("class"),
+				workRoleInfoInEachRow.put(s.findElement(By.cssSelector("div>lg-switch>label>ng-form>input[type='checkbox']")).getAttribute("class"),
 						s.findElement(By.cssSelector("div:nth-child(2)")).getText().trim());
 				assignmentRulesInfo.add(workRoleInfoInEachRow);
 			}
 			return assignmentRulesInfo;
 		}else
-			SimpleUtils.fail("Failed go to Assignment rules in locations level ",false);
+			SimpleUtils.fail("Failed go to labor model in locations level ",false);
 		return null;
 	}
 
@@ -2879,6 +2880,26 @@ private  WebElement schedulingCollaborationContainer;
 				SimpleUtils.fail("Back to location configuration page failed",false);
 		}else
 			SimpleUtils.fail("Back button in each type of template load failed",false);
+	}
+	@FindBy(css="tr[ng-repeat=\"(key,value) in $ctrl.templates\"]")
+	private List<WebElement> templateRows;
+
+	@Override
+	public List<HashMap<String, String>> getLocationTemplateInfoInLocationLevel() {
+		List<HashMap<String,String>> templateInfo = new ArrayList<>();
+		if (areListElementVisible(templateRows,5)) {
+			for (WebElement s :templateRows) {
+				HashMap<String, String> templateInfoInEachRow = new HashMap<>();
+				templateInfoInEachRow.put("Template Type",s.findElement(By.cssSelector("td:nth-child(1)")).getText());
+				templateInfoInEachRow.put("Template Name",s.findElement(By.cssSelector("td:nth-child(2)")).getText());
+				templateInfoInEachRow.put("Overridden",s.findElement(By.cssSelector("td:nth-child(3)")).getText());
+				templateInfo.add(templateInfoInEachRow);
+			}
+			return templateInfo;
+		}else
+			SimpleUtils.fail("Location configuration tab load failed",false);
+
+		return null;
 	}
 
 }
