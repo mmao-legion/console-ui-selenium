@@ -4661,9 +4661,10 @@ private WebElement locationColumn;
 			SimpleUtils.fail("Days in Session end panel fail to load! ", false);
 	}
 
-	public void activeTMAndRejectAllTimeOff(String firstName) throws Exception{
+	public void activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(String firstName) throws Exception{
 
 		ProfileNewUIPage profileNewUIPage = new ConsoleProfileNewUIPage();
+		String workPreferencesLabel = "Work Preferences";
 		goToTeam();
 
 		if (checkIfTMExists(firstName)) {
@@ -4682,6 +4683,9 @@ private WebElement locationColumn;
 			if (isCancelDeactivateButtonLoaded()) {
 				cancelTMDeactivate();
 			}
+
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.approveAllPendingAvailabilityRequest();
 
 			profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
 			profileNewUIPage.rejectAllTimeOff();
