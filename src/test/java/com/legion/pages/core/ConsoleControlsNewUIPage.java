@@ -2091,7 +2091,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		boolean isTabSelected = false;
 		if (schedulingPolicyGroupsTabs.size() > 0) {
 			for (WebElement schedulingPolicyGroupsTab : schedulingPolicyGroupsTabs) {
-				if (schedulingPolicyGroupsTab.getText().toLowerCase().contains(tabLabel.toLowerCase())) {
+				if (schedulingPolicyGroupsTab.getText().replace("Non Exempt", "Nonexempt").toLowerCase().contains(tabLabel.toLowerCase())) {
 					click(schedulingPolicyGroupsTab);
 					isTabSelected = true;
 				}
