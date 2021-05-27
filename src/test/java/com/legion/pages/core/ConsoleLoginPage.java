@@ -107,7 +107,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     {
     	if(isLoginDone){
             getActiveConsoleName(dashboardConsoleName);
-            if (isElementLoaded(locationSelectorButton, 5) && locationSelectorButton.getText().contains(selectedLocation)) {
+            if (isElementLoaded(locationSelectorButton, 15) && locationSelectorButton.getText().contains(selectedLocation)) {
 				SimpleUtils.pass("Login to Legion Application " + displayCurrentURL() + " Successfully with selected location: '" + selectedLocation + "'.");
 			} else {
 				SimpleUtils.fail("Not able to select the location: " + selectedLocation + " Successfully!",false);
