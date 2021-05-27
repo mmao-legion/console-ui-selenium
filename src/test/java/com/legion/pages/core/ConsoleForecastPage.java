@@ -1337,7 +1337,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					info = tooltipForForecastBar.getText().replace("\n", " ");
 				} else {
 					//info = "x x Forecast 0 Legion 0 Edited Comparison N/A Actual";
-					SimpleUtils.fail("tooltipForForecastBar is not loaded!", false);
+					SimpleUtils.report("tooltipForForecastBar is not loaded since there is no tooltip!");
 				}
 			}else if (areListElementVisible(forecastBarsInViewMode,10)){
 				scrollToElement(forecastBarsInViewMode.get(Integer.parseInt(index)));
@@ -1347,7 +1347,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					//String s = "2 Wed Forecast 527 Legion 527 Edited Comparison N/A Actual";
 					info = tooltipForForecastBar.getText().replace("\n", " ");
 				} else {
-					SimpleUtils.fail("tooltipForForecastBar is not loaded!", false);
+					SimpleUtils.report("tooltipForForecastBar is not loaded since there is no tooltip!");
 				}
 			} else {
 				SimpleUtils.fail("forecastBars are not loaded!", false);
@@ -1888,5 +1888,89 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		} else
 			SimpleUtils.fail("Forecast Page: Bars failed to load", false);
 		return info;
+	}
+
+	// Added by Julie
+	@FindBy(css = "[label=\"Refresh\"] button")
+	private WebElement refreshButton;
+
+	@FindBy(css = ".modal-content")
+	private WebElement warningDialog;
+
+	@FindBy(css = ".redesigned-modal-header")
+	private WebElement headerOnwarningDialog;
+
+	@FindBy(css = ".redesigned-modal-body")
+	private WebElement bodyOnWarningDialog;
+
+	@FindBy(css = ".redesigned-modal-button-cancel")
+	private WebElement cancelBtnOnWarningDialog;
+
+	@FindBy(css = ".redesigned-modal-button-ok")
+	private WebElement refreshanywayBtnOnWarningDialog;
+
+	@Override
+	public void clickOnRefreshButton() throws Exception {
+		if (isElementLoaded(refreshButton, 10)) {
+			click(refreshButton);
+			SimpleUtils.pass("Forecast Page: Click on Refresh button Successfully!");
+		} else {
+			SimpleUtils.fail("Forecast Page: Refresh button not Loaded!", true);
+		}
+	}
+
+	@Override
+	public void verifyWarningDialogPopsUp() throws Exception {
+		if(isElementLoaded(warningDialog, 10))
+			SimpleUtils.pass("Forecast Page: Warning dialog pops up after clicking Refresh");
+		else
+			SimpleUtils.fail("Forecast Page: waring dialog doesn't appear", false);
+	}
+
+	@Override
+	public void verifyTheContentOnWarningDialog() throws Exception {
+		if(isElementLoaded(warningDialog, 10)) {
+			if (isElementLoaded(headerOnwarningDialog,10) && isElementLoaded(bodyOnWarningDialog,10)
+			&& isElementLoaded(cancelBtnOnWarningDialog,10) && isElementLoaded(refreshanywayBtnOnWarningDialog,10)) {
+				SimpleUtils.pass("Forecast Page: Warning title, body and buttons in dialog show after clicking Refresh");
+				if (headerOnwarningDialog.getText().contains("Warning") && bodyOnWarningDialog.getText().contains("Refreshing the forecast will delete all recent edits.")
+						&& cancelBtnOnWarningDialog.getText().contains("Cancel") && refreshanywayBtnOnWarningDialog.getText().contains("Refresh anyway"))
+					SimpleUtils.pass("Forecast Page: Following content in warning dialog is loaded:\n" +
+							"- Warning" +
+							"Refreshing the forecast will delete all recent edits\n" +
+							"- Cancel button\n" +
+							"- Refresh anyway button");
+				else
+					SimpleUtils.fail("Forecast Page: The content in warning dialog is incorrect", false);
+			} else
+				SimpleUtils.fail("Forecast Page: Warning title, body and buttons in dialog don't show after clicking Refresh",false);
+		} else
+			SimpleUtils.fail("Forecast Page: waring dialog doesn't appear", false);
+	}
+
+	@Override
+	public void verifyTheFunctionalityOfCancelButtonOnWarningDialog(int index, String value) throws Exception {
+		if (isElementLoaded(cancelBtnOnWarningDialog,10)) {
+			click(cancelBtnOnWarningDialog);
+			String tooltip = getTooltipInfo(String.valueOf(index));
+			if (tooltip.contains(value))
+				SimpleUtils.pass("Forecast Page: Click on Cancel button successfully, edited forecast persist");
+			else
+				SimpleUtils.fail("Forecast Page: Failed to click on Cancel button",false);
+		} else
+			SimpleUtils.fail("Forecast Page: Cancel button in waring dialog failed to load",false);
+	}
+
+	@Override
+	public void verifyTheFunctionalityOfRefreshanywayButtonOnWarningDialog(int index, String value) throws Exception {
+		if (isElementLoaded(refreshanywayBtnOnWarningDialog,10)) {
+			click(refreshanywayBtnOnWarningDialog);
+			String tooltip = getTooltipInfo(String.valueOf(index));
+			if (!tooltip.contains(value))
+				SimpleUtils.pass("Forecast Page: Click on Refresh anyway button successfully, edited forecast is reverted");
+			else
+				SimpleUtils.fail("Forecast Page: Failed to click on Refresh anyway button",false);
+		} else
+			SimpleUtils.fail("Forecast Page: Refresh anyway button in waring dialog failed to load",false);
 	}
 }

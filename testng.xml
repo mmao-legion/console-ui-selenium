@@ -214,10 +214,12 @@
                         <include name="verifyScheduleFunctionalityForecast"/>
                         <include name="verifyEditForecastInDayViewViewAsInternalAdmin"/>
                         <include name="verifyEditForecastInWeekViewViewAsInternalAdmin"/>
+                        <include name="verifyFunctionalityOfRefreshAsInternalAdmin"/>
                     </methods>
                 </class>
             </classes>
         </test>-->
+
     <test name="Activity Test">
         <classes>
             <class name="com.legion.tests.core.ActivityTest">

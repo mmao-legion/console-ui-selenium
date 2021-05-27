@@ -424,4 +424,52 @@ public class ForecastTest extends TestBase{
 			SimpleUtils.fail(e.getMessage(),false);
 		}
 	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify Edit Forecast in Day View")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyFunctionalityOfRefreshAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+//		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			ForecastPage forecastPage  = pageFactory.createForecastPage();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()),false);
+
+			// Verify forecast can be edited and saved
+			int index = 3;
+		    String value = "510";
+		    forecastPage.verifyAndClickEditBtn();
+		    forecastPage.verifyDoubleClickAndUpdateForecastBarValue(String.valueOf(index), value);
+			forecastPage.verifyAndClickSaveBtn();
+
+		    // Verify Refresh button is clickable
+		    forecastPage.clickOnRefreshButton();
+
+		    // Verify Warning dialog pops up
+            forecastPage.verifyWarningDialogPopsUp();
+
+            // Verify the content on Warning dialog
+            forecastPage.verifyTheContentOnWarningDialog();
+
+            // Verify the functionality of Cancel button on Warning dialog
+            forecastPage.verifyTheFunctionalityOfCancelButtonOnWarningDialog(index,value);
+
+            // Verify the functionality of Refresh anyway button on Warning dialog
+		    forecastPage.clickOnRefreshButton();
+            forecastPage.verifyTheFunctionalityOfRefreshanywayButtonOnWarningDialog(index,value);
+
+//
+//		} catch (Exception e) {
+//			SimpleUtils.fail(e.getMessage(),false);
+//		}
+	}
 }
