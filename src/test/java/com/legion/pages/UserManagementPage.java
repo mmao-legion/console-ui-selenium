@@ -28,7 +28,7 @@ public interface UserManagementPage {
 
     public void addNewWorkRole(String workRoleName, String colour, String workRole, String hourlyRate, String selectATeamMemberTitle, String defineTheTimeWhenThisRuleApplies, String specifyTheConditionAndNumber, String shiftNumber, String defineTheTypeAndFrequencyOfTimeRequiredAndPriority, String priority) throws Exception;
 
-    public void iCanSeeDynamicGroupItemTileInUserManagementTab();
+    public boolean iCanSeeDynamicGroupItemTileInUserManagementTab();
 
     public void goToDynamicGroup();
 

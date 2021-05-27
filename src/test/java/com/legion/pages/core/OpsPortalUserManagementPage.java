@@ -3,14 +3,12 @@ package com.legion.pages.core;
 import com.legion.pages.BasePage;
 import com.legion.pages.UserManagementPage;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.net.SocketImpl;
 import java.util.*;
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -427,17 +425,19 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	@FindBy(css = "div.mappingLocation.mt-20> span")
 	private  WebElement testBtnInfo;
 	@Override
-	public void iCanSeeDynamicGroupItemTileInUserManagementTab() {
+	public boolean iCanSeeDynamicGroupItemTileInUserManagementTab() {
 		if (isElementEnabled(dynamicGroupCard,5)) {
 			SimpleUtils.pass("Dynamic group card is shown");
 			String contextInfo = dynamicGroupCard.getText();
 			if (contextInfo.contains("Dynamic Group") && contextInfo.contains("Dynamic Group Configuration") &&
 					contextInfo.contains("Newsfeed Group") ) {
 				SimpleUtils.pass("Title and description show well");
+				return true;
 			}else
 				SimpleUtils.fail("Title and description are wrong",false);
 		}else
-			SimpleUtils.fail("There is no dynamic group card",false);
+			SimpleUtils.report("Dynamic group switch is off");
+		    return false;
 	}
 
 	@Override

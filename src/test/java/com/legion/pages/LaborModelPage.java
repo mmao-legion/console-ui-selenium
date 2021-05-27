@@ -11,4 +11,6 @@ public interface LaborModelPage {
     public void clickOnSpecifyTemplateName(String template_name, String edit) throws Exception;
 
     public void clickOnLaborModelTab() throws Exception;
+
+    public List<HashMap<String, String>> getLaborModelInTemplateLevel();
 }

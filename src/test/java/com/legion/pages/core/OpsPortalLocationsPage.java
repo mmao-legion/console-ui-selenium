@@ -2666,11 +2666,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public List<HashMap<String, String>> getAssignmentRolesInLocationLevel() {
 		List<HashMap<String,String>> assignmentRulesInfo = new ArrayList<>();
-		HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
 		if (areListElementVisible(workRolesInAssignmentRulesInLocationLevel,5)&& workRolesInAssignmentRulesInLocationLevel.size()>0) {
 			for (WebElement s: workRolesInAssignmentRulesInLocationLevel) {
-				workRoleInfoInEachRow.put(s.findElement(By.cssSelector("button[type='button']")).getText().trim(),
-						s.findElement(By.cssSelector("td:nth-child(2)")).getText().trim());
+				HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+				workRoleInfoInEachRow.put("WorkRole Name",s.findElement(By.cssSelector("button[type='button']")).getText().trim());
+				String assignmentRulesNum = s.findElement(By.cssSelector("td:nth-child(2)")).getText().split(" ")[0];
+				if (!assignmentRulesNum.equalsIgnoreCase("+")) {
+					workRoleInfoInEachRow.put("# of Assignment Rules",assignmentRulesNum);
+				}else
+					workRoleInfoInEachRow.put("# of Assignment Rules","0");
 				assignmentRulesInfo.add(workRoleInfoInEachRow);
 			}
 
@@ -2705,7 +2709,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			return templateValue;
 		}else
 			SimpleUtils.fail("Go to operating hours template failed in location level via template name link",false);
-		return null;
+		    return null;
 	}
 
 	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
@@ -2726,12 +2730,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public List<HashMap<String,String>> getScheRulesTemplateValueInLocationLevel() {
 		List<HashMap<String,String>> schedulingRulesInfo = new ArrayList<>();
-		HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
 		if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel,5)) {
 			for (WebElement s: workRolesInSchedulingRulesInLocationLevel) {
-				String aa = s.findElement(By.cssSelector("button[type='button']")).getText().trim();
-				String bb = s.findElement(By.cssSelector("tr > td")).getText().trim();
-				workRoleInfoInEachRow.put(s.findElement(By.cssSelector("td:nth-child(1)")).getText().trim(),s.findElement(By.cssSelector("button[type='button']")).getText().trim());
+				HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+				workRoleInfoInEachRow.put("WorkRole Name",s.findElement(By.cssSelector("tr>td:nth-child(1)")).getText().trim());
+				workRoleInfoInEachRow.put("Staffing Rules",s.findElement(By.cssSelector("tr>td:nth-child(2)")).getText().trim());
 				schedulingRulesInfo.add(workRoleInfoInEachRow);
 			}
 
@@ -2740,7 +2743,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Failed go to scheduling rules in locations level ",false);
 		    return null;
 	}
-@FindBy(css = "div.onboarding.templates-main-container.ng-scope")
+@FindBy(css = "form[name=\"$ctrl.generalForm\"]")
 private  WebElement schedulingCollaborationContainer;
 	@Override
 	public void canGoToScheduleCollaborationInLocationLevel() {
@@ -2857,11 +2860,17 @@ private  WebElement schedulingCollaborationContainer;
 	@Override
 	public List<HashMap<String, String>> getLaborModelInLocationLevel() {
 		List<HashMap<String,String>> assignmentRulesInfo = new ArrayList<>();
-		HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+
 		if (areListElementVisible(workRolesInLobarModelInLocationLevel,5)) {
 			for (WebElement s: workRolesInLobarModelInLocationLevel) {
-				workRoleInfoInEachRow.put(s.findElement(By.cssSelector("div>lg-switch>label>ng-form>input[type='checkbox']")).getAttribute("class"),
-						s.findElement(By.cssSelector("div:nth-child(2)")).getText().trim());
+				HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+				workRoleInfoInEachRow.put("WorkRole Name",s.findElement(By.cssSelector("div:nth-child(2)")).getText().replaceAll(" +",""));
+				String enableOrDisWorkRoleInLocationLevel = s.findElement(By.cssSelector("div>lg-switch>label>ng-form>input[type='checkbox']")).getAttribute("class");
+				if (enableOrDisWorkRoleInLocationLevel.contains("not-empty")) {
+					workRoleInfoInEachRow.put("enableOrDisWorkRoleInLocationLevel","Yes");
+				}else
+					workRoleInfoInEachRow.put("enableOrDisWorkRoleInLocationLevel","No");
+
 				assignmentRulesInfo.add(workRoleInfoInEachRow);
 			}
 			return assignmentRulesInfo;
@@ -2892,7 +2901,12 @@ private  WebElement schedulingCollaborationContainer;
 				HashMap<String, String> templateInfoInEachRow = new HashMap<>();
 				templateInfoInEachRow.put("Template Type",s.findElement(By.cssSelector("td:nth-child(1)")).getText());
 				templateInfoInEachRow.put("Template Name",s.findElement(By.cssSelector("td:nth-child(2)")).getText());
-				templateInfoInEachRow.put("Overridden",s.findElement(By.cssSelector("td:nth-child(3)")).getText());
+				String overriddenText = s.findElement(By.cssSelector("td:nth-child(3)")).getAttribute("aria-hidden");
+				if (overriddenText == null) {
+					templateInfoInEachRow.put("Overridden","No");
+				}else
+					templateInfoInEachRow.put("Overridden","Yes");
+
 				templateInfo.add(templateInfoInEachRow);
 			}
 			return templateInfo;

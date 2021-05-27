@@ -276,7 +276,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public void clickOnConfigurationCrad(String templateType) throws Exception {
 		if(templateType!=null){
-			waitForSeconds(15);
+			waitForSeconds(10);
 			if(configurationCardsList.size()!=0) {
 				for (WebElement configurationCard : configurationCardsList) {
 					if(configurationCard.getText().contains(templateType)){
@@ -316,7 +316,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	//open the specify template to edit or view details
 	@Override
 	public void clickOnSpecifyTemplateName(String templateName,String editOrViewMode) throws Exception {
-
+		waitForSeconds(5);
 		if(isTemplateListPageShow()){
 			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){

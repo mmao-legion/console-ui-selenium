@@ -1632,15 +1632,11 @@ public class LocationsTest extends TestBase {
             String wfsMode = "Yes";
             String wfsName = "WFS";
             String locationName = "OMLocation16";
-            String districtName = "OMDistrict1";
             String criteria = "Custom";
 
             List<String> wfsGroup = new ArrayList<>();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeUpperFieldsByName("Business Unit", "BU-ForAutomation");
-            locationSelectorPage.changeUpperFieldsByName("Region", "Region-ForAutomation");
-            locationSelectorPage.changeUpperFieldsByName("District", "District-ForAutomation");
-            locationSelectorPage.changeLocation(locationName);
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -1901,7 +1897,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify user can see template value via click template name")
+    @TestName(description = "Verify user can see template value via click template name in location level and compare")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUserCanSeeEachTypeOfTemViaClickingTemName(String browser, String username, String password, String location) throws Exception {
 
@@ -1916,77 +1912,131 @@ public class LocationsTest extends TestBase {
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
             List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-//            locationsPage.canGoToAssignmentRoleInLocationLevel();
-//            List<HashMap<String,String>> workRolesListInAssignmentRules = locationsPage.getAssignmentRolesInLocationLevel();
-//            locationsPage.backToConfigurationTabInLocationLevel();
-//            locationsPage.canGoToOperationHoursInLocationLevel();
-//            String contextInOHTemplate = locationsPage.getOHTemplateValueInLocationLevel();
-//            locationsPage.backToConfigurationTabInLocationLevel();
-//            locationsPage.canGoToSchedulingRulesInLocationLevel();
-//            List<HashMap<String,String>> contextInScheRulesTemplate = locationsPage.getScheRulesTemplateValueInLocationLevel();
-//            locationsPage.backToConfigurationTabInLocationLevel();
-//            locationsPage.canGoToScheduleCollaborationInLocationLevel();
-//            String contextInScheCollTemplate = locationsPage.getScheCollTemplateValueInLocationLevel();
-//            locationsPage.backToConfigurationTabInLocationLevel();
-//            locationsPage.canGoToTAInLocationLevel();
-//            String contextInTATemplate = locationsPage.getTATemplateValueInLocationLevel();
-//            locationsPage.backToConfigurationTabInLocationLevel();
-//            locationsPage.canGoToSchedulingPoliciesInLocationLevel();
-//            String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
-//            locationsPage.backToConfigurationTabInLocationLevel();
-//            locationsPage.canGoToComplianceInLocationLevel();
-//            String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
-//            locationsPage.backToConfigurationTabInLocationLevel();
-//            locationsPage.canGoToLaborModelInLocationLevel();
-//            List<HashMap<String,String>> workRolesListInLaborModel = locationsPage.getLaborModelInLocationLevel();
-//            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.canGoToAssignmentRoleInLocationLevel();
+            List<HashMap<String,String>> workRolesListInAssignmentRules = locationsPage.getAssignmentRolesInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.canGoToOperationHoursInLocationLevel();
+            String contextInOHTemplate = locationsPage.getOHTemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.canGoToSchedulingRulesInLocationLevel();
+            List<HashMap<String,String>> contextInScheRulesTemplate = locationsPage.getScheRulesTemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.canGoToScheduleCollaborationInLocationLevel();
+            String contextInScheCollTemplate = locationsPage.getScheCollTemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.canGoToTAInLocationLevel();
+            String contextInTATemplate = locationsPage.getTATemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.canGoToSchedulingPoliciesInLocationLevel();
+            String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.canGoToComplianceInLocationLevel();
+            String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.canGoToLaborModelInLocationLevel();
+            List<HashMap<String,String>> workRolesListInLaborModel = locationsPage.getLaborModelInLocationLevel();
+            locationsPage.backToConfigurationTabInLocationLevel();
 
-//            //go to configuration tab to check each template value in template level
-//            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
-//            userManagementPage.clickOnUserManagementTab();
-//            userManagementPage.goToWorkRolesTile();
-//            List<HashMap<String,String>> workRolesListInGlobal = locationsPage.getAssignmentRolesInLocationLevel();
-//            //get template level info of Operation hours
-//            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-//            configurationPage.goToConfigurationPage();
-//            configurationPage.clickOnConfigurationCrad(templateInfo.get(1).get("Template Type"));
-//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(1).get("Template Name"),"edit");
-//            String specificOHInTemplateLevel = locationsPage.getOHTemplateValueInLocationLevel();
-//            //get template level info of Scheduling rules
-//            configurationPage.goToConfigurationPage();
-//            configurationPage.clickOnConfigurationCrad(templateInfo.get(2).get("Template Type"));
-//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(2).get("Template Name"),"edit");
-//            List<HashMap<String,String>> specificSchPoInTemplateLevel = locationsPage.getScheRulesTemplateValueInLocationLevel();
-//
-//            //get template level info of Scheduling collaboration
-//            configurationPage.goToConfigurationPage();
-//            configurationPage.clickOnConfigurationCrad(templateInfo.get(3).get("Template Type"));
-//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(3).get("Template Name"),"edit");
-//            String specificSchCollInTemplateLevel = locationsPage.getScheCollTemplateValueInLocationLevel();
-//
-//            //get template level info of TA
-//            configurationPage.goToConfigurationPage();
-//            configurationPage.clickOnConfigurationCrad(templateInfo.get(4).get("Template Type"));
-//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(4).get("Template Name"),"edit");
-//            String specificTAInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
-//
-//            //get template level info of Schedule policy
-//            configurationPage.goToConfigurationPage();
-//            configurationPage.clickOnConfigurationCrad(templateInfo.get(5).get("Template Type"));
-//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(5).get("Template Name"),"edit");
-//            String specificSchPolicyInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
-//
-//            //get template level info of Compliance
-//            configurationPage.goToConfigurationPage();
-//            configurationPage.clickOnConfigurationCrad(templateInfo.get(6).get("Template Type"));
-//            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(6).get("Template Name"),"edit");
-//            String specificComplianceInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
+            //go to configuration tab to check each template value in template level
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            List<HashMap<String,String>> workRolesListInGlobal = locationsPage.getAssignmentRolesInLocationLevel();
+            //get template level info of Operation hours
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateInfo.get(1).get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(1).get("Template Name"),"view");
+            String specificOHInTemplateLevel = locationsPage.getOHTemplateValueInLocationLevel();
+            //get template level info of Scheduling rules
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateInfo.get(2).get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(2).get("Template Name"),"view");
+            List<HashMap<String,String>> specificSchRolesInTemplateLevel = locationsPage.getScheRulesTemplateValueInLocationLevel();
+
+            //get template level info of Scheduling collaboration
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateInfo.get(3).get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(3).get("Template Name"),"view");
+            String specificSchCollInTemplateLevel = locationsPage.getScheCollTemplateValueInLocationLevel();
+
+            //get template level info of TA
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Time & Attendance");
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(4).get("Template Name"),"view");
+            String specificTAInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
+
+            //get template level info of Schedule policy
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateInfo.get(5).get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(5).get("Template Name"),"view");
+            String specificSchPolicyInTemplateLevel = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
+
+            //get template level info of Compliance
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateInfo.get(6).get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(6).get("Template Name"),"view");
+            String specificComplianceInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
 
             //go to labor model tab to get specific template value
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             laborModelPage.clickOnLaborModelTab();
             laborModelPage.goToLaborModelTile();
-            laborModelPage.clickOnSpecifyTemplateName(templateInfo.get(7).get("Template Name"),"edit");
+            laborModelPage.clickOnSpecifyTemplateName(templateInfo.get(7).get("Template Name"),"view");
+            List<HashMap<String,String>> workRolesListInLaborModelTemplateLevel = laborModelPage.getLaborModelInTemplateLevel();
+            
+            //compare location level value with template level
+            if (contextInOHTemplate.equalsIgnoreCase(specificOHInTemplateLevel)) {
+                SimpleUtils.pass("Operation Hours template value in location level equals to template level");
+            }else
+                SimpleUtils.fail("Operation Hours template value in location level doesn't equals to template level",false);
+
+            if (contextInSchedulingPoliciesTemplate.equalsIgnoreCase(specificSchPolicyInTemplateLevel)) {
+                SimpleUtils.pass("Schedule Policy value in location level equals to template level");
+            }else
+                SimpleUtils.fail("Schedule Policy value in location level doesn't equals to template level",false);
+
+
+            if (contextInScheCollTemplate.equalsIgnoreCase(specificSchCollInTemplateLevel)) {
+                SimpleUtils.pass("Schedule Collaboration template value in location level equals to template level");
+            }else
+                SimpleUtils.fail("Schedule Collaboration template value in location level doesn't equals to template level",false);
+
+            if (contextInTATemplate.equalsIgnoreCase(specificTAInTemplateLevel)) {
+                SimpleUtils.pass("Time Attendance value in location level equals to template level");
+            }else
+                SimpleUtils.fail("Time Attendance value in location level doesn't equals to template level",false);
+
+
+            if (contextInComplianceTemplate.equalsIgnoreCase(specificComplianceInTemplateLevel)) {
+                SimpleUtils.pass("Compliance template value in location level equals to template level");
+            }else
+                SimpleUtils.fail("Compliance template value in location level doesn't equals to template level",false);
+
+            String[] contextInScheRulesTemplateAft = contextInScheRulesTemplate.toArray(new String[]{});
+            String[] specificSchRolesInTemplateLevelAft = specificSchRolesInTemplateLevel.toArray(new String[]{});
+            if (contextInScheRulesTemplateAft.equals(specificSchRolesInTemplateLevelAft)) {
+                SimpleUtils.pass("Scheduling rules in location level equals to template level");
+            }else
+                SimpleUtils.fail("Scheduling rules in location level doesn't equals to template level",false);
+
+            //compare assignment rules in location level with work roles list in user management
+            String[] workRolesListInGlobalAft = workRolesListInGlobal.toArray(new String[]{});
+            String[] workRolesListInAssignmentRulesAft = workRolesListInAssignmentRules.toArray(new String[]{});
+            if (workRolesListInGlobalAft.equals(workRolesListInAssignmentRulesAft)) {
+                SimpleUtils.pass("Assignment Rules in location level equals to template level");
+            }else
+                SimpleUtils.fail("Assignment Rules in location level doesn't equals to template level",false);
+
+
+            String[] workRolesListInLaborModelTemplateLevelAft = workRolesListInLaborModelTemplateLevel.toArray(new String[]{});
+            String[] workRolesListInLaborModelAft = workRolesListInLaborModel.toArray(new String[]{});
+            if (workRolesListInLaborModelAft.equals(workRolesListInLaborModelTemplateLevelAft)) {
+                SimpleUtils.pass("Labor model in location level equals to template level");
+            }else
+                SimpleUtils.fail("Labor model in location level doesn't equals to template level",false);
+
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

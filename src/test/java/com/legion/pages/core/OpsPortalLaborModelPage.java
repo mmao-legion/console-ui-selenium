@@ -139,5 +139,29 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}else
 			SimpleUtils.fail("Labor model tab not load",false);
 	}
+
+	@FindBy(css="tbody[ng-repeat=\"workRole in $ctrl.template.workRoles\"]")
+	private List<WebElement> workRolesInLobarModelInTemplateLevel;
+	@Override
+	public List<HashMap<String, String>> getLaborModelInTemplateLevel() {
+		List<HashMap<String,String>> assignmentRulesInfo = new ArrayList<>();
+
+		if (areListElementVisible(workRolesInLobarModelInTemplateLevel,5)) {
+			for (WebElement s: workRolesInLobarModelInTemplateLevel) {
+				HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+				workRoleInfoInEachRow.put("WorkRole Name",s.findElement(By.cssSelector("tr>td:nth-child(1)")).getText().replaceAll(" ",""));
+//				workRoleInfoInEachRow.put("Labor Standard",s.findElement(By.cssSelector("tr>td:nth-child(2)")).getText());
+				String enableOrDisWorkRoleInTemplateLevel = s.findElement(By.cssSelector("tr>td:nth-child(3)>input-field>ng-form>input")).getAttribute("class");
+				if (enableOrDisWorkRoleInTemplateLevel.contains("not-empty")) {
+					workRoleInfoInEachRow.put("enableOrDisWorkRoleInTemplateLevel","Yes");
+				}else
+					workRoleInfoInEachRow.put("enableOrDisWorkRoleInTemplateLevel","No");
+				assignmentRulesInfo.add(workRoleInfoInEachRow);
+			}
+			return assignmentRulesInfo;
+		}else
+			SimpleUtils.fail("Failed go to labor model in template level ",false);
+			return null;
+	}
 }
 

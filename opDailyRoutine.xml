@@ -53,6 +53,8 @@
                     <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
                     <include name="verifyGlobalDynamicGroupInClockInFunction" />
                     <include name="verifyGlobalDynamicGroupInWFS" />
+                    <!--                    Location level template overridden-->
+                    <include name="verifyUserCanSeeEachTypeOfTemViaClickingTemName" />
 
                 </methods>
             </class>

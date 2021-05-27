@@ -1210,7 +1210,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else if(isElementLoaded(deleteScheduleButton, 10)) {
             return true;
         }
-        if(areListElementVisible(shiftsWeekView,3)){
+        if(areListElementVisible(shiftsWeekView,3) || isElementLoaded(editScheduleButton,5)){
             SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Generated!");
             return true;
         }
