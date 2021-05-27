@@ -133,6 +133,7 @@
                     <include name="verifyAdvancedStaffingRulesShowWell"/>
                     <include name="daysOfWeekE2E"/>
                     <include name="numberOfShiftsInADVRuleE2E"/>
+                    <include name="timeOfDayInADVRuleE2E"/>
                 </methods>
             </class>
         </classes>

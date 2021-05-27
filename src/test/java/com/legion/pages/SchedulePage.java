@@ -617,4 +617,6 @@ public interface SchedulePage {
 	public List<WebElement> getAllOOOHShifts() throws Exception;
 	public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception;
 	public List<String> verifyDaysHasShifts() throws Exception;
+	public void verifyShiftTimeInReadMode(String index,String shiftTime) throws Exception;
+	public List<String> getIndexOfDaysHaveShifts() throws Exception;
 }

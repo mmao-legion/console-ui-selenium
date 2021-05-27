@@ -4712,20 +4712,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
-
     @FindBy (css = "lg-button[ng-click=\"deleteSchedule()\"]")
     private WebElement deleteScheduleButton;
 
-    @FindBy (css = "div.delete-schedule-modal")
+    @FindBy (css = "div.redesigned-modal")
     private WebElement deleteSchedulePopup;
 
-    @FindBy (css = ".delete-schedule-modal input")
+    @FindBy (css = ".redesigned-modal input")
     private WebElement deleteScheduleCheckBox;
 
-    @FindBy (css = "button.delete-schedule-modal-button-delete")
+    @FindBy (css = "button.redesigned-modal-button-ok")
     private WebElement deleteButtonOnDeleteSchedulePopup;
 
-    @FindBy (css = "button.delete-schedule-modal-button-cancel")
+    @FindBy (css = ".redesigned-modal-button-cancel")
     private WebElement cancelButtonOnDeleteSchedulePopup;
 
     @Override
@@ -14723,6 +14722,45 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         }
         return dayHasShifts;
+    }
+
+    @FindBy(css=".ReactVirtualized__Grid__innerScrollContainer")
+    private WebElement shiftsTable;
+
+    @Override
+    public void verifyShiftTimeInReadMode(String index,String shiftTime) throws Exception{
+        String shiftTimeInShiftTable;
+        if (isElementEnabled(shiftsTable,5)) {
+            List<WebElement> shiftsTableList = shiftsTable.findElements(By.className("div[data-day=\"" + index + "\"].week-schedule-shift"));
+            for(WebElement shiftTable:shiftsTableList){
+                shiftTimeInShiftTable = shiftTable.findElement(By.cssSelector(".week-schedule-shift-time")).getText().trim();
+                if(shiftTimeInShiftTable.equals(shiftTime)){
+                    SimpleUtils.pass("The shift time on data-day-index: " + index + "is aligned with advance staffing rule");
+                }else {
+                    SimpleUtils.fail("The shift time is NOT aligned with advance staffing rule",false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("There is no shifts generated.",false);
+        }
+    }
+
+    @Override
+    public List<String> getIndexOfDaysHaveShifts() throws Exception {
+        List<String> index = new ArrayList<String>();
+        String dataDayIndex = null;
+        if (areListElementVisible(scheduleDays, 10)) {
+            for(WebElement scheduleDay:scheduleDays){
+                String totalCalendarDaySummary = scheduleDay.findElement(By.cssSelector("div.sch-calendar-day-summary span")).getText().trim().split(" ")[0];
+                if(! totalCalendarDaySummary.equals("0")){
+                    dataDayIndex = scheduleDay.getAttribute("data-day-index").trim();
+                }
+                index.add(dataDayIndex);
+            }
+        } else {
+            SimpleUtils.fail("Table header fail to load!", false);
+        }
+        return index;
     }
 }
 

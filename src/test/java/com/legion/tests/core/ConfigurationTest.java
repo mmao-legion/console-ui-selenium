@@ -89,9 +89,8 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
-
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.goToConfigurationPage();
@@ -116,7 +115,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -143,7 +142,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
             String formula ="IsDay(p_Truck_Date,-1)";
 
@@ -171,7 +170,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
             String offsetTime ="10";
             String startEventPoint = "before";
@@ -223,7 +222,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
             String duringTime ="10";
 
@@ -253,7 +252,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
             String endOffsetTime ="10";
             String endEventPoint = "before";
@@ -283,7 +282,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
             String formulaOfTimeOfDay = "123";
 
@@ -312,7 +311,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
             List<String> mealBreakInfo = new ArrayList<String>(){{
                 add("30");
@@ -352,7 +351,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
             String shiftsNumber = "6";
             String shiftsNumberFormula = "5";
@@ -382,7 +381,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -408,7 +407,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
@@ -443,7 +442,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole1 = "New Work Role";
             String workRole2 = "Mgr on Duty";
             List<String> days = new ArrayList<String>(){{
@@ -472,7 +471,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
             String shiftsNumber = "7";
             List<String> days = new ArrayList<String>(){{
@@ -523,7 +522,7 @@ public class ConfigurationTest extends TestBase {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
-            String templateName = "FionaUsing";
+            String templateName = "FionaUsing2";
             String workRole = "New Work Role";
             String shiftsNumber = "7";
             List<String> days = new ArrayList<String>(){{
@@ -580,53 +579,24 @@ public class ConfigurationTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void daysOfWeekE2E(String browser, String username, String password, String location) throws Exception {
         try{
-            String templateType = "Scheduling Rules";
-            String mode = "edit";
-            String templateName = "FionaUsing";
-            String workRole = "New Work Role";
-            String shiftsNumber = "7";
+            String locationName = "AutoUsingByFiona1";
             List<String> days = new ArrayList<String>(){{
                 add("Friday");
                 add("Sunday");
             }};
             List<String> daysAbbr = new ArrayList<String>();
             List<String> daysHasShifts = new ArrayList<String>();
-            String startOffsetTime = "30";
-            String startTimeUnit = "minutes";
-            String startEventPoint = "after";
-            String startEvent = "Opening Operating Hours";
-            String endOffsetTime = "35";
-            String endTimeUnit = "minutes";
-            String endEventPoint = "before";
-            String endEvent = "Closing Operating Hours";
-            String locationName = "AutoUsingByFiona1";
-
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeLocation(locationName);
-
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateType);
-            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.selectWorkRoleToEdit(workRole);
-            configurationPage.deleteAllScheduleRules();
-            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
-            configurationPage.verifyAdvancedStaffingRulePageShowWell();
-            configurationPage.validateAdvanceStaffingRuleShowing(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
-                    endEvent,endOffsetTime,endEventPoint,endTimeUnit,days,shiftsNumber);
-            configurationPage.clickOnSaveButtonOnScheduleRulesListPage();
-            configurationPage.publishNowTemplate();
-
+            //Back to console
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
             SimpleUtils.assertOnFail("Console Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             locationSelectorPage.changeLocation(locationName);
+            //go to schedule function
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
@@ -665,56 +635,25 @@ public class ConfigurationTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void numberOfShiftsInADVRuleE2E(String browser, String username, String password, String location) throws Exception {
         try{
-            String templateType = "Scheduling Rules";
-            String mode = "edit";
-            String templateName = "FionaUsing";
-            String workRole = "New Work Role";
+            String locationName = "AutoUsingByFiona1";
             String shiftsNumber = "7";
             List<String> days = new ArrayList<String>(){{
                 add("Friday");
                 add("Sunday");
             }};
-
             List<String> daysAbbr = new ArrayList<String>();
-            List<String> daysHasShifts = new ArrayList<String>();
-            String startOffsetTime = "30";
-            String startTimeUnit = "minutes";
-            String startEventPoint = "after";
-            String startEvent = "Opening Operating Hours";
-            String endOffsetTime = "35";
-            String endTimeUnit = "minutes";
-            String endEventPoint = "before";
-            String endEvent = "Closing Operating Hours";
-            String locationName = "AutoUsingByFiona1";
-
             HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
-
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeLocation(locationName);
-
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateType);
-            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.selectWorkRoleToEdit(workRole);
-            configurationPage.deleteAllScheduleRules();
-            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
-            configurationPage.verifyAdvancedStaffingRulePageShowWell();
-            configurationPage.validateAdvanceStaffingRuleShowing(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
-                    endEvent,endOffsetTime,endEventPoint,endTimeUnit,days,shiftsNumber);
-            configurationPage.clickOnSaveButtonOnScheduleRulesListPage();
-            configurationPage.publishNowTemplate();
-
+            //Back to console to select one location
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
             SimpleUtils.assertOnFail("Console Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             locationSelectorPage.changeLocation(locationName);
+            //go to schedule function
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
@@ -760,56 +699,21 @@ public class ConfigurationTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void timeOfDayInADVRuleE2E(String browser, String username, String password, String location) throws Exception {
         try{
-            String templateType = "Scheduling Rules";
-            String mode = "edit";
-            String templateName = "FionaUsing";
-            String workRole = "New Work Role";
-            String shiftsNumber = "7";
-            List<String> days = new ArrayList<String>(){{
-                add("Friday");
-                add("Sunday");
-            }};
-
-            List<String> daysAbbr = new ArrayList<String>();
-            List<String> daysHasShifts = new ArrayList<String>();
-            String startOffsetTime = "30";
-            String startTimeUnit = "minutes";
-            String startEventPoint = "after";
-            String startEvent = "Opening Operating Hours";
-            String endOffsetTime = "35";
-            String endTimeUnit = "minutes";
-            String endEventPoint = "before";
-            String endEvent = "Closing Operating Hours";
             String locationName = "AutoUsingByFiona1";
-
-            HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
-
+            String shiftTime = "12:30am - 11pm";
+            List<String> indexes = new ArrayList<String>();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeLocation(locationName);
-
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateType);
-            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.selectWorkRoleToEdit(workRole);
-            configurationPage.deleteAllScheduleRules();
-            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
-            configurationPage.verifyAdvancedStaffingRulePageShowWell();
-            configurationPage.validateAdvanceStaffingRuleShowing(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
-                    endEvent,endOffsetTime,endEventPoint,endTimeUnit,days,shiftsNumber);
-            configurationPage.clickOnSaveButtonOnScheduleRulesListPage();
-            configurationPage.publishNowTemplate();
-
+            //back to console mode
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
             SimpleUtils.assertOnFail("Console Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            //Switch select one location
             locationSelectorPage.changeLocation(locationName);
+            //go to schedule function
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
@@ -821,27 +725,9 @@ public class ConfigurationTest extends TestBase {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             schedulePage.createScheduleForNonDGFlowNewUI();
-            hoursNTeamMembersCount = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
-
-            List<String> numbersOfShifts = new ArrayList<String>();
-            //get abbr for each work day which have shifts
-            for(String day:days){
-                String dayAbbr = day.substring(0,3);
-                daysAbbr.add(dayAbbr);
-            }
-            //get TMs number for each work day which have shifts
-            for(String dayAbbr:daysAbbr){
-                String hoursAndTeamMembersCount = hoursNTeamMembersCount.get(dayAbbr);
-                String tms = hoursAndTeamMembersCount.trim().split(" ")[1];
-                String numberOfTM = tms.substring(3);
-                numbersOfShifts.add(numberOfTM);
-            }
-            for(String numbersOfShift:numbersOfShifts){
-                if(numbersOfShift.equals(shiftsNumber)){
-                    SimpleUtils.pass("Shifts number is aligned with advance staffing rule");
-                }else {
-                    SimpleUtils.fail("Shifts number is NOT aligned with advance staffing rule",false);
-                }
+            indexes = schedulePage.getIndexOfDaysHaveShifts();
+            for(String index:indexes){
+                schedulePage.verifyShiftTimeInReadMode(index,shiftTime);
             }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

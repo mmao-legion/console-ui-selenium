@@ -1502,8 +1502,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void publishNowTemplate() throws Exception {
-		if (isElementLoaded(dropdownArrowButton,5)) {
-			click(dropdownArrowButton);
+		if (isElementLoaded(dropdownArrowBTN,5)) {
+			click(dropdownArrowBTN);
 			click(publishNowButton);
 			click(publishTemplateButton);
 			if(isElementLoaded(publishTemplateConfirmModal, 5)){
