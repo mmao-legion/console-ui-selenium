@@ -617,11 +617,11 @@ public class DragAndDropTest extends TestBase {
             String firstNameOfTM1 = teamMembers.get("TeamMember2")[0][0].toString();
             String workRoleOfTM1 = teamMembers.get("TeamMember2")[0][2].toString();
 
-            teamPage.activeTMAndRejectAllTimeOff(firstNameOfTM1);
+            teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstNameOfTM1);
             String firstNameOfTM2 = teamMembers.get("TeamMember3")[0][0].toString();
             String workRoleOfTM2 = teamMembers.get("TeamMember3")[0][2].toString();
 
-            teamPage.activeTMAndRejectAllTimeOff(firstNameOfTM2);
+            teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstNameOfTM2);
 
         // Go to Schedule page, Schedule tab
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();

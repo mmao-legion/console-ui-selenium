@@ -1341,6 +1341,21 @@ public class ScheduleCopyImprovementTest extends TestBase {
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option);
 
+            HashMap<String, Object[][]> teamMembers = null;
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+                teamMembers = kendraScott2TeamMembers;
+            } else {
+                teamMembers = cinemarkWkdyTeamMembers;
+            }
+
+
+            String tm1 = teamMembers.get("TeamMember1")[0][0].toString();
+            String tm2 = teamMembers.get("TeamMember2")[0][0].toString();
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(tm1);
+            teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(tm2);
+
             Thread.sleep(2000);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
@@ -1365,55 +1380,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            // Create new TM for terminate
-            String tm1 = "Nora6745";
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
-            if (teamPage.checkIfTMExists(tm1)) {
-                teamPage.searchAndSelectTeamMemberByName(tm1);
-                if(teamPage.isManualOnBoardButtonLoaded()) {
-                    teamPage.manualOnBoardTeamMember();
-                }
-                if (teamPage.isActivateButtonLoaded()) {
-                    teamPage.clickOnActivateButton();
-                    teamPage.isActivateWindowLoaded();
-                    teamPage.selectADateOnCalendarAndActivate();
-                }
-                if (teamPage.isCancelTerminateButtonLoaded()) {
-                    teamPage.cancelTMTerminate();
-                }
-                if (teamPage.isCancelDeactivateButtonLoaded()) {
-                    teamPage.cancelTMDeactivate();
-                }
-            } else {
-                tm1 = createAndOnboardNewTM(newTMDetails1);
-            }
+            teamPage.searchAndSelectTeamMemberByName(tm1);
             teamPage.terminateOrDeactivateTheTeamMemberFromSpecificDate(true, fromDate);
 
-
-            //Create Tm for deactivation
-            String tm2 = "Mary19650";
             teamPage.goToTeam();
-            if (teamPage.checkIfTMExists(tm2)) {
-                teamPage.searchAndSelectTeamMemberByName(tm2);
-                if(teamPage.isManualOnBoardButtonLoaded()) {
-                    teamPage.manualOnBoardTeamMember();
-                }
-                if (teamPage.isActivateButtonLoaded()) {
-                    teamPage.clickOnActivateButton();
-                    teamPage.isActivateWindowLoaded();
-                    teamPage.selectADateOnCalendarAndActivate();
-                }
-                if (teamPage.isCancelTerminateButtonLoaded()) {
-                    teamPage.cancelTMTerminate();
-                }
-                if (teamPage.isCancelDeactivateButtonLoaded()) {
-                    teamPage.cancelTMDeactivate();
-                }
-            } else {
-                tm2 = createAndOnboardNewTM(newTMDetails2);
-            }
+            teamPage.searchAndSelectTeamMemberByName(tm2);
             teamPage.terminateOrDeactivateTheTeamMemberFromSpecificDate(false, fromDate);
+
             Thread.sleep(3000);
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
