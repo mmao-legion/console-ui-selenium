@@ -13,8 +13,8 @@
         <classes>
             <class name="com.legion.tests.core.OnboardingTest">
                 <methods>
-                    <include name="verifyTheOnboardingFlowForNewHireAndStatusChangeToActiveAsInternalAdmin" />
-                    <include name="verifyTheOnboardingFlowForNewHireAndStatusChangeToOnboardedAsInternalAdmin" />
+                    <include name="verifyTheOnboardingFlowForRehireAndStatusChangeToOnboardedAsInternalAdmin" />
+                    <include name="verifyTheOnboardingFlowForRehireAndStatusChangeToActiveAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
