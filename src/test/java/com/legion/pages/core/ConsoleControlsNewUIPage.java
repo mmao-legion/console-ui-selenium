@@ -5781,7 +5781,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		if (areListElementVisible(accessSections,10)){
 			for (WebElement accessSection : accessSections){
 				if (accessSection.findElement(By.tagName("span")).getText().equalsIgnoreCase(section)){
-					if (!accessSection.getAttribute("class").contains("expand")){
+					if (!accessSection.findElement(By.cssSelector("div")).getAttribute("class").contains("expand")){
 						clickTheElement(accessSection.findElement(By.tagName("span")));
 					}
 					int index = getTheIndexByAccessRolesName("Store Manager", accessSection);
