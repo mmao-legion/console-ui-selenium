@@ -501,7 +501,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                     }else {
                                         SimpleUtils.fail("Search " + upperFieldType + "input failed to load!", false);
                                     }
-                                    waitForSeconds(4);
+                                    waitForSeconds(6);
                                     availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
                                     if (availableLocationCardsName.size() > 0) {
                                         for (WebElement upperFieldCardName : availableLocationCardsName) {

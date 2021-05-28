@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import static com.legion.utils.MyThreadLocal.failedComment;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.text.SimpleDateFormat;
@@ -49,7 +50,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	@FindBy(css = "div.lgn-calendar.current-month")
 	private List<WebElement> overviewCalendarMonthsYears;
 
-	@FindBy(css = "div[ng-if='!loading']")
+	@FindBy(css = "div[ng-if*='!loading']")
     private WebElement scheduleTable;
 
 	@FindBy(className = "left-banner")
@@ -442,13 +443,13 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 				flag = true;
 				SimpleUtils.pass("Calendar on Schedule Overview Loaded Successfully!");
 			}else{
-				SimpleUtils.fail("Calendar on Schedule Overview Not Loaded Successfully!", true);
+				SimpleUtils.fail("Calendar on Schedule Overview Not Loaded Successfully!", false);
 			}
 			if(isElementLoaded(scheduleTable)){
 				flag = true;
 				SimpleUtils.pass("Schedule Table on Schedule Overview Loaded Successfully!");
 			}else{
-				SimpleUtils.fail("Schedule Table on Schedule Overview Not Loaded Successfully!", true);
+				SimpleUtils.fail("Schedule Table on Schedule Overview Not Loaded Successfully!", false);
 			}
 		}else{
 			SimpleUtils.fail("ScheduleTab left navigation menu not found", true);
