@@ -104,7 +104,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public Boolean isChangeLocationButtonLoaded() throws Exception
     {
-        if(isElementLoaded(locationSelectorButton,20)) {
+        if(isElementLoaded(locationSelectorButton,30)) {
             return true;
         }
         return false;
@@ -474,7 +474,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             setScreenshotConsoleName(activeConsoleName);
             WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));
             if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
-                if (isElementLoaded(upperFieldSelectorButton, 5)) {
+                if (isElementLoaded(upperFieldSelectorButton, 60)) {
                     if (upperFieldSelectorButton.getText().equalsIgnoreCase(upperFieldName)) {
                         SimpleUtils.pass("Given '" + upperFieldType + " " + upperFieldName + "' already selected!");
                     } else {
