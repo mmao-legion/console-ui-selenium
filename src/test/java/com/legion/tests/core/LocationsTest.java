@@ -53,7 +53,7 @@ public class LocationsTest extends TestBase {
         try {
           this.createDriver((String)params[0],"83","Window");
           visitPage(testMethod);
-          loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
+            loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
 //          AdminPage adminPage = pageFactory.createConsoleAdminPage();
 //          adminPage.goToAdminTab();
 //          adminPage.rebuildSearchIndex();
