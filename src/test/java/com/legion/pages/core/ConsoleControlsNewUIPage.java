@@ -3057,15 +3057,20 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@FindBy(css = "input[placeholder*=\"You can search by name, job title\"]")
 	private WebElement usersAndRolesUserSearchBox;
+	@FindBy(css = "tr[ng-repeat=\"user in $ctrl.pagedUsers\"]")
+	private List<WebElement> userRows;
 
 	public void searchUserByFirstName(String userFirstName) throws Exception {
 		if (isElementLoaded(usersAndRolesUserSearchBox)) {
 			if (usersAndRolesUserSearchBox.isDisplayed() && usersAndRolesUserSearchBox.isEnabled()) {
 				usersAndRolesUserSearchBox.clear();
 				usersAndRolesUserSearchBox.sendKeys(userFirstName);
-				waitForSeconds(10);
-				SimpleUtils.pass("Users and Roles: '" + usersAndRolesAllUsersRows.size() + "' user(s) found with name '"
-						+ userFirstName + "'");
+				waitForSeconds(30);
+				if (userRows.size()>0) {
+					SimpleUtils.pass("Users and Roles: '" + usersAndRolesAllUsersRows.size() + "' user(s) found with name '"
+							+ userFirstName + "'");
+				}else
+					SimpleUtils.report("There is no user which match your search criteria");
 			}
 		}else
 			SimpleUtils.fail("Search filed in global model in controls load failed",false);
@@ -3104,9 +3109,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					scrollToBottom();
 					if (isElementLoaded(managerLocationBtn)) {
 						click(managerLocationBtn);
-						searchLocation(userFirstName);
+						searchLocation("Level:Region");
 						click(selectAllCheckBoxInManaLocationWin);
 						if (locationCheckBoxs.size()>0) {
+							SimpleUtils.pass("Can search upperfield of region");
 							for (int i = 2; i <5 ; i++) {
 								if (isElementLoaded(locationCheckBoxs.get(i)) && !locationCheckBoxs.get(i).getAttribute("class").contains("not-empty")) {
 									click(locationCheckBoxs.get(i));
@@ -3120,11 +3126,11 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					}else
 						SimpleUtils.fail("Manager location button load failed ",true);
 
-						String  locationAfterUpdated = getUserLocationsList();
-						if (locationAfterUpdated.equals(defaultLocation)) {
-							SimpleUtils.pass("User's location was updated successfully");
-						}else
-							SimpleUtils.fail("Manager location failed for this user",false);
+					String  locationAfterUpdated = getUserLocationsList();
+					if (!locationAfterUpdated.equals(defaultLocation)) {
+						SimpleUtils.pass("User's location was updated successfully");
+					}else
+						SimpleUtils.fail("Manager location failed for this user",false);
 					}else
 					SimpleUtils.fail("User profile edit button load failed ",true);
 
@@ -3177,6 +3183,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			if (isElementLoaded(managerLocationPopUpTitle,5)) {
 				managerLocationInputFiled.sendKeys(userFirstName);
 				managerLocationInputFiled.sendKeys(Keys.ENTER);
+				waitForSeconds(10);
 				if (locationListRows.size()>1) {
 					SimpleUtils.pass("Manager Location: '" + locationListRows.size() + "' upperfield(s) found with name '"
 							+ userFirstName + "'");

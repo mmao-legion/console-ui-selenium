@@ -56,7 +56,7 @@ public class NewNavigationFlowTest extends TestBase {
 
         //search one user and to see edit
         controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-        String userFirstName = "Level:Region";
+        String userFirstName = "a";
 
         //Validate manager location for one user
         controlsNewUIPage.verifyUpdateUserAndRolesOneUserLocationInfo(userFirstName);
