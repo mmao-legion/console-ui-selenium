@@ -9,6 +9,8 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -729,6 +731,61 @@ public class ConfigurationTest extends TestBase {
             for(String index:indexes){
                 schedulePage.verifyShiftTimeInReadMode(index,shiftTime);
             }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "E2E -> Verify the time of day setting in advance staffing rule")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void mealAndRestBreakInADVRuleE2E(String browser, String username, String password, String location) throws Exception {
+        try{
+            String locationName = "AutoUsingByFiona1";
+            String mealBreakTiem = "5:30am - 6:15am";
+            String restBreakTime = "6:30am - 7:15am";
+            HashMap<String,String> mealRestBreaks= new HashMap<String,String>();
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            //back to console mode
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            SimpleUtils.assertOnFail("Console Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            //Switch select one location
+            locationSelectorPage.changeLocation(locationName);
+            //go to schedule function
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            // Navigate to a week
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            // create the schedule if not created
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUI();
+//          Click on edit button on week view
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), false);
+//          Click On Profile icon -> Breaks
+            schedulePage.clickOnProfileIcon();
+            schedulePage.clickOnEditMeaLBreakTime();
+            mealRestBreaks = schedulePage.getMealAndRestBreaksTime();
+
+            if(mealRestBreaks.get("Meal Break").compareToIgnoreCase(mealBreakTiem) == 0){
+                SimpleUtils.pass("The Meal Break info is correct");
+            }else
+                SimpleUtils.fail("The Meal Break info is correct",false);
+            if(mealRestBreaks.get("Rest Break").compareToIgnoreCase(restBreakTime) == 0){
+                SimpleUtils.pass("The Rest Break info is correct");
+            }else
+                SimpleUtils.fail("The Rest Break info is correct",false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

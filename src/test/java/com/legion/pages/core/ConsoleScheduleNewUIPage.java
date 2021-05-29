@@ -14729,7 +14729,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyShiftTimeInReadMode(String index,String shiftTime) throws Exception{
-        String shiftTimeInShiftTable;
+        String shiftTimeInShiftTable = null;
         if (isElementEnabled(shiftsTable,5)) {
             List<WebElement> shiftsTableList = shiftsTable.findElements(By.className("div[data-day=\"" + index + "\"].week-schedule-shift"));
             for(WebElement shiftTable:shiftsTableList){
@@ -14761,6 +14761,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Table header fail to load!", false);
         }
         return index;
+    }
+
+    @FindBy(css = "div.slider-section-description-break-time-item-rest")
+    private List<WebElement> restBreakTimes;
+
+    @Override
+    public HashMap<String, String> getMealAndRestBreaksTime() throws Exception {
+        HashMap<String, String> mealAndRestBreaksTime = new HashMap<String, String>();
+        if (isElementEnabled(editMealBreakTitle,5)) {
+            for (WebElement mealBreakTime:mealBreakTimes){
+                String mealTime = mealBreakTime.getText().trim();
+                mealAndRestBreaksTime.put("Meal Break",mealTime);
+            }
+            for (WebElement restBreakTime:restBreakTimes){
+                String restTime = restBreakTime.getText().trim();
+                mealAndRestBreaksTime.put("Rest Break",restTime);
+            }
+        }else
+            SimpleUtils.report("Breaks edit page don't display");
+        return mealAndRestBreaksTime;
     }
 }
 
