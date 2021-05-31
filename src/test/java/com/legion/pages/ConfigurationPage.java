@@ -70,4 +70,7 @@ public interface ConfigurationPage {
     public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception;
     public void searchTemplate(String templateName) throws Exception;
     public void publishNowTemplate() throws Exception;
+    public void goToWorkRolesWithStaffingRules();
+    public void deleteBasicStaffingRule() throws Exception;
+    public void saveBtnIsClickable() throws Exception;
 }

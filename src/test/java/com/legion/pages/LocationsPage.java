@@ -183,39 +183,45 @@ public interface LocationsPage {
 
     public void goToConfigurationTabInLocationLevel();
 
-    public void canGoToAssignmentRoleInLocationLevel();
+    public void canGoToAssignmentRoleViaTemNameInLocationLevel();
 
     public List<HashMap<String, String>> getAssignmentRolesInLocationLevel();
 
-    public void canGoToOperationHoursInLocationLevel();
+    public void canGoToOperationHoursViaTemNameInLocationLevel();
 
     public String getOHTemplateValueInLocationLevel();
 
-    public void canGoToSchedulingRulesInLocationLevel();
+    public void canGoToSchedulingRulesViaTemNameInLocationLevel();
 
     public List<HashMap<String,String>> getScheRulesTemplateValueInLocationLevel();
 
-    public void canGoToScheduleCollaborationInLocationLevel();
+    public void canGoToScheduleCollaborationViaTemNameInLocationLevel();
 
     public String getScheCollTemplateValueInLocationLevel();
 
-    public void canGoToTAInLocationLevel();
+    public void canGoToTAViaTemNameInLocationLevel();
 
     public String getTATemplateValueInLocationLevel();
 
-    public void canGoToSchedulingPoliciesInLocationLevel();
+    public void canGoToSchedulingPoliciesViaTemNameInLocationLevel();
 
     public String getSchedulingPoliciesTemplateValueInLocationLevel();
 
-    public void canGoToComplianceInLocationLevel();
+    public void canGoToComplianceViaTemNameInLocationLevel();
 
     public String getComplianceTemplateValueInLocationLevel();
 
-    public void canGoToLaborModelInLocationLevel();
+    public void canGoToLaborModelViaTemNameInLocationLevel();
 
     public List<HashMap<String, String>> getLaborModelInLocationLevel();
 
     public void backToConfigurationTabInLocationLevel();
 
     public List<HashMap<String, String>> getLocationTemplateInfoInLocationLevel();
+
+    public void editLocationBtnIsClickableInLocationDetails();
+
+    public void actionsForEachTypeOfTemplate(String template_type, String action);
+
+    public void okBtnIsClickable() throws Exception;
 }

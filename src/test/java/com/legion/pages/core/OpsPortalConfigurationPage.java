@@ -1360,6 +1360,36 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("There is no advanced staffing rule.",false);
 		}
 	}
+	@FindBy(css="div.settings-work-role-detail-edit-rules div[ng-if=\"ifStaffingRule()\"]")
+	private List<WebElement> basicStaffingRuleList;
+	@Override
+	public void deleteBasicStaffingRule() throws Exception{
+		int countOfAdvancedStaffingRule = basicStaffingRuleList.size();
+		if(countOfAdvancedStaffingRule!=0){
+			WebElement deleteButton = basicStaffingRuleList.get(0).findElement(By.cssSelector("span.settings-work-rule-edit-delete-icon"));
+			clickTheElement(deleteButton);
+			if(isElementEnabled(deleteButtonOnDialogPage,2)){
+				clickTheElement(deleteButtonOnDialogPage);
+			}
+			waitForSeconds(2);
+			if(basicStaffingRuleList.get(0).findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size()==1){
+				SimpleUtils.pass("User can delete basic staffing rule successfully!");
+			}else {
+				SimpleUtils.fail("User can't delete advance staffing rule successfully!",false);
+			}
+		}else {
+			SimpleUtils.fail("There is no advanced staffing rule.",false);
+		}
+	}
+
+	@Override
+	public void saveBtnIsClickable() throws Exception {
+		scrollToBottom();
+		if (isElementLoaded(saveButton,5)) {
+			click(saveButton);
+		}else
+			SimpleUtils.fail("Save button load failed",false);
+	}
 
 	@FindBy(css="div.settings-work-rule-container")
 	private WebElement scheduleRulesList;
@@ -1813,4 +1843,21 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("OP - Schedule Collaboration: Open Shift : Convert unassigned shifts to open when copying schedule settings dropdown list not loaded.", false);
 		}
 	}
+
+	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]>tr>td:nth-child(2)>lg-button>button[type='button']")
+	private List<WebElement> staffingRulesForWorkRoleInSchedulingRoles;
+	@Override
+	public void goToWorkRolesWithStaffingRules() {
+		if (areListElementVisible(staffingRulesForWorkRoleInSchedulingRoles,5)) {
+			for (WebElement s:staffingRulesForWorkRoleInSchedulingRoles) {
+				if (!s.getText().contains("Add")) {
+					click(s);
+					break;
+				}
+			}
+		}else
+			SimpleUtils.fail("staffing rules link show wrong for each work role",false);
+
+	}
+
 }
