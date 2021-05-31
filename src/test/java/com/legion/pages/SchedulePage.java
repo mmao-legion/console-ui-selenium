@@ -660,4 +660,5 @@ public interface SchedulePage {
 	public boolean isCopyScheduleWindow() throws Exception;
 	public int getSpecificFiltersCount (String filterText) throws Exception;
 	public void deleteMealBreakForOneShift(WebElement shift) throws Exception;
+	public List<WebElement> getShiftsByNameOnDayView(String name) throws Exception;
 }

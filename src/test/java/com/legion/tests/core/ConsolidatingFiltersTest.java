@@ -76,9 +76,9 @@ public class ConsolidatingFiltersTest extends TestBase {
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Validate Compliance Review in week view")
+    @TestName(description = "Validate Compliance Review in week view and day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyComplianceReviewInWeekViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -201,6 +201,40 @@ public class ConsolidatingFiltersTest extends TestBase {
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             SimpleUtils.assertOnFail("Uncheck Compliance Review filter fail! ",
                     allShiftsCount == schedulePage.getShiftsCount(), false);
+
+            //Validate Compliance Review in day view
+            schedulePage.clickOnDayView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            for (int i=0; i< 4; i++) {
+                schedulePage.navigateDayViewWithIndex(i);
+                schedulePage.clickOnFilterBtn();
+                complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
+                complianceShiftsCount = schedulePage.getShiftsCount();
+                SimpleUtils.assertOnFail("The compliance shift count display incorrectly in schedule filter dropdown list! ",
+                        complianceReviewCount == complianceShiftsCount, false);
+
+                //Check the clopening violation shifts on the first and second day
+                if (i ==0 || i==1) {
+                    shiftsOfFirstDay = schedulePage.getShiftsByNameOnDayView(firstNameOfTM1);
+                    SimpleUtils.assertOnFail("Clopening compliance message display failed",
+                            schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("Clopening"), false);
+                }
+
+                //Check the meal break violation shifts on the third day
+                if (i==2) {
+                    shiftsOfThirdDay = schedulePage.getShiftsByNameOnDayView(firstNameOfTM1);
+                    SimpleUtils.assertOnFail("Meal break compliance message display failed",
+                            schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
+                }
+
+                //Check the OT violation shifts on the forth day. Blocked by SCH-4250
+//                if (i==3) {
+//                      shiftsOfForthDay = schedulePage.getShiftsByNameOnDayView(firstNameOfTM1);
+//                    SimpleUtils.assertOnFail("OT compliance message display failed",
+//                            schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
+//                }
+            }
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
