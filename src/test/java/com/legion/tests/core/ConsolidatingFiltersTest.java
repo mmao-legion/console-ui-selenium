@@ -18,9 +18,12 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
 public class ConsolidatingFiltersTest extends TestBase {
 
     private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
+    private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
 
     @Override
     @BeforeMethod()
@@ -84,7 +87,13 @@ public class ConsolidatingFiltersTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            HashMap<String, Object[][]> teamMembers = kendraScott2TeamMembers;
+            HashMap<String, Object[][]> teamMembers = new HashMap<>();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+                teamMembers = kendraScott2TeamMembers;
+            } else {
+                teamMembers = cinemarkWkdyTeamMembers;
+            }
+
             String firstNameOfTM1 = teamMembers.get("TeamMember2")[0][0].toString();
             String workRoleOfTM1 = teamMembers.get("TeamMember2")[0][2].toString();
             teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstNameOfTM1);

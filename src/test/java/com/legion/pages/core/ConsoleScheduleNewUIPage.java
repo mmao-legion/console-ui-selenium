@@ -15422,20 +15422,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             while(deleteMealBreakButtons.size()>0){
                 click(deleteMealBreakButtons.get(0));
             }
-            click(continueBtnInMealBreakButton);
-            if (isElementEnabled(confirmWindow, 5)) {
-                click(okBtnOnConfirm);
-            }
+
             SimpleUtils.pass("Delete meal break times successfully");
         } else {
             SimpleUtils.report("Delete meal break fail to load! ");
         }
-        if (isMealBreakTimeWindowDisplayWell(true)) {
-
-
-        }else
-            SimpleUtils.fail("Delete meal break window load failed",false);
-        click(cannelBtnInMealBreakButton);
+        click(continueBtnInMealBreakButton);
+        if (isElementEnabled(confirmWindow, 5)) {
+            click(okBtnOnConfirm);
+        }
     }
 
     @Override
