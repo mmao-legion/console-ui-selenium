@@ -15394,5 +15394,48 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
+    @FindBy(css = "label.input-label.ng-binding")
+    private List<WebElement> allFilterText;
+
+    public int getSpecificFiltersCount (String filterText) throws Exception {
+        int count = 0;
+        if (areListElementVisible(allFilterText, 10) && allFilterText.size()>0){
+            for (WebElement filter: allFilterText){
+                String [] fullText= filter.getText().split("\\(");
+                String filterName = fullText[0].trim();
+                String filterCount = fullText[1].replace(")", "");
+                if (filterName.equalsIgnoreCase(filterText)) {
+                    count = Integer.parseInt(filterCount);
+                }
+            }
+        } else
+            SimpleUtils.fail("Filter text in schedule filter dropdown list fail to load! ", false);
+        return count;
+    }
+
+    @Override
+    public void deleteMealBreakForOneShift(WebElement shift) throws Exception {
+        click(shift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+        clickOnEditMeaLBreakTime();
+
+        if (areListElementVisible(deleteMealBreakButtons, 5)) {
+            while(deleteMealBreakButtons.size()>0){
+                click(deleteMealBreakButtons.get(0));
+            }
+            click(continueBtnInMealBreakButton);
+            if (isElementEnabled(confirmWindow, 5)) {
+                click(okBtnOnConfirm);
+            }
+            SimpleUtils.pass("Delete meal break times successfully");
+        } else {
+            SimpleUtils.report("Delete meal break fail to load! ");
+        }
+        if (isMealBreakTimeWindowDisplayWell(true)) {
+
+
+        }else
+            SimpleUtils.fail("Delete meal break window load failed",false);
+        click(cannelBtnInMealBreakButton);
+    }
 }
 

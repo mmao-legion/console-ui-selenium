@@ -658,4 +658,6 @@ public interface SchedulePage {
 	public void verifyShiftTypeFilters() throws Exception;
 	public float checkEnterBudgetWindowLoadedForNonDG() throws Exception;
 	public boolean isCopyScheduleWindow() throws Exception;
+	public int getSpecificFiltersCount (String filterText) throws Exception;
+	public void deleteMealBreakForOneShift(WebElement shift) throws Exception;
 }
