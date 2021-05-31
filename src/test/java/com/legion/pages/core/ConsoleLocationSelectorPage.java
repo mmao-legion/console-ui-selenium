@@ -136,7 +136,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                 for (WebElement locationItem : locationItems) {
                                     if (locationItem.getText().contains(locationName)) {
                                         isLocationMatched = true;
-                                        click(locationItem);
+                                        clickTheElement(locationItem);
                                         SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
                                         break;
                                     }

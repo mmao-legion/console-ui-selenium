@@ -8575,8 +8575,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public int verifyClickOnAnyShift() throws Exception {
         List<String> expectedRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
         int index = 100;
-        if (areListElementVisible(tmIcons, 15)) {
-            for (int i = 0; i < tmIcons.size(); i++) {
+        if (areListElementVisible(tmIcons, 15) && tmIcons.size() > 1) {
+            for (int i = 1; i < tmIcons.size(); i++) {
                 scrollToElement(tmIcons.get(i));
                 waitForSeconds(1);
                 clickTheElement(tmIcons.get(i));
