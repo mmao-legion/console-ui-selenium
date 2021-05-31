@@ -1973,4 +1973,19 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		} else
 			SimpleUtils.fail("Forecast Page: Refresh anyway button in waring dialog failed to load",false);
 	}
+
+	@FindBy(id = "forecast-labor-prediction")
+	private WebElement forecastLaborPrediction;
+
+	@FindBy(className = "card-carousel-fixed")
+	private WebElement forecastSmartcard;
+
+	@Override
+	public void verifyLaborForecastCanLoad() throws Exception {
+		if (isElementLoaded(forecastLaborPrediction,10) && !forecastLaborPrediction.getText().contains("Failed to load data")
+				&& forecastLaborPrediction.getText().contains("LABOR HOURS") && isElementLoaded(forecastSmartcard,10))
+			SimpleUtils.pass("Forecast Page: Content under labor tab should be loaded successfully");
+		else
+			SimpleUtils.fail("Forecast Page: Content under labor tab is not loaded",false);
+	}
 }

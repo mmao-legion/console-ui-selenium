@@ -948,7 +948,7 @@ public class ActivityTest extends TestBase {
             for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
                 if (!entry.getKey().equals("Cover TM")) {
                     swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Swap User name: " + entry.getKey());
+                    SimpleUtils.pass("Get Cover User name: " + entry.getKey());
                 }
             }
             Object[][] credential = null;
@@ -1059,7 +1059,7 @@ public class ActivityTest extends TestBase {
             for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
                 if (!entry.getKey().equals("Cover TM")) {
                     swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Swap User name: " + entry.getKey());
+                    SimpleUtils.pass("Get Cover User name: " + entry.getKey());
                 }
             }
             Object[][] credential = null;

@@ -8575,7 +8575,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public int verifyClickOnAnyShift() throws Exception {
         List<String> expectedRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
         int index = 100;
-        if (areListElementVisible(tmIcons, 15)) {
+        if (areListElementVisible(tmIcons, 20)) {
             for (int i = 0; i < tmIcons.size(); i++) {
                 scrollToElement(tmIcons.get(i));
                 waitForSeconds(1);
@@ -11920,21 +11920,24 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         int index = 0;
         if (areListElementVisible(tmIcons, 5)) {
             for (int i = 0; i < tmIcons.size(); i++) {
-                moveToElementAndClick(tmIcons.get(i));
+                scrollToElement(tmIcons.get(i));
+                waitForSeconds(1);
+                clickTheElement(tmIcons.get(i));
                 if (isPopOverLayoutLoaded()) {
                     if (popOverLayout.getText().contains(requestName) && popOverLayout.getText().contains(requestUserName)) {
                         index = 1;
                         click(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
                         SimpleUtils.pass("Click " + requestName + " button Successfully!");
                         break;
-                    }
+                    } else
+                    clickTheElement(tmIcons.get(i));
                 }
             }
             if (index == 0) {
-                SimpleUtils.fail("Failed to select one shift to claim", true);
+                SimpleUtils.fail("Failed to select one shift to claim", false);
             }
         } else {
-            SimpleUtils.fail("Team Members' Icons not loaded", true);
+            SimpleUtils.fail("Team Members' Icons not loaded", false);
         }
     }
 

@@ -88,4 +88,5 @@ public interface ForecastPage<pubic> {
 	public void verifyTheContentOnWarningDialog() throws Exception;
 	public void verifyTheFunctionalityOfCancelButtonOnWarningDialog(int index, String value) throws Exception;
 	public void verifyTheFunctionalityOfRefreshanywayButtonOnWarningDialog(int index, String value) throws Exception;
+	public void verifyLaborForecastCanLoad() throws Exception;
 }

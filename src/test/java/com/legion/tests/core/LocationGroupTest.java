@@ -2880,7 +2880,7 @@ public class LocationGroupTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate the filter on schedule page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheFilterOnSchedulePageForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {

@@ -215,6 +215,8 @@
                         <include name="verifyEditForecastInDayViewViewAsInternalAdmin"/>
                         <include name="verifyEditForecastInWeekViewViewAsInternalAdmin"/>
                         <include name="verifyFunctionalityOfRefreshAsInternalAdmin"/>
+                        <include name="verifyFunctionalityOfRefreshAsStoreManager"/>
+                        <include name="validateP2PLaborForecastCanLoadAsInternalAdmin"/>
                     </methods>
                 </class>
             </classes>
