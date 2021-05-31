@@ -18,13 +18,14 @@ public interface ActivityPage{
     public boolean isActivityBellIconLoaded() throws Exception;
     public void verifyTheContentOnActivity() throws Exception;
     public void verifyTheContentOfShiftSwapActivity() throws Exception;
-    public WebElement verifyNewShiftCoverCardShowsOnActivity(String requestUserName, String respondUserName) throws Exception;
-    public void approveOrRejectShiftCoverRequestOnActivity(String requestUserName, String respondUserName, String action) throws Exception;
-    public void verifyActivityOfShiftOffer(String requestUserName) throws Exception;
+    public WebElement verifyNewShiftCoverCardShowsOnActivity(String requestUserName, String respondUserName, String location) throws Exception;
+    public void approveOrRejectShiftCoverRequestOnActivity(String requestUserName, String respondUserName, String action, String location) throws Exception;
+    public void verifyActivityOfShiftOffer(String requestUserName, String location) throws Exception;
     public void approveOrRejectShiftOfferRequestOnActivity(String requestUserName, String action)throws Exception;
     public void verifyApproveShiftOfferRequestAndGetErrorOnActivity(String requestUserName) throws Exception;
     public void verifyFiveActivityButtonsLoaded() throws Exception;
     public boolean isActivityContainerPoppedUp() throws Exception;
+    public boolean isApproveRejectBtnsLoaded(int index) throws Exception;
     public void verifyNewWorkPreferencesCardShowsOnActivity(String userName) throws Exception;
     public void verifyNewBusinessProfileCardShowsOnActivity(String userName, boolean isNewLabelShows) throws Exception;
     public void verifyTheNotificationForReqestTimeOff(String requestUserName, String startTime, String endTime,String timeOffAction) throws Exception;

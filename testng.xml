@@ -241,6 +241,7 @@
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
+                    <include name="verifyActivityOfClaimOpenShiftNoApprovalAsTeamLead" />
                     <include name="verifyActivityOfPublishUpdateSchedule" />
                     <include name="verifyTheNotificationForCancelTimeOffAsTeamMember"/>
 <!--                    <include name="verifyNoNotificationForActivateTMAsStoreManager"/>-->

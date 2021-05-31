@@ -1838,7 +1838,18 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
 			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			String shiftEndTime = "";
+			String shiftStartTime = "";
+			if (firstShiftInfo.get(2).split("-")[1].contains(":")) {
+				shiftEndTime = firstShiftInfo.get(2).split("-")[1].split(":")[0] + firstShiftInfo.get(2).split("-")[1].substring(firstShiftInfo.get(2).split("-")[1].length() - 2);
+				SimpleUtils.report("Get the shift end time: " + shiftEndTime);
+			}
+			if (firstShiftInfo.get(2).split("-")[0].contains(":")) {
+				shiftStartTime = firstShiftInfo.get(2).split("-")[0].split(":")[0] + firstShiftInfo.get(2).split("-")[0].substring(firstShiftInfo.get(2).split("-")[0].length() - 2);
+				SimpleUtils.report("Get the shift start time: " + shiftStartTime);
+			}
+			schedulePage.moveSliderAtCertainPoint(shiftEndTime, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.moveSliderAtCertainPoint(shiftStartTime, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 			schedulePage.selectWorkingDaysOnNewShiftPageByIndex(Integer.parseInt(firstShiftInfo.get(1)));
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();

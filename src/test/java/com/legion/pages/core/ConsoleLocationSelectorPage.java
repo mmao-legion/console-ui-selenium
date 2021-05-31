@@ -104,7 +104,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public Boolean isChangeLocationButtonLoaded() throws Exception
     {
-        if(isElementLoaded(locationSelectorButton,20)) {
+        if(isElementLoaded(locationSelectorButton,30)) {
             return true;
         }
         return false;
@@ -136,7 +136,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                 for (WebElement locationItem : locationItems) {
                                     if (locationItem.getText().contains(locationName)) {
                                         isLocationMatched = true;
-                                        click(locationItem);
+                                        clickTheElement(locationItem);
                                         SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
                                         break;
                                     }
@@ -474,7 +474,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             setScreenshotConsoleName(activeConsoleName);
             WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));
             if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
-                if (isElementLoaded(upperFieldSelectorButton, 5)) {
+                if (isElementLoaded(upperFieldSelectorButton, 60)) {
                     if (upperFieldSelectorButton.getText().equalsIgnoreCase(upperFieldName)) {
                         SimpleUtils.pass("Given '" + upperFieldType + " " + upperFieldName + "' already selected!");
                     } else {
@@ -501,7 +501,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                     }else {
                                         SimpleUtils.fail("Search " + upperFieldType + "input failed to load!", false);
                                     }
-                                    waitForSeconds(4);
+                                    waitForSeconds(6);
                                     availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
                                     if (availableLocationCardsName.size() > 0) {
                                         for (WebElement upperFieldCardName : availableLocationCardsName) {

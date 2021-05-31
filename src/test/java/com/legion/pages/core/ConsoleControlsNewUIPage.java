@@ -5781,28 +5781,29 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		if (areListElementVisible(accessSections,10)){
 			for (WebElement accessSection : accessSections){
 				if (accessSection.findElement(By.tagName("span")).getText().equalsIgnoreCase(section)){
-					if (!accessSection.getAttribute("class").contains("expand")){
+					if (!accessSection.findElement(By.cssSelector("div")).getAttribute("class").contains("expand")){
 						clickTheElement(accessSection.findElement(By.tagName("span")));
 					}
+					int index = getTheIndexByAccessRolesName("Store Manager", accessSection);
 					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".table-row"));
 					for (WebElement permissionTemp : permissions){
 						String s = permissionTemp.getText();
 						if (s!=null && s.toLowerCase().contains(permission.toLowerCase())){
 							SimpleUtils.pass("Found permission: "+ permission);
 							List<WebElement> permissionInputs = permissionTemp.findElements(By.tagName("input"));
-							if (permissionInputs.size()>5) {
-								if (permissionInputs.get(5).getAttribute("class").contains("ng-not-empty")) {
+							if (permissionInputs.size()>index) {
+								if (permissionInputs.get(index).getAttribute("class").contains("ng-not-empty")) {
 									if (action.equalsIgnoreCase("on")) {
 										SimpleUtils.pass(permission + " already on!");
 									} else {
-										clickTheElement(permissionInputs.get(5));
+										clickTheElement(permissionInputs.get(index));
 										SimpleUtils.pass(permission + " unChecked!");
 									}
 								} else {
 									if (action.equalsIgnoreCase("off")) {
 										SimpleUtils.pass(permission + " already off!");
 									} else {
-										clickTheElement(permissionInputs.get(5));
+										clickTheElement(permissionInputs.get(index));
 										SimpleUtils.pass(permission + " Checked!");
 									}
 								}
@@ -5816,6 +5817,26 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		} else {
 			SimpleUtils.fail("No access item loaded!", false);
 		}
+	}
+
+	private int getTheIndexByAccessRolesName(String roleName, WebElement accessSection) throws Exception {
+		int index = -1;
+		if (accessSection != null) {
+			List<WebElement> accessRoles = accessSection.findElements(By.cssSelector(".header-row [ng-repeat*=\"headers\"]"));
+			if (accessRoles != null && accessRoles.size() > 0) {
+				for (int i = 0; i < accessRoles.size(); i++) {
+					if (accessRoles.get(i).getText().equalsIgnoreCase(roleName)) {
+						SimpleUtils.pass("Get the index of Role: " + roleName + ": " + i);
+						index = i;
+						break;
+					}
+				}
+			}
+		}
+		if (index == -1) {
+			SimpleUtils.fail("Failed to Get the index of Role: " + roleName, false);
+		}
+		return index;
 	}
 
 	@FindBy(css = "[form-title*=\"Schedule Copy\"]")
