@@ -11065,7 +11065,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             unCheckFilters(jobTitleFilters);
             String jobTitle = jobTitleFilter.getText();
             SimpleUtils.report("Data for job title: '" + jobTitle + "' as bellow");
-            clickTheElement(jobTitleFilter);
+            clickTheElement(jobTitleFilter.findElement(By.cssSelector("input[type=\"checkbox\"]")));
             click(filterButton);
             String cardHoursAndWagesText = "";
             HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
@@ -11209,7 +11209,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
                     click(filterButton);
                 unCheckFilters(workRoleFilters);
-                click(workRoleFilter);
+                click(workRoleFilter.findElement(By.cssSelector("input[type=\"checkbox\"]")));
                 SimpleUtils.report("Data for Work Role: '" + workRoleFilter.getText() + "'");
                 if (isWeekView) {
                     filterScheduleByJobTitleWeekView(jobTitleFilters, availableJobTitleList);
