@@ -15437,5 +15437,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Delete meal break window load failed",false);
         click(cannelBtnInMealBreakButton);
     }
+
+    @Override
+    public List<WebElement> getShiftsByNameOnDayView(String name) throws Exception {
+        int count = 0;
+        List<WebElement> shiftsOfOneTM = new ArrayList<>();
+        if (areListElementVisible(dayViewAvailableShifts, 5) && dayViewAvailableShifts != null && dayViewAvailableShifts.size() > 0) {
+            for (WebElement shift : dayViewAvailableShifts) {
+                WebElement name1 = shift.findElement(By.className("sch-day-view-shift-worker-name"));
+                if (name1 != null && name1.getText().contains(name)) {
+                    shiftsOfOneTM.add(shift);
+                    SimpleUtils.pass("shift exists on this day!");
+                    count++;
+                }
+            }
+            if(count==0){
+                SimpleUtils.report("No shifts on the day for the TM: " + name);
+            }
+        } else {
+            SimpleUtils.fail("No shifts on the day",false);
+        }
+        return shiftsOfOneTM;
+    }
 }
 
