@@ -769,7 +769,7 @@ public class CinemarkMinorTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Admin can configure the access to edit calendars")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) {
+    public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -783,8 +783,8 @@ public class CinemarkMinorTest extends TestBase {
             String accessRoleTab = "Access Roles";
             controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
             String permissionSection = "Team";
-            String permission1 = "Team: Manage School Calendars";
-            String permission2 = "Team: View School Calendars";
+            String permission1 = "Manage School Calendars";
+            String permission2 = "View School Calendars";
             String actionOff = "off";
             String actionOn = "on";
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());

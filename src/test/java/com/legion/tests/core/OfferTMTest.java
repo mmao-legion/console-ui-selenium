@@ -797,7 +797,7 @@ public class OfferTMTest extends TestBase {
             activityPage.verifyActivityBellIconLoaded();
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
-            activityPage.verifyActivityOfShiftOffer(firstNameOfTM);
+            activityPage.verifyActivityOfShiftOffer(firstNameOfTM, location);
             activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM, ActivityTest.approveRejectAction.Approve.getValue());
             activityPage.closeActivityWindow();
 
@@ -920,7 +920,7 @@ public class OfferTMTest extends TestBase {
             activityPage.verifyActivityBellIconLoaded();
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
-            activityPage.verifyActivityOfShiftOffer(firstNameOfTM);
+            activityPage.verifyActivityOfShiftOffer(firstNameOfTM, location);
             activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM, ActivityTest.approveRejectAction.Reject.getValue());
             activityPage.closeActivityWindow();
             loginPage.logOut();
@@ -1061,7 +1061,7 @@ public class OfferTMTest extends TestBase {
             activityPage.verifyActivityBellIconLoaded();
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
-            activityPage.verifyActivityOfShiftOffer(firstNameOfTM2);
+            activityPage.verifyActivityOfShiftOffer(firstNameOfTM2, location);
             activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM1, ActivityTest.approveRejectAction.Approve.getValue());
             activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(firstNameOfTM1);
             String expectedTopMessage = "Error! Failed to Approve";

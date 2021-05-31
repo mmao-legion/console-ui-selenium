@@ -165,6 +165,7 @@
             <class name="com.legion.tests.core.ConsolidatingFiltersTest">
                 <methods>
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                    <include name="verifyComplianceReviewInWeekViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

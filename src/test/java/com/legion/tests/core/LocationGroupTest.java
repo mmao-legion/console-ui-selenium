@@ -169,7 +169,7 @@ public class LocationGroupTest extends TestBase {
             controlsNewUIPage.selectUsersAndRolesSubTabByLabel(ControlsNewUITest.usersAndRolesSubTabs.AccessByJobTitles.getValue());
 
             String permissionSection = "Controls";
-            String permission = "Controls: Manage Working Hours Settings";
+            String permission = "Manage Working Hours Settings";
             String actionOff = "off";
             String actionOn = "on";
             cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
@@ -287,7 +287,7 @@ public class LocationGroupTest extends TestBase {
             controlsNewUIPage.selectUsersAndRolesSubTabByLabel(ControlsNewUITest.usersAndRolesSubTabs.AccessByJobTitles.getValue());
 
             String permissionSection = "Controls";
-            String permission = "Controls: Manage Working Hours Settings";
+            String permission = "Manage Working Hours Settings";
             String actionOff = "off";
             String actionOn = "on";
             cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
@@ -1762,7 +1762,7 @@ public class LocationGroupTest extends TestBase {
         activityPage.verifyActivityBellIconLoaded();
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
-        activityPage.verifyActivityOfShiftOffer(teamMemberName);
+        activityPage.verifyActivityOfShiftOffer(teamMemberName, "");
         activityPage.approveOrRejectShiftOfferRequestOnActivity(teamMemberName, ActivityTest.approveRejectAction.Approve.getValue());
 
         //Check the shift been scheduled
@@ -1880,7 +1880,7 @@ public class LocationGroupTest extends TestBase {
         activityPage.verifyActivityBellIconLoaded();
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
-        activityPage.verifyActivityOfShiftOffer(teamMemberName);
+        activityPage.verifyActivityOfShiftOffer(teamMemberName,"");
         activityPage.approveOrRejectShiftOfferRequestOnActivity(teamMemberName, ActivityTest.approveRejectAction.Approve.getValue());
 
         //Check the shift been scheduled
