@@ -35,6 +35,7 @@
                     <include name="numberOfShiftsInADVRuleE2E"/>
                     <include name="timeOfDayInADVRuleE2E"/>
                     <include name="mealAndRestBreakInADVRuleE2E"/>
+                    <include name="locationLevelAdvanceStaffingRule"/>
                 </methods>
             </class>
         </classes>

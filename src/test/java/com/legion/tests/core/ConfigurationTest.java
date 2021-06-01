@@ -790,4 +790,42 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Location Level Advance Staffing Rule")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void locationLevelAdvanceStaffingRule(String browser, String username, String password, String location) throws Exception {
+        try{
+            String shiftsNumber = "7";
+            List<String> days = new ArrayList<String>(){{
+                add("Sunday");
+                add("Friday");
+            }};
+            String startOffsetTime = "30";
+            String startTimeUnit = "minutes";
+            String startEventPoint = "after";
+            String startEvent = "Opening Operating Hours";
+            String endOffsetTime = "60";
+            String endTimeUnit = "minutes";
+            String endEventPoint = "before";
+            String endEvent = "Closing Operating Hours";
+
+            String locationName = "AutoUsingByFiona1";
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.actionsForEachTypeOfTemplate("Scheduling Rules","View");
+            locationsPage.goToScheduleRulesListAtLocationLevel("New Work Role");
+            configurationPage.validateAdvanceStaffingRuleShowing(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
+                    endEvent,endOffsetTime,endEventPoint,endTimeUnit,days,shiftsNumber);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

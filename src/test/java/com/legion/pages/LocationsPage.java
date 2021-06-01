@@ -224,4 +224,6 @@ public interface LocationsPage {
     public void actionsForEachTypeOfTemplate(String template_type, String action);
 
     public void okBtnIsClickable() throws Exception;
+
+    public void goToScheduleRulesListAtLocationLevel(String workRole);
 }

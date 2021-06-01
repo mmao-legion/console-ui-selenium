@@ -3158,4 +3158,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}else
 			SimpleUtils.fail("Ok button load failed",false);
 	}
+
+	@Override
+	public void goToScheduleRulesListAtLocationLevel(String workRole) {
+		if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel, 5)) {
+			for (WebElement s : workRolesInSchedulingRulesInLocationLevel) {
+				if(s.findElement(By.cssSelector("tr>td:nth-child(1)")).getText().trim().equals(workRole)){
+					clickTheElement(s.findElement(By.cssSelector("tr>td:nth-child(2) button")));
+					waitForSeconds(5);
+				}
+				break;
+			}
+		} else
+			SimpleUtils.fail("Failed to loading the work role list", false);
+	}
 }
