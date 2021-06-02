@@ -1,8 +1,7 @@
 package com.legion.tests.core;
 
-import com.legion.pages.DashboardPage;
-import com.legion.pages.SchedulePage;
-import com.legion.pages.TeamPage;
+import com.legion.pages.*;
+import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -66,7 +65,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             }
 
             schedulePage.clickOnFilterBtn();
-            schedulePage.verifyShiftTypeInLeft();
+            schedulePage.verifyShiftTypeInLeft(false);
             schedulePage.verifyShiftTypeFilters();
 
         } catch (Exception e){
@@ -243,6 +242,260 @@ public class ConsolidatingFiltersTest extends TestBase {
 //                    SimpleUtils.assertOnFail("OT compliance message display failed",
 //                            schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
 //                }
+            }
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Action Required in week view and day view")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String option = "No, keep as unassigned";
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+                ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+                ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+                controlsPage.gotoControlsPage();
+                SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+                controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+                SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+                controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
+
+                //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
+                controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption(option);
+
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
+                opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                configurationPage.goToConfigurationPage();
+                configurationPage.goToTemplateDetailsPage("Schedule Collaboration");
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
+                configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+                configurationPage.publishNowTheTemplate();
+                opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            }
+
+            if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
+                Thread.sleep(300000);
+            }
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            // Create schedule if it is not created
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "08:00PM");
+
+            schedulePage.clickOnFilterBtn();
+            int allShiftsCount = schedulePage.getShiftsCount();
+            int unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
+            schedulePage.selectShiftTypeFilterByText("Action Required");
+            int unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
+            SimpleUtils.assertOnFail("The Action Required shift count display incorrectly in schedule filter dropdown list! ",
+                    unassignedAndOOOHShiftCount == unassignedAndOOOHShiftCountInFilter, false);
+
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+            SimpleUtils.assertOnFail("Uncheck Action Required filter fail! ",
+                    allShiftsCount == schedulePage.getShiftsCount(), false);
+
+            //Validate Action Required shifts in day view
+            schedulePage.clickOnDayView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Action Required");
+            for (int i=0; i< 7; i++) {
+                schedulePage.navigateDayViewWithIndex(i);
+                schedulePage.clickOnFilterBtn();
+                unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
+                unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
+                SimpleUtils.assertOnFail("The Action Required shift count display incorrectly in schedule filter dropdown list! ",
+                        unassignedAndOOOHShiftCount == unassignedAndOOOHShiftCountInFilter, false);
+            }
+
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            schedulePage.publishActiveSchedule();
+
+
+            //Get the info of this week for copy schedule
+            String firstWeekInfo = schedulePage.getActiveWeekText();
+            if (firstWeekInfo.length() > 11) {
+                firstWeekInfo = firstWeekInfo.trim().substring(10);
+                if (firstWeekInfo.contains("-")) {
+                    String[] temp = firstWeekInfo.split("-");
+                    if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
+                        firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
+                                + " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
+                    }
+                }
+            }
+
+            schedulePage.navigateToNextWeek();
+
+            isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.clickCreateScheduleBtn();
+            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "11:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "11:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "11:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "11:00AM", "08:00PM");
+            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "11:00AM", "08:00PM");
+            schedulePage.clickNextBtnOnCreateScheduleWindow();
+            schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
+            schedulePage.clickOnFinishButtonOnCreateSchedulePage();
+
+            schedulePage.clickOnFilterBtn();
+            allShiftsCount = schedulePage.getShiftsCount();
+            unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
+            schedulePage.selectShiftTypeFilterByText("Action Required");
+            unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
+            SimpleUtils.assertOnFail("The Action Required shift count display incorrectly in schedule filter dropdown list! ",
+                    unassignedAndOOOHShiftCount == unassignedAndOOOHShiftCountInFilter, false);
+
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+            SimpleUtils.assertOnFail("Uncheck Action Required filter fail! ",
+                    allShiftsCount == schedulePage.getShiftsCount(), false);
+
+            //Validate Action Required shifts in day view
+            schedulePage.clickOnDayView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Action Required");
+            for (int i=0; i< 7; i++) {
+                schedulePage.navigateDayViewWithIndex(i);
+                schedulePage.clickOnFilterBtn();
+                unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
+                unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
+                SimpleUtils.assertOnFail("The Action Required shift count display incorrectly in schedule filter dropdown list! ",
+                        unassignedAndOOOHShiftCount == unassignedAndOOOHShiftCountInFilter, false);
+            }
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate Shift Type content in Filter with LG")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyShiftTypeContentInFilterWithLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("District Whistler");
+            locationSelectorPage.changeLocation("Lift Ops_Parent");
+            // Go to Schedule page, Schedule tab
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            // Create schedule if it is not created
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            schedulePage.clickOnFilterBtn();
+            schedulePage.verifyShiftTypeInLeft(true);
+            schedulePage.verifyShiftTypeFilters();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Compliance Review with LG")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyComplianceReviewWithLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeDistrict("District Whistler");
+            locationSelectorPage.changeLocation("Lift Ops_Parent");
+
+            // Go to Schedule page, Schedule tab
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            // Create schedule if it is not created
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
+
+            // Edit the Schedule
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            schedulePage.clickOnFilterBtn();
+            int allShiftsCount = schedulePage.getShiftsCount();
+            int complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
+            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            int complianceShiftsCount = schedulePage.getShiftsCount();
+            SimpleUtils.assertOnFail("The compliance shift count display incorrectly in schedule filter dropdown list! ",
+                    complianceReviewCount == complianceShiftsCount, false);
+
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+            SimpleUtils.assertOnFail("Uncheck Compliance Review filter fail! ",
+                    allShiftsCount == schedulePage.getShiftsCount(), false);
+
+            //Validate Compliance Review in day view
+            schedulePage.clickOnDayView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Action Required");
+            for (int i=0; i< 7; i++) {
+                schedulePage.navigateDayViewWithIndex(i);
+                schedulePage.clickOnFilterBtn();
+                complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
+                complianceShiftsCount = schedulePage.getShiftsCount();
+                SimpleUtils.assertOnFail("The compliance shift count display incorrectly in schedule filter dropdown list! ",
+                        complianceReviewCount == complianceShiftsCount, false);
             }
 
         } catch (Exception e){
