@@ -6220,4 +6220,50 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		else
 			SimpleUtils.fail("Controls Page: All day parts have been not disabled in working hours",false);
 	}
+
+
+	@Override
+	public void turnOnOrOffSpecificPermissionForDifferentRole(String rolePermission, String section, String permission, String action) throws Exception {
+		if (areListElementVisible(accessSections,10)){
+			click(editButton);
+			for (WebElement accessSection : accessSections){
+				if (accessSection.findElement(By.tagName("span")).getText().equalsIgnoreCase(section)){
+					if (!accessSection.findElement(By.cssSelector("div")).getAttribute("class").contains("expand")){
+						clickTheElement(accessSection.findElement(By.tagName("span")));
+					}
+					int index = getTheIndexByAccessRolesName(rolePermission, accessSection);
+					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".table-row"));
+					for (WebElement permissionTemp : permissions){
+						String s = permissionTemp.getText();
+						if (s!=null && s.toLowerCase().contains(permission.toLowerCase())){
+							SimpleUtils.pass("Found permission: "+ permission);
+							List<WebElement> permissionInputs = permissionTemp.findElements(By.tagName("input"));
+							if (permissionInputs.size()>index) {
+								if (permissionInputs.get(index).getAttribute("class").contains("ng-not-empty")) {
+									if (action.equalsIgnoreCase("on")) {
+										SimpleUtils.pass(permission + " already on!");
+									} else {
+										clickTheElement(permissionInputs.get(index));
+										SimpleUtils.pass(permission + " unChecked!");
+									}
+								} else {
+									if (action.equalsIgnoreCase("off")) {
+										SimpleUtils.pass(permission + " already off!");
+									} else {
+										clickTheElement(permissionInputs.get(index));
+										SimpleUtils.pass(permission + " Checked!");
+									}
+								}
+								click(saveButton);
+								break;
+							}
+						}
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("No access item loaded!", false);
+		}
+	}
 }

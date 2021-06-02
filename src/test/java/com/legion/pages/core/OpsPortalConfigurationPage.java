@@ -1844,4 +1844,20 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}else
 			SimpleUtils.fail("Set copy restriction setting fail to load!  ",false);
 	}
+
+	@FindBy(css=".console-navigation-item-label.User.Management")
+	private WebElement userManagementTab;
+	@Override
+	public void goToUserManagementPage() throws Exception {
+		if (isElementEnabled(userManagementTab,10)) {
+			click(userManagementTab);
+			waitForSeconds(20);
+			if(categoryOfTemplateList.size()!=0){
+				SimpleUtils.pass("User can click user management tab successfully");
+			}else{
+				SimpleUtils.fail("User can't click user management tab",false);
+			}
+		}else
+			SimpleUtils.fail("User management tab load failed",false);
+	}
 }

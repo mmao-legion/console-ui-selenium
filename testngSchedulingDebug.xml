@@ -230,7 +230,7 @@
                     <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
-<!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
+<!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG been generated slow-->
                 </methods>
             </class>
         </classes>

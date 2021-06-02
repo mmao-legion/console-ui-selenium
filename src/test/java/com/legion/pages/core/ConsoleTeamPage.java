@@ -4694,4 +4694,14 @@ private WebElement locationColumn;
 		} else
 			SimpleUtils.fail("The team member '"+ firstName +"' is not exists! ", false);
 	}
+
+	public boolean checkIsInviteButtonExists() {
+		boolean isInviteButtonExists = false;
+		if (areListElementVisible(inviteButtons, 5)) {
+			isInviteButtonExists = true;
+			SimpleUtils.pass("The Invite buttons display correctly! ");
+		} else
+			SimpleUtils.report("The Invite buttons fail to load! ");
+		return isInviteButtonExists;
+	}
 }

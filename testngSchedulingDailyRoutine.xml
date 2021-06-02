@@ -41,6 +41,7 @@
 <!--                   <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by SCH-3934/>-->
                    <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
+                   <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />
                </methods>
            </class>
        </classes>

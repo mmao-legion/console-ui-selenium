@@ -467,7 +467,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
+            schedulePage.createScheduleForNonDGFlowNewUI();
 
             // Edit the Schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

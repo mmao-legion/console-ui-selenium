@@ -177,4 +177,5 @@ public interface TeamPage {
 	public boolean isCancelDeactivateButtonLoaded () throws Exception;
 	public void selectSchoolSessionStartAndEndDate(String startDate, String endDate) throws Exception;
 	public void activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(String firstName) throws Exception;
+	public boolean checkIsInviteButtonExists();
 }
