@@ -103,6 +103,20 @@ public class OnboardingTest extends TestBase {
         }
     }
 
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the onboarding flow for New hire (Non-SSO & OP based)")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheOnboardingFlowForNewHireOnOPEnabledEnvAsInternalAdmin(String browser, String username, String password, String location){
+        try {
+            verifyOnboardingFlow("Yes", username, password);
+            verifyOnboardingFlowForRehire("Yes", username, password);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     private void verifyOnboardingFlow (String yesOrNo, String username, String password) throws Exception {
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();

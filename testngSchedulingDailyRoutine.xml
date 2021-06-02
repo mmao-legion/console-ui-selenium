@@ -40,6 +40,7 @@
                <methods>
 <!--                   <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by SCH-3934/>-->
                    <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
+                   <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
                </methods>
            </class>
        </classes>
@@ -73,6 +74,7 @@
                     <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin"/>
                     <include name="validateWeatherSmartCardOnForecastPage"/>
                     <include name="verifyScheduleFunctionalityForecast"/>
+                    <include name="verifyShopperForecastFunctionality"/>
                 </methods>
             </class>
         </classes>
@@ -99,6 +101,8 @@
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -123,6 +127,7 @@
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
 <!--                    <include name="verifySchedulesWidgetsAsStoreManager" Blocked by SCH-4155/>-->
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
+                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                 </methods>
             </class>
         </classes>
@@ -150,6 +155,10 @@
 <!--                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" Blocked by SCH-4162/>-->
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin" />
+                    <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
+                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -181,6 +190,9 @@
                     <!--                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800 -->
                     <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
+                    <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -211,6 +223,7 @@
                     <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
                     <include name="verifyWarningModelForClopeningAsInternalAdmin" />
                     <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
+                    <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -249,6 +262,27 @@
 
 <!--                    <include name="validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin" /> Blocked by SCH-4250-->
                     <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Offer TM Test">
+        <classes>
+            <class name="com.legion.tests.core.OfferTMTest">
+                <methods>
+                    <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
+                    <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
+                    <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
+                    <include name="verifyTMCanBeOfferedAsTeamMember" />
+                    <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

@@ -128,6 +128,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                             click(locationSelectorButton);
                         }
                         List<WebElement> locationItems = new ArrayList<>();
+                        waitForSeconds(3);
                         if (areListElementVisible(districtAndLocationDropDownList, 5) && districtAndLocationDropDownList.size() > 0){
                             locationItems = districtAndLocationDropDownList.get(districtAndLocationDropDownList.size() - 1).findElements(By.cssSelector("div.lg-search-options__option"));
                         }
