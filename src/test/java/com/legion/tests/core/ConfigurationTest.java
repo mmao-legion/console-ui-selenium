@@ -739,12 +739,12 @@ public class ConfigurationTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "E2E -> Verify the time of day setting in advance staffing rule")
+    @TestName(description = "E2E Verify meal and rest break function in advance staffing rule")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void mealAndRestBreakInADVRuleE2E(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
-            String mealBreakTiem = "5:30am - 6:15am";
+            String mealBreakTime = "5:30am - 6:15am";
             String restBreakTime = "6:30am - 7:15am";
             HashMap<String,String> mealRestBreaks= new HashMap<String,String>();
 
@@ -778,7 +778,7 @@ public class ConfigurationTest extends TestBase {
             schedulePage.clickOnEditMeaLBreakTime();
             mealRestBreaks = schedulePage.getMealAndRestBreaksTime();
 
-            if(mealRestBreaks.get("Meal Break").compareToIgnoreCase(mealBreakTiem) == 0){
+            if(mealRestBreaks.get("Meal Break").compareToIgnoreCase(mealBreakTime) == 0){
                 SimpleUtils.pass("The Meal Break info is correct");
             }else
                 SimpleUtils.fail("The Meal Break info is correct",false);
@@ -822,7 +822,7 @@ public class ConfigurationTest extends TestBase {
             locationsPage.goToConfigurationTabInLocationLevel();
             locationsPage.actionsForEachTypeOfTemplate("Scheduling Rules","View");
             locationsPage.goToScheduleRulesListAtLocationLevel("New Work Role");
-            configurationPage.validateAdvanceStaffingRuleShowing(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
+            configurationPage.validateAdvanceStaffingRuleShowingAtLocationLevel(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
                     endEvent,endOffsetTime,endEventPoint,endTimeUnit,days,shiftsNumber);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

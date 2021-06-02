@@ -1860,4 +1860,94 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	}
 
+	@Override
+	public void validateAdvanceStaffingRuleShowingAtLocationLevel(String startEvent,String startOffsetTime,String startEventPoint,String startTimeUnit,
+												   String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
+												   List<String> days,String shiftsNumber) throws Exception{
+		List<WebElement> staffingRuleText = staffingRulesList.get(staffingRulesList.size()-1).findElements(By.cssSelector("span[ng-bind-html=\"$ctrl.ruleLabelText\"] span"));
+		List<String> daysInRule = Arrays.asList(staffingRuleText.get(2).getText().trim().split(","));
+		List<String> newDaysInRule = new ArrayList<>();
+		for(String dayInRules:daysInRule){
+			String newDayInRule = dayInRules.trim().toLowerCase();
+			newDaysInRule.add(newDayInRule);
+		}
+		List<String> newDays = new ArrayList<>();
+		for(String day:days){
+			String newDay = day.substring(0,3).toLowerCase();
+			newDays.add(newDay);
+		}
+		Collections.sort(newDaysInRule);
+		Collections.sort(newDays);
+		if(ListUtils.isEqualList(newDaysInRule,newDays)){
+			SimpleUtils.pass("The days info in rule are correct");
+		}else{
+			SimpleUtils.fail("The days info in rule are NOT correct",false);
+		}
+		String shiftsNumberInRule = staffingRuleText.get(1).getText().trim();
+		if(shiftsNumberInRule.equals(shiftsNumber)){
+			SimpleUtils.pass("The shifts number info in rule is correct");
+		}else {
+			SimpleUtils.fail("The shifts number info in rule is NOT correct",false);
+		}
+
+		String startTimeInfo = staffingRuleText.get(0).getText().trim().split(",")[0];
+		String endTimeInfo = staffingRuleText.get(0).getText().trim().split(",")[1];
+		String startEventInRule = "";
+		for(int i = 5;i<startTimeInfo.split(" ").length;i++){
+			startEventInRule = startEventInRule + startTimeInfo.split(" ")[i] + " ";
+		}
+		startEventInRule.trim();
+		if(startEventInRule.contains(startEvent)){
+			SimpleUtils.pass("The start event info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start event info in rule is NOT correct",false);
+		}
+		String startOffsetTimeInRule = startTimeInfo.split(" ")[2].trim();
+		if(startOffsetTimeInRule.equals(startOffsetTime)){
+			SimpleUtils.pass("The start Offset Time info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start Offset Time info in rule is NOT correct",false);
+		}
+		String startEventPointInRule = startTimeInfo.split(" ")[4].trim();
+		if(startEventPointInRule.equals(startEventPoint)){
+			SimpleUtils.pass("The start Event Point info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start Event Point info in rule is NOT correct",false);
+		}
+		String startTimeUnitInRule = startTimeInfo.split(" ")[3].trim();
+		if(startTimeUnitInRule.equals(startTimeUnit)){
+			SimpleUtils.pass("The start Time Unit info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start Time Unit info in rule is NOT correct",false);
+		}
+		String endEventInRule = "";
+		for(int i = 5;i<endTimeInfo.split(" ").length;i++){
+			endEventInRule = endEventInRule + endTimeInfo.split(" ")[i] + " ";
+		}
+		endEventInRule.trim();
+		if(endEventInRule.contains(endEvent)){
+			SimpleUtils.pass("The end Event info in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Event info in rule is NOT correct",false);
+		}
+		String endOffsetTimeInRule = endTimeInfo.split(" ")[3].trim();
+		if(endOffsetTimeInRule.contains(endOffsetTime)){
+			SimpleUtils.pass("The end Offset Time in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Offset Time in rule is NOT correct",false);
+		}
+		String endEventPointInRule = endTimeInfo.split(" ")[5].trim();
+		if(endEventPointInRule.contains(endEventPoint)){
+			SimpleUtils.pass("The end Event Point in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Event Point in rule is NOT correct",false);
+		}
+		String endTimeUnitInRule = endTimeInfo.split(" ")[4].trim();
+		if(endTimeUnitInRule.contains(endTimeUnit)){
+			SimpleUtils.pass("The end Time Unit in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Time Unit in rule is NOT correct",false);
+		}
+	}
+
 }

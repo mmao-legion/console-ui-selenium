@@ -73,4 +73,7 @@ public interface ConfigurationPage {
     public void goToWorkRolesWithStaffingRules();
     public void deleteBasicStaffingRule() throws Exception;
     public void saveBtnIsClickable() throws Exception;
+    public void validateAdvanceStaffingRuleShowingAtLocationLevel(String startEvent,String startOffsetTime,String startEventPoint,String startTimeUnit,
+                                                                  String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
+                                                                  List<String> days,String shiftsNumber) throws Exception;
 }

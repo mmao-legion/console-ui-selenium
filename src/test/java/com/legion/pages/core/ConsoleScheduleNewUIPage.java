@@ -14731,11 +14731,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyShiftTimeInReadMode(String index,String shiftTime) throws Exception{
         String shiftTimeInShiftTable = null;
         if (isElementEnabled(shiftsTable,5)) {
-            List<WebElement> shiftsTableList = shiftsTable.findElements(By.className("div[data-day=\"" + index + "\"].week-schedule-shift"));
+            List<WebElement> shiftsTableList = shiftsTable.findElements(By.cssSelector("div[data-day-index=\"" + index + "\"].week-schedule-shift"));
             for(WebElement shiftTable:shiftsTableList){
                 shiftTimeInShiftTable = shiftTable.findElement(By.cssSelector(".week-schedule-shift-time")).getText().trim();
                 if(shiftTimeInShiftTable.equals(shiftTime)){
-                    SimpleUtils.pass("The shift time on data-day-index: " + index + "is aligned with advance staffing rule");
+                    SimpleUtils.pass("The shift time on data-day-index: " + index + " is aligned with advance staffing rule");
                 }else {
                     SimpleUtils.fail("The shift time is NOT aligned with advance staffing rule",false);
                 }
@@ -14754,8 +14754,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 String totalCalendarDaySummary = scheduleDay.findElement(By.cssSelector("div.sch-calendar-day-summary span")).getText().trim().split(" ")[0];
                 if(! totalCalendarDaySummary.equals("0")){
                     dataDayIndex = scheduleDay.getAttribute("data-day-index").trim();
+                    index.add(dataDayIndex);
                 }
-                index.add(dataDayIndex);
             }
         } else {
             SimpleUtils.fail("Table header fail to load!", false);
