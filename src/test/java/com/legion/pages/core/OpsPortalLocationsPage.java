@@ -2678,8 +2678,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
-	private List<WebElement> workRolesInAssignmentRulesInLocationLevel;
+	private List<WebElement> workRolesInSchedulingRulesInLocationLevel;
 
+	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+	private List<WebElement> workRolesInAssignmentRulesInLocationLevel;
 	@Override
 	public void canGoToAssignmentRoleViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
@@ -2743,9 +2745,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Go to operating hours template failed in location level via template name link", false);
 		return null;
 	}
-
-	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
-	private List<WebElement> workRolesInSchedulingRulesInLocationLevel;
 
 	@Override
 	public void canGoToSchedulingRulesViaTemNameInLocationLevel() {
@@ -2919,6 +2918,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void backToConfigurationTabInLocationLevel() {
 		if (isElementEnabled(backBtnInLocationDetailsPage, 5)) {
 			click(backBtnInLocationDetailsPage);
+			waitForSeconds(8);
 			if (isElementEnabled(editLocationBtn, 5)) {
 				SimpleUtils.pass("Back to location configuration page successfully");
 			} else
