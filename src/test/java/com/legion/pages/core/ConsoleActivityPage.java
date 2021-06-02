@@ -154,7 +154,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
 	@Override
 	public void verifyNewShiftSwapCardShowsOnActivity(String requestUserName, String respondUserName, String actionLabel,
-													  boolean isNewLabelShows) throws Exception {
+													  boolean isNewLabelShows, String location) throws Exception {
 		String newStatus = "New";
 		String expectedMessage = actionLabel + " to swap shifts";
 		waitForSeconds(5);
@@ -169,7 +169,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 			}
 			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
 			if (message != null && message.getText().contains(requestUserName) && message.getText().contains(respondUserName)
-					&& message.getText().toLowerCase().contains(expectedMessage)) {
+					&& message.getText().toLowerCase().contains(expectedMessage)
+					&& isElementLoaded(activityCards.get(0).findElement(By.cssSelector(".notification-content .location"))) && activityCards.get(0).findElement(By.cssSelector(".notification-content .location")).getText().toLowerCase().contains("@"+location.toLowerCase())) {
 				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
 			}else {
 				SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + message.getText(), false);
@@ -647,11 +648,11 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     }
 
     @Override
-    public void verifyTheContentOfShiftSwapActivity() throws Exception {
+    public void verifyTheContentOfShiftSwapActivity(String location) throws Exception {
     	waitForSeconds(3);
         if (isElementLoaded(filterTitle,10) && (isElementLoaded(notificationsContainer, 10) || isElementLoaded(notificationsContainerEmpty, 10))) {
             if (filterTitle.getText().contains("Shift Swap")) {
-                if (notificationsContainer.getText().contains("requested to swap shifts") || notificationsContainer.getText().contains("agreed to cover")) {
+                if ((notificationsContainer.getText().contains("requested to swap shifts") || notificationsContainer.getText().contains("agreed to cover")) && notificationsContainer.getText().toLowerCase().contains("@"+location.toLowerCase())) {
                     SimpleUtils.pass("The content of shift swap activity displays successfully");
                 } else if (notificationsContainerEmpty.getText().contains("No activities available")) {
                     SimpleUtils.pass("No activities available for the selected filter");
@@ -688,6 +689,18 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         }
         return shiftCoverCard;
     }
+
+	@Override
+    public void verifyCancelledMessageOnTheBottomOfTheNotification() throws Exception{
+		if (areListElementVisible(activityCards, 15)) {
+			WebElement canceledMessage = activityCards.get(0).findElement(By.className("notification-approved"));
+			if (canceledMessage != null && canceledMessage.getText().toLowerCase().contains("cancelled")) {
+				SimpleUtils.pass("Canceled message load successfully!");
+			} else {
+				SimpleUtils.fail("Cancelled message failed to load!", false);
+			}
+		}
+	}
 
     @Override
     public void approveOrRejectShiftCoverRequestOnActivity(String requestUserName, String respondUserName, String action, String location) throws Exception {

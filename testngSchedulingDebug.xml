@@ -66,6 +66,21 @@
                     <include name="verifyApproveCoverRequestOfShiftSwapActivityAsInternalAdmin"/>
                     <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
                     <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsInternalAdmin" />
+                    <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyCoverRequestOfShiftSwapActivityWithNoApprovalAsInternalAdmin"/>
+                    <include name="verifyTM1CancelCoverRequestOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyCancelToSwapActivityAsInternalAdmin"/>
+                    <include name="verifyCoverRequestOfShiftSwapActivityWithNoApprovalAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="LiquidDashboard Test">
+        <classes>
+            <class name="com.legion.tests.core.LiquidDashboardTest">
+                <methods>
+                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                 </methods>
             </class>
         </classes>

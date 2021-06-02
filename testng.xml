@@ -250,6 +250,10 @@
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin"/>
+                    <include name="verifyCoverRequestOfShiftSwapActivityWithNoApprovalAsInternalAdmin"/>
+                    <include name="verifyTM1CancelCoverRequestOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyCancelToSwapActivityAsInternalAdmin"/>
+                    <include name="verifyCoverRequestOfShiftSwapActivityWithNoApprovalAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>

@@ -3130,7 +3130,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         By isUnAssignedShift = By.cssSelector(".rows .week-view-shift-image-optimized span");
         WebElement unAssignedPlusBtn = unAssignedShift.findElement(isUnAssignedShift);
         if (isElementLoaded(unAssignedPlusBtn)) {
-            click(unAssignedPlusBtn);
+            scrollToElement(unAssignedPlusBtn);
+            clickTheElement(unAssignedPlusBtn);
             if (isElementLoaded(shiftPopover)) {
                 WebElement convertToOpenOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canConvertToOpenShift() && !isTmView()\"]"));
                 if (isElementLoaded(convertToOpenOption)) {
