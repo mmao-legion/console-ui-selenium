@@ -178,4 +178,10 @@ public interface LocationsPage {
     public int getSearchResultNum() throws Exception;
 
     public void cancelCreatingUpperfield(String level, String upperfieldsName, String upperfieldsId) throws Exception;
+
+    public void clickOnLocationInLocationResult(String location) throws Exception;
+
+    public void clickOnConfigurationTabOfLocation() throws Exception;
+
+    public HashMap<String,String> getTemplateTypeAndNameFromLocation() throws Exception;
 }

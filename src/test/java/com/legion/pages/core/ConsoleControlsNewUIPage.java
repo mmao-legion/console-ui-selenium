@@ -6200,4 +6200,24 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		return hasCompanyMobilePolicyURL;
 	}
 
+	@FindBy (css = ".lg-table label.switch input.ng-pristine")
+	private List<WebElement> enabledDayparts;
+
+	@FindBy (css = "[block-title=\"'Dayparts'\"] a[ng-show=\"collapsed\"]")
+	private WebElement daypartsCollapsed;
+
+	@Override
+	public void disableAllDayparts() throws Exception {
+		if (daypartsCollapsed.getAttribute("class").contains("ng-hide"))
+			click(daypartsCollapsed);
+		if (areListElementVisible(enabledDayparts,10)) {
+			for (WebElement dayPart: enabledDayparts)
+				click(dayPart);
+		} else
+			SimpleUtils.fail("Controls Page: Enabled day parts failed to load in working hours",false);
+		if (!areListElementVisible(enabledDayparts,10))
+			SimpleUtils.pass("Controls Page: All day parts have been disabled in working hours");
+		else
+			SimpleUtils.fail("Controls Page: All day parts have been not disabled in working hours",false);
+	}
 }

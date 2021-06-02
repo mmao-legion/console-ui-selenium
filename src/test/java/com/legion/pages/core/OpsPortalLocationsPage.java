@@ -3,6 +3,7 @@ package com.legion.pages.core;
 import com.legion.pages.BasePage;
 import com.legion.pages.LocationsPage;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
@@ -2608,5 +2609,54 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		}
 	}
+
+	// Added by Julie
+	@FindBy (css = "tr[ng-repeat=\"location in filteredCollection\"] span[ng-transclude]>span")
+	private List<WebElement> locationNamesInLocationRows;
+
+	@FindBy (xpath = "//lg-tabs//div[contains(text(),'Configuration')]")
+	private WebElement configurationTabOfLocation;
+
+	@FindBy (css = "tr[ng-repeat=\"(key,value) in $ctrl.templates\"]")
+	private List<WebElement> templateRows;
+
+	@Override
+	public void clickOnLocationInLocationResult(String location) throws Exception {
+		if (areListElementVisible(locationNamesInLocationRows,10)) {
+			for (WebElement locationName: locationNamesInLocationRows)
+				if (locationName.getText().equals(location)) {
+					click(locationName);
+					SimpleUtils.pass("Locations Page: Search out the location '" + location + "' and open it successfully");
+					break;
+				}
+		} else
+			SimpleUtils.fail("Locations Page: Cannot search out the location name '" + location + "'",false);
+	}
+
+	@Override
+	public void clickOnConfigurationTabOfLocation() throws Exception {
+		if (isElementEnabled(configurationTabOfLocation,10)) {
+			click(configurationTabOfLocation);
+			SimpleUtils.pass("Locations Page: Switch to Configuration tab successfully");
+		} else
+			SimpleUtils.fail("Locations Page: Configuration tab failed to load",false);
+	}
+
+    @Override
+	public HashMap<String,String> getTemplateTypeAndNameFromLocation() throws Exception {
+		HashMap<String, String> templateTypeAndName = new HashMap<>();
+		if (areListElementVisible(templateRows, 5) && templateRows.size() != 0) {
+			for (WebElement templateRow: templateRows) {
+				String templateType = templateRow.findElement(By.xpath("./td[1]")).getText().trim();
+				String templateName = templateRow.findElement(By.xpath("./td[2]/span")).getText().trim();
+				templateTypeAndName.put(templateType, templateName);
+				SimpleUtils.report("Get template name'" + templateName + "' for template type '" + templateType + "' successfully");
+			}
+		} else {
+			SimpleUtils.fail("Schedule Week View Page: Budget and Scheduled smart card not loaded Successfully!", false);
+		}
+		return templateTypeAndName;
+	}
+
 }
 
