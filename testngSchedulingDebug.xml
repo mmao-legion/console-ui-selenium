@@ -214,6 +214,8 @@
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
+                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+<!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
                 </methods>
             </class>
         </classes>

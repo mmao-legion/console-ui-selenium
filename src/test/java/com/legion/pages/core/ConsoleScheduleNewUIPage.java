@@ -15361,12 +15361,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     @Override
-    public void verifyShiftTypeInLeft() throws Exception {
+    public void verifyShiftTypeInLeft(boolean isLG) throws Exception {
         if (isElementLoaded(filterPopup,5)) {
-            if (filterLabels.size() == 3 && filterLabels.get(0).getText().equals("SHIFT TYPE"))
-                SimpleUtils.pass("Schedule Page: 'SHIFT TYPE' displays in left");
-            else
-                SimpleUtils.fail("Schedule Page: 'SHIFT TYPE' is not in the left",false);
+            if (isLG) {
+                if (isElementLoaded(filterPopup,5)) {
+                    if (filterLabels.size() == 4 && filterLabels.get(1).getText().equals("SHIFT TYPE"))
+                        SimpleUtils.pass("Schedule Page: 'SHIFT TYPE' displays in left expect Location");
+                    else
+                        SimpleUtils.fail("Schedule Page: 'SHIFT TYPE' is not in the left expect Location",false);
+                } else
+                    SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+            } else {
+                if (isElementLoaded(filterPopup,5)) {
+                    if (filterLabels.size() == 3 && filterLabels.get(0).getText().equals("SHIFT TYPE"))
+                        SimpleUtils.pass("Schedule Page: 'SHIFT TYPE' displays in left");
+                    else
+                        SimpleUtils.fail("Schedule Page: 'SHIFT TYPE' is not in the left",false);
+                } else
+                    SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+            }
         } else
             SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
     }
