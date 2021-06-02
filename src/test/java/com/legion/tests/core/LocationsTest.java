@@ -760,20 +760,17 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.fail("Child location creation failed",true);
             }
 
-
             //get location's  info
             ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
 
             //check location group navigation
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+//            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
 
             for (int i = 0; i <childLocationNum+1 ; i++) {
-                locationSelectorPage.changeLocation(locationInfoDetails.get(i).get("locationName"));
+                locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationInfoDetails.get(i).get("locationName"));
             }
-
-
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
