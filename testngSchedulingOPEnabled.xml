@@ -110,7 +110,20 @@
             </class>
         </classes>
     </test>
-    
+
+
+    <test name="Consolidating Filters Test">
+        <classes>
+            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
+                <methods>
+                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                    <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" />
+                    <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="Schedule Copy Improvement Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
@@ -121,13 +134,12 @@
                     <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
                     <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
 <!--                    <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" Blocked by SCH-4238/>-->
+                    <include name="validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
                     <include name="validateTheOOOHShiftsAsInternalAdmin" />
-                    <include name="validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin" />
-
                     <include name="validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin" />
                     <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />
 
@@ -160,16 +172,7 @@
         </classes>
     </test>
 
-    <test name="Consolidating Filters Test">
-        <classes>
-            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
-                <methods>
-                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
-                    <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+
 
 <!--    <test name="Schedule Test KendraScott2">
         <classes>

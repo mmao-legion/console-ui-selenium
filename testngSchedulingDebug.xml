@@ -213,6 +213,7 @@
                 <methods>
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" />
+                    <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

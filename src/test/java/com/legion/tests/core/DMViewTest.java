@@ -1635,7 +1635,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify Location Summary widget on Dashboard in DM View")
+    @TestName(description = "Verify Location Summary widget on Dashboard in DM View on non TA env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
@@ -1648,7 +1648,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Verify Location Summary widget on Dashboard in DM View")
+    @TestName(description = "Verify Location Summary widget on Dashboard in DM View on TA env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
@@ -1765,7 +1765,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify Schedule Status on Schedule in DM View")
+    @TestName(description = "Verify Schedule Status on Schedule in DM View on Non TA Env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
@@ -1808,7 +1808,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Verify Schedule Status on Schedule in DM View")
+    @TestName(description = "Verify Schedule Status on Schedule in DM View on TA non DG env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
@@ -1851,7 +1851,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify Schedule Status on Schedule in DM View")
+    @TestName(description = "Verify Schedule Status on Schedule in DM View on TA DG env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
