@@ -307,4 +307,5 @@ public interface ControlsNewUIPage {
 	public void selectAccessRoles (List<String> selectAccessRoles) throws Exception;
 	public boolean hasCompanyMobilePolicyURLOrNot () throws Exception;
 	public void verifyUsersAreLoaded() throws Exception;
+	public void disableAllDayparts() throws Exception;
 }
