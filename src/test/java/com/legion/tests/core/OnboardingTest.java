@@ -27,6 +27,7 @@ public class OnboardingTest extends TestBase {
     private static HashMap<String, String> testDataMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/OnboardingTestData.json");
     private String nonSSOEnterprise = propertyMap.get("KendraScott2_Enterprise");
     private String ssoEnterprise = propertyMap.get("Dgch_Enterprise");
+    private String opEnabledEnterprise = propertyMap.get("CinemarkWkdy_Enterprise");
     private String currentLocation = "";
     private String invitationCode = "";
     private String newPassword = testDataMap.get("Password");
@@ -110,11 +111,39 @@ public class OnboardingTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheOnboardingFlowForNewHireOnOPEnabledEnvAsInternalAdmin(String browser, String username, String password, String location){
         try {
-            verifyOnboardingFlow("Yes", username, password);
-            verifyOnboardingFlowForRehire("Yes", username, password);
+            verifyOnboardingFlowOnOPEnabled();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+    private void verifyOnboardingFlowOnOPEnabled() throws Exception {
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.searchLocation(currentLocation);               ;
+        SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(currentLocation), false);
+        locationsPage.clickOnLocationInLocationResult(currentLocation);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.goToConfigurationPage();
+        controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));
+        boolean isSetActive = controlsNewUIPage.getTheSettingForAutomaticallySetOnboardedEmployeesToActive();
+        configurationPage.goToConfigurationPage();
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Compliance"));
+        hasCompanyMobilePolicyURL = controlsNewUIPage.hasCompanyMobilePolicyURLOrNot();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
     }
 
     private void verifyOnboardingFlow (String yesOrNo, String username, String password) throws Exception {
@@ -317,12 +346,14 @@ public class OnboardingTest extends TestBase {
         if (MyThreadLocal.getEnterprise().equalsIgnoreCase(nonSSOEnterprise)) {
             currentLocation = testDataMap.get("Non-SSO_Location");
             locationSelectorPage.changeUpperFields(testDataMap.get("Non-SSO_Upperfields"));
-            locationSelectorPage.changeLocation(currentLocation);
         } else if (MyThreadLocal.getEnterprise().equalsIgnoreCase(ssoEnterprise)) {
             currentLocation = testDataMap.get("SSO_Location");
             locationSelectorPage.changeUpperFields(testDataMap.get("SSO_Upperfields"));
-            locationSelectorPage.changeLocation(currentLocation);
+        } else if (MyThreadLocal.getEnterprise().equalsIgnoreCase(opEnabledEnterprise)) {
+            currentLocation = testDataMap.get("Non-SSO_Location");
+            locationSelectorPage.changeUpperFields(testDataMap.get("OPEnabled_Upperfields"));
         }
+        locationSelectorPage.changeLocation(currentLocation);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, currentLocation);
     }

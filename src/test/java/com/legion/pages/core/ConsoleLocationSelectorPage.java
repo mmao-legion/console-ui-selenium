@@ -125,11 +125,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                         SimpleUtils.pass("Given Location '" + locationName + "' already selected!");
                     } else {
                         if (isElementLoaded(locationSelectorButton, 10)){
-                            click(locationSelectorButton);
+                            clickTheElement(locationSelectorButton);
                         }
                         List<WebElement> locationItems = new ArrayList<>();
-                        waitForSeconds(3);
-                        if (areListElementVisible(districtAndLocationDropDownList, 5) && districtAndLocationDropDownList.size() > 0){
+                        waitForSeconds(5);
+                        if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
                             locationItems = districtAndLocationDropDownList.get(districtAndLocationDropDownList.size() - 1).findElements(By.cssSelector("div.lg-search-options__option"));
                         }
                         if (areListElementVisible(locationItems, 10) || isElementLoaded(locationDropDownButton)) {
