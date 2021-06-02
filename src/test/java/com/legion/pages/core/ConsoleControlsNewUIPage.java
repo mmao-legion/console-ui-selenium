@@ -6109,6 +6109,25 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@FindBy(css ="[question-title*=\"onboarded employees\"] span")
 	private List<WebElement> yesNoForAutomaticallySetOnboardedEmployeesToActive;
+	@FindBy(css = "[question-title*=\"onboarded employees\"] .lg-button-group-selected span")
+	private WebElement selectedValueForAutoSetOnboardingToActive;
+
+	@Override
+	public boolean getTheSettingForAutomaticallySetOnboardedEmployeesToActive() throws Exception {
+		boolean isSetActive = false;
+		try {
+			if (isElementLoaded(selectedValueForAutoSetOnboardingToActive, 10)) {
+				if (selectedValueForAutoSetOnboardingToActive.getText().equalsIgnoreCase("Yes")) {
+					isSetActive = true;
+				}
+				SimpleUtils.report("Get the setting for \"Automatically set onboarded employees to active?\": " + selectedValueForAutoSetOnboardingToActive.getText());
+			}
+		} catch (Exception e) {
+			isSetActive = false;
+		}
+		return isSetActive;
+	}
+
 	@Override
 	public void setAutomaticallySetOnboardedEmployeesToActive(String yesOrNo) throws Exception {
 		// wait for the value to be loaded
@@ -6163,7 +6182,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	}
 
-	@FindBy(css ="input-field[label=\"Mobile Policy URL\"] input")
+	@FindBy(css ="input[placeholder=\"http://...\"]")
 	private WebElement companyMobilePolicyURL;
 
 	public boolean hasCompanyMobilePolicyURLOrNot () throws Exception {
@@ -6171,7 +6190,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		waitForSeconds(10);
 		if (isElementLoaded(companyMobilePolicyURL, 5)){
 			String url = companyMobilePolicyURL.getAttribute("value");
-			if (!url.equals("")){
+			if (!url.equals("") && !url.equals("http://...")){
 				hasCompanyMobilePolicyURL = true;
 			} else
 				SimpleUtils.report("The company mobile policy URL is empty");
