@@ -184,6 +184,15 @@
         </classes>
     </test>
 
+    <test name="Location Navigation Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationNavigationTest">
+                <methods>
+                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 <!--    <test name="Schedule Test KendraScott2">
         <classes>

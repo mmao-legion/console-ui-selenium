@@ -36,4 +36,5 @@ public interface LocationSelectorPage {
 	public void searchSpecificDistrictAndNavigateTo(String districtText);
 	public void searchSpecificLocationAndNavigateTo(String locationText);
 	public void verifyMagnifyGlassIconShowOrNot();
+	public void changeLocationDirect(String locationName);
 }

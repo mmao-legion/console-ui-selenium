@@ -990,4 +990,66 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
     }
 
+    @Override
+    public void changeLocationDirect(String locationName) {
+        try {
+            Boolean isLocationMatched = false;
+            if (isElementLoaded(activeConsoleMenuItem, 10)) {
+                activeConsoleName = activeConsoleMenuItem.getText();
+            }
+            setScreenshotConsoleName(activeConsoleName);
+            if (isChangeLocationButtonLoaded()) {
+                if (isLocationSelected(locationName)) {
+                    SimpleUtils.pass("Given Location '" + locationName + "' already selected!");
+                } else {
+                    if (isElementLoaded(locationSelectorButton, 10)){
+                        clickTheElement(locationSelectorButton);
+                    }
+                    List<WebElement> locationItems = new ArrayList<>();
+                    waitForSeconds(5);
+                    if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
+                        locationItems = districtAndLocationDropDownList.get(districtAndLocationDropDownList.size() - 1).findElements(By.cssSelector("div.lg-search-options__option"));
+                    }
+                    if (areListElementVisible(locationItems, 10) || isElementLoaded(locationDropDownButton)) {
+                        if (locationItems.size() > 0) {
+                            for (WebElement locationItem : locationItems) {
+                                if (locationItem.getText().contains(locationName)) {
+                                    isLocationMatched = true;
+                                    clickTheElement(locationItem);
+                                    SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
+                                    break;
+                                }
+                            }
+                            if (!isLocationMatched) {
+                                //updated by Estelle because the default location dropdown list show more than 50 location ,it's not efficient for navigation latest logic
+                                searchLocationAndSelect(locationName);
+                                waitForSeconds(10);
+//                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                                locationItems = districtAndLocationDropDownList.get(districtAndLocationDropDownList.size() - 1).findElements(By.cssSelector("div.lg-search-options__option"));
+                                if (locationItems.size() > 0) {
+                                    for (WebElement locationItem : locationItems) {
+                                        if (locationItem.getText().contains(locationName)) {
+                                            isLocationMatched = true;
+                                            click(locationItem);
+                                            SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!isLocationMatched) {
+                                SimpleUtils.fail("Location does not match with '" + locationName + "'", false);
+                            }
+                        }else
+                            SimpleUtils.report("No mapping data for this location,maybe it's disabled or child location for Master Slave ");
+                    }
+                }
+            }
+        }
+        catch(Exception e) {
+            SimpleUtils.fail("Unable to change location! Get Exception: " + e.toString(), false);
+        }
+
+    }
+
 }
