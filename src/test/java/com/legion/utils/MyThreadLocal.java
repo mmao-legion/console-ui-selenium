@@ -91,6 +91,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<Boolean> isCompanyPolicySet = new ThreadLocal<>();
 	public static final ThreadLocal<String> phone = new ThreadLocal<>();
 	public static final ThreadLocal<String> employeeId = new ThreadLocal<>();
+	public static final ThreadLocal<String> consoleHandle = new ThreadLocal<>();
 
 	public static void setIsNeedEditingOperatingHours(Boolean value) { isNeedUpdateOperatingHours.set(value); }
 
@@ -514,4 +515,6 @@ public class MyThreadLocal {
 	public static String getPhoneForNewHire() { return  phone.get();}
 	public static void setEmployeeIdForNewHire(String value) { employeeId.set(value);}
 	public static String getEmployeeIdForNewHire() { return  employeeId.get();}
+	public static void setConsoleWindowHandle(String value) { consoleHandle.set(value);}
+	public static String getConsoleWindowHandle() { return consoleHandle.get();}
 }

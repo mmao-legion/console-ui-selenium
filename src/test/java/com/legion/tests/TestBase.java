@@ -497,11 +497,26 @@ public abstract class TestBase {
         String winHandleBefore =getDriver().getWindowHandle();
         for(String winHandle : getDriver().getWindowHandles()) {
             if (winHandle.equals(winHandleBefore)) {
-                getDriver().close();
+                //getDriver().close();
                 continue;
             }
             getDriver().switchTo().window(winHandle);
             break;
+        }
+    }
+
+    public static void switchToConsoleWindow() {
+        try {
+            Set<String> winHandles = getDriver().getWindowHandles();
+            for (String handle : winHandles) {
+                if (handle.equals(getConsoleWindowHandle())) {
+                    getDriver().switchTo().window(handle);
+                    SimpleUtils.pass("Switch to Console window successfully!");
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Failed to switch to Console window!", false);
         }
     }
 

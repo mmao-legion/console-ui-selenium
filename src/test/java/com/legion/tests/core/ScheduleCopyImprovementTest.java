@@ -762,7 +762,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
             configurationPage.publishNowTheTemplate();
-            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            switchToConsoleWindow();
         }
     }
 
@@ -785,7 +785,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.setScheduleCopyRestrictions("no");
             configurationPage.publishNowTheTemplate();
-            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            switchToConsoleWindow();
         }
     }
 

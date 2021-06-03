@@ -143,7 +143,7 @@ public class OnboardingTest extends TestBase {
         controlsNewUIPage.clickOnControlsComplianceSection();
         cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Compliance"));
         hasCompanyMobilePolicyURL = controlsNewUIPage.hasCompanyMobilePolicyURLOrNot();
-        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+        switchToConsoleWindow();
     }
 
     private void verifyOnboardingFlow (String yesOrNo, String username, String password) throws Exception {

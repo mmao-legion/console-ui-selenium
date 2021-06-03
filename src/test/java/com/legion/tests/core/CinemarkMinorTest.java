@@ -645,7 +645,7 @@ public class CinemarkMinorTest extends TestBase {
             Thread.sleep(3000);
 
             //Back to Console
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            switchToConsoleWindow();
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
@@ -727,7 +727,7 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
 
             //Back to Console
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            switchToConsoleWindow();
 //            locationSelectorPage.changeUpperFieldsByName("Business Unit", "BU1");
 //            locationSelectorPage.changeUpperFieldsByName("Region", "Region1");
 //            locationSelectorPage.changeDistrict(districtName);

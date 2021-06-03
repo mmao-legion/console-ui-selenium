@@ -71,7 +71,7 @@ public class GroupByDayPartsTest extends TestBase {
 
 
 
-                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+                switchToConsoleWindow();
             }
 
 
