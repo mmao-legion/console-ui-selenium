@@ -82,7 +82,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     private WebElement resendEmailBtn;
     @FindBy (css = ".header-blue h1")
     private WebElement blueHeader;
-    @FindBy (css = "[steps=\"onboaridngSteps\"]")
+    @FindBy (css = "[steps*=\"onboaridngSteps\"]")
     private WebElement onboardingSteps;
     @FindBy (css = ".user-onboarding-step-current")
     private WebElement currentOnboardingStep;
@@ -108,7 +108,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     @Override
     public void verifyTheContentOfLoginToYourAccountPage() throws Exception {
         try {
-            if (isElementLoaded(enterpriseInviteMsg, 10) && enterpriseInviteMsg.getText().equalsIgnoreCase(invitingMessage)) {
+            if (isElementLoaded(enterpriseInviteMsg, 10) && enterpriseInviteMsg.getText().contains(invitingMessage.replaceAll("-", " "))) {
                 SimpleUtils.pass(enterpriseInviteMsg.getText() + loadSuccessfully);
             } else {
                 SimpleUtils.fail(invitingMessage + failedLoad, false);

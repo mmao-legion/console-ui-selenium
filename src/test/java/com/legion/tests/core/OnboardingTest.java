@@ -33,7 +33,10 @@ public class OnboardingTest extends TestBase {
     private String newPassword = testDataMap.get("Password");
     private String continueLabel = "Continue";
     private String nextLabel = "Next";
-    boolean hasCompanyMobilePolicyURL = false;
+    private boolean hasCompanyMobilePolicyURL = false;
+    private boolean isSetActive = false;
+    private String rcEnv = "rc-enterprise.dev.legion.work";
+    private String firstName = "";
 
     private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
     @Override
@@ -111,18 +114,21 @@ public class OnboardingTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheOnboardingFlowForNewHireOnOPEnabledEnvAsInternalAdmin(String browser, String username, String password, String location){
         try {
-            verifyOnboardingFlowOnOPEnabled();
+            verifyOnboardingFlowOnOPEnabled(username, password);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-    private void verifyOnboardingFlowOnOPEnabled() throws Exception {
+    private void verifyOnboardingFlowOnOPEnabled(String username, String password) throws Exception {
+        // Initial the pages
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-        OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+
+        // Switch to OP side to get the setting for current location
         locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         locationsPage.clickOnLocationsTab();
@@ -133,45 +139,43 @@ public class OnboardingTest extends TestBase {
         locationsPage.clickOnConfigurationTabOfLocation();
         HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
 
-        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
         configurationPage.goToConfigurationPage();
         controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
         cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));
-        boolean isSetActive = controlsNewUIPage.getTheSettingForAutomaticallySetOnboardedEmployeesToActive();
+        isSetActive = controlsNewUIPage.getTheSettingForAutomaticallySetOnboardedEmployeesToActive();
         configurationPage.goToConfigurationPage();
         controlsNewUIPage.clickOnControlsComplianceSection();
         cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Compliance"));
         hasCompanyMobilePolicyURL = controlsNewUIPage.hasCompanyMobilePolicyURLOrNot();
         switchToConsoleWindow();
+
+        createNewUserAndInvite();
+        verifyOnboardingFlowForNewOrReHire(false);
+
+        String status = profileNewUIPage.getStatusOnProfilePage();
+
+        if(isSetActive){
+            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Active, but actual display as "+ status,
+                    status.equalsIgnoreCase("Active"), false);
+        } else
+            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Onboarded, but actual display as "+ status,
+                    status.equalsIgnoreCase("Onboarded"), false);
+
+        // Logout and login as internal admin to terminate the user
+        loginAsInternalAdminAndTerminateUser(username, password);
     }
 
     private void verifyOnboardingFlow (String yesOrNo, String username, String password) throws Exception {
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-        OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
         // Set "Automatically set onboarded employees to active?"
-        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-            controlsPage.gotoControlsPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-            SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
-            controlsNewUIPage.clickOnGlobalLocationButton();
-
-            controlsNewUIPage.setAutomaticallySetOnboardedEmployeesToActive(yesOrNo);
-
-        } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-            OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.goToTemplateDetailsPage("Schedule Collaboration");
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            controlsNewUIPage.setAutomaticallySetOnboardedEmployeesToActive(yesOrNo);
-            configurationPage.publishNowTheTemplate();
-            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-        }
+        controlsPage.gotoControlsPage();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+        SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        controlsNewUIPage.setAutomaticallySetOnboardedEmployeesToActive(yesOrNo);
 
         //Check if there is the url set under Controls -> Compliance -> Company Mobile Policy
         controlsPage.gotoControlsPage();
@@ -181,66 +185,9 @@ public class OnboardingTest extends TestBase {
         controlsNewUIPage.clickOnGlobalLocationButton();
         hasCompanyMobilePolicyURL = controlsNewUIPage.hasCompanyMobilePolicyURLOrNot();
 
-        //Create new TM
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-        teamPage.isProfilePageLoaded();
-        String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        createNewUserAndInvite();
 
-        //If testing on rc, set "Preview User" for this user
-        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-            controlsPage.gotoControlsPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-            controlsNewUIPage.searchAndSelectTeamMemberByName(firstName);
-            List<String> selectAccessRoles = new ArrayList<>();
-            selectAccessRoles.add("Preview User");
-            controlsNewUIPage.selectAccessRoles(selectAccessRoles);
-        }
-
-        teamPage.goToTeam();
-        teamPage.searchAndSelectTeamMemberByName(firstName);
-        //click Invite to Legion button
-        profileNewUIPage.userProfileInviteTeamMember();
-
-        //Get invitation code
-        profileNewUIPage.clickOnShowOrHideInvitationCodeButton(true);
-        invitationCode = profileNewUIPage.getInvitationCode();
-
-        String lastName = MyThreadLocal.getLastNameForNewHire();
-        onboardingPage.openOnboardingPage(invitationCode, firstName, false, "KendraScott2");
-        onboardingPage.verifyTheContentOfCreateAccountPage(firstName, invitationCode);
-        onboardingPage.verifyLastName(lastName);
-        SimpleUtils.assertOnFail("Create Account page failed to load after verifying last name!", onboardingPage.isCreateAccountPageLoadedAfterVerifyingLastName(), false);
-        onboardingPage.createAccountForNewHire(newPassword);
-        // Verify "Is this email correct?" dialog pops up
-        onboardingPage.verifyIsEmailCorrectDialogPopup();
-        // Verify the functionality of YES button
-        onboardingPage.clickYesBtnOnIsEmailCorrectDialog();
-        // Verify Important Notice from your Employer page will load
-        // Verify the content on Important Notice from your Employer page
-        if (hasCompanyMobilePolicyURL) {
-            onboardingPage.verifyImportantNoticeFromYourEmployerPageLoaded();
-            onboardingPage.clickOnButtonByLabel(continueLabel);
-        }
-        // Verify the content on Verify Profile page
-        onboardingPage.validateVerifyProfilePageLoaded();
-        onboardingPage.clickOnButtonByLabel(nextLabel);
-
-        //Verify the content on Set Availability page
-        onboardingPage.verifySetAvailabilityPageLoaded();
-        onboardingPage.clickOnNextButtonOnSetAvailabilityPage();
-        onboardingPage.verifyThatsItPageLoaded();
-        onboardingPage.clickOnDoneOnThatsItPage();
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-        //Check user status from profile page
-        profileNewUIPage.clickOnUserProfileImage();
-        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+        verifyOnboardingFlowForNewOrReHire(false);
         String status = profileNewUIPage.getStatusOnProfilePage();
 
         if(yesOrNo.equalsIgnoreCase("Yes")){
@@ -251,12 +198,7 @@ public class OnboardingTest extends TestBase {
                     status.equalsIgnoreCase("Onboarded"), false);
 
         // Logout and login as internal admin to terminate the user
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
-        verifyLoginToTheSpecificLocation(username, password, currentLocation);
-        teamPage.goToTeam();
-        teamPage.searchAndSelectTeamMemberByName(firstName);
-        teamPage.terminateTheTeamMember(true);
+        loginAsInternalAdminAndTerminateUser(username, password);
     }
 
     private void verifyOnboardingFlowForRehire(String yesOrNo, String username, String password) throws Exception {
@@ -265,40 +207,46 @@ public class OnboardingTest extends TestBase {
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
-        teamPage.goToTeam();
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-        teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
-        teamPage.isProfilePageLoaded();
-        String firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
-        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 
-        //If testing on rc, set "Preview User" for this user
-        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-            controlsPage.gotoControlsPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-            controlsNewUIPage.searchAndSelectTeamMemberByName(firstName);
-            List<String> selectAccessRoles = new ArrayList<>();
-            selectAccessRoles.add("Preview User");
-            controlsNewUIPage.selectAccessRoles(selectAccessRoles);
+        createNewUserAndInvite();
+
+        verifyOnboardingFlowForNewOrReHire(true);
+
+        String status = profileNewUIPage.getStatusOnProfilePage();
+
+        if(yesOrNo.equalsIgnoreCase("Yes")){
+            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Active, but actual display as "+ status,
+                    status.equalsIgnoreCase("Active"), false);
+        } else
+            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Onboarded, but actual display as "+ status,
+                    status.equalsIgnoreCase("Onboarded"), false);
+
+        // Logout and login as internal admin to terminate the user
+        loginAsInternalAdminAndTerminateUser(username, password);
+    }
+
+    private void verifyOnboardingFlowForNewOrReHire(boolean isRehire) throws Exception {
+        OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+
+        onboardingPage.openOnboardingPage(invitationCode, firstName, isRehire, getEnterprise());
+        if (isRehire) {
+            // Verify the content of "Log in to your account" page
+            onboardingPage.verifyTheContentOfLoginToYourAccountPage();
+            // Verify the rehire can login to the previous legion credential successfully
+            onboardingPage.verifyRehireLoginToPreviousCredential(getEmailAccount(), newPassword);
+        } else {
+            String lastName = MyThreadLocal.getLastNameForNewHire();
+            onboardingPage.openOnboardingPage(invitationCode, firstName, false, "KendraScott2");
+            onboardingPage.verifyTheContentOfCreateAccountPage(firstName, invitationCode);
+            onboardingPage.verifyLastName(lastName);
+            SimpleUtils.assertOnFail("Create Account page failed to load after verifying last name!", onboardingPage.isCreateAccountPageLoadedAfterVerifyingLastName(), false);
+            onboardingPage.createAccountForNewHire(newPassword);
+            // Verify "Is this email correct?" dialog pops up
+            onboardingPage.verifyIsEmailCorrectDialogPopup();
+            // Verify the functionality of YES button
+            onboardingPage.clickYesBtnOnIsEmailCorrectDialog();
         }
-
-        teamPage.goToTeam();
-        teamPage.searchAndSelectTeamMemberByName(firstName);
-        // Verify manager can invite the user to use Legion, click Re invite to Legion button
-        profileNewUIPage.userProfileInviteTeamMember();
-        //Get invitation code
-        profileNewUIPage.clickOnShowOrHideInvitationCodeButton(true);
-        invitationCode = profileNewUIPage.getInvitationCode();
-
-        String lastName = MyThreadLocal.getLastNameForNewHire();
-        onboardingPage.openOnboardingPage(invitationCode, firstName, true, getEnterprise());
-
-        // Verify the content of "Log in to your account" page
-        onboardingPage.verifyTheContentOfLoginToYourAccountPage();
-        // Verify the rehire can login to the previous legion credential successfully
-        onboardingPage.verifyRehireLoginToPreviousCredential(getEmailAccount(), newPassword);
-
         // Verify the content on Important Notice from your Employer page
         if (hasCompanyMobilePolicyURL) {
             onboardingPage.verifyImportantNoticeFromYourEmployerPageLoaded();
@@ -322,16 +270,47 @@ public class OnboardingTest extends TestBase {
         //Check user status from profile page
         profileNewUIPage.clickOnUserProfileImage();
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-        String status = profileNewUIPage.getStatusOnProfilePage();
+    }
 
-        if(yesOrNo.equalsIgnoreCase("Yes")){
-            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Active, but actual display as "+ status,
-                    status.equalsIgnoreCase("Active"), false);
-        } else
-            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Onboarded, but actual display as "+ status,
-                    status.equalsIgnoreCase("Onboarded"), false);
+    private void createNewUserAndInvite() throws Exception {
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
 
-        // Logout and login as internal admin to terminate the user
+        // Go to Team page, to create the new user for onboarding
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+        teamPage.isProfilePageLoaded();
+        firstName = teamPage.addANewTeamMemberToInvite(newTMDetails);
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+        //If testing on rc, set "Preview User" for this user
+        if (getDriver().getCurrentUrl().contains(rcEnv)){
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            controlsNewUIPage.searchAndSelectTeamMemberByName(firstName);
+            List<String> selectAccessRoles = new ArrayList<>();
+            selectAccessRoles.add("Preview User");
+            controlsNewUIPage.selectAccessRoles(selectAccessRoles);
+        }
+
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName(firstName);
+        // Verify manager can invite the user to use Legion, click Re invite to Legion button
+        profileNewUIPage.userProfileInviteTeamMember();
+        //Get invitation code
+        profileNewUIPage.clickOnShowOrHideInvitationCodeButton(true);
+        invitationCode = profileNewUIPage.getInvitationCode();
+    }
+
+    private void loginAsInternalAdminAndTerminateUser(String username, String password) throws Exception {
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+
         loginPage.logOut();
         verifyLoginToTheSpecificLocation(username, password, currentLocation);
         teamPage.goToTeam();

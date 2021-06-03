@@ -205,7 +205,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
     private List<WebElement> templateList;
     @Override
     public void findDefaultTemplate(String templateName) throws Exception {
-        if (isElementLoaded(searchInput,15)){
+        if (isElementLoaded(searchInput,25)){
             searchInput.clear();
             searchInput.sendKeys(templateName);
             waitForSeconds(2);
