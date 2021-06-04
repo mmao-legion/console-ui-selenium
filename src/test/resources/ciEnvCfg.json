@@ -22,7 +22,7 @@
   "CHROME" : "Chrome",
   "FIREFOX" : "Firefox",
   "console_logs" : "true",
-  "close_browser" : "true",
+  "close_browser" : "false",
   "show_report" : "true",
   "VERSION" : "68",
   "OS" : "WINDOW",
@@ -36,5 +36,5 @@
   "Download_File_Default_Dir" : "/var/lib/jenkins/workspace/createRemoteSeleniumGridForHydsoft/chinaQA",
   "isHeadlessBrowser" : "false",
   "isGridEnabled" : "true",
-  "URL" : "http://localhost:4455/wd/hub"
+  "URL" : "http://jenkins.shared.legion.local:4466/wd/hub"
 }
