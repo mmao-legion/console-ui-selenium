@@ -213,11 +213,17 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     //added by estelle to search location if the location is not in recent list
     @FindBy(css = "input[placeholder=\"Search Location\"]")
     private WebElement locationSearchInput;
+    @FindBy(css = "input[placeholder=\"Search\"]")
+    private WebElement upperFieldSearchInput;
     private void searchLocationAndSelect(String locationName) throws Exception {
         if (isElementLoaded(locationSearchInput,5)) {
             locationSearchInput.sendKeys(locationName);
             waitForSeconds(30);
             locationSearchInput.sendKeys(Keys.ENTER);
+        }else if (isElementLoaded(upperFieldSearchInput,5)) {
+            upperFieldSearchInput.sendKeys(locationName);
+            waitForSeconds(30);
+            upperFieldSearchInput.sendKeys(Keys.ENTER);
         }else
            SimpleUtils.fail("Location search input filed load failed",true);
     }
@@ -980,9 +986,36 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
     }
 
-    @Override
-    public void searchSpecificLocationAndNavigateTo(String locationText) {
 
+    @FindBy(css = "img.search-icon")
+    private WebElement upperFieldSearchIcon;
+
+    @Override
+    public void searchSpecificLocationAndNavigateTo(String locationName) throws Exception {
+        Boolean isLocationMatched = false;
+        if (isElementLoaded(upperFieldSearchIcon, 10)){
+            clickTheElement(upperFieldSearchIcon);
+        }
+        searchLocationAndSelect(locationName);
+        List<WebElement> locationItems = new ArrayList<>();
+        waitForSeconds(5);
+        if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
+            locationItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
+        }
+        if (locationItems.size() > 0) {
+            for (WebElement locationItem : locationItems) {
+                if (locationItem.getText().contains(locationName)) {
+                    isLocationMatched = true;
+                    click(locationItem);
+                    SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
+                    break;
+                }
+            }
+        }
+
+        if (!isLocationMatched) {
+            SimpleUtils.fail("Location does not match with '" + locationName + "'", false);
+        }
     }
 
     @Override
@@ -1052,4 +1085,29 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
     }
 
+    @FindBy(css = "lg-select[search-hint='Search Region'] div.input-faked")
+    private WebElement regionSelectorButton;
+
+    @FindBy(css = "lg-select[search-hint='Search HQ'] div.input-faked")
+    private WebElement hqSelectorButton;
+
+    public List<String> getSelectedUpperFields () throws Exception {
+        List<String> selectedUpperFields = new ArrayList<>();
+        if (isElementLoaded(locationSelectorButton, 5)
+                && isElementLoaded(districtSelectorButton, 5)
+                && (isElementLoaded(regionSelectorButton, 5)|| isElementLoaded(hqSelectorButton, 5))) {
+            selectedUpperFields.add(locationSelectorButton.getText());
+            selectedUpperFields.add(districtSelectorButton.getText());
+            if (isElementLoaded(regionSelectorButton, 5)) {
+                selectedUpperFields.add(regionSelectorButton.getText());
+            } else if (isElementLoaded(hqSelectorButton, 5)){
+                selectedUpperFields.add(hqSelectorButton.getText());
+            }
+
+            SimpleUtils.pass("Get upper fields successfully! ");
+        } else
+            SimpleUtils.fail("Upper fields navigator fail to load! ", false);
+
+        return selectedUpperFields;
+    }
 }
