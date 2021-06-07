@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" name="Legion Test" parallel="methods" thread-count="4">
+<suite verbose ="2" name="Legion Test" >
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Automation - Daily Routine"/>
@@ -66,6 +66,7 @@
     </test>
 
     <test name="Navigation Test">
+
         <classes>
             <class name="com.legion.tests.core.NewNavigationFlowTest">
                 <methods>
@@ -175,3 +176,5 @@
     </test>
 
 </suite> <!-- Suite -->
+
+

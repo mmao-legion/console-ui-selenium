@@ -69,7 +69,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to create location with mandatory fields")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateRegularLocationWithMandatoryFields(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -103,7 +103,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = " create a Type Regular location with effective date as a past date")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateRegularLocationWithAllFieldsAndNavigate(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -126,7 +126,7 @@ public class LocationsTest extends TestBase {
             //add new regular location
             locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);
 
-            //search created location
+               //search created location
             if (locationsPage.searchNewLocation(locationName)) {
                 SimpleUtils.pass("Create new location successfully: "+locationName);
             }else
@@ -152,9 +152,9 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "create a Type MOCK location that based on a ENABLED status regular location ")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateMockLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
-        try{
+       try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime =  dfs.format(new Date());
             String locationName = "AutoCreate" +currentTime;
@@ -192,7 +192,7 @@ public class LocationsTest extends TestBase {
 //           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
 //           SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
 //                   schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
-        } catch (Exception e){
+       } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -200,7 +200,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Create a Type NSO location with below conditions successfully")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateNSOLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -241,7 +241,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify disable the Type Regular locations")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDisableEnableLocationFunction(String browser, String username, String password, String location) throws Exception {
         try{
             String searchInputText="status:Enabled";
@@ -271,7 +271,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Import locations common function")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyImportLocationDistrict(String browser, String username, String password, String location) throws Exception {
         try{
             String searchInputText="Child_LocationGroup_Example";
@@ -303,7 +303,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Export all/specific location function")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyExportLocationDistrict(String browser, String username, String password, String location) throws Exception {
         try{
             int index =0;
@@ -333,7 +333,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify MS location group function for Regular")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMSLocationGroupFunctionForRegular(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -447,63 +447,63 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify change MS location group to P2P")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeMSToP2P(String browser, String username, String password, String location) throws Exception {
-        try{
+            try{
 
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date());
-            String locationName ="LGMSAuto" +currentTime;
-            setLGMSLocationName(locationName);
-            int index =0;
-            int childLocationNum = 1;
-            String searchCharactor = "No touch";
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+                String currentTime =  dfs.format(new Date());
+                String locationName ="LGMSAuto" +currentTime;
+                setLGMSLocationName(locationName);
+                int index =0;
+                int childLocationNum = 1;
+                String searchCharactor = "No touch";
+                DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+                SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-locations tab
-            locationsPage.goToSubLocationsInLocationsPage();
-            //add new MS location group-parent and child
-            String  parentRelationship = "Parent location";
-            String locationType = "Regular";
-            locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.MS.getValue());
+                //go to locations tab
+                locationsPage.clickOnLocationsTab();
+                //check locations item
+                locationsPage.validateItemsInLocations();
+                //go to sub-locations tab
+                locationsPage.goToSubLocationsInLocationsPage();
+                //add new MS location group-parent and child
+                String  parentRelationship = "Parent location";
+                String locationType = "Regular";
+                locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.MS.getValue());
 
-            //add child location by child number
-            try {
-                for (int i = 0; i <childLocationNum ; i++) {
-                    String childLocationName = "childLocationForMS" + i +currentTime;
-                    setLGMSLocationName(childLocationName);
-                    String  childRelationship = "Part of a location group";
-                    locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
+                //add child location by child number
+                try {
+                    for (int i = 0; i <childLocationNum ; i++) {
+                        String childLocationName = "childLocationForMS" + i +currentTime;
+                        setLGMSLocationName(childLocationName);
+                        String  childRelationship = "Part of a location group";
+                        locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
+                    }
+                }catch (Exception e){
+                    SimpleUtils.fail("Child location creation failed",true);
                 }
-            }catch (Exception e){
-                SimpleUtils.fail("Child location creation failed",true);
+
+                ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+                //Verify the location relationship
+                if (locationsPage.isItMSLG()) {
+                    locationsPage.changeLGToMSOrP2P(locationGroupSwitchOperation.PTP.getValue(),locationInfoDetails.get(0).get("locationName"));
+                }else
+                    SimpleUtils.fail("It's not MS location group,select another one pls",false);
+                //search location again
+                locationsPage.searchLocation("Change "+locationName+" to P2P or MS");
+                if (!locationsPage.isItMSLG()) {
+                    SimpleUtils.pass("Change MS location group to P2P successfully");
+                    setLGPTPLocationName(locationName);
+                }else
+                    SimpleUtils.fail("Change MS location group to P2P failed",true);
+
+            } catch (Exception e){
+                SimpleUtils.fail(e.getMessage(), false);
             }
-
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            //Verify the location relationship
-            if (locationsPage.isItMSLG()) {
-                locationsPage.changeLGToMSOrP2P(locationGroupSwitchOperation.PTP.getValue(),locationInfoDetails.get(0).get("locationName"));
-            }else
-                SimpleUtils.fail("It's not MS location group,select another one pls",false);
-            //search location again
-            locationsPage.searchLocation("Change "+locationName+" to P2P or MS");
-            if (!locationsPage.isItMSLG()) {
-                SimpleUtils.pass("Change MS location group to P2P successfully");
-                setLGPTPLocationName(locationName);
-            }else
-                SimpleUtils.fail("Change MS location group to P2P failed",true);
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
     }
 
 
@@ -511,56 +511,56 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Peer to Peer location group function for Regular")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyP2PLocationGroupFunctionForRegular(String browser, String username, String password, String location) throws Exception {
 
         try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date());
-            String locationName = "LGPTPAuto" +currentTime;
-            setLGPTPLocationName(locationName);
-            int index =0;
-            int childLocationNum = 1;
-            String searchCharactor = "No touch";
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+                String currentTime =  dfs.format(new Date());
+                String locationName = "LGPTPAuto" +currentTime;
+                setLGPTPLocationName(locationName);
+                int index =0;
+                int childLocationNum = 1;
+                String searchCharactor = "No touch";
+                DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+                SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-locations tab
-            locationsPage.goToSubLocationsInLocationsPage();
-            //add new MS location group-parent and child
-            String  parentRelationship = "Parent location";
-            String locationType = "Regular";
-            locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.PTP.getValue());
-            try {
-                for (int i = 0; i <childLocationNum ; i++) {
-                    String childLocationName = "childLocationForPTP" + i +currentTime;
-                    String  childRelationship = "Part of a location group";
-                    locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
+                //go to locations tab
+                locationsPage.clickOnLocationsTab();
+                //check locations item
+                locationsPage.validateItemsInLocations();
+                //go to sub-locations tab
+                locationsPage.goToSubLocationsInLocationsPage();
+                //add new MS location group-parent and child
+                String  parentRelationship = "Parent location";
+                String locationType = "Regular";
+                locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship,locationGroupSwitchOperation.PTP.getValue());
+                try {
+                    for (int i = 0; i <childLocationNum ; i++) {
+                        String childLocationName = "childLocationForPTP" + i +currentTime;
+                        String  childRelationship = "Part of a location group";
+                        locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
+                    }
+                }catch (Exception e){
+                    SimpleUtils.fail("Child location creation failed",true);
                 }
-            }catch (Exception e){
-                SimpleUtils.fail("Child location creation failed",true);
-            }
 
 
-            //get location's  info
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+                //get location's  info
+                ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
 
-            //update p2p location Group district
-            String originalDistrict = locationInfoDetails.get(0).get("locationDistrict");
-            locationsPage.updateParentLocationDistrict("QA",index);
-            ArrayList<HashMap<String, String>> locationInfoDetailsAfterUpdate =locationsPage.getLocationInfo(locationName);
-            String districtAfterUpdate = locationInfoDetailsAfterUpdate.get(0).get("locationDistrict");
-            if (!districtAfterUpdate.equals(originalDistrict)) {
-                SimpleUtils.pass("District updated successfully");
-            }else
-                SimpleUtils.fail("Update failed",true);
+                //update p2p location Group district
+                String originalDistrict = locationInfoDetails.get(0).get("locationDistrict");
+                locationsPage.updateParentLocationDistrict("QA",index);
+                ArrayList<HashMap<String, String>> locationInfoDetailsAfterUpdate =locationsPage.getLocationInfo(locationName);
+                String districtAfterUpdate = locationInfoDetailsAfterUpdate.get(0).get("locationDistrict");
+                if (!districtAfterUpdate.equals(originalDistrict)) {
+                    SimpleUtils.pass("District updated successfully");
+                }else
+                    SimpleUtils.fail("Update failed",true);
 
             //disable parent location
             String action="Disable";
@@ -596,7 +596,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate Master Slave Location group creation with regular type")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUpdateP2PLocationGroupDistrictFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -660,7 +660,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify MS location group function for NSO")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateMSLocationGroupWithNSOTypeFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -723,7 +723,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Peer to peer location group function for NSO")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateP2PLocationGroupWithNsoTypeFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -782,7 +782,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to disable P2P child /parent location")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDisableEnableParentChildLocationInLGP2P(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -835,7 +835,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to update MS location group to None")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeMSLocationsToNoneFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -900,7 +900,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to update P2P location to None")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeP2PLocationsToNoneFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -966,7 +966,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify location group common function")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNoLocationGroupSettingForMock(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -993,7 +993,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to MS parent")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeNoneLocationToMSParent(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1035,7 +1035,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to P2P parent")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeNoneLocationToP2PParent(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1077,7 +1077,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to P2P child")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeNoneLocationToChild(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1146,7 +1146,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change P2P location group to MS")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeP2PToMS(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1212,7 +1212,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify UpperFields list page and search function")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUpperFieldsListPageAndSearchFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1250,36 +1250,36 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Add New Upperfields with different level")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddUpperFieldsWithDiffLevel(String browser, String username, String password, String location) throws Exception {
 
         try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-            String currentTime =  dfs.format(new Date()).trim();
-            String upperfieldsName = currentTime;
-            String upperfieldsId = currentTime;
-            String searchChara = "test";
-            int index = 0;
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+                String currentTime =  dfs.format(new Date()).trim();
+                String upperfieldsName = currentTime;
+                String upperfieldsId = currentTime;
+                String searchChara = "test";
+                int index = 0;
 
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+                SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
+                //go to locations tab
+                locationsPage.clickOnLocationsTab();
+                //check locations item
+                locationsPage.validateItemsInLocations();
 
-            //get organization hierarchy info
-            locationsPage.goToGlobalConfigurationInLocations();
-            ArrayList<HashMap<String ,String>> organizationHierarchyInfo = locationsPage.getOrganizationHierarchyInfo();
-            locationsPage.goBackToLocationsTab();
-            //go to sub-upperfield  tab
-            locationsPage.goToUpperFieldsPage();
-            locationsPage.verifyBackBtnInCreateNewUpperfieldPage();
-            locationsPage.addNewUpperfieldsWithoutParentAndChild( upperfieldsName, upperfieldsId,searchChara,index,organizationHierarchyInfo);
+                //get organization hierarchy info
+                locationsPage.goToGlobalConfigurationInLocations();
+                ArrayList<HashMap<String ,String>> organizationHierarchyInfo = locationsPage.getOrganizationHierarchyInfo();
+                locationsPage.goBackToLocationsTab();
+                //go to sub-upperfield  tab
+                locationsPage.goToUpperFieldsPage();
+                locationsPage.verifyBackBtnInCreateNewUpperfieldPage();
+                locationsPage.addNewUpperfieldsWithoutParentAndChild( upperfieldsName, upperfieldsId,searchChara,index,organizationHierarchyInfo);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -1291,14 +1291,14 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify disable and enable upperfield")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDisableEnableUpperFieldFunction(String browser, String username, String password, String location) throws Exception {
 
-        try{
+       try{
             String disableAction = "Disable";
             String enableAction = "Enable";
-            String searchChara = "status:Disabled";
-            int index = 0;
+           String searchChara = "status:Disabled";
+           int index = 0;
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1312,29 +1312,29 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-district  tab
             locationsPage.goToUpperFieldsPage();
-            String upperfieldsName = "";
-            ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(searchChara);
-            for (int i = 0; i <upperfieldInfo.size() ; i++) {
-                if (upperfieldInfo.get(i).get("upperfieldStatus").equalsIgnoreCase("DISABLED") &&
-                        upperfieldInfo.get(i).get("numOfLocations").equals("0")) {
-                    upperfieldsName = upperfieldInfo.get(i).get("upperfieldName");
-                    break;
-                }
-            }
+           String upperfieldsName = "";
+           ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(searchChara);
+           for (int i = 0; i <upperfieldInfo.size() ; i++) {
+               if (upperfieldInfo.get(i).get("upperfieldStatus").equalsIgnoreCase("DISABLED") &&
+                       upperfieldInfo.get(i).get("numOfLocations").equals("0")) {
+                   upperfieldsName = upperfieldInfo.get(i).get("upperfieldName");
+                   break;
+               }
+           }
             //disable and enable upperfield
             locationsPage.disableEnableUpperfield(upperfieldsName,enableAction);
             locationsPage.disableEnableUpperfield(upperfieldsName,disableAction);
 
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+       } catch (Exception e){
+           SimpleUtils.fail(e.getMessage(), false);
+       }
 
     }
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify update upperfield")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUpdateUpperFieldFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1375,7 +1375,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify cancel creating upperfield")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCancelCreatingUpperfieldFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1412,7 +1412,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify upperfield smartcard data")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUpperFieldSmartCardData(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1455,7 +1455,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "verify internal location picture")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyInternalLocationPicFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1494,7 +1494,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global dynamic group in Locations tab  ")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyGlobalDynamicGroupFunctionInLocationsTab(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1545,7 +1545,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global dynamic group for Clock in")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyGlobalDynamicGroupInClockInFunction(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1586,7 +1586,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify abnormal scenarios")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyGlobalDynamicGroupAbnormalScenarios(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1619,7 +1619,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global dynamic group for Workforce Sharing")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyGlobalDynamicGroupInWFS(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1718,7 +1718,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Parent formula in Workforce Sharing")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyParentFormulaInWFS(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1818,7 +1818,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify default value of Organization Hierarchy")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefaultOrganizationHierarchyShow(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1840,7 +1840,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate add edit remove organization hierarchy")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddEditRemoveOrganizationHierarchy(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1870,7 +1870,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "abnormal cases of hierarchy")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAbnormalCasesOfOrganizationHierarchy(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1895,7 +1895,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can see template value via click template name in location level and compare")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUserCanSeeEachTypeOfTemViaClickingTemName(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -2042,7 +2042,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "View template of Scheduling policy schedule collaboration TA and Compliance")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevel(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -2104,7 +2104,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Overridden scheduling rules template in location level")
-    @Test(parameters ={"username","password","location"})
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyOverriddenSchedulingRulesInLocationLevel(String browser, String username, String password, String location) throws Exception {
 
         try{
