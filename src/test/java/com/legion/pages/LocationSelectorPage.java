@@ -33,8 +33,8 @@ public interface LocationSelectorPage {
 	public void verifyDefaultLevelForBUOrAdmin();
 	public void searchSpecificBUAndNavigateTo(String buText);
 	public void searchSpecificRegionAndNavigateTo(String regionText);
-	public void searchSpecificDistrictAndNavigateTo(String districtText);
-	public void searchSpecificLocationAndNavigateTo(String locationText) throws Exception;
+	public void searchSpecificDistrictAndNavigateTo(String districtText) throws Exception;
+	public void searchSpecificLocationAndNavigateTo(String locationName) throws Exception;
 	public void verifyMagnifyGlassIconShowOrNot();
 	public void changeLocationDirect(String locationName);
 	public List<String> getSelectedUpperFields () throws Exception;

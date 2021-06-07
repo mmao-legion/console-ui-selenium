@@ -982,8 +982,31 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
 
     @Override
-    public void searchSpecificDistrictAndNavigateTo(String districtText) {
+    public void searchSpecificDistrictAndNavigateTo(String districtName) throws Exception {
+        Boolean isDistrictMatched = false;
+        if (isElementLoaded(upperFieldSearchIcon, 10)){
+            clickTheElement(upperFieldSearchIcon);
+        }
+        searchLocationAndSelect(districtName);
+        List<WebElement> districtItems = new ArrayList<>();
+        waitForSeconds(5);
+        if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
+            districtItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
+        }
+        if (districtItems.size() > 0) {
+            for (WebElement districtItem : districtItems) {
+                if (districtItem.getText().contains(districtName)) {
+                    isDistrictMatched = true;
+                    click(districtItem);
+                    SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+                    break;
+                }
+            }
+        }
 
+        if (!isDistrictMatched) {
+            SimpleUtils.fail("District does not match with '" + districtName + "'", false);
+        }
     }
 
 
