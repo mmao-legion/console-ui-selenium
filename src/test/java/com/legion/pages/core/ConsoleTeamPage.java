@@ -4697,7 +4697,8 @@ private WebElement locationColumn;
 
 	public boolean checkIsInviteButtonExists() {
 		boolean isInviteButtonExists = false;
-		if (areListElementVisible(inviteButtons, 5)) {
+		if (areListElementVisible(teamMembers, 10)
+				&& areListElementVisible(inviteButtons, 5)) {
 			isInviteButtonExists = true;
 			SimpleUtils.pass("The Invite buttons display correctly! ");
 		} else

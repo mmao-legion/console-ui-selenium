@@ -1291,7 +1291,16 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
-			float budgetHoursInSchedule = Float.parseFloat(schedulePage.getBudgetNScheduledHoursFromSmartCard().get("Budget"));
+			String budgetHours = schedulePage.getBudgetNScheduledHoursFromSmartCard().get("Budget");
+			String guidanceHours = schedulePage.getBudgetNScheduledHoursFromSmartCard().get("Guidance");
+			float budgetHoursInSchedule = 0;
+			if (budgetHours != null) {
+				budgetHoursInSchedule = Float.parseFloat(budgetHours);
+			} else if (guidanceHours != null) {
+				budgetHoursInSchedule = Float.parseFloat(guidanceHours);
+			} else
+				SimpleUtils.fail("The budget and guidance hour fail to load! ", false);
+
 			dashboardPage.clickOnDashboardConsoleMenu();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 			locationSelectorPage.changeDistrictDirect();

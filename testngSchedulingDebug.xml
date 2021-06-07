@@ -242,6 +242,7 @@
             <class name="com.legion.tests.core.LocationNavigationTest">
                 <methods>
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
