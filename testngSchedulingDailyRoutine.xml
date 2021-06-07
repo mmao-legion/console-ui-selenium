@@ -75,7 +75,7 @@
                     <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin"/>
                     <include name="validateWeatherSmartCardOnForecastPage"/>
                     <include name="verifyScheduleFunctionalityForecast"/>
-                    <include name="verifyShopperForecastFunctionality"/>
+<!--                    <include name="verifyShopperForecastFunctionality"/>-->
                 </methods>
             </class>
         </classes>
