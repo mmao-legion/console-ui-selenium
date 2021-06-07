@@ -14,7 +14,7 @@ import org.testng.annotations.DataProvider;
 
 public class CredentialDataProviderSource {
 
-    @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = false)
+    @DataProvider(name = "legionTeamCredentialsByEnterprise", parallel = true)
     public static Object[][] firstCredentialsByEnterprise(Method testMethod) {
         String fileName = "UsersCredentials.json";
         if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
@@ -38,7 +38,7 @@ public class CredentialDataProviderSource {
          return firstCredentialsByEnterprise(testMethod);
      }
      
-     @DataProvider(name = "legionTeamCredentialsByRoles", parallel = false)
+     @DataProvider(name = "legionTeamCredentialsByRoles", parallel = true)
      public static Object[][] credentialsByRoles (Method testMethod) {
          String fileName = "UsersCredentials.json";
          if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
