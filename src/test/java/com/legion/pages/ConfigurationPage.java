@@ -76,4 +76,6 @@ public interface ConfigurationPage {
     public void validateAdvanceStaffingRuleShowingAtLocationLevel(String startEvent,String startOffsetTime,String startEventPoint,String startTimeUnit,
                                                                   String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
                                                                   List<String> days,String shiftsNumber) throws Exception;
+    public void selectOneDynamicGroup(String dynamicGroupName) throws Exception;
+    public void publishNewTemplate(String templateName,String dynamicGroupName) throws Exception;
 }

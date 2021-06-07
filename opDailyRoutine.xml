@@ -163,4 +163,15 @@
         </classes>
     </test>
 
+
+    <test name="Labor Model Test">
+        <classes>
+            <class name="com.legion.tests.core.LaborModelTest">
+                <methods>
+                    <include name="verifyUserCanCreateDeleteAndPublishLaborModelTemplate"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

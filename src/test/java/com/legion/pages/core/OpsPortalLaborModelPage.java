@@ -9,6 +9,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import com.legion.pages.ConfigurationPage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +72,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 			SimpleUtils.pass("Template landing page shows well");
 			flag = true;
 		}else{
-			SimpleUtils.fail("Template landing page was NOT loaing well",false);
+			SimpleUtils.fail("Template landing page was NOT loaded well or there is no template now",false);
 			flag = false;
 		}
 		return flag;
@@ -163,5 +164,79 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 			SimpleUtils.fail("Failed go to labor model in template level ",false);
 			return null;
 	}
+
+	@FindBy(css="[title='Labor Model'] h1")
+	private WebElement laborModelCard;
+
+	@Override
+	public void addNewLaborModelTemplate(String templateName) throws Exception {
+		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
+		if(isElementEnabled(laborModelTab)){
+			clickOnLaborModelTab();
+			if(isElementLoaded(laborModelTile,5)){
+				SimpleUtils.pass("Labor Model tile is loaded successfully!");
+				clickTheElement(laborModelCard);
+				waitForSeconds(5);
+				if(isTemplateListPageShow()){
+					SimpleUtils.pass("Labor model template list is showing now");
+					configurationPage.createNewTemplate(templateName);
+				}else {
+					SimpleUtils.fail("Labor model template list is not loaded well",false);
+				}
+			}else {
+				SimpleUtils.fail("Labor Model tile is not loaded",false);
+			}
+		}else {
+			SimpleUtils.fail("Labor model tab is not loaded",false);
+		}
+	}
+
+	@Override
+	public void deleteDraftLaborModelTemplate(String templateName) throws Exception {
+		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
+		if(isElementEnabled(laborModelTab)){
+			clickOnLaborModelTab();
+			if(isElementLoaded(laborModelTile,5)){
+				SimpleUtils.pass("Labor Model tile is loaded successfully!");
+				clickTheElement(laborModelCard);
+				waitForSeconds(5);
+				if(isTemplateListPageShow()){
+					SimpleUtils.pass("Labor model template list is showing now");
+					searchTemplate(templateName);
+					configurationPage.deleteNewCreatedTemplate(templateName);
+				}else {
+					SimpleUtils.fail("Labor model template list is not loaded well",false);
+				}
+			}else {
+				SimpleUtils.fail("Labor Model tile is not loaded",false);
+			}
+		}else {
+			SimpleUtils.fail("Labor model tab is not loaded",false);
+		}
+	}
+
+	@Override
+	public void publishNewLaborModelTemplate(String templateName,String dynamicGroupName) throws Exception {
+		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
+		if(isElementEnabled(laborModelTab)){
+			clickOnLaborModelTab();
+			if(isElementLoaded(laborModelTile,5)){
+				SimpleUtils.pass("Labor Model tile is loaded successfully!");
+				clickTheElement(laborModelCard);
+				waitForSeconds(5);
+				if(isTemplateListPageShow()){
+					SimpleUtils.pass("Labor model template list is showing now");
+					configurationPage.publishNewTemplate(templateName,dynamicGroupName);
+				}else {
+					SimpleUtils.fail("Labor model template list is not loaded well",false);
+				}
+			}else {
+				SimpleUtils.fail("Labor Model tile is not loaded",false);
+			}
+		}else {
+			SimpleUtils.fail("Labor model tab is not loaded",false);
+		}
+	}
+
 }
 

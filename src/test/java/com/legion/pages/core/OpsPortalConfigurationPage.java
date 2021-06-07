@@ -1538,7 +1538,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			click(publishTemplateButton);
 			if(isElementLoaded(publishTemplateConfirmModal, 5)){
 				click(okButtonOnPublishTemplateConfirmModal);
-//				displaySuccessMessage();
+				displaySuccessMessage();
 			}
 		}else
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
@@ -1947,6 +1947,95 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.pass("The end Time Unit in rule is correct");
 		}else {
 			SimpleUtils.fail("The end Time Unit in rule is NOT correct",false);
+		}
+	}
+
+	@FindBy(css = "lg-search input")
+	private WebElement searchAssociateFiled;
+	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(1)")
+	private WebElement templateDetailsBTN;
+	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(2)")
+	private WebElement templateExternalAttributesBTN;
+	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(3)")
+	private WebElement templateAssociationBTN;
+
+	public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception{
+		if(isElementEnabled(templateAssociationBTN,5)){
+			clickTheElement(templateAssociationBTN);
+			if(isElementEnabled(searchAssociateFiled,2)){
+				SimpleUtils.pass("Click Association Tab successfully!");
+			}else {
+				SimpleUtils.fail("Failed to Click Association Tab!",false);
+			}
+		}
+
+	}
+
+	@FindBy(css = "table.templateAssociation_table tr[ng-repeat=\"group in filterdynamicGroups\"]")
+	private List<WebElement> templateAssociationRows;
+
+	public void searchOneDynamicGroup(String dynamicGroupName) throws Exception{
+		clickOnAssociationTabOnTemplateDetailsPage();
+		searchAssociateFiled.sendKeys(dynamicGroupName);
+		waitForSeconds(2);
+		if(templateAssociationRows.size()!=0){
+			SimpleUtils.pass("User can search out association named: " + dynamicGroupName);
+		}else {
+			SimpleUtils.fail("User can NOT search out association named: \" + dynamicGroupName",false);
+		}
+	}
+
+	@FindBy(css="lg-tab[tab-title=\"Association\"] lg-button[label=\"Save\"] button")
+	private WebElement saveBTNOnAssociationPage;
+
+	@Override
+	public void selectOneDynamicGroup(String dynamicGroupName) throws Exception{
+		searchOneDynamicGroup(dynamicGroupName);
+		for(WebElement templateAssociationRow:templateAssociationRows){
+			String associationName = templateAssociationRow.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+			if(associationName.equals(dynamicGroupName)){
+				clickTheElement(templateAssociationRow.findElement(By.cssSelector("td:nth-child(1) input")));
+				break;
+			}
+		}
+		clickTheElement(saveBTNOnAssociationPage);
+	}
+
+	@Override
+	public void publishNewTemplate(String templateName,String dynamicGroupName) throws Exception{
+		if(isTemplateListPageShow()){
+			clickTheElement(newTemplateBTN);
+			waitForSeconds(1);
+			if(isElementEnabled(createNewTemplatePopupWindow)){
+				SimpleUtils.pass("User can click new template button successfully!");
+				clickTheElement(newTemplateName);
+				newTemplateName.sendKeys(templateName);
+				clickTheElement(newTemplateDescription);
+				newTemplateDescription.sendKeys(templateName);
+				clickTheElement(continueBTN);
+				waitForSeconds(2);
+				if(isElementEnabled(welcomeCloseButton)){
+					clickTheElement(welcomeCloseButton);
+				}
+				if(isElementEnabled(taTemplateSpecialField)){
+					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+				}
+				selectOneDynamicGroup(dynamicGroupName);
+				waitForSeconds(5);
+				clickTheElement(templateDetailsBTN);
+				waitForSeconds(2);
+				publishNowTemplate();
+			}else {
+				SimpleUtils.fail("User can't click new template button successfully!",false);
+			}
+		}
+		String newTemplateName = templateNameList.get(0).getText().trim();
+		if(newTemplateName.contains(templateName)){
+			SimpleUtils.pass("User can add new template successfully!");
+		}else {
+			SimpleUtils.fail("User can't add new template successfully",false);
 		}
 	}
 
