@@ -120,6 +120,20 @@ public class OnboardingTest extends TestBase {
         }
     }
 
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the onboarding flow for Rehire (Non-SSO & OP based)")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheOnboardingFlowForReHireOnOPEnabledEnvAsInternalAdmin(String browser, String username, String password, String location){
+        try {
+            verifyOnboardingFlowOnOPEnabled(username, password);
+            verifyOnboardingFlowForRehireOnOPEnabled(username, password);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     private void verifyOnboardingFlowOnOPEnabled(String username, String password) throws Exception {
         // Initial the pages
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -151,6 +165,26 @@ public class OnboardingTest extends TestBase {
 
         createNewUserAndInvite();
         verifyOnboardingFlowForNewOrReHire(false);
+
+        String status = profileNewUIPage.getStatusOnProfilePage();
+
+        if(isSetActive){
+            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Active, but actual display as "+ status,
+                    status.equalsIgnoreCase("Active"), false);
+        } else
+            SimpleUtils.assertOnFail("The user status display incorrectly! It should display as: Onboarded, but actual display as "+ status,
+                    status.equalsIgnoreCase("Onboarded"), false);
+
+        // Logout and login as internal admin to terminate the user
+        loginAsInternalAdminAndTerminateUser(username, password);
+    }
+
+    private void verifyOnboardingFlowForRehireOnOPEnabled(String username, String password) throws Exception {
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+
+        createNewUserAndInvite();
+
+        verifyOnboardingFlowForNewOrReHire(true);
 
         String status = profileNewUIPage.getStatusOnProfilePage();
 
@@ -202,11 +236,7 @@ public class OnboardingTest extends TestBase {
     }
 
     private void verifyOnboardingFlowForRehire(String yesOrNo, String username, String password) throws Exception {
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-        OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
 
         createNewUserAndInvite();
 

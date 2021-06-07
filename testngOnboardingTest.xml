@@ -15,6 +15,7 @@
                 <methods>
                     <include name="verifyTheOnboardingFlowForRehireAndStatusChangeToOnboardedAsInternalAdmin" />
                     <include name="verifyTheOnboardingFlowForRehireAndStatusChangeToActiveAsInternalAdmin" />
+                    <include name="verifyTheOnboardingFlowForReHireOnOPEnabledEnvAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
