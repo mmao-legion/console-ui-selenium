@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite  verbose ="10" name="Legion Test" parallel="tests" thread-count="5">
     <parameter name="para" value="test_para1"/>
     <test name="Location Test">
+        <parameter name="username" value="stoneman@legion.co"/>
+        <parameter name="password" value="admin11.a"/>
+        <parameter name="location" value="OMLocation16"/>
         <classes>
-            <parameters>
-                <parameter name="username" value="stoneman@legion.co"/>
-                <parameter name="password" value="admin11.a"/>
-                <parameter name="location" value="OMLocation16"/>
-            </parameters>
+
+
+
             <class name = "com.legion.tests.core.LocationsTest">
                 <methods>
                     <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
@@ -60,11 +62,11 @@
     </test>
 
     <test name="Job Test">
+        <parameter name="username" value="fiona+46@legion.co"/>
+        <parameter name="password" value="admin11.a"/>
+        <parameter name="location" value="OMLocation16"/>
         <classes>
-            <parameters>
-                <parameter name="username" value="fiona+46@legion.co"/>
-                <parameter name="password" value="admin11.a"/>
-            </parameters>
+
             <class name = "com.legion.tests.core.JobTest">
                 <methods>
                     <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
