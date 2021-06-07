@@ -552,7 +552,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy(css = "lg-select[search-hint=\"Search District\"]")
     private WebElement selectedDistrict;
 
-    public void changeDistrictDirect() throws Exception {
+    public void selectCurrentDistrictAgain() throws Exception {
         waitForSeconds(4);
         String districtName = null;
         if (isElementLoaded(selectedDistrict, 5)) {
@@ -1109,5 +1109,36 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             SimpleUtils.fail("Upper fields navigator fail to load! ", false);
 
         return selectedUpperFields;
+    }
+
+    public void changeDistrictDirect(String districtName) throws Exception {
+        waitForSeconds(4);
+        try {
+            Boolean isDistrictMatched = false;
+            if (isChangeDistrictButtonLoaded()) {
+                click(districtSelectorButton);
+                if (isElementLoaded(districtDropDownButton)) {
+                    if (availableLocationCardsName.size() != 0) {
+                        for (WebElement locationCardName : availableLocationCardsName) {
+                            if (locationCardName.getText().contains(districtName)) {
+                                isDistrictMatched = true;
+                                click(locationCardName);
+                                SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+                                break;
+                            }
+                        }
+                        if (!isDistrictMatched) {
+                            if (isChangeDistrictButtonLoaded()) {
+                                click(districtSelectorButton);
+                            }
+                            SimpleUtils.fail("District does not matched with '" + districtName + "'", true);
+                        }
+                    }
+                }
+            }
+        }
+        catch(Exception e) {
+            SimpleUtils.fail("Unable to change District!", true);
+        }
     }
 }

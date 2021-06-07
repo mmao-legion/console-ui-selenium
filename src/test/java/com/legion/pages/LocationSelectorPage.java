@@ -15,7 +15,7 @@ public interface LocationSelectorPage {
 	public void verifyClickChangeLocationButton() throws Exception;
 	public void verifyTheContentOfDetailLocations() throws Exception;
 	public void verifyTheFunctionOfSearchTextBox(List<String> testStrings) throws Exception;
-	public void changeDistrictDirect() throws Exception;
+	public void selectCurrentDistrictAgain() throws Exception;
 	public void isDMView() throws Exception;
 	public void isSMView() throws Exception;
 	public List<Integer> searchDistrict(String searchInputText) throws Exception;
@@ -38,4 +38,5 @@ public interface LocationSelectorPage {
 	public void verifyMagnifyGlassIconShowOrNot();
 	public void changeLocationDirect(String locationName);
 	public List<String> getSelectedUpperFields () throws Exception;
+	public void changeDistrictDirect(String districtName) throws Exception;
 }

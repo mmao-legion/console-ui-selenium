@@ -1303,7 +1303,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			dashboardPage.clickOnDashboardConsoleMenu();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-			locationSelectorPage.changeDistrictDirect();
+			locationSelectorPage.selectCurrentDistrictAgain();
 			schedulePage.clickOnScheduleConsoleMenuItem();
 
 			ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
