@@ -191,7 +191,7 @@
                     <!--                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800 -->
                     <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
-                    <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
+                    <!--  SCH-3942                   <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />  -->
                     <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
                 </methods>
