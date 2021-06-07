@@ -6,6 +6,7 @@
             <parameters>
                 <parameter name="username" value="stoneman@legion.co"/>
                 <parameter name="password" value="admin11.a"/>
+                <parameter name="location" value="OMLocation16"/>
             </parameters>
             <class name = "com.legion.tests.core.LocationsTest">
                 <methods>
