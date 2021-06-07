@@ -10,6 +10,7 @@ import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
@@ -18,6 +19,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.legion.utils.MyThreadLocal.location;
 import static com.legion.utils.MyThreadLocal.setTestSuiteID;
 
 public class CinemarkMinorTest extends TestBase {
@@ -34,6 +36,9 @@ public class CinemarkMinorTest extends TestBase {
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+            if (MyThreadLocal.getCurrentComplianceTemplate()==null || MyThreadLocal.getCurrentComplianceTemplate().equals("")){
+                getAndSetDefaultTemplate((String) params[3]);
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -635,7 +640,8 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.clickOnBtn(buttonGroup.Delete.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
 
-            cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            //cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentComplianceTemplate());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("no","14N15");
@@ -709,7 +715,8 @@ public class CinemarkMinorTest extends TestBase {
             controlsNewUIPage.clickOnControlsComplianceSection();
 
             //Find the template
-            cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            //cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentComplianceTemplate());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
@@ -850,7 +857,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify turn on minor rule and set rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleAsInternalAdmin(String browser, String username, String password, String location) {
@@ -869,7 +876,8 @@ public class CinemarkMinorTest extends TestBase {
             controlsNewUIPage.clickOnControlsComplianceSection();
 
             //Find the template
-            cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            //cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentComplianceTemplate());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
@@ -897,6 +905,29 @@ public class CinemarkMinorTest extends TestBase {
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+    //added by Haya.
+    public void getAndSetDefaultTemplate(String currentLocation) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+
+        //Go to OP page
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.searchLocation(currentLocation);               ;
+        SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(currentLocation), false);
+        locationsPage.clickOnLocationInLocationResult(currentLocation);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+        MyThreadLocal.setCurrentComplianceTemplate(templateTypeAndName.get("Compliance"));
+        //back to console.
+        switchToConsoleWindow();
     }
 
 

@@ -1,9 +1,6 @@
 package com.legion.tests.core;
 
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LiquidDashboardPage;
-import com.legion.pages.LocationSelectorPage;
-import com.legion.pages.SchedulePage;
+import com.legion.pages.*;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -161,5 +158,180 @@ public class LocationNavigationTest extends TestBase {
                             && selectedUpperFields.get(1).equalsIgnoreCase(upperFields[0].trim())
                             && selectedUpperFields.get(2).equalsIgnoreCase(hQ), false);
         }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify changing district on SM schedule tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingDistrictOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            //Go to Schedule tab -> Overview page
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            //Click on change district button to change the district
+            String[] upperFields = null;
+            String locationName = "";
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+                upperFields = districtsMap.get("KendraScott2_Enterprise2").split(">");
+                locationName = liftOpsParentLocation;
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                upperFields = districtsMap.get("CinemarkWkdy_Enterprise2").split(">");
+                locationName = location00808;
+            }
+            String districtName = upperFields[upperFields.length-1].trim();
+            locationSelectorPage.changeDistrictDirect(districtName);
+
+            //Verify the page loaded
+            SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            //Verify the locations listed
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
+
+            //Go to Schedule tab -> Schedule page
+            locationSelectorPage.changeLocationDirect(locationName);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            //Click on change district button to change the district
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+                upperFields = districtsMap.get("KendraScott2_Enterprise").split(">");
+                locationName = austinDownTownLocation;
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                upperFields = districtsMap.get("CinemarkWkdy_Enterprise").split(">");
+                locationName = location00127;
+            }
+            districtName = upperFields[upperFields.length-1].trim();
+            locationSelectorPage.changeDistrictDirect(districtName);
+
+            //Verify the page loaded
+            SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            //Verify the locations listed
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
+
+            //Go to Schedule tab -> Forecast page
+            locationSelectorPage.changeLocationDirect(locationName);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            //Click on change district button to change the district
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+                upperFields = districtsMap.get("KendraScott2_Enterprise2").split(">");
+                locationName = liftOpsParentLocation;
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                upperFields = districtsMap.get("CinemarkWkdy_Enterprise2").split(">");
+                locationName = location00808;
+            }
+            districtName = upperFields[upperFields.length-1].trim();
+            locationSelectorPage.changeDistrictDirect(districtName);
+
+            //Verify the page loaded
+            SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            //Verify the locations listed
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify searching and selecting the district on SM schedule tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Go to Schedule tab -> Overview page
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            String[] upperFields = null;
+            String locationName = "";
+            //Click on Search button to search the district and select
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+                upperFields = districtsMap.get("KendraScott2_Enterprise2").split(">");
+                searchDistrictAndCheckTheUpperFields(upperFields);
+                locationName = liftOpsParentLocation;
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                upperFields = districtsMap.get("CinemarkWkdy_Enterprise2").split(">");
+                searchDistrictAndCheckTheUpperFields(upperFields);
+                locationName = location00808;
+            }
+            //Verify the locations listed
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
+
+            //Go to Schedule tab -> Forecast page
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeLocationDirect(locationName);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            //Click on Search button to search the district and select
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+                upperFields = districtsMap.get("KendraScott2_Enterprise").split(">");
+                searchDistrictAndCheckTheUpperFields(upperFields);
+                locationName = austinDownTownLocation;
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                upperFields = districtsMap.get("CinemarkWkdy_Enterprise").split(">");
+                searchDistrictAndCheckTheUpperFields(upperFields);
+                locationName = location00127;
+            }
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
+            //Go to Schedule tab -> Schedule page
+            locationSelectorPage.changeLocationDirect(locationName);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            //Click on Search button to search the district and select
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+                upperFields = districtsMap.get("KendraScott2_Enterprise2").split(">");
+                searchDistrictAndCheckTheUpperFields(upperFields);
+                locationName = liftOpsParentLocation;
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                upperFields = districtsMap.get("CinemarkWkdy_Enterprise2").split(">");
+                searchDistrictAndCheckTheUpperFields(upperFields);
+                locationName = location00808;
+            }
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private void searchDistrictAndCheckTheUpperFields (String[] upperFields) throws Exception {
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        if (upperFields.length > 1) {
+            locationSelectorPage.searchSpecificDistrictAndNavigateTo(upperFields[1].trim());
+        } else {
+            locationSelectorPage.searchSpecificDistrictAndNavigateTo(upperFields[0].trim());
+        }
+        List<String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+
+        //Verify the upperfiled should be correct
+        //Verify district is selected in the navigation bar
+        if (upperFields.length > 1) {
+            SimpleUtils.assertOnFail("The selected upperfields is incorrect",
+                    selectedUpperFields.get(1).equalsIgnoreCase(upperFields[1].trim())
+                            && selectedUpperFields.get(2).equalsIgnoreCase(upperFields[0].trim()), false);
+        } else {
+            SimpleUtils.assertOnFail("The selected upperfields is incorrect",
+                    selectedUpperFields.get(1).equalsIgnoreCase(upperFields[0].trim())
+                            && selectedUpperFields.get(2).equalsIgnoreCase(hQ), false);
+        }
+        //Verify the DM page loaded
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
+                schedulePage.isScheduleDMView(), false);
     }
 }

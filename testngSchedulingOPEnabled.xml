@@ -191,19 +191,21 @@
                 <methods>
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--                    <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" /> Blocked by SCH-4331  -->
+<!--                    <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" /> Blocked by SCH-4331  -->
+                    </methods>
+                </class>
+            </classes>
+        </test>
 
-<!--    <test name="Schedule Test KendraScott2">
-        <classes>
-            <class name="com.legion.tests.core.SmartCopyConfigsInOP">
-                <methods>
-            &lt;!&ndash; template cache       <include name="verifySmartCopyConfigsInOPAsInternalAdmin"/>&ndash;&gt;
-                </methods>
-            </class>
-        </classes>
-    </test>-->
+    <!--    <test name="Schedule Test KendraScott2">
+            <classes>
+                <class name="com.legion.tests.core.SmartCopyConfigsInOP">
+                    <methods>
+                &lt;!&ndash; template cache       <include name="verifySmartCopyConfigsInOPAsInternalAdmin"/>&ndash;&gt;
+                    </methods>
+                </class>
+            </classes>
+        </test>-->
 
 </suite> <!-- Suite -->

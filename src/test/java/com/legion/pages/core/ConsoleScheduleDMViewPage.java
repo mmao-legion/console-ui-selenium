@@ -809,7 +809,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             //validate the schedule hours are consistent between Schedule DM view and schedule detail page
 
             String districtName = dashboardPage.getCurrentDistrict();
-            locationSelectorPage.changeDistrictDirect();
+            locationSelectorPage.selectCurrentDistrictAgain();
             schedulePage.clickOnScheduleConsoleMenuItem();
             if(isTAEnv){
                 switch(specificWeek){
@@ -982,12 +982,12 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         allScheduleInfo.put("scheduleStatus", schedulesInDMView.get(i).findElement(By.className("analytics-new-table-published-status")).getText());
                         //add Score
 //                        allScheduleInfo.add(schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_SCORE\"]")).getText());   //Need Turn off Score function on Schedule DM view
-                        String budgetedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText();
+                        String budgetedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText().replace(",","");
                         //add Budgeted Hours
                         allScheduleInfo.put("budgetedHours", budgetedHours);
                         //add Scheduled Hours
                         allScheduleInfo.put("scheduledHours", schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")).getText());
-                        String projectedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText();
+                        String projectedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",","");
                         //add Projected Hours
                         allScheduleInfo.put("projectedHours", projectedHours);
                         //add Projected Under/Over Budget Hours
