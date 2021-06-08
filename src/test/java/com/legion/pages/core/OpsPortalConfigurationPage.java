@@ -230,7 +230,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public boolean isTemplateListPageShow() throws Exception {
 		boolean flag = false;
-			if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
+			if(areListElementVisible(templatesList, 15) && templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
 				SimpleUtils.pass("Template landing page shows well");
 				flag = true;
 			}else{
