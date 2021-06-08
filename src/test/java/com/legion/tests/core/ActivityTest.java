@@ -891,7 +891,7 @@ public class ActivityTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the activity of publish or update schedule")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass= CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyActivityOfPublishUpdateScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
