@@ -678,7 +678,7 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
-            cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentComplianceTemplate());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
