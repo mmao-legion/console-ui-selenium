@@ -24,7 +24,7 @@
                     <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
                     <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
                     <include name="verifyGlobalDynamicGroupInClockInFunction" />
-<!--                    <include name="verifyGlobalDynamicGroupInWFS" />-->
+                    <include name="verifyGlobalDynamicGroupInWFS" />
                     <!--                    Location level template overridden-->
                     <include name="verifyUserCanSeeEachTypeOfTemViaClickingTemName" />
                     <include name="verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevel" />

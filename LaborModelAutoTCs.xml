@@ -15,7 +15,7 @@
         <classes>
             <class name="com.legion.tests.core.LaborModelTest">
                 <methods>
-                    <include name="verifyUserCanCreateDeleteAndPublishLaborModelTemplate"/>
+                    <include name="verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdminForLaborModel"/>
                 </methods>
             </class>
         </classes>

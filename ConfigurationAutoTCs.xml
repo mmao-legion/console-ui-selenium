@@ -15,27 +15,27 @@
         <classes>
             <class name="com.legion.tests.core.ConfigurationTest">
                 <methods>
-                    <include name="verifyUserCanOpenEachTypeTemplate"/>
-                    <include name="verifyNewAdvancedStaffingRulePage"/>
-                    <include name="verifyCheckBoxOfDaysOfWeek"/>
-                    <include name="verifyInputFormulaForDaysOfWeek"/>
-                    <include name="verifyTimeOfDayStartSection"/>
-                    <include name="verifyTimeOfDayDuringSection"/>
-                    <include name="verifyTimeOfDayEndSection"/>
-                    <include name="verifyTimeOfDayFormulaSection"/>
-                    <include name="verifyMealAndRestBreaks"/>
-                    <include name="verifyNumberOfShifts"/>
-                    <include name="verifyBadgesOfAdvanceStaffingRules"/>
-                    <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRules"/>
-                    <include name="verifySaveAndCancelButtonOfAdvanceStaffingRules"/>
-                    <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRules"/>
-                    <include name="verifyCreateAllTypeTemplate"/>
-                    <include name="verifyAdvancedStaffingRulesShowWell"/>
-                    <include name="daysOfWeekE2E"/>
-                    <include name="numberOfShiftsInADVRuleE2E"/>
-                    <include name="timeOfDayInADVRuleE2E"/>
-                    <include name="mealAndRestBreakInADVRuleE2E"/>
-                    <include name="locationLevelAdvanceStaffingRule"/>
+                    <include name="verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration"/>
+                    <include name="verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration"/>
+                    <include name="verifyCheckBoxOfDaysOfWeekAsInternalAdminForConfiguration"/>
+                    <include name="verifyInputFormulaForDaysOfWeekAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayStartSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayDuringSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayEndSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayFormulaSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyMealAndRestBreaksAsInternalAdminForConfiguration"/>
+                    <include name="verifyNumberOfShiftsAsInternalAdminForConfiguration"/>
+                    <include name="verifyBadgesOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifySaveAndCancelButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifyCreateAllTypeTemplateAsInternalAdminForConfiguration"/>
+                    <include name="verifyAdvancedStaffingRulesShowWellAsInternalAdminForConfiguration"/>
+                    <include name="daysOfWeekE2EAsInternalAdminForConfiguration"/>
+                    <include name="numberOfShiftsInADVRuleE2EAsInternalAdminForConfiguration"/>
+                    <include name="timeOfDayInADVRuleE2EAsInternalAdminForConfiguration"/>
+                    <include name="mealAndRestBreakInADVRuleE2EAsInternalAdminForConfiguration"/>
+                    <include name="locationLevelAdvanceStaffingRuleAsInternalAdminForConfiguration"/>
                 </methods>
             </class>
         </classes>

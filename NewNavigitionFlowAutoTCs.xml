@@ -15,7 +15,7 @@
             <class name="com.legion.tests.core.NewNavigationFlowTest">
                 <methods>
                     <!--                    <include name="verifyLocationProfilePageInControls" />-->
-                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
+                    <include name="verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow" />
                     <!--                    <include name="verifyDashboardViewAsInternalAdmin" />-->
                     <!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
                     <include name="verifyDashboardViewAsStoreManager" />

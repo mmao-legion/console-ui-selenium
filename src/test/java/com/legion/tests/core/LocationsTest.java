@@ -333,8 +333,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify MS location group function for Regular")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyMSLocationGroupFunctionForRegular(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMSLocationGroupFunctionForRegularAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -447,8 +447,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify change MS location group to P2P")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeMSToP2P(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyChangeMSToP2PAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
             try{
 
                 SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -511,8 +511,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Peer to Peer location group function for Regular")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyP2PLocationGroupFunctionForRegular(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyP2PLocationGroupFunctionForRegularAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
                 SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -596,8 +596,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate Master Slave Location group creation with regular type")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpdateP2PLocationGroupDistrictFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpdateP2PLocationGroupDistrictFunctionAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
             String LGMSLocationName =getLGMSLocationName();
@@ -660,8 +660,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify MS location group function for NSO")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateMSLocationGroupWithNSOTypeFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateMSLocationGroupWithNSOTypeFunctionAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -723,8 +723,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Peer to peer location group function for NSO")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateP2PLocationGroupWithNsoTypeFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateP2PLocationGroupWithNsoTypeFunctionAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -782,8 +782,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to disable P2P child /parent location")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDisableEnableParentChildLocationInLGP2P(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDisableEnableParentChildLocationInLGP2PAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
             String LGPTPLocationName =getLGPTPLocationName();
@@ -835,8 +835,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to update MS location group to None")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeMSLocationsToNoneFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyChangeMSLocationsToNoneFunctionAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -900,8 +900,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to update P2P location to None")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeP2PLocationsToNoneFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyChangeP2PLocationsToNoneFunctionAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
 
@@ -966,8 +966,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify location group common function")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyNoLocationGroupSettingForMock(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyNoLocationGroupSettingForMockAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -993,8 +993,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to MS parent")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeNoneLocationToMSParent(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyChangeNoneLocationToMSParentAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -1035,8 +1035,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to P2P parent")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeNoneLocationToP2PParent(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyChangeNoneLocationToP2PParentAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -1077,8 +1077,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to P2P child")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeNoneLocationToChild(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyChangeNoneLocationToChildAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -1120,7 +1120,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the create new button on the district landing page.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddNewDistricBtnAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddNewDistricBtnAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1146,8 +1146,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change P2P location group to MS")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeP2PToMS(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyChangeP2PToMSAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
 
@@ -1212,8 +1212,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify UpperFields list page and search function")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpperFieldsListPageAndSearchFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpperFieldsListPageAndSearchFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
         try{
             String[] searchInfo = {"BU1","Level: District","Level: Region","status:enabled","status: disabled"};
@@ -1250,8 +1250,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Add New Upperfields with different level")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddUpperFieldsWithDiffLevel(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddUpperFieldsWithDiffLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
         try{
                 SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -1291,8 +1291,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify disable and enable upperfield")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDisableEnableUpperFieldFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDisableEnableUpperFieldFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
        try{
             String disableAction = "Disable";
@@ -1334,8 +1334,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify update upperfield")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpdateUpperFieldFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpdateUpperFieldFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
         try{
 
@@ -1375,8 +1375,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify cancel creating upperfield")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCancelCreatingUpperfieldFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCancelCreatingUpperfieldFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
         try{
 
@@ -1412,8 +1412,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify upperfield smartcard data")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpperFieldSmartCardData(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpperFieldSmartCardDataAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
         try{
 
@@ -1818,8 +1818,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify default value of Organization Hierarchy")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDefaultOrganizationHierarchyShow(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDefaultOrganizationHierarchyShowAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1840,8 +1840,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate add edit remove organization hierarchy")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditRemoveOrganizationHierarchy(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddEditRemoveOrganizationHierarchyAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
         try{
             List<String> hierarchyNames = new ArrayList<String>(){{
@@ -1870,8 +1870,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "abnormal cases of hierarchy")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAbnormalCasesOfOrganizationHierarchy(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAbnormalCasesOfOrganizationHierarchyAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

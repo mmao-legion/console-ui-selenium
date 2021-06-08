@@ -53,8 +53,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to enable centralized schedule release function")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOpenCentralizedScheduleReleaseToYes(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOpenCentralizedScheduleReleaseToYesAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
         try{
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -89,8 +89,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate job landing page show")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyJobLandingPage(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyJobLandingPageAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
         try{
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
@@ -106,8 +106,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate job search function")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyJobSearchFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyJobSearchFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
         try{
             String searchText = "*,Adjust Forecast,Create Schedule,Adjust Budget,Release Schedule";
@@ -115,7 +115,7 @@ public class JobTest extends TestBase {
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
             jobsPage.iCanEnterJobsTab();
             for (String search: searchJobCha
-                 ) {
+            ) {
                 jobsPage.iCanSearchTheJobWhichICreated(search);
             }
 
@@ -129,8 +129,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate check each type of job details page")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCheckJobDetailsFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCheckJobDetailsFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
         try{
 
@@ -168,8 +168,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify copy stop resume and archive job function")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCopyStopResumeAndArchiveJobFunctionFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCopyStopResumeAndArchiveJobFunctionFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
         try{
             int index = 0;
@@ -218,8 +218,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate filter function by job type and job status")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyFilterFunctionByJobTypeAndJobStatus(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyFilterFunctionByJobTypeAndJobStatusAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
         try{
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
@@ -234,7 +234,7 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate filter function by job type")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyFilterFunctionByJobType(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -250,8 +250,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate filter function by job status")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyFilterFunctionByJobStatus(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyFilterFunctionByJobStatusAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
         try{
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
@@ -266,8 +266,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate create create schedule job")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateScheduleJobFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateScheduleJobFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
 
         try {
@@ -304,21 +304,21 @@ public class JobTest extends TestBase {
 //            }else {
 //                SimpleUtils.pass("Current week schedule is not  Generated!");
 //                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
-                jobsPage.iCanEnterJobsTab();
-                jobsPage.iCanEnterCreateNewJobPage();
-                if (jobsPage.verifyCreatNewJobPopUpWin()) {
-                    jobsPage.selectJobType(jobType);
-                    jobsPage.selectWeekForJobToTakePlace();
-                    jobsPage.clickOkBtnInCreateNewJobPage();
-                    jobsPage.inputJobTitle(jobTitle);
-                    jobsPage.inputJobComments(commentText);
-                    jobsPage.addLocationBtnIsClickable();
-                    jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
-                    jobsPage.createBtnIsClickable();
-                    jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
-                }else
-                    SimpleUtils.fail("Create job pop up page load failed",false);
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanEnterCreateNewJobPage();
+            if (jobsPage.verifyCreatNewJobPopUpWin()) {
+                jobsPage.selectJobType(jobType);
+                jobsPage.selectWeekForJobToTakePlace();
+                jobsPage.clickOkBtnInCreateNewJobPage();
+                jobsPage.inputJobTitle(jobTitle);
+                jobsPage.inputJobComments(commentText);
+                jobsPage.addLocationBtnIsClickable();
+                jobsPage.iCanSelectLocationsByAddLocation(searchText,index);
+                jobsPage.createBtnIsClickable();
+                jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+            }else
+                SimpleUtils.fail("Create job pop up page load failed",false);
 //            }
 
 //            Thread.sleep(60000);//to wait for job completed
@@ -349,8 +349,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate abnormal create job flow")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAbnormalCheatJobFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAbnormalCheatJobFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -395,8 +395,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate release schedule job function")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateReleaseScheduleJobFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateReleaseScheduleJobFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
 
         try {
@@ -411,24 +411,24 @@ public class JobTest extends TestBase {
             String releaseDay = "10";
             String timeForRelease = "0";
 
-                JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
-                jobsPage.iCanEnterJobsTab();
-                jobsPage.iCanEnterCreateNewJobPage();
-                if (jobsPage.verifyCreatNewJobPopUpWin()) {
-                    jobsPage.selectJobType(jobType);
-                    jobsPage.selectWeekForJobToTakePlace();
-                    jobsPage.clickOkBtnInCreateNewJobPage();
-                    jobsPage.inputJobTitle(jobTitle);
-                    jobsPage.inputJobComments(commentText);
-                    jobsPage.addLocationBtnIsClickable();
-                    jobsPage.iCanSelectLocationsViaDynamicGroupInAddLocation(searchText);
-                    jobsPage.iCanClickOnCreatAndReleaseCheckBox();
-                    jobsPage.iCanSetUpDaysBeforeRelease(releaseDay);
-                    jobsPage.iCanSetUpTimeOfRelease(timeForRelease);
-                    jobsPage.createBtnIsClickable();
-                    jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
-                }else
-                    SimpleUtils.fail("Create job pop up page load failed",false);
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+            jobsPage.iCanEnterCreateNewJobPage();
+            if (jobsPage.verifyCreatNewJobPopUpWin()) {
+                jobsPage.selectJobType(jobType);
+                jobsPage.selectWeekForJobToTakePlace();
+                jobsPage.clickOkBtnInCreateNewJobPage();
+                jobsPage.inputJobTitle(jobTitle);
+                jobsPage.inputJobComments(commentText);
+                jobsPage.addLocationBtnIsClickable();
+                jobsPage.iCanSelectLocationsViaDynamicGroupInAddLocation(searchText);
+                jobsPage.iCanClickOnCreatAndReleaseCheckBox();
+                jobsPage.iCanSetUpDaysBeforeRelease(releaseDay);
+                jobsPage.iCanSetUpTimeOfRelease(timeForRelease);
+                jobsPage.createBtnIsClickable();
+                jobsPage.iCanSearchTheJobWhichICreated(jobTitle);
+            }else
+                SimpleUtils.fail("Create job pop up page load failed",false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -439,8 +439,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate adjust budget job function")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAdjustBudgetJobFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAdjustBudgetJobFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime =  dfs.format(new Date());
@@ -493,8 +493,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate adjust forecast job function")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAdjustForecastJobFunction(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAdjustForecastJobFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime =  dfs.format(new Date());
@@ -546,8 +546,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Export Result File and Export Task Summary function In Create Schedule Job")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJob(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJobAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
         try{
             int index =0;
             String searchCharactor = "Create Schedule";
@@ -568,8 +568,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Export Result File and Export Task Summary function In Adjust Budget Job")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJob(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJobAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
         try{
             int index =0;
             String searchCharactor = "Adjust Budget";
@@ -590,8 +590,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Export Result File In Release Schedule Job")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportResultFileFunctionInReleaseScheduleJob(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileFunctionInReleaseScheduleJobAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
         try{
             int index =0;
             String searchCharactor = "Release Schedule";
@@ -611,8 +611,8 @@ public class JobTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Export Result File In Adjust Forecast Job")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportResultFileFunctionInAdjustForecastJob(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportResultFileFunctionInAdjustForecastJobAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
         try{
             int index =0;
             String searchCharactor = "Adjust Forecast";

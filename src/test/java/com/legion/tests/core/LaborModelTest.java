@@ -52,8 +52,8 @@ public class LaborModelTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Labor Model Sanity Test")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUserCanCreateDeleteAndPublishLaborModelTemplate(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
         try{
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();

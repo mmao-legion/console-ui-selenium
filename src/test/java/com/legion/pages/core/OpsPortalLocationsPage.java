@@ -1282,9 +1282,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void validateTheAddDistrictBtn() throws Exception {
 		if (isElementLoaded(addUpperfieldsButton, 5)) {
-			SimpleUtils.pass("Add new district button shows well");
+			SimpleUtils.pass("Add new district or upperfield button shows well");
 		} else {
-			SimpleUtils.pass("Add new district button doesn't show");
+			SimpleUtils.pass("Add new district or upperfield button doesn't show");
 		}
 	}
 

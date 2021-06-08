@@ -53,8 +53,8 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify add and update work role")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddUpdateWorkRole(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddUpdateWorkRoleAsInternalAdminForUserManagement(String browser, String username, String password, String location) throws Exception {
         try{
 //            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
 //            String currentTime =  dfs.format(new Date());
@@ -94,8 +94,8 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Common function for newsfeed group")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDynamicGroupFunctionInUserManagementTab(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDynamicGroupFunctionInUserManagementTabAsInternalAdminForUserManagement(String browser, String username, String password, String location) throws Exception {
 
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -159,8 +159,8 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Remove the condition from drop down list if it's selected")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyRemoveTheConditionFromDropDownListIfItSelected(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRemoveTheConditionFromDropDownListIfItSelectedAsInternalAdminForUserManagement(String browser, String username, String password, String location) throws Exception {
 
         try{
             //go to User Management tab
@@ -181,8 +181,8 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify manage item in User Management access role tab")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyManageItemInUserManagementAccessRoleTab(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyManageItemInUserManagementAccessRoleTabAsInternalAdminForUserManagement(String browser, String username, String password, String location) throws Exception {
 
         try{
             //go to User Management tab

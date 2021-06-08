@@ -43,8 +43,8 @@ public class NewNavigationFlowTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate manager location for one user in controls")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyManagerLocationForOneUserInControlsInControls(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow(String browser, String username, String password, String location) throws Exception {
 
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
