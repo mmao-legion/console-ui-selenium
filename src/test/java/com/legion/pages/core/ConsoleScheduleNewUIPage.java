@@ -10582,10 +10582,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean isOfferTMOptionVisible() throws Exception {
         if(isElementEnabled(OfferTMS,5)){
-            SimpleUtils.pass("Offer Team Members option is visible on Pop Over Style!");
             return true;
         } else{
-            SimpleUtils.fail("Offer Team Members option is not visible on Pop Over Style ",true);
             return false;
         }
     }

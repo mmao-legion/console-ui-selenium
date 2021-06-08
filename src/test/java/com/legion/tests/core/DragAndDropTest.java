@@ -1056,7 +1056,10 @@ public class DragAndDropTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUI();
             //edit schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.deleteTMShiftInWeekView("Open");
+            schedulePage.saveSchedule();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> shiftInfo = new ArrayList<>();
             while (shiftInfo.size() == 0) {
                 shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
@@ -1070,7 +1073,6 @@ public class DragAndDropTest extends TestBase {
             String firstNameOfTM2 = shiftInfo2.get(0);
             String workRoleOfTM2 = shiftInfo2.get(4);
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.selectWorkRole(workRoleOfTM2);
             schedulePage.clearAllSelectedDays();
