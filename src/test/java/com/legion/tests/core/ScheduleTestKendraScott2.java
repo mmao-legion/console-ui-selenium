@@ -35,6 +35,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	private static HashMap<String, String> schedulePolicyData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
 	private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
+	private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
+	private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
 
 	@Override
 	@BeforeMethod()
@@ -2280,11 +2282,15 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			// Select one team member to view profile
+			HashMap<String, Object[][]> teamMembers = null;
+			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+				teamMembers = kendraScott2TeamMembers;
+			} else {
+				teamMembers = cinemarkWkdyTeamMembers;
+			}
+			String firstName = teamMembers.get("TeamMember1")[0][0].toString();
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
-			teamPage.goToTeam();
-			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-			String userName = teamPage.selectATeamMemberToViewProfile();
-			String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
+			teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstName);
 
 			//Go to schedule page
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -2334,9 +2340,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.searchTeamMemberByName(firstName);
+			String scheduleStatus = schedulePage.getTheMessageOfTMScheduledStatus();
 			SimpleUtils.assertOnFail("TM scheduled status message display failed",
-					schedulePage.getTheMessageOfTMScheduledStatus().equalsIgnoreCase("Schedule not published") ||
-							schedulePage.getTheMessageOfTMScheduledStatus().equalsIgnoreCase("Schedule Not Created"), false);
+					scheduleStatus.equalsIgnoreCase("Schedule not published") ||
+							scheduleStatus.equalsIgnoreCase("Schedule Not Created"), false);
 
 			schedulePage.clickOnOfferOrAssignBtn();
 			schedulePage.verifyDayHasShiftByName(0, firstName);
