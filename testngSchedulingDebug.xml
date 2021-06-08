@@ -245,6 +245,9 @@
                     <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" />
+
+                    <!-- Run on Legion Coffee -->
+                    <include name="verifyChangingRegionOnSMScheduleTabAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
