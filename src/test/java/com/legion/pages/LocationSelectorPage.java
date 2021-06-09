@@ -38,5 +38,5 @@ public interface LocationSelectorPage {
 	public void verifyMagnifyGlassIconShowOrNot();
 	public void changeLocationDirect(String locationName);
 	public List<String> getSelectedUpperFields () throws Exception;
-	public void changeDistrictDirect(String districtName) throws Exception;
+	public void changeUpperFieldDirect(String upperFieldType, String upperFieldName) throws Exception;
 }

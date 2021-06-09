@@ -10,6 +10,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import org.apache.regexp.RE;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -28,7 +29,14 @@ public class LocationNavigationTest extends TestBase {
     private static String location00364 = "00364";
     private static String location00808 = "00808";
     private static String hQ = "HQ";
+    private static String rockVilleLocation = "Rock ville";
+    private static String mountainViewLocation = "Mountain View";
+
     public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpperfieldsForDifferentEnterprises.json");
+
+    private static String District = "District";
+    private static String Region = "Region";
+    private static String BusinessUnit = "Business Unit";
 
     @Override
     @BeforeMethod()
@@ -188,7 +196,7 @@ public class LocationNavigationTest extends TestBase {
                 locationName = location00808;
             }
             String districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.changeDistrictDirect(districtName);
+            locationSelectorPage.changeUpperFieldDirect( District,districtName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
@@ -209,7 +217,7 @@ public class LocationNavigationTest extends TestBase {
                 locationName = location00127;
             }
             districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.changeDistrictDirect(districtName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
@@ -229,7 +237,7 @@ public class LocationNavigationTest extends TestBase {
                 locationName = location00808;
             }
             districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.changeDistrictDirect(districtName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
@@ -333,5 +341,77 @@ public class LocationNavigationTest extends TestBase {
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
                 schedulePage.isScheduleDMView(), false);
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify changing Region on SM schedule tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingRegionOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            //Go to Schedule tab -> Overview page
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            //Click on change region button to change the region
+            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
+            String locationName = mountainViewLocation;
+            String regionName = upperFields[upperFields.length-2].trim();
+            String districtName = upperFields[upperFields.length-1].trim();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            //Verify the page loaded
+            SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            //Verify the locations listed
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
+
+
+            //Go to Schedule tab -> Schedule page
+            locationSelectorPage.changeUpperFieldsByName("District", districtName);
+            locationSelectorPage.changeLocationDirect(locationName);
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            //Click on change region button to change the region
+            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            locationName = rockVilleLocation;
+            regionName = upperFields[upperFields.length-2].trim();
+            districtName = upperFields[upperFields.length-1].trim();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            //Verify the page loaded
+            SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            //Verify the locations listed
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
+
+            //Go to Schedule tab -> Forecast page
+            locationSelectorPage.changeUpperFieldsByName("District", districtName);
+            locationSelectorPage.changeLocationDirect(locationName);
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            //Click on change region button to change the region
+            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
+            regionName = upperFields[upperFields.length-2].trim();
+            districtName = upperFields[upperFields.length-1].trim();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            //Verify the page loaded
+            SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            //Verify the locations listed
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 }

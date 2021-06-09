@@ -982,7 +982,11 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         allScheduleInfo.put("scheduleStatus", schedulesInDMView.get(i).findElement(By.className("analytics-new-table-published-status")).getText());
                         //add Score
 //                        allScheduleInfo.add(schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_SCORE\"]")).getText());   //Need Turn off Score function on Schedule DM view
-                        String budgetedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText().replace(",","");
+                        String budgetedHours = "";
+                        if (areListElementVisible(budgetHours, 5)){
+                            budgetedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText().replace(",","");
+                        } else
+                            budgetedHours = schedulesInDMView.get(i).findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(2).getText().replace(",","");
                         //add Budgeted Hours
                         allScheduleInfo.put("budgetedHours", budgetedHours);
                         //add Scheduled Hours
