@@ -75,7 +75,7 @@
                     <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin"/>
                     <include name="validateWeatherSmartCardOnForecastPage"/>
                     <include name="verifyScheduleFunctionalityForecast"/>
-                    <include name="verifyShopperForecastFunctionality"/>
+<!--                    <include name="verifyShopperForecastFunctionality"/>-->
                 </methods>
             </class>
         </classes>
@@ -95,9 +95,9 @@
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
-                    <include name="verifyActivityOfPublishUpdateSchedule" />
-<!--                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" Blocked by SCH-4010/>-->
-<!--                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" Blocked by SCH-4010/>-->
+                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
+                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
+                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
@@ -191,7 +191,7 @@
                     <!--                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800 -->
                     <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
-                    <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
+                    <!--  SCH-3942                   <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />  -->
                     <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
                 </methods>

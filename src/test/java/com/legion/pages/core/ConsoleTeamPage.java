@@ -2408,7 +2408,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			teamMember = teamMemberNames.get(randomIndex).getText();
 			clickTheElement(teamMemberNames.get(randomIndex));
 		} else {
-			SimpleUtils.fail("Team Members are failed to load!", true);
+			SimpleUtils.fail("Team Members are failed to load!", false);
 		}
 		return teamMember;
 	}
@@ -2494,7 +2494,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				rejectAllTeamMembersTimeOffRequest(profileNewUIPage, index + 1);
 			}
 		} else {
-			SimpleUtils.fail("Team Members are failed to load!", true);
+			SimpleUtils.fail("Team Members are failed to load!", false);
 		}
 	}
 
@@ -4377,7 +4377,7 @@ private WebElement locationColumn;
 				}
 			}
 		} else {
-			SimpleUtils.fail("Team Members are failed to load!", true);
+			SimpleUtils.fail("Team Members are failed to load!", false);
 		}
 	}
 
@@ -4697,7 +4697,8 @@ private WebElement locationColumn;
 
 	public boolean checkIsInviteButtonExists() {
 		boolean isInviteButtonExists = false;
-		if (areListElementVisible(inviteButtons, 5)) {
+		if (areListElementVisible(teamMembers, 10)
+				&& areListElementVisible(inviteButtons, 5)) {
 			isInviteButtonExists = true;
 			SimpleUtils.pass("The Invite buttons display correctly! ");
 		} else

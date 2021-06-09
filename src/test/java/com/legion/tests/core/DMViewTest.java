@@ -1398,30 +1398,31 @@ public class DMViewTest extends TestBase {
     @TestName(description = "Verify TOP x VIOLATIONS (HRS) on Compliance in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTopViolationsCardInComplianceDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try {
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            String districtName = dashboardPage.getCurrentDistrict();
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            locationSelectorPage.reSelectDistrict(districtName);
+        String districtName = dashboardPage.getCurrentDistrict();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+        CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+        locationSelectorPage.reSelectDistrict(districtName);
 
-            //Navigate to Compliance page.
-            timeSheetPage.clickOnComplianceConsoleMenu();
-            SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
+        //Navigate to Compliance page.
+        timeSheetPage.clickOnComplianceConsoleMenu();
+        SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
 
-            //Validate the content on top violations card.
+        float topViolationInOvertimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Overtime"))));
+        float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
+        float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
+        float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
+        float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+
+
+        if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
             HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
-            System.out.println(valuesFromLocationsWithViolationCard);
 
-            float topViolationInOvertimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Overtime"))));
-            float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
-            float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
-            float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
-            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+
 
             if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
                 SimpleUtils.assertOnFail("Overtime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Overtime (Hrs)")-topViolationInOvertimeCol)==0, false);
@@ -1438,6 +1439,11 @@ public class DMViewTest extends TestBase {
             if (valuesFromLocationsWithViolationCard.containsKey("Doubletime (Hrs)")){
                 SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime (Hrs)")-topViolationInDoubletimeCol)==0, false);
             }
+        }
+        //Validate the content on top violations card.
+
+        try {
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

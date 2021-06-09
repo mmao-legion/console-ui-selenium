@@ -1078,25 +1078,45 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 scheduleWagesAndHours[4] = tmp[6];
             }else
                 scheduleWagesAndHours =tmp;
-            for(String wagesAndHours: scheduleWagesAndHours)
+            for(int i = 0; i < scheduleWagesAndHours.length; i++)
             {
-                if(wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.hours.getValue().toLowerCase()))
+                if(scheduleWagesAndHours[i].toLowerCase().contains(scheduleHoursAndWagesData.hours.getValue().toLowerCase()))
                 {
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[1],
-                            scheduleHoursAndWagesData.budgetedHours.getValue());
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[2],
-                            scheduleHoursAndWagesData.scheduledHours.getValue());
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[3],
-                            scheduleHoursAndWagesData.otherHours.getValue());
+                    if (scheduleWagesAndHours[i].split(" ").length == 4) {
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[1],
+                                scheduleHoursAndWagesData.budgetedHours.getValue());
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[2],
+                                scheduleHoursAndWagesData.scheduledHours.getValue());
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[3],
+                                scheduleHoursAndWagesData.otherHours.getValue());
+                    } else {
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i].split(" ")[1],
+                                scheduleHoursAndWagesData.budgetedHours.getValue());
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 1],
+                                scheduleHoursAndWagesData.scheduledHours.getValue());
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 2],
+                                scheduleHoursAndWagesData.otherHours.getValue());
+                    }
+                    break;
                 }
-                else if(wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.wages.getValue().toLowerCase()))
+                else if(scheduleWagesAndHours[i].toLowerCase().contains(scheduleHoursAndWagesData.wages.getValue().toLowerCase()))
                 {
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[1]
-                            .replace("$", ""), scheduleHoursAndWagesData.budgetedWages.getValue());
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[2]
-                            .replace("$", ""), scheduleHoursAndWagesData.scheduledWages.getValue());
-                    scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , wagesAndHours.split(" ")[3]
-                            .replace("$", ""), scheduleHoursAndWagesData.otherWages.getValue());
+                    if (scheduleWagesAndHours[i].split(" ").length == 4) {
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[1]
+                                .replace("$", ""), scheduleHoursAndWagesData.budgetedWages.getValue());
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[2]
+                                .replace("$", ""), scheduleHoursAndWagesData.scheduledWages.getValue());
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[3]
+                                .replace("$", ""), scheduleHoursAndWagesData.otherWages.getValue());
+                    } else {
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i].split(" ")[1]
+                                .replace("$", ""), scheduleHoursAndWagesData.budgetedWages.getValue());
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 1]
+                                .replace("$", ""), scheduleHoursAndWagesData.scheduledWages.getValue());
+                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 1]
+                                .replace("$", ""), scheduleHoursAndWagesData.otherWages.getValue());
+                    }
+                    break;
                 }
             }
         }
@@ -2848,7 +2868,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public boolean getScheduleStatus() throws Exception {
         boolean ScheduleStatus = false;
 //		waitForSeconds(5);
-        if(areListElementVisible(scheduleSearchTeamMemberStatus,5) || isElementLoaded(scheduleNoAvailableMatchStatus,5)){
+        if(areListElementVisible(scheduleSearchTeamMemberStatus,10) || isElementLoaded(scheduleNoAvailableMatchStatus,10)){
             for(int i=0; i<scheduleSearchTeamMemberStatus.size();i++){
                 if(scheduleSearchTeamMemberStatus.get(i).getText().contains("Available")
                         || scheduleSearchTeamMemberStatus.get(i).getText().contains("Unknown")){
@@ -10562,10 +10582,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean isOfferTMOptionVisible() throws Exception {
         if(isElementEnabled(OfferTMS,5)){
-            SimpleUtils.pass("Offer Team Members option is visible on Pop Over Style!");
             return true;
         } else{
-            SimpleUtils.fail("Offer Team Members option is not visible on Pop Over Style ",true);
             return false;
         }
     }

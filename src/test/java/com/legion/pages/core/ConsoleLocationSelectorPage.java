@@ -213,11 +213,17 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     //added by estelle to search location if the location is not in recent list
     @FindBy(css = "input[placeholder=\"Search Location\"]")
     private WebElement locationSearchInput;
+    @FindBy(css = "input[placeholder=\"Search\"]")
+    private WebElement upperFieldSearchInput;
     private void searchLocationAndSelect(String locationName) throws Exception {
         if (isElementLoaded(locationSearchInput,5)) {
             locationSearchInput.sendKeys(locationName);
             waitForSeconds(30);
             locationSearchInput.sendKeys(Keys.ENTER);
+        }else if (isElementLoaded(upperFieldSearchInput,5)) {
+            upperFieldSearchInput.sendKeys(locationName);
+            waitForSeconds(30);
+            upperFieldSearchInput.sendKeys(Keys.ENTER);
         }else
            SimpleUtils.fail("Location search input filed load failed",true);
     }
@@ -546,7 +552,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy(css = "lg-select[search-hint=\"Search District\"]")
     private WebElement selectedDistrict;
 
-    public void changeDistrictDirect() throws Exception {
+    public void selectCurrentDistrictAgain() throws Exception {
         waitForSeconds(4);
         String districtName = null;
         if (isElementLoaded(selectedDistrict, 5)) {
@@ -976,13 +982,63 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
 
     @Override
-    public void searchSpecificDistrictAndNavigateTo(String districtText) {
+    public void searchSpecificDistrictAndNavigateTo(String districtName) throws Exception {
+        Boolean isDistrictMatched = false;
+        if (isElementLoaded(upperFieldSearchIcon, 10)){
+            clickTheElement(upperFieldSearchIcon);
+        }
+        searchLocationAndSelect(districtName);
+        List<WebElement> districtItems = new ArrayList<>();
+        waitForSeconds(5);
+        if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
+            districtItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
+        }
+        if (districtItems.size() > 0) {
+            for (WebElement districtItem : districtItems) {
+                if (districtItem.getText().contains(districtName)) {
+                    isDistrictMatched = true;
+                    click(districtItem);
+                    SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+                    break;
+                }
+            }
+        }
 
+        if (!isDistrictMatched) {
+            SimpleUtils.fail("District does not match with '" + districtName + "'", false);
+        }
     }
 
-    @Override
-    public void searchSpecificLocationAndNavigateTo(String locationText) {
 
+    @FindBy(css = "img.search-icon")
+    private WebElement upperFieldSearchIcon;
+
+    @Override
+    public void searchSpecificLocationAndNavigateTo(String locationName) throws Exception {
+        Boolean isLocationMatched = false;
+        if (isElementLoaded(upperFieldSearchIcon, 10)){
+            clickTheElement(upperFieldSearchIcon);
+        }
+        searchLocationAndSelect(locationName);
+        List<WebElement> locationItems = new ArrayList<>();
+        waitForSeconds(5);
+        if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
+            locationItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
+        }
+        if (locationItems.size() > 0) {
+            for (WebElement locationItem : locationItems) {
+                if (locationItem.getText().contains(locationName)) {
+                    isLocationMatched = true;
+                    click(locationItem);
+                    SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
+                    break;
+                }
+            }
+        }
+
+        if (!isLocationMatched) {
+            SimpleUtils.fail("Location does not match with '" + locationName + "'", false);
+        }
     }
 
     @Override
@@ -990,4 +1046,141 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
     }
 
+    @Override
+    public void changeLocationDirect(String locationName) {
+        try {
+            Boolean isLocationMatched = false;
+            if (isElementLoaded(activeConsoleMenuItem, 10)) {
+                activeConsoleName = activeConsoleMenuItem.getText();
+            }
+            setScreenshotConsoleName(activeConsoleName);
+            if (isChangeLocationButtonLoaded()) {
+                if (isLocationSelected(locationName)) {
+                    SimpleUtils.pass("Given Location '" + locationName + "' already selected!");
+                } else {
+                    if (isElementLoaded(locationSelectorButton, 10)){
+                        clickTheElement(locationSelectorButton);
+                    }
+                    List<WebElement> locationItems = new ArrayList<>();
+                    waitForSeconds(5);
+                    if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
+                        locationItems = districtAndLocationDropDownList.get(districtAndLocationDropDownList.size() - 1).findElements(By.cssSelector("div.lg-search-options__option"));
+                    }
+                    if (areListElementVisible(locationItems, 10) || isElementLoaded(locationDropDownButton)) {
+                        if (locationItems.size() > 0) {
+                            for (WebElement locationItem : locationItems) {
+                                if (locationItem.getText().contains(locationName)) {
+                                    isLocationMatched = true;
+                                    clickTheElement(locationItem);
+                                    SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
+                                    break;
+                                }
+                            }
+                            if (!isLocationMatched) {
+                                //updated by Estelle because the default location dropdown list show more than 50 location ,it's not efficient for navigation latest logic
+                                searchLocationAndSelect(locationName);
+                                waitForSeconds(10);
+//                                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                                locationItems = districtAndLocationDropDownList.get(districtAndLocationDropDownList.size() - 1).findElements(By.cssSelector("div.lg-search-options__option"));
+                                if (locationItems.size() > 0) {
+                                    for (WebElement locationItem : locationItems) {
+                                        if (locationItem.getText().contains(locationName)) {
+                                            isLocationMatched = true;
+                                            click(locationItem);
+                                            SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!isLocationMatched) {
+                                SimpleUtils.fail("Location does not match with '" + locationName + "'", false);
+                            }
+                        }else
+                            SimpleUtils.report("No mapping data for this location,maybe it's disabled or child location for Master Slave ");
+                    }
+                }
+            }
+        }
+        catch(Exception e) {
+            SimpleUtils.fail("Unable to change location! Get Exception: " + e.toString(), false);
+        }
+
+    }
+
+    @FindBy(css = "lg-select[search-hint='Search Region'] div.input-faked")
+    private WebElement regionSelectorButton;
+
+    @FindBy(css = "lg-select[search-hint='Search HQ'] div.input-faked")
+    private WebElement hqSelectorButton;
+
+    public List<String> getSelectedUpperFields () throws Exception {
+        List<String> selectedUpperFields = new ArrayList<>();
+        if (isElementLoaded(locationSelectorButton, 5)
+                && isElementLoaded(districtSelectorButton, 5)
+                && (isElementLoaded(regionSelectorButton, 5)|| isElementLoaded(hqSelectorButton, 5))) {
+            selectedUpperFields.add(locationSelectorButton.getText());
+            selectedUpperFields.add(districtSelectorButton.getText());
+            if (isElementLoaded(regionSelectorButton, 5)) {
+                selectedUpperFields.add(regionSelectorButton.getText());
+            } else if (isElementLoaded(hqSelectorButton, 5)){
+                selectedUpperFields.add(hqSelectorButton.getText());
+            }
+
+            SimpleUtils.pass("Get upper fields successfully! ");
+        } else
+            SimpleUtils.fail("Upper fields navigator fail to load! ", false);
+
+        return selectedUpperFields;
+    }
+
+    public void changeUpperFieldDirect(String upperFieldType, String upperFieldName) throws Exception {
+        waitForSeconds(4);
+        Boolean isUpperFieldMatched = false;
+        WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));
+        if (isElementLoaded(upperFieldSelectorButton, 60)) {
+            if(isElementLoaded(upperFieldSelectorButton, 10)){
+                click(upperFieldSelectorButton);
+            }
+            WebElement upperFieldDropDownButton = getDriver().findElement(By.cssSelector("[search-hint=\"Search " +
+                    upperFieldType + "\"] div.lg-search-options"));
+            if (isElementLoaded(upperFieldDropDownButton, 5)) {
+                availableLocationCardsName = getDriver().findElements(By.cssSelector("[class=\"lg-picker-input__wrapper lg-ng-animate\"] div.lg-search-options__option"));
+                if (availableLocationCardsName.size() != 0) {
+                    for (WebElement upperFieldCardName : availableLocationCardsName) {
+                        if (upperFieldCardName.getText().trim().equalsIgnoreCase(upperFieldName)) {
+                            isUpperFieldMatched = true;
+                            clickTheElement(upperFieldCardName);
+                            SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
+                            break;
+                        }
+                    }
+                    if (!isUpperFieldMatched) {
+                        WebElement upperFieldSearchInput = getDriver().findElement(By.cssSelector("input[placeholder=\"Search " + upperFieldType + "\"]"));
+                        if (isElementLoaded(upperFieldSearchInput,5)) {
+                            upperFieldSearchInput.sendKeys(upperFieldName);
+                            upperFieldSearchInput.sendKeys(Keys.ENTER);
+                        }else {
+                            SimpleUtils.fail("Search " + upperFieldType + "input failed to load!", false);
+                        }
+                        waitForSeconds(6);
+                        availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                        if (availableLocationCardsName.size() > 0) {
+                            for (WebElement upperFieldCardName : availableLocationCardsName) {
+                                if (upperFieldCardName.getText().trim().equalsIgnoreCase(upperFieldName)) {
+                                    isUpperFieldMatched = true;
+                                    clickTheElement(upperFieldCardName);
+                                    SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!isUpperFieldMatched) {
+                        SimpleUtils.fail(upperFieldType + " does matched with '" + upperFieldName + "'", false);
+                    }
+                }
+            }
+        }
+    }
 }

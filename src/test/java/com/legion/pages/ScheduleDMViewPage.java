@@ -26,4 +26,5 @@ public interface ScheduleDMViewPage {
     public void verifyScheduleStatusAndHoursInScheduleList(String locationName, Boolean isTAEnv, Boolean isDGEnv, String scheduleStatus, String specificWeek) throws Exception;
     public void verifyTheContentOnScheduleStatusCards() throws Exception;
     public void verifyTheScheduleStatusAccountOnScheduleStatusCards() throws Exception;
+    public Map<String, String> getAllScheduleInfoFromScheduleInDMViewByLocation(String location) throws Exception;
 }

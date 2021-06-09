@@ -235,4 +235,21 @@
             </class>
         </classes>
     </test>
+
+
+    <test name="Location Navigation Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationNavigationTest">
+                <methods>
+                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" />
+
+                    <!-- Run on Legion Coffee -->
+                    <include name="verifyChangingRegionOnSMScheduleTabAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

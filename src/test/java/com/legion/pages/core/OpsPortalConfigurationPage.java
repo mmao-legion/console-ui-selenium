@@ -220,8 +220,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public boolean isTemplateListPageShow() throws Exception {
 		boolean flag = false;
-		waitForSeconds(5);
-			if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
+			if(areListElementVisible(templatesList, 15) && templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
 				SimpleUtils.pass("Template landing page shows well");
 				flag = true;
 			}else{
@@ -239,7 +238,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(classValue!=null && classValue.contains("hasChildren")){
 				clickTheElement(templateToggleButton);
 				waitForSeconds(3);
-				clickTheElement(templatesList.get(1).findElement(By.cssSelector("button")));
+				clickTheElement(templatesList.get(0).findElements(By.cssSelector("button")).get(1));
 				waitForSeconds(20);
 				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 				&&isElementEnabled(templateDetailsPageForm)){
@@ -656,7 +655,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement dayPartsPagination;
 	@FindBy(css="div.lg-paged-search div.lg-paged-search__pagination select option")
 	private List<WebElement> dayPartsPaginationList;
-	@FindBy(css=".dayparts table tbody tr")
+	@FindBy(css="table tr")
 	private List<WebElement> dayPartsList;
 
 	//verify list of Shift Start Time Event
