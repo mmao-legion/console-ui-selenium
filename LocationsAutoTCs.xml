@@ -15,7 +15,7 @@
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
                     <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
-                    <include name="verifyCreateMockLocationAndNavigate" />
+<!--                    <include name="verifyCreateMockLocationAndNavigate" />-->
                     <include name="verifyCreateNSOLocationAndNavigate" />
                     <include name="verifyDisableEnableLocationFunction" />
 <!--                    <include name="verifyImportLocationDistrict" />-->

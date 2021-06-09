@@ -2,116 +2,14 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite  verbose ="10" name="Legion Test" parallel="classes" thread-count="5">
     <parameter name="para" value="test_para1"/>
-    <test name="Location Test">
-<!--        <parameter name="username" value="stoneman@legion.co"/>-->
-<!--        <parameter name="password" value="admin11.a"/>-->
-<!--        <parameter name="location" value="OMLocation16"/>-->
+    <test name="Legion Test">
         <classes>
-            <class name = "com.legion.tests.core.LocationsTest">
-                <methods>
-                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
-                    <!--                    <include name="verifyCreateMockLocationAndNavigate" />-->
-                    <include name="verifyCreateNSOLocationAndNavigate" />
-                    <include name="verifyDisableEnableLocationFunction" />
-                    <include name="verifyExportLocationDistrict" />
-                    <!--                    Location group test cases-->
-                    <include name="verifyMSLocationGroupFunctionForRegular" />
-                    <!--                    <include name="verifyChangeMSToP2P" />-->
-                    <include name="verifyP2PLocationGroupFunctionForRegular" />
-                    <!--                    <include name="verifyChangeP2PToMS" />-->
-
-                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
-                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
-                    <include name="verifyNoLocationGroupSettingForMock" />
-
-                    <include name="verifyChangeNoneLocationToChild" />
-                    <include name="verifyChangeNoneLocationToP2PParent" />
-                    <include name="verifyChangeNoneLocationToMSParent" />
-                    <include name="verifyChangeMSLocationsToNoneFunction" />
-                    <include name="verifyChangeP2PLocationsToNoneFunction" />
-
-
-                    <!--                    Upperfield test cases-->
-                    <include name="verifyDefaultOrganizationHierarchyShow"/>
-                    <include name="verifyAddEditRemoveOrganizationHierarchy"/>
-                    <include name="verifyAbnormalCasesOfOrganizationHierarchy"/>
-                    <include name="verifyUpperFieldsListPageAndSearchFunction" />
-                    <include name="verifyAddUpperFieldsWithDiffLevel" />
-                    <include name="verifyDisableEnableUpperFieldFunction"/>
-                    <include name="verifyUpperFieldSmartCardData" />
-                    <!--                    <include name="verifyUpdateUpperFieldFunction" />-->
-                    <include name="verifyCancelCreatingUpperfieldFunction" />
-
-
-                    <!--                    Global dynamic group test cases-->
-                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
-                    <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
-                    <include name="verifyGlobalDynamicGroupInClockInFunction" />
-                    <include name="verifyGlobalDynamicGroupInWFS" />
-                    <!--                    Location level template overridden-->
-                    <include name="verifyUserCanSeeEachTypeOfTemViaClickingTemName" />
-                    <include name="verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevel" />
-                    <include name="verifyOverriddenSchedulingRulesInLocationLevel" />
-
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Job Test">
-<!--        <parameter name="username" value="fiona+46@legion.co"/>-->
-<!--        <parameter name="password" value="admin11.a"/>-->
-<!--        <parameter name="location" value="OMLocation16"/>-->
-        <classes>
-
-            <class name = "com.legion.tests.core.JobTest">
-                <methods>
-                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
-                    <!--                    <include name="verifyCreateMockLocationAndNavigate" />-->
-                    <include name="verifyCreateNSOLocationAndNavigate" />
-                    <include name="verifyDisableEnableLocationFunction" />
-                    <include name="verifyExportLocationDistrict" />
-                    <!--                    Location group test cases-->
-                    <include name="verifyMSLocationGroupFunctionForRegular" />
-                    <!--                    <include name="verifyChangeMSToP2P" />-->
-                    <include name="verifyP2PLocationGroupFunctionForRegular" />
-                    <!--                    <include name="verifyChangeP2PToMS" />-->
-
-                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
-                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
-                    <include name="verifyNoLocationGroupSettingForMock" />
-
-                    <include name="verifyChangeNoneLocationToChild" />
-                    <include name="verifyChangeNoneLocationToP2PParent" />
-                    <include name="verifyChangeNoneLocationToMSParent" />
-                    <include name="verifyChangeMSLocationsToNoneFunction" />
-                    <include name="verifyChangeP2PLocationsToNoneFunction" />
-
-
-                    <!--                    Upperfield test cases-->
-                    <include name="verifyDefaultOrganizationHierarchyShow"/>
-                    <include name="verifyAddEditRemoveOrganizationHierarchy"/>
-                    <include name="verifyAbnormalCasesOfOrganizationHierarchy"/>
-                    <include name="verifyUpperFieldsListPageAndSearchFunction" />
-                    <include name="verifyAddUpperFieldsWithDiffLevel" />
-                    <include name="verifyDisableEnableUpperFieldFunction"/>
-                    <include name="verifyUpperFieldSmartCardData" />
-                    <!--                    <include name="verifyUpdateUpperFieldFunction" />-->
-                    <include name="verifyCancelCreatingUpperfieldFunction" />
-
-
-                    <!--                    Global dynamic group test cases-->
-                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
-                    <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
-                    <include name="verifyGlobalDynamicGroupInClockInFunction" />
-                    <include name="verifyGlobalDynamicGroupInWFS" />
-                    <!--                    Location level template overridden-->
-                    <include name="verifyUserCanSeeEachTypeOfTemViaClickingTemName" />
-                    <include name="verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevel" />
-                    <include name="verifyOverriddenSchedulingRulesInLocationLevel" />
-
-                </methods>
-            </class>
+            <class name = "com.legion.tests.core.LocationsTest"/>
+            <class name = "com.legion.tests.core.JobTest"/>
+            <class name = "com.legion.tests.core.NewNavigationFlowTest"/>
+            <class name = "com.legion.tests.core.ConfigurationTest"/>
+            <class name = "com.legion.tests.core.UserManagementTest"/>
+            <class name = "com.legion.tests.core.LaborModelTest"/>
         </classes>
     </test>
 </suite>

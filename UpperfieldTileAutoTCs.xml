@@ -25,7 +25,7 @@
                     <include name="verifyAddUpperFieldsWithDiffLevelAsInternalAdminForUpperFieldTile" />
                     <include name="verifyDisableEnableUpperFieldFunctionAsInternalAdminForUpperFieldTile"/>
                     <include name="verifyUpperFieldSmartCardDataAsInternalAdminForUpperFieldTile" />
-                    <include name="verifyUpdateUpperFieldFunctionAsInternalAdminForUpperFieldTile" />
+<!--                    <include name="verifyUpdateUpperFieldFunctionAsInternalAdminForUpperFieldTile" />-->
                     <include name="verifyCancelCreatingUpperfieldFunctionAsInternalAdminForUpperFieldTile" />
                 </methods>
             </class>

@@ -1340,7 +1340,7 @@ public class LocationsTest extends TestBase {
         try{
 
             String upperfieldsName = "Level:Region";
-            String searchChara = "reg";
+            String searchChara = "re";
             int index = 1;
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
