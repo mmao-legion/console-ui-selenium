@@ -184,4 +184,6 @@ public interface LocationsPage {
     public void clickOnConfigurationTabOfLocation() throws Exception;
 
     public HashMap<String,String> getTemplateTypeAndNameFromLocation() throws Exception;
+
+    public void enableDaypart(String dayPart) throws Exception;
 }

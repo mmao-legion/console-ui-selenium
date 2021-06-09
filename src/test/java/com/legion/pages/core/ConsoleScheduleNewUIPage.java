@@ -9,7 +9,6 @@ import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import org.json.simple.JSONArray;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -66,7 +65,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         groupbyWorkRole("Group by Work Role"),
         groupbyTM("Group by TM"),
         groupbyJobTitle("Group by Job Title"),
-        groupbyLocation("Group by Location");
+        groupbyLocation("Group by Location"),
+        groupbyDayParts("Group by Day Parts");
 
         private final String value;
 
@@ -15468,5 +15468,45 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return shiftsOfOneTM;
     }
+
+    @FindBy (className = "week-schedule-shift-title")
+    private List<WebElement> weekScheduleShiftTitles;
+
+    @FindBy (className = "sch-group-label")
+    private List<WebElement> dayScheduleGroupLabels;
+
+    @Override
+    public boolean isGroupByDayPartsLoaded() throws Exception {
+        Select groupBySelectElement = new Select(scheduleGroupByButton);
+        List<WebElement> scheduleGroupByButtonOptions = groupBySelectElement.getOptions();
+         for (WebElement scheduleGroupByButtonOption: scheduleGroupByButtonOptions) {
+            if (scheduleGroupByButtonOption.getText().contains("Group by Day Parts"))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<String> getWeekScheduleShiftTitles() throws Exception {
+        List<String> weekShiftTitles = new ArrayList<>();
+        if (areListElementVisible(weekScheduleShiftTitles, 10)) {
+            for (WebElement title: weekScheduleShiftTitles) {
+                weekShiftTitles.add(title.getText());
+            }
+        }
+        return weekShiftTitles;
+    }
+
+    @Override
+    public List<String> getDayScheduleGroupLabels() throws Exception {
+        List<String> dayGroupLabels = new ArrayList<>();
+        if (areListElementVisible(dayScheduleGroupLabels, 10)) {
+            for (WebElement label: dayScheduleGroupLabels) {
+                dayGroupLabels.add(label.getText());
+            }
+        }
+        return dayGroupLabels;
+    }
+
 }
 

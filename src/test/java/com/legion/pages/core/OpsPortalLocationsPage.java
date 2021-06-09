@@ -92,6 +92,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
 		boolean isLoaded = false;
+		waitForSeconds(10);
 		if (isElementLoaded(goToLocationsButton, 150))
 			isLoaded = true;
 		return isLoaded;
@@ -2650,7 +2651,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				String templateType = templateRow.findElement(By.xpath("./td[1]")).getText().trim();
 				String templateName = templateRow.findElement(By.xpath("./td[2]/span")).getText().trim();
 				templateTypeAndName.put(templateType, templateName);
-				SimpleUtils.report("Get template name'" + templateName + "' for template type '" + templateType + "' successfully");
+				SimpleUtils.report("Get template name '" + templateName + "' for template type '" + templateType + "' successfully");
 			}
 		} else {
 			SimpleUtils.fail("Schedule Week View Page: Budget and Scheduled smart card not loaded Successfully!", false);
@@ -2658,5 +2659,57 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return templateTypeAndName;
 	}
 
+
+	@FindBy(css = ".daypart-container tbody tr td")
+	private List<WebElement> dayPartNames;
+
+	@FindBy(css = ".daypart-header .settings-add-icon")
+	private WebElement addDayPartsBtn;
+
+	@FindBy(css = "input-field[ng-if=\"daypart.isNew\"] ng-form input")
+	private WebElement newDayPartName;
+
+	@FindBy(css = "input-field[value=\"daypart.description\"] ng-form input")
+	private WebElement newDayPartDescription;
+
+	@FindBy(css = ".color-select")
+	private WebElement dayPartColor;
+
+	@FindBy(css = "li[ng-repeat=\"color in $ctrl.daypartColorList\"]")
+	private List<WebElement> dayPartsColors;
+
+	@FindBy(css = "i.fa-check-circle")
+	private WebElement dayPartCheckCircle;
+
+	@Override
+	public void enableDaypart(String dayPart) throws Exception {
+		boolean isDaypartPresent = false;
+		if(isElementEnabled(editOnGlobalConfigPage,10))
+			clickTheElement(editOnGlobalConfigPage);
+		else
+			SimpleUtils.fail("Global Configuration Page: Edit button failed to load", false);
+		if (areListElementVisible(dayPartNames, 30)) {
+			for (int i = 0; i < dayPartNames.size(); i++) {
+				if (dayPartNames.get(i).getText().contains(dayPart)) {
+					isDaypartPresent = true;
+					SimpleUtils.pass("Global Configuration Page: Find day part '" + dayPart + "' successfully");
+					continue;
+				}
+			}
+		}
+		if (isElementLoaded(addDayPartsBtn,30)) {
+			if (!isDaypartPresent) {
+				click(addDayPartsBtn);
+				newDayPartName.sendKeys(dayPart);
+				newDayPartDescription.sendKeys(dayPart);
+				click(dayPartColor);
+				click(dayPartsColors.get((new Random()).nextInt(dayPartsColors.size())));
+				click(dayPartCheckCircle);
+				SimpleUtils.pass("Global Configuration Page: Add day part '" + dayPart + "' successfully");
+			}
+		} else
+			SimpleUtils.fail("Global Configuration Page: Day parts failed to load",false);
+		clickTheElement(saveButtonOnGlobalConfiguration);
+	}
 }
 

@@ -72,5 +72,9 @@ public interface ConfigurationPage {
     public void selectOperatingBufferHours(String option) throws Exception;
     public void setOpeningAndClosingBufferHours (int openingBufferHour, int closingBufferHour) throws Exception;
     public void setScheduleCopyRestrictions(String yesOrNo) throws Exception;
+    public void disableAllDayparts() throws Exception;
     public void goToUserManagementPage() throws Exception;
+    public void selectDaypart(String dayPart) throws Exception;
+    public void setDaypart(String dayPart, String startTime, String endTime) throws Exception;
+    public HashMap<String, List<String>> getDayPartsDataFromBusinessHours() throws Exception;
 }

@@ -661,4 +661,7 @@ public interface SchedulePage {
 	public int getSpecificFiltersCount (String filterText) throws Exception;
 	public void deleteMealBreakForOneShift(WebElement shift) throws Exception;
 	public List<WebElement> getShiftsByNameOnDayView(String name) throws Exception;
+	public boolean isGroupByDayPartsLoaded() throws Exception;
+	public List<String> getWeekScheduleShiftTitles() throws Exception;
+	public List<String> getDayScheduleGroupLabels() throws Exception;
 }

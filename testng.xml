@@ -550,6 +550,18 @@
             </class>
         </classes>
     </test>
+
+    <test name="Group By Day Parts Test">
+        <classes>
+            <class name="com.legion.tests.core.GroupByDayPartsTest">
+                <methods>
+                    <include name="validateDaypartsCanBeConfiguredAsInternalAdmin" />
+                    <include name="validateGroupByDayPartsIsAvailableInWeekNDayViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 <!--======================================================End - This is Scheduling tests==============================================-->
 
 </suite> <!-- Suite -->
