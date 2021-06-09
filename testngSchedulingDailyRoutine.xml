@@ -96,8 +96,8 @@
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
                     <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
-<!--                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" Blocked by SCH-4010/>-->
-<!--                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" Blocked by SCH-4010/>-->
+                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
+                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />

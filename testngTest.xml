@@ -8,30 +8,33 @@
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
-    
-    <test name="Schedule Copy Improvement Test">
-        <classes>
-            <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
-                <methods>
-                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInOPAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
-                    <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
-                    <!--                    <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" Blocked by SCH-4238/>-->
-                    <include name="validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
-                    <include name="validateTheOOOHShiftsAsInternalAdmin" />
-                    <include name="validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin" />
-                    <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />
 
+    <test name="Activity Test">
+        <classes>
+            <class name="com.legion.tests.core.ActivityTest">
+                <methods>
+                    <include name="verifyAccessControlsOnActivitiesPage"/>
+                    <include name="verifyTheContentOnActivityAsStoreManager"/>
+                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>
+                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfActivityPageAsStoreManager" />
+                    <include name="verifyToCloseActivityFeedAsStoreManager" />
+                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
+                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
+                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
+                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
+                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
-
 
 </suite> 
