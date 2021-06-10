@@ -13,7 +13,6 @@ import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -48,9 +47,45 @@ public class GroupByDayPartsTest extends TestBase {
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
-        } catch (Exception e) {
+            if (MyThreadLocal.getDriver().getCurrentUrl().contains(parameterMap.get("KendraScott2_Enterprise")) && (MyThreadLocal.getCurrentOperatingTemplate()==null || MyThreadLocal.getCurrentOperatingTemplate().equals(""))){
+
+            } else if (MyThreadLocal.getDriver().getCurrentUrl().contains(parameterMap.get("CinemarkWkdy_Enterprise")) && (MyThreadLocal.getCurrentOperatingTemplate()==null || MyThreadLocal.getCurrentOperatingTemplate().equals(""))){
+                getAndSetDefaultOperatingHoursTemplate((String) params[3]);
+            }
+        } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+    //added by Haya.
+    public void getAndSetDefaultOperatingHoursTemplate(String currentLocation) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+
+        //Go to OP page
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.searchLocation(currentLocation);               ;
+        SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(currentLocation), false);
+        locationsPage.clickOnLocationInLocationResult(currentLocation);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+        MyThreadLocal.setCurrentOperatingTemplate(templateTypeAndName.get("Operating Hours"));
+        //go to Configuration
+        cinemarkMinorPage.clickConfigurationTabInOP();
+        controlsNewUIPage.clickOnControlsOperatingHoursSection();
+
+        //Find the template
+        cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentOperatingTemplate());
+        cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+        cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.OKWhenEdit.getValue());
+        //back to console.
+        switchToConsoleWindow();
     }
 
     @Automated(automated = "Automated")
@@ -225,4 +260,6 @@ public class GroupByDayPartsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(),false);
         }
     }
+
+    
 }

@@ -2261,6 +2261,86 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    public void verifySpecificDayPartExists(String dayPart) throws Exception{
+        boolean flag = false;
+        for (WebElement dayPartTemp: dayPartTitlesOnSchedulePage){
+            System.out.println(dayPartTemp.getText());
+            if (dayPartTemp.getText().equalsIgnoreCase(dayPart)){
+                flag = true;
+                break;
+            }
+        }
+        if (flag){
+            SimpleUtils.pass(dayPart + " exists!");
+        } else {
+            SimpleUtils.fail(dayPart + " doesn't exists!", false);
+        }
+    }
+
+    public String getNextDayPart(String dayPart) throws Exception{
+        String nextDayPart = null;
+        for (int i = 0 ; i < dayPartTitlesOnSchedulePage.size(); i++){
+            if (dayPartTitlesOnSchedulePage.get(i).getText().equalsIgnoreCase(dayPart)){
+                if (i < dayPartTitlesOnSchedulePage.size()-1){
+                    nextDayPart = dayPartTitlesOnSchedulePage.get(i+1).getText();
+                }
+            }
+        }
+        return nextDayPart;
+    }
+
+
+    public int getIndexInAllShiftPlacesOfTheOnlyAddedOne(String name) throws Exception{
+        int index = 0;
+        for (int i = 0; i < shiftPlaces.size(); i++){
+            System.out.println(shiftPlaces.get(i).getText());
+            if (shiftPlaces.get(i).getText().toLowerCase().contains(name.toLowerCase())){
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+
+    @FindBy(css = ".drag-target-place")
+    List<WebElement> shiftPlaces;
+    @FindBy(css = ".week-schedule-shift-title")
+    List<WebElement> dayPartTitlesOnSchedulePage;
+    @Override
+    public void verifyNewAddedShiftFallsInDayPart(String nameOfTheShift, String dayPart) throws Exception {
+        int index = 0;
+        int indexOfDayPart = 0;
+        int indexOfNextDayPart = 0;
+        String nextDayPart = getNextDayPart(dayPart);
+
+        if (areListElementVisible(shiftPlaces,15) && areListElementVisible(dayPartTitlesOnSchedulePage, 15)){
+            verifySpecificDayPartExists(dayPart);
+            index = getIndexInAllShiftPlacesOfTheOnlyAddedOne(nameOfTheShift);
+            for (int i = 0; i < shiftPlaces.size(); i++){
+                if (shiftPlaces.get(i).getText().toLowerCase().contains(dayPart.toLowerCase())){
+                    indexOfDayPart = i;
+                    continue;
+                }
+                if (nextDayPart != null && shiftPlaces.get(i).getText().toLowerCase().contains(nextDayPart.toLowerCase())){
+                    indexOfNextDayPart = i;
+                    break;
+                }
+            }
+            System.out.println(indexOfDayPart);
+            System.out.println(index);
+            System.out.println(indexOfNextDayPart);
+            if (indexOfNextDayPart == 0 && index > indexOfDayPart){
+                SimpleUtils.pass("successful!");
+            } else if (indexOfNextDayPart != 0 && index > indexOfDayPart && index < indexOfNextDayPart){
+                SimpleUtils.pass("successful!");
+            } else {
+                SimpleUtils.fail("fail!", false);
+            }
+        } else {
+
+        }
+    }
+
     public ArrayList<WebElement> getAllAvailableShiftsInWeekView() {
         ArrayList<WebElement> avalableShifts = new ArrayList<WebElement>();
         if (shiftsOnScheduleView.size() != 0) {
