@@ -985,7 +985,7 @@ public class ActivityTest extends TestBase {
             //Verify Activity Feed as admin
             if (!activityPage.isActivityBellIconLoaded())
                 SimpleUtils.pass("Admin view have no access to see Activity Feed as expected");
-            else SimpleUtils.fail("Admin view can see Activity Feed unexpectedly",true);
+            else SimpleUtils.fail("Admin view can see Activity Feed unexpectedly",false);
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
