@@ -2190,9 +2190,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Verify search bar on schedule page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifySearchBarOnSchedulePageAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+	public void verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 		try{
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2218,9 +2219,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.verifyGhostTextInSearchBox();
 
 			//Get the info of first shift
-			List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
-			//Search shift by TM names: first name and last name
-			String firstNameOfTM = shiftInfo.get(0);
+			List<String> shiftInfo = new ArrayList<>();
+			String firstNameOfTM = "";
+			while (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned")) {
+				shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+				//Search shift by TM names: first name and last name
+				firstNameOfTM = shiftInfo.get(0);
+			}
+
 			List<WebElement> searchResultOfFirstName = schedulePage.searchShiftOnSchedulePage(firstNameOfTM);
 			schedulePage.verifySearchResult(firstNameOfTM, null, null, null, searchResultOfFirstName);
 
@@ -2248,9 +2254,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnOpenSearchBoxButton();
 			//Click X button to close search box
 			schedulePage.clickOnCloseSearchBoxButton();
-
-			//The search box will not display in day view
-			schedulePage.verifySearchBoxNotDisplayInDayView();
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
@@ -3065,5 +3068,81 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(),false);
 		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate search bar on schedule page in day view")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifySearchBarOnSchedulePageInDayViewAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+		try{
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Go to day view
+			schedulePage.clickOnDayView();
+
+			//click search button
+			schedulePage.clickOnOpenSearchBoxButton();
+
+			//Check the ghost text inside the Search bar
+			schedulePage.verifyGhostTextInSearchBox();
+
+			//Get the info of a random shift
+			List<String> shiftInfo = new ArrayList<>();
+			String firstNameOfTM = "";
+			while (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned")) {
+				shiftInfo = schedulePage.getTheShiftInfoInDayViewByIndex(schedulePage.getRandomIndexOfShift());
+				//Search shift by TM names: first name and last name
+				firstNameOfTM = shiftInfo.get(0);
+			}
+			List<WebElement> searchResultOfFirstName = schedulePage.searchShiftOnSchedulePage(firstNameOfTM);
+			schedulePage.verifySearchResult(firstNameOfTM, null, null, null, searchResultOfFirstName);
+
+			String lastNameOfTM = shiftInfo.get(5);
+			List<WebElement> searchResultOfLastName = schedulePage.searchShiftOnSchedulePage(lastNameOfTM);
+			schedulePage.verifySearchResult(null, lastNameOfTM, null, null, searchResultOfLastName);
+
+			//Search shift by work role
+			String workRole = shiftInfo.get(4);
+			List<WebElement> searchResultOfWorkRole = schedulePage.searchShiftOnSchedulePage(workRole);
+			schedulePage.verifySearchResult(null, null, workRole, null, searchResultOfWorkRole);
+
+			//Search shift by job title
+			String jobTitle = shiftInfo.get(3);
+			List<WebElement> searchResultOfJobTitle = schedulePage.searchShiftOnSchedulePage(jobTitle);
+			schedulePage.verifySearchResult(null, null, null, jobTitle, searchResultOfJobTitle);
+
+			//Click X button to close search box
+			schedulePage.clickOnCloseSearchBoxButton();
+
+			//Go to edit mode
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+			//click search button
+			schedulePage.clickOnOpenSearchBoxButton();
+			//Click X button to close search box
+			schedulePage.clickOnCloseSearchBoxButton();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
 	}
 }

@@ -2,27 +2,17 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ConfigurationPage;
-import com.legion.pages.ControlsNewUIPage;
-import com.legion.utils.FileDownloadVerify;
-import com.legion.utils.JsonUtil;
-import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.an.E;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
-import org.testng.Assert;
 
 import java.util.*;
 
-import static com.legion.tests.TestBase.flagForTestRun;
-import static com.legion.tests.TestBase.propertyMap;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 
@@ -234,7 +224,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				SimpleUtils.pass("Template landing page shows well");
 				flag = true;
 			}else{
-				SimpleUtils.fail("Template landing page was NOT loaing well",false);
+				SimpleUtils.fail("Template landing page was NOT loading well",false);
 				flag = false;
 			}
 			return flag;
@@ -1843,6 +1833,258 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.pass("Set copy restriction to "+ yesOrNo + " successfully! ");
 		}else
 			SimpleUtils.fail("Set copy restriction setting fail to load!  ",false);
+	}
+
+	// Added by Julie
+	@FindBy (css = ".dayparts span.manage-action-wrapper")
+	private WebElement manageDaypartsBtn;
+
+	@FindBy (css = "[ng-if=\"!$ctrl.getSelectedDayparts().length\"]")
+	private WebElement selectDapartsBtn;
+
+	@FindBy (css = "table div input.ng-not-empty")
+	private List<WebElement> checkedBoxes;
+
+	@FindBy (css = "table div.lg-select-list__thumbnail-wrapper input-field[type=\"checkbox\"]")
+	private List<WebElement> allCheckBoxes;
+
+	@FindBy (css = "div.lg-select-list__table-wrapper table tbody tr")
+	private List<WebElement> rowsInManageDayparts;
+
+	@FindBy (xpath = "//body/div[1]//lg-daypart-weekday/div[@class=\"availability-row availability-row-active ng-scope\"]")
+	private List<WebElement> rowsWhenSetDaypart;
+
+	@FindBy (css = ".availability-row-time [ng-repeat=\"r in $ctrl.hoursRange\"]")
+	private List<WebElement> timeRangeWhenSetDaypart;
+
+	@FindBy (css = ".daypart-legend .item")
+	private List<WebElement> itemsOfDaypart;
+
+	@FindBy(css = "lg-button[label=\"Save\"] button")
+	private WebElement saveBtnInManageDayparts;
+
+	@FindBy(css = ".business-hours lg-button[label=\"Edit\"]")
+	private List<WebElement> editBtnsOfBusinessHours;
+
+	@FindBy(css = ".location-working-hours nav.lg-tabs__nav div")
+	private List<WebElement> tabsWhenEditBusinessHours;
+
+	@FindBy(xpath = "//body/div[1]//input-field/ng-form")
+	private List<WebElement> daysCheckBoxes;
+
+	@FindBy(className = "col-sm-4")
+	private List<WebElement> daysOfDayParts;
+
+	@FindBy(className = "row-fx")
+	private List<WebElement> rowsOfDayParts;
+
+	@Override
+	public void disableAllDayparts() throws Exception {
+		if (areListElementVisible(dayPartsList,10)) {
+			click(manageDaypartsBtn);
+			if (areListElementVisible(allCheckBoxes,10)) {
+				for (int i = 0; i < allCheckBoxes.size(); i++) {
+					if (allCheckBoxes.get(i).findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty"))
+						click(allCheckBoxes.get(i));
+				}
+				if (checkedBoxes.size() == 0 )
+					SimpleUtils.pass("Operation Hours: Day parts have been disabled");
+				else
+					SimpleUtils.fail("Operation Hours: Day parts have been not disabled",false);
+				scrollToBottom();
+				clickTheElement(saveBtnInManageDayparts);
+			} else
+				SimpleUtils.fail("Operation Hours: Checked boxes failed to load in day parts",false);
+		} else if (isElementLoaded(selectDapartsBtn,10))
+			SimpleUtils.pass("Operation Hours: No Dayparts Available");
+		else
+			SimpleUtils.fail("Operation Hours: Day parts failed to load",false);
+	}
+
+	@Override
+	public void selectDaypart(String dayPart) throws Exception {
+		boolean isDayPartPresent = false;
+		if (isElementEnabled(selectDapartsBtn, 10)) {
+			clickTheElement(selectDapartsBtn);
+			if (areListElementVisible(rowsInManageDayparts, 10)) {
+				for (int i = 0; i < rowsInManageDayparts.size(); i++) {
+					WebElement daypartName = rowsInManageDayparts.get(i).findElement(By.xpath("./td[3]//span"));
+					WebElement daypartCheckBox = rowsInManageDayparts.get(i).findElement(By.xpath("./td[1]//input"));
+					if (daypartName.getText().equals(dayPart)) {
+						if (daypartCheckBox.getAttribute("class").contains("ng-empty"))
+							click(daypartCheckBox);
+						break;
+					}
+				}
+				scrollToBottom();
+				clickTheElement(saveBtnInManageDayparts);
+			} else
+				SimpleUtils.fail("Operation Hours: Rows failed to load in manage day parts", false);
+		}
+		if (areListElementVisible(dayPartsList, 10)) {
+			for (WebElement row: dayPartsList) {
+				WebElement daypartName = row.findElement(By.xpath("./td[1]"));
+				if (daypartName.getText().equals(dayPart)) {
+					isDayPartPresent = true;
+					break;
+				}
+			}
+			if (!isDayPartPresent) {
+				click(manageDaypartsBtn);
+				if (areListElementVisible(rowsInManageDayparts, 10)) {
+					for (int i = 0; i < rowsInManageDayparts.size(); i++) {
+						WebElement daypartName = rowsInManageDayparts.get(i).findElement(By.xpath("./td[3]//span"));
+						WebElement daypartCheckBox = rowsInManageDayparts.get(i).findElement(By.xpath("./td[1]//input"));
+						if (daypartName.getText().equals(dayPart)) {
+							if (daypartCheckBox.getAttribute("class").contains("ng-empty"))
+								click(daypartCheckBox);
+							break;
+						}
+					}
+					scrollToBottom();
+					clickTheElement(saveBtnInManageDayparts);
+				} else
+					SimpleUtils.fail("Operation Hours: Rows failed to load in manage day parts", false);
+				waitForSeconds(3);
+				for (WebElement row: dayPartsList) {
+					WebElement daypartName = row.findElement(By.xpath("./td[1]"));
+					if (daypartName.getText().equals(dayPart)) {
+						isDayPartPresent = true;
+						break;
+					}
+				}
+			}
+		} else
+			SimpleUtils.fail("Operation Hours: Day parts failed to load", false);
+		if (isDayPartPresent)
+			SimpleUtils.pass("Operation Hours: Operation Hours: '" + dayPart + "' is selected successfully");
+		else
+			SimpleUtils.fail("Operation Hours: Operation Hours: '" + dayPart + "' doesn't exist", false);
+	}
+
+	@Override
+	public void setDaypart(String day, String dayPart, String startTime, String endTime) throws Exception {
+		// Please set the start time and end time's format like 11am, 2pm
+		String daypartColor = "";
+		List<WebElement> hourCells = null;
+		WebElement colorInRow = null;
+		if (areListElementVisible(daysOfDayParts,10)) {
+			for (int h = 0; h < daysOfDayParts.size(); h++) {
+				if (day.equals("All days")) {
+					clickTheElement(editBtnsOfBusinessHours.get(h));
+					break;
+				}
+				if (daysOfDayParts.get(h).getText().toUpperCase().equals(day.toUpperCase())) {
+					clickTheElement(editBtnsOfBusinessHours.get(h));
+					break;
+				}
+			}
+		}
+		int l=0;
+		int k = 0;
+		if (areListElementVisible(tabsWhenEditBusinessHours,10))
+			click(tabsWhenEditBusinessHours.get(1));
+		int j = 0;
+		int i = 0;
+		if (areListElementVisible(itemsOfDaypart, 10)) {
+			for (WebElement item : itemsOfDaypart) {
+				WebElement itemName = item.findElement(By.className("ng-binding"));
+				if (itemName.getText().equals(dayPart)) {
+					WebElement itemColor = item.findElement(By.className("icon"));
+					daypartColor = itemColor.getAttribute("style");
+					break;
+				}
+			}
+		} else
+			SimpleUtils.fail("Operation Hours: Daypart legend failed to load when editing daypart", false);
+		if (areListElementVisible(rowsWhenSetDaypart, 10)) {
+			for (i = 0; i < rowsWhenSetDaypart.size(); i++) {
+				try {
+					colorInRow = rowsWhenSetDaypart.get(i).findElement(By.cssSelector("day-part-color>div>div"));
+				} catch (Exception e) {
+					continue;
+				}
+				String color = colorInRow.getAttribute("style");
+				if (color.contains(daypartColor)) {
+					hourCells = rowsWhenSetDaypart.get(i).findElements(By.cssSelector(".availability-box div"));
+					break;
+				}
+			}
+		} else
+			SimpleUtils.fail("Operation Hours: Daypart rows failed to load when editing daypart",false);
+		if (areListElementVisible(timeRangeWhenSetDaypart, 10)) {
+			for (int m = 0; m < timeRangeWhenSetDaypart.size(); m++) {
+				String hourRange = timeRangeWhenSetDaypart.get(m).getText().trim().replace("\n","");
+				if (hourRange.contains("12PM")) {
+					j = m;
+					break;
+				}
+			}
+			if (startTime.contains("am")) {
+				for (k = 0; k < j; k++) {
+					String hourRange = timeRangeWhenSetDaypart.get(k).getText().trim().replace("\n","");
+					if (hourRange.equals(startTime.replace("am",""))) {
+						break;
+					}
+				}
+			} else if (startTime.contains("pm")) {
+				for (k = j; k < timeRangeWhenSetDaypart.size(); k++) {
+					String hourRange = timeRangeWhenSetDaypart.get(k).getText().trim().replace("\n","");
+					if (hourRange.equals(startTime.replace("am",""))) {
+						break;
+					}
+				}
+			}
+			if (endTime.contains("am")) {
+				for (l = 0; l < j; l++) {
+					String hourRange = timeRangeWhenSetDaypart.get(l).getText().trim().replace("\n","");
+					if (hourRange.equals(endTime.replace("pm",""))) {
+						break;
+					}
+				}
+			} else if (endTime.contains("pm")) {
+				for (l = j; l < timeRangeWhenSetDaypart.size(); l++) {
+					String hourRange = timeRangeWhenSetDaypart.get(l).getText().trim().replace("\n","");
+					if (hourRange.equals(endTime.replace("pm",""))) {
+						break;
+					}
+				}
+			}
+			mouseHoverDragandDrop(hourCells.get(k),hourCells.get(l-1));
+			if (day.equals("All days"))
+				click(daysCheckBoxes.get(daysCheckBoxes.size() - 1));
+			WebElement dayPartMap = rowsWhenSetDaypart.get(i).findElement(By.cssSelector("[ng-if=\"$ctrl.daypartMap[daypart.objectId]\"] span"));
+			if (dayPartMap.getText().equals(startTime + " - " + endTime))
+			    SimpleUtils.pass("Operation Hours: Day Part with '" + startTime + " - " + endTime + "' has been set");
+			else
+				SimpleUtils.fail("Operation Hours: Actual Day Part is '" + dayPartMap.getText() + "', expected Day Part is '" + startTime + " - " + endTime + "'",false);
+			click(saveBtnInManageDayparts);
+		} else
+			SimpleUtils.fail("Operation Hours: Daypart rows failed to load when editing daypart",false);
+	}
+
+	@Override
+	public HashMap<String, List<String>> getDayPartsDataFromBusinessHours() throws Exception {
+		HashMap<String, List<String>> dataFromBusinessHours = new HashMap<>();
+		List<String> nameColorDuration = new ArrayList<>();
+		if (areListElementVisible(rowsOfDayParts, 10)) {
+			for (WebElement row: rowsOfDayParts) {
+				WebElement day = row.findElement(By.className("col-sm-4"));
+				List<WebElement> progressBars = row.findElements(By.className("progress-bar"));
+				for (WebElement bar: progressBars) {
+					click(bar);
+					String progress = bar.getAttribute("innerHTML");
+					System.out.println(progress);
+					String tool = bar.getAttribute("data-tootik");
+					System.out.println(tool);
+
+					nameColorDuration.add(progress);
+				}
+				dataFromBusinessHours.put(day.getText(),nameColorDuration);
+			}
+		} else
+			SimpleUtils.fail("Operation Hours: Business Hours rows failed to load ",false);
+		return dataFromBusinessHours;
 	}
 
 	@FindBy(css=".console-navigation-item-label.User.Management")

@@ -6200,25 +6200,71 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		return hasCompanyMobilePolicyURL;
 	}
 
-	@FindBy (css = ".lg-table label.switch input.ng-pristine")
+	@FindBy(css = ".lg-table label.switch input.ng-not-empty")
 	private List<WebElement> enabledDayparts;
 
-	@FindBy (css = "[block-title=\"'Dayparts'\"] a[ng-show=\"collapsed\"]")
+	@FindBy(css = "[block-title=\"'Dayparts'\"] a[ng-show=\"collapsed\"]")
 	private WebElement daypartsCollapsed;
+
+	@FindBy(css = "[block-title=\"'Regular'\"] a[ng-show=\"collapsed\"]")
+	private WebElement regularCollapsed;
+
+	@FindBy(css = "[ng-click=\"saveDayParts()\"]")
+	private WebElement saveDayPartsButton;
+
+	@FindBy(css = ".lg-table label.switch input[type=\"checkbox\"]")
+	private List<WebElement> dayPartsSlider;
+
+	@FindBy(css = ".row-name")
+	private List<WebElement> dayPartNames;
+
+	@FindBy(css = "[label=\"Add Daypart\"]")
+	private WebElement addDayPartsBtn;
+
+	@FindBy(className = "lg-modal")
+	private WebElement dialogWindow;
+
+	@FindBy(css = "input[aria-label=\"Name\"]")
+	private WebElement newDayPartName;
+
+	@FindBy(css = "input[aria-label=\"Description\"]")
+	private WebElement newDayPartDescription;
+
+	@FindBy(css = "[label=\"Create Daypart\"] button")
+	private WebElement createDaypartBtn;
+
+	@FindBy(css = "lg-badge-selector-item")
+	private List<WebElement> dayPartsColors;
+
+	@FindBy(css = "[day-type=\"'workday'\"] [label=\"Edit\"] span>span")
+	private List<WebElement> editBtnsOfRegular;
+
+	@FindBy(css = ".location-working-hours nav.lg-tabs__nav div")
+	private List<WebElement> tabsWhenEditRegular;
+
+	@FindBy(css = "[label=\"All days\"] ng-form")
+	private WebElement allDayCheckBox;
+
+	@FindBy(css = ".location-working-hours [label=\"Save\"]")
+	private WebElement saveBtnWhenEditRegular;
 
 	@Override
 	public void disableAllDayparts() throws Exception {
-		if (daypartsCollapsed.getAttribute("class").contains("ng-hide"))
+		if (isElementLoaded(daypartsCollapsed, 20) && !daypartsCollapsed.getAttribute("class").contains("ng-hide"))
 			click(daypartsCollapsed);
-		if (areListElementVisible(enabledDayparts,10)) {
-			for (WebElement dayPart: enabledDayparts)
-				click(dayPart);
-		} else
-			SimpleUtils.fail("Controls Page: Enabled day parts failed to load in working hours",false);
-		if (!areListElementVisible(enabledDayparts,10))
+		if (dayPartNames.size() > 0) {
+			for (int i = 0; i < dayPartNames.size(); i++) {
+				WebElement slider = dayPartNames.get(i).findElement(By.xpath("./..//ng-form"));
+				if (slider.findElement(By.xpath("./input")).getAttribute("class").contains("ng-not-empty")) {
+					clickTheElement(slider.findElement(By.xpath("./span")));
+				}
+				clickTheElement(saveDayPartsButton);
+			}
+		}
+		if (!areListElementVisible(enabledDayparts, 10))
 			SimpleUtils.pass("Controls Page: All day parts have been disabled in working hours");
 		else
-			SimpleUtils.fail("Controls Page: All day parts have been not disabled in working hours",false);
+			SimpleUtils.fail("Controls Page: All day parts have been not disabled in working hours", false);
 	}
 
 
@@ -6265,5 +6311,62 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		} else {
 			SimpleUtils.fail("No access item loaded!", false);
 		}
+	}
+
+	@Override
+	public void enableDaypart(String dayPart) throws Exception {
+		boolean isDaypartPresent = false;
+		if (isElementLoaded(daypartsCollapsed, 20) && !daypartsCollapsed.getAttribute("class").contains("ng-hide"))
+			click(daypartsCollapsed);
+		if (areListElementVisible(dayPartNames, 30)) {
+			for (int i = 0; i < dayPartNames.size(); i++) {
+				if (dayPartNames.get(i).getText().equals(dayPart)) {
+					isDaypartPresent = true;
+					WebElement slider1 = dayPartNames.get(i).findElement(By.xpath("./..//ng-form"));
+					if (slider1.findElement(By.xpath("./input")).getAttribute("class").contains("ng-empty")) {
+						clickTheElement(slider1.findElement(By.xpath("./span")));
+						clickTheElement(saveDayPartsButton);
+						SimpleUtils.pass("Controls Page: Enable day part '" + dayPart + "' successfully");
+						continue;
+					}
+				}
+			}
+		}
+		if (isElementLoaded(addDayPartsBtn,30)) {
+			if (!isDaypartPresent) {
+				click(addDayPartsBtn);
+				if (isElementLoaded(dialogWindow, 10)) {
+					newDayPartName.sendKeys(dayPart);
+					newDayPartDescription.sendKeys(dayPart);
+					click(dayPartsColors.get((new Random()).nextInt(dayPartsColors.size())));
+					click(createDaypartBtn);
+					for (int i = 0; i < dayPartNames.size(); i++) {
+						if (dayPartNames.get(i).getText().equals(dayPart)) {
+							WebElement slider1 = dayPartNames.get(i).findElement(By.xpath("./..//ng-form"));
+							if (slider1.findElement(By.xpath("./input")).getAttribute("class").contains("ng-empty")) {
+								clickTheElement(slider1.findElement(By.xpath("./span")));
+								clickTheElement(saveDayPartsButton);
+								SimpleUtils.pass("Controls Page: Enable day part '" + dayPart + "' successfully");
+								break;
+							}
+						}
+					}
+				} else
+					SimpleUtils.fail("Controls Page: Add day parts window does not appear", false);
+			}
+		} else
+			SimpleUtils.fail("Controls Page: Day parts failed to load",false);
+	}
+
+	@Override
+	public void setDaypart(String dayPart, String startTime, String endTime) throws Exception {
+		if (isElementLoaded(regularCollapsed, 20) && !regularCollapsed.getAttribute("class").contains("ng-hide"))
+			click(regularCollapsed);
+        clickTheElement(editBtnsOfRegular.get(0));
+		if (areListElementVisible(tabsWhenEditRegular,10))
+			click(tabsWhenEditRegular.get(1));
+        // todo: Blocked by bug https://legiontech.atlassian.net/browse/SCH-4355
+		click(allDayCheckBox);
+        click(saveBtnWhenEditRegular);
 	}
 }

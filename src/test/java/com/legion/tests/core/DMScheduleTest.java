@@ -165,7 +165,8 @@ public class DMScheduleTest extends TestBase{
     public enum scheduleGroupByFilterOptions{
         groupbyAll("Group by All"),
         groupbyWorkRole("Group by Work Role"),
-        groupbyTM("Group by TM");
+        groupbyTM("Group by TM"),
+        groupbyDayParts("Group by Day Parts");
         private final String value;
         scheduleGroupByFilterOptions(final String newValue) {
             value = newValue;

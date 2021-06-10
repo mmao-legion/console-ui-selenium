@@ -61,6 +61,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> timeOffStartTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffEndTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> currentComplianceTemplate = new ThreadLocal<>();
+	public static final ThreadLocal<String> currentOperatingTemplate = new ThreadLocal<>();
 	public static final ThreadLocal<String> testSuiteID = new ThreadLocal<>();
 	public static final ThreadLocal<Boolean> ifAddNewTestRun = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailRunName = new ThreadLocal<>();
@@ -152,6 +153,10 @@ public class MyThreadLocal {
 	public static void setCurrentComplianceTemplate(String value) { currentComplianceTemplate.set(value); }
 
 	public static String getCurrentComplianceTemplate() { return currentComplianceTemplate.get(); }
+
+	public static void setCurrentOperatingTemplate(String value) { currentOperatingTemplate.set(value); }
+
+	public static String getCurrentOperatingTemplate() { return currentOperatingTemplate.get(); }
 
 	public static void setTestSuiteID(String value) { testSuiteID.set(value); }
 

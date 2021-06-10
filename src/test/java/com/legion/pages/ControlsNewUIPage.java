@@ -309,5 +309,7 @@ public interface ControlsNewUIPage {
 	public boolean hasCompanyMobilePolicyURLOrNot () throws Exception;
 	public void verifyUsersAreLoaded() throws Exception;
 	public void disableAllDayparts() throws Exception;
+	public void enableDaypart(String dayPart) throws Exception;
 	public void turnOnOrOffSpecificPermissionForDifferentRole(String rolePermission, String section, String permission, String action) throws Exception;
+	public void setDaypart(String dayPart, String startTime, String endTime) throws Exception;
 }
