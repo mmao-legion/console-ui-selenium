@@ -975,8 +975,8 @@ public class ActivityTest extends TestBase {
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate access controls on Activities page when logon with Admin/TM or SM switch to employer view")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyAccessControlsOnActivitiesPage(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyAccessControlsOnActivitiesPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
