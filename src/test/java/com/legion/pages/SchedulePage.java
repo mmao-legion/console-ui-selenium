@@ -62,6 +62,7 @@ public interface SchedulePage {
 	public void clickOnPostSaveBtn() throws Exception;
 	public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) throws Exception;
 	public void selectGroupByFilter(String optionVisibleText);
+	public void verifyNewAddedShiftFallsInDayPart(String nameOfTheShift, String dayPart) throws Exception;
 	public String getActiveWeekText() throws Exception;
 	public ArrayList<WebElement> getAllAvailableShiftsInWeekView();
 	public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception;

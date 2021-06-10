@@ -127,7 +127,8 @@
                     <include name="verifyScheduleFunctionalityDayViewAsInternalAdmin"/>
                     <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
-                    <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
+                    <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
+                    <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                     <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
                     <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />

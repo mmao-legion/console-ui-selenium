@@ -170,6 +170,8 @@
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
                     <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin"/>
+                    <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
+                    <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
