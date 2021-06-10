@@ -557,6 +557,8 @@
                 <methods>
                     <include name="validateDaypartsCanBeConfiguredAsInternalAdmin" />
                     <include name="validateGroupByDayPartsIsAvailableInWeekNDayViewAsInternalAdmin" />
+                    <include name="validateShiftEndTimeIsWithinADayPartAsInternalAdmin" />
+                    <include name="validateEitherShiftStartTimeNorEndTimeFallsWithinADaypartAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
