@@ -490,7 +490,7 @@ public class LocationsTest extends TestBase {
                 ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
                 //Verify the location relationship
                 if (locationsPage.isItMSLG()) {
-                    locationsPage.changeLGToMSOrP2P(locationGroupSwitchOperation.PTP.getValue(),locationInfoDetails.get(0).get("locationName"));
+                    locationsPage.changeLGToMSOrP2P(locationInfoDetails.get(0).get("locationName"),locationGroupSwitchOperation.PTP.getValue());
                 }else
                     SimpleUtils.fail("It's not MS location group,select another one pls",false);
                 //search location again

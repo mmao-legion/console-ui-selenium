@@ -132,7 +132,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void goToSubLocationsInLocationsPage() throws Exception {
 		if (isElementLoaded(locationsInLocations, 5)) {
 			click(locationsInLocations);
-			waitForSeconds(20);
+			waitForSeconds(8);
 			if (isElementEnabled(addLocationBtn, 5)) {
 				SimpleUtils.pass("sub-location page load successfully");
 			} else
@@ -521,7 +521,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				searchInput.clear();
 				searchInput.sendKeys(searchLocationCha[0]);
 				searchInput.sendKeys(Keys.ENTER);
-				waitForSeconds(20);
+				waitForSeconds(5);
 				if (locationRows.size() > 0) {
 					SimpleUtils.pass("Locations: " + locationRows.size() + " location(s) found  ");
 					break;
@@ -881,7 +881,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(firstDay.findElement(By.cssSelector("div:nth-child(8)")));
 			scrollToBottom();
 			click(createLocationBtn);
-			waitForSeconds(30);
+			waitForSeconds(10);
 			SimpleUtils.pass("location creation done");
 
 		} else
@@ -999,7 +999,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			itemsAndTransactionInoutField.get(1).sendKeys("1");
 			scrollToBottom();
 			click(createLocationBtn);
-			waitForSeconds(20);
+			waitForSeconds(5);
 			SimpleUtils.pass("New location creation done");
 
 		} else
@@ -1034,7 +1034,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.pass("Location update done");
 		} else
 			SimpleUtils.fail("No search result", true);
-		waitForSeconds(10);
+		waitForSeconds(5);
 		searchLocation(locationName);
 		if (verifyIsThisLocationGroup()) {
 			SimpleUtils.pass("Change None location to parent successfully");
@@ -1125,7 +1125,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(locationDetailsLinks.get(0));
 			click(editLocationBtn);
 			displayNameInput.clear();
-			displayNameInput.sendKeys("Change " + locationName + " to P2P or MS");
+			displayNameInput.sendKeys(locationName + "toP2PorMS");
 //			setLocationName(locationName);
 			click(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
 			scrollToBottom();
