@@ -664,4 +664,7 @@ public interface SchedulePage {
 	public boolean isGroupByDayPartsLoaded() throws Exception;
 	public List<String> getWeekScheduleShiftTitles() throws Exception;
 	public List<String> getDayScheduleGroupLabels() throws Exception;
+	public boolean isShiftInDayPartOrNotInWeekView(int shiftIndex, String dayPart) throws Exception;
+	public int getTheIndexOfShift(WebElement shift) throws Exception;
+	public boolean isShiftInDayPartOrNotInDayView(int shiftIndex, String dayPart) throws Exception;
 }

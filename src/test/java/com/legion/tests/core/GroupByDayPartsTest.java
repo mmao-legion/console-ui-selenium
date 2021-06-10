@@ -10,6 +10,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
@@ -144,8 +145,8 @@ public class GroupByDayPartsTest extends TestBase {
                 configurationPage.clickOnEditButtonOnTemplateDetailsPage();
                 configurationPage.selectDaypart("Lunch");
                 configurationPage.selectDaypart("Dinner");
-                configurationPage.setDaypart("Lunch", "11am", "2pm");
-                configurationPage.setDaypart("Dinner", "4pm", "7pm");
+                configurationPage.setDaypart("All days","Lunch", "11am", "2pm");
+                configurationPage.setDaypart("All days","Dinner", "4pm", "7pm");
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
             }
@@ -178,7 +179,7 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
             List<String> dayPartsDefined =  Arrays.asList("LUNCH", "DINNER", "UNSPECIFIED");
 
             // Verify group by dayparts is available in week view
@@ -187,23 +188,22 @@ public class GroupByDayPartsTest extends TestBase {
                 schedulePage.createScheduleForNonDGFlowNewUI();
             }
             boolean isContained = false;
-            if (schedulePage.isGroupByDayPartsLoaded()) {
-                schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyDayParts.value);
-                List<String> dayPartNamesInWeekView = schedulePage.getWeekScheduleShiftTitles();
-                for (int i = 0; i < dayPartNamesInWeekView.size(); i++) {
-                    if (dayPartsDefined.contains(dayPartNamesInWeekView.get(i))) {
-                        isContained = true;
-                    } else {
-                        isContained = false;
-                        break;
-                    }
+            SimpleUtils.assertOnFail("Schedule page 'Group by Day Parts' option isn't in the drop down list", schedulePage.isGroupByDayPartsLoaded(),false);
+            schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyDayParts.value);
+            List<String> dayPartNamesInWeekView = schedulePage.getWeekScheduleShiftTitles();
+            for (int i = 0; i < dayPartNamesInWeekView.size(); i++) {
+                if (dayPartsDefined.contains(dayPartNamesInWeekView.get(i))) {
+                    isContained = true;
+                } else {
+                    isContained = false;
+                    break;
                 }
-                if (isContained)
-                    SimpleUtils.pass("Schedule page: The shifts in week view are within defined day parts or 'UNSPECIFIED'");
-                else
-                    SimpleUtils.fail("Schedule page: The shifts in week view are within defined day parts or 'UNSPECIFIED'", false);
-            } else
-                SimpleUtils.fail("Schedule page 'Group by Day Parts' option isn't in the drop down list",true);
+            }
+            if (isContained)
+                SimpleUtils.pass("Schedule page: The shifts in week view are within defined day parts or 'UNSPECIFIED'");
+            else
+                SimpleUtils.fail("Schedule page: The shifts in week view are within defined day parts or 'UNSPECIFIED'", false);
+
 
             // Verify group by dayparts is available in day view
             schedulePage.clickOnDayView();
@@ -224,5 +224,86 @@ public class GroupByDayPartsTest extends TestBase {
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate shift end time is within a daypart")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateShiftEndTimeIsWithinADayPartAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+        // Verify shift shows in the daypart when shift starts outside a daypart in week view
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
+            schedulePage.createScheduleForNonDGFlowNewUI();
+        }
+        SimpleUtils.assertOnFail("Schedule page 'Group by Day Parts' option isn't in the drop down list", schedulePage.isGroupByDayPartsLoaded(),false);
+        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyDayParts.value);
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        int randomIndex = schedulePage.getRandomIndexOfShift();
+        WebElement shift = schedulePage.getTheShiftByIndex(randomIndex);
+        schedulePage.editTheShiftTimeForSpecificShift(shift,"10am","1pm");
+        int shiftIndex = schedulePage.getTheIndexOfEditedShift();
+        SimpleUtils.assertOnFail("Schedule Page: The shift doesn't show in the daypart when shift starts outside a daypart and ends within a daypart in week view", schedulePage.isShiftInDayPartOrNotInWeekView(shiftIndex,"LUNCH"),false);
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+
+        // Verify shift shows in the daypart when shift starts inside a daypart in week view
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        randomIndex = schedulePage.getRandomIndexOfShift();
+        shift = schedulePage.getTheShiftByIndex(randomIndex);
+        schedulePage.editTheShiftTimeForSpecificShift(shift,"12pm","2pm");
+        shiftIndex = schedulePage.getTheIndexOfEditedShift();
+        SimpleUtils.assertOnFail("Schedule Page: The shift doesn't show in the daypart when shift starts outside a daypart and ends inside a daypart in week view", schedulePage.isShiftInDayPartOrNotInWeekView(shiftIndex,"LUNCH"),false);
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+
+        // Verify shift shows in the daypart when shift starts inside another daypart in week view
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        randomIndex = schedulePage.getRandomIndexOfShift();
+        shift = schedulePage.getTheShiftByIndex(randomIndex);
+        schedulePage.editTheShiftTimeForSpecificShift(shift,"11am","5pm");
+        shiftIndex = schedulePage.getTheIndexOfEditedShift();
+        SimpleUtils.assertOnFail("Schedule Page: The shift doesn't show in the daypart when shift starts outside a daypart and ends inside a daypart in week view", schedulePage.isShiftInDayPartOrNotInWeekView(shiftIndex,"LUNCH"),false);
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+
+        // Verify shift shows in the daypart when shift starts outside a daypart in day view
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        randomIndex = schedulePage.getRandomIndexOfShift();
+        shift = schedulePage.getTheShiftByIndex(randomIndex);
+        schedulePage.editTheShiftTimeForSpecificShift(shift,"9am","1pm");
+        shiftIndex = schedulePage.getTheIndexOfEditedShift();
+        SimpleUtils.assertOnFail("Schedule Page: The shift doesn't show in the daypart when shift starts outside a daypart and ends inside a daypart in week view", schedulePage.isShiftInDayPartOrNotInWeekView(shiftIndex,"LUNCH"),false);
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+
+        // Verify shift shows in the daypart when shift starts inside a daypart in day view
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        randomIndex = schedulePage.getRandomIndexOfShift();
+        shift = schedulePage.getTheShiftByIndex(randomIndex);
+        schedulePage.editTheShiftTimeForSpecificShift(shift,"1pm","2pm");
+        shiftIndex = schedulePage.getTheIndexOfEditedShift();
+        SimpleUtils.assertOnFail("Schedule Page: The shift doesn't show in the daypart when shift starts outside a daypart and ends inside a daypart in week view", schedulePage.isShiftInDayPartOrNotInWeekView(shiftIndex,"LUNCH"),false);
+        schedulePage.saveSchedule();
+        schedulePage.publishActiveSchedule();
+
+        // Verify shift shows in the daypart when shift starts inside another daypart in day view
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        randomIndex = schedulePage.getRandomIndexOfShift();
+        shift = schedulePage.getTheShiftByIndex(randomIndex);
+        schedulePage.editTheShiftTimeForSpecificShift(shift,"12pm","5pm");
+        shiftIndex = schedulePage.getTheIndexOfEditedShift();
+        SimpleUtils.assertOnFail("Schedule Page: The shift doesn't show in the daypart when shift starts outside a daypart and ends inside a daypart in week view", schedulePage.isShiftInDayPartOrNotInWeekView(shiftIndex,"LUNCH"),false);
+        schedulePage.saveSchedule();
     }
 }

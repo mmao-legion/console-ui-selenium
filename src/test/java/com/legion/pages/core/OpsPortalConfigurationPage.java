@@ -1963,12 +1963,23 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void setDaypart(String dayPart, String startTime, String endTime) throws Exception {
+	public void setDaypart(String day, String dayPart, String startTime, String endTime) throws Exception {
 		// Please set the start time and end time's format like 11am, 2pm
 		String daypartColor = "";
 		List<WebElement> hourCells = null;
 		WebElement colorInRow = null;
-		clickTheElement(editBtnsOfBusinessHours.get(0));
+		if (areListElementVisible(daysOfDayParts,10)) {
+			for (int h = 0; h < daysOfDayParts.size(); h++) {
+				if (day.equals("All days")) {
+					clickTheElement(editBtnsOfBusinessHours.get(h));
+					break;
+				}
+				if (daysOfDayParts.get(h).getText().toUpperCase().equals(day.toUpperCase())) {
+					clickTheElement(editBtnsOfBusinessHours.get(h));
+					break;
+				}
+			}
+		}
 		int l=0;
 		int k = 0;
 		if (areListElementVisible(tabsWhenEditBusinessHours,10))
@@ -2040,7 +2051,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}
 			}
 			mouseHoverDragandDrop(hourCells.get(k),hourCells.get(l-1));
-			click(daysCheckBoxes.get(daysCheckBoxes.size() - 1));
+			if (day.equals("All days"))
+				click(daysCheckBoxes.get(daysCheckBoxes.size() - 1));
 			WebElement dayPartMap = rowsWhenSetDaypart.get(i).findElement(By.cssSelector("[ng-if=\"$ctrl.daypartMap[daypart.objectId]\"] span"));
 			if (dayPartMap.getText().equals(startTime + " - " + endTime))
 			    SimpleUtils.pass("Operation Hours: Day Part with '" + startTime + " - " + endTime + "' has been set");

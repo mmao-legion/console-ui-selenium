@@ -12820,8 +12820,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     continue;
                 }
             }
+        } else if (areListElementVisible(shiftsInDayView,10)) {
+            for (int i = 0; i < shiftsInDayView.size(); i++) {
+                try {
+                    WebElement editedShift = shiftsInDayView.get(i).findElement(By.xpath("./../../preceding-sibling::div[1][@ng-if=\"isShiftBeingEdited(shift)\"]"));
+                    index = i;
+                    SimpleUtils.pass("Schedule Day View: Get the index of the edited shift successfully: " + i);
+                    break;
+                } catch (NoSuchElementException e) {
+                    continue;
+                }
+            }
         } else {
-            SimpleUtils.fail("Schedule Week View: There are no shifts loaded!", false);
+            SimpleUtils.fail("Schedule Page: There are no shifts loaded!", false);
         }
         return index;
     }
@@ -13757,10 +13768,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         WebElement shift = null;
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             shift = weekShifts.get(index);
-        } else {
-            SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
-        }
-        return shift;
+        } else if (areListElementVisible(shiftsInDayView, 20) && index < shiftsInDayView.size()) {
+            shift = shiftsInDayView.get(index);
+        } else
+            SimpleUtils.fail("Schedule Page: week or day shifts not loaded successfully!", false);
+         return shift;
     }
 
     @FindBy(css = ".modal-dialog")
@@ -15337,7 +15349,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public void editTheShiftTimeForSpecificShift(WebElement shift, String startTime, String endTime) throws Exception {
-        By isUnAssignedShift = By.cssSelector(".rows .week-view-shift-image-optimized span");
+        By isUnAssignedShift = null;
+        if (!isScheduleDayViewActive())
+            isUnAssignedShift = By.cssSelector(".rows .week-view-shift-image-optimized span");
+        else
+            isUnAssignedShift = By.cssSelector(".sch-shift-worker-img-border");
         WebElement shiftPlusBtn = shift.findElement(isUnAssignedShift);
         if (isElementLoaded(shiftPlusBtn)) {
             click(shiftPlusBtn);
@@ -15526,5 +15542,79 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return dayGroupLabels;
     }
 
+    @Override
+    public boolean isShiftInDayPartOrNotInWeekView(int shiftIndex, String dayPart) throws Exception {
+        boolean isIn = false;
+        int index2 = -1;
+        for (int i = 0; i < weekScheduleShiftTitles.size(); i++) {
+                if (weekScheduleShiftTitles.get(i).getText().equals(dayPart)) {
+                    int index1 = getTheIndexOfShift(weekScheduleShiftTitles.get(i).findElement(By.xpath("./../../following-sibling::div[7]/div")));
+                    if (i != weekScheduleShiftTitles.size() - 1)
+                        index2 = getTheIndexOfShift(weekScheduleShiftTitles.get(i+1).findElement(By.xpath("./../../following-sibling::div[7]/div")));
+                    else
+                        index2 = weekShifts.size() - 1;
+                    if (shiftIndex >= index1 && shiftIndex <= index2) {
+                        isIn = true;
+                        break;
+                    }
+                }
+            }
+        return isIn;
+    }
+
+    @Override
+    public boolean isShiftInDayPartOrNotInDayView(int shiftIndex, String dayPart) throws Exception {
+        boolean isIn = false;
+        int index2 = -1;
+        for (int i = 0; i < weekScheduleShiftTitles.size(); i++) {
+            if (weekScheduleShiftTitles.get(i).getText().equals(dayPart)) {
+                int index1 = getTheIndexOfShift(weekScheduleShiftTitles.get(i).findElement(By.xpath("./../../following-sibling::div[7]/div")));
+                if (i != weekScheduleShiftTitles.size() - 1)
+                    index2 = getTheIndexOfShift(weekScheduleShiftTitles.get(i+1).findElement(By.xpath("./../../following-sibling::div[7]/div")));
+                else
+                    index2 = weekShifts.size() - 1;
+                if (shiftIndex >= index1 && shiftIndex <= index2) {
+                    isIn = true;
+                    break;
+                }
+            }
+        }
+        return isIn;
+    }
+
+    @Override
+    public int getTheIndexOfShift(WebElement shift) throws Exception {
+        int index = -1;
+        if (areListElementVisible(weekShifts, 10)) {
+            for (int i = 0; i < weekShifts.size(); i++) {
+                try {
+                     if (weekShifts.get(i).equals(shift)) {
+                         index = i;
+                         SimpleUtils.pass("Schedule Week View: Get the index of the shift successfully: " + i);
+                         break;
+                     }
+
+                } catch (NoSuchElementException e) {
+                    continue;
+                }
+            }
+        } else if (areListElementVisible(shiftsInDayView, 10)) {
+            for (int i = 0; i < shiftsInDayView.size(); i++) {
+                try {
+                    if (shiftsInDayView.get(i).equals(shift)) {
+                        index = i;
+                        SimpleUtils.pass("Schedule Day View: Get the index of the shift successfully: " + i);
+                        break;
+                    }
+
+                } catch (NoSuchElementException e) {
+                    continue;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View: There are no shifts loaded!", false);
+        }
+        return index;
+    }
 }
 
