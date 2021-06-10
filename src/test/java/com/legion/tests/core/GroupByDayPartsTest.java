@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -78,14 +79,6 @@ public class GroupByDayPartsTest extends TestBase {
         locationsPage.clickOnConfigurationTabOfLocation();
         HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
         MyThreadLocal.setCurrentOperatingTemplate(templateTypeAndName.get("Operating Hours"));
-        //go to Configuration
-        cinemarkMinorPage.clickConfigurationTabInOP();
-        controlsNewUIPage.clickOnControlsOperatingHoursSection();
-
-        //Find the template
-        cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentOperatingTemplate());
-        cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-        cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.OKWhenEdit.getValue());
         //back to console.
         switchToConsoleWindow();
     }
@@ -432,5 +425,104 @@ public class GroupByDayPartsTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule Page: The shift doesn't show in Unspecified when shift end equals exactly the start of a daypart in week view", schedulePage.isShiftInDayPartOrNotInDayView(shiftIndex, "UNSPECIFIED"), false);
             schedulePage.publishActiveSchedule();
         }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate shift start time is within a daypart")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateShiftStartTimeWithinDaypartAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+        // Verify dayparts can be cleared in Operation Hours or Working Hours
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        if (MyThreadLocal.getDriver().getCurrentUrl().contains(parameterMap.get("KendraScott2_Enterprise"))) {
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);
+            controlsNewUIPage.clickOnGlobalLocationButton();
+            controlsNewUIPage.clickOnControlsWorkingHoursCard();
+            SimpleUtils.assertOnFail("Controls Page: Working Hours Section not Loaded.", controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.clickOnSpecifyTemplateName(MyThreadLocal.getCurrentOperatingTemplate(), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectDaypart("Lunch");
+            configurationPage.selectDaypart("Dinner");
+            configurationPage.setDaypart("All days","Lunch", "11am", "2pm");
+            configurationPage.setDaypart("All days","Dinner", "4pm", "7pm");
+        } else if (MyThreadLocal.getDriver().getCurrentUrl().contains(parameterMap.get("CinemarkWkdy_Enterprise"))) {
+            //Go to OP page
+            locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.clickOnSpecifyTemplateName(MyThreadLocal.getCurrentOperatingTemplate(), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectDaypart("Lunch");
+            configurationPage.selectDaypart("Dinner");
+            configurationPage.setDaypart("All days","Lunch", "11am", "2pm");
+            configurationPage.setDaypart("All days","Dinner", "4pm", "7pm");
+            configurationPage.publishNowTheTemplate();
+            //go to Configuration
+            controlsNewUIPage.clickOnControlsOperatingHoursSection();
+
+            //Find the template
+            cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentOperatingTemplate());
+            cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+            cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.OKWhenEdit.getValue());
 
     }
+
+            //back to console.
+            switchToConsoleWindow();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            schedulePage.createScheduleForNonDGFlowNewUI();
+
+            //delete unassigned shifts and open shifts.
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("unassigned");
+            schedulePage.deleteTMShiftInWeekView("open");
+            schedulePage.saveSchedule();
+            List<String> shiftInfo = new ArrayList<>();
+            while (shiftInfo.size() == 0) {
+                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+            }
+            String workRole = shiftInfo.get(4);
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.clickOnDayViewAddNewShiftButton();
+            schedulePage.customizeNewShiftPage();
+            String shiftEndTime = "3";
+            String shiftStartTime = "11";
+            schedulePage.moveSliderAtCertainPoint(shiftEndTime, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.moveSliderAtCertainPoint(shiftStartTime, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            schedulePage.selectWorkRole(workRole);
+            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+            schedulePage.clickOnCreateOrNextBtn();
+            schedulePage.saveSchedule();
+            schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyDayParts.getValue());
+            schedulePage.verifyNewAddedShiftFallsInDayPart("open","LUNCH");
+        }
+        try {
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+}

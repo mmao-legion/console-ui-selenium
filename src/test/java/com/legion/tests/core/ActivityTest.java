@@ -975,8 +975,8 @@ public class ActivityTest extends TestBase {
     @Owner(owner = "Julie")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate access controls on Activities page when logon with Admin/TM or SM switch to employer view")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyAccessControlsOnActivitiesPage(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyAccessControlsOnActivitiesPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -985,7 +985,7 @@ public class ActivityTest extends TestBase {
             //Verify Activity Feed as admin
             if (!activityPage.isActivityBellIconLoaded())
                 SimpleUtils.pass("Admin view have no access to see Activity Feed as expected");
-            else SimpleUtils.fail("Admin view can see Activity Feed unexpectedly",true);
+            else SimpleUtils.fail("Admin view can see Activity Feed unexpectedly",false);
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
