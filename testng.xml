@@ -227,7 +227,7 @@
             <class name="com.legion.tests.core.ActivityTest">
                 <methods>
                     <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
-                    <include name="verifyAccessControlsOnActivitiesPage"/>
+                    <include name="verifyAccessControlsOnActivitiesPageAsInternalAdmin"/>
                     <include name="verifyTheContentOnActivityAsStoreManager"/>
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>
                     <include name="verifyApproveCoverRequestOfShiftSwapActivityAsInternalAdmin"/>
@@ -557,6 +557,8 @@
                 <methods>
                     <include name="validateDaypartsCanBeConfiguredAsInternalAdmin" />
                     <include name="validateGroupByDayPartsIsAvailableInWeekNDayViewAsInternalAdmin" />
+                    <include name="validateShiftEndTimeIsWithinADayPartAsInternalAdmin" />
+                    <include name="validateEitherShiftStartTimeNorEndTimeFallsWithinADaypartAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
