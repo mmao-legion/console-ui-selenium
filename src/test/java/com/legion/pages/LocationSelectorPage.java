@@ -1,6 +1,7 @@
 package com.legion.pages;
 
 import java.util.List;
+import java.util.Map;
 
 public interface LocationSelectorPage {
 
@@ -32,11 +33,11 @@ public interface LocationSelectorPage {
 	public void changeUpperFieldsByName(String upperFieldType, String upperFieldName) throws Exception;
 	public void verifyDefaultLevelForBUOrAdmin();
 	public void searchSpecificBUAndNavigateTo(String buText);
-	public void searchSpecificRegionAndNavigateTo(String regionText);
-	public void searchSpecificDistrictAndNavigateTo(String districtText) throws Exception;
-	public void searchSpecificLocationAndNavigateTo(String locationName) throws Exception;
+	public void searchSpecificRegionAndNavigateTo(String regionText) throws Exception;
+	public void searchSpecificUpperFieldAndNavigateTo(String districtText) throws Exception;
+//	public void searchSpecificLocationAndNavigateTo(String locationName) throws Exception;
 	public void verifyMagnifyGlassIconShowOrNot();
 	public void changeLocationDirect(String locationName);
-	public List<String> getSelectedUpperFields () throws Exception;
+	public Map<String, String> getSelectedUpperFields () throws Exception;
 	public void changeUpperFieldDirect(String upperFieldType, String upperFieldName) throws Exception;
 }
