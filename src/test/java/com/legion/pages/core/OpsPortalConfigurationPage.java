@@ -655,7 +655,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement dayPartsPagination;
 	@FindBy(css="div.lg-paged-search div.lg-paged-search__pagination select option")
 	private List<WebElement> dayPartsPaginationList;
-	@FindBy(css="table tr")
+	@FindBy(css=".dayparts table tbody tr")
 	private List<WebElement> dayPartsList;
 
 	//verify list of Shift Start Time Event
@@ -2030,7 +2030,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			} else if (startTime.contains("pm")) {
 				for (k = j; k < timeRangeWhenSetDaypart.size(); k++) {
 					String hourRange = timeRangeWhenSetDaypart.get(k).getText().trim().replace("\n","");
-					if (hourRange.equals(startTime.replace("am",""))) {
+					if (hourRange.equals(startTime.replace("pm",""))) {
 						break;
 					}
 				}
@@ -2038,7 +2038,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if (endTime.contains("am")) {
 				for (l = 0; l < j; l++) {
 					String hourRange = timeRangeWhenSetDaypart.get(l).getText().trim().replace("\n","");
-					if (hourRange.equals(endTime.replace("pm",""))) {
+					if (hourRange.equals(endTime.replace("am",""))) {
 						break;
 					}
 				}
