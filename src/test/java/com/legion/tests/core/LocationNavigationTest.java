@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.loc;
 
 public class LocationNavigationTest extends TestBase {
 
@@ -103,7 +104,7 @@ public class LocationNavigationTest extends TestBase {
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify searching and selecting the location on SM schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) {
+    public void verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -152,19 +153,19 @@ public class LocationNavigationTest extends TestBase {
 
     private void searchAndCheckTheUpperFields (String locationName, String[] upperFields) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.searchSpecificLocationAndNavigateTo(locationName);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
 
-        List<String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+        Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
         if (upperFields.length > 1) {
             SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get(0).equalsIgnoreCase(locationName)
-                            && selectedUpperFields.get(1).equalsIgnoreCase(upperFields[1].trim())
-                            && selectedUpperFields.get(2).equalsIgnoreCase(upperFields[0].trim()), false);
+                    selectedUpperFields.get("Location").equalsIgnoreCase(locationName)
+                            && selectedUpperFields.get("District").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
+                            && selectedUpperFields.get("Region").equalsIgnoreCase(upperFields[upperFields.length-2].trim()), false);
         } else {
             SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get(0).equalsIgnoreCase(locationName)
-                            && selectedUpperFields.get(1).equalsIgnoreCase(upperFields[0].trim())
-                            && selectedUpperFields.get(2).equalsIgnoreCase(hQ), false);
+                    selectedUpperFields.get("Location").equalsIgnoreCase(locationName)
+                            && selectedUpperFields.get("District").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
+                            && selectedUpperFields.get("HQ").equalsIgnoreCase(hQ), false);
         }
     }
 
@@ -196,7 +197,7 @@ public class LocationNavigationTest extends TestBase {
                 locationName = location00808;
             }
             String districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.changeUpperFieldDirect( District,districtName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
@@ -320,22 +321,22 @@ public class LocationNavigationTest extends TestBase {
     private void searchDistrictAndCheckTheUpperFields (String[] upperFields) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         if (upperFields.length > 1) {
-            locationSelectorPage.searchSpecificDistrictAndNavigateTo(upperFields[1].trim());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields[1].trim());
         } else {
-            locationSelectorPage.searchSpecificDistrictAndNavigateTo(upperFields[0].trim());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields[0].trim());
         }
-        List<String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+        Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
 
         //Verify the upperfiled should be correct
         //Verify district is selected in the navigation bar
         if (upperFields.length > 1) {
             SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get(1).equalsIgnoreCase(upperFields[1].trim())
-                            && selectedUpperFields.get(2).equalsIgnoreCase(upperFields[0].trim()), false);
+                    selectedUpperFields.get("District").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
+                            && selectedUpperFields.get("Region").equalsIgnoreCase(upperFields[upperFields.length-2].trim()), false);
         } else {
             SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get(1).equalsIgnoreCase(upperFields[0].trim())
-                            && selectedUpperFields.get(2).equalsIgnoreCase(hQ), false);
+                    selectedUpperFields.get("Region").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
+                            && selectedUpperFields.get("HQ").equalsIgnoreCase(hQ), false);
         }
         //Verify the DM page loaded
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -413,5 +414,70 @@ public class LocationNavigationTest extends TestBase {
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify searching and selecting the region on SM schedule tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySearchingAndSelectingTheRegionOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Go to Schedule tab -> Overview page
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            //Click on change region button to change the region
+            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
+            String locationName = mountainViewLocation;
+            searchRegionAndCheckTheUpperFields(upperFields, locationName);
+
+            //Go to Schedule tab -> Forecast page
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            locationName = rockVilleLocation;
+            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            searchRegionAndCheckTheUpperFields(upperFields, locationName);
+
+            //Go to Schedule tab -> Schedule page
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            locationName = mountainViewLocation;
+            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
+            searchRegionAndCheckTheUpperFields(upperFields, locationName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private void searchRegionAndCheckTheUpperFields (String[] upperFields, String locationName) throws Exception {
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields[upperFields.length-2].trim());
+        Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+        String bUName = upperFields[upperFields.length-3].trim();
+        String regionName = upperFields[upperFields.length-2].trim();
+        String districtName = upperFields[upperFields.length-1].trim();
+        //Verify the upperfield should be correct
+        //Verify district is selected in the navigation bar
+        SimpleUtils.assertOnFail("The selected upperfields is incorrect",
+                selectedUpperFields.get("Region").equalsIgnoreCase(regionName)
+                        && selectedUpperFields.get("BU").equalsIgnoreCase(bUName), false);
+
+        //Verify the Region page loaded
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        SimpleUtils.assertOnFail("Schedule page Region view not loaded Successfully!",
+                schedulePage.isScheduleDMView(), false);
+
+        //Verify the district listed
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+        scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
+
+        locationSelectorPage.changeUpperFieldDirect(District, districtName);
+        locationSelectorPage.changeLocationDirect(locationName);
     }
 }

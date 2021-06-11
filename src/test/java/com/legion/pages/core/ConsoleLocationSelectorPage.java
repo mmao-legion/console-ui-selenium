@@ -3,10 +3,7 @@ package com.legion.pages.core;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.legion.api.ApiList;
 import com.legion.utils.JsonUtil;
@@ -982,30 +979,30 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
 
     @Override
-    public void searchSpecificDistrictAndNavigateTo(String districtName) throws Exception {
-        Boolean isDistrictMatched = false;
+    public void searchSpecificUpperFieldAndNavigateTo(String upperFieldName) throws Exception {
+        Boolean isUpperFieldMatched = false;
         if (isElementLoaded(upperFieldSearchIcon, 10)){
             clickTheElement(upperFieldSearchIcon);
         }
-        searchLocationAndSelect(districtName);
-        List<WebElement> districtItems = new ArrayList<>();
+        searchLocationAndSelect(upperFieldName);
+        List<WebElement> upperFieldItems = new ArrayList<>();
         waitForSeconds(5);
         if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
-            districtItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
+            upperFieldItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
         }
-        if (districtItems.size() > 0) {
-            for (WebElement districtItem : districtItems) {
-                if (districtItem.getText().contains(districtName)) {
-                    isDistrictMatched = true;
-                    click(districtItem);
-                    SimpleUtils.pass("District changed successfully to '" + districtName + "'");
+        if (upperFieldItems.size() > 0) {
+            for (WebElement upperFieldItem : upperFieldItems) {
+                if (upperFieldItem.getText().contains(upperFieldName)) {
+                    isUpperFieldMatched = true;
+                    click(upperFieldItem);
+                    SimpleUtils.pass("Upper Field changed successfully to '" + upperFieldName + "'");
                     break;
                 }
             }
         }
 
-        if (!isDistrictMatched) {
-            SimpleUtils.fail("District does not match with '" + districtName + "'", false);
+        if (!isUpperFieldMatched) {
+            SimpleUtils.fail("Upper Field does not match with '" + upperFieldName + "'", false);
         }
     }
 
@@ -1013,33 +1010,33 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy(css = "img.search-icon")
     private WebElement upperFieldSearchIcon;
 
-    @Override
-    public void searchSpecificLocationAndNavigateTo(String locationName) throws Exception {
-        Boolean isLocationMatched = false;
-        if (isElementLoaded(upperFieldSearchIcon, 10)){
-            clickTheElement(upperFieldSearchIcon);
-        }
-        searchLocationAndSelect(locationName);
-        List<WebElement> locationItems = new ArrayList<>();
-        waitForSeconds(5);
-        if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
-            locationItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
-        }
-        if (locationItems.size() > 0) {
-            for (WebElement locationItem : locationItems) {
-                if (locationItem.getText().contains(locationName)) {
-                    isLocationMatched = true;
-                    click(locationItem);
-                    SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
-                    break;
-                }
-            }
-        }
-
-        if (!isLocationMatched) {
-            SimpleUtils.fail("Location does not match with '" + locationName + "'", false);
-        }
-    }
+//    @Override
+//    public void searchSpecificLocationAndNavigateTo(String locationName) throws Exception {
+//        Boolean isLocationMatched = false;
+//        if (isElementLoaded(upperFieldSearchIcon, 10)){
+//            clickTheElement(upperFieldSearchIcon);
+//        }
+//        searchLocationAndSelect(locationName);
+//        List<WebElement> locationItems = new ArrayList<>();
+//        waitForSeconds(5);
+//        if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
+//            locationItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
+//        }
+//        if (locationItems.size() > 0) {
+//            for (WebElement locationItem : locationItems) {
+//                if (locationItem.getText().contains(locationName)) {
+//                    isLocationMatched = true;
+//                    click(locationItem);
+//                    SimpleUtils.pass("Location changed successfully to '" + locationName + "'");
+//                    break;
+//                }
+//            }
+//        }
+//
+//        if (!isLocationMatched) {
+//            SimpleUtils.fail("Location does not match with '" + locationName + "'", false);
+//        }
+//    }
 
     @Override
     public void verifyMagnifyGlassIconShowOrNot() {
@@ -1114,17 +1111,28 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy(css = "lg-select[search-hint='Search HQ'] div.input-faked")
     private WebElement hqSelectorButton;
 
-    public List<String> getSelectedUpperFields () throws Exception {
-        List<String> selectedUpperFields = new ArrayList<>();
+    @FindBy(css = "lg-select[search-hint='Search Business Unit'] div.input-faked")
+    private WebElement buSelectorButton;
+
+    public Map<String, String> getSelectedUpperFields () throws Exception {
+        Map<String, String> selectedUpperFields = new HashMap<String, String>();
         if (isElementLoaded(locationSelectorButton, 5)
-                && isElementLoaded(districtSelectorButton, 5)
-                && (isElementLoaded(regionSelectorButton, 5)|| isElementLoaded(hqSelectorButton, 5))) {
-            selectedUpperFields.add(locationSelectorButton.getText());
-            selectedUpperFields.add(districtSelectorButton.getText());
+                || isElementLoaded(districtSelectorButton, 5)
+                || isElementLoaded(regionSelectorButton, 5)|| isElementLoaded(hqSelectorButton, 5)) {
+            if (isElementLoaded(locationSelectorButton, 5)) {
+                selectedUpperFields.put("Location", locationSelectorButton.getText());
+            }
+            if (isElementLoaded(districtSelectorButton, 5)) {
+                selectedUpperFields.put("District", districtSelectorButton.getText());
+            }
             if (isElementLoaded(regionSelectorButton, 5)) {
-                selectedUpperFields.add(regionSelectorButton.getText());
-            } else if (isElementLoaded(hqSelectorButton, 5)){
-                selectedUpperFields.add(hqSelectorButton.getText());
+                selectedUpperFields.put("Region", regionSelectorButton.getText());
+            }
+            if (isElementLoaded(buSelectorButton, 5)) {
+                selectedUpperFields.put("BU",buSelectorButton.getText());
+            }
+            if (isElementLoaded(hqSelectorButton, 5)){
+                selectedUpperFields.put("HQ", hqSelectorButton.getText());
             }
 
             SimpleUtils.pass("Get upper fields successfully! ");

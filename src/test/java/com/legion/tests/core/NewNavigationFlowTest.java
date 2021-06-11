@@ -109,8 +109,8 @@ public class NewNavigationFlowTest extends TestBase {
         locationSelectorPage.verifyDefaultLevelForBUOrAdmin();
         locationSelectorPage.searchSpecificBUAndNavigateTo(BUText);
         locationSelectorPage.searchSpecificRegionAndNavigateTo(RegionText);
-        locationSelectorPage.searchSpecificDistrictAndNavigateTo(DistrictText);
-        locationSelectorPage.searchSpecificLocationAndNavigateTo(LocationText);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(DistrictText);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(LocationText);
         locationSelectorPage.searchSpecificBUAndNavigateTo(BUText);
 
 
