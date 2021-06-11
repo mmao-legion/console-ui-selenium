@@ -809,7 +809,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             //validate the schedule hours are consistent between Schedule DM view and schedule detail page
 
             String districtName = dashboardPage.getCurrentDistrict();
-            locationSelectorPage.selectCurrentDistrictAgain();
+            locationSelectorPage.selectCurrentUpperFieldAgain("District");
             schedulePage.clickOnScheduleConsoleMenuItem();
             if(isTAEnv){
                 switch(specificWeek){
