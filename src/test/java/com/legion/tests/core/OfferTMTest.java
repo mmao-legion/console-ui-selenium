@@ -781,7 +781,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
             SimpleUtils.assertOnFail("Didn't get open shift offer!", schedulePage.getShiftsCount()==1, false);
             List<String> shiftInfoFromTMView = schedulePage.getTheShiftInfoInDayViewByIndex(0);
-            SimpleUtils.assertOnFail("shift info is not consistent", shiftInfo.containsAll(shiftInfoFromTMView), false);
+            SimpleUtils.assertOnFail("shift info is not consistent", shiftInfo.get(2).contains(shiftInfoFromTMView.get(2)) && shiftInfo.get(4).contains(shiftInfoFromTMView.get(4)), false);
 
             List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
             schedulePage.selectOneShiftIsClaimShift(claimShift);
@@ -807,7 +807,6 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-
             schedulePage.navigateToNextWeek();
             shiftInfo = schedulePage.getTheShiftInfoByIndex(index);
             SimpleUtils.assertOnFail("Open shift is not assigned successfully!", shiftInfo.get(0).equalsIgnoreCase(firstNameOfTM), false);
@@ -904,7 +903,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
             SimpleUtils.assertOnFail("Didn't get open shift offer!", schedulePage.getShiftsCount()==1, false);
             List<String> shiftInfoFromTMView = schedulePage.getTheShiftInfoInDayViewByIndex(0);
-            SimpleUtils.assertOnFail("shift info is not consistent", shiftInfo.containsAll(shiftInfoFromTMView), false);
+            SimpleUtils.assertOnFail("shift info is not consistent", shiftInfo.get(2).contains(shiftInfoFromTMView.get(2)) && shiftInfo.get(4).contains(shiftInfoFromTMView.get(4)), false);
 
             List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
             schedulePage.selectOneShiftIsClaimShift(claimShift);

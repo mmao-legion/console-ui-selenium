@@ -4221,6 +4221,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                 }
                 clickTheElement(operatingHoursSaveBtn);
+                waitForSeconds(3);
                 if (isElementEnabled(editBudgetBtn, 10)) {
                     SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
                 }else {
@@ -15484,7 +15485,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public String getViewStatusShiftsInfo() throws Exception {
         String result = "";
         if (isElementLoaded(shiftInViewStatusWindow, 5)) {
-            result = shiftInViewStatusWindow.getText();
+            result = shiftInViewStatusWindow.getAttribute("innerText");
         }
         return result;
     }
