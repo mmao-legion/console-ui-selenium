@@ -93,7 +93,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public boolean isOpsPortalPageLoaded() throws Exception {
 		boolean isLoaded = false;
 		try {
-			waitForSeconds(5);
+			waitForSeconds(10);
 			if (isElementLoaded(goToLocationsButton, 150))
 				isLoaded = true;
 		} catch (Exception e) {
