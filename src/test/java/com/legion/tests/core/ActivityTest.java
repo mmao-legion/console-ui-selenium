@@ -1693,12 +1693,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             //Login as Team Member to change availability
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();
@@ -1719,8 +1714,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Team Member again
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             profileNewUIPage.getNickNameFromProfile();
             String myWorkPreferencesLabel = "My Work Preferences";
@@ -1740,9 +1734,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager again to check message
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());

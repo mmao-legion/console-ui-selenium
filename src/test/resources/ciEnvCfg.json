@@ -15,6 +15,7 @@
   "Op_Enterprise" : "op",
   "CinemarkWkdy_Enterprise" : "cinemark-wkdy",
   "Dgch_Enterprise" : "dgch",
+  "Vailqacn_Enterprise": "vailqacn",
   "DEFAULT_USERNAME" : "admin2.a",
   "DEFAULT_PASSWORD" : "admin2.a",
   "ENVIRONMENT" : "QA",

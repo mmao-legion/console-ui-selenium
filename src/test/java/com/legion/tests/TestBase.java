@@ -97,6 +97,20 @@ public abstract class TestBase {
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 5;
 
+    public enum AccessRoles {
+        InternalAdmin("InternalAdmin"),
+        StoreManager("StoreManager"),
+        TeamLead("TeamLead"),
+        TeamMember("TeamMember");
+        private final String role;
+        AccessRoles(final String accessRole) {
+            role = accessRole;
+        }
+        public String getValue() {
+            return role;
+        }
+    }
+
     @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName","testRailRunName"})
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
@@ -421,14 +435,21 @@ public abstract class TestBase {
         }
     }
 
-    public void LoginAsDifferentRole(String roleName) throws Exception {
+    public void loginAsDifferentRole(String roleName) throws Exception {
         try {
+            Object[][] credentials = null;
+            StackTraceElement[] stacks = (new Throwable()).getStackTrace();
+            String simpleClassName = stacks[1].getFileName().replace(".java", "");
             String fileName = "UsersCredentials.json";
             fileName = MyThreadLocal.getEnterprise() + fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get(roleName);
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            if (userCredentials.containsKey(roleName + "Of" + simpleClassName)) {
+                credentials = userCredentials.get(roleName + "Of" + simpleClassName);
+            } else {
+                credentials = userCredentials.get(roleName);
+            }
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(credentials[0][0]), String.valueOf(credentials[0][1])
+                    , String.valueOf(credentials[0][2]));
         } catch (Exception e) {
             SimpleUtils.fail("Login as: " + roleName + " failed!", false);
         }
