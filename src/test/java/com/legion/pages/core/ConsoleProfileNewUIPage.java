@@ -2710,7 +2710,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "[label=\"Save\"] button")
 	private List<WebElement> saveBtnsOfProfile;
 
-	@FindBy(xpath = "//lg-button[@ng-click=\"$ctrl.onAction()\"]/button")
+	@FindBy(css = "[on-action=\"editProfile()\"] [label=\"Edit\"] button")
 	private WebElement editBtnOfProfile;
 
 	@FindBy(xpath = "//div[contains(text(),\"NAME\")]/../span")
