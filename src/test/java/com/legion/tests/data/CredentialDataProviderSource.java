@@ -53,7 +53,7 @@ public class CredentialDataProviderSource {
              {
                  String testFullName = testMethod.getName();
                  testFullName = testFullName + "Of" + testMethod.getDeclaringClass().getSimpleName();
-                 if(testFullName.contains(entry.getKey()))
+                 if(testFullName.endsWith(entry.getKey()))
                  {
                      return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue()) ;
                  }
