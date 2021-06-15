@@ -52,8 +52,8 @@ public class CredentialDataProviderSource {
         	 for(Map.Entry<String, Object[][]> entry : userCredentials.entrySet())
              {
                  String testFullName = testMethod.getName();
-                 testFullName = testFullName + "Of" + testMethod.getDeclaringClass().getName().replace("com.legion.tests.core.","");
-                 if(testFullName.contains(entry.getKey()))
+                 testFullName = testFullName + "Of" + testMethod.getDeclaringClass().getSimpleName();
+                 if(testFullName.endsWith(entry.getKey()))
                  {
                      return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue()) ;
                  }
