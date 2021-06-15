@@ -7,7 +7,6 @@
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
-
 <!--======================================================Start - This is OP tests===================================================-->
 
     <test name="Location Test">
@@ -559,6 +558,7 @@
                     <include name="validateGroupByDayPartsIsAvailableInWeekNDayViewAsInternalAdmin" />
                     <include name="validateShiftEndTimeIsWithinADayPartAsInternalAdmin" />
                     <include name="validateEitherShiftStartTimeNorEndTimeFallsWithinADaypartAsInternalAdmin" />
+                   <!-- SCH-4383 <include name="validateShiftStartTimeWithinDaypartAsInternalAdmin" />  -->
                 </methods>
             </class>
         </classes>
