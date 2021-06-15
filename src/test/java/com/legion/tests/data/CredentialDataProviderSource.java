@@ -52,7 +52,9 @@ public class CredentialDataProviderSource {
         	 for(Map.Entry<String, Object[][]> entry : userCredentials.entrySet())
              {
                  String testFullName = testMethod.getName();
-                 testFullName = testFullName + "Of" + testMethod.getDeclaringClass().getName().split(".")[testMethod.getDeclaringClass().getName().split(".").length-1];
+                 if (testMethod.getDeclaringClass().getName().split(".").length>0){
+                     testFullName = testFullName + "Of" + testMethod.getDeclaringClass().getName().split(".")[testMethod.getDeclaringClass().getName().split(".").length-1];
+                 }
                  if(testFullName.contains(entry.getKey()))
                  {
                      return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue()) ;
