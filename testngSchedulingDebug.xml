@@ -250,6 +250,7 @@
                     <!-- Run on Legion Coffee -->
                     <include name="verifyChangingRegionOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheRegionOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifyChangingBusinessUnitOnSMScheduleTabAsInternalAdmin" />
                  </methods>
             </class>
         </classes>

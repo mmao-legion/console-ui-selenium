@@ -597,6 +597,8 @@ public class LiquidDashboardTest extends TestBase {
                 liquidDashboardPage.saveAndExitEditMode();
             }
 
+            dashboardPage.clickOnRefreshButton();
+
             String currentWeek = liquidDashboardPage.getTheStartOfCurrentWeekFromSchedulesWidget();
             List<String> alertsFromDashboard = new ArrayList<>();
             // Verify the content on Alerts Widget

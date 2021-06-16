@@ -1033,8 +1033,8 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-            controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.clickOnGlobalLocationButton();
+            controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
 
             controlsNewUIPage.enableOverRideAssignmentRuleAsNo();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -1085,13 +1085,13 @@ public class DragAndDropTest extends TestBase {
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.dragOneAvatarToAnotherSpecificAvatar(0, firstNameOfTM1, 1, firstNameOfTM2);
-            String expectedViolationMessage ="This assignment will trigger a role violation\n" +
-                    firstNameOfTM1+" "+shiftInfo.get(5)+" can not take a "+workRoleOfTM2+" shift.\n";
+            String expectedViolationMessage ="This assignment will trigger a role violation.\n" +
+                    firstNameOfTM1+" "+shiftInfo.get(5)+" can not take a "+workRoleOfTM2+" shift\n";
             String actualwarningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
             if (expectedViolationMessage.equalsIgnoreCase(actualwarningMessage)){
                 SimpleUtils.pass("violation warning message is expected!");
             } else {
-                SimpleUtils.fail("violation warning message is not expected!",true);
+                SimpleUtils.fail("violation warning message is not expected! the actual is: " + actualwarningMessage+" expected: "+ expectedViolationMessage,true);
             }
             schedulePage.clickOnOkButtonInWarningMode();
             if (schedulePage.verifyDayHasShiftByName(0,firstNameOfTM1)==1 && schedulePage.verifyDayHasShiftByName(1,firstNameOfTM2)==1){

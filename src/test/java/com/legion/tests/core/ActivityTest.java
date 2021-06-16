@@ -1531,7 +1531,7 @@ public class ActivityTest extends TestBase {
             profileNewUIPage.cancelAllTimeOff();
             profileNewUIPage.clickOnCreateTimeOffBtn();
             SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-            String timeOffReasonLabel = "JURY DUTY";
+            String timeOffReasonLabel = "FAMILY EMERGENCY";
             // select time off reason
             profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
             profileNewUIPage.selectStartAndEndDate();
@@ -1549,7 +1549,7 @@ public class ActivityTest extends TestBase {
             activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
             activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
             activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
-            //activityPage.closeActivityWindow();
+            activityPage.closeActivityWindow();
             loginPage.logOut();
 
             // Login as Team Member to create time off
@@ -1571,7 +1571,7 @@ public class ActivityTest extends TestBase {
             activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
             activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
             activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
-            //activityPage.closeActivityWindow();
+            activityPage.closeActivityWindow();
             loginPage.logOut();
 
             // Login as Team Member to cancel time off
@@ -1606,7 +1606,7 @@ public class ActivityTest extends TestBase {
             profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
             String myTimeOffLabel = "My Time Off";
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-            String timeOffReasonLabel = "JURY DUTY";
+            String timeOffReasonLabel = "FAMILY EMERGENCY";
             profileNewUIPage.cancelAllTimeOff();
             profileNewUIPage.clickOnCreateTimeOffBtn();
             SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);

@@ -4978,7 +4978,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void enableOverRideAssignmentRuleAsNo() throws Exception {
 		if (isElementEnabled(btnOverrideAssignmentRule, 10)) {
-			if (isElementEnabled(btnOverrideAssignmentRuleNo, 3)) {
+			if (isElementEnabled(btnOverrideAssignmentRuleNo, 10)) {
 				waitForSeconds(5);
 				if (btnOverrideAssignmentRuleNo.getAttribute("class").contains("selected")) {
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'No' button already enabled");

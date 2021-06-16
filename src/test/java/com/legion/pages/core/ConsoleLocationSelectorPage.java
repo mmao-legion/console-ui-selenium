@@ -549,32 +549,32 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @FindBy(css = "lg-select[search-hint=\"Search District\"]")
     private WebElement selectedDistrict;
 
-    public void selectCurrentDistrictAgain() throws Exception {
+    public void selectCurrentUpperFieldAgain(String upperFieldType) throws Exception {
         waitForSeconds(4);
-        String districtName = null;
-        if (isElementLoaded(selectedDistrict, 5)) {
-            districtName = selectedDistrict.getText();
-        }
         try {
-            Boolean isDistrictMatched = false;
-            if (isChangeDistrictButtonLoaded()) {
-                click(districtSelectorButton);
-                if (isElementLoaded(districtDropDownButton)) {
-                    if (availableLocationCardsName.size() != 0) {
-                        for (WebElement locationCardName : availableLocationCardsName) {
-                            if (locationCardName.getText().contains(districtName)) {
-                                isDistrictMatched = true;
-                                click(locationCardName);
-                                SimpleUtils.pass("District changed successfully to '" + districtName + "'");
-                                break;
-                            }
+            String upperFieldName = null;
+            WebElement selectedUpperField = getDriver().findElement(By.cssSelector("lg-select[search-hint=\"Search " + upperFieldType + "\"]"));
+            WebElement upperFieldButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div>input-field div.input-faked"));
+            upperFieldName = selectedUpperField.getText();
+            Boolean isUpperFieldMatched = false;
+            click(upperFieldButton);
+            WebElement upperFieldDropDownButton = getDriver().findElement(By.cssSelector("[search-hint=\"Search " + upperFieldType + "\"] div.lg-search-options"));
+
+            if (isElementLoaded(upperFieldDropDownButton)) {
+                if (availableLocationCardsName.size() != 0) {
+                    for (WebElement locationCardName : availableLocationCardsName) {
+                        if (locationCardName.getText().contains(upperFieldName)) {
+                            isUpperFieldMatched = true;
+                            click(locationCardName);
+                            SimpleUtils.pass("District changed successfully to '" + upperFieldName + "'");
+                            break;
                         }
-                        if (!isDistrictMatched) {
-                            if (isChangeDistrictButtonLoaded()) {
-                                click(districtSelectorButton);
-                            }
-                            SimpleUtils.fail("District does not matched with '" + districtName + "'", true);
+                    }
+                    if (!isUpperFieldMatched) {
+                        if (isChangeDistrictButtonLoaded()) {
+                            click(upperFieldButton);
                         }
+                        SimpleUtils.fail("District does not matched with '" + upperFieldName + "'", true);
                     }
                 }
             }
@@ -583,7 +583,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             SimpleUtils.fail("Unable to change District!", true);
         }
     }
-    
+
     //added by estelle to search location if the location is not in recent list
     @FindBy(css = "input[placeholder=\"Search District\"]")
     private WebElement districtSearchInput;
@@ -1144,12 +1144,10 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
     public void changeUpperFieldDirect(String upperFieldType, String upperFieldName) throws Exception {
         waitForSeconds(4);
-        Boolean isUpperFieldMatched = false;
-        WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));
-        if (isElementLoaded(upperFieldSelectorButton, 60)) {
-            if(isElementLoaded(upperFieldSelectorButton, 10)){
-                click(upperFieldSelectorButton);
-            }
+        try {
+            Boolean isUpperFieldMatched = false;
+            WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));;
+            click(upperFieldSelectorButton);
             WebElement upperFieldDropDownButton = getDriver().findElement(By.cssSelector("[search-hint=\"Search " +
                     upperFieldType + "\"] div.lg-search-options"));
             if (isElementLoaded(upperFieldDropDownButton, 5)) {
@@ -1189,6 +1187,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                     }
                 }
             }
+        } catch(Exception e) {
+            SimpleUtils.fail("Unable to change Upper Field Direct! Get Exception: " + e.toString(), false);
         }
+
     }
 }
