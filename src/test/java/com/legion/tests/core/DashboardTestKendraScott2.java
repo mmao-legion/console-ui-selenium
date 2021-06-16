@@ -156,12 +156,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 
-			String fileName = "UsersCredentials.json";
-			fileName = getEnterprise() + fileName;
-			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			Object[][] internalAdminCredentials = userCredentials.get("InternalAdmin");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(internalAdminCredentials[0][0]), String.valueOf(internalAdminCredentials[0][1])
-					, String.valueOf(internalAdminCredentials[0][2]));
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 			teamPage.goToTeam();
@@ -178,11 +173,16 @@ public class DashboardTestKendraScott2 extends TestBase {
 				schedulePageAdmin.createScheduleForNonDGFlowNewUI();
 			}
 			schedulePageAdmin.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			List<String> shiftInfo = new ArrayList<>();
+			while (shiftInfo.size() == 0) {
+				shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			}
 			schedulePageAdmin.deleteTMShiftInWeekView(nickName);
 			schedulePageAdmin.deleteTMShiftInWeekView("Unassigned");
 			schedulePageAdmin.clickOnDayViewAddNewShiftButton();
 			schedulePageAdmin.customizeNewShiftPage();
-			schedulePageAdmin.selectWorkRole("MOD");
+			schedulePageAdmin.selectWorkRole(shiftInfo.get(4));
 			schedulePageAdmin.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			schedulePageAdmin.clickOnCreateOrNextBtn();
 			schedulePageAdmin.searchTeamMemberByName(nickName);
