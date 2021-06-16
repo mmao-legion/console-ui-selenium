@@ -668,4 +668,6 @@ public interface SchedulePage {
 	public boolean isShiftInDayPartOrNotInWeekView(int shiftIndex, String dayPart) throws Exception;
 	public int getTheIndexOfShift(WebElement shift) throws Exception;
 	public boolean isShiftInDayPartOrNotInDayView(int shiftIndex, String dayPart) throws Exception;
+	public void deleteAllShiftsOfGivenDayPartInWeekView(String dayPart) throws Exception;
+	public void deleteAllShiftsOfGivenDayPartInDayView(String dayPart) throws Exception;
 }

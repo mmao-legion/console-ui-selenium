@@ -559,6 +559,10 @@
                     <include name="validateGroupByDayPartsIsAvailableInWeekNDayViewAsInternalAdmin" />
                     <include name="validateShiftEndTimeIsWithinADayPartAsInternalAdmin" />
                     <include name="validateEitherShiftStartTimeNorEndTimeFallsWithinADaypartAsInternalAdmin" />
+                    <include name="validateAShiftAppearsInOneDaypartOnlyAsInternalAdmin" />
+                    <include name="validateDaypartNotShowWhenNoShiftsInItAsInternalAdmin" />
+                    <include name="validateDaypartsWorkForMSAsInternalAdmin" />
+                    <include name="validateDaypartsWorkForP2PAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
