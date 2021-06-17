@@ -17,4 +17,133 @@
         </classes>
     </test>
 
+    <test name="Profile Test">
+        <classes>
+            <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
+                <methods>
+                    <!--                    <include name="verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember2" />-->
+                    <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
+                    <!--                    <include name="verifyCreateNewTimeOffFunctionalityAsTeamMember" />-->
+                    <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
+                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="LiquidDashboard Test">
+        <classes>
+            <class name="com.legion.tests.core.LiquidDashboardTest">
+                <methods>
+                    <include name="verifyCommonUIOfWidgetsAsStoreManager" />
+                    <!--                    <include name="verifyTheContentOfStartingSoonWidgetAsInternalAdmin" />-->
+                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
+                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
+                    <!--                    <include name="verifyTheContentOfTimesheetApprovalStatusWidgetAsStoreManager" />-->
+                    <!--                    <include name="verifyTheContentOfOpenShiftsAsInternalAdmin" />-->
+                    <!--                    <include name="verifySwitchWeekOfOpenShiftsAsStoreManager" />-->
+                    <!--                    <include name="dataValidationOfOpenShiftsUnclaimedAsStoreManager" />-->
+                    <!--                    <include name="dataValidationOfOpenShiftsClaimedAsTeamMember" />-->
+                    <!--                    <include name="verifyHelpfulLinksWidgetsAsStoreManager" />-->
+                    <!--                    <include name="verifyTodayForecastWidgetsAsStoreManager" />-->
+                    <!--                                        <include name="verifySchedulesWidgetsAsInternalAdmin" />-->
+                    <!--<include name="verifyComplianceViolationWidgetsAsStoreManager" /> -->
+                    <!--                    <include name="verifyNoContentOfSwapNCoverWidgetAsInternalAdmin" />-->
+                    <!--                    <include name="verifyTimesheetApprovalRateWidgetAsStoreManager" />-->
+                    <!--                    <include name="verifyTheContentOfSwapNCoverWidgetAsInternalAdmin" />-->
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="DM Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.DMScheduleTest">
+                <methods>
+                    <include name="validateDMScheduleAsInternalAdmin" />
+                    <include name="validateProjectedHoursFromDashBoardAndScheduleAsInternalAdmin" />
+                    <include name="validateDMDashboardAsInternalAdmin" />
+                    <!--                    <include name="validateDMViewDataWithSMViewAsInternalAdmin" />-->
+                    <include name="validateDMViewUnplannedClockAndTimesheetCountAsInternalAdmin" />
+                    <include name="validateDMtoSMNavigationNViceVersaAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Inbox Test">
+        <classes>
+            <class name="com.legion.tests.core.InboxTest">
+                <methods>
+                    <include name="verifyGFEReportsAreAbleToExportAsInternalAdmin"/>
+                    <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
+                    <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
+                    <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
+                    <!--      <include name="verifyTurnOffGFEAsInternalAdmin" /> -->
+                    <include name="verifyTurnOnGFEAsInternalAdmin" />
+                    <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
+                    <include name="verifyContentOfGFEAsInternalAdmin" />
+                    <include name="verifyVSLInfoAsInternalAdmin" />
+                    <!--                    <include name="verifyTheColumnAndCountOfGFEReportAsInternalAdmin" />-->
+                    <include name="verifyTheMostRecentGFEIsInReportAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Group By Day Parts Test">
+        <classes>
+            <class name="com.legion.tests.core.GroupByDayPartsTest">
+                <methods>
+                    <include name="validateDaypartsCanBeConfiguredAsInternalAdmin" />
+                    <include name="validateGroupByDayPartsIsAvailableInWeekNDayViewAsInternalAdmin" />
+                    <include name="validateShiftEndTimeIsWithinADayPartAsInternalAdmin" />
+                    <include name="validateEitherShiftStartTimeNorEndTimeFallsWithinADaypartAsInternalAdmin" />
+                    <!-- SCH-4383 <include name="validateShiftStartTimeWithinDaypartAsInternalAdmin" />  -->
+                    <include name="validateAShiftAppearsInOneDaypartOnlyAsInternalAdmin" />
+                    <include name="validateDaypartNotShowWhenNoShiftsInItAsInternalAdmin" />
+                    <include name="validateDaypartsWorkForMSAsInternalAdmin" />
+                    <include name="validateDaypartsWorkForP2PAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="DM View Test">
+        <classes>
+            <class name="com.legion.tests.core.DMViewTest">
+                <methods>
+                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyTimesheetApprovalRateWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />
+                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceViolationsWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
+                    <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyDMViewNavigationAsInternalAdmin" />
+                    <include name="verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin" />
+                    <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyAnalyticTableInTimesheetDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
+                    <include name="verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->
