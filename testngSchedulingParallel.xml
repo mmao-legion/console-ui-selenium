@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest" parallel="tests">
+<suite verbose ="0" thread-count="5" name="LegionTest" parallel="tests">
     <parameter name="environment" value="QA"/>
-    <parameter name="testRail" value="No"/>
+    <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Automation Regression"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
@@ -12,6 +12,121 @@
         <classes>
             <class name="com.legion.tests.core.ActivityTest">
                 <methods>
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyAccessControlsOnActivitiesPageAsInternalAdmin"/>
+                    <include name="verifyTheContentOnActivityAsStoreManager"/>
+                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>
+                    <include name="verifyApproveCoverRequestOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyTheContentOfActivityPageAsStoreManager" />
+                    <include name="verifyToCloseActivityFeedAsStoreManager" />
+                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
+                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
+                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
+                    <include name="verifyTheContentOfShiftSwapActivityWithoutApprovalAsInternalAdmin" />
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamMember" />
+                    <include name="verifyActivityOfClaimOpenShiftNoApprovalAsTeamLead" />
+                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
+                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember"/>
+                    <!--                    <include name="verifyNoNotificationForActivateTMAsStoreManager"/>-->
+                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember"/>
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin"/>
+                    <include name="verifyCoverRequestOfShiftSwapActivityWithNoApprovalAsInternalAdmin"/>
+                    <include name="verifyTM1CancelCoverRequestOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyCancelToSwapActivityAsInternalAdmin"/>
+                    <include name="verifyCoverRequestOfShiftSwapActivityWithNoApprovalAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Drag And Drop Test">
+        <classes>
+            <class name="com.legion.tests.core.DragAndDropTest">
+                <methods>
+                    <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
+                    <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
+                    <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
+                    <include name="verifyWarningModelForClopeningAsInternalAdmin" />
+                    <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
+                    <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
+                    <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Schedule New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                <methods>
+                    <include name="verifyScheduleLegionFunctionality" />
+                    <include name="verifyComplianceSmartCardFunctionality" />
+                    <!--                    <include name="verifyScheduleFunctionalitySchedule" />-->
+                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
+                    <include name="verifyScheduleFunctionalityWeekView"/>
+                    <include name="verifyScheduleFunctionalityDayViewAsInternalAdmin"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView"/>
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView"/>
+                    <include name="verificationOfMySchedulePageAsTeamMember" />
+                    <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
+                    <include name="verifyProfilePictureFunctionalityAsTeamMember" />
+                    <include name="verifyInfoIconFunctionalityAsTeamMember" />
+                    <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
+                    <!--                    <include name="verifyTheContentOfCopyScheduleForNonDGFlowAsInternalAdmin" />-->
+                    <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
+                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
+                    <!--                    <include name="verifyTheContentOfClosedWeekDayScheduleForNonDGFlowAsInternalAdmin" />-->
+                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
+                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
+                    <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
+                    <!-- <include name="verifyContentOfBudgetHoursForNonDGFlowAsInternalAdmin" />-->
+                    <!--                    <include name="verifyTooltipForDeleteShiftsAsInternalAdmin" />-->
+                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
+                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <!--                    <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager" />-->
+                    <!-- <include name="verifyAssignTMWarningWhenTMIsInactiveAsStoreManager" />-->
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" />
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
+                    <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
+                    <!--                    <include name="verifyVersionNumberAndEditsAsInternalAdmin" />-->
+                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
+                    <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin" />
+                    <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
+                    <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
+                    <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
+                    <include name="verifyComplianceWarningInPublishConfirmModalAsInternalAdmin" />
+                    <include name="verifyHrsOverBudgetInPublishConfirmModalForNonDGAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Offer TM Test">
+        <classes>
+            <class name="com.legion.tests.core.OfferTMTest">
+                <methods>
+                    <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
+                    <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
+                    <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
+                    <include name="verifyTMCanBeOfferedAsTeamMember" />
+                    <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
