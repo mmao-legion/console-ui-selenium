@@ -714,13 +714,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
         //Check the schedule can be saved and published
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        List<String> shiftInfo = new ArrayList<>();
-        while (shiftInfo.size() == 0) {
-            shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-        }
+        String workRole = schedulePage.getRandomWorkRole();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
-        schedulePage.selectWorkRole(shiftInfo.get(4));
+        schedulePage.selectWorkRole(workRole);
 
         schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
         schedulePage.clickOnCreateOrNextBtn();
@@ -1017,13 +1014,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Edit the schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
 
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
@@ -1300,13 +1294,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Check the schedule can be saved and published
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
 
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
@@ -1411,15 +1402,12 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView(tm2);
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
 
             schedulePage.moveSliderAtCertainPoint("3pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("10am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1433,7 +1421,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.moveSliderAtCertainPoint("4pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());

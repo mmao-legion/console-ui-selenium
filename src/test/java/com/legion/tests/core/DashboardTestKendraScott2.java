@@ -174,15 +174,12 @@ public class DashboardTestKendraScott2 extends TestBase {
 			}
 			schedulePageAdmin.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-			List<String> shiftInfo = new ArrayList<>();
-			while (shiftInfo.size() == 0) {
-				shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-			}
+			String workRole = schedulePage.getRandomWorkRole();
 			schedulePageAdmin.deleteTMShiftInWeekView(nickName);
 			schedulePageAdmin.deleteTMShiftInWeekView("Unassigned");
 			schedulePageAdmin.clickOnDayViewAddNewShiftButton();
 			schedulePageAdmin.customizeNewShiftPage();
-			schedulePageAdmin.selectWorkRole(shiftInfo.get(4));
+			schedulePageAdmin.selectWorkRole(workRole);
 			schedulePageAdmin.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			schedulePageAdmin.clickOnCreateOrNextBtn();
 			schedulePageAdmin.searchTeamMemberByName(nickName);

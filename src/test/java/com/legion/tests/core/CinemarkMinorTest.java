@@ -391,10 +391,7 @@ public class CinemarkMinorTest extends TestBase {
             // Create new shift for the minor at weekday, weekend and holiday if have
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
@@ -402,7 +399,7 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.selectSpecificWorkDay(7);
             schedulePage.moveSliderAtCertainPoint("10pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("6am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
@@ -749,15 +746,12 @@ public class CinemarkMinorTest extends TestBase {
                 schedulePage.createScheduleForNonDGFlowNewUI();
             }
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.clearAllSelectedDays();
             schedulePage.selectDaysByIndex(0,0,0);
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.moveSliderAtSomePoint("8", 20, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();

@@ -755,13 +755,10 @@ public class LocationGroupTest extends TestBase {
                 schedulePage.saveSchedule();
             }
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -851,13 +848,10 @@ public class LocationGroupTest extends TestBase {
                 schedulePage.saveSchedule();
             }
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -948,13 +942,10 @@ public class LocationGroupTest extends TestBase {
 
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        List<String> shiftInfo = new ArrayList<>();
-        while (shiftInfo.size() == 0) {
-            shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-        }
+        String workRole = schedulePage.getRandomWorkRole();
         //Create auto open shift.
         schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.selectWorkRole(shiftInfo.get(4));
+        schedulePage.selectWorkRole(workRole);
         schedulePage.selectChildLocInCreateShiftWindow("Child1");
         schedulePage.moveSliderAtSomePoint("36", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
         schedulePage.moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1043,13 +1034,10 @@ public class LocationGroupTest extends TestBase {
 
 
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
             schedulePage.moveSliderAtSomePoint("36", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1147,13 +1135,10 @@ public class LocationGroupTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Marlon");
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1165,7 +1150,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
             schedulePage.moveSliderAtSomePoint("40", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1183,7 +1168,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Carmel Club DG Oregon");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1238,7 +1223,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1250,7 +1235,7 @@ public class LocationGroupTest extends TestBase {
 
             //verify travel violation message when assign TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Carmel Club DG Oregon");
             schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1309,13 +1294,10 @@ public class LocationGroupTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Abigayle");
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1327,7 +1309,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child2");
             schedulePage.moveSliderAtSomePoint("40", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1345,7 +1327,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1400,7 +1382,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1412,7 +1394,7 @@ public class LocationGroupTest extends TestBase {
 
             //verify travel violation message when assign TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child2");
             schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1473,13 +1455,10 @@ public class LocationGroupTest extends TestBase {
             schedulePage.saveSchedule();
 
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1491,7 +1470,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child2");
             schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1509,7 +1488,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create manual open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child2");
             schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1715,13 +1694,10 @@ public class LocationGroupTest extends TestBase {
         schedulePage.saveSchedule();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        List<String> shiftInfo = new ArrayList<>();
-        while (shiftInfo.size() == 0) {
-            shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-        }
+        String workRole = schedulePage.getRandomWorkRole();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
-        schedulePage.selectWorkRole(shiftInfo.get(4));
+        schedulePage.selectWorkRole(workRole);
         schedulePage.clearAllSelectedDays();
         schedulePage.selectSpecificWorkDay(1);
         List<String> locations = schedulePage.getAllLocationGroupLocationsFromCreateShiftWindow();
@@ -1830,13 +1806,10 @@ public class LocationGroupTest extends TestBase {
         schedulePage.saveSchedule();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        List<String> shiftInfo = new ArrayList<>();
-        while (shiftInfo.size() == 0) {
-            shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-        }
+        String workRole = schedulePage.getRandomWorkRole();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
-        schedulePage.selectWorkRole(shiftInfo.get(4));
+        schedulePage.selectWorkRole(workRole);
         schedulePage.clearAllSelectedDays();
         schedulePage.selectSpecificWorkDay(1);
 //        List<String> locations = schedulePage.getAllLocationGroupLocationsFromCreateShiftWindow();
@@ -2591,12 +2564,9 @@ public class LocationGroupTest extends TestBase {
 
             //Create auto open shift.
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole(shiftInfo.get(4));
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("40", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("22", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
