@@ -1,6 +1,7 @@
 package com.legion.tests.data;
 
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
 import java.lang.reflect.Array;
@@ -48,10 +49,11 @@ public class CredentialDataProviderSource {
          }
          HashMap<String, Object[][]> userCredentials = SimpleUtils
         		 .getEnvironmentBasedUserCredentialsFromJson(fileName);
-         
         	 for(Map.Entry<String, Object[][]> entry : userCredentials.entrySet())
              {
-                 if(testMethod.getName().contains(entry.getKey()))
+                 String testFullName = testMethod.getName();
+                 testFullName = testFullName + "Of" + testMethod.getDeclaringClass().getSimpleName();
+                 if(testFullName.endsWith(entry.getKey()))
                  {
                      return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue()) ;
                  }

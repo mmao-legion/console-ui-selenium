@@ -391,6 +391,7 @@ public class CinemarkMinorTest extends TestBase {
             // Create new shift for the minor at weekday, weekend and holiday if have
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
@@ -398,7 +399,7 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.selectSpecificWorkDay(7);
             schedulePage.moveSliderAtCertainPoint("10pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("6am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.selectWorkRole("Team Member Corporate-Theatre");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
@@ -572,12 +573,7 @@ public class CinemarkMinorTest extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise") + fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             int random3 = (new Random()).nextInt(1000);
             int random4 = (new Random()).nextInt(1000);
@@ -656,13 +652,7 @@ public class CinemarkMinorTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
-
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -756,11 +746,12 @@ public class CinemarkMinorTest extends TestBase {
                 schedulePage.createScheduleForNonDGFlowNewUI();
             }
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.clearAllSelectedDays();
             schedulePage.selectDaysByIndex(0,0,0);
-            schedulePage.selectWorkRole("MOD");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.moveSliderAtSomePoint("8", 20, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
@@ -802,12 +793,7 @@ public class CinemarkMinorTest extends TestBase {
             loginPage.logOut();
 
             //Log in as SM to check
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -827,8 +813,7 @@ public class CinemarkMinorTest extends TestBase {
             loginPage.logOut();
 
             //Log in as SM to check
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             teamPage.goToTeam();
             String calendarTab = "School Calendars";

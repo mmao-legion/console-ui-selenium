@@ -6488,6 +6488,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public String getRandomWorkRole() throws Exception {
+        List<String> shiftInfo = new ArrayList<>();
+        while (shiftInfo.size() == 0) {
+            shiftInfo = getTheShiftInfoByIndex(0);
+        }
+        return shiftInfo.get(4);
+    }
+
+    @Override
     public List<String> getTheShiftInfoInDayViewByIndex(int index) throws Exception {
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {

@@ -246,7 +246,7 @@ public class DeleteScheduleTest extends TestBase {
             loginPage.logOut();
 
             // Login as SM
-            LoginAsDifferentRole("StoreManager");
+            loginAsDifferentRole("StoreManager");
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -331,7 +331,7 @@ public class DeleteScheduleTest extends TestBase {
             loginPage.logOut();
 
             // Login as SM
-            LoginAsDifferentRole("StoreManager");
+            loginAsDifferentRole("StoreManager");
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 

@@ -179,12 +179,7 @@ public class LocationGroupTest extends TestBase {
             loginPage.logOut();
 
             //Log in as SM
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManagerLG");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManagerLG.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Check SM cannot edit operating hours now
@@ -210,9 +205,7 @@ public class LocationGroupTest extends TestBase {
             loginPage.logOut();
 
             //Log in as admin, grant the Working Hours Setting Permission to SM.
-            storeManagerCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             locationSelectorPage.changeDistrict("District Whistler");
             locationSelectorPage.changeLocation("Lift Ops_Parent");
@@ -297,12 +290,7 @@ public class LocationGroupTest extends TestBase {
             loginPage.logOut();
 
             //Log in as SM
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManagerLG");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManagerLG.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Check SM cannot edit operating hours now
@@ -324,9 +312,7 @@ public class LocationGroupTest extends TestBase {
             loginPage.logOut();
 
             //Log in as admin, grant the Working Hours Setting Permission to SM.
-            storeManagerCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             locationSelectorPage.changeDistrict("Bay Area District");
             locationSelectorPage.changeLocation("LocGroup2");
@@ -769,10 +755,10 @@ public class LocationGroupTest extends TestBase {
                 schedulePage.saveSchedule();
             }
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
+            String workRole = schedulePage.getRandomWorkRole();
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("BARTENDER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -862,10 +848,10 @@ public class LocationGroupTest extends TestBase {
                 schedulePage.saveSchedule();
             }
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
+            String workRole = schedulePage.getRandomWorkRole();
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -956,10 +942,10 @@ public class LocationGroupTest extends TestBase {
 
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
+        String workRole = schedulePage.getRandomWorkRole();
         //Create auto open shift.
         schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.selectWorkRole("LIFT OPERATOR");
+        schedulePage.selectWorkRole(workRole);
         schedulePage.selectChildLocInCreateShiftWindow("Child1");
         schedulePage.moveSliderAtSomePoint("36", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
         schedulePage.moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1048,10 +1034,10 @@ public class LocationGroupTest extends TestBase {
 
 
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
+            String workRole = schedulePage.getRandomWorkRole();
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("BARTENDER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
             schedulePage.moveSliderAtSomePoint("36", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1149,10 +1135,10 @@ public class LocationGroupTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Marlon");
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
+            String workRole = schedulePage.getRandomWorkRole();
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("KEY MANAGER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1164,7 +1150,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("KEY MANAGER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
             schedulePage.moveSliderAtSomePoint("40", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1182,7 +1168,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("KEY MANAGER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Carmel Club DG Oregon");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1237,7 +1223,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("KEY MANAGER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Mountain View");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1249,7 +1235,7 @@ public class LocationGroupTest extends TestBase {
 
             //verify travel violation message when assign TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("KEY MANAGER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Carmel Club DG Oregon");
             schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1308,10 +1294,10 @@ public class LocationGroupTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Abigayle");
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
+            String workRole = schedulePage.getRandomWorkRole();
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1323,7 +1309,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child2");
             schedulePage.moveSliderAtSomePoint("40", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1341,7 +1327,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create auto open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1396,7 +1382,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("28", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1408,7 +1394,7 @@ public class LocationGroupTest extends TestBase {
 
             //verify travel violation message when assign TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child2");
             schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1469,10 +1455,10 @@ public class LocationGroupTest extends TestBase {
             schedulePage.saveSchedule();
 
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
+            String workRole = schedulePage.getRandomWorkRole();
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1484,7 +1470,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create shift and assign to TM.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child2");
             schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1502,7 +1488,7 @@ public class LocationGroupTest extends TestBase {
 
             //Create manual open shift.
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child2");
             schedulePage.moveSliderAtSomePoint("44", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("32", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
@@ -1671,12 +1657,7 @@ public class LocationGroupTest extends TestBase {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 
-        String fileName = "UsersCredentials.json";
-        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] credential = userCredentials.get("InternalAdmin");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1]), String.valueOf(credential[0][2]));
+        loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.changeDistrict("District Whistler");
         locationSelectorPage.changeLocation("Lift Ops_Parent");
@@ -1713,9 +1694,10 @@ public class LocationGroupTest extends TestBase {
         schedulePage.saveSchedule();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        String workRole = schedulePage.getRandomWorkRole();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
-        schedulePage.selectWorkRole("LIFT OPERATOR");
+        schedulePage.selectWorkRole(workRole);
         schedulePage.clearAllSelectedDays();
         schedulePage.selectSpecificWorkDay(1);
         List<String> locations = schedulePage.getAllLocationGroupLocationsFromCreateShiftWindow();
@@ -1754,9 +1736,7 @@ public class LocationGroupTest extends TestBase {
         loginPage.logOut();
 
         // 4.Login with SM to check activity
-        Object[][] storeManagerCredentials = userCredentials.get("StoreManagerLG");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                , String.valueOf(storeManagerCredentials[0][2]));
+        loginAsDifferentRole(AccessRoles.StoreManagerLG.getValue());
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         ActivityPage activityPage = pageFactory.createConsoleActivityPage();
         activityPage.verifyActivityBellIconLoaded();
@@ -1791,12 +1771,7 @@ public class LocationGroupTest extends TestBase {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 
-        String fileName = "UsersCredentials.json";
-        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] credential = userCredentials.get("InternalAdmin");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1]), String.valueOf(credential[0][2]));
+        loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.changeDistrict("Bay Area District");
         locationSelectorPage.changeLocation("LocGroup2");
@@ -1831,9 +1806,10 @@ public class LocationGroupTest extends TestBase {
         schedulePage.saveSchedule();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        String workRole = schedulePage.getRandomWorkRole();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
-        schedulePage.selectWorkRole("KEY MANAGER");
+        schedulePage.selectWorkRole(workRole);
         schedulePage.clearAllSelectedDays();
         schedulePage.selectSpecificWorkDay(1);
 //        List<String> locations = schedulePage.getAllLocationGroupLocationsFromCreateShiftWindow();
@@ -1871,9 +1847,7 @@ public class LocationGroupTest extends TestBase {
         loginPage.logOut();
 
         // 4.Login with SM to check activity
-        Object[][] storeManagerCredentials = userCredentials.get("StoreManagerLG");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                , String.valueOf(storeManagerCredentials[0][2]));
+        loginAsDifferentRole(AccessRoles.StoreManagerLG.getValue());
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
         ActivityPage activityPage = pageFactory.createConsoleActivityPage();
@@ -1955,12 +1929,7 @@ public class LocationGroupTest extends TestBase {
 
             // Verify operate schedule by SM user
             /// Login as Store Manager
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManagerLG");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManagerLG.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -2070,12 +2039,7 @@ public class LocationGroupTest extends TestBase {
 
             // Verify operate schedule by SM user
             /// Login as Store Manager
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("Coffee_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManagerLG");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManagerLG.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -2547,12 +2511,7 @@ public class LocationGroupTest extends TestBase {
         loginPage.logOut();
 
         // Login as Store Manager
-        fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] teamMemberCredentials = userCredentials.get("StoreManagerLG");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
+        loginAsDifferentRole(AccessRoles.StoreManagerLG.getValue());
         locationSelectorPage.changeDistrict("District Whistler");
         locationSelectorPage.changeLocation("Lift Ops_Parent");
         dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -2605,8 +2564,9 @@ public class LocationGroupTest extends TestBase {
 
             //Create auto open shift.
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("LIFT OPERATOR");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.selectChildLocInCreateShiftWindow("Child1");
             schedulePage.moveSliderAtSomePoint("40", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtSomePoint("22", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
