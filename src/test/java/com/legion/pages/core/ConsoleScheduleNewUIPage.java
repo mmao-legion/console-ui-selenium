@@ -6488,6 +6488,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public String getRandomWorkRole() throws Exception {
+        List<String> shiftInfo = new ArrayList<>();
+        while (shiftInfo.size() == 0) {
+            shiftInfo = getTheShiftInfoByIndex(0);
+        }
+        return shiftInfo.get(4);
+    }
+
+    @Override
     public List<String> getTheShiftInfoInDayViewByIndex(int index) throws Exception {
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
@@ -15614,6 +15623,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (className = "sch-group-label")
     private List<WebElement> dayScheduleGroupLabels;
 
+    @FindBy(css = "[src=\"img/legion/edit/deleted-shift-week.png\"]")
+    private List<WebElement> deleteShiftImgsInWeekView;
+
+    @FindBy(css = "img[ng-src=\"img/legion/edit/deleted-shift-day@2x.png\"]")
+    private List<WebElement> deleteShiftImgsInDayView;
+
     @Override
     public boolean isGroupByDayPartsLoaded() throws Exception {
         Select groupBySelectElement = new Select(scheduleGroupByButton);
@@ -15650,18 +15665,39 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean isShiftInDayPartOrNotInWeekView(int shiftIndex, String dayPart) throws Exception {
         boolean isIn = false;
+        int index1 = -1;
         int index2 = -1;
         for (int i = 0; i < weekScheduleShiftTitles.size(); i++) {
                 if (weekScheduleShiftTitles.get(i).getText().equals(dayPart)) {
-                    int index1 = getTheIndexOfShift(weekScheduleShiftTitles.get(i).findElement(By.xpath("./../../following-sibling::div[7]/div")));
-                    if (i != weekScheduleShiftTitles.size() - 1)
-                        index2 = getTheIndexOfShift(weekScheduleShiftTitles.get(i+1).findElement(By.xpath("./../../following-sibling::div[7]/div")));
-                    else
+                    for (int k = 7; k < 13; k++) {
+                        try {
+                            WebElement nextShift = weekScheduleShiftTitles.get(i).findElement(By.xpath("./../../following-sibling::div[" + k + "]/div"));
+                            if (isElementLoaded(nextShift,10)) {
+                                index1 = getTheIndexOfShift(nextShift);
+                                break;
+                            }
+                        } catch (NoSuchElementException e) {
+                            continue;
+                        }
+                    }
+                    if (i != weekScheduleShiftTitles.size() - 1) {
+                        for (int j = 7; j < 13; j++) {
+                            try {
+                                WebElement nextShift = weekScheduleShiftTitles.get(i + 1).findElement(By.xpath("./../../following-sibling::div[" + j + "]/div"));
+                                if (isElementLoaded(nextShift,10)) {
+                                    index2 = getTheIndexOfShift(nextShift);
+                                    break;
+                                }
+                            } catch (NoSuchElementException e) {
+                                continue;
+                            }
+                        }
+                    } else
                         index2 = weekShifts.size() - 1;
                     if (shiftIndex >= index1 && shiftIndex <= index2) {
                         isIn = true;
-                        break;
                     }
+                    break;
                 }
             }
         return isIn;
@@ -15720,6 +15756,82 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Schedule Week View: There are no shifts loaded!", false);
         }
         return index;
+    }
+
+    @Override
+    public void deleteAllShiftsOfGivenDayPartInWeekView(String dayPart) throws Exception {
+        boolean isFound = false;
+        for (int i = 0; i < weekScheduleShiftTitles.size(); i++) {
+            if (weekScheduleShiftTitles.get(i).getText().equals(dayPart)) {
+                isFound = true;
+                if (i == weekScheduleShiftTitles.size() - 1) {
+                    List<WebElement> shifts = weekScheduleShiftTitles.get(i).findElements(By.xpath("./../../following-sibling::div//div[@class=\"rows\"]//span/span"));
+                    int count1 = shifts.size();
+                    for (int j = 0; j < count1; j++) {
+                        clickTheElement(shifts.get(j));
+                        if (isPopOverLayoutLoaded()) {
+                            clickTheElement(deleteShift);
+                            if (isDeleteShiftShowWell())
+                                click(deleteBtnInDeleteWindows);
+                        }
+                    }
+                    int count2 = deleteShiftImgsInWeekView.size();
+                    if (count1 == count2)
+                        SimpleUtils.pass("Schedule Page: Delete all the shifts in '" + dayPart + "' in week view successfully");
+                    else
+                        SimpleUtils.fail("Schedule Page: Failed to delete all the shifts in '\" + dayPart + \"' in week view",false);
+                } else {
+                    List<WebElement> shifts = weekScheduleShiftTitles.get(i).findElements(By.xpath("./../../following-sibling::div//div[@class=\"rows\"]//span/span"));
+                    List<WebElement> shiftsOfNextDayPart = weekScheduleShiftTitles.get(i + 1).findElements(By.xpath("./../../following-sibling::div//div[@class=\"rows\"]//span/span"));
+                    int count1 = shifts.size() - shiftsOfNextDayPart.size();
+                    for (int j = 0; j < count1; j++) {
+                        clickTheElement(shifts.get(j));
+                        if (isPopOverLayoutLoaded()) {
+                            clickTheElement(deleteShift);
+                            if (isDeleteShiftShowWell())
+                                click(deleteBtnInDeleteWindows);
+                        }
+                    }
+                    int count2 = deleteShiftImgsInWeekView.size();
+                    if (count1 == count2)
+                        SimpleUtils.pass("Schedule Page: Delete all the shifts in '" + dayPart + "' in week view successfully");
+                    else
+                        SimpleUtils.fail("Schedule Page: Failed to delete all the shifts in '" + dayPart + "' in week view",false);
+                }
+                break;
+            }
+        }
+        if (!isFound)
+            SimpleUtils.report("Schedule Page: Not find the given day part in week view");
+    }
+
+    @Override
+    public void deleteAllShiftsOfGivenDayPartInDayView(String dayPart) throws Exception {
+        boolean isFound = false;
+        int count1 = 0;
+        for (int i = 0; i < dayScheduleGroupLabels.size(); i++) {
+            if (dayScheduleGroupLabels.get(i).getText().equals(dayPart)) {
+                isFound = true;
+                for (int j = 0; j < dayScheduleGroupLabels.get(i).findElements(By.xpath("./../../following-sibling::div//worker-detail/div")).size(); j++) {
+                    List<WebElement> shifts = dayScheduleGroupLabels.get(i).findElements(By.xpath("./../../following-sibling::div//worker-detail/div"));
+                    count1 = shifts.size();
+                    click(shifts.get(j));
+                    if (isPopOverLayoutLoaded()) {
+                        clickTheElement(deleteShift);
+                        if (isDeleteShiftShowWell())
+                            click(deleteBtnInDeleteWindows);
+                    }
+                }
+                int count2 = deleteShiftImgsInDayView.size();
+                if (count1 == count2)
+                    SimpleUtils.pass("Schedule Page: Delete all the shifts in '" + dayPart + "' in day view successfully");
+                else
+                    SimpleUtils.fail("Schedule Page: Failed to delete all the shifts in '" + dayPart + "' in day view",false);
+            }
+            break;
+        }
+        if (!isFound)
+            SimpleUtils.report("Schedule Page: Not find the given day part in week view");
     }
 }
 

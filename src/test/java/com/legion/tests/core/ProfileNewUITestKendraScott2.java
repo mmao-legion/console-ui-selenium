@@ -68,7 +68,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     public void verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), true);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             dashboardPage.clickOnSubMenuOnProfile("My Work Preferences");
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             //SimpleUtils.assertOnFail("Profile Page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
@@ -118,12 +118,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
             /// Login as Store Manager
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -143,11 +138,11 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             if (requestStatusApprove.toLowerCase().contains(TeamTestKendraScott2.timeOffRequestStatus.Approved.getValue().toLowerCase()))
                 SimpleUtils.pass("Team Page: Time Off request Approved By Store Manager reflected on Team Page.");
             else
-                SimpleUtils.fail("Team Page: Time Off request Approved By Store Manager not reflected on Team Page.", true);
+                SimpleUtils.fail("Team Page: Time Off request Approved By Store Manager not reflected on Team Page.", false);
             if (requestStatusReject.toLowerCase().contains(TeamTestKendraScott2.timeOffRequestStatus.Rejected.getValue().toLowerCase()))
                 SimpleUtils.pass("Team Page: Time Off request Rejected By Store Manager reflected on Team Page.");
             else
-                SimpleUtils.fail("Team Page: Time Off request Rejected By Store Manager not reflected on Team Page.", true);
+                SimpleUtils.fail("Team Page: Time Off request Rejected By Store Manager not reflected on Team Page.", false);
             loginPage.logOut();
             /// Login as Team Member Again
             loginToLegionAndVerifyIsLoginDone(username, password, location);
@@ -158,14 +153,14 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
                         + "' after Store Manager Approved the request.");
             else
                 SimpleUtils.fail("Profile Page: New Time Off Request status is '" + requestStatusApprove
-                        + "' after Store Manager Approved the request.", true);
+                        + "' after Store Manager Approved the request.", false);
             requestStatusReject = profileNewUIPage.getTimeOffRequestStatusByExplanationText(timeOffExplanationReject);
             if (requestStatusReject.toLowerCase().contains(TeamTestKendraScott2.timeOffRequestStatus.Rejected.getValue().toLowerCase()))
                 SimpleUtils.pass("Profile Page: New Time Off Request status is '" + requestStatusReject
                         + "' after Store Manager Rejected the request.");
             else
                 SimpleUtils.fail("Profile Page: New Time Off Request status is '" + requestStatusReject
-                        + "' after Store Manager Rejected the request.", true);
+                        + "' after Store Manager Rejected the request.", false);
 
             //T1838602 Validate the functionality of time off cancellation.
             profileNewUIPage.validateTheFunctionalityOfTimeOffCancellation();
@@ -304,7 +299,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             profileNewUIPage.clickOnSaveUserProfileBtn();
             profileNewUIPage.clickOnEditUserProfilePencilIcon();
             HashMap<String,String> valuesUpdated = profileNewUIPage.getValuesOfFields();
-            SimpleUtils.assertOnFail("profile page fail to update!",newValues.equals(valuesUpdated),true);
+            SimpleUtils.assertOnFail("profile page fail to update!",newValues.equals(valuesUpdated),false);
             profileNewUIPage.updateAllFields(values);
             profileNewUIPage.verifyManageBadgeBtn();
             profileNewUIPage.verifySelectBadge();
@@ -360,9 +355,9 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             profileNewUIPage.clickOnSaveUserProfileBtn();
             profileNewUIPage.clickOnEditUserProfilePencilIcon();
             HashMap<String,String> valuesUpdated = profileNewUIPage.getValuesOfFields();
-            SimpleUtils.assertOnFail("profile page fail to update!",newValues.equals(valuesUpdated),true);
+            SimpleUtils.assertOnFail("profile page fail to update!",newValues.equals(valuesUpdated),false);
             profileNewUIPage.updateAllFields(values);
-            SimpleUtils.assertOnFail("Manage badge button should not display!",!profileNewUIPage.verifyManageBadgeBtn(),true);
+            SimpleUtils.assertOnFail("Manage badge button should not display!",!profileNewUIPage.verifyManageBadgeBtn(),false);
             profileNewUIPage.clickOnSaveUserProfileBtn();
             profileNewUIPage.clickOnEditUserProfilePencilIcon();
             profileNewUIPage.clickOnCancelUserProfileBtn();

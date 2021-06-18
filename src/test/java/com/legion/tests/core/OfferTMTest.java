@@ -67,13 +67,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("unassigned");
             schedulePage.deleteTMShiftInWeekView("open");
             schedulePage.saveSchedule();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
-            String firstNameOfTM = shiftInfo.get(0);
-            String workRoleOfTM = shiftInfo.get(4);
-
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //verify assigned shift in non-edit mode for week view and day view
             schedulePage.clickOnProfileIcon();
@@ -180,14 +174,14 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             String fileName = "UsersCredentials.json";
-            String workRoleOfTM = "";
+/*            String workRoleOfTM = "";
             fileName = this.enterpriseName+fileName;
             if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
-
+*/
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 
             Object[][] adminCredentials = userCredentials.get("InternalAdmin");
@@ -212,8 +206,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("unassigned");
             schedulePage.deleteTMShiftInWeekView("open");
-
-
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //create auto open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -269,14 +262,14 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             String fileName = "UsersCredentials.json";
-            String workRoleOfTM = "";
+/*            String workRoleOfTM = "";
             fileName = this.enterpriseName+fileName;
             if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
-
+*/
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 
             Object[][] adminCredentials = userCredentials.get("InternalAdmin");
@@ -301,6 +294,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.deleteTMShiftInWeekView("Open");
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //create auto open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -355,14 +349,14 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             String fileName = "UsersCredentials.json";
-            String workRoleOfTM = "";
+/*            String workRoleOfTM = "";
             fileName = this.enterpriseName+fileName;
             if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
-
+*/
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 
             Object[][] adminCredentials = userCredentials.get("InternalAdmin");
@@ -387,7 +381,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("unassigned");
             schedulePage.deleteTMShiftInWeekView("open");
-
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
 
             //create manual open shifts.
@@ -446,14 +440,14 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             String fileName = "UsersCredentials.json";
-            String workRoleOfTM = "";
+/*            String workRoleOfTM = "";
             fileName = this.enterpriseName+fileName;
             if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
-
+*/
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 
             Object[][] adminCredentials = userCredentials.get("InternalAdmin");
@@ -478,6 +472,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.deleteTMShiftInWeekView("Open");
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //create manual open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -534,14 +529,14 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             String fileName = "UsersCredentials.json";
-            String workRoleOfTM = "";
+/*            String workRoleOfTM = "";
             fileName = this.enterpriseName+fileName;
             if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
-
+*/
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 
             Object[][] adminCredentials = userCredentials.get("InternalAdmin");
@@ -568,6 +563,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("open");
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
             schedulePage.saveSchedule();
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //convert a shift to open shift
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -623,14 +619,14 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             String fileName = "UsersCredentials.json";
-            String workRoleOfTM = "";
+/*            String workRoleOfTM = "";
             fileName = this.enterpriseName+fileName;
             if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
-
+*/
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 
             Object[][] adminCredentials = userCredentials.get("InternalAdmin");
@@ -657,6 +653,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("open");
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
             schedulePage.saveSchedule();
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //convert a shift to open shift
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -710,14 +707,14 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             String fileName = "UsersCredentials.json";
-            String workRoleOfTM = "";
+/*            String workRoleOfTM = "";
             fileName = this.enterpriseName+fileName;
             if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
-
+*/
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 
             Object[][] adminCredentials = userCredentials.get("InternalAdmin");
@@ -743,6 +740,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.deleteTMShiftInWeekView("Open");
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //create manual open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -832,14 +830,14 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             String fileName = "UsersCredentials.json";
-            String workRoleOfTM = "";
+/*            String workRoleOfTM = "";
             fileName = this.enterpriseName+fileName;
             if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
-
+*/
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 
             Object[][] adminCredentials = userCredentials.get("InternalAdmin");
@@ -865,6 +863,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.deleteTMShiftInWeekView("Open");
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //create manual open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -955,13 +954,14 @@ public class OfferTMTest extends TestBase {
 
             //log in as TM2 to get nickname.
             String fileName = "UsersCredentials.json";
-            String workRoleOfTM = "";
+/*            String workRoleOfTM = "";
             fileName = this.enterpriseName+fileName;
             if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
+*/
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 
             Object[][] TM2Credentials = userCredentials.get("TeamMember2");
@@ -1005,6 +1005,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Open");
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //create manual open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -1087,15 +1088,14 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM1 = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String workRoleOfTM = "";
             String fileName = "UsersCredentials.json";
-            fileName = this.enterpriseName+fileName;
+/*            fileName = this.enterpriseName+fileName;
             if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
-
+*/
             //log in as TM2 to get nickname.
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             Object[][] TM2Credentials = userCredentials.get("TeamMember2");
@@ -1138,6 +1138,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Open");
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //create manual open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -1212,15 +1213,15 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM1 = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String workRoleOfTM = "";
+
             String fileName = "UsersCredentials.json";
             fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
+ /*           if (this.enterpriseName.contains("cinemark-wkdy")){
                 workRoleOfTM = "Team Member Corporate-Theatre";
             } else {//KendraScott2_Enterprise by default
                 workRoleOfTM = scheduleWorkRoles.get("MOD");
             }
-
+*/
             //log in as admin.
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             Object[][] adminCredentials = userCredentials.get("InternalAdmin");
@@ -1256,6 +1257,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.deleteTMShiftInWeekView("Open");
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //create manual open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -1371,11 +1373,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.deleteTMShiftInWeekView("Open");
             schedulePage.saveSchedule();
-            List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
-                shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
-            }
-            String workRoleOfTM = shiftInfo.get(4);
+            String workRoleOfTM = schedulePage.getRandomWorkRole();
 
             //create auto open shifts.
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

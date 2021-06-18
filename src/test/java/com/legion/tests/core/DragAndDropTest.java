@@ -77,13 +77,15 @@ public class DragAndDropTest extends TestBase {
 
             // Delete all the shifts that are assigned to the team member on Step #1
             schedulePage.deleteTMShiftInWeekView(firstName);
+            String workRole = schedulePage.getRandomWorkRole();
 
             // Create new shift for this TM on Monday and Tuesday
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
-            schedulePage.selectWorkRole("MOD");
+            //schedulePage.selectWorkRole("MOD");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstName);
@@ -120,7 +122,8 @@ public class DragAndDropTest extends TestBase {
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
-            schedulePage.selectWorkRole("MOD");
+            //schedulePage.selectWorkRole("MOD");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstName);
@@ -228,13 +231,15 @@ public class DragAndDropTest extends TestBase {
 
             // Delete all the shifts that are assigned to the team member on Step #1
             schedulePage.deleteTMShiftInWeekView(firstName);
+            String workRole = schedulePage.getRandomWorkRole();
 
             // Create new shift for this TM on Monday and Tuesday
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
-            schedulePage.selectWorkRole("MOD");
+            //schedulePage.selectWorkRole("MOD");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstName);
@@ -315,11 +320,13 @@ public class DragAndDropTest extends TestBase {
             // Edit schedule to create the new shift for new TM
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(firstName);
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             List<Integer> indexes = schedulePage.selectDaysByCountAndCannotSelectedDate(1, timeOffDate);
-            schedulePage.selectWorkRole("MOD");
+            //schedulePage.selectWorkRole("MOD");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstName + " " + lastName.substring(0, 1));
@@ -400,8 +407,10 @@ public class DragAndDropTest extends TestBase {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(TM1);
             schedulePage.deleteTMShiftInWeekView(TM2);
+            String workRole = schedulePage.getRandomWorkRole();
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("EVENT MANAGER");
+            //schedulePage.selectWorkRole("EVENT MANAGER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(2);
             schedulePage.moveSliderAtSomePoint("8", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
@@ -411,7 +420,8 @@ public class DragAndDropTest extends TestBase {
             schedulePage.clickOnOfferOrAssignBtn();
 
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("EVENT MANAGER");
+            //schedulePage.selectWorkRole("EVENT MANAGER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(1);
             schedulePage.moveSliderAtSomePoint("8", 10, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
@@ -455,7 +465,8 @@ public class DragAndDropTest extends TestBase {
             //verify change shift
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("EVENT MANAGER");
+            //schedulePage.selectWorkRole("EVENT MANAGER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clearAllSelectedDays();
             //schedulePage.selectDaysByIndex(0, 0, 2);
             schedulePage.selectSpecificWorkDay(1);
@@ -466,7 +477,8 @@ public class DragAndDropTest extends TestBase {
             schedulePage.clickOnOfferOrAssignBtn();
 
             schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.selectWorkRole("EVENT MANAGER");
+            //schedulePage.selectWorkRole("EVENT MANAGER");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clearAllSelectedDays();
             schedulePage.selectDaysByIndex(1, 1, 1);
             //schedulePage.selectSpecificWorkDay(1);
@@ -536,13 +548,15 @@ public class DragAndDropTest extends TestBase {
             // Delete all the shifts that are assigned to the team member on Step #1
             schedulePage.deleteTMShiftInWeekView(firstName);
             schedulePage.deleteTMShiftInWeekView("Open");
+            String workRole = schedulePage.getRandomWorkRole();
 
             // Create 2 new shifts for this TM on Monday and Tuesday
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
             schedulePage.clearAllSelectedDays();
             List<Integer> dayIndexes = schedulePage.selectDaysByCountAndCannotSelectedDate(2, "");
-            schedulePage.selectWorkRole("MOD");
+            //schedulePage.selectWorkRole("MOD");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstName);
@@ -556,7 +570,8 @@ public class DragAndDropTest extends TestBase {
                 schedulePage.selectWorkingDaysOnNewShiftPageByIndex(dayIndexes.get(1));
             else
                 schedulePage.selectWorkingDaysOnNewShiftPageByIndex(1);
-            schedulePage.selectWorkRole("MOD");
+            //schedulePage.selectWorkRole("MOD");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
 

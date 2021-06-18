@@ -473,6 +473,7 @@ public interface SchedulePage {
 	public void selectAShiftToAssignTM(String username) throws Exception;
 	public void verifyInactiveMessageNWarning(String username, String date) throws Exception;
 	public List<String> getTheShiftInfoByIndex(int index) throws Exception;
+	public String getRandomWorkRole() throws Exception;
 	public List<String> getTheShiftInfoInDayViewByIndex(int index) throws Exception;
 	public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
 	public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
@@ -668,4 +669,6 @@ public interface SchedulePage {
 	public boolean isShiftInDayPartOrNotInWeekView(int shiftIndex, String dayPart) throws Exception;
 	public int getTheIndexOfShift(WebElement shift) throws Exception;
 	public boolean isShiftInDayPartOrNotInDayView(int shiftIndex, String dayPart) throws Exception;
+	public void deleteAllShiftsOfGivenDayPartInWeekView(String dayPart) throws Exception;
+	public void deleteAllShiftsOfGivenDayPartInDayView(String dayPart) throws Exception;
 }
