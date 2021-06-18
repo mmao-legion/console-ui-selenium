@@ -52,10 +52,16 @@ public class CredentialDataProviderSource {
         	 for(Map.Entry<String, Object[][]> entry : userCredentials.entrySet())
              {
                  String testFullName = testMethod.getName();
-                 testFullName = testFullName + "Of" + testMethod.getDeclaringClass().getSimpleName();
-                 if(testFullName.endsWith(entry.getKey()))
-                 {
-                     return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue()) ;
+                 String simpleClassName = "Of" + testMethod.getDeclaringClass().getSimpleName();
+                 String testNameNClassName = testFullName + simpleClassName;
+                 if (entry.getKey().contains(simpleClassName)) {
+                     if (testNameNClassName.contains(entry.getKey())) {
+                         return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue());
+                     }
+                 } else {
+                     if (testFullName.contains(entry.getKey())) {
+                         return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue());
+                     }
                  }
              }
          
