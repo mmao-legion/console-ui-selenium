@@ -126,12 +126,7 @@ public class DeleteScheduleTest extends TestBase {
             loginPage.logOut();
 
             // Login as SM
-            String fileName = "UsersCredentials.json";
-            fileName = MyThreadLocal.getEnterprise() +fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             schedulePage.clickOnScheduleConsoleMenuItem();
@@ -246,7 +241,7 @@ public class DeleteScheduleTest extends TestBase {
             loginPage.logOut();
 
             // Login as SM
-            loginAsDifferentRole("StoreManager");
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -331,7 +326,7 @@ public class DeleteScheduleTest extends TestBase {
             loginPage.logOut();
 
             // Login as SM
-            loginAsDifferentRole("StoreManager");
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 

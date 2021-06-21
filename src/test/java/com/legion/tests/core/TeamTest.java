@@ -121,8 +121,8 @@ public class TeamTest extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality > In Activate")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInActivate(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInActivateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			String onBoarded = "Onboarded";
 			String active = "Active";
@@ -186,8 +186,8 @@ public class TeamTest extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality > In Terminate")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInTerminate(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInTerminateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			String timeZone = "";
 			String active = "Active";
@@ -308,12 +308,7 @@ public class TeamTest extends TestBase{
 			loginPage.logOut();
 
 			// Login as Team Member
-			String fileName = "UsersCredentials.json";
-			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-					, String.valueOf(teamMemberCredentials[0][2]));
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();

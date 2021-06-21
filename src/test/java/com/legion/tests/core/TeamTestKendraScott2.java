@@ -262,8 +262,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Functionality > In Update Info")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInUpdateInfo(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInUpdateInfoAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			dashboardPage.verifyDashboardPageLoadedProperly();
@@ -299,8 +299,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality>In Roster")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInRoster(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInRosterAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -392,8 +392,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality>In Transfer")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInTransfer(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInTransferAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -434,8 +434,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality > In Badges")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInBadges(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInBadgesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			dashboardPage.isDashboardPageLoaded();
@@ -463,8 +463,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Functionality > Invite Team Member")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInInviteTeamMember(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInInviteTeamMemberAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			dashboardPage.isDashboardPageLoaded();
@@ -716,15 +716,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			loginPage.logOut();
 
 
-			// Login as Store Manager
-			String fileName = "UserCredentialsForComparableSwapShifts.json";
-			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			fileName = "UsersCredentials.json";
-			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-			userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-					, String.valueOf(teamMemberCredentials[0][2]));
+			// Login as Team Member
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			schedulePage.clickOnScheduleSubTab("Team Schedule");
 			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
@@ -785,17 +778,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			loginPage.logOut();
 
 			//Login as DM
-			String fileName = "UsersCredentials.json";
-			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-				fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-			} else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-				fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
-			}
-
-			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			Object[][] storeManagerCredentials = userCredentials.get("DistrictManager");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -817,9 +800,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as SM
-			storeManagerCredentials = userCredentials.get("StoreManager");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -843,9 +824,7 @@ public class TeamTestKendraScott2 extends TestBase{
 //			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 //			loginPage.logOut();
 			//Login as admin
-			storeManagerCredentials = userCredentials.get("InternalAdmin");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			loginToLegionAndVerifyIsLoginDone(username, password, location);
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -862,9 +841,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			loginPage.logOut();
 
 			//Login as DM
-			storeManagerCredentials = userCredentials.get("DistrictManager");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -875,9 +852,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", !profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as SM
-			storeManagerCredentials = userCredentials.get("StoreManager");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -888,9 +863,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", !profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as TL
-			storeManagerCredentials = userCredentials.get("TeamLead");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			loginAsDifferentRole(AccessRoles.TeamLead.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 

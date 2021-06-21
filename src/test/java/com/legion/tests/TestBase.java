@@ -109,7 +109,8 @@ public abstract class TestBase {
         StoreManager("StoreManager"),
         TeamLead("TeamLead"),
         TeamMember("TeamMember"),
-        StoreManagerLG("StoreManagerLG");
+        StoreManagerLG("StoreManagerLG"),
+        DistrictManager("DistrictManager");
         private final String role;
         AccessRoles(final String accessRole) {
             role = accessRole;

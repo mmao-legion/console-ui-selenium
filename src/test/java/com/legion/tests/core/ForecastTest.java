@@ -78,8 +78,8 @@ public class ForecastTest extends TestBase{
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
 		@TestName(description = "Verify the Schedule functionality > Shopper Forecast")
-		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-		public void verifyShopperForecastFunctionality(String username, String password, String browser, String location)
+		@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+		public void verifyShopperForecastFunctionalityAsInternalAdmin(String username, String password, String browser, String location)
 				throws Exception {
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -144,8 +144,8 @@ public class ForecastTest extends TestBase{
 	@Owner(owner = "Estelle")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality > Shopper Forecast> Weather smartcard")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void validateWeatherSmartCardOnForecastPage(String username, String password, String browser, String location)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void validateWeatherSmartCardOnForecastPageAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
@@ -214,8 +214,8 @@ public class ForecastTest extends TestBase{
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
 		@TestName(description = "Verify the Schedule functionality > Forecast")
-		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-		public void verifyScheduleFunctionalityForecast(String username, String password, String browser, String location)
+		@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+		public void verifyScheduleFunctionalityForecastAsInternalAdmin(String username, String password, String browser, String location)
 				throws Exception {
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 			scheduleOverviewPage.loadScheduleOverview();

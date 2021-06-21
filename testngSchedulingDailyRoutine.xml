@@ -73,9 +73,9 @@
             <class name="com.legion.tests.core.ForecastTest">
                 <methods>
                     <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin"/>
-                    <include name="validateWeatherSmartCardOnForecastPage"/>
-                    <include name="verifyScheduleFunctionalityForecast"/>
-<!--                    <include name="verifyShopperForecastFunctionality"/>-->
+                    <include name="validateWeatherSmartCardOnForecastPageAsInternalAdmin"/>
+                    <include name="verifyScheduleFunctionalityForecastAsInternalAdmin"/>
+<!--                    <include name="verifyShopperForecastFunctionalityAsInternalAdmin"/>-->
                 </methods>
             </class>
         </classes>

@@ -148,14 +148,14 @@
        <classes>
            <class name="com.legion.tests.core.TeamTestKendraScott2">
                <methods>
-<!--                   <include name="verifyTheTeamFunctionalityInRoster" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInTransfer" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInUpdateInfo" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInBadges" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInInviteTeamMember" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInRosterAsInternalAdmin" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInTransferAsInternalAdmin" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInUpdateInfoAsInternalAdmin" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInBadgesAsInternalAdmin" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInInviteTeamMemberAsInternalAdmin" />-->
                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
 <!--                   <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />-->
-                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
+                   <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
                    <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
                </methods>
@@ -167,8 +167,8 @@
         <classes>
             <class name="com.legion.tests.core.TeamTest">
                 <methods>
-<!--                    <include name="verifyTheTeamFunctionalityInActivate" />-->
-<!--                    <include name="verifyTheTeamFunctionalityInTerminate" />-->
+<!--                    <include name="verifyTheTeamFunctionalityInActivateAsInternalAdmin" />-->
+<!--                    <include name="verifyTheTeamFunctionalityInTerminateAsInternalAdmin" />-->
                     <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />
                     <include name="verifyEditModeInNewUserProfilePageAsInternalAdmin" />
 <!--                    <include name="verifyTheTeamFunctionalityInTimeOffAsInternalAdmin" />-->
@@ -208,9 +208,9 @@
                 <class name="com.legion.tests.core.ForecastTest">
                     <methods>
                         <include name="verifyScheduleLaborForeCastFunctionality"/>
-                        <include name="verifyShopperForecastFunctionality"/>
-                        <include name="validateWeatherSmartCardOnForecastPage"/>
-                        <include name="verifyScheduleFunctionalityForecast"/>
+                        <include name="verifyShopperForecastFunctionalityAsInternalAdmin"/>
+                        <include name="validateWeatherSmartCardOnForecastPageAsInternalAdmin"/>
+                        <include name="verifyScheduleFunctionalityForecastAsInternalAdmin"/>
                         <include name="verifyEditForecastInDayViewViewAsInternalAdmin"/>
                         <include name="verifyEditForecastInWeekViewViewAsInternalAdmin"/>
                         <include name="verifyFunctionalityOfRefreshAsInternalAdmin"/>

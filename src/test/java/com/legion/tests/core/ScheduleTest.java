@@ -878,12 +878,7 @@ public class ScheduleTest extends TestBase{
 			loginPage.logOut();
 
 			// Login as Team Member
-			String fileName = "UsersCredentials.json";
-			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-					, String.valueOf(teamMemberCredentials[0][2]));
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			schedulePage.goToSchedulePageAsTeamMember();
@@ -1149,12 +1144,7 @@ public class ScheduleTest extends TestBase{
 			loginPage.logOut();
 
 			// Login as Team Member
-			String fileName = "UsersCredentials.json";
-			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-					, String.valueOf(teamMemberCredentials[0][2]));
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			schedulePage.goToSchedulePageAsTeamMember();
@@ -1193,12 +1183,7 @@ public class ScheduleTest extends TestBase{
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 
-			String fileName = "UsersCredentials.json";
-			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-			userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			Object[][] credentials = userCredentials.get("InternalAdmin");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(credentials[0][0]), String.valueOf(credentials[0][1]), String.valueOf(credentials[0][2]));
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			// Checking configuration in controls
@@ -1225,11 +1210,12 @@ public class ScheduleTest extends TestBase{
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.deleteTMShiftInWeekView(tmName);
 			schedulePage.deleteTMShiftInWeekView("Unassigned");
+			String workRole = schedulePage.getRandomWorkRole();
 			schedulePage.saveSchedule();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
-			schedulePage.selectWorkRole("MOD");
+			schedulePage.selectWorkRole(workRole);
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.searchTeamMemberByName(tmName);
