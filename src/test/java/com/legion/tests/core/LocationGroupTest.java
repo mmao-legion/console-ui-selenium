@@ -46,7 +46,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the generation of LG schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheGenerationOfLGScheduleForMSAsInternalAdmin(String username, String password, String browser, String location)
+    public void validateTheGenerationOfLGScheduleAsInternalAdminPC(String username, String password, String browser, String location)
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -82,7 +82,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "P2P:Validate the generation of LG schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheGenerationOfLGScheduleForP2PAsInternalAdmin(String username, String password, String browser, String location)
+    public void validateTheGenerationOfLGScheduleAsInternalAdminP2P(String username, String password, String browser, String location)
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -153,7 +153,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate mananger cannot edit operating hours when disable it's Manage Working Hours Setting permission")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForMSAsInternalAdmin(String username, String password, String browser, String location)
+    public void validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdminPC(String username, String password, String browser, String location)
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -252,7 +252,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "P2P:Validate mananger cannot edit operating hours when disable it's Manage Working Hours Setting permission")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PAsInternalAdmin(String username, String password, String browser, String location)
+    public void validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdminP2P(String username, String password, String browser, String location)
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -355,7 +355,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate all smart cards display correctly after generate schedule ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForMSAsInternalAdmin (String username, String password, String browser, String location)
+    public void validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleAsInternalAdminPC (String username, String password, String browser, String location)
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -438,7 +438,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "P2P:Validate all smart cards display correctly after generate schedule ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForP2PAsInternalAdmin (String username, String password, String browser, String location)
+    public void validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleAsInternalAdminP2P (String username, String password, String browser, String location)
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -521,7 +521,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the buttons on schedule page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheButtonsOnSchedulePageForMSAsInternalAdmin(String username, String password, String browser, String location)
+    public void validateTheButtonsOnSchedulePageAsInternalAdminPC(String username, String password, String browser, String location)
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -588,7 +588,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "P2P:Validate the buttons on schedule page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheButtonsOnSchedulePageForP2PAsInternalAdmin(String username, String password, String browser, String location)
+    public void validateTheButtonsOnSchedulePageAsInternalAdminP2P(String username, String password, String browser, String location)
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -655,7 +655,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the group by dropdown list")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheGroupByDropdownListForMSAsInternalAdmin(String username, String password, String browser, String location)
+    public void validateTheGroupByDropdownListAsInternalAdminPC(String username, String password, String browser, String location)
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -693,7 +693,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "P2P:Validate the group by dropdown list")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheGroupByDropdownListForP2PAsInternalAdmin(String username, String password, String browser, String location)
+    public void validateTheGroupByDropdownListAsInternalAdminP2P(String username, String password, String browser, String location)
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -731,7 +731,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate the function of auto open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheFunctionOfAutoOpenShiftForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateTheFunctionOfAutoOpenShiftAsInternalAdminP2P (String username, String password, String browser, String location) throws Exception {
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -823,7 +823,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the function of auto open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheFunctionOfAutoOpenShiftForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateTheFunctionOfAutoOpenShiftAsInternalAdminPC (String username, String password, String browser, String location) throws Exception {
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -917,7 +917,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the function of auto open shift in day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheFunctionOfAutoOpenShiftForMSInDayViewAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateTheFunctionOfAutoOpenShiftInDayViewAsInternalAdminPC (String username, String password, String browser, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1008,7 +1008,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate the function of auto open shift in day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheFunctionOfAutoOpenShiftForP2PInDayViewAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateTheFunctionOfAutoOpenShiftInDayViewAsInternalAdminP2P (String username, String password, String browser, String location) throws Exception {
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1098,7 +1098,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate the function of manual open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheFunctionOfManualOpenShiftForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateTheFunctionOfManualOpenShiftAsInternalAdminP2P (String username, String password, String browser, String location) throws Exception {
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1258,7 +1258,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the function of manual open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheFunctionOfManualOpenShiftForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateTheFunctionOfManualOpenShiftAsInternalAdminPC (String username, String password, String browser, String location) throws Exception {
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1418,7 +1418,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the function of manual open shift in day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheFunctionOfManualOpenShiftInDayViewForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateTheFunctionOfManualOpenShiftInDayViewAsInternalAdminPC (String username, String password, String browser, String location) throws Exception {
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1555,7 +1555,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate Assign TM when TM has max no. of shifts scheduled")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateAssignTMWhenTMHasMaxNoOfShiftsScheduledAsInternalAdminPC (String username, String password, String browser, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1652,7 +1652,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate TMs Can Receive & Accept Offers for Multiple Shifts and Multiple Locations")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG(String browser, String username, String password, String location) throws Exception {
+    public void verifyActivityOfClaimOpenShiftAsTeamMemberLGPC(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -1766,7 +1766,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "P2P:Validate TMs Can Receive & Accept Offers for Multiple Shifts and Multiple Locations")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG(String browser, String username, String password, String location) throws Exception {
+    public void verifyActivityOfClaimOpenShiftAsTeamMemberLGP2P(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -1878,7 +1878,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate that operate LG schedule by different user")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateOperateLGScheduleByDifferentUserForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateOperateLGScheduleByDifferentUserAsInternalAdminPC (String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1986,7 +1986,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate that operate LG schedule by different user")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateOperateLGScheduleByDifferentUserForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateOperateLGScheduleByDifferentUserAsInternalAdminP2P (String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -2096,7 +2096,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate UI performance for large roster (500 employees) with one location as well as multiple location groups")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateUIPerformanceForLargeRosterForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateUIPerformanceForLargeRosterAsInternalAdminPC (String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -2136,7 +2136,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate UI performance for large roster (500 employees) with one location as well as multiple location groups")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateUIPerformanceForLargeRosterForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateUIPerformanceForLargeRosterAsInternalAdminP2P (String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -2177,7 +2177,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate Print Schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validatePrintScheduleForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validatePrintScheduleAsInternalAdminPC (String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -2266,7 +2266,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate Print Schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validatePrintScheduleForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validatePrintScheduleAsInternalAdminP2P (String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2357,7 +2357,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Prepare the data for swap")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void prepareTheSwapShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void prepareTheSwapShiftsAsInternalAdminPC(String browser, String username, String password, String location) throws Exception {
         try {
             swapCoverNames = new ArrayList<>();
             swapCoverCredentials = getSwapCoverUserCredentials(location);
@@ -2414,8 +2414,8 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the content of Shift Swap activity when TM request to swap the shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyTheContentOfShiftSwapActivityForMSAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        prepareTheSwapShiftsAsInternalAdmin(browser, username, password, location);
+    public void verifyTheContentOfShiftSwapActivityAsInternalAdminPC(String browser, String username, String password, String location) throws Exception {
+        prepareTheSwapShiftsAsInternalAdminPC(browser, username, password, location);
         SimpleUtils.report("Need to set 'Is approval by Manager required when an employee claims a shift swap or cover request?' to 'Always' First!");
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.changeDistrict("District Whistler");
@@ -2520,7 +2520,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the content of copy schedule for non dg flow")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTheContentOfCopyScheduleForMSAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyTheContentOfCopyScheduleAsInternalAdminPC(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2719,7 +2719,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the filter on schedule page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheFilterOnSchedulePageForMSAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateTheFilterOnSchedulePageAsInternalAdminPC (String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2829,7 +2829,7 @@ public class LocationGroupTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Validate the filter on schedule page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheFilterOnSchedulePageForP2PAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+    public void validateTheFilterOnSchedulePageAsInternalAdminP2P (String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
