@@ -467,6 +467,23 @@ public abstract class TestBase {
         }
     }
 
+    public HashMap<String, Object[][]> getSwapCoverUserCredentials(String locationName) throws Exception {
+        HashMap<String, Object[][]> swapCoverCredentials = new HashMap<>();
+        try {
+            String fileName = "UserCredentialsForComparableSwapShifts.json";
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
+                if (String.valueOf(entry.getValue()[0][2]).contains(locationName)) {
+                    swapCoverCredentials.put(entry.getKey(), entry.getValue());
+                    SimpleUtils.pass("Get Swap/Cover User Credential:" + entry.getKey());
+                }
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Failed to get the swap/cover name list for Location: " + locationName, false);
+        }
+        return swapCoverCredentials;
+    }
+
     public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
     // TODO Auto-generated method stub
 

@@ -429,7 +429,7 @@ public interface SchedulePage {
 
 	void clickOnDayViewAddNewShiftButton() throws Exception;
 
-	void addNewShiftsByNames(List<String> names) throws Exception;
+	void addNewShiftsByNames(List<String> names, String workRole) throws Exception;
 	boolean displayAlertPopUp() throws Exception;
 	public void displayAlertPopUpForRoleViolation() throws Exception;
 
