@@ -40,4 +40,5 @@ public interface LocationSelectorPage {
 	public void changeLocationDirect(String locationName);
 	public Map<String, String> getSelectedUpperFields () throws Exception;
 	public void changeUpperFieldDirect(String upperFieldType, String upperFieldName) throws Exception;
+	public boolean isNoDataToShowPageLoaded() throws Exception;
 }

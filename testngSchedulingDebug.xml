@@ -251,6 +251,9 @@
                     <include name="verifyChangingRegionOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheRegionOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifyChangingBusinessUnitOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheBusinessUnitOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySelectingHQOnBusinessUnitScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheHQOnSMScheduleTabAsInternalAdmin" />
                  </methods>
             </class>
         </classes>

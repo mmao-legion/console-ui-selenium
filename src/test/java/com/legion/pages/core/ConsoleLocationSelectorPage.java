@@ -1192,4 +1192,17 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
 
     }
+
+    @FindBy(css = "div.nodata-content")
+    private WebElement noDataToShowSection;
+
+    public boolean isNoDataToShowPageLoaded() throws Exception {
+        boolean isNoDataToShowPageLoaded = false;
+        if (isElementLoaded(noDataToShowSection, 10)) {
+            SimpleUtils.report("The No data to show page is loaded! ");
+            isNoDataToShowPageLoaded = true;
+        } else
+            SimpleUtils.report("The No data to show page fail to load! ");
+        return isNoDataToShowPageLoaded;
+    }
 }

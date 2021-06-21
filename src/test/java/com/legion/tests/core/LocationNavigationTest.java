@@ -18,8 +18,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.loc;
+import static com.legion.utils.MyThreadLocal.*;
 
 public class LocationNavigationTest extends TestBase {
 
@@ -557,5 +556,191 @@ public class LocationNavigationTest extends TestBase {
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify searching and selecting the business unit on SM schedule tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySearchingAndSelectingTheBusinessUnitOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Go to Schedule tab -> Overview page
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            //Click on change BU button to change the BU
+            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
+            String locationName = mountainViewLocation;
+            searchBusinessUnitAndCheckTheUpperFields(upperFields, locationName);
+
+            //Go to Schedule tab -> Forecast page
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            locationName = rockVilleLocation;
+            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            searchBusinessUnitAndCheckTheUpperFields(upperFields, locationName);
+
+            //Go to Schedule tab -> Schedule page
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            locationName = mountainViewLocation;
+            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
+            searchBusinessUnitAndCheckTheUpperFields(upperFields, locationName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private void searchBusinessUnitAndCheckTheUpperFields (String[] upperFields, String locationName) throws Exception {
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields[upperFields.length-3].trim());
+        Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+        String bUName = upperFields[upperFields.length-3].trim();
+        String regionName = upperFields[upperFields.length-2].trim();
+        String districtName = upperFields[upperFields.length-1].trim();
+        //Verify the upperfield should be correct
+        SimpleUtils.assertOnFail("The selected upperfields is incorrect",
+                selectedUpperFields.get("BU").equalsIgnoreCase(bUName), false);
+
+        //Verify the BU page loaded
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        SimpleUtils.assertOnFail("Schedule page BU view not loaded Successfully!",
+                schedulePage.isScheduleDMView(), false);
+
+        //Verify the region listed
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+        scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
+        locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+        locationSelectorPage.changeUpperFieldDirect(District, districtName);
+        locationSelectorPage.changeLocationDirect(locationName);
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify selecting HQ on business unit schedule tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySelectingHQOnBusinessUnitScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            //Click on change HQ button to change the HQ
+            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
+            String locationName = mountainViewLocation;
+            String buName = upperFields[upperFields.length-3].trim();
+            String regionName = upperFields[upperFields.length-2].trim();
+            String districtName = upperFields[upperFields.length-1].trim();
+            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
+            locationSelectorPage.selectCurrentUpperFieldAgain(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
+
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
+            //Go to Schedule tab
+            locationSelectorPage.changeUpperFieldsByName(BusinessUnit, buName);
+            locationSelectorPage.changeUpperFieldsByName(Region, regionName);
+            locationSelectorPage.changeUpperFieldsByName(District, districtName);
+            locationSelectorPage.changeLocationDirect(locationName);
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Click on change BU button to change the BU
+            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            buName = upperFields[upperFields.length-3].trim();
+            locationName = rockVilleLocation;
+            regionName = upperFields[upperFields.length-2].trim();
+            districtName = upperFields[upperFields.length-1].trim();
+            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
+            locationSelectorPage.selectCurrentUpperFieldAgain(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
+
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
+            //Go to Schedule tab
+            locationSelectorPage.changeUpperFieldsByName(BusinessUnit, buName);
+            locationSelectorPage.changeUpperFieldsByName(Region, regionName);
+            locationSelectorPage.changeUpperFieldsByName(District, districtName);
+            locationSelectorPage.changeLocationDirect(locationName);
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            //Click on change Bu button to change the BU
+            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
+            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
+            locationSelectorPage.selectCurrentUpperFieldAgain(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
+
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify searching HQ on different level of schedule tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySearchingAndSelectingTheHQOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Click on change region button to change the region
+            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
+            String locationName = mountainViewLocation;
+            searchHQAndCheckTheUpperFields(upperFields, locationName);
+
+            //Go to Schedule tab -> Forecast page
+            locationName = rockVilleLocation;
+            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            searchHQAndCheckTheUpperFields(upperFields, locationName);
+
+            //Go to Schedule tab -> Schedule page
+            locationName = mountainViewLocation;
+            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
+            searchHQAndCheckTheUpperFields(upperFields, locationName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private void searchHQAndCheckTheUpperFields (String[] upperFields, String locationName) throws Exception {
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+        Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+        String bUName = upperFields[upperFields.length-3].trim();
+        String regionName = upperFields[upperFields.length-2].trim();
+        String districtName = upperFields[upperFields.length-1].trim();
+        //Verify the upperfield should be correct
+        SimpleUtils.assertOnFail("The selected upperfields is incorrect",
+                selectedUpperFields.get(hQ).equalsIgnoreCase(hQ), false);
+
+        //Verify the No data page loaded
+        SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
+        //Verify the district listed
+        locationSelectorPage.changeUpperFieldDirect(BusinessUnit, bUName);
+        locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+        locationSelectorPage.changeUpperFieldDirect(District, districtName);
+        locationSelectorPage.changeLocationDirect(locationName);
     }
 }
