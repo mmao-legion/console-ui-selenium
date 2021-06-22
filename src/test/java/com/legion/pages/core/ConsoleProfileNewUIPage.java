@@ -276,7 +276,21 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		else
 			SimpleUtils.fail("Controls Page: 'Create Time Off' button not loaded.", false);
 	}
-	
+
+	@Override
+	public boolean isReasonLoad(String timeOffReasonLabel) throws Exception{
+		boolean result = false;
+		if(areListElementVisible(timeOffReasons, 20)) {
+			for(WebElement timeOffReason : timeOffReasons) {
+				if(timeOffReason.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
+					result = true;
+				}
+			}
+		} else {
+			result = true;
+		}
+		return result;
+	}
 	
 	@Override
 	public void selectTimeOffReason(String reasonLabel) throws Exception
@@ -1899,6 +1913,25 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		startNEndDates.add(timeOffEndDateWithYear);
 		return startNEndDates;
 	}
+
+	public List<String> selectStartAndEndDate(int daysInadvance) throws Exception {
+		List<String> startNEndDates = new ArrayList<>();
+		selectDate(daysInadvance+1);
+		selectDate(daysInadvance+6);
+		HashMap<String, String> timeOffDate = getTimeOffDate(daysInadvance+1, daysInadvance+6);
+		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
+		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
+		setTimeOffStartTime(timeOffStartDate);
+		setTimeOffEndTime(timeOffEndDate);
+		HashMap<String, String> timeOffDateWithYear = getTimeOffDateWithYear(10, 15);
+		String timeOffStartDateWithYear = timeOffDateWithYear.get("startDateWithYearTimeOff");
+		String timeOffEndDateWithYear = timeOffDateWithYear.get("endDateWithYearTimeOff");
+		startNEndDates.add(timeOffStartDateWithYear);
+		startNEndDates.add(timeOffEndDateWithYear);
+		return startNEndDates;
+	}
+
+
 
 	@Override
 	public String selectStartAndEndDateAtSameDay() throws Exception {

@@ -21,6 +21,8 @@ public interface ProfileNewUIPage {
 
 	public void selectTimeOffReason(String reasonLabel) throws Exception;
 
+	public boolean isReasonLoad(String timeOffReasonLabel) throws Exception;
+
 	public void createNewTimeOffRequest(String timeOffReasonLabel, String timeOffExplanationText) throws Exception;
 
 	public void clickOnSaveTimeOffRequestBtn() throws Exception;
@@ -112,6 +114,8 @@ public interface ProfileNewUIPage {
 	public void selectProfileSubPageByLabelOnProfileImage(String profilePageSubSectionLabel) throws Exception;
 
 	public List<String> selectStartAndEndDate() throws Exception;
+
+	public List<String> selectStartAndEndDate(int daysInadvance) throws Exception;
 
 	public String selectStartAndEndDateAtSameDay() throws Exception;
 

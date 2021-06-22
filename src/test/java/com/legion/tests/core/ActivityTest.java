@@ -65,6 +65,22 @@ public class ActivityTest extends TestBase {
         public String getValue() { return value; }
     }
 
+    public enum timeOffReasonType{
+        Vacation("VACATION"),
+        JuryDuty("JURY DUTY"),
+        Bereavement("BEREAVEMENT"),
+        UnpaidTimeOff("UNPAID TIME OFF"),
+        PersonalEmergency("PERSONAL EMERGENCY"),
+        FamilyEmergency("FAMILY EMERGENCY"),
+        FloatingHoliday("FLOATING HOLIDAY"),
+        Sick("SICK");
+        private final String value;
+        timeOffReasonType(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
+    }
+
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
     @Enterprise(name = "KendraScott2_Enterprise")
@@ -1360,65 +1376,95 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify the notification when TM is requesting time off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyTheNotificationForRequestTimeOffAsTeamMember(String browser, String username, String password, String location) {
+    public void verifyTheNotificationForRequestTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+        controlsPage.gotoControlsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+        int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+        // Login as Team Member to create time off
+        loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String requestUserName = profileNewUIPage.getNickNameFromProfile();
+        String myTimeOffLabel = "My Time Off";
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
+        profileNewUIPage.cancelAllTimeOff();
+        profileNewUIPage.clickOnCreateTimeOffBtn();
+        SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+        // select time off reason
+        if (profileNewUIPage.isReasonLoad(timeOffReasonType.FamilyEmergency.getValue())){
+            profileNewUIPage.selectTimeOffReason(timeOffReasonType.FamilyEmergency.getValue());
+        } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.PersonalEmergency.getValue())){
+            profileNewUIPage.selectTimeOffReason(timeOffReasonType.PersonalEmergency.getValue());
+        } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.JuryDuty.getValue())){
+            profileNewUIPage.selectTimeOffReason(timeOffReasonType.JuryDuty.getValue());
+        } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Sick.getValue())){
+            profileNewUIPage.selectTimeOffReason(timeOffReasonType.Sick.getValue());
+        } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
+            profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
+        }
+        profileNewUIPage.selectStartAndEndDate(advancedDays);
+        profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+        loginPage.logOut();
+
+        // Login as Store Manager again to check message and reject
+        String RequstTimeOff = "requested";
+        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+        String respondUserName = profileNewUIPage.getNickNameFromProfile();
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
+        activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
+        activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
+        activityPage.closeActivityWindow();
+        loginPage.logOut();
+
+        // Login as Team Member to create time off
+        loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+        profileNewUIPage.clickOnUserProfileImage();
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
+        profileNewUIPage.clickOnCreateTimeOffBtn();
+        SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+        //select time off reason
+        if (profileNewUIPage.isReasonLoad(timeOffReasonType.FamilyEmergency.getValue())){
+            profileNewUIPage.selectTimeOffReason(timeOffReasonType.FamilyEmergency.getValue());
+        } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.PersonalEmergency.getValue())){
+            profileNewUIPage.selectTimeOffReason(timeOffReasonType.PersonalEmergency.getValue());
+        } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.JuryDuty.getValue())){
+            profileNewUIPage.selectTimeOffReason(timeOffReasonType.JuryDuty.getValue());
+        } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Sick.getValue())){
+            profileNewUIPage.selectTimeOffReason(timeOffReasonType.Sick.getValue());
+        } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
+            profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
+        }
+        profileNewUIPage.selectStartAndEndDate(advancedDays);
+        profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+        loginPage.logOut();
+
+        // Login as Store Manager again to check message and approve
+        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
+        activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
+        activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
+        activityPage.closeActivityWindow();
+        loginPage.logOut();
+
+        // Login as Team Member to cancel time off
+        loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+        profileNewUIPage.clickOnUserProfileImage();
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
+        profileNewUIPage.cancelAllTimeOff();
         try {
-            // Login as Team Member to create time off
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
 
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String requestUserName = profileNewUIPage.getNickNameFromProfile();
-            String myTimeOffLabel = "My Time Off";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
-            profileNewUIPage.cancelAllTimeOff();
-            profileNewUIPage.clickOnCreateTimeOffBtn();
-            SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-            String timeOffReasonLabel = "FAMILY EMERGENCY";
-            // select time off reason
-            profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-            profileNewUIPage.selectStartAndEndDate();
-            profileNewUIPage.clickOnSaveTimeOffRequestBtn();
-            loginPage.logOut();
-
-            // Login as Store Manager again to check message and reject
-            String RequstTimeOff = "requested";
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-            String respondUserName = profileNewUIPage.getNickNameFromProfile();
-            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
-            activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
-            activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Reject.getValue());
-            activityPage.closeActivityWindow();
-            loginPage.logOut();
-
-            // Login as Team Member to create time off
-            loginToLegionAndVerifyIsLoginDone(username, password, location);
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
-            profileNewUIPage.clickOnCreateTimeOffBtn();
-            SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-            //select time off reason
-            profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-            profileNewUIPage.selectStartAndEndDate();
-            profileNewUIPage.clickOnSaveTimeOffRequestBtn();
-            loginPage.logOut();
-
-            // Login as Store Manager again to check message and approve
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
-            activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequstTimeOff);
-            activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName,approveRejectAction.Approve.getValue());
-            activityPage.closeActivityWindow();
-            loginPage.logOut();
-
-            // Login as Team Member to cancel time off
-            loginToLegionAndVerifyIsLoginDone(username, password, location);
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
-            profileNewUIPage.cancelAllTimeOff();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1429,9 +1475,21 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify the notification when TM cancels time off request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyTheNotificationForCancelTimeOffAsTeamMember(String browser, String username, String password, String location) {
+    public void verifyTheNotificationForCancelTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+            int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+
             // Login as Team member to create the time off request
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -1443,16 +1501,24 @@ public class ActivityTest extends TestBase {
             profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
             String myTimeOffLabel = "My Time Off";
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-            String timeOffReasonLabel = "FAMILY EMERGENCY";
             profileNewUIPage.cancelAllTimeOff();
             profileNewUIPage.clickOnCreateTimeOffBtn();
             SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
             // select time off reason
-            profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-            List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate();
+            if (profileNewUIPage.isReasonLoad(timeOffReasonType.FamilyEmergency.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.FamilyEmergency.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.PersonalEmergency.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.PersonalEmergency.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.JuryDuty.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.JuryDuty.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Sick.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Sick.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
+            }
+            List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate(advancedDays);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
             profileNewUIPage.cancelAllTimeOff();
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
             // Login as Store Manager again to check message

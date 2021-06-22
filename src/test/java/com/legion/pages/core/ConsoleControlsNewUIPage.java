@@ -1703,10 +1703,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void clickOnSchedulingPoliciesTimeOffAdvanceBtn() throws Exception {
-		if (isElementLoaded(schedulingPoliciesTimeOffFormSectionDiv)) {
+		if (isElementLoaded(schedulingPoliciesTimeOffFormSectionDiv, 10)) {
 			WebElement schedulingPoliciesTimeOffAdvanceBtn = schedulingPoliciesTimeOffFormSectionDiv.findElement(
 					By.cssSelector("div.lg-advanced-box__toggle"));
-			if (isElementLoaded(schedulingPoliciesTimeOffAdvanceBtn) && !schedulingPoliciesTimeOffAdvanceBtn.getAttribute("class")
+			if (isElementLoaded(schedulingPoliciesTimeOffAdvanceBtn, 10) && !schedulingPoliciesTimeOffAdvanceBtn.getAttribute("class")
 					.contains("--advanced")) {
 				click(schedulingPoliciesTimeOffAdvanceBtn);
 				SimpleUtils.pass("Controls Page: - Scheduling Policies 'Time Off' section: 'Advance' button clicked.");
@@ -1714,6 +1714,21 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.fail("Controls Page: - Scheduling Policies 'Time Off' section: 'Advance' button not loaded.", false);
 		} else
 			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Time Off' form section not loaded.", false);
+	}
+
+	@FindBy(css = "[question-title*=\"days in advance.\"] .input-form")
+	private WebElement daysInAdvanceToCreateTimeOff;
+	@Override
+	public int getDaysInAdvanceCreateTimeOff() throws Exception {
+		waitForSeconds(3);
+		if (isElementLoaded(daysInAdvanceToCreateTimeOff,15)){
+			if (SimpleUtils.isNumeric(daysInAdvanceToCreateTimeOff.findElement(By.cssSelector("div.input-faked")).getAttribute("innerText").replaceAll("\n","").trim())){
+				return Integer.parseInt(daysInAdvanceToCreateTimeOff.findElement(By.cssSelector("div.input-faked")).getAttribute("innerText").replaceAll("\n","").trim());
+			}
+		} else {
+			SimpleUtils.fail("Days in advance fail to load!", false);
+		}
+		return 0;
 	}
 
 	@Override
