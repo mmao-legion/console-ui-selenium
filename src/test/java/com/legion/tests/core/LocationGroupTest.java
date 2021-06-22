@@ -1905,7 +1905,7 @@ public class LocationGroupTest extends TestBase {
 
             /// Add shifts in schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithDefaultTime("MOD","Child2");
+            schedulePage.addOpenShiftWithDefaultTime(schedulePage.getRandomWorkRole(),"Child2");
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
             schedulePage.clickOnProfileIcon();
@@ -1954,7 +1954,7 @@ public class LocationGroupTest extends TestBase {
 
             /// Add shifts in schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithDefaultTime("MOD","Child2");
+            schedulePage.addOpenShiftWithDefaultTime(schedulePage.getRandomWorkRole(),"Child2");
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
             schedulePage.clickOnProfileIcon();
@@ -2015,7 +2015,7 @@ public class LocationGroupTest extends TestBase {
 
             /// Add shifts in schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithDefaultTime("MOD","Mountain View");
+            schedulePage.addOpenShiftWithDefaultTime(schedulePage.getRandomWorkRole(),"Mountain View");
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
             schedulePage.clickOnProfileIcon();
@@ -2064,7 +2064,7 @@ public class LocationGroupTest extends TestBase {
 
             /// Add shifts in schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithDefaultTime("MOD");
+            schedulePage.addOpenShiftWithDefaultTime(schedulePage.getRandomWorkRole());
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
             schedulePage.clickOnProfileIcon();
@@ -2789,13 +2789,13 @@ public class LocationGroupTest extends TestBase {
 
             // Verify changes not publish smart card default view will be able to show location aggregated
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithDefaultTime("MOD", location1);
+            schedulePage.addOpenShiftWithDefaultTime(schedulePage.getRandomWorkRole(), location1);
             schedulePage.saveSchedule();
             String changes1 = schedulePage.getChangesOnActionRequired().contains(" ")? schedulePage.getChangesOnActionRequired().split(" ")[0]: schedulePage.getChangesOnActionRequired();
             schedulePage.clickOnFilterBtn();
             String location2 = schedulePage.selectRandomChildLocationToFilter();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithDefaultTime("MOD", location2);
+            schedulePage.addOpenShiftWithDefaultTime(schedulePage.getRandomWorkRole(), location2);
             schedulePage.saveSchedule();
             String changes2 = schedulePage.getChangesOnActionRequired().contains(" ")? schedulePage.getChangesOnActionRequired().split(" ")[0]: schedulePage.getChangesOnActionRequired();
             if (Integer.parseInt(changes2) > Integer.parseInt(changes1))
@@ -2899,13 +2899,13 @@ public class LocationGroupTest extends TestBase {
 
             // Verify changes not publish smart card default view will be able to show location aggregated
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithDefaultTime("MOD", location1);
+            schedulePage.addOpenShiftWithDefaultTime(schedulePage.getRandomWorkRole(), location1);
             schedulePage.saveSchedule();
             String changes1 = schedulePage.getChangesOnActionRequired().contains(" ")? schedulePage.getChangesOnActionRequired().split(" ")[0]: schedulePage.getChangesOnActionRequired();
             schedulePage.clickOnFilterBtn();
             String location2 = schedulePage.selectRandomChildLocationToFilter();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithDefaultTime("MOD", location2);
+            schedulePage.addOpenShiftWithDefaultTime(schedulePage.getRandomWorkRole(), location2);
             schedulePage.saveSchedule();
             String changes2 = schedulePage.getChangesOnActionRequired().contains(" ")? schedulePage.getChangesOnActionRequired().split(" ")[0]: schedulePage.getChangesOnActionRequired();
             if (Integer.parseInt(changes2) > Integer.parseInt(changes1))
