@@ -254,6 +254,11 @@
                     <include name="verifySearchingAndSelectingTheBusinessUnitOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySelectingHQOnBusinessUnitScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheHQOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQScheduleTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQComplianceTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
                  </methods>
             </class>
         </classes>

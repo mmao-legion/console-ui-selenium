@@ -130,4 +130,6 @@ public interface DashboardPage {
     public void clickViewSchedulesLinkOnOpenShiftsWidget() throws Exception;
     public HashMap<String, Integer> verifyContentOfOpenShiftsWidgetForDMView() throws Exception;
     public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception;
+    public boolean isConsoleNavigationBarIsGray(String consoleNavigationBarName) throws Exception;
+    public boolean isConsoleNavigationBarBeenSelected (String consoleNavigationBarName) throws Exception;
 }

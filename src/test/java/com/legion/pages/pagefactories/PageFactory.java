@@ -66,4 +66,6 @@ public interface PageFactory {
     IntegrationPage createIntegrationPage();
 
     OnboardingPage createOnboardingPage();
+
+    ComplianceDMViewPage createComplianceDMViewPage();
 }

@@ -743,4 +743,265 @@ public class LocationNavigationTest extends TestBase {
         locationSelectorPage.changeUpperFieldDirect(District, districtName);
         locationSelectorPage.changeLocationDirect(locationName);
     }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify selecting different level of upperfields and locations on HQ schedule tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
+            //Click on change HQ button to change the HQ
+            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            String locationName = rockVilleLocation;
+            String buName = upperFields[upperFields.length-3].trim();
+            String regionName = upperFields[upperFields.length-2].trim();
+            String districtName = upperFields[upperFields.length-1].trim();
+
+            //Go to Schedule tab
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
+
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
+
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
+            locationSelectorPage.changeLocationDirect(locationName);
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify selecting different level of upperfields and locations on HQ compliance tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQComplianceTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            dashboardPage.isConsoleNavigationBarIsGray("Compliance");
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
+            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            String locationName = rockVilleLocation;
+            String buName = upperFields[upperFields.length-3].trim();
+            String regionName = upperFields[upperFields.length-2].trim();
+            String districtName = upperFields[upperFields.length-1].trim();
+
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
+
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(locationName);
+            locationSelectorPage.changeLocationDirect(locationName);
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify selecting different level of upperfields on SM compliance tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            String locationName = rockVilleLocation;
+            String buName = upperFields[upperFields.length-3].trim();
+            String regionName = upperFields[upperFields.length-2].trim();
+            String districtName = upperFields[upperFields.length-1].trim();
+            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
+
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(locationName);
+
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
+
+            locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify selecting different level of upperfields and locations on HQ Report tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            dashboardPage.isConsoleNavigationBarIsGray("Report");
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            //Check Report page is display after click Report tab
+            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+            analyticsPage.clickOnAnalyticsConsoleMenu();
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
+            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            String locationName = rockVilleLocation;
+            String buName = upperFields[upperFields.length-3].trim();
+            String regionName = upperFields[upperFields.length-2].trim();
+            String districtName = upperFields[upperFields.length-1].trim();
+            String reportMenuTab = "Report";
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
+                    analyticsPage.isReportsPageLoaded(), false);
+            SimpleUtils.assertOnFail("Report is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(reportMenuTab), false);
+            SimpleUtils.assertOnFail("Report tab is not selected correctly !",
+                    analyticsPage.isSpecificReportsTabBeenSelected(buName), false);
+
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
+                    analyticsPage.isReportsPageLoaded(), false);
+            SimpleUtils.assertOnFail("Report is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(reportMenuTab), false);
+            SimpleUtils.assertOnFail("Report tab is not selected correctly !",
+                    analyticsPage.isSpecificReportsTabBeenSelected(regionName), false);
+
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
+                    analyticsPage.isReportsPageLoaded(), false);
+            SimpleUtils.assertOnFail("Report is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(reportMenuTab), false);
+            SimpleUtils.assertOnFail("Report tab is not selected correctly !",
+                    analyticsPage.isSpecificReportsTabBeenSelected(districtName), false);
+
+            locationSelectorPage.changeLocationDirect(locationName);
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
+                    analyticsPage.isReportsPageLoaded(), false);
+            SimpleUtils.assertOnFail("Report is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(reportMenuTab), false);
+            SimpleUtils.assertOnFail("Report tab is not selected correctly !",
+                    analyticsPage.isSpecificReportsTabBeenSelected(locationName), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify selecting different level of upperfields on location Report tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+            analyticsPage.clickOnAnalyticsConsoleMenu();
+            String reportMenuTab = "Report";
+            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            String locationName = rockVilleLocation;
+            String buName = upperFields[upperFields.length-3].trim();
+            String regionName = upperFields[upperFields.length-2].trim();
+            String districtName = upperFields[upperFields.length-1].trim();
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
+                    analyticsPage.isReportsPageLoaded(), false);
+            SimpleUtils.assertOnFail("Report is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(reportMenuTab), false);
+            SimpleUtils.assertOnFail("Report tab is not selected correctly !",
+                    analyticsPage.isSpecificReportsTabBeenSelected(locationName), false);
+
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
+                    analyticsPage.isReportsPageLoaded(), false);
+            SimpleUtils.assertOnFail("Report is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(reportMenuTab), false);
+            SimpleUtils.assertOnFail("Report tab is not selected correctly !",
+                    analyticsPage.isSpecificReportsTabBeenSelected(districtName), false);
+
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
+                    analyticsPage.isReportsPageLoaded(), false);
+            SimpleUtils.assertOnFail("Report is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(reportMenuTab), false);
+            SimpleUtils.assertOnFail("Report tab is not selected correctly !",
+                    analyticsPage.isSpecificReportsTabBeenSelected(regionName), false);
+
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
+                    analyticsPage.isReportsPageLoaded(), false);
+            SimpleUtils.assertOnFail("Report is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(reportMenuTab), false);
+            SimpleUtils.assertOnFail("Report tab is not selected correctly !",
+                    analyticsPage.isSpecificReportsTabBeenSelected(buName), false);
+
+            locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
