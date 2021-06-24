@@ -13,6 +13,7 @@ import com.legion.utils.SimpleUtils;
 import org.apache.regexp.RE;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import sun.rmi.runtime.Log;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -1004,4 +1005,233 @@ public class LocationNavigationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify selecting different level of upperfields and locations on HQ News tab - Newsfeed page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            NewsPage newsPage = pageFactory.createNewsPage();
+            newsPage.clickOnNewsConsoleMenu();
+            List<String> postInfo = newsPage.createPost();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            String newsMenuTab = "News";
+            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            String locationName = rockVilleLocation;
+            String buName = upperFields[upperFields.length-3].trim();
+            String regionName = upperFields[upperFields.length-2].trim();
+            String districtName = upperFields[upperFields.length-1].trim();
+
+            LoginAsDifferentRole("InternalAdmin");
+
+            //Check Report page is display after click Report tab
+            newsPage.clickOnNewsConsoleMenu();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            SimpleUtils.assertOnFail("The location level post fail to load! ",
+                    !newsPage.checkIfPostExists(postInfo.get(0)), false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            SimpleUtils.assertOnFail("The location level post fail to load! ",
+                    !newsPage.checkIfPostExists(postInfo.get(0)), false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            SimpleUtils.assertOnFail("The location level post fail to load! ",
+                    !newsPage.checkIfPostExists(postInfo.get(0)), false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            SimpleUtils.assertOnFail("The location level post fail to load! ",
+                    !newsPage.checkIfPostExists(postInfo.get(0)), false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+            locationSelectorPage.changeLocationDirect(locationName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            SimpleUtils.assertOnFail("The location level post fail to load! ",
+                    newsPage.checkIfPostExists(postInfo.get(0)), false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+            newsPage.deletePost(postInfo.get(0));
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify selecting different level of upperfields on location Newsfeed page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            NewsPage newsPage = pageFactory.createNewsPage();
+            newsPage.clickOnNewsConsoleMenu();
+            List<String> postInfo = newsPage.createPost();
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            String newsMenuTab = "News";
+            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            String locationName = rockVilleLocation;
+            String buName = upperFields[upperFields.length-3].trim();
+            String regionName = upperFields[upperFields.length-2].trim();
+            String districtName = upperFields[upperFields.length-1].trim();
+
+            LoginAsDifferentRole("InternalAdmin");
+            newsPage.clickOnNewsConsoleMenu();
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            SimpleUtils.assertOnFail("The location level post fail to load! ",
+                    newsPage.checkIfPostExists(postInfo.get(0)), false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            SimpleUtils.assertOnFail("The location level post fail to load! ",
+                    !newsPage.checkIfPostExists(postInfo.get(0)), false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            SimpleUtils.assertOnFail("The location level post fail to load! ",
+                    !newsPage.checkIfPostExists(postInfo.get(0)), false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            SimpleUtils.assertOnFail("The location level post fail to load! ",
+                    !newsPage.checkIfPostExists(postInfo.get(0)), false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+            locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            SimpleUtils.assertOnFail("The location level post fail to load! ",
+                    !newsPage.checkIfPostExists(postInfo.get(0)), false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
+            newsPage.deletePost(postInfo.get(0));
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify location navigation should not show on Moderation page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            NewsPage newsPage = pageFactory.createNewsPage();
+            newsPage.clickOnNewsConsoleMenu();
+
+            String newsMenuTab = "News";
+            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
+            String locationName = rockVilleLocation;
+            String buName = upperFields[upperFields.length-3].trim();
+            String regionName = upperFields[upperFields.length-2].trim();
+            String districtName = upperFields[upperFields.length-1].trim();
+
+            newsPage.clickOnNewsConsoleMenu();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            newsPage.clickModerationTab();
+            SimpleUtils.assertOnFail("The upperfield navigation should not display! ",
+                    !locationSelectorPage.isUpperFieldNavigationLoaded() , false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+            newsPage.clickNewsfeedTab();
+
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            newsPage.clickModerationTab();
+            SimpleUtils.assertOnFail("The upperfield navigation should not display! ",
+                    !locationSelectorPage.isUpperFieldNavigationLoaded() , false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+            newsPage.clickNewsfeedTab();
+
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            newsPage.clickModerationTab();
+            SimpleUtils.assertOnFail("The upperfield navigation should not display! ",
+                    !locationSelectorPage.isUpperFieldNavigationLoaded() , false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+            newsPage.clickNewsfeedTab();
+
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            newsPage.clickModerationTab();
+            SimpleUtils.assertOnFail("The upperfield navigation should not display! ",
+                    !locationSelectorPage.isUpperFieldNavigationLoaded() , false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+            newsPage.clickNewsfeedTab();
+
+            locationSelectorPage.changeLocationDirect(locationName);
+            SimpleUtils.assertOnFail("The news page fail to load! ",
+                    newsPage.checkIfNewsPageLoaded(), false);
+            newsPage.clickModerationTab();
+            SimpleUtils.assertOnFail("The upperfield navigation should not display! ",
+                    !locationSelectorPage.isUpperFieldNavigationLoaded() , false);
+            SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
+                    dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

@@ -1205,4 +1205,18 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             SimpleUtils.report("The No data to show page fail to load! ");
         return isNoDataToShowPageLoaded;
     }
+
+
+    @FindBy(css = "lg-upperfield-navigation[ng-if=\"useNewNavigation\"]")
+    private WebElement upperFieldNavigation;
+
+    public boolean isUpperFieldNavigationLoaded() throws Exception {
+        boolean isUpperFieldNavigationLoaded = false;
+        if (isElementLoaded(upperFieldNavigation, 10)) {
+            SimpleUtils.report("The upperfield navigation is loaded! ");
+            isUpperFieldNavigationLoaded = true;
+        } else
+            SimpleUtils.report("The upperfield navigation fail to load! ");
+        return isUpperFieldNavigationLoaded;
+    }
 }
