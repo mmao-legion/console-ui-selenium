@@ -277,6 +277,8 @@ public abstract class TestBase {
             getDriver().register(webDriverEventListener);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            getDriver().quit();
         }
     }
 
