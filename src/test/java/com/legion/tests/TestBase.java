@@ -90,34 +90,25 @@ public abstract class TestBase {
     private static AppiumServiceBuilder builder;
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 5;
-    public static String testSuiteID = null;
-    public static String finalTestRailRunName = null;
-    public static boolean ifAddNewTestRun = true;
-    public static List<Integer> AllTestCaseIDList = null;
-    public static String testRailReportingFlag = null;
-    public static Integer testRailRunId = null;
-    public static String testRailProjectID = null;
 
     @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName","testRailRunName"})
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        if (System.getProperty("enterprise") !=null && System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
-            testSuiteID = testRailCfgOp.get("TEST_RAIL_SUITE_ID");
-            finalTestRailRunName = testRailRunName;
-            ifAddNewTestRun = true;
+        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+            MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
+            MyThreadLocal.setTestRailRunName(testRailRunName);
+            MyThreadLocal.setIfAddNewTestRun(true);
         }else{
-            testSuiteID = testRailCfg.get("TEST_RAIL_SUITE_ID");
-            finalTestRailRunName = testRailRunName;
-            ifAddNewTestRun = true;
+            MyThreadLocal.setTestSuiteID(testRailCfgOp.get("TEST_RAIL_SUITE_ID"));
+            MyThreadLocal.setTestRailRunName(testRailRunName);
+            MyThreadLocal.setIfAddNewTestRun(true);
         }
 
 
-        if (AllTestCaseIDList==null){
-            AllTestCaseIDList = new ArrayList<Integer>();
+        if (MyThreadLocal.getTestCaseIDList()==null){
+            MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
         }
-
-        //For mobile.
         if(platform!= null && executionon!= null && runMode!= null){
             if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice")
                     && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
@@ -129,9 +120,8 @@ public abstract class TestBase {
         }else{
             Reporter.log("Script will be executing only for Web");
         }
-
-        if(System.getProperty("testRail") != null && System.getProperty("testRail").equalsIgnoreCase("Yes")){
-            testRailReportingFlag = "Y";
+        if(System.getProperty("testRail")!=null&& System.getProperty("testRail").equalsIgnoreCase("Yes")){
+            setTestRailReporting("Y");
         }
     }
 
@@ -178,12 +168,12 @@ public abstract class TestBase {
                 + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
         //setTestRailRunId(0);
-        if (testRailRunId==null){
-            testRailRunId = 0;
+        if (MyThreadLocal.getTestRailRunId()==null){
+            setTestRailRunId(0);
         }
         List<Integer> testRailId =  new ArrayList<Integer>();
-        //setTestRailRun(testRailId);
-        if(testRailReportingFlag!=null){
+        setTestRailRun(testRailId);
+        if(getTestRailReporting()!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         }
         setCurrentMethod(method);
@@ -311,10 +301,10 @@ public abstract class TestBase {
 
     @AfterSuite
     public void afterSuiteWorker() throws IOException{
-        if(testRailReportingFlag!=null){
+        if(getTestRailReporting()!=null){
             List<Integer> testRunList = new ArrayList<Integer>();
-            testRunList.add(testRailRunId);
-            if (testRailRunId!=null && SimpleUtils.isTestRunEmpty(testRailRunId)){
+            testRunList.add(getTestRailRunId());
+            if (SimpleUtils.isTestRunEmpty(getTestRailRunId())){
                 SimpleUtils.deleteTestRail(testRunList);
             }
         }
