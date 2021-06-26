@@ -384,8 +384,9 @@ public abstract class TestBase {
         SimpleUtils.assertOnFail("Failed to login to the application!", loginPage.isLoginSuccess(), false);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
-        locationSelectorPage.changeLocation(location);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+//        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
+//        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
         MyThreadLocal.setIsNeedEditingOperatingHours(false);
