@@ -4572,7 +4572,7 @@ private WebElement locationColumn;
 	@FindBy (css = "[ng-click=\"changeMonth(sessionStart, 1)\"]")
 	private WebElement sessionStartRightArrow;
 
-	@FindBy (css = "ng-click=\"changeMonth(sessionEnd, -1)\"")
+	@FindBy (css = "[ng-click=\"changeMonth(sessionEnd, -1)\"]")
 	private WebElement sessionEndLeftArrow;
 
 	@FindBy (css = "[ng-click=\"changeMonth(sessionEnd, 1, true)\"]")

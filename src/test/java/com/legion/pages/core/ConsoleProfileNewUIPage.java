@@ -3477,7 +3477,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isInviteToLegionButtonLoaded() throws Exception {
 		boolean isInviteToLegionButtonLoaded = false;
-		if(isElementLoaded(userProfileInviteBtn, 5)) {
+		if(isElementLoaded(userProfileInviteBtn, 10)) {
 			isInviteToLegionButtonLoaded =true;
 			SimpleUtils.report("Profile Page: Invite To Legion Button loaded successfully.");
 		} else
