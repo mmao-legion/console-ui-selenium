@@ -37,7 +37,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement>consoleNavigationMenuItems;
 	@FindBy(css = "div.profile")
 	private WebElement profilePageSection;
-	@FindBy(css="div.collapsible-title-text")
+	@FindBy(css="div.collapsible-title-text span")
 	private List<WebElement> profilePageSubSections;
 	@FindBy(css="a[ng-click=\"newTimeOff()\"]")
 	private WebElement newTimeOffBtn;
@@ -250,7 +250,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void selectProfilePageSubSectionByLabel(String profilePageSubSectionLabel) throws Exception {
 		boolean isSubSectionSelected = false;
-		if(areListElementVisible(profilePageSubSections,10)) {
+		if(areListElementVisible(profilePageSubSections,60)) {
 			for(WebElement profilePageSubSection : profilePageSubSections) {
 				if(profilePageSubSection.getText().toLowerCase().contains(profilePageSubSectionLabel.toLowerCase())) {
 					clickTheElement(profilePageSubSection);

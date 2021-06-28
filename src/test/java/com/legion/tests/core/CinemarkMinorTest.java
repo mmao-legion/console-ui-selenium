@@ -146,11 +146,14 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.navigateDayViewWithDayName("Sat");
             Map<String, String> dayInfo = schedulePage.getActiveDayInfo();
 
+            // TODO: as a workaround for bug: https://legiontech.atlassian.net/browse/SCH-4507, after it is fixed, will remove the code
+            dashboardPage.clickOnDashboardConsoleMenu();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-
             teamPage.goToTeam();
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
             teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
             SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
@@ -161,7 +164,7 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartAndEndDate(String.valueOf(Integer.parseInt(dayInfo.get("year"))-1) +" Jan 1",
+            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year")) - 1) +" Jan 1",
                     dayInfo.get("year") +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.inputCalendarName(calendarName);
@@ -911,8 +914,6 @@ public class CinemarkMinorTest extends TestBase {
     public void getAndSetDefaultTemplate(String currentLocation) throws Exception{
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
         //Go to OP page
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
