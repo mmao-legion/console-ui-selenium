@@ -230,7 +230,7 @@
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
-                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                    <include name="verifyShiftTypeContentInFilterWithLGAsInternalAdmin" />
 <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG been generated slow-->
                 </methods>
             </class>
@@ -242,7 +242,7 @@
         <classes>
             <class name="com.legion.tests.core.LocationNavigationTest">
                 <methods>
-                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                    <include name="verifyChangingLocationOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" />

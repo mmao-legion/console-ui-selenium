@@ -161,7 +161,7 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartAndEndDate(dayInfo.get("year") +" Jan 1",
+            teamPage.selectSchoolSessionStartAndEndDate(String.valueOf(Integer.parseInt(dayInfo.get("year"))-1) +" Jan 1",
                     dayInfo.get("year") +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.inputCalendarName(calendarName);

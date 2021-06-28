@@ -829,26 +829,25 @@ public class TeamTestKendraScott2 extends TestBase{
 			teamPage.searchAndSelectTeamMemberByName(tm);
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
-			//Login as TL Blocked by SCH-3703
-//			storeManagerCredentials = userCredentials.get("TeamLead");
-//			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-//					, String.valueOf(storeManagerCredentials[0][2]));
-//			dashboardPage = pageFactory.createConsoleDashboardPage();
-//			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//
-//			//Go to team page and check the invite button
-//			teamPage.goToTeam();
-//			SimpleUtils.assertOnFail("The invite buttons fail to load on Roster page! ", teamPage.checkIsInviteButtonExists(), false);
-//			teamPage.searchAndSelectTeamMemberByName(tm);
-//			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
-//			loginPage.logOut();
+
+			storeManagerCredentials = userCredentials.get("TeamLead");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+					, String.valueOf(storeManagerCredentials[0][2]));
+			dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			//Go to team page and check the invite button
+			teamPage.goToTeam();
+			SimpleUtils.assertOnFail("The invite buttons fail to load on Roster page! ", teamPage.checkIsInviteButtonExists(), false);
+			teamPage.searchAndSelectTeamMemberByName(tm);
+			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
+			loginPage.logOut();
 			//Login as admin
 			storeManagerCredentials = userCredentials.get("InternalAdmin");
 			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
 					, String.valueOf(storeManagerCredentials[0][2]));
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-
 
 			controlsPage.gotoControlsPage();
 			controlsNewUIPage.isControlsPageLoaded();
