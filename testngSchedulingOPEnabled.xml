@@ -117,8 +117,8 @@
         <classes>
             <class name="com.legion.tests.core.ConsolidatingFiltersTest">
                 <methods>
-                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
-                    <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" />
+<!--                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" Due to issues that jenkins cannot continue run/>-->
+<!--                    <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" Due to issues that jenkins cannot continue run/>-->
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->

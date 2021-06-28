@@ -93,7 +93,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public boolean isOpsPortalPageLoaded() throws Exception {
 		boolean isLoaded = false;
 		try {
-			waitForSeconds(10);
+			waitForSeconds(15);
 			if (isElementLoaded(goToLocationsButton, 150))
 				isLoaded = true;
 		} catch (Exception e) {
@@ -2650,6 +2650,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
     @Override
 	public HashMap<String,String> getTemplateTypeAndNameFromLocation() throws Exception {
 		HashMap<String, String> templateTypeAndName = new HashMap<>();
+		waitForSeconds(3);
 		if (areListElementVisible(templateRows, 30) && templateRows.size() != 0) {
 			for (WebElement templateRow: templateRows) {
 				String templateType = templateRow.findElement(By.xpath("./td[1]")).getText().trim();

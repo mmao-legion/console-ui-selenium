@@ -6909,14 +6909,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void searchTeamMemberByName(String name) throws Exception {
-        if(areListElementVisible(btnSearchteamMember,5)) {
+        if(areListElementVisible(btnSearchteamMember,15)) {
             if (btnSearchteamMember.size() == 2) {
                 //click(btnSearchteamMember.get(1));
                 if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
                     textSearch.clear();
                     textSearch.sendKeys(name);
                     click(searchIcon);
-                    if (areListElementVisible(searchResults, 15)) {
+                    if (areListElementVisible(searchResults, 30)) {
                         for (WebElement searchResult : searchResults) {
                             WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
                             WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));

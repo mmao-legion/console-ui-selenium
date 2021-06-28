@@ -2484,7 +2484,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void rejectAllTeamMembersTimeOffRequest(ProfileNewUIPage profileNewUIPage, int index) throws Exception {
-		if (areListElementVisible(teamMemberNames, 15)) {
+		if (areListElementVisible(teamMemberNames, 30)) {
 			if (index < teamMemberNames.size()) {
 				clickTheElement(teamMemberNames.get(index));
 				String myTimeOffLabel = "Time Off";
@@ -4205,7 +4205,7 @@ private WebElement locationColumn;
 	public void clickOnSaveSchoolCalendarBtn() throws Exception {
 		if (isElementLoaded(savePreferButton, 5) && isElementEnabled(savePreferButton, 5)) {
 			clickTheElement(savePreferButton);
-			if (isElementLoaded(deleteCalendarBtn, 10) && isElementLoaded(editCalendarBtn, 10)) {
+			if (isElementLoaded(deleteCalendarBtn, 20) && isElementLoaded(editCalendarBtn, 20)) {
 				SimpleUtils.pass("School Calendar: Save the calendar Successfully!");
 			} else {
 				SimpleUtils.fail("School Calendar: Failed to save the school calendar!", false);
