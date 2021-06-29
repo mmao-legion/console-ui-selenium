@@ -21,7 +21,5 @@ public interface LaborModelPage {
 
     public void publishNewLaborModelTemplate(String templateName,String dynamicGroupName) throws Exception;
 
-
-
-
+    public void overriddenLaborModelRuleInLocationLevel(int index);
 }

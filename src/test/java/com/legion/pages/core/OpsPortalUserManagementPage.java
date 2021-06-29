@@ -869,5 +869,76 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}else
 			SimpleUtils.fail("Add Global dynamic group button load failed", false);
 	}
+
+	@Override
+	public void goToWorkRolesDetails(String workRoleName) throws Exception {
+		if (workRolesRows.size()>0) {
+			for (WebElement e :workRolesRows) {
+				e.getText().contains(workRoleName);
+				click(e.findElement(By.cssSelector("button[type=\"button\"]")));
+				if (isElementLoaded(workNameInputBox,5)) {
+					SimpleUtils.pass("Can go to "+workRoleName +" details page successfully");
+				}else
+					SimpleUtils.fail("Go to "+workRoleName +" details page failed",false);
+				break;
+			}
+		}else 
+			SimpleUtils.fail("",false);
+	}
+	@FindBy(className = "settings-work-rule-number")
+	private List<WebElement> enableDisableIcons;
+	@FindBy(css = "div[ng-click=\"clickRuleEnable()\"]")
+	private List<WebElement> enableDisableRuleBtn;
+	@Override
+	public void disableAssignmentRulesInLocationLevel(int index) {
+		click(enableDisableIcons.get(index));
+		if (enableDisableIcons.size()>0) {
+			for (int i = index; i <enableDisableIcons.size() ; i++) {
+				if (enableDisableIcons.get(i).getAttribute("data-tootik").contains("enable")) {
+					click(enableDisableIcons.get(i));
+					if (enableDisableIcons.get(i).getAttribute("data-tootik").contains("disable")) {
+						SimpleUtils.pass("Disable assignment rule successfully");
+					}else
+						SimpleUtils.fail("Disable assignment rule failed",false);
+					break;
+				}
+			}
+			click(saveRuleConfirmationBtn);
+		}else
+			SimpleUtils.report("There is no assignment rule");
+	}
+
+	@Override
+	public void enableAssignmentRulesInLocationLevel(int index) {
+		click(enableDisableIcons.get(index));
+		if (enableDisableIcons.size()>0) {
+			for (int i = index; i <enableDisableIcons.size() ; i++) {
+				if (enableDisableIcons.get(i).getAttribute("data-tootik").contains("disable")) {
+					click(enableDisableIcons.get(i));
+					if (enableDisableIcons.get(i).getAttribute("data-tootik").contains("enable")) {
+						SimpleUtils.pass("Enable assignment rule successfully");
+					}else
+						SimpleUtils.fail("Enable assignment rule failed",false);
+					break;
+				}
+			}
+			click(saveRuleConfirmationBtn);
+		}else
+			SimpleUtils.report("There is no assignment rule");
+	}
+
+	@Override
+	public void overriddenAssignmentRule(int index) {
+		if (enableDisableIcons.size()>0) {
+			for (int i = index; i <enableDisableIcons.size() ; i++) {
+				if (enableDisableIcons.get(i).getAttribute("data-tootik").contains("enable")) {
+					disableAssignmentRulesInLocationLevel(i);
+				}else
+					enableAssignmentRulesInLocationLevel(i);
+			}
+		}else
+			SimpleUtils.report("There is no assignment rule");
+	}
+
 }
 

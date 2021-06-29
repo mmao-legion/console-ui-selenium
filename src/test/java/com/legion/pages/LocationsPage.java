@@ -226,4 +226,10 @@ public interface LocationsPage {
     public void okBtnIsClickable() throws Exception;
 
     public void goToScheduleRulesListAtLocationLevel(String workRole);
+
+    public void editBtnIsClickableInBusinessHours();
+
+    public void selectDayInWorkingHoursPopUpWin(int i);
+
+    public void clickSaveBtnInWorkingHoursPopUpWin();
 }

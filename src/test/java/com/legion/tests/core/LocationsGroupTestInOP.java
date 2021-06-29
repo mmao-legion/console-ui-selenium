@@ -435,21 +435,6 @@ public class LocationsGroupTestInOP extends TestBase {
             }catch (Exception e){
                 SimpleUtils.fail("Child location creation failed",true);
             }
-//            //get location's  info
-//            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-//            //check location group navigation
-//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-//            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-//            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
-//
-//            //Go to Team tab to check location column for MS location group
-//            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-//            teamPage.goToTeam();
-//            if (teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
-//                SimpleUtils.pass("Location column in Team Tab is showing for MS location group");
-//            }else
-//                SimpleUtils.fail("There is no location column in Team Tab for MS location group",true);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -942,6 +927,67 @@ public class LocationsGroupTestInOP extends TestBase {
                 SimpleUtils.fail("Change P2P location group to MS failed",true);
 
         } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify team tab function for parent child and p2p location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTeamTabFunctionForParentChildAndP2pLocationGroupAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String parentChildLocationName = "ParentChildLG";
+            String p2pParentLocationName = "P2PLG";
+            String p2pChildLocationName = "JFK Enrollment";
+
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(parentChildLocationName);
+            //Go to Team tab to check location column for MS location group
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            if (teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
+                SimpleUtils.pass("Location column in Team Tab is showing for MS location group");
+            } else
+                SimpleUtils.fail("There is no location column in Team Tab for MS location group", true);
+            int numberOfLocation = teamPage.getLocationName();
+            if (numberOfLocation>1) {
+                SimpleUtils.pass("Can see rosters in child location");
+            }else
+                SimpleUtils.report("Only one location's roster display or there is no roster for any location");
+
+            //navigate to p2p parent location
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(p2pParentLocationName);
+            if (teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
+                SimpleUtils.pass("Location column in Team Tab is showing for MS location group");
+            } else
+                SimpleUtils.fail("There is no location column in Team Tab for MS location group", true);
+            int numberOfLocationForP2PParent = teamPage.getLocationName();
+            if (numberOfLocationForP2PParent>1) {
+                SimpleUtils.pass("Can see rosters in child location");
+            }else
+                SimpleUtils.report("Only one location's roster display or there is no roster for any location");
+
+            //navigate to p2p child location
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(p2pChildLocationName);
+            if (teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
+                SimpleUtils.pass("Location column in Team Tab is showing for MS location group");
+            } else
+                SimpleUtils.fail("There is no location column in Team Tab for MS location group", true);
+            int numberOfLocationForP2PChild = teamPage.getLocationName();
+            if (numberOfLocationForP2PChild>1) {
+                SimpleUtils.pass("Can see rosters in child location");
+            }else
+                SimpleUtils.report("Only one location's roster display or there is no roster for any location");
+
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }

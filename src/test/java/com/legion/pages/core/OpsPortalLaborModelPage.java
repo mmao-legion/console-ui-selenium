@@ -237,6 +237,56 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 			SimpleUtils.fail("Labor model tab is not loaded",false);
 		}
 	}
+//location level work roles
+	@FindBy(className="workRoleContainer")
+	private List<WebElement> workRolesInLocationLevel;
+
+	@FindBy(css="label > ng-form > input[type=\"checkbox\"]")
+	private List<WebElement> checkBoxForEachWorkRolesInLocationLevel;
+	@Override
+	public void overriddenLaborModelRuleInLocationLevel(int index) {
+		if (workRolesInLocationLevel.size()>0) {
+			for (int i = index; i <workRolesInLocationLevel.size() ; i++) {
+				if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("not-empty")) {
+					disableLaborModelInLocationLevel(index);
+				}else
+					enableLaborModelInLocationLevel(index);
+			}
+		}else
+			SimpleUtils.report("There is no assignment rule");
+	}
+
+	private void enableLaborModelInLocationLevel(int index) {
+		if (checkBoxForEachWorkRolesInLocationLevel.size()>0) {
+			for (int i = index; i <checkBoxForEachWorkRolesInLocationLevel.size() ; i++) {
+				if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-empty")) {
+					click(checkBoxForEachWorkRolesInLocationLevel.get(i));
+					if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-not-empty")) {
+						SimpleUtils.pass("Enable work role successfully");
+					}else
+						SimpleUtils.fail("Enable work role failed",false);
+					break;
+				}
+			}
+		}else
+			SimpleUtils.report("There is no work role");
+	}
+
+	private void disableLaborModelInLocationLevel(int index) {
+		if (checkBoxForEachWorkRolesInLocationLevel.size()>0) {
+			for (int i = index; i <checkBoxForEachWorkRolesInLocationLevel.size() ; i++) {
+				if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-not-empty")) {
+					click(checkBoxForEachWorkRolesInLocationLevel.get(i));
+					if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-empty")) {
+						SimpleUtils.pass("Disable work role successfully");
+					}else
+						SimpleUtils.fail("Disable work role failed",false);
+					break;
+				}
+			}
+		}else
+			SimpleUtils.report("There is no work role");
+	}
 
 }
 
