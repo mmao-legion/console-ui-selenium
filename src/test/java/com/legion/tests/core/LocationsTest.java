@@ -1434,8 +1434,9 @@ public class LocationsTest extends TestBase {
             locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Edit");
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             laborModelPage.overriddenLaborModelRuleInLocationLevel(index);
-            locationsPage.clickSaveBtnInWorkingHoursPopUpWin();
-            locationsPage.clickSaveBtnInWorkingHoursPopUpWin();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.saveBtnIsClickable();
+
             List<HashMap<String,String>>  templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftOverridden.get(7).get("Overridden").equalsIgnoreCase("Yes")) {
                 SimpleUtils.pass("Overridden scheduling rules successfully");

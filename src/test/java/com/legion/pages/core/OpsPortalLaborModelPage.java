@@ -243,8 +243,12 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 
 	@FindBy(css="label > ng-form > input[type=\"checkbox\"]")
 	private List<WebElement> checkBoxForEachWorkRolesInLocationLevel;
+
+	@FindBy(css="label.switch> ng-form>span")
+	private List<WebElement> checkBoxForEachWorkRolesInLocationLevel2;
 	@Override
 	public void overriddenLaborModelRuleInLocationLevel(int index) {
+		waitForSeconds(5);
 		if (workRolesInLocationLevel.size()>0) {
 			for (int i = index; i <workRolesInLocationLevel.size() ; i++) {
 				if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("not-empty")) {
@@ -260,7 +264,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		if (checkBoxForEachWorkRolesInLocationLevel.size()>0) {
 			for (int i = index; i <checkBoxForEachWorkRolesInLocationLevel.size() ; i++) {
 				if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-empty")) {
-					click(checkBoxForEachWorkRolesInLocationLevel.get(i));
+					click(checkBoxForEachWorkRolesInLocationLevel2.get(i));
 					if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-not-empty")) {
 						SimpleUtils.pass("Enable work role successfully");
 					}else
@@ -276,7 +280,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		if (checkBoxForEachWorkRolesInLocationLevel.size()>0) {
 			for (int i = index; i <checkBoxForEachWorkRolesInLocationLevel.size() ; i++) {
 				if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-not-empty")) {
-					click(checkBoxForEachWorkRolesInLocationLevel.get(i));
+					click(checkBoxForEachWorkRolesInLocationLevel2.get(i));
 					if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-empty")) {
 						SimpleUtils.pass("Disable work role successfully");
 					}else

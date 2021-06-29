@@ -971,19 +971,19 @@ public class LocationsGroupTestInOP extends TestBase {
                 SimpleUtils.fail("There is no location column in Team Tab for MS location group", true);
             int numberOfLocationForP2PParent = teamPage.getLocationName();
             if (numberOfLocationForP2PParent>1) {
-                SimpleUtils.pass("Can see rosters in child location");
+                SimpleUtils.pass("Can see children's rosters in p2p parent location");
             }else
                 SimpleUtils.report("Only one location's roster display or there is no roster for any location");
 
             //navigate to p2p child location
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(p2pChildLocationName);
-            if (teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
-                SimpleUtils.pass("Location column in Team Tab is showing for MS location group");
+            if (!teamPage.verifyThereIsLocationColumnForMSLocationGroup()) {
+                SimpleUtils.pass("There is no location column in Team Tab for child location");
             } else
-                SimpleUtils.fail("There is no location column in Team Tab for MS location group", true);
+                SimpleUtils.fail("Should not show location column for child location", true);
             int numberOfLocationForP2PChild = teamPage.getLocationName();
-            if (numberOfLocationForP2PChild>1) {
-                SimpleUtils.pass("Can see rosters in child location");
+            if (numberOfLocationForP2PChild==0) {
+                SimpleUtils.pass("Only show children's rosters in child location");
             }else
                 SimpleUtils.report("Only one location's roster display or there is no roster for any location");
 
