@@ -53,4 +53,5 @@ public interface LaborModelPage {
 
     public void selectLaborModelTemplateDetailsPageSubTabByLabel(String label) throws Exception;
 
+    public void overriddenLaborModelRuleInLocationLevel(int index);
 }

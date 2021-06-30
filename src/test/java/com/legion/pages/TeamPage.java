@@ -168,4 +168,5 @@ public interface TeamPage {
 	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception;
 	public void selectARandomOnboardedOrNotTeamMemberToViewProfile(boolean selectOnboardedTM) throws Exception;
 	public void selectSchoolYear() throws Exception;
+	public int getLocationName();
 }

@@ -78,4 +78,5 @@ public interface ConfigurationPage {
                                                                   List<String> days,String shiftsNumber) throws Exception;
     public void selectOneDynamicGroup(String dynamicGroupName) throws Exception;
     public void publishNewTemplate(String templateName,String dynamicGroupName) throws Exception;
+    public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
 }

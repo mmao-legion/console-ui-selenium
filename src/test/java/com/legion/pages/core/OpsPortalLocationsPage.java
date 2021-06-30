@@ -3173,4 +3173,48 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		} else
 			SimpleUtils.fail("Failed to loading the work role list", false);
 	}
+
+	@FindBy(css = "lg-button[label=\"Edit\"]")
+	private List<WebElement> editBtnsInOH;
+	@FindBy(css = ".modal-content>div.location-working-hours.modal-body")
+	private WebElement workingHoursModalBody;
+	@FindBy(css = ".each-day-selector>input-field>ng-form>input[type=\"checkbox\"]")
+	private List<WebElement> checkBoxOfEachDay;
+
+	@Override
+	public void editBtnIsClickableInBusinessHours() {
+		scrollToBottom();
+		if (editBtnsInOH.size()>0) {
+			click(editBtnsInOH.get(0));
+			if (isElementEnabled(workingHoursModalBody,5)) {
+				SimpleUtils.pass("Edit button is clickable in business hours");
+			}else
+				SimpleUtils.fail("Working hours edit pop up window load failed",false);
+		}else
+			SimpleUtils.fail("Edit buttons load failed in operating hours template",false);
+	}
+
+	@Override
+	public void selectDayInWorkingHoursPopUpWin(int i) {
+		if (areListElementVisible(checkBoxOfEachDay,5)) {
+			click(checkBoxOfEachDay.get(i));
+			if (checkBoxOfEachDay.get(i).getAttribute("class").contains("not-empty")) {
+				SimpleUtils.pass("Select the checkbox successfully");
+			}else
+				SimpleUtils.fail("This checkbox was not selected",false);
+		}else
+			SimpleUtils.fail("Checkbox of each day in working hours pop up windown load failed",false);
+	}
+
+	@Override
+	public void clickSaveBtnInWorkingHoursPopUpWin() {
+		if (isElementEnabled(saveBtnInUpdateLocationPage)) {
+			click(saveBtnInUpdateLocationPage);
+			if (areListElementVisible(editBtnsInOH,5)) {
+				SimpleUtils.pass("Save button is clickable in business hours");
+			}else
+				SimpleUtils.fail("Click save button failed",false);
+		}else
+			SimpleUtils.fail("Save buttons load failed",false);
+	}
 }

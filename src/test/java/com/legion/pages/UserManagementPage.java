@@ -73,4 +73,12 @@ public interface UserManagementPage {
     public void verifyManageItemInUserManagementAccessRoleTab() throws Exception;
 
     public void verifyRemoveTheConditionFromDropDownListIfItSelected() throws Exception;
+
+    public void goToWorkRolesDetails(String workRoleName) throws Exception;
+
+    public void disableAssignmentRulesInLocationLevel(int index);
+
+    public void enableAssignmentRulesInLocationLevel(int index);
+
+    public void overriddenAssignmentRule(int index);
 }

@@ -2039,4 +2039,63 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	//added by Estelle to edit operating hours
+	@FindBy(className = "lg-time-slider-notch-selector")
+	private List<WebElement> startEndSliderInBusinessHoursPopUp;
+	@FindBy(css = "div[ng-repeat=\"notch in $ctrl.notches\"]")
+	private List<WebElement> sliderScaleInBusinessHoursPopUp;
+	@Override
+	public void moveSliderAtSomePoint( int moveCount, String slideType) throws Exception {
+		int startSelectTime = Integer.parseInt(startEndSliderInBusinessHoursPopUp.get(0).getText().trim().split(":")[0]);
+	  	int endSelectTime = Integer.parseInt(startEndSliderInBusinessHoursPopUp.get(1).getText().trim().split(":")[0]) + 12;
+	  	int endSliderTime = Integer.parseInt(sliderScaleInBusinessHoursPopUp.get(sliderScaleInBusinessHoursPopUp.size()-1).getText().trim().split(":")[0])+12;
+	  	int startSliderTime = Integer.parseInt(sliderScaleInBusinessHoursPopUp.get(0).getText().trim().split(":")[0]);
+		if (startSliderTime == 12) {
+			startSliderTime = 0;
+		}else
+			startSliderTime =startSliderTime;
+
+
+		if(slideType.equalsIgnoreCase("End")){
+			if(isElementLoaded(startEndSliderInBusinessHoursPopUp.get(1),5) && endSelectTime<endSliderTime){
+				SimpleUtils.pass("Business hours with Sliders loaded on page Successfully for End Point");
+				if (endSelectTime<endSliderTime) {
+					for(int i= endSelectTime*4+moveCount; i< startEndSliderInBusinessHoursPopUp.size();i++){
+						WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+						mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+						break;
+					}
+				}else if (endSelectTime==endSliderTime){
+					for(int i= endSelectTime*4-moveCount; i> startEndSliderInBusinessHoursPopUp.size();i++){
+						WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+						mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+						break;
+					}
+				}
+
+
+			}else{
+				SimpleUtils.fail("Business hours with End Sliders load failed", false);
+			}
+		}else if(slideType.equalsIgnoreCase("Start")){
+			if(isElementLoaded(startEndSliderInBusinessHoursPopUp.get(0),10) && startEndSliderInBusinessHoursPopUp.size()>0){
+				SimpleUtils.pass("Business hours with Sliders loaded on page Successfully for Starting point");
+				if (startSelectTime>endSliderTime) {
+					for(int i= endSelectTime*4-moveCount; i< startEndSliderInBusinessHoursPopUp.size();i++){
+						WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+						mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+						break;
+					}
+				}else if (startSelectTime==endSliderTime){
+					for(int i= endSelectTime*4+moveCount; i> startEndSliderInBusinessHoursPopUp.size();i++){
+						WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+						mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+						break;
+					}
+				}
+			}else{
+				SimpleUtils.fail("Business hours with Start Sliders load failed", false);
+			}
+		}
+	}
 }
