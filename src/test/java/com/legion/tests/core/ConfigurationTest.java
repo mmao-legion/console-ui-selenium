@@ -797,7 +797,7 @@ public class ConfigurationTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void locationLevelAdvanceStaffingRuleAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
         try{
-            String shiftsNumber = "7";
+            String shiftsNumber = "9";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
                 add("Friday");
