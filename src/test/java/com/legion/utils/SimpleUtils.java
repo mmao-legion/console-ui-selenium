@@ -905,7 +905,8 @@ public class SimpleUtils {
 			testRailPassword = testRailCfgOp.get("TEST_RAIL_PASSWORD");
 			setTestRailPassword(testRailPassword);
 			testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
-			setTestRailProjectID(testRailProjectID);
+			TestBase.testRailProjectID = testRailProjectID;
+			//setTestRailProjectID(testRailProjectID);
 			//testRailSuiteID = MyThreadLocal.getTestSuiteID();
 			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
 		}else {
