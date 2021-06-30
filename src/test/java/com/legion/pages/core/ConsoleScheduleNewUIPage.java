@@ -8594,8 +8594,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyClickOnSubmitButton() throws Exception {
         if (isElementLoaded(submitButton, 10)) {
             click(submitButton);
-            if (isElementLoaded(confirmWindow, 10) && isElementLoaded(okBtnOnConfirm, 10)) {
-                click(okBtnOnConfirm);
+            if (isElementLoaded(confirmWindow, 20) && isElementLoaded(okBtnOnConfirm, 20)) {
+                clickTheElement(okBtnOnConfirm);
                 SimpleUtils.pass("Confirm window loaded Successfully!");
             }else {
                 SimpleUtils.fail("Confirm window not loaded Successfully!", true);
@@ -11142,6 +11142,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);
+                                waitForSeconds(1);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
                                     click(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
@@ -12023,13 +12024,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception {
         int index = 0;
-        if (areListElementVisible(tmIcons, 5)) {
+        if (areListElementVisible(tmIcons, 15)) {
             for (int i = 0; i < tmIcons.size(); i++) {
                 moveToElementAndClick(tmIcons.get(i));
                 if (isPopOverLayoutLoaded()) {
                     if (popOverLayout.getText().contains(requestName) && popOverLayout.getText().contains(requestUserName)) {
                         index = 1;
-                        click(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
+                        clickTheElement(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
                         SimpleUtils.pass("Click " + requestName + " button Successfully!");
                         break;
                     }
