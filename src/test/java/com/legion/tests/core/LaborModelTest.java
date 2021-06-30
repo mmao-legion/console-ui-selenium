@@ -65,9 +65,9 @@ public class LaborModelTest extends TestBase {
             laborModelPage.addNewLaborModelTemplate(templateName);
             laborModelPage.deleteDraftLaborModelTemplate(templateName);
             laborModelPage.publishNewLaborModelTemplate(templateName,dynamicGroupName);
-            laborModelPage.clickOnLaborModelTab();
-            laborModelPage.goToLaborModelTile();
-            laborModelPage.archivePublishedOrDeleteDraftTemplate(templateName,action);
+//            laborModelPage.clickOnLaborModelTab();
+//            laborModelPage.goToLaborModelTile();
+//            laborModelPage.archivePublishedOrDeleteDraftTemplate(templateName,action);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
