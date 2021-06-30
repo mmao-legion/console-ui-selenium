@@ -9893,7 +9893,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div[ng-click=\"editShiftTime($event, shift)\"]")
     private WebElement editShiftTime;
 
-    @FindBy(css = "div[ng-click=\"editMealBreakTime($event, shift)\"]")
+    @FindBy(css = "div[ng-click=\"editBreaksTime()\"]")
     private WebElement editMealBreakTime;
 
     @FindBy(css = "div.modal-instance-header-title")
@@ -10499,7 +10499,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    @FindBy(css="div.edit-meal-break-time-modal")
+    @FindBy(css="div.edit-breaks-time-modal")
     private WebElement editShiftTimePopUp;
 
     @FindBy(css="div.worker-shift-container")
@@ -13627,7 +13627,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             waitForSeconds(3);
             scrollToElement(shift);
             if(isScheduleDayViewActive()){
-                click(shift.findElement(By.cssSelector("img[ng-if=\"hasViolateCompliance(shift)\"]")));
+                click(shift.findElement(By.cssSelector(".day-view-shift-hover-info-icon img")));
                 waitForSeconds(2);
             } else
                 click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
