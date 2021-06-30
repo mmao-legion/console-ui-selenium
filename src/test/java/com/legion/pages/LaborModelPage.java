@@ -21,7 +21,36 @@ public interface LaborModelPage {
 
     public void publishNewLaborModelTemplate(String templateName,String dynamicGroupName) throws Exception;
 
+    public void selectLaborStandardRepositorySubTabByLabel(String label) throws Exception;
 
+    public void goToLaborStandardRepositoryTile() throws Exception;
 
+    public void clickOnEditButton() throws Exception;
+
+    public void clickOnSaveButton() throws Exception;
+
+    public void clickOnCancelButton() throws Exception;
+
+    public void clickOnAddAttributeButton() throws Exception;
+
+    public void createNewAttribute(String attributeName,String attributeValue,String attributeDescription) throws Exception;
+
+    public void cancelCreateNewAttribute(String attributeName,String attributeValue,String attributeDescription) throws Exception;
+
+    public boolean isSpecifyAttributeExisting(String attributeName) throws Exception;
+
+    public void clickOnDeleteAttributeButton(String attributeName) throws Exception;
+
+    public void clickOkBtnOnDeleteAttributeDialog() throws Exception;
+
+    public void clickCancelBtnOnDeleteAttributeDialog() throws Exception;
+
+    public boolean checkDeleteAttributeButtonForEachAttribute() throws Exception;
+
+    public List<String> clickOnPencilButtonAndUpdateAttribute(String attributeName,String attributeValueUpdate,String attributeDescriptionUpdate) throws Exception;
+
+    public HashMap<String, List<String>> getValueAndDescriptionForEachAttribute() throws Exception;
+
+    public void selectLaborModelTemplateDetailsPageSubTabByLabel(String label) throws Exception;
 
 }

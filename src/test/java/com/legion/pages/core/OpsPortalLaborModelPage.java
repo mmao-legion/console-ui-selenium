@@ -4,6 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LaborModelPage;
 import com.legion.pages.UserManagementPage;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.an.E;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.legion.utils.MyThreadLocal.failedComment;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 
@@ -46,6 +48,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}else
 			SimpleUtils.fail("Work Roles Tile load failed",false);
 	}
+
 	@FindBy(css="[class=\"lg-table ng-scope\"] tbody")
 	private List<WebElement> templatesList;
 	@FindBy(css="[class=\"lg-table ng-scope\"] button span.ng-binding")
@@ -238,5 +241,306 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}
 	}
 
+	@FindBy(css="lg-button[label=\"Edit\"] button")
+	private WebElement editButton;
+	@FindBy(css="lg-button[label=\"Add Task\"] button")
+	private WebElement addTaskButton;
+	@FindBy(css="div.button-container lg-button[label=\"Cancel\"] button")
+	private WebElement cancelButton;
+	@FindBy(css="div.button-container lg-button[label=\"Save\"] button")
+	private WebElement saveButton;
+	@FindBy(css="div[ng-click=\"$ctrl.addAttributeClick()\"]")
+	private WebElement addAttributeButton;
+	@FindBy(css="tbody tr[ng-if=\"$ctrl.showInput\"]")
+	private WebElement newAttributeInputRow;
+
+	@FindBy(css = "div.lg-tabs__nav-item")
+	private List<WebElement> subTabs;
+
+	@Override
+	public void selectLaborStandardRepositorySubTabByLabel(String label) throws Exception {
+		boolean isTabFound = false;
+		if (areListElementVisible(subTabs,10) && subTabs.size() > 0) {
+			for (WebElement subTab : subTabs) {
+				if (subTab.getText().toLowerCase().contains(label.toLowerCase())) {
+					click(subTab);
+					isTabFound = true;
+				}
+			}
+			if (isTabFound)
+				SimpleUtils.pass("Labor Model Page: Labor Standard Repository section- '" + label + "' tab selected successfully.");
+			else
+				SimpleUtils.fail("Labor Model Page: Labor Standard Repository section - '" + label + "' tab not found.", true);
+		} else
+			SimpleUtils.fail("Labor Model Page: Labor Standard Repository section - sub tabs not loaded.", false);
+	}
+
+	@Override
+	public void clickOnEditButton() throws Exception {
+		if(isElementEnabled(editButton,5)){
+			clickTheElement(editButton);
+			if(isElementEnabled(addTaskButton,2)&&isElementEnabled(cancelButton,2)&&isElementEnabled(saveButton,2)){
+				SimpleUtils.pass("User click edit button successfully on Labor Standard Repository page");
+			}else {
+				SimpleUtils.fail("User failed to click edit button on Labor Standard Repository page.",false);
+			}
+		}
+	}
+
+	@Override
+	public void clickOnSaveButton() throws Exception {
+		if(isElementEnabled(saveButton,5)){
+			clickTheElement(saveButton);
+			waitForSeconds(5);
+		}
+	}
+
+	@FindBy(css="div.modal-dialog lg-button[label=\"Yes\"] button")
+	private WebElement yesButtonOnCancelDialog;
+
+	@Override
+	public void clickOnCancelButton() throws Exception {
+		if(isElementEnabled(cancelButton,5)){
+			clickTheElement(cancelButton);
+			waitForSeconds(5);
+			if(isElementEnabled(yesButtonOnCancelDialog,5)){
+				SimpleUtils.pass("User can click cancel button successfully!");
+				clickTheElement(yesButtonOnCancelDialog);
+			}else {
+				SimpleUtils.fail("User can click cancel button successfully!",false);
+			}
+		}
+	}
+
+
+	public void clickOnAddAttributeButton() throws Exception{
+		if(isElementEnabled(addAttributeButton,5)){
+			clickTheElement(addAttributeButton);
+			if(isElementEnabled(newAttributeInputRow,2)){
+				SimpleUtils.pass("User click add Attribute button successfully on Labor Standard Repository - External Attributes page");
+			}else {
+				SimpleUtils.fail("User failed to click add Attribute button on Labor Standard Repository - External Attributes page.",false);
+			}
+		}
+	}
+
+	@FindBy(css="tbody tr[ng-if=\"$ctrl.showInput\"] input-field[label=\"Attribute Name\"] input")
+	private WebElement newAttributeNameInputField;
+	@FindBy(css="tbody tr[ng-if=\"$ctrl.showInput\"] input-field[label=\"Default Value\"] input")
+	private WebElement newAttributeValueInputField;
+	@FindBy(css="tbody tr[ng-if=\"$ctrl.showInput\"] input-field[label=\"Description\"] input")
+	private WebElement newAttributeDescriptionInputField;
+	@FindBy(css="tbody tr[ng-if=\"$ctrl.showInput\"] td.action-buttons i.fa-check-circle")
+	private WebElement newAttributeCheckButton;
+	@FindBy(css="tbody tr[ng-if=\"$ctrl.showInput\"] td.action-buttons i.fa-times-circle")
+	private WebElement newAttributeCrossButton;
+	@FindBy(css="table.lg-table tbody.ng-scope")
+	private List<WebElement> attributesList;
+	@FindBy(css="tbody tr td[ng-if=\"!(type.edit && type.isNew)\"]")
+	private List<WebElement> attributesNameList;
+	@FindBy(css="tbody tr td[ng-if=\"!(type.edit || !$ctrl.showHeader)\"]")
+	private List<WebElement> attributesValueList;
+	@FindBy(css="tbody tr td[ng-if=\"$ctrl.modifyDescription && !(type.edit || !$ctrl.showHeader)\"]")
+	private List<WebElement> attributesDescriptionList;
+
+	public void inputAllFieldsForNewAttribute(String attributeName,String attributeValue,String attributeDescription) throws Exception{
+		if(isElementEnabled(newAttributeInputRow,2)){
+			newAttributeNameInputField.sendKeys(attributeName);
+			newAttributeValueInputField.sendKeys(attributeValue);
+			newAttributeDescriptionInputField.sendKeys(attributeDescription);
+		}
+	}
+
+	@Override
+	public void cancelCreateNewAttribute(String attributeName,String attributeValue,String attributeDescription) throws Exception{
+//		Click x button when creating new attribute
+		int beforeCreate = attributesList.size();
+		inputAllFieldsForNewAttribute(attributeName,attributeValue,attributeDescription);
+		clickTheElement(newAttributeCrossButton);
+		int afterCreate1 = attributesList.size();
+		if(afterCreate1-beforeCreate == 0){
+			SimpleUtils.pass("User can click cross button successfully when creating new attributes");
+		}else {
+			SimpleUtils.fail("User failed to click cross button when creating new attributes",false);
+		}
+		clickOnAddAttributeButton();
+//		Click cancel button when creating new attribute
+		inputAllFieldsForNewAttribute(attributeName,attributeValue,attributeDescription);
+		clickTheElement(newAttributeCheckButton);
+		clickOnCancelButton();
+	}
+
+	@Override
+	public void createNewAttribute(String attributeName,String attributeValue,String attributeDescription) throws Exception{
+		int beforeCreate = attributesList.size();
+		//Create new attribute
+		inputAllFieldsForNewAttribute(attributeName,attributeValue,attributeDescription);
+		clickTheElement(newAttributeCheckButton);
+
+		int afterCreate = attributesList.size();
+		if(afterCreate-beforeCreate == 1){
+			SimpleUtils.pass("User can click check button successfully when creating new attributes");
+		}else {
+			SimpleUtils.fail("User failed to click check button when creating new attributes",false);
+		}
+		clickOnSaveButton();
+	}
+
+	@Override
+	public boolean isSpecifyAttributeExisting(String attributeName) throws Exception{
+		boolean flag = false;
+		if(areListElementVisible(attributesList,10)){
+			for(WebElement attributesName:attributesNameList){
+				String name = attributesName.getText().trim();
+				if(name.equals(attributeName)){
+					SimpleUtils.pass(attributeName + " is shown in attribute list");
+					flag = true;
+				}else {
+					SimpleUtils.fail(attributeName + " is NOT shown in attribute list",true);
+				}
+			}
+		}
+		return flag;
+	}
+
+	@Override
+	public void goToLaborStandardRepositoryTile() throws Exception {
+		if (isElementLoaded(laborModelRepositoryTile,5)) {
+			click(laborModelRepositoryTile);
+			waitForSeconds(5);
+			if (areListElementVisible(subTabs,5) && isElementEnabled(editButton,5)) {
+				SimpleUtils.pass("Go to labor model repository tile successfully");
+			}else
+				SimpleUtils.fail("Failed to labor model repository tile",false);
+		}else
+			SimpleUtils.fail("labor model repository tile load failed",false);
+	}
+
+	@FindBy(css="tbody tr td.edit-button i.fa-pencil")
+	private WebElement pencilButton;
+	@FindBy(css="tbody tr td.edit-button i.fa-times")
+	private WebElement deleteAttributeButton;
+	@FindBy(css="div.lg-modal h1 div")
+	private WebElement disableExternalAttributePopupTitle;
+
+	@Override
+	public boolean checkDeleteAttributeButtonForEachAttribute() throws Exception {
+		boolean flag = true;
+		if (areListElementVisible(attributesList, 10)) {
+			for (WebElement attribute : attributesList) {
+				WebElement deleteBTN = attribute.findElement(By.cssSelector("td:nth-child(4) i.fa-times"));
+				if (!isElementEnabled(deleteBTN, 1)) {
+					flag = false;
+					SimpleUtils.fail("There is no delete button!", false);
+				}
+			}
+		}
+		return flag;
+	}
+
+	@Override
+	public void clickOnDeleteAttributeButton(String attributeName) throws Exception {
+		if(areListElementVisible(attributesList,10)){
+			for(WebElement attribute:attributesList){
+				String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+				if(name.equals(attributeName)){
+					WebElement deleteBTN = attribute.findElement(By.cssSelector("td:nth-child(4) i.fa-times"));
+					clickTheElement(deleteBTN);
+					String title = disableExternalAttributePopupTitle.getText().trim();
+					if(isElementEnabled(disableExternalAttributePopupTitle,3) && title.contains("Disable External Attribute")){
+						SimpleUtils.pass("User can click delete attribute successfully!");
+					}else{
+						SimpleUtils.fail("User failed to click delete attribute!",false);
+					}
+				}else {
+					SimpleUtils.fail("There is no " + attributeName + " in attributes list.",false);
+				}
+			}
+		}
+	}
+
+	@Override
+	public List<String> clickOnPencilButtonAndUpdateAttribute(String attributeName,String attributeValueUpdate,String attributeDescriptionUpdate) throws Exception {
+		List<String> updateValues = new ArrayList<>();
+		if (areListElementVisible(attributesList, 10)) {
+			for (WebElement attribute : attributesList) {
+				String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+				if (name.equals(attributeName)) {
+					WebElement editBTN = attribute.findElement(By.cssSelector("td:nth-child(4) i.fa-pencil"));
+					clickTheElement(editBTN);
+					clickTheElement(newAttributeValueInputField);
+					newAttributeValueInputField.sendKeys("1");
+					clickTheElement(newAttributeDescriptionInputField);
+					newAttributeDescriptionInputField.sendKeys("-Update");
+					clickTheElement(newAttributeCheckButton);
+					String updateValue = attribute.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+					String updateDes = attribute.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
+					updateValues.add(updateValue);
+					updateValues.add(updateDes);
+					clickOnSaveButton();
+				}else {
+					SimpleUtils.fail("Can't find " + attributeName + " in attributes list.",false);
+				}
+			}
+		}
+		return updateValues;
+	}
+
+	@FindBy(css="div.lg-modal lg-button[label=\"Ok\"] button")
+	private WebElement okButtonOnDeleteAttributeDialog;
+
+	@FindBy(css="div.lg-modal lg-button[label=\"Cancel\"] button")
+	private WebElement cancelButtonOnDeleteAttributeDialog;
+
+	@Override
+	public void clickOkBtnOnDeleteAttributeDialog() throws Exception {
+		if(isElementEnabled(disableExternalAttributePopupTitle,10)){
+			clickTheElement(okButtonOnDeleteAttributeDialog);
+			waitForSeconds(1);
+		}
+	}
+
+	@Override
+	public void clickCancelBtnOnDeleteAttributeDialog() throws Exception {
+		if(isElementEnabled(disableExternalAttributePopupTitle,10)){
+			clickTheElement(cancelButtonOnDeleteAttributeDialog);
+			waitForSeconds(1);
+		}
+	}
+
+	@Override
+	public HashMap<String, List<String>> getValueAndDescriptionForEachAttribute() throws Exception{
+		HashMap<String, List<String>> infoForEachAttribute = new HashMap<>();
+		if(areListElementVisible(attributesList,5)){
+			for (WebElement attribute : attributesList) {
+				List<String> infos = new ArrayList<>();
+				String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+				String value = attribute.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+				String des = attribute.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
+				infos.add(0,value);
+				infos.add(1,des);
+				infoForEachAttribute.put(name,infos);
+			}
+		}
+		return infoForEachAttribute;
+	}
+
+	@Override
+	public void selectLaborModelTemplateDetailsPageSubTabByLabel(String label) throws Exception {
+		boolean isTabFound = false;
+		if (areListElementVisible(subTabs,10) && subTabs.size() > 0) {
+			for (WebElement subTab : subTabs) {
+				if (subTab.getText().toLowerCase().contains(label.toLowerCase())) {
+					click(subTab);
+					isTabFound = true;
+				}
+			}
+			if (isTabFound)
+				SimpleUtils.pass("Labor Model Page: Labor Model Details page - '" + label + "' tab selected successfully.");
+			else
+				SimpleUtils.fail("Labor Model Page: Labor Model Details page - '" + label + "' tab not found.", true);
+		} else
+			SimpleUtils.fail("Labor Model Page: Labor Model Details page - sub tabs not loaded.", false);
+	}
 }
 
