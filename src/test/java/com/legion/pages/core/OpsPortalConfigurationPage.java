@@ -1668,7 +1668,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				clickTheElement(newTemplateDescription);
 				newTemplateDescription.sendKeys(templateName);
 				clickTheElement(continueBTN);
-				waitForSeconds(2);
+				waitForSeconds(5);
 				if(isElementEnabled(welcomeCloseButton)){
 					clickTheElement(welcomeCloseButton);
 				}
@@ -1680,7 +1680,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if(isElementEnabled(saveAsDraftButton)){
 					SimpleUtils.pass("User can click continue button successfully!");
 					clickTheElement(saveAsDraftButton);
-					waitForSeconds(3);
+					waitForSeconds(5);
 				}else {
 					SimpleUtils.fail("User can't click continue button successfully!",false);
 				}
@@ -1702,15 +1702,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="modal[modal-title=\"Deleting Template\"]")
 	private WebElement deleteTemplateDialog;
 
+	@FindBy(css="modal[modal-title=\"Archive Template\"]")
+	private WebElement archiveTemplateDialog;
+
 	@FindBy(css="modal[modal-title=\"Deleting Template\"] lg-button[label=\"OK\"] button")
 	private WebElement okButtonOnDeleteTemplateDialog;
 
 	@Override
 	public void deleteNewCreatedTemplate(String templateName) throws Exception{
-		String newTemplateName = templateNameList.get(0).getText().trim();
 		if(templateName.equals(newTemplateName)){
 			clickTheElement(templateNameList.get(0));
-			waitForSeconds(5);
+			waitForSeconds(5);		String newTemplateName = templateNameList.get(0).getText().trim();
+
 			if(isElementEnabled(deleteTemplateButton,3)){
 				clickTheElement(deleteTemplateButton);
 				if(isElementEnabled(deleteTemplateDialog,3)){
@@ -1977,7 +1980,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void searchOneDynamicGroup(String dynamicGroupName) throws Exception{
 		clickOnAssociationTabOnTemplateDetailsPage();
 		searchAssociateFiled.sendKeys(dynamicGroupName);
-		waitForSeconds(2);
+		waitForSeconds(5);
 		if(templateAssociationRows.size()!=0){
 			SimpleUtils.pass("User can search out association named: " + dynamicGroupName);
 		}else {
@@ -2013,7 +2016,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				clickTheElement(newTemplateDescription);
 				newTemplateDescription.sendKeys(templateName);
 				clickTheElement(continueBTN);
-				waitForSeconds(2);
+				waitForSeconds(5);
 				if(isElementEnabled(welcomeCloseButton)){
 					clickTheElement(welcomeCloseButton);
 				}
@@ -2046,56 +2049,86 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private List<WebElement> sliderScaleInBusinessHoursPopUp;
 	@Override
 	public void moveSliderAtSomePoint( int moveCount, String slideType) throws Exception {
-		int startSelectTime = Integer.parseInt(startEndSliderInBusinessHoursPopUp.get(0).getText().trim().split(":")[0]);
-	  	int endSelectTime = Integer.parseInt(startEndSliderInBusinessHoursPopUp.get(1).getText().trim().split(":")[0]) + 12;
-	  	int endSliderTime = Integer.parseInt(sliderScaleInBusinessHoursPopUp.get(sliderScaleInBusinessHoursPopUp.size()-1).getText().trim().split(":")[0])+12;
-	  	int startSliderTime = Integer.parseInt(sliderScaleInBusinessHoursPopUp.get(0).getText().trim().split(":")[0]);
-		if (startSliderTime == 12) {
-			startSliderTime = 0;
-		}else
-			startSliderTime =startSliderTime;
+		try {
+			int startSelectTime = Integer.parseInt(startEndSliderInBusinessHoursPopUp.get(0).getText().trim().split(":")[0]);
+			int endSelectTime = Integer.parseInt(startEndSliderInBusinessHoursPopUp.get(1).getText().trim().split(":")[0]) + 12;
+			int endSliderTime = Integer.parseInt(sliderScaleInBusinessHoursPopUp.get(sliderScaleInBusinessHoursPopUp.size()-1).getText().trim().split(":")[0])+12;
+			int startSliderTime = Integer.parseInt(sliderScaleInBusinessHoursPopUp.get(0).getText().trim().split(":")[0]);
+			if (startSliderTime == 12) {
+				startSliderTime = 0;
+			}else
+				startSliderTime =startSliderTime;
+
+			if(slideType.equalsIgnoreCase("End")){
+				if(isElementLoaded(startEndSliderInBusinessHoursPopUp.get(1),5) && endSelectTime<endSliderTime){
+					SimpleUtils.pass("Business hours with Sliders loaded on page Successfully for End Point");
+					if (endSelectTime<endSliderTime) {
+						for(int i= endSelectTime*4+moveCount; i< startEndSliderInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+							break;
+						}
+					}else if (endSelectTime==endSliderTime){
+						for(int i= endSelectTime*4-moveCount; i> startEndSliderInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+							break;
+						}
+					}
 
 
-		if(slideType.equalsIgnoreCase("End")){
-			if(isElementLoaded(startEndSliderInBusinessHoursPopUp.get(1),5) && endSelectTime<endSliderTime){
-				SimpleUtils.pass("Business hours with Sliders loaded on page Successfully for End Point");
-				if (endSelectTime<endSliderTime) {
-					for(int i= endSelectTime*4+moveCount; i< startEndSliderInBusinessHoursPopUp.size();i++){
-						WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
-						mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
-						break;
-					}
-				}else if (endSelectTime==endSliderTime){
-					for(int i= endSelectTime*4-moveCount; i> startEndSliderInBusinessHoursPopUp.size();i++){
-						WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
-						mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
-						break;
-					}
+				}else{
+					SimpleUtils.fail("Business hours with End Sliders load failed", false);
 				}
-
-
-			}else{
-				SimpleUtils.fail("Business hours with End Sliders load failed", false);
+			}else if(slideType.equalsIgnoreCase("Start")){
+				if(isElementLoaded(startEndSliderInBusinessHoursPopUp.get(0),10) && startEndSliderInBusinessHoursPopUp.size()>0){
+					SimpleUtils.pass("Business hours with Sliders loaded on page Successfully for Starting point");
+					if (startSelectTime>endSliderTime) {
+						for(int i= endSelectTime*4-moveCount; i< startEndSliderInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+							break;
+						}
+					}else if (startSelectTime==endSliderTime){
+						for(int i= endSelectTime*4+moveCount; i> startEndSliderInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+							break;
+						}
+					}
+				}else{
+					SimpleUtils.fail("Business hours with Start Sliders load failed", false);
+				}
 			}
-		}else if(slideType.equalsIgnoreCase("Start")){
-			if(isElementLoaded(startEndSliderInBusinessHoursPopUp.get(0),10) && startEndSliderInBusinessHoursPopUp.size()>0){
-				SimpleUtils.pass("Business hours with Sliders loaded on page Successfully for Starting point");
-				if (startSelectTime>endSliderTime) {
-					for(int i= endSelectTime*4-moveCount; i< startEndSliderInBusinessHoursPopUp.size();i++){
-						WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
-						mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
-						break;
-					}
-				}else if (startSelectTime==endSliderTime){
-					for(int i= endSelectTime*4+moveCount; i> startEndSliderInBusinessHoursPopUp.size();i++){
-						WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
-						mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
-						break;
-					}
-				}
-			}else{
-				SimpleUtils.fail("Business hours with Start Sliders load failed", false);
+		}catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
+	}
+
+	@Override
+	public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) {
+
+		clickTheElement(templateNameList.get(0));
+		waitForSeconds(5);
+		List<WebElement> deleteArchiveBtn = getDriver().findElements(By.cssSelector("button[type=\"button\"]"));
+		for (WebElement e: deleteArchiveBtn) {
+			if (e.getText().equalsIgnoreCase(action)) {
+				click(e);
+				break;
 			}
 		}
+		if(isElementEnabled(archiveTemplateDialog,3)){
+			clickTheElement(okButtonOnDeleteTemplateDialog);
+			waitForSeconds(5);
+			String firstTemplateName = templateNameList.get(0).getText().trim();
+			if(!firstTemplateName.equals(templateName)){
+				SimpleUtils.pass("User has " + action + "  template successfully!");
+			}else {
+				SimpleUtils.fail("User has " + action + "  template failed!",false);
+			}
+		} else
+			SimpleUtils.fail(action+" template dialog pop up window load failed.",false);
+
 	}
 }

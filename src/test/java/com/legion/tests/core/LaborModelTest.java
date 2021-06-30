@@ -58,12 +58,16 @@ public class LaborModelTest extends TestBase {
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
             String templateName="AutoCreate"+currentTime;
-            String dynamicGroupName ="ForAuto";
+            String dynamicGroupName ="For Auto";
+            String action = "Archive";
 
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             laborModelPage.addNewLaborModelTemplate(templateName);
             laborModelPage.deleteDraftLaborModelTemplate(templateName);
             laborModelPage.publishNewLaborModelTemplate(templateName,dynamicGroupName);
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.archivePublishedOrDeleteDraftTemplate(templateName,action);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -155,27 +155,27 @@ public class UserManagementTest extends TestBase {
 
     }
 
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Remove the condition from drop down list if it's selected")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyRemoveTheConditionFromDropDownListIfItSelectedAsInternalAdminForUserManagement(String browser, String username, String password, String location) throws Exception {
-
-        try{
-            //go to User Management tab
-            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
-            userManagementPage.clickOnUserManagementTab();
-            //check dynamic group item
-            userManagementPage.iCanSeeDynamicGroupItemTileInUserManagementTab();
-            //go to dynamic group
-            userManagementPage.goToDynamicGroup();
-            userManagementPage.verifyRemoveTheConditionFromDropDownListIfItSelected();
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-
-    }
+//    @Automated(automated = "Automated")
+//    @Owner(owner = "Estelle")
+//    @Enterprise(name = "Op_Enterprise")
+//    @TestName(description = "Remove the condition from drop down list if it's selected")
+//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+//    public void verifyRemoveTheConditionFromDropDownListIfItSelectedAsInternalAdminForUserManagement(String browser, String username, String password, String location) throws Exception {
+//
+//        try{
+//            //go to User Management tab
+//            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+//            userManagementPage.clickOnUserManagementTab();
+//            //check dynamic group item
+//            userManagementPage.iCanSeeDynamicGroupItemTileInUserManagementTab();
+//            //go to dynamic group
+//            userManagementPage.goToDynamicGroup();
+//            userManagementPage.verifyRemoveTheConditionFromDropDownListIfItSelected();
+//        } catch (Exception e){
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
+//
+//    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")

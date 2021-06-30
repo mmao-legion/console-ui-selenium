@@ -232,4 +232,6 @@ public interface LocationsPage {
     public void selectDayInWorkingHoursPopUpWin(int i);
 
     public void clickSaveBtnInWorkingHoursPopUpWin();
+
+//    public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
 }

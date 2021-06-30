@@ -507,7 +507,7 @@ public class JobTest extends TestBase {
             int index = 0;
             String adjustmentValue = "10";
             String directionChoices = "Decrease";
-            String categoryType = "Transactions";
+            String categoryType = "Enrollments";
             String adjustmentType ="Percent";
 
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();

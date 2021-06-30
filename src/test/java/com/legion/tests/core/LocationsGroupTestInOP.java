@@ -232,10 +232,10 @@ public class LocationsGroupTestInOP extends TestBase {
                 }else
                     SimpleUtils.fail("It's not MS location group,select another one pls",false);
                 //search location again
-                locationsPage.searchLocation("Change "+locationName+" to P2P or MS");
+//                locationsPage.searchLocation("Change "+locationName+" to P2P or MS");
+                locationsPage.searchLocation(locationName);
                 if (!locationsPage.isItMSLG()) {
                     SimpleUtils.pass("Change MS location group to P2P successfully");
-                    setLGPTPLocationName(locationName);
                 }else
                     SimpleUtils.fail("Change MS location group to P2P failed",true);
 
@@ -300,95 +300,44 @@ public class LocationsGroupTestInOP extends TestBase {
                 }else
                     SimpleUtils.fail("Update failed",true);
 
-            //disable parent location
-            String action="Disable";
-            locationsPage.disableEnableLocation(locationInfoDetails.get(0).get("locationName"),action);
-            ArrayList<HashMap<String, String>> locationInfoDetailsAfterDisable =locationsPage.getLocationInfo(locationName);
+                //disable parent location
+                String action="Disable";
+                locationsPage.disableEnableLocation(locationInfoDetails.get(0).get("locationName"),action);
+                ArrayList<HashMap<String, String>> locationInfoDetailsAfterDisable =locationsPage.getLocationInfo(locationName);
 
-            for (int i = 1; i <locationInfoDetailsAfterDisable.size() ; i++) {
-                if (locationInfoDetailsAfterDisable.get(i).get("locationStatus").equals(locationInfoDetails.get(i).get("locationStatus"))) {
-                    SimpleUtils.pass("There is no impact for child location status after changed parent location ");
+                for (int i = 1; i <locationInfoDetailsAfterDisable.size() ; i++) {
+                    if (locationInfoDetailsAfterDisable.get(i).get("locationStatus").equals(locationInfoDetails.get(i).get("locationStatus"))) {
+                        SimpleUtils.pass("There is no impact for child location status after changed parent location ");
+                    }else
+                        SimpleUtils.fail("Child location status is changed after changed parent location, it's not expect behavior ",true);
+                }
+
+                //disable child location
+                locationsPage.disableEnableLocation(locationInfoDetails.get(1).get("locationName"),action);
+
+                //revert status to enable
+                String actionEnable="Enable";
+                locationsPage.disableEnableLocation(locationInfoDetails.get(0).get("locationName"),actionEnable);
+                locationsPage.disableEnableLocation(locationInfoDetails.get(1).get("locationName"),actionEnable);
+
+                //verify to change p2p child location to None
+                String locationToNone = locationInfoDetails.get(1).get("locationName");
+                locationsPage.changeOneLocationToNone(locationToNone);
+                //search this location group again
+                ArrayList<HashMap<String, String>> locationInfoDetailsAftToNone =locationsPage.getLocationInfo(locationName);
+
+                if (locationInfoDetailsAftToNone.size() < locationInfoDetails.size()) {
+                    SimpleUtils.pass("Child location:"+locationInfoDetailsAftToNone.get(locationInfoDetailsAftToNone.size()-1).get("locationName") +" was removed from this location group:");
                 }else
-                    SimpleUtils.fail("Child location status is changed after changed parent location, it's not expect behavior ",true);
-            }
+                    SimpleUtils.fail("Update child location to None failed",true);
 
-            //disable child location
-            locationsPage.disableEnableLocation(locationInfoDetails.get(1).get("locationName"),action);
-
-            //revert status to enable
-            String actionEnable="Enable";
-            locationsPage.disableEnableLocation(locationInfoDetails.get(0).get("locationName"),actionEnable);
-            locationsPage.disableEnableLocation(locationInfoDetails.get(1).get("locationName"),actionEnable);
-
+                //change parent location to None
+                locationsPage.changeOneLocationToNone(locationName);
 //                //check location group navigation
 //                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
 //                LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 //                locationSelectorPage.changeDistrict(locationInfoDetailsAfterUpdate.get(0).get("locationDistrict"));
 //                locationSelectorPage.changeLocation(locationInfoDetailsAfterUpdate.get(0).get("locationName"));
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate Master Slave Location group creation with regular type")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpdateP2PLocationGroupDistrictFunctionAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
-
-        try{
-            String LGMSLocationName =getLGMSLocationName();
-            int index =0;
-            String searchCharacter = "a";
-            String searchDistrict = "No touch";
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-locations tab
-            locationsPage.goToSubLocationsInLocationsPage();
-            //get location's  info
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(LGMSLocationName);
-            String originalDistrict = locationInfoDetails.get(0).get("locationDistrict");
-            locationsPage.updateParentLocationDistrict(searchCharacter,index);
-            ArrayList<HashMap<String, String>> locationInfoDetailsAfterUpdate =locationsPage.getLocationInfo(LGMSLocationName);
-            String districtAfterUpdate = locationInfoDetailsAfterUpdate.get(0).get("locationDistrict");
-            if (!districtAfterUpdate.equals(originalDistrict)) {
-                SimpleUtils.pass("District updated successfully");
-            }else
-                SimpleUtils.fail("Update failed",true);
-
-            //check location group navigation
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict(districtAfterUpdate);
-            //to check locations is showing under new district
-            for (int i = 0; i <locationInfoDetails.size() ; i++) {
-                locationSelectorPage.changeLocation(locationInfoDetails.get(i).get("locationName"));
-
-            }
-            //revert the update
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            locationsPage.clickOnLocationsTab();
-            locationsPage.validateItemsInLocations();
-            locationsPage.goToSubLocationsInLocationsPage();
-            locationsPage.searchLocation(LGMSLocationName);
-            locationsPage.updateParentLocationDistrict(searchDistrict,index);
-            ArrayList<HashMap<String, String>> locationInfoDetailsAfterRevert =locationsPage.getLocationInfo(LGMSLocationName);
-            String districtAfterRevert= locationInfoDetailsAfterRevert.get(0).get("locationDistrict");
-            if (districtAfterRevert.equals(originalDistrict)) {
-                SimpleUtils.pass("Revert successfully");
-            }else
-                SimpleUtils.fail("Revert failed",true);
-
-
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -500,190 +449,6 @@ public class LocationsGroupTestInOP extends TestBase {
 
 
     }
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to disable P2P child /parent location")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDisableEnableParentChildLocationInLGP2PAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
-
-        try{
-            String LGPTPLocationName =getLGPTPLocationName();
-
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-locations tab
-            locationsPage.goToSubLocationsInLocationsPage();
-            //add new MS location group-parent and child
-
-
-            //get location's  info
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(LGPTPLocationName);
-
-            //disable parent location
-            String action="Disable";
-            locationsPage.disableEnableLocation(locationInfoDetails.get(0).get("locationName"),action);
-            ArrayList<HashMap<String, String>> locationInfoDetailsAfterUpdate =locationsPage.getLocationInfo(LGPTPLocationName);
-
-            for (int i = 1; i <locationInfoDetailsAfterUpdate.size() ; i++) {
-                if (locationInfoDetailsAfterUpdate.get(i).get("locationStatus").equals(locationInfoDetails.get(i).get("locationStatus"))) {
-                    SimpleUtils.pass("There is no impact for child location status after changed parent location ");
-                }else
-                    SimpleUtils.fail("Child location status is changed after changed parent location, it's not expect behavior ",true);
-            }
-
-            //disable child location
-            locationsPage.disableEnableLocation(locationInfoDetails.get(1).get("locationName"),action);
-
-            //revert status to enable
-            String actionEnable="Enable";
-            locationsPage.disableEnableLocation(locationInfoDetails.get(0).get("locationName"),actionEnable);
-            locationsPage.disableEnableLocation(locationInfoDetails.get(1).get("locationName"),actionEnable);
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-
-    }
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to update MS location group to None")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeMSLocationsToNoneFunctionAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
-
-        try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-            String currentTime =  dfs.format(new Date());
-            String locationName = "LGMSAuto" +currentTime;
-            setLGMSLocationName(locationName);
-
-            int index =0;
-            int childLocationNum = 1;
-            String searchCharactor = "No touch";
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-locations tab
-            locationsPage.goToSubLocationsInLocationsPage();
-            String  parentRelationship = "Parent location";
-            String locationType = "Regular";
-            locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship, locationGroupSwitchOperation.MS.getValue());
-
-            //add child location by child number
-            String childLocationName = "";
-            try {
-                for (int i = 0; i <childLocationNum ; i++) {
-                    childLocationName = "childLocationForMS" + i +currentTime;
-                    setLGMSChildLocationName(childLocationName);
-                    String  childRelationship = "Part of a location group";
-                    locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
-                }
-            }catch (Exception e){
-                SimpleUtils.fail("Child location creation failed",true);
-            }
-            //get search result location info
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            //verify to change MS child location to None
-            locationsPage.changeOneLocationToNone(childLocationName);
-            //search this location group again
-            ArrayList<HashMap<String, String>> locationInfoDetailsAftUpdate =locationsPage.getLocationInfo(locationName);
-
-            if (locationInfoDetailsAftUpdate.size() < locationInfoDetails.size()) {
-                SimpleUtils.pass("Child location:"+locationInfoDetails.get(locationInfoDetails.size()-1).get("locationName") +" was removed from this location group");
-            }else
-                SimpleUtils.fail("Update child location to None failed",true);
-            //change MS parent location to None
-            locationsPage.changeOneLocationToNone(locationName);
-
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-
-    }
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to update P2P location to None")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyChangeP2PLocationsToNoneFunctionAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
-
-        try{
-
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date());
-            String locationName = "LGPTPAuto" +currentTime;
-            setLGPTPLocationName(locationName);
-            int index =0;
-            int childLocationNum = 1;
-            String searchCharactor = "No touch";
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-locations tab
-            locationsPage.goToSubLocationsInLocationsPage();
-            //add new p2p location group-parent and child
-            String  parentRelationship = "Parent location";
-            String locationType = "Regular";
-            locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship, locationGroupSwitchOperation.PTP.getValue());
-            String childLocationName = "";
-            try {
-                for (int i = 0; i <childLocationNum ; i++) {
-                    childLocationName = "childLocationForP2P" + i +currentTime;
-                    setLGPTPChildLocationName(childLocationName);
-                    String  childRelationship = "Part of a location group";
-                    locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
-                }
-            }catch (Exception e){
-                SimpleUtils.fail("Child location creation failed",true);
-            }
-            //search location
-            locationsPage.searchLocation(locationName);
-            //get search result location info
-            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-            //verify to change P2P child location to None
-            locationsPage.changeOneLocationToNone(childLocationName);
-            //search this location group again
-            ArrayList<HashMap<String, String>> locationInfoDetailsAftUpdate =locationsPage.getLocationInfo(locationName);
-
-            if (locationInfoDetailsAftUpdate.size() < locationInfoDetails.size()) {
-                SimpleUtils.pass("Child location:"+locationInfoDetails.get(locationInfoDetails.size()-1).get("locationName") +" was removed from this location group:"+LGPTPLocationName.get());
-            }else
-                SimpleUtils.fail("Child location was not removed from parent location",true);
-            //change MS parent location to None
-            locationsPage.changeOneLocationToNone(locationName);
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-
-    }
-
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
@@ -919,7 +684,8 @@ public class LocationsGroupTestInOP extends TestBase {
             }else
                 SimpleUtils.fail("It's not P2P location group,select another one pls",false);
             //search location again
-            locationsPage.searchLocation("Change "+locationName+" to MS group");
+//            locationsPage.searchLocation("Change "+locationName+" to MS group");block by https://legiontech.atlassian.net/browse/OPS-2510
+            locationsPage.searchLocation(locationName);
             if (locationsPage.isItMSLG()) {
                 SimpleUtils.pass("Change P2P location group to MS successfully");
 //                setLGMSLocationName(locationName);

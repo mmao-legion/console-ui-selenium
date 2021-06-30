@@ -72,7 +72,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void clickModelSwitchIconInDashboardPage(String value) {
 		waitForSeconds(3);
-		if (isElementEnabled(modeSwitchIcon, 10)) {
+		if (isElementEnabled(modeSwitchIcon, 30)) {
 			clickTheElement(modeSwitchIcon);
 			waitForSeconds(5);
 			if (modelSwitchOption.size() != 0) {
@@ -96,7 +96,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(goToLocationsButton, 150))
+		if (isElementLoaded(goToLocationsButton, 10))
 			isLoaded = true;
 		return isLoaded;
 	}
@@ -314,7 +314,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(selectALocationTitle, 5)) {
 			searchInputInSelectALocation.sendKeys(searchCharactor);
 			searchInputInSelectALocation.sendKeys(Keys.ENTER);
-			waitForSeconds(20);
+			waitForSeconds(10);
 			if (locationRowsInSelectLocation.size() > 0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"radio\"]"));
 				click(firstRow);
@@ -1093,7 +1093,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
 			waitForSeconds(3);
-			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
+			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/div/lg-button[1]/button")).getText().equals(action)) {
 				SimpleUtils.pass(action + " " + locationName + " successfully");
 			} else
 				SimpleUtils.fail(action + " " + locationName + " successfully", true);
@@ -1659,7 +1659,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				}
 			} else
 				SimpleUtils.report("There is no location under this upperfield and no need to move");
-			SimpleUtils.pass("Upperfield update done");
+
 		} else
 			SimpleUtils.fail("No search result", true);
 
@@ -2231,7 +2231,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 				upperfieldNameInput.sendKeys(levelInfo.get(i) + upperfieldsName);
 				upperfieldIdInput.sendKeys(levelInfo.get(i).replace(" ", "") + upperfieldsId);
-				selectByIndex(upperfieldManagerSelector, 1);
+//				selectByIndex(upperfieldManagerSelector, 1);
 				waitForSeconds(3);
 //				click(ManagerBtnInDistrictCreationPage);
 //				managerDistrictLocations(searchChara,index);
@@ -3183,6 +3183,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void editBtnIsClickableInBusinessHours() {
+		waitForSeconds(5);
 		scrollToBottom();
 		if (editBtnsInOH.size()>0) {
 			click(editBtnsInOH.get(0));

@@ -4,7 +4,6 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LaborModelPage;
 import com.legion.pages.UserManagementPage;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.an.E;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.legion.utils.MyThreadLocal.failedComment;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 
@@ -48,7 +46,6 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}else
 			SimpleUtils.fail("Work Roles Tile load failed",false);
 	}
-
 	@FindBy(css="[class=\"lg-table ng-scope\"] tbody")
 	private List<WebElement> templatesList;
 	@FindBy(css="[class=\"lg-table ng-scope\"] button span.ng-binding")
@@ -595,6 +592,44 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 				SimpleUtils.fail("Labor Model Page: Labor Model Details page - '" + label + "' tab not found.", true);
 		} else
 			SimpleUtils.fail("Labor Model Page: Labor Model Details page - sub tabs not loaded.", false);
+	}
+
+	@Override
+	public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) throws Exception {
+		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
+		if(isTemplateListPageShow()){
+			SimpleUtils.pass("Labor model template list is showing now");
+			searchTemplate(templateName);
+			if (templatesList.size()>1) {
+				SimpleUtils.report("There are :" +templatesList.size()+" found");
+				for(int i=0;i<templateNameList.size();i++){
+					if (isItMultipVersion(i)) {
+						expandTemplate(i);
+					}
+					configurationPage.archivePublishedOrDeleteDraftTemplate(templateName,action);
+					break;
+
+				}
+			}else
+				SimpleUtils.fail("There are no template that match your criteria",false);
+
+
+		}else {
+			SimpleUtils.fail("Labor model template list is not loaded well",false);
+		}
+	}
+
+	private boolean isItMultipVersion(int i) {
+		String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+		if (classValue != null && classValue.contains("hasChildren")) {
+			return true;
+		} else
+			return false;
+	}
+
+	private void expandTemplate(int i) {
+		clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
+		waitForSeconds(3);
 	}
 }
 

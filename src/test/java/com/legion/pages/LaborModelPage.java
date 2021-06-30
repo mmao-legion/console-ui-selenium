@@ -1,6 +1,5 @@
 package com.legion.pages;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,4 +53,6 @@ public interface LaborModelPage {
     public void selectLaborModelTemplateDetailsPageSubTabByLabel(String label) throws Exception;
 
     public void overriddenLaborModelRuleInLocationLevel(int index);
+
+    public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) throws Exception;
 }

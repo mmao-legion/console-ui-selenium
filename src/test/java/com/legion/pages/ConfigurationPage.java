@@ -79,4 +79,5 @@ public interface ConfigurationPage {
     public void selectOneDynamicGroup(String dynamicGroupName) throws Exception;
     public void publishNewTemplate(String templateName,String dynamicGroupName) throws Exception;
     public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
+    public void archivePublishedOrDeleteDraftTemplate(String templateName, String action);
 }
