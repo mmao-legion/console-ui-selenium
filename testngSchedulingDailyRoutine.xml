@@ -115,7 +115,7 @@
                 <methods>
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
-                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
+<!--                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" Blocked by SCH-4254/>-->
                 </methods>
             </class>
         </classes>
@@ -174,7 +174,7 @@
                     <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
                     <include name="verifyTurnOnGFEAsInternalAdmin" />
                     <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
-                    <include name="verifyContentOfGFEAsInternalAdmin" />
+<!--                    <include name="verifyContentOfGFEAsInternalAdmin" Blocked by SCH-4547/>-->
 <!--                    <include name="verifyVSLInfoAsInternalAdmin" Blocked by SCH-4012/>-->
                 </methods>
             </class>

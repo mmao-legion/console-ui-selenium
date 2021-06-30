@@ -113,19 +113,19 @@
     </test>
 
 
-    <test name="Consolidating Filters Test">
+<!--    <test name="Consolidating Filters Test">
         <classes>
             <class name="com.legion.tests.core.ConsolidatingFiltersTest">
                 <methods>
-<!--                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" Due to issues that jenkins cannot continue run/>-->
-<!--                    <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" Due to issues that jenkins cannot continue run/>-->
+&lt;!&ndash;                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" Due to issues that jenkins cannot continue run/>&ndash;&gt;
+&lt;!&ndash;                    <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" Due to issues that jenkins cannot continue run/>&ndash;&gt;
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
-                    <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
+                    &lt;!&ndash;                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated &ndash;&gt;
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
     <test name="Schedule Copy Improvement Test">
         <classes>
