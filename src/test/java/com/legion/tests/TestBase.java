@@ -107,6 +107,7 @@ public abstract class TestBase {
     public enum AccessRoles {
         InternalAdmin("InternalAdmin"),
         StoreManager("StoreManager"),
+        StoreManagerOtherLocation1("StoreManagerOtherLocation1"),
         TeamLead("TeamLead"),
         TeamMember("TeamMember"),
         TeamMember2("TeamMember2"),
