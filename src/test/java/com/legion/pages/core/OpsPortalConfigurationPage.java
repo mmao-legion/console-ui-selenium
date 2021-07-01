@@ -2359,34 +2359,43 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	//added by Estelle to edit operating hours
-	@FindBy(className = "lg-time-slider-notch-selector")
+	@FindBy(className = "lgn-time-slider-notch-selector")
 	private List<WebElement> startEndSliderInBusinessHoursPopUp;
-	@FindBy(css = "div[ng-repeat=\"notch in $ctrl.notches\"]")
+	@FindBy(css = "div[ng-repeat=\"notch in notches\"]")
 	private List<WebElement> sliderScaleInBusinessHoursPopUp;
 	@Override
 	public void moveSliderAtSomePoint( int moveCount, String slideType) throws Exception {
 		try {
 			int startSelectTime = Integer.parseInt(startEndSliderInBusinessHoursPopUp.get(0).getText().trim().split(":")[0]);
 			int endSelectTime = Integer.parseInt(startEndSliderInBusinessHoursPopUp.get(1).getText().trim().split(":")[0]) + 12;
-			int endSliderTime = Integer.parseInt(sliderScaleInBusinessHoursPopUp.get(sliderScaleInBusinessHoursPopUp.size()-1).getText().trim().split(":")[0])+12;
-			int startSliderTime = Integer.parseInt(sliderScaleInBusinessHoursPopUp.get(0).getText().trim().split(":")[0]);
+			String startSliderTimeText = sliderScaleInBusinessHoursPopUp.get(0).getText().trim();
+			int startSliderTime = Integer.parseInt(startSliderTimeText.split("\n")[0]);;
+
 			if (startSliderTime == 12) {
 				startSliderTime = 0;
 			}else
 				startSliderTime =startSliderTime;
 
+			String  endSliderTimeText = sliderScaleInBusinessHoursPopUp.get(96).getText().trim();
+			int endSliderTime = Integer.parseInt(endSliderTimeText.split("\n")[0]);
+			if (endSliderTimeText.contains("AM")&&endSliderTime>11) {
+				endSliderTime = endSliderTime+12;
+			}else
+				endSliderTime = endSliderTime;
+
+
 			if(slideType.equalsIgnoreCase("End")){
 				if(isElementLoaded(startEndSliderInBusinessHoursPopUp.get(1),5) && endSelectTime<endSliderTime){
 					SimpleUtils.pass("Business hours with Sliders loaded on page Successfully for End Point");
 					if (endSelectTime<endSliderTime) {
-						for(int i= endSelectTime*4+moveCount; i< startEndSliderInBusinessHoursPopUp.size();i++){
-							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+						for(int i= endSelectTime*4+moveCount; i< sliderScaleInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+2)+")"));
 							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
 							break;
 						}
 					}else if (endSelectTime==endSliderTime){
-						for(int i= endSelectTime*4-moveCount; i> startEndSliderInBusinessHoursPopUp.size();i++){
-							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+						for(int i= endSelectTime*4-moveCount; i> sliderScaleInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+2)+")"));
 							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
 							break;
 						}
@@ -2400,14 +2409,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if(isElementLoaded(startEndSliderInBusinessHoursPopUp.get(0),10) && startEndSliderInBusinessHoursPopUp.size()>0){
 					SimpleUtils.pass("Business hours with Sliders loaded on page Successfully for Starting point");
 					if (startSelectTime>endSliderTime) {
-						for(int i= endSelectTime*4-moveCount; i< startEndSliderInBusinessHoursPopUp.size();i++){
-							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+						for(int i= endSelectTime*4-moveCount; i< sliderScaleInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+2)+")"));
 							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
 							break;
 						}
 					}else if (startSelectTime==endSliderTime){
-						for(int i= endSelectTime*4+moveCount; i> startEndSliderInBusinessHoursPopUp.size();i++){
-							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+						for(int i= endSelectTime*4+moveCount; i> sliderScaleInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch.droppable:nth-child("+(i+2)+")"));
 							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
 							break;
 						}

@@ -122,54 +122,54 @@ public class LocationsTest extends TestBase {
         }
     }
       //mock location creation is blocked by https://legiontech.atlassian.net/browse/OPS-2503
-//    @Automated(automated = "Automated")
-//    @Owner(owner = "Estelle")
-//    @Enterprise(name = "Op_Enterprise")
-//    @TestName(description = "create a Type MOCK location that based on a ENABLED status regular location ")
-//    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-//    public void verifyCreateMockLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
-//       try{
-//            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-//            String currentTime =  dfs.format(new Date());
-//            String locationName = "AutoCreate" +currentTime;
-//            int index =0;
-//            String searchCharactor = "No touch";
-//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-//            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-//
-//            //go to locations tab
-//            locationsPage.clickOnLocationsTab();
-//            //check locations item
-//            locationsPage.validateItemsInLocations();
-//            //go to sub-locations tab
-//            locationsPage.goToSubLocationsInLocationsPage();
-//            //add one mock location，first create one new location and then to mock that -to avoid duplication
-//            locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
-//            locationsPage.addNewMockLocationWithAllFields(locationName,locationName,index);
-//            //search created location
-//            if (locationsPage.searchNewLocation(locationName+"-MOCK")) {
-//                SimpleUtils.pass("Create new mock location successfully");
-//            }else
-//                SimpleUtils.fail("Create new location failed or can't search created location",true);
-////            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
-////            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-////            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-////            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
-////            locationSelectorPage.changeLocation(locationName+"-MOCK");
-////           SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-////           schedulePage.clickOnScheduleConsoleMenuItem();
-////           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-////           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-////           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-////           SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
-////                   schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
-//       } catch (Exception e){
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
-//    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "create a Type MOCK location that based on a ENABLED status regular location ")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateMockLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
+       try{
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =  dfs.format(new Date());
+            String locationName = "AutoCreate" +currentTime;
+            int index =0;
+            String searchCharactor = "No touch";
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-locations tab
+            locationsPage.goToSubLocationsInLocationsPage();
+            //add one mock location，first create one new location and then to mock that -to avoid duplication
+            locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
+            locationsPage.addNewMockLocationWithAllFields(locationName,locationName,index);
+            //search created location
+            if (locationsPage.searchNewLocation(locationName+"-MOCK")) {
+                SimpleUtils.pass("Create new mock location successfully");
+            }else
+                SimpleUtils.fail("Create new location failed or can't search created location",true);
+//            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
+//            locationSelectorPage.changeLocation(locationName+"-MOCK");
+//           SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//           schedulePage.clickOnScheduleConsoleMenuItem();
+//           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+//           SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+//                   schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+       } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
     // NSO location is blocked by https://legiontech.atlassian.net/browse/OPS-2757
 //    @Automated(automated = "Automated")
@@ -1301,9 +1301,9 @@ public class LocationsTest extends TestBase {
             locationsPage.editBtnIsClickableInBusinessHours();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.moveSliderAtSomePoint(moveCount, ohSliderDroppable.EndPoint.getValue());
-            locationsPage.selectDayInWorkingHoursPopUpWin(7);
-            locationsPage.clickSaveBtnInWorkingHoursPopUpWin();
-            locationsPage.clickSaveBtnInWorkingHoursPopUpWin();
+            locationsPage.selectDayInWorkingHoursPopUpWin(6);
+            configurationPage.saveBtnIsClickable();
+            configurationPage.saveBtnIsClickable();
             List<HashMap<String,String>>  templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftOverridden.get(1).get("Overridden").equalsIgnoreCase("Yes")) {
                 SimpleUtils.pass("Overridden scheduling rules successfully");
@@ -1352,8 +1352,10 @@ public class LocationsTest extends TestBase {
             userManagementPage.verifySearchWorkRole(workRoleName);
             userManagementPage.goToWorkRolesDetails(workRoleName);
             userManagementPage.overriddenAssignmentRule(index);
-            locationsPage.clickSaveBtnInWorkingHoursPopUpWin();
-            locationsPage.clickSaveBtnInWorkingHoursPopUpWin();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.saveBtnIsClickable();
+            configurationPage.saveBtnIsClickable();
+
             List<HashMap<String,String>>  templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftOverridden.get(0).get("Overridden").equalsIgnoreCase("Yes")) {
                 SimpleUtils.pass("Overridden scheduling rules successfully");

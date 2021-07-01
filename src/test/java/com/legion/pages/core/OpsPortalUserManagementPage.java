@@ -895,7 +895,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		if (enableDisableIcons.size()>0) {
 			for (int i = index; i <enableDisableIcons.size() ; i++) {
 				if (enableDisableIcons.get(i).getAttribute("data-tootik").contains("enable")) {
-					click(enableDisableIcons.get(i));
+					click(enableDisableRuleBtn.get(i));
 					if (enableDisableIcons.get(i).getAttribute("data-tootik").contains("disable")) {
 						SimpleUtils.pass("Disable assignment rule successfully");
 					}else
@@ -914,7 +914,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		if (enableDisableIcons.size()>0) {
 			for (int i = index; i <enableDisableIcons.size() ; i++) {
 				if (enableDisableIcons.get(i).getAttribute("data-tootik").contains("disable")) {
-					click(enableDisableIcons.get(i));
+					click(enableDisableRuleBtn.get(i));
 					if (enableDisableIcons.get(i).getAttribute("data-tootik").contains("enable")) {
 						SimpleUtils.pass("Enable assignment rule successfully");
 					}else
@@ -933,8 +933,10 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			for (int i = index; i <enableDisableIcons.size() ; i++) {
 				if (enableDisableIcons.get(i).getAttribute("data-tootik").contains("enable")) {
 					disableAssignmentRulesInLocationLevel(i);
+					break;
 				}else
 					enableAssignmentRulesInLocationLevel(i);
+				    break;
 			}
 		}else
 			SimpleUtils.report("There is no assignment rule");

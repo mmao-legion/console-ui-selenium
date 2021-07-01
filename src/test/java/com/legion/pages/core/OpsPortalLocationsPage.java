@@ -104,7 +104,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void clickOnLocationsTab() throws Exception {
-		if (isElementLoaded(goToLocationsButton, 15)) {
+		if (isElementLoaded(goToLocationsButton, 25)) {
 			click(goToLocationsButton);
 			SimpleUtils.pass("Locations tab is clickable");
 		} else
@@ -255,7 +255,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean searchNewLocation(String locationName) {
-		waitForSeconds(20);
+		waitForSeconds(30);
 		if (isElementEnabled(searchInput, 8)) {
 			searchInput.sendKeys(locationName);
 			searchInput.sendKeys(Keys.ENTER);
@@ -263,7 +263,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (locationsName.getText().trim().equalsIgnoreCase(locationName.trim())) {
 				SimpleUtils.pass("the location is searched");
 				return true;
-			}
+			}else
+				SimpleUtils.fail("There are no locations that match your criteria. ",false);
 		} else
 			SimpleUtils.fail("search filed load failed", false);
 		return false;
@@ -2075,7 +2076,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(testBtn);
 			String testInfo = testBtnInfo.getText().trim();
 			click(okBtnInSelectLocation);
-			waitForSeconds(3);
+			waitForSeconds(8);
 			searchClockInDynamicGroup(groupNameForCloIn + "Update");
 			if (groupRows.size() > 0) {
 				SimpleUtils.pass("Clock-in Dynamic group update successfully");
@@ -3071,11 +3072,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void actionsForEachTypeOfTemplate(String template_type, String action) {
-		List<String> aaa = new ArrayList<>();
 		if (templateRows.size() > 0) {
 			switch (template_type) {
 				case "Assignment Rules":
-					List<WebElement> actions = templateRows.get(0).findElements(By.cssSelector(" td:nth-child(6)>span."));
+					List<WebElement> actions = templateRows.get(0).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actions) {
 						if (s.getText().contains(action)&& action.equals("View")) {
 							clickTheElement(s);
@@ -3319,4 +3319,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}else
 			SimpleUtils.fail("Save buttons load failed",false);
 	}
+
+
 }
