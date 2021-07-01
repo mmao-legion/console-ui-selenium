@@ -55,4 +55,10 @@ public interface LaborModelPage {
     public void overriddenLaborModelRuleInLocationLevel(int index);
 
     public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) throws Exception;
+
+    public void clickOnEditButtonOnTemplateDetailsPage() throws Exception;
+
+    public String updateAttributeValueInTemplate(String attributeName,String attributeValueUpdate) throws Exception;
+
+    public void saveAsDraftTemplate() throws Exception;
 }

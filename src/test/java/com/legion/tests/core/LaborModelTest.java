@@ -153,7 +153,10 @@ public class LaborModelTest extends TestBase {
             String label = "External Attributes";
             HashMap<String,List<String>> attributesInfoInGlobal = new HashMap<>();
             HashMap<String,List<String>> attributesInfoInTemplate = new HashMap<>();
-
+            HashMap<String,List<String>> attributesUpdatedInfoInTemplate = new HashMap<>();
+            String attributeName ="AutoUsingAttribute";
+            String attributeValueUpdate = "23";
+            
             String templateName = "AutoUsingByFiona";
             String mode = "edit";
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
@@ -168,9 +171,40 @@ public class LaborModelTest extends TestBase {
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
             attributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttribute();
             //Compare two map info
+            for(String key:attributesInfoInTemplate.keySet()){
+                for(String key1:attributesInfoInGlobal.keySet()){
+                    if(key.equals(key1)){
+                        List<String> valuesInGlobal = attributesInfoInGlobal.get(key1);
+                        List<String> valuesInTemplate = attributesInfoInTemplate.get(key);
 
+                        if(ListUtils.isEqualList(valuesInGlobal,valuesInTemplate)){
+                            SimpleUtils.pass("The attribute " + key + " in template level is correct.");
+                            break;
+                        }else{
+                            SimpleUtils.fail("The attribute " + key + " in template level is NOT correct.",false);
+                        }
+                    }
+                }
+            }
             //update template attribute value
-
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.updateAttributeValueInTemplate(attributeName,attributeValueUpdate);
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Details");
+            laborModelPage.saveAsDraftTemplate();
+            //go to template details page check updated or not?
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            attributesUpdatedInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttribute();
+            for(String key2:attributesUpdatedInfoInTemplate.keySet()){
+                if(key2.equals(attributeName)){
+                    if(attributesUpdatedInfoInTemplate.get(key2).get(0).equals(attributeValueUpdate)){
+                        SimpleUtils.pass("User can update attribute value successfully in labor model template.");
+                        break;
+                    }else {
+                        SimpleUtils.fail("User can NOT update attribute value successfully in labor model template.",false);
+                    }
+                }
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

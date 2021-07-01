@@ -154,6 +154,7 @@
                 <methods>
                     <include name="verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdminForLaborModel"/>
                     <include name="verifyCreateUpdateAndDeleteNewAttributeFunctionAsInternalAdminForLaborModel"/>
+                    <include name="verifyTemplateLevelAttributeFunctionAsInternalAdminForLaborModel"/>
                 </methods>
             </class>
         </classes>

@@ -298,7 +298,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	private WebElement addTaskButton;
 	@FindBy(css="div.button-container lg-button[label=\"Cancel\"] button")
 	private WebElement cancelButton;
-	@FindBy(css="div.button-container lg-button[label=\"Save\"] button")
+	@FindBy(css="lg-button[label=\"Save\"] button")
 	private WebElement saveButton;
 	@FindBy(css="div[ng-click=\"$ctrl.addAttributeClick()\"]")
 	private WebElement addAttributeButton;
@@ -520,17 +520,18 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 					WebElement editBTN = attribute.findElement(By.cssSelector("td:nth-child(4) i.fa-pencil"));
 					clickTheElement(editBTN);
 					clickTheElement(newAttributeValueInputField);
-					newAttributeValueInputField.sendKeys("1");
+					newAttributeValueInputField.clear();
+					newAttributeValueInputField.sendKeys(attributeValueUpdate);
 					clickTheElement(newAttributeDescriptionInputField);
-					newAttributeDescriptionInputField.sendKeys("-Update");
+					newAttributeDescriptionInputField.clear();
+					newAttributeDescriptionInputField.sendKeys(attributeDescriptionUpdate);
 					clickTheElement(newAttributeCheckButton);
 					String updateValue = attribute.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
 					String updateDes = attribute.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
 					updateValues.add(updateValue);
 					updateValues.add(updateDes);
 					clickOnSaveButton();
-				}else {
-					SimpleUtils.fail("Can't find " + attributeName + " in attributes list.",false);
+					break;
 				}
 			}
 		}
@@ -631,5 +632,64 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 		waitForSeconds(3);
 	}
+
+	@FindBy(css="div[class=\"lg-modal\"]")
+	private WebElement editTemplatePopupPage;
+	@FindBy(css="lg-button[label=\"OK\"]")
+	private WebElement okButton;
+	@FindBy(css="lg-button[label=\"Save as draft\"] i.fa.fa-sort-down")
+	private WebElement dropdownArrowButton;
+
+	@Override
+	public void clickOnEditButtonOnTemplateDetailsPage() throws Exception {
+		if(isElementEnabled(editButton)){
+			clickTheElement(editButton);
+			waitForSeconds(3);
+			if(isElementEnabled(editTemplatePopupPage)){
+				SimpleUtils.pass("Click edit button successfully!");
+				clickTheElement(okButton);
+				if(isElementEnabled(dropdownArrowButton)){
+					SimpleUtils.pass("Template is in edit mode now");
+				}else{
+					SimpleUtils.fail("Template is not in edit mode now",false);
+				}
+			}else{
+				SimpleUtils.fail("Click edit button successfully!",false);
+			}
+		}else{
+			SimpleUtils.fail("Template details page is loaded failed",false);
+		}
+	}
+
+	@Override
+	public String updateAttributeValueInTemplate(String attributeName,String attributeValueUpdate) throws Exception {
+		String updateValue = null;
+		if (areListElementVisible(attributesList, 10)) {
+			for (WebElement attribute : attributesList) {
+				String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+				if (name.equals(attributeName)) {
+					clickTheElement(newAttributeValueInputField);
+					newAttributeValueInputField.clear();
+					newAttributeValueInputField.sendKeys(attributeValueUpdate);
+					clickTheElement(newAttributeCheckButton);
+					updateValue = attribute.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+					clickOnSaveButton();
+					break;
+				}
+			}
+		}
+		return updateValue;
+	}
+	@FindBy(css="lg-button[label=\"Save as draft\"] button.pre-saveas")
+	private WebElement saveAsDraftButton;
+
+	@Override
+	public void saveAsDraftTemplate() throws Exception {
+		if (isElementEnabled(saveAsDraftButton)) {
+			clickTheElement(saveAsDraftButton);
+			waitForSeconds(5);
+		}
+	}
+
 }
 
