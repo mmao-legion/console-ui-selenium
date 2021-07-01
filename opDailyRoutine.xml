@@ -42,7 +42,9 @@
                     <include name="verifyUserCanSeeEachTypeOfTemViaClickingTemName" />
                     <include name="verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevel" />
                     <include name="verifyOverriddenSchedulingRulesInLocationLevel" />
-
+                    <include name="verifyOverriddenLaborModelInLocationLevel" />
+                    <include name="verifyOverriddenAssignmentRulesInLocationLevel" />
+                    <include name="verifyOverriddenOperatingHoursInLocationLevel" />
 
 
                 </methods>
