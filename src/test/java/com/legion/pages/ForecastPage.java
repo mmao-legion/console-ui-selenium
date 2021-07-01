@@ -83,4 +83,10 @@ public interface ForecastPage<pubic> {
 	public void verifyPeakShoppersPeakTimeTotalShoppersEditedDataInDayView () throws Exception;
 	public List<String> getTooltipInfoWhenView() throws Exception;
 	public HashMap<String, Float> getInsightDataInShopperDayView() throws Exception;
+	public void clickOnRefreshButton() throws Exception;
+	public void verifyWarningDialogPopsUp() throws Exception;
+	public void verifyTheContentOnWarningDialog() throws Exception;
+	public void verifyTheFunctionalityOfCancelButtonOnWarningDialog(int index, String value) throws Exception;
+	public void verifyTheFunctionalityOfRefreshanywayButtonOnWarningDialog(int index, String value) throws Exception;
+	public void verifyLaborForecastCanLoad() throws Exception;
 }

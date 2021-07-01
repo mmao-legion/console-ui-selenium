@@ -5,6 +5,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 import java.util.HashMap;
 import java.util.List;
 
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -574,5 +575,20 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		} else {
 			SimpleUtils.fail("Analytics: Report rows not loaded Successfully!", false);
 		}
+	}
+
+
+	@FindBy (css = "[ng-if=\"canDownloadAllLocationReports\"] div.lg-button-group-selected")
+	private WebElement selectedReportsTab;
+	@Override
+	public boolean isSpecificReportsTabBeenSelected(String reportsTabName) throws Exception {
+		boolean isSelected = false;
+		if (isElementLoaded(selectedReportsTab, 10)
+				&& selectedReportsTab.getText().equalsIgnoreCase(reportsTabName)) {
+			isSelected = true;
+			SimpleUtils.report("The tab: "+ reportsTabName+" is selected! ");
+		} else
+			SimpleUtils.report("The tab: "+ reportsTabName+" is not selected! ");
+		return isSelected;
 	}
 }

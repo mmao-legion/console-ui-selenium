@@ -164,7 +164,7 @@ public abstract class TestBase {
         String testName = ExtentTestManager.getTestName(method);
         String ownerName = ExtentTestManager.getOwnerName(method);
         String automatedName = ExtentTestManager.getAutomatedName(method);
-        String enterpriseName =  SimpleUtils.getEnterprise(method);
+        enterpriseName =  SimpleUtils.getEnterprise(method);
         String platformName =  ExtentTestManager.getMobilePlatformName(method);
 //        int sectionId = ExtentTestManager.getTestRailSectionId(method);
         String testRunPhaseName = ExtentTestManager.getTestRunPhase(method);
@@ -382,10 +382,12 @@ public abstract class TestBase {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         SimpleUtils.report(getDriver().getCurrentUrl());
         loginPage.loginToLegionWithCredential(username, Password);
+        SimpleUtils.assertOnFail("Failed to login to the application!", loginPage.isLoginSuccess(), false);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
-        locationSelectorPage.changeLocation(location);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+//        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
+//        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
         MyThreadLocal.setIsNeedEditingOperatingHours(false);
@@ -418,6 +420,19 @@ public abstract class TestBase {
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
             locationSelectorPage.changeUpperFields(districtsMap.get("CinemarkWkdy_Enterprise"));
+        }
+    }
+
+    public void LoginAsDifferentRole(String roleName) throws Exception {
+        try {
+            String fileName = "UsersCredentials.json";
+            fileName = MyThreadLocal.getEnterprise() + fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] teamMemberCredentials = userCredentials.get(roleName);
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
+                    , String.valueOf(teamMemberCredentials[0][2]));
+        } catch (Exception e) {
+            SimpleUtils.fail("Login as: " + roleName + " failed!", false);
         }
     }
 
@@ -484,11 +499,26 @@ public abstract class TestBase {
         String winHandleBefore =getDriver().getWindowHandle();
         for(String winHandle : getDriver().getWindowHandles()) {
             if (winHandle.equals(winHandleBefore)) {
-                getDriver().close();
+                //getDriver().close();
                 continue;
             }
             getDriver().switchTo().window(winHandle);
             break;
+        }
+    }
+
+    public static void switchToConsoleWindow() {
+        try {
+            Set<String> winHandles = getDriver().getWindowHandles();
+            for (String handle : winHandles) {
+                if (handle.equals(getConsoleWindowHandle())) {
+                    getDriver().switchTo().window(handle);
+                    SimpleUtils.pass("Switch to Console window successfully!");
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Failed to switch to Console window!", false);
         }
     }
 

@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleControlsNewUIPage;
+import com.legion.pages.core.ConsoleIntegrationPage;
 import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -9,6 +10,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
@@ -45,11 +47,24 @@ public class PrepareSettingsTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Team page, reject all the time off request
-//        TeamPage teamPage = pageFactory.createConsoleTeamPage();
-//        teamPage.goToTeam();
-//        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-//        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-//        teamPage.rejectAllTeamMembersTimeOffRequest(profileNewUIPage, 0);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            teamPage.rejectAllTeamMembersTimeOffRequest(profileNewUIPage, 0);
+
+            dashboardPage.clickOnIntegrationConsoleMenu();
+            dashboardPage.verifyIntegrationPageIsLoaded();
+            IntegrationPage integrationPage = pageFactory.createIntegrationPage();
+            if(!integrationPage.checkIsConfigExists("custom", "HR")){
+                Map<String, String> configInfo = new HashMap<>();
+                configInfo.put("channel", "CUSTOM");
+                configInfo.put("applicationType", "HR");
+                configInfo.put("status", "ENABLED");
+                configInfo.put("timeZoneOption", "UTC");
+
+                integrationPage.createConfig(configInfo);
+            }
 
             // Set time off policy
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
@@ -59,6 +74,15 @@ public class PrepareSettingsTest extends TestBase {
 
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+
+            //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
+            controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
+            controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption("Yes, all unassigned shifts");
+
             controlsPage.gotoControlsPage();
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
 
@@ -78,14 +102,25 @@ public class PrepareSettingsTest extends TestBase {
             SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
             controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
 
-            //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
-            controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
-            controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption("Yes, all unassigned shifts");
-
             controlsPage.gotoControlsPage();
             controlsPage.clickGlobalSettings();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
+
+            //Set buffer hours: before--2, after--3
+            controlsPage.gotoControlsPage();
+            controlsPage.clickGlobalSettings();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+            HashMap<String, String> schedulingPoliciesData = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SchedulingPoliciesData.json");
+            String beforeBufferCount = schedulingPoliciesData.get("Additional_Schedule_Hours_Before");
+            String afterBufferCount = schedulingPoliciesData.get("Additional_Schedule_Hours_After");
+            controlsNewUIPage.updateScheduleBufferHoursBefore(beforeBufferCount);
+            controlsNewUIPage.updateScheduleBufferHoursAfter(afterBufferCount);
+
+
+
+
 
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
@@ -111,6 +146,20 @@ public class PrepareSettingsTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            dashboardPage.clickOnIntegrationConsoleMenu();
+            dashboardPage.verifyIntegrationPageIsLoaded();
+            IntegrationPage integrationPage = pageFactory.createIntegrationPage();
+            if(!integrationPage.checkIsConfigExists("custom", "HR")){
+                Map<String, String> configInfo = new HashMap<>();
+                configInfo.put("channel", "CUSTOM");
+                configInfo.put("applicationType", "HR");
+                configInfo.put("status", "ENABLED");
+                configInfo.put("timeZoneOption", "UTC");
+
+                integrationPage.createConfig(configInfo);
+            }
+
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
@@ -120,10 +169,19 @@ public class PrepareSettingsTest extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-            cinemarkMinorPage.findDefaulTemplate("Cinemark Base Template");
+            cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+            configurationPage.publishNowTheTemplate();
+
+            //Set buffer hours on OP: before--2, after--3
+            configurationPage.goToConfigurationPage();
+            controlsNewUIPage.clickOnControlsOperatingHoursSection();
+            cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template Updated");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectOperatingBufferHours("BufferHour");
+            configurationPage.setOpeningAndClosingBufferHours(2, 3);
             configurationPage.publishNowTheTemplate();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

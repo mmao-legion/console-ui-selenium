@@ -5,6 +5,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LocationsPage;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
@@ -2641,6 +2642,106 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		}
 	}
+
+	// Added by Julie
+	@FindBy (css = "tr[ng-repeat=\"location in filteredCollection\"] span[ng-transclude]>span")
+	private List<WebElement> locationNamesInLocationRows;
+
+	@FindBy (xpath = "//lg-tabs//div[contains(text(),'Configuration')]")
+	private WebElement configurationTabOfLocation;
+
+	@Override
+	public void clickOnLocationInLocationResult(String location) throws Exception {
+		if (areListElementVisible(locationNamesInLocationRows,10)) {
+			for (WebElement locationName: locationNamesInLocationRows)
+				if (locationName.getText().equals(location)) {
+					click(locationName);
+					SimpleUtils.pass("Locations Page: Search out the location '" + location + "' and open it successfully");
+					break;
+				}
+		} else
+			SimpleUtils.fail("Locations Page: Cannot search out the location name '" + location + "'",false);
+	}
+
+	@Override
+	public void clickOnConfigurationTabOfLocation() throws Exception {
+		if (isElementEnabled(configurationTabOfLocation,10)) {
+			click(configurationTabOfLocation);
+			SimpleUtils.pass("Locations Page: Switch to Configuration tab successfully");
+		} else
+			SimpleUtils.fail("Locations Page: Configuration tab failed to load",false);
+	}
+
+    @Override
+	public HashMap<String,String> getTemplateTypeAndNameFromLocation() throws Exception {
+		HashMap<String, String> templateTypeAndName = new HashMap<>();
+		waitForSeconds(3);
+		if (areListElementVisible(templateRows, 30) && templateRows.size() != 0) {
+			for (WebElement templateRow: templateRows) {
+				String templateType = templateRow.findElement(By.xpath("./td[1]")).getText().trim();
+				String templateName = templateRow.findElement(By.xpath("./td[2]/span")).getText().trim();
+				templateTypeAndName.put(templateType, templateName);
+				SimpleUtils.report("Get template name '" + templateName + "' for template type '" + templateType + "' successfully");
+			}
+		} else {
+			SimpleUtils.fail("Schedule Week View Page: Budget and Scheduled smart card not loaded Successfully!", false);
+		}
+		return templateTypeAndName;
+	}
+
+
+	@FindBy(css = ".daypart-container tbody tr td")
+	private List<WebElement> dayPartNames;
+
+	@FindBy(css = ".daypart-header .settings-add-icon")
+	private WebElement addDayPartsBtn;
+
+	@FindBy(css = "input-field[ng-if=\"daypart.isNew\"] ng-form input")
+	private WebElement newDayPartName;
+
+	@FindBy(css = "input-field[value=\"daypart.description\"] ng-form input")
+	private WebElement newDayPartDescription;
+
+	@FindBy(css = ".color-select")
+	private WebElement dayPartColor;
+
+	@FindBy(css = "li[ng-repeat=\"color in $ctrl.daypartColorList\"]")
+	private List<WebElement> dayPartsColors;
+
+	@FindBy(css = "i.fa-check-circle")
+	private WebElement dayPartCheckCircle;
+
+	@Override
+	public void enableDaypart(String dayPart) throws Exception {
+		boolean isDaypartPresent = false;
+		if(isElementEnabled(editOnGlobalConfigPage,10))
+			clickTheElement(editOnGlobalConfigPage);
+		else
+			SimpleUtils.fail("Global Configuration Page: Edit button failed to load", false);
+		if (areListElementVisible(dayPartNames, 30)) {
+			for (int i = 0; i < dayPartNames.size(); i++) {
+				if (dayPartNames.get(i).getText().contains(dayPart)) {
+					isDaypartPresent = true;
+					SimpleUtils.pass("Global Configuration Page: Find day part '" + dayPart + "' successfully");
+					continue;
+				}
+			}
+		}
+		if (isElementLoaded(addDayPartsBtn,30)) {
+			if (!isDaypartPresent) {
+				click(addDayPartsBtn);
+				newDayPartName.sendKeys(dayPart);
+				newDayPartDescription.sendKeys(dayPart);
+				click(dayPartColor);
+				click(dayPartsColors.get((new Random()).nextInt(dayPartsColors.size())));
+				click(dayPartCheckCircle);
+				SimpleUtils.pass("Global Configuration Page: Add day part '" + dayPart + "' successfully");
+			}
+		} else
+			SimpleUtils.fail("Global Configuration Page: Day parts failed to load",false);
+		clickTheElement(saveButtonOnGlobalConfiguration);
+	}
+
 
 	@Override
 	public void goToLocationDetailsPage(String locationName) throws Exception {

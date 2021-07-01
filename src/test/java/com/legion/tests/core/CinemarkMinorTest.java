@@ -10,13 +10,16 @@ import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.legion.utils.MyThreadLocal.location;
 import static com.legion.utils.MyThreadLocal.setTestSuiteID;
 
 public class CinemarkMinorTest extends TestBase {
@@ -33,6 +36,9 @@ public class CinemarkMinorTest extends TestBase {
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+            if (MyThreadLocal.getCurrentComplianceTemplate()==null || MyThreadLocal.getCurrentComplianceTemplate().equals("")){
+                getAndSetDefaultTemplate((String) params[3]);
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -124,22 +130,42 @@ public class CinemarkMinorTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            if (!isWeekGenerated){
+                schedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            schedulePage.navigateDayViewWithDayName("Sat");
+            Map<String, String> dayInfo = schedulePage.getActiveDayInfo();
 
+            // TODO: as a workaround for bug: https://legiontech.atlassian.net/browse/SCH-4507, after it is fixed, will remove the code
+            dashboardPage.clickOnDashboardConsoleMenu();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
             teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
             SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                     teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-            String calendarName = "Start Next Saturday";
+            String calendarName = "Start Next Saturday1";
 
             teamPage.deleteCalendarByName(calendarName);
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartNEndDate();
+            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year")) - 1) +" Jan 1",
+                    dayInfo.get("year") +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.inputCalendarName(calendarName);
             teamPage.clickOnSaveSchoolCalendarBtn();
@@ -529,8 +555,8 @@ public class CinemarkMinorTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            int random1 = (new Random()).nextInt(100);
-            int random2 = (new Random()).nextInt(100);
+            int random1 = (new Random()).nextInt(1000);
+            int random2 = (new Random()).nextInt(1000);
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -556,8 +582,8 @@ public class CinemarkMinorTest extends TestBase {
             loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
                     , String.valueOf(storeManagerCredentials[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            int random3 = (new Random()).nextInt(100);
-            int random4 = (new Random()).nextInt(100);
+            int random3 = (new Random()).nextInt(1000);
+            int random4 = (new Random()).nextInt(1000);
 
             teamPage.goToTeam();
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
@@ -613,11 +639,12 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.verifyDefaultMinorRuleIsOff("14N15");
             cinemarkMinorPage.verifyDefaultMinorRuleIsOff("16N17");
             cinemarkMinorPage.saveOrPublishTemplate(templateAction.Save_As_Draft.getValue());
-            cinemarkMinorPage.findDefaulTemplate(templateName);
+            cinemarkMinorPage.findDefaultTemplate(templateName);
             cinemarkMinorPage.clickOnBtn(buttonGroup.Delete.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
 
-            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            //cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentComplianceTemplate());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("no","14N15");
@@ -627,7 +654,7 @@ public class CinemarkMinorTest extends TestBase {
             Thread.sleep(3000);
 
             //Back to Console
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            switchToConsoleWindow();
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
@@ -654,7 +681,7 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
-            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentComplianceTemplate());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
@@ -691,7 +718,8 @@ public class CinemarkMinorTest extends TestBase {
             controlsNewUIPage.clickOnControlsComplianceSection();
 
             //Find the template
-            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            //cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentComplianceTemplate());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
@@ -709,7 +737,7 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
 
             //Back to Console
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            switchToConsoleWindow();
 //            locationSelectorPage.changeUpperFieldsByName("Business Unit", "BU1");
 //            locationSelectorPage.changeUpperFieldsByName("Region", "Region1");
 //            locationSelectorPage.changeDistrict(districtName);
@@ -751,7 +779,7 @@ public class CinemarkMinorTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Admin can configure the access to edit calendars")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) {
+    public void verifyAccessToEditCalendarsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -765,8 +793,8 @@ public class CinemarkMinorTest extends TestBase {
             String accessRoleTab = "Access Roles";
             controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
             String permissionSection = "Team";
-            String permission1 = "Team: Manage School Calendars";
-            String permission2 = "Team: View School Calendars";
+            String permission1 = "Manage School Calendars";
+            String permission2 = "View School Calendars";
             String actionOff = "off";
             String actionOn = "on";
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
@@ -832,7 +860,7 @@ public class CinemarkMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Op_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify turn on minor rule and set rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTurnOnAndSetMinorRuleAsInternalAdmin(String browser, String username, String password, String location) {
@@ -851,7 +879,8 @@ public class CinemarkMinorTest extends TestBase {
             controlsNewUIPage.clickOnControlsComplianceSection();
 
             //Find the template
-            cinemarkMinorPage.findDefaulTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            //cinemarkMinorPage.findDefaultTemplate(templateInUse.TEMPLATE_NAME.getValue());
+            cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentComplianceTemplate());
             cinemarkMinorPage.clickOnBtn(buttonGroup.Edit.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
@@ -879,6 +908,27 @@ public class CinemarkMinorTest extends TestBase {
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+    //added by Haya.
+    public void getAndSetDefaultTemplate(String currentLocation) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        //Go to OP page
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.searchLocation(currentLocation);               ;
+        SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(currentLocation), false);
+        locationsPage.clickOnLocationInLocationResult(currentLocation);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+        MyThreadLocal.setCurrentComplianceTemplate(templateTypeAndName.get("Compliance"));
+        //back to console.
+        switchToConsoleWindow();
     }
 
 
@@ -1135,12 +1185,13 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        schedulePage.saveSchedule();
         if(schedulePage.isRequiredActionSmartCardLoaded()){
             schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteAllOOOHShiftInWeekView();
+            schedulePage.saveSchedule();
         }
-        schedulePage.saveSchedule();
         schedulePage.publishActiveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
@@ -1375,7 +1426,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime1 = "11am,1pm";
             String shiftTime2 = "11am,4pm";
             int needCreateShiftsNumber1 = 6;
-            int needCreateShiftsNumber2 = 3;
+            int needCreateShiftsNumber2 = 4;
             String workRole = "Team Member Corporate-Theatre";
             String maxOfDays = "6";
             String maxOfScheduleHours = "18";

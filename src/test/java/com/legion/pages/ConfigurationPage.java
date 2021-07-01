@@ -69,6 +69,14 @@ public interface ConfigurationPage {
     public void deleteAllScheduleRules() throws Exception;
     public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception;
     public void searchTemplate(String templateName) throws Exception;
+    public void selectOperatingBufferHours(String option) throws Exception;
+    public void setOpeningAndClosingBufferHours (int openingBufferHour, int closingBufferHour) throws Exception;
+    public void setScheduleCopyRestrictions(String yesOrNo) throws Exception;
+    public void disableAllDayparts() throws Exception;
+    public void goToUserManagementPage() throws Exception;
+    public void selectDaypart(String dayPart) throws Exception;
+    public void setDaypart(String day, String dayPart, String startTime, String endTime) throws Exception;
+    public HashMap<String, List<String>> getDayPartsDataFromBusinessHours() throws Exception;
     public void publishNowTemplate() throws Exception;
     public void goToWorkRolesWithStaffingRules();
     public void deleteBasicStaffingRule() throws Exception;

@@ -26,7 +26,7 @@ public class ForecastTest extends TestBase{
 	public enum ForecastCalenderWeekCount{
 		ZERO(0),
 		One(1),
-		Two(2),	
+		Two(2),
 		Three(3);
 		private final int value;
 		ForecastCalenderWeekCount(final int newValue) {
@@ -422,6 +422,128 @@ public class ForecastTest extends TestBase{
 			forecastPage.verifyPeakShoppersPeakTimeTotalShoppersEditedDataInDayView();
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(),false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify Edit Forecast in Day View")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyFunctionalityOfRefreshAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()), false);
+
+			// Verify forecast can be edited and saved
+			int index = 3;
+			String value = "510";
+			forecastPage.verifyAndClickEditBtn();
+			forecastPage.verifyDoubleClickAndUpdateForecastBarValue(String.valueOf(index), value);
+			forecastPage.verifyAndClickSaveBtn();
+
+			// Verify Refresh button is clickable
+			forecastPage.clickOnRefreshButton();
+
+			// Verify Warning dialog pops up
+			forecastPage.verifyWarningDialogPopsUp();
+
+			// Verify the content on Warning dialog
+			forecastPage.verifyTheContentOnWarningDialog();
+
+			// Verify the functionality of Cancel button on Warning dialog
+			forecastPage.verifyTheFunctionalityOfCancelButtonOnWarningDialog(index, value);
+
+			// Verify the functionality of Refresh anyway button on Warning dialog
+			forecastPage.clickOnRefreshButton();
+			forecastPage.verifyTheFunctionalityOfRefreshanywayButtonOnWarningDialog(index, value);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify Edit Forecast in Day View")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyFunctionalityOfRefreshAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()), false);
+
+			// Verify forecast can be edited and saved
+			int index = 3;
+			String value = "510";
+			forecastPage.verifyAndClickEditBtn();
+			forecastPage.verifyDoubleClickAndUpdateForecastBarValue(String.valueOf(index), value);
+			forecastPage.verifyAndClickSaveBtn();
+
+			// Verify Refresh button is clickable
+			forecastPage.clickOnRefreshButton();
+
+			// Verify Warning dialog pops up
+			forecastPage.verifyWarningDialogPopsUp();
+
+			// Verify the content on Warning dialog
+			forecastPage.verifyTheContentOnWarningDialog();
+
+			// Verify the functionality of Cancel button on Warning dialog
+			forecastPage.verifyTheFunctionalityOfCancelButtonOnWarningDialog(index, value);
+
+			// Verify the functionality of Refresh anyway button on Warning dialog
+			forecastPage.clickOnRefreshButton();
+			forecastPage.verifyTheFunctionalityOfRefreshanywayButtonOnWarningDialog(index, value);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Julie")
+	@Enterprise(name = "Coffee_Enterprise")
+	@TestName(description = "Verify Edit Forecast in Day View")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void validateP2PLaborForecastCanLoadAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.changeDistrict("Bay Area District");
+			locationSelectorPage.changeLocation("LocGroup2");
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+
+            // Validate P2P labor forecast can load successfully
+			forecastPage.clickOnLabor();
+			forecastPage.verifyLaborForecastCanLoad();
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
 }

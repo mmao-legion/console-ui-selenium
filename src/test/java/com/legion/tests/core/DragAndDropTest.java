@@ -21,10 +21,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
 public class DragAndDropTest extends TestBase {
 
     private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
-
+    private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -335,9 +337,6 @@ public class DragAndDropTest extends TestBase {
             // Drag the TM's shift to the day that he/she has time off
             schedulePage.dragOneShiftToAnotherDay(indexes.get(0), firstName, endIndex);
 
-            // Verify if Confirm Store Operating hours dialog pops up
-            schedulePage.verifyConfirmStoreOpenCloseHours();
-
             // Verify the Warning model pops up with the message
             schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
 
@@ -612,7 +611,19 @@ public class DragAndDropTest extends TestBase {
             //turn on clopening toggle and set hours
             controlsNewUIPage.selectClopeningHours(12);
 
-            // Go to Schedule page, Schedule tab
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            HashMap<String, Object[][]> teamMembers = kendraScott2TeamMembers;
+            String firstNameOfTM1 = teamMembers.get("TeamMember2")[0][0].toString();
+            String workRoleOfTM1 = teamMembers.get("TeamMember2")[0][2].toString();
+
+            teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstNameOfTM1);
+            String firstNameOfTM2 = teamMembers.get("TeamMember3")[0][0].toString();
+            String workRoleOfTM2 = teamMembers.get("TeamMember3")[0][2].toString();
+
+            teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstNameOfTM2);
+
+        // Go to Schedule page, Schedule tab
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -636,24 +647,6 @@ public class DragAndDropTest extends TestBase {
             // Edit the Schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
-            //Get two random TM name from shifts
-            List<String> shiftInfo1 = new ArrayList<>();
-            while(shiftInfo1.size() == 0 || shiftInfo1.get(0).equalsIgnoreCase("open")
-                    || shiftInfo1.get(0).equalsIgnoreCase("unassigned")){
-                shiftInfo1 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
-            }
-            String firstNameOfTM1 = shiftInfo1.get(0);
-            String workRoleOfTM1 = shiftInfo1.get(4);
-            List<String> shiftInfo2 = new ArrayList<>();
-            while(shiftInfo2.size()==0 || shiftInfo2.get(0).equalsIgnoreCase("open")
-                    || shiftInfo2.get(0).equalsIgnoreCase("unassigned")
-                    || shiftInfo2.get(0).equalsIgnoreCase(firstNameOfTM1)
-                    || !shiftInfo2.get(4).equalsIgnoreCase(workRoleOfTM1)){
-                shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
-            }
-
-            String firstNameOfTM2 = shiftInfo2.get(0);
-            String workRoleOfTM2 = shiftInfo2.get(4);
             // Delete all the shifts that are assigned to the team member
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
@@ -936,6 +929,9 @@ public class DragAndDropTest extends TestBase {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //schedulePage.deleteTMShiftInWeekView("Open");
             schedulePage.deleteTMShiftInWeekView("Unassigned");
+            schedulePage.deleteTMShiftInWeekView("open");
+            schedulePage.saveSchedule();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> shiftInfo = new ArrayList<>();
             while (shiftInfo.size() == 0) {
                 shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
@@ -943,7 +939,7 @@ public class DragAndDropTest extends TestBase {
             String firstNameOfTM1 = shiftInfo.get(0);
             String workRoleOfTM1 = shiftInfo.get(4);
             List<String> shiftInfo2 = new ArrayList<>();
-            while (shiftInfo2.size() == 0 || workRoleOfTM1.equals(shiftInfo2.get(4)) || shiftInfo2.get(0).equalsIgnoreCase("Open")) {
+            while (shiftInfo2.size() == 0 || workRoleOfTM1.equals(shiftInfo2.get(4))) {
                 shiftInfo2 = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
             }
             String firstNameOfTM2 = shiftInfo2.get(0);
@@ -976,6 +972,7 @@ public class DragAndDropTest extends TestBase {
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.dragOneAvatarToAnotherSpecificAvatar(0, firstNameOfTM1, 1, firstNameOfTM2);
+            schedulePage.verifyConfirmStoreOpenCloseHours();
             String expectedViolationMessage = firstNameOfTM1+" should not take a "+workRoleOfTM2+" shift";
             schedulePage.verifyMessageInConfirmPage(expectedViolationMessage,expectedViolationMessage);
             List<String> swapData = schedulePage.getShiftSwapDataFromConfirmPage("swap");
@@ -1009,6 +1006,7 @@ public class DragAndDropTest extends TestBase {
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.dragOneAvatarToAnotherSpecificAvatar(0, firstNameOfTM1, 1, firstNameOfTM2);
+            schedulePage.verifyConfirmStoreOpenCloseHours();
             schedulePage.selectSwapOrAssignOption("assign");
             schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (schedulePage.verifyDayHasShiftByName(0,firstNameOfTM1)==1 && schedulePage.verifyDayHasShiftByName(1,firstNameOfTM1)==1){
@@ -1035,8 +1033,8 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-            controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.clickOnGlobalLocationButton();
+            controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
 
             controlsNewUIPage.enableOverRideAssignmentRuleAsNo();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -1058,7 +1056,10 @@ public class DragAndDropTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUI();
             //edit schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.deleteTMShiftInWeekView("Open");
+            schedulePage.saveSchedule();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> shiftInfo = new ArrayList<>();
             while (shiftInfo.size() == 0) {
                 shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
@@ -1072,7 +1073,6 @@ public class DragAndDropTest extends TestBase {
             String firstNameOfTM2 = shiftInfo2.get(0);
             String workRoleOfTM2 = shiftInfo2.get(4);
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.selectWorkRole(workRoleOfTM2);
             schedulePage.clearAllSelectedDays();
@@ -1085,13 +1085,13 @@ public class DragAndDropTest extends TestBase {
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.dragOneAvatarToAnotherSpecificAvatar(0, firstNameOfTM1, 1, firstNameOfTM2);
-            String expectedViolationMessage ="This assignment will trigger a role violation\n" +
-                    firstNameOfTM1+" "+shiftInfo.get(5)+" can not take a "+workRoleOfTM2+" shift.\n";
+            String expectedViolationMessage ="This assignment will trigger a role violation.\n" +
+                    firstNameOfTM1+" "+shiftInfo.get(5)+" can not take a "+workRoleOfTM2+" shift\n";
             String actualwarningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
             if (expectedViolationMessage.equalsIgnoreCase(actualwarningMessage)){
                 SimpleUtils.pass("violation warning message is expected!");
             } else {
-                SimpleUtils.fail("violation warning message is not expected!",true);
+                SimpleUtils.fail("violation warning message is not expected! the actual is: " + actualwarningMessage+" expected: "+ expectedViolationMessage,true);
             }
             schedulePage.clickOnOkButtonInWarningMode();
             if (schedulePage.verifyDayHasShiftByName(0,firstNameOfTM1)==1 && schedulePage.verifyDayHasShiftByName(1,firstNameOfTM2)==1){

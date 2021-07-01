@@ -85,7 +85,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	private WebElement legionHeaderIcon;
 	@Override
 	public boolean isLoginSuccess() throws Exception {
-		WebDriverWait tempWait = new WebDriverWait(getDriver(), 20);
+		WebDriverWait tempWait = new WebDriverWait(getDriver(), 30);
 		try {
 			tempWait.until(ExpectedConditions.visibilityOf(legionHeaderIcon));
 			return true;
@@ -107,7 +107,9 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     {
     	if(isLoginDone){
             getActiveConsoleName(dashboardConsoleName);
-            if (isElementLoaded(locationSelectorButton, 5) && locationSelectorButton.getText().contains(selectedLocation)) {
+            setConsoleWindowHandle(getDriver().getWindowHandle());
+            waitForSeconds(5);
+            if (isElementLoaded(locationSelectorButton, 30) && locationSelectorButton.getText().contains(selectedLocation)) {
 				SimpleUtils.pass("Login to Legion Application " + displayCurrentURL() + " Successfully with selected location: '" + selectedLocation + "'.");
 			} else {
 				SimpleUtils.fail("Not able to select the location: " + selectedLocation + " Successfully!",false);

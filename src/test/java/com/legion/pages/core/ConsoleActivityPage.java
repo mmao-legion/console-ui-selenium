@@ -154,7 +154,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
 	@Override
 	public void verifyNewShiftSwapCardShowsOnActivity(String requestUserName, String respondUserName, String actionLabel,
-													  boolean isNewLabelShows) throws Exception {
+													  boolean isNewLabelShows, String location) throws Exception {
 		String newStatus = "New";
 		String expectedMessage = actionLabel + " to swap shifts";
 		waitForSeconds(5);
@@ -169,7 +169,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 			}
 			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
 			if (message != null && message.getText().contains(requestUserName) && message.getText().contains(respondUserName)
-					&& message.getText().toLowerCase().contains(expectedMessage)) {
+					&& message.getText().toLowerCase().contains(expectedMessage)
+					&& isElementLoaded(activityCards.get(0).findElement(By.cssSelector(".notification-content .location"))) && activityCards.get(0).findElement(By.cssSelector(".notification-content .location")).getText().toLowerCase().contains("@"+location.toLowerCase())) {
 				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
 			}else {
 				SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + message.getText(), false);
@@ -265,13 +266,13 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	}
 
 	@Override
-	public void verifyActivityOfShiftOffer(String requestUserName) throws Exception {
+	public void verifyActivityOfShiftOffer(String requestUserName, String location) throws Exception {
 		String expectedMessage = "open shift";
 		waitForSeconds(5);
 		if (areListElementVisible(activityCards, 15)) {
 			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
 			if (message != null && message.getText().contains(requestUserName)
-					&& message.getText().toLowerCase().contains(expectedMessage)) {
+					&& message.getText().toLowerCase().contains(expectedMessage) && message.getText().toLowerCase().contains("@"+location.toLowerCase())) {
 				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
 			}else if( message.getText().toLowerCase().contains("no activities available for the selected filter")) {
 				SimpleUtils.report("No activities available for the selected filter");
@@ -314,6 +315,44 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		}
 	}
 
+	@Override
+	public boolean isApproveRejectBtnsLoaded(int index) throws Exception {
+		WebElement shiftSwapCard = activityCards.get(index);
+		if (shiftSwapCard != null) {
+			List<WebElement> actionButtons = shiftSwapCard.findElements(By.className("notification-buttons-button"));
+			if (areListElementVisible(actionButtons, 10)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void verifyApproveShiftOfferRequestAndGetErrorOnActivity(String requestUserName) throws Exception {
+		if (activityCards.size()>0) {
+			for (int i = 0; i<activityCards.size(); i++){
+				WebElement shiftSwapCard = activityCards.get(i);
+				if (i>3){
+					SimpleUtils.fail("Didn't find the right notification!", false);
+				}
+				List<WebElement> actionButtons = shiftSwapCard.findElements(By.className("notification-buttons-button"));
+				WebElement message = shiftSwapCard.findElement(By.className("notification-content-message"));
+				if (actionButtons != null && actionButtons.size() == 2 && message.getText().contains(requestUserName)) {
+					for (WebElement button : actionButtons) {
+						if ("approve".equalsIgnoreCase(button.getText())) {
+							click(button);
+							break;
+						}
+					}
+					// check the status of the card.
+					waitForSeconds(2);
+					SimpleUtils.assertOnFail("Approve and Reject buttons should be there!", areListElementVisible(activityCards.get(i).findElements(By.className("notification-buttons-button"))), false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Failed to find a new Shift Offer activity!", false);
+		}
+	}
 
 
     @Override
@@ -609,11 +648,11 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     }
 
     @Override
-    public void verifyTheContentOfShiftSwapActivity() throws Exception {
+    public void verifyTheContentOfShiftSwapActivity(String location) throws Exception {
     	waitForSeconds(3);
         if (isElementLoaded(filterTitle,10) && (isElementLoaded(notificationsContainer, 10) || isElementLoaded(notificationsContainerEmpty, 10))) {
             if (filterTitle.getText().contains("Shift Swap")) {
-                if (notificationsContainer.getText().contains("requested to swap shifts") || notificationsContainer.getText().contains("agreed to cover")) {
+                if ((notificationsContainer.getText().contains("requested to swap shifts") || notificationsContainer.getText().contains("agreed to cover")) && notificationsContainer.getText().toLowerCase().contains("@"+location.toLowerCase())) {
                     SimpleUtils.pass("The content of shift swap activity displays successfully");
                 } else if (notificationsContainerEmpty.getText().contains("No activities available")) {
                     SimpleUtils.pass("No activities available for the selected filter");
@@ -623,7 +662,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     }
 
     @Override
-    public WebElement verifyNewShiftCoverCardShowsOnActivity(String requestUserName, String respondUserName) throws Exception {
+    public WebElement verifyNewShiftCoverCardShowsOnActivity(String requestUserName, String respondUserName, String location) throws Exception {
         String expectedMessage = "agreed to cover";
         WebElement shiftCoverCard = null;
         waitForSeconds(5);
@@ -633,7 +672,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
             for (WebElement activityCard: activityCards) {
                 message = activityCard.findElement(By.className("notification-content-message"));
                 if (message != null && message.getText().contains(requestUserName) && message.getText().contains(respondUserName)
-                        && message.getText().toLowerCase().contains(expectedMessage)) {
+                        && message.getText().toLowerCase().contains(expectedMessage) && message.getText().toLowerCase().contains("@" + location.toLowerCase())) {
                     SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
                     shiftCoverCard = activityCard;
                     isShiftCoverCardPresent = true;
@@ -651,9 +690,21 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         return shiftCoverCard;
     }
 
+	@Override
+    public void verifyCancelledMessageOnTheBottomOfTheNotification() throws Exception{
+		if (areListElementVisible(activityCards, 15)) {
+			WebElement canceledMessage = activityCards.get(0).findElement(By.className("notification-approved"));
+			if (canceledMessage != null && canceledMessage.getText().toLowerCase().contains("cancelled")) {
+				SimpleUtils.pass("Canceled message load successfully!");
+			} else {
+				SimpleUtils.fail("Cancelled message failed to load!", false);
+			}
+		}
+	}
+
     @Override
-    public void approveOrRejectShiftCoverRequestOnActivity(String requestUserName, String respondUserName, String action) throws Exception {
-        WebElement shiftCoverCard = verifyNewShiftCoverCardShowsOnActivity(requestUserName, respondUserName);
+    public void approveOrRejectShiftCoverRequestOnActivity(String requestUserName, String respondUserName, String action, String location) throws Exception {
+        WebElement shiftCoverCard = verifyNewShiftCoverCardShowsOnActivity(requestUserName, respondUserName, location);
         if (shiftCoverCard != null) {
             List<WebElement> actionButtons = shiftCoverCard.findElements(By.className("notification-buttons-button"));
             if (actionButtons != null && actionButtons.size() == 2) {

@@ -98,6 +98,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @FindBy(css = ".col-sm-6.text-right")
     private WebElement currentTime;
 
+	@FindBy(css = ".sc-lgWdIC.cRRXke")
+	private List<WebElement> districtTimeOnDashboard;
+
     @FindBy(css = "div.fx-center.welcome-text h1")
     private WebElement detailWelcomeText;
 
@@ -331,7 +334,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void verifyTheWelcomeMessage(String userName) throws Exception {
-		String greetingTime = getTimePeriod(currentTime.getText());
+		String greetingTime = getTimePeriod(districtTimeOnDashboard.get(1).getText());
 		String expectedText = "Good " + greetingTime + ", " + userName + "." + "\n" + "Welcome to Legion" + "\n" + "Your Complete Workforce Engagement Solution";
 		String actualText = "";
 		if(isElementLoaded(detailWelcomeText, 5)){
@@ -347,7 +350,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
-	@FindBy (css = "div.col-sm-6.text-left")
+	@FindBy (css = ".sc-lgWdIC.cRRXke")
 	private WebElement currentDate;
 	@FindBy (css = "div.forecast>div:nth-child(2)")
 	private WebElement budgetSection;
@@ -674,7 +677,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void validateDateAndTimeAfterSelectingDifferentLocation() throws Exception {
 		String dateFormat = "";
-		String dateFromDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
+		String dateFromDashboard = getCurrentDateFromDashboard() + " " + districtTimeOnDashboard.get(1).getText().toUpperCase();
 		if (dateFromDashboard.toLowerCase().contains("am") || dateFromDashboard.toLowerCase().contains("pm")) {
 			dateFormat = "EEEE, MMMM d h:mm a";
 		} else {
@@ -1325,10 +1328,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = ".dashboard-time .text-left")
 	private WebElement districtOnDashboardDM;
 
+	@FindBy (css = ".sc-lgWdIC.cRRXke")
+	private List<WebElement> districtWeekOnDashboardDM;
+
 	@FindBy (css = ".dashboard-time .text-right")
 	private WebElement weekOnDashboardDM;
 
-	@FindBy (css = ".dms-time-stamp")
+	@FindBy (css = ".sc-kLwonV.erBgkb")
 	private WebElement dmsTimeStamp;
 
 	@Override
@@ -1396,8 +1402,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public String getDistrictNameOnDashboard() throws Exception {
 		String districtName = "";
-		if (isElementEnabled(districtOnDashboardDM, 10)) {
-			districtName = districtOnDashboardDM.getText();
+		if (isElementEnabled(districtWeekOnDashboardDM.get(0), 10)) {
+			districtName = districtWeekOnDashboardDM.get(0).getText();
 			SimpleUtils.pass("Dashboard Page: District name is '" + districtName + "'");
 		} else {
 			SimpleUtils.fail("Dashboard Page: District failed to load", true);
@@ -1511,16 +1517,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
 	}
 
-	@FindBy (css = "div.fl-right.width-48.dms-smart-card-4")
+	@FindBy (css = "div.sc-jCPRHX.dUJIHI div")
 	private WebElement projectedComplianceWidget;
 
-	@FindBy (css = "div.dms-number-x-large")
+	@FindBy (css = "div.sc-jhDJEt.ciiXUl")
 	private WebElement totalViolationHrs;
 
-	@FindBy (css = "div.tc.dms-box-item-title-2.dms-box-item-title-color-light")
+	@FindBy (css = "div.sc-enrZtP.fzMHFO")
 	private WebElement totalViolationHrsMessage;
 
-	@FindBy (css = "div[ng-click=\"viewCompliance()\"]")
+	@FindBy (css = "div.sc-jCPRHX.dUJIHI div.sc-dHMioH.jeOpi")
 	private WebElement viewComplianceLink;
 
 
@@ -1536,7 +1542,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	public void verifyTheContentInProjectedComplianceWidget() throws Exception {
 		if(isElementLoaded(projectedComplianceWidget, 5)) {
-			WebElement projectedComplianceWidgetTitle = projectedComplianceWidget.findElement(By.cssSelector("div.dms-box-title.dms-box-item-title-row"));
+			WebElement projectedComplianceWidgetTitle = projectedComplianceWidget.findElement(By.tagName("h3"));
 			if (isElementLoaded(projectedComplianceWidgetTitle, 5)
 					&& projectedComplianceWidgetTitle.getText().equalsIgnoreCase("Projected Compliance")
 					&& isElementLoaded(totalViolationHrs, 5)
@@ -2287,31 +2293,31 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         return weeksInfo;
     }
 
-	@FindBy(css = "div[class=\"dms-row21\"]")
+	@FindBy(css = "div.sc-iuhXDa.dCgdGX")
 	private WebElement scheduleVsGuidanceByDayWidget;
 
-	@FindBy(css = "div[class=\"dms-box-title dms-box-item-title-row ng-binding col-sm-5\"]")
+	@FindBy(css = ".sc-iuhXDa.dCgdGX h3")
 	private WebElement scheduleVsGuidanceByDayWidgetTitle;
 
-	@FindBy(css = "div.dms-budgeted")
+	@FindBy(css = "div.sc-ByBTK.CJgYi")
 	private WebElement budgetedLegend;
 
-	@FindBy(css = "div.dms-scheduled")
+	@FindBy(css = "div.sc-ByBTK.bwdYaU")
 	private WebElement scheduledLegend;
 
 	@FindBy(css = "[class=\"payroll-projection-chart__svg\"] rect")
 	private List<WebElement> scheduleVsGuidanceChartBars;
 
-	@FindBy(css = "[class=\"payroll-projection-chart__svg\"]")
+	@FindBy(css = "div.sc-hfVBHA.cUtlan")
 	private WebElement scheduleVsGuidanceChart;
 
-	@FindBy(css = "div.text-right.dms-legend-text")
+	@FindBy(css = "text.grouped-bar-chart-bottom-label")
 	private WebElement weekInfoOnScheduleVsGuidanceByDayWidget;
 
-	@FindBy(css = "[class=\"dms-row21\"] .dms-caret-large")
+	@FindBy(css = "span.sc-irqbAE.emlRte")
 	private WebElement budgetHoursCaret;
 
-	@FindBy(css = "span.dms-box-item-title.dms-box-item-title-row")
+	@FindBy(css = "div.sc-eCbnUT.sc-kBqmDu.dyrrwW.joLJeQ")
 	private WebElement budgetHoursMessageSpan;
 
 	public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception {
@@ -2325,16 +2331,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception {
-		List<WebElement> legendTexts = scheduleVsGuidanceByDayWidget.findElements(By.cssSelector(".ml-10.dms-legend-text"));
-		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
-		if(isElementLoaded(scheduleVsGuidanceByDayWidgetTitle, 5)
+		List<WebElement> legendTexts = scheduleVsGuidanceByDayWidget.findElements(By.cssSelector(".sc-biHcxt.duZDU"));
+		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector(".sc-dHMioH.jeOpiX"));
+		if(isElementLoaded(scheduleVsGuidanceByDayWidgetTitle, 15)
+				&& areListElementVisible(legendTexts, 5) && legendTexts.size() ==2
 				&& isElementLoaded(budgetedLegend, 5)
 				&& isElementLoaded(scheduledLegend, 5)
-				&& areListElementVisible(legendTexts, 5) && legendTexts.size() ==2
 				&& isElementLoaded(scheduleVsGuidanceChart, 5)
 				&& isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)
 				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromDMView().substring(8))
-				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
+//				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
 				&& isElementLoaded(budgetHoursCaret, 5)
 				&& isElementLoaded(viewSchedulesLink, 5)){
 			SimpleUtils.pass("The content on Schedule Vs Guidance By Day Widget display correctly! ");
@@ -2366,13 +2372,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				//compare the hours on widget and on schedule page
 				String budgetHoursFromDashboard = budgetHoursMessageSpan.getText().split(" ")[0];
 				click(scheduleConsoleMenu);
+				waitForSeconds(3);
 				ScheduleDMViewPage scheduleDMViewPage = new ConsoleScheduleDMViewPage();
 				String budgetHoursFromSchedulePage = scheduleDMViewPage.
 						getTextFromTheChartInLocationSummarySmartCard().get(4).split(" ")[0];
 				if (budgetHoursFromDashboard.equalsIgnoreCase(budgetHoursFromSchedulePage)) {
 					SimpleUtils.pass("Budget hrs display correctly on Schedule Vs Guidance By Day Widget!");
 				} else
-					SimpleUtils.fail("Budget hrs display incorrectly on Schedule Vs Guidance By Day Widget!", false);
+					SimpleUtils.fail("Budget hrs display incorrectly on Schedule Vs Guidance By Day Widget! The budget hours from dashboard is: " + budgetHoursFromDashboard
+							+ ". The budget hours from schedule page is: " +budgetHoursFromSchedulePage, false);
 			}
 		} else {
 			if (isElementLoaded(budgetHoursCaret, 5)&& !isElementLoaded(budgetHoursMessageSpan)){
@@ -2436,7 +2444,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "i.dms-caret-small")
 	private WebElement budgetHoursCaretOnLocationSummaryWidget;
 
-	@FindBy(css = "span.dms-box-item-unit-trend")
+	@FindBy(css = "div.sc-hLyimJ.bSSXNe")
 	private WebElement budgetHoursMessageOnLocationSummaryWidget;
 
 	public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception {
@@ -2609,4 +2617,29 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 		return results;
 	}
+
+	@Override
+	public boolean isConsoleNavigationBarIsGray(String consoleNavigationBarName) throws Exception {
+		boolean isConsoleNavigationBarIsGray = false;
+		WebElement consoleNavigationBar = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'console-navigation-item-label "+ consoleNavigationBarName +"')]//parent::div"));
+		if (consoleNavigationBar.getAttribute("class").contains("gray-item")){
+			isConsoleNavigationBarIsGray = true;
+			SimpleUtils.report("The console navigation bar: "+ consoleNavigationBarName+" is display as gray! ");
+		} else
+			SimpleUtils.report("The console navigation bar: "+ consoleNavigationBarName+" is not display as gray! ");
+		return isConsoleNavigationBarIsGray;
+	}
+
+	@Override
+	public boolean isConsoleNavigationBarBeenSelected (String consoleNavigationBarName) throws Exception {
+		boolean isConsoleNavigationBarBeenSelected = false;
+		WebElement consoleNavigationBar = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'console-navigation-item-label "+ consoleNavigationBarName +"')]//parent::div"));
+		if (consoleNavigationBar.getAttribute("class").contains("active")){
+			isConsoleNavigationBarBeenSelected = true;
+			SimpleUtils.report("The console navigation bar: "+ consoleNavigationBarName+" is selected! ");
+		} else
+			SimpleUtils.report("The console navigation bar: "+ consoleNavigationBarName+" is not selected! ");
+		return isConsoleNavigationBarBeenSelected;
+	}
+
 }

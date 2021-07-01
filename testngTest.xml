@@ -9,33 +9,29 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="Cinemark Minor Test">
+    <test name="Activity Test">
         <classes>
-            <class name="com.legion.tests.core.CinemarkMinorTest">
+            <class name="com.legion.tests.core.ActivityTest">
                 <methods>
-                    <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
-<!--                    <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />-->
-                    <!--                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" Debug/>-->
-<!--                    <include name="verifySchoolCalendarListAsInternalAdmin" />-->
-<!--                    <include name="verifyCreateCalendarAsInternalAdmin" />-->
-<!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-<!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-<!--                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-<!--                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-<!--                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-<!--                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-<!--                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-<!--                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-                    <!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />-->
-<!--                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />-->
-                    <!-- blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" />-->
-                    <!--                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>-->
-                    <!-- blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" />-->
+                    <include name="verifyAccessControlsOnActivitiesPage"/>
+                    <include name="verifyTheContentOnActivityAsStoreManager"/>
+                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>
+                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfActivityPageAsStoreManager" />
+                    <include name="verifyToCloseActivityFeedAsStoreManager" />
+                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
+                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
+                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
+                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
+                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
+                    <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

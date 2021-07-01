@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import com.google.inject.internal.cglib.reflect.$FastClass;
 import com.legion.utils.JsonUtil;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.openqa.selenium.By;
@@ -36,7 +37,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement>consoleNavigationMenuItems;
 	@FindBy(css = "div.profile")
 	private WebElement profilePageSection;
-	@FindBy(css="div.collapsible-title-text")
+	@FindBy(css="div.collapsible-title-text span")
 	private List<WebElement> profilePageSubSections;
 	@FindBy(css="a[ng-click=\"newTimeOff()\"]")
 	private WebElement newTimeOffBtn;
@@ -249,7 +250,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void selectProfilePageSubSectionByLabel(String profilePageSubSectionLabel) throws Exception {
 		boolean isSubSectionSelected = false;
-		if(areListElementVisible(profilePageSubSections,10)) {
+		if(areListElementVisible(profilePageSubSections,60)) {
 			for(WebElement profilePageSubSection : profilePageSubSections) {
 				if(profilePageSubSection.getText().toLowerCase().contains(profilePageSubSectionLabel.toLowerCase())) {
 					clickTheElement(profilePageSubSection);
@@ -1646,7 +1647,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 	
 	//updated by Haya
-	private void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception {
+	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception {
 		if(isElementLoaded(myAvailabilityEditModeSaveBtn)) {
 			click(myAvailabilityEditModeSaveBtn);
 			if(availabilityChangesRepeat.toLowerCase().contains("repeat forward")) {
@@ -2647,10 +2648,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Profile Page: 'My Shift Preference' edit container 'Save' button not loaded.", false);
 	}
 
-	@FindBy(xpath = "//span[contains(text(),\"MINOR\")]")
+	@FindBy(xpath = "//div[contains(text(),\"MINOR\")]")
 	private WebElement minorField;
 
-	@FindBy(xpath = "//span[contains(text(),\"MINOR\")]/../../following-sibling::div[1]/div[2]")
+	@FindBy(xpath = "//div[contains(text(),\"MINOR\")]/../div[2]")
 	private WebElement minorValue;
 
 	@FindBy(css = ".lg-toast__highlight-text")
@@ -2709,7 +2710,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "[label=\"Save\"] button")
 	private List<WebElement> saveBtnsOfProfile;
 
-	@FindBy(xpath = "//lg-button[@ng-click=\"$ctrl.onAction()\"]/button")
+	@FindBy(css = "[on-action=\"editProfile()\"] [label=\"Edit\"] button")
 	private WebElement editBtnOfProfile;
 
 	@FindBy(xpath = "//div[contains(text(),\"NAME\")]/../span")
@@ -2833,7 +2834,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "div.user-readonly-details")
 	private List<WebElement> userProfileInfoInUserProfileSection;
 
-	@FindBy(css = ".quick-engagement .col-xs-6.label")
+	@FindBy(css = ".quick-engagement .label")
 	private List<WebElement> fieldsInHRProfileInformationSection;
 
 	@FindBy(css = "[box-title=\"Legion Information\"] .col-xs-6.label")
@@ -3476,7 +3477,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isInviteToLegionButtonLoaded() throws Exception {
 		boolean isInviteToLegionButtonLoaded = false;
-		if(isElementLoaded(userProfileInviteBtn, 5)) {
+		if(isElementLoaded(userProfileInviteBtn, 10)) {
 			isInviteToLegionButtonLoaded =true;
 			SimpleUtils.report("Profile Page: Invite To Legion Button loaded successfully.");
 		} else
@@ -3503,7 +3504,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
 //		String d="2021 Apr 15";
 		String d= fromDay;
-		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT+8", dateFormat);
+//		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT+8", dateFormat);
+		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("UTC-7", dateFormat);
+//		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT-4", dateFormat);
 		long to = dateFormat.parse(d).getTime();
 		long from = dateFormat.parse(today).getTime();
 		int days = (int) ((to - from)/(1000 * 60 * 60 * 24));
@@ -3523,6 +3526,83 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		else
 			SimpleUtils.fail("Profile Page: New Time Off not Save Successfully.", false);
 
+	}
+
+	@FindBy(css = "[ng-click=\"removeAvailability()\"]")
+	private WebElement removeAvailabilityIcon;
+
+	@FindBy(css = "div.cursor-empty")
+	private List<WebElement> emptyAvailabilities;
+
+	@FindBy(css = "span.tooltip-red")
+	private WebElement availabilityToolTip;
+
+
+	public void updatePreferredOrBusyHoursToAllDay(int dayIndex, String hoursType) throws Exception {
+
+		String preferredHoursTabText = "Preferred";
+		String busyHoursTabText = "Busy";
+		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
+			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
+		else
+			selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+
+		//Delete all availabilities in the day
+		WebElement dayRow = null;
+		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
+			dayRow = myAvailabilityDayOfWeekRows.get(dayIndex);
+			List<WebElement> availabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.cursor-resizableW"));
+			for (WebElement availability: availabilitiesInTheDay) {
+				moveToElementAndClick(availability);
+				clickTheElement(removeAvailabilityIcon);
+				SimpleUtils.report("Remove one availability successfully! ");
+			}
+		} else
+			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
+
+		//Click first two empty availabilities
+		List<WebElement> emptyAvailabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.cursor-empty"));
+		for (int i =0; i< 10; i++) {
+			click(emptyAvailabilitiesInTheDay.get(i));
+		}
+
+		WebElement rightCell = dayRow.findElement(By.cssSelector("div.cursor-resizableE"));
+		int i=0;
+		while (!availabilityToolTip.getText().contains("12:00am - 12:00am") && i<5){
+			//Drag the availability to the end of the day
+			scrollToElement(rightCell);
+			mouseHoverDragandDrop(rightCell,emptyAvailabilitiesInTheDay.get(emptyAvailabilitiesInTheDay.size()-1));
+			i++;
+			waitForSeconds(2);
+		}
+
+		if (!availabilityToolTip.getText().contains("12:00am - 12:00am")) {
+//			mouseHoverDragandDrop(rightCell,emptyAvailabilitiesInTheDay.get(emptyAvailabilitiesInTheDay.size()-1));
+			SimpleUtils.fail("Update availabilities fail! ", false);
+		} else
+			SimpleUtils.report("Update availabilities successfully! ");
+	}
+
+
+	public void clickAvailabilityEditButton() throws Exception{
+		if (isElementLoaded(editBtn,10)){
+			click(editBtn);
+		}else{
+			SimpleUtils.fail("Edit button is not loaded!", false);
+		}
+	}
+
+	@FindBy(tagName = "lg-eg-status")
+	private WebElement statusOnProfilePage;
+
+	public String getStatusOnProfilePage () throws Exception {
+		String status = "";
+		if (isElementLoaded(statusOnProfilePage, 10)){
+			status = statusOnProfilePage.getAttribute("type");
+			SimpleUtils.pass("Get status from profile page successfully! ");
+		} else
+			SimpleUtils.fail("Status on profile page fail to load! ", false);
+		return status;
 	}
 
 	//Added by Estelle to get home store location

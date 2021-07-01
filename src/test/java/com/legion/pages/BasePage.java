@@ -149,7 +149,7 @@ public class BasePage {
     
     public void checkElementVisibility(WebElement element)
     {
-        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
+        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 60);
         try {
         	wait.until(ExpectedConditions.visibilityOf(element));
         }
@@ -558,13 +558,13 @@ public class BasePage {
                     select.selectByVisibleText(text);
                     SimpleUtils.pass("Select:" + text + " Successfully!");
                 } else {
-                    SimpleUtils.fail(text + " doesn't exist in options!", true);
+                    SimpleUtils.fail(text + " doesn't exist in options!", false);
                 }
             } else {
-                SimpleUtils.fail("Select options are empty!", true);
+                SimpleUtils.fail("Select options are empty!", false);
             }
         }else {
-            SimpleUtils.fail("Select Element failed to load!", true);
+            SimpleUtils.fail("Select Element failed to load!", false);
         }
     }
 

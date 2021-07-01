@@ -35,6 +35,8 @@ public interface ControlsNewUIPage {
 
 	public void enableOrDisableScheduleCopyRestriction(String yesOrNo) throws Exception;
 
+	public void setCopyConfig(boolean onOrOff, String toggleName) throws Exception;
+
 	public void setViolationLimit(String value) throws Exception;
 
 	public void setBudgetOverageLimit(String value) throws Exception;
@@ -54,6 +56,7 @@ public interface ControlsNewUIPage {
 	public void clickOnControlsComplianceSection() throws Exception;
 	public void clickOnControlsUsersAndRolesSection() throws Exception;
 	public void clickOnControlsTasksAndWorkRolesSection() throws Exception;
+	public void clickOnControlsOperatingHoursSection() throws Exception;
 	
 	public boolean isControlsLocationProfileLoaded() throws Exception;
 	public boolean isControlsScheduleCollaborationLoaded() throws Exception;
@@ -300,4 +303,13 @@ public interface ControlsNewUIPage {
 	public void verifyConvertUnassignedShiftsToOpenSetting() throws Exception;
 	public String getConvertUnassignedShiftsToOpenSettingOption() throws Exception;
 	public void updateConvertUnassignedShiftsToOpenSettingOption(String option) throws Exception;
+	public void setAutomaticallySetOnboardedEmployeesToActive(String yesOrNo) throws Exception;
+	public boolean getTheSettingForAutomaticallySetOnboardedEmployeesToActive() throws Exception;
+	public void selectAccessRoles (List<String> selectAccessRoles) throws Exception;
+	public boolean hasCompanyMobilePolicyURLOrNot () throws Exception;
+	public void verifyUsersAreLoaded() throws Exception;
+	public void disableAllDayparts() throws Exception;
+	public void enableDaypart(String dayPart) throws Exception;
+	public void turnOnOrOffSpecificPermissionForDifferentRole(String rolePermission, String section, String permission, String action) throws Exception;
+	public void setDaypart(String dayPart, String startTime, String endTime) throws Exception;
 }

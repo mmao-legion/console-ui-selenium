@@ -589,7 +589,7 @@ public class SchedulingMinorTest extends TestBase {
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "09:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
@@ -901,7 +901,7 @@ public class SchedulingMinorTest extends TestBase {
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
+            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "09:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String firstNameOfTM1 = "Minor13";
             String lastNameOfTM = "RC";

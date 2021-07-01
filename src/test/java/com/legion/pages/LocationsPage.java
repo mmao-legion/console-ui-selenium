@@ -179,6 +179,13 @@ public interface LocationsPage {
 
     public void cancelCreatingUpperfield(String level, String upperfieldsName, String upperfieldsId) throws Exception;
 
+    public void clickOnLocationInLocationResult(String location) throws Exception;
+
+    public void clickOnConfigurationTabOfLocation() throws Exception;
+
+    public HashMap<String,String> getTemplateTypeAndNameFromLocation() throws Exception;
+
+    public void enableDaypart(String dayPart) throws Exception;
     public void goToLocationDetailsPage(String locationName) throws Exception;
 
     public void goToConfigurationTabInLocationLevel();

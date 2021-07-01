@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.legion.pages.core.ConsoleGmailPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
+import com.legion.pages.core.OpsPortalLocationsPage;
 import org.apache.poi.ss.formula.ptg.ControlPtg;
 import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.WebElement;
@@ -62,6 +63,9 @@ public class TeamTestKendraScott2 extends TestBase{
 	private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     private static HashMap<String, String> imageFilePath = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ProfileImageFilePath.json");
+	private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
+	private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
+
 
 	@Override
 	  @BeforeMethod()
@@ -724,6 +728,178 @@ public class TeamTestKendraScott2 extends TestBase{
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			schedulePage.clickOnScheduleSubTab("Team Schedule");
 			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the SM, DM, TL can or cannot see the invite button on TM list and profile page when grant or ungrant Invite Employee permission to them")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyAbilityToHideInviteButtonAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+			//Grant Invite Employee permission for DM SM and TL
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			String accessRoleTab = "Access Roles";
+			String rolePermissionForDM = "District Manager";
+			String rolePermissionForSM = "Store Manager";
+			String rolePermissionForTL = "Team Lead";
+			String section = "Team";
+			String permission = "Invite Employee";
+			String actionOff = "off";
+			String actionOn = "on";
+			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+				controlsPage.gotoControlsPage();
+				controlsNewUIPage.isControlsPageLoaded();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.verifyUsersAreLoaded();
+				controlsPage.clickGlobalSettings();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForDM, section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOn);
+
+			} else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+				OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
+				opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+				ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+				configurationPage.goToUserManagementPage();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForDM, section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOn);
+				switchToConsoleWindow();
+			}
+
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			//Login as DM
+			String fileName = "UsersCredentials.json";
+			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+				fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+			} else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+				fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
+			}
+
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+			Object[][] storeManagerCredentials = userCredentials.get("DistrictManager");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+					, String.valueOf(storeManagerCredentials[0][2]));
+			dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			//Go to team page and check the invite button
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			teamPage.goToTeam();
+			HashMap<String, Object[][]> teamMembers = null;
+			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+				teamMembers = kendraScott2TeamMembers;
+			} else {
+				teamMembers = cinemarkWkdyTeamMembers;
+			}
+
+			String tm = teamMembers.get("TeamMember1")[0][0].toString();
+
+			SimpleUtils.assertOnFail("The invite buttons fail to load on Roster page! ", teamPage.checkIsInviteButtonExists(), false);
+			teamPage.searchAndSelectTeamMemberByName(tm);
+			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
+			loginPage.logOut();
+			//Login as SM
+			storeManagerCredentials = userCredentials.get("StoreManager");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+					, String.valueOf(storeManagerCredentials[0][2]));
+			dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			//Go to team page and check the invite button
+			teamPage.goToTeam();
+			SimpleUtils.assertOnFail("The invite buttons fail to load on Roster page! ", teamPage.checkIsInviteButtonExists(), false);
+			teamPage.searchAndSelectTeamMemberByName(tm);
+			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
+			loginPage.logOut();
+
+			storeManagerCredentials = userCredentials.get("TeamLead");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+					, String.valueOf(storeManagerCredentials[0][2]));
+			dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			//Go to team page and check the invite button
+			teamPage.goToTeam();
+			SimpleUtils.assertOnFail("The invite buttons fail to load on Roster page! ", teamPage.checkIsInviteButtonExists(), false);
+			teamPage.searchAndSelectTeamMemberByName(tm);
+			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
+			loginPage.logOut();
+			//Login as admin
+			storeManagerCredentials = userCredentials.get("InternalAdmin");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+					, String.valueOf(storeManagerCredentials[0][2]));
+			dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			controlsPage.gotoControlsPage();
+			controlsNewUIPage.isControlsPageLoaded();
+			controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+			controlsNewUIPage.verifyUsersAreLoaded();
+			controlsPage.clickGlobalSettings();
+			controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+			controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForDM, section, permission, actionOff);
+			controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOff);
+			controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOff);
+			loginPage.logOut();
+
+			//Login as DM
+			storeManagerCredentials = userCredentials.get("DistrictManager");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+					, String.valueOf(storeManagerCredentials[0][2]));
+			dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			//Go to team page and check the invite button
+			teamPage.goToTeam();
+			SimpleUtils.assertOnFail("The invite buttons fail to load on Roster page! ", !teamPage.checkIsInviteButtonExists(), false);
+			teamPage.searchAndSelectTeamMemberByName(tm);
+			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", !profileNewUIPage.isInviteToLegionButtonLoaded(), false);
+			loginPage.logOut();
+			//Login as SM
+			storeManagerCredentials = userCredentials.get("StoreManager");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+					, String.valueOf(storeManagerCredentials[0][2]));
+			dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			//Go to team page and check the invite button
+			teamPage.goToTeam();
+			SimpleUtils.assertOnFail("The invite buttons fail to load on Roster page! ", !teamPage.checkIsInviteButtonExists(), false);
+			teamPage.searchAndSelectTeamMemberByName(tm);
+			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", !profileNewUIPage.isInviteToLegionButtonLoaded(), false);
+			loginPage.logOut();
+			//Login as TL
+			storeManagerCredentials = userCredentials.get("TeamLead");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+					, String.valueOf(storeManagerCredentials[0][2]));
+			dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			//Go to team page and check the invite button
+			teamPage.goToTeam();
+			SimpleUtils.assertOnFail("The invite buttons fail to load on Roster page! ", !teamPage.checkIsInviteButtonExists(), false);
+			teamPage.searchAndSelectTeamMemberByName(tm);
+			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", !profileNewUIPage.isInviteToLegionButtonLoaded(), false);
+
+
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}

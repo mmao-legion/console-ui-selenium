@@ -204,8 +204,8 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
     @FindBy(css = "tbody[ng-repeat*=\"item\"]")
     private List<WebElement> templateList;
     @Override
-    public void findDefaulTemplate(String templateName) throws Exception {
-        if (isElementLoaded(searchInput,15)){
+    public void findDefaultTemplate(String templateName) throws Exception {
+        if (isElementLoaded(searchInput,25)){
             searchInput.clear();
             searchInput.sendKeys(templateName);
             waitForSeconds(2);
