@@ -242,4 +242,6 @@ public interface ProfileNewUIPage {
 	public boolean isShowOrHideInvitationCodeButtonLoaded() throws Exception;
 
 	public void createTimeOffOnSpecificDays(String timeOffReasonLabel, String timeOffExplanationText,String fromDay, int duration) throws Exception;
+
+	public HashMap<String, String> getOneUserHRProfileInfo() throws Exception;
 }

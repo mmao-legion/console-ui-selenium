@@ -201,17 +201,102 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		}else
 			SimpleUtils.fail("Select a location window load failed",true);
 	}
-	@FindBy(css=".lg-tabs__nav >.lg-tabs__nav-item:nth-child(2)")
-	private WebElement districtTabAftClickAddLocationBtn;
 
+	@FindBy(css=".lg-tabs__nav >.lg-tabs__nav-item:nth-child(4)")
+	private WebElement dynamicGroupTabAftClickAddLocationBtn;
+	@FindBy(css ="tr[ng-repeat=\"item in $ctrl.currentPageItems track by $index\"]")
+	private List<WebElement> groupRows;
 	@Override
-	public void iCanSelectDistrictByAddLocation(String searchText, int index) {
-		click(districtTabAftClickAddLocationBtn);
+	public void iCanSelectLocationsViaDynamicGroupInAddLocation(String searchText) throws Exception {
 		if (isElementEnabled(selectALocationTitle,5)) {
-			searchInputInSelectALocation.sendKeys(searchText);
-			searchInputInSelectALocation.sendKeys(Keys.ENTER);
-			waitForSeconds(5);
+			click(dynamicGroupTabAftClickAddLocationBtn);
+			if (groupRows.size()>0) {
+				for (WebElement eachRow: groupRows) {
+					WebElement groupNameInEachRow = eachRow.findElement(By.cssSelector("td:nth-child(2)"));
+					WebElement checkBoxOfEachGroup = eachRow.findElement(By.cssSelector("td>div>input-field"));
+					if (groupNameInEachRow.getText().equalsIgnoreCase(searchText) ||groupNameInEachRow.getText().contains(searchText)) {
+						click(checkBoxOfEachGroup);
+						click(okBtnInCreateNewJobPage);
+						break;
+					}else
+						SimpleUtils.fail("No group mached to "+searchText,false);
+				}
+			}else
+				createNewDynamicGroup(searchText,searchText,searchText,0);
+
+		}else
+			SimpleUtils.fail("Select a location window load failed",true);
+	}
+	@FindBy(css = "lg-button[label=\"Create Group\"]")
+	private WebElement addDynamicGroupBtn;
+	@FindBy(css = "fieldset.rule_container")
+	private WebElement formOfCreateEditGroup;
+	@FindBy(css = "lg-button[label=\"Test\"]")
+	private  WebElement testBtn;
+	@FindBy(css = "input[aria-label=\"Group Name\"]")
+	private  WebElement groupNameInput;
+	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
+	private  WebElement groupDescriptionInput;
+	@FindBy(css = "select.ng-pristine.ng-untouched.ng-valid")
+	private  WebElement criteriaSelect;
+	@FindBy(css = "lg-button[label=\"Add More\"]")
+	private  WebElement addMoreBtn;
+	@FindBy(css = "textarea[id=\"omjob\"]")
+	private WebElement formulaInputBox;
+	@FindBy(css = "lg-picker-input[value=\"group.values\"]")
+	private  WebElement criteriaValue;
+	@FindBy(css = "input-field[type=\"checkbox\"]")
+	private  List<WebElement> checkboxInCriteriaValue;
+	@FindBy(css = "div.mappingLocation.mt-20.ng-scope > span")
+	private  WebElement testBtnInfo;
+	public void createNewDynamicGroup(String name,String distriction,String criteria,int index) throws Exception {
+
+		if (isElementEnabled(addDynamicGroupBtn,5)) {
+			click(addDynamicGroupBtn);
+			if (isElementEnabled(formOfCreateEditGroup,5)) {
+				groupNameInput.sendKeys(name);
+				groupDescriptionInput.sendKeys(distriction);
+				selectByVisibleText(criteriaSelect,criteria);
+				if (!isElementEnabled(formulaInputBox)) {
+					click(criteriaValue);
+					click(checkboxInCriteriaValue.get(0));
+					click(testBtn);
+					String testInfo = testBtnInfo.getText().trim();
+					click(okBtnInCreateNewJobPage);
+					waitForSeconds(3);
+					if (groupRows.size()>0) {
+						SimpleUtils.pass("Dynamic group create successfully");
+					}else
+						SimpleUtils.fail("Dynamic group create failed",false);
+
+				}else
+					formulaInputBox.sendKeys("Parent(1)");
+				click(okBtnInCreateNewJobPage);
+				waitForSeconds(3);
+			}else
+				SimpleUtils.fail("Create or Edit Dynamic Group form load failed",false);
+		}else
+			SimpleUtils.fail("Add dynamic group button load failed",false);
+
+	}
+	@FindBy(css=".lg-tabs__nav >.lg-tabs__nav-item:nth-child(2)")
+	private WebElement upperFieldTabAftClickAddLocationBtn;
+	@FindBy(css = "input[placeholder=\"Search by upperfield name\"]")
+	private WebElement searchTextOfUpperField;
+	@Override
+	public void iCanSelectUpperFieldByAddLocation(String searchText, int index) {
+		if (isElementEnabled(selectALocationTitle,5)) {
+			click(upperFieldTabAftClickAddLocationBtn);
+			if (isElementEnabled(searchTextOfUpperField,5)) {
+				SimpleUtils.pass("UpperField item in select a UpperField window show well");
+				searchInputInSelectALocation.sendKeys(searchText);
+				searchInputInSelectALocation.sendKeys(Keys.ENTER);
+				waitForSeconds(5);
+			}else
+				SimpleUtils.fail("UpperField item in select a UpperField window load failed",false);
+
 			if (locationRowsInSelectLocation.size()>0) {
+				SimpleUtils.pass("Can select UpperField in select a location window");
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
 				click(firstRow);
 				click(addBtn);

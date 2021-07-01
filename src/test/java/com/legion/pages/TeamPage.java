@@ -1,7 +1,5 @@
 package com.legion.pages;
 
-import cucumber.api.java.it.Ma;
-import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
@@ -170,4 +168,5 @@ public interface TeamPage {
 	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception;
 	public void selectARandomOnboardedOrNotTeamMemberToViewProfile(boolean selectOnboardedTM) throws Exception;
 	public void selectSchoolYear() throws Exception;
+	public int getLocationName();
 }

@@ -58,7 +58,17 @@ public class ConsoleAdminPage extends BasePage implements AdminPage {
 				SimpleUtils.fail("Action button is not clickable",false);
 
 		}
+	}
 
-
+	@Override
+	public void clickOnConsoleAdminMenu() throws Exception {
+		if(isElementLoaded(consoleAdminPageTabElement,20)) {
+			click(consoleAdminPageTabElement);
+			if (consoleAdminPageTabElement.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
+				SimpleUtils.pass("Admin Page: Click on Admin console menu successfully");
+			else
+				SimpleUtils.fail("Admin Page: It doesn't navigate to Admin console menu after clicking", false);
+		} else
+			SimpleUtils.fail("Admin Console Menu not loaded Successfully!", false);
 	}
 }
