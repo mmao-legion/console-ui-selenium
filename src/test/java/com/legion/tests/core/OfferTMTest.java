@@ -173,20 +173,7 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-/*            String workRoleOfTM = "";
-            fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -233,9 +220,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //login with TM.
-            Object[][] TMCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
-                    , String.valueOf(TMCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
@@ -261,20 +246,7 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-/*            String workRoleOfTM = "";
-            fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -348,20 +320,7 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-/*            String workRoleOfTM = "";
-            fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -411,9 +370,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //login with TM.
-            Object[][] TMCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
-                    , String.valueOf(TMCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
@@ -439,20 +396,7 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-/*            String workRoleOfTM = "";
-            fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -528,20 +472,7 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-/*            String workRoleOfTM = "";
-            fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -590,9 +521,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //login with TM.
-            Object[][] TMCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
-                    , String.valueOf(TMCredentials[0][2]));
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
@@ -618,20 +547,7 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-/*            String workRoleOfTM = "";
-            fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -706,20 +622,7 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-/*            String workRoleOfTM = "";
-            fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -771,9 +674,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //login with TM.
-            Object[][] TMCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
-                    , String.valueOf(TMCredentials[0][2]));
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
@@ -787,9 +688,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
             loginPage.logOut();
 
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
             activityPage.verifyActivityBellIconLoaded();
@@ -829,21 +728,7 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-/*            String workRoleOfTM = "";
-            fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
-
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
@@ -894,9 +779,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //login with TM.
-            Object[][] TMCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
-                    , String.valueOf(TMCredentials[0][2]));
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
@@ -910,9 +793,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
             loginPage.logOut();
 
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
             activityPage.verifyActivityBellIconLoaded();
@@ -924,8 +805,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //log in as TM.
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
-                    , String.valueOf(TMCredentials[0][2]));
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickOnFilterBtn();
@@ -953,27 +833,12 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //log in as TM2 to get nickname.
-            String fileName = "UsersCredentials.json";
-/*            String workRoleOfTM = "";
-            fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-
-            Object[][] TM2Credentials = userCredentials.get("TeamMember2");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TM2Credentials[0][0]), String.valueOf(TM2Credentials[0][1])
-                    , String.valueOf(TM2Credentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
             String firstNameOfTM2 = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
 
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             // 1.Checking configuration in controls
             String option = "Always";
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1028,9 +893,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //login with TM1 to claim.
-            Object[][] TMCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
-                    , String.valueOf(TMCredentials[0][2]));
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
@@ -1041,8 +904,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //login with TM2 to claim.
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TM2Credentials[0][0]), String.valueOf(TM2Credentials[0][1])
-                    , String.valueOf(TM2Credentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
@@ -1053,9 +915,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //log in as SM to check.
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
             activityPage.verifyActivityBellIconLoaded();
@@ -1088,25 +948,11 @@ public class OfferTMTest extends TestBase {
             String firstNameOfTM1 = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-/*            fileName = this.enterpriseName+fileName;
-            if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            //log in as TM2 to get nickname.
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] TM2Credentials = userCredentials.get("TeamMember2");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TM2Credentials[0][0]), String.valueOf(TM2Credentials[0][1])
-                    , String.valueOf(TM2Credentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
             String firstNameOfTM2 = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             // 1.Checking configuration in controls
             String option = "Never";
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1162,9 +1008,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //login with TM1 to claim.
-            Object[][] TMCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
-                    , String.valueOf(TMCredentials[0][2]));
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
@@ -1175,8 +1019,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //login with TM2 to claim.
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TM2Credentials[0][0]), String.valueOf(TM2Credentials[0][1])
-                    , String.valueOf(TM2Credentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
@@ -1184,8 +1027,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //log in as AM to set back the config.
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             option = "Always";
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             controlsNewUIPage.clickOnControlsConsoleMenu();
@@ -1214,19 +1056,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
 
-            String fileName = "UsersCredentials.json";
-            fileName = this.enterpriseName+fileName;
- /*           if (this.enterpriseName.contains("cinemark-wkdy")){
-                workRoleOfTM = "Team Member Corporate-Theatre";
-            } else {//KendraScott2_Enterprise by default
-                workRoleOfTM = scheduleWorkRoles.get("MOD");
-            }
-*/
-            //log in as admin.
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] adminCredentials = userCredentials.get("InternalAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
-                    , String.valueOf(adminCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             // 1.Checking configuration in controls
             String option = "Never";
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1284,9 +1114,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //login with TM to claim.
-            Object[][] TMCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
-                    , String.valueOf(TMCredentials[0][2]));
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
@@ -1297,9 +1125,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //log in as SM to check the shift
-            Object[][] SMCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(SMCredentials[0][0]), String.valueOf(SMCredentials[0][1])
-                    , String.valueOf(SMCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
@@ -1402,14 +1228,7 @@ public class OfferTMTest extends TestBase {
 
 
 
-            String fileName = "UsersCredentials.json";
-            fileName = this.enterpriseName+fileName;
-            //log in as admin.
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-
-            Object[][] SMCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(SMCredentials[0][0]), String.valueOf(SMCredentials[0][1])
-                    , String.valueOf(SMCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);

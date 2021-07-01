@@ -109,6 +109,7 @@ public abstract class TestBase {
         StoreManager("StoreManager"),
         TeamLead("TeamLead"),
         TeamMember("TeamMember"),
+        TeamMember2("TeamMember2"),
         StoreManagerLG("StoreManagerLG"),
         DistrictManager("DistrictManager");
         private final String role;
@@ -444,6 +445,9 @@ public abstract class TestBase {
         }
         if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
             locationSelectorPage.changeUpperFields(districtsMap.get("CinemarkWkdy_Enterprise"));
+        }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("Vailqacn_Enterprise"))) {
+            locationSelectorPage.changeUpperFields(districtsMap.get("Vailqacn_Enterprise"));
         }
     }
 

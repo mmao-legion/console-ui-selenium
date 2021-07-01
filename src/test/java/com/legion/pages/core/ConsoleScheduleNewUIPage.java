@@ -4967,10 +4967,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = ".redesigned-modal input")
     private WebElement deleteScheduleCheckBox;
 
-    @FindBy (css = "button.redesigned-modal-button-ok")
+    @FindBy (css = "button.redesigned-button-ok")
     private WebElement deleteButtonOnDeleteSchedulePopup;
 
-    @FindBy (css = ".redesigned-modal-button-cancel")
+    @FindBy (css = ".redesigned-button-cancel")
     private WebElement cancelButtonOnDeleteSchedulePopup;
 
     @Override
