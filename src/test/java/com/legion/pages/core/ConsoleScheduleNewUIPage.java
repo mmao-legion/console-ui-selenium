@@ -1231,7 +1231,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }else if(isElementLoaded(deleteScheduleButton, 10)) {
             return true;
         }
-        if(areListElementVisible(shiftsWeekView,3)){
+        if(areListElementVisible(shiftsWeekView,3) || isElementLoaded(editScheduleButton,5)){
             SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Generated!");
             return true;
         }
@@ -4957,7 +4957,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
-
     @FindBy (css = "lg-button[ng-click=\"deleteSchedule()\"]")
     private WebElement deleteScheduleButton;
 
@@ -4970,7 +4969,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = ".redesigned-button-ok")
     private WebElement deleteButtonOnDeleteSchedulePopup;
 
-    @FindBy (css = ".redesigned-button-cancel-gray")
+    @FindBy (css = ".redesigned-modal-button-cancel")
     private WebElement cancelButtonOnDeleteSchedulePopup;
 
     @Override
@@ -14033,7 +14032,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean verifyWFSFunction() {
         if (searchResults.size()!=0) {
-            SimpleUtils.pass("Can search team members in same district");
+            SimpleUtils.pass("Can search team members in Workforce sharing group");
             return true;
         }else
             SimpleUtils.fail("Workforce Sharing function work wrong",false);
@@ -15721,11 +15720,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (areListElementVisible(weekShifts, 10)) {
             for (int i = 0; i < weekShifts.size(); i++) {
                 try {
-                     if (weekShifts.get(i).equals(shift)) {
-                         index = i;
-                         SimpleUtils.pass("Schedule Week View: Get the index of the shift successfully: " + i);
-                         break;
-                     }
+                    if (weekShifts.get(i).equals(shift)) {
+                        index = i;
+                        SimpleUtils.pass("Schedule Week View: Get the index of the shift successfully: " + i);
+                        break;
+                    }
 
                 } catch (NoSuchElementException e) {
                     continue;
@@ -15746,6 +15745,61 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         } else {
             SimpleUtils.fail("Schedule Week View: There are no shifts loaded!", false);
+        }
+        return index;
+    }
+    
+    // added by Fiona
+    public List<String> verifyDaysHasShifts() throws Exception {
+        List<String> dayHasShifts = new ArrayList<String>();
+        if (areListElementVisible(scheduleDays, 10)) {
+            for(WebElement scheduleDay:scheduleDays){
+                String dayAbbr = scheduleDay.findElement(By.cssSelector("div.sch-calendar-day-label")).getText().trim();
+                String totalCalendarDaySummary = scheduleDay.findElement(By.cssSelector("div.sch-calendar-day-summary span")).getText().trim().split(" ")[0];
+                if(! totalCalendarDaySummary.equals("0")){
+                    dayHasShifts.add(dayAbbr);
+                    SimpleUtils.pass(dayAbbr + " has shifts!");
+                }
+            }
+        }
+        return dayHasShifts;
+    }
+
+    @FindBy(css=".ReactVirtualized__Grid__innerScrollContainer")
+    private WebElement shiftsTable;
+
+    @Override
+    public void verifyShiftTimeInReadMode(String index,String shiftTime) throws Exception{
+        String shiftTimeInShiftTable = null;
+        if (isElementEnabled(shiftsTable,5)) {
+            List<WebElement> shiftsTableList = shiftsTable.findElements(By.cssSelector("div[data-day-index=\"" + index + "\"].week-schedule-shift"));
+            for(WebElement shiftTable:shiftsTableList){
+                shiftTimeInShiftTable = shiftTable.findElement(By.cssSelector(".week-schedule-shift-time")).getText().trim();
+                if(shiftTimeInShiftTable.equals(shiftTime)){
+                    SimpleUtils.pass("The shift time on data-day-index: " + index + " is aligned with advance staffing rule");
+                }else {
+                    SimpleUtils.fail("The shift time is NOT aligned with advance staffing rule",false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("There is no shifts generated.",false);
+        }
+    }
+
+    @Override
+    public List<String> getIndexOfDaysHaveShifts() throws Exception {
+        List<String> index = new ArrayList<String>();
+        String dataDayIndex = null;
+        if (areListElementVisible(scheduleDays, 10)) {
+            for(WebElement scheduleDay:scheduleDays){
+                String totalCalendarDaySummary = scheduleDay.findElement(By.cssSelector("div.sch-calendar-day-summary span")).getText().trim().split(" ")[0];
+                if(! totalCalendarDaySummary.equals("0")){
+                    dataDayIndex = scheduleDay.getAttribute("data-day-index").trim();
+                    index.add(dataDayIndex);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Table header fail to load!", false);
         }
         return index;
     }
@@ -15824,6 +15878,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         if (!isFound)
             SimpleUtils.report("Schedule Page: Not find the given day part in week view");
+    }
+    
+    @FindBy(css = "div.slider-section-description-break-time-item-rest")
+    private List<WebElement> restBreakTimes;
+
+    @Override
+    public HashMap<String, String> getMealAndRestBreaksTime() throws Exception {
+        HashMap<String, String> mealAndRestBreaksTime = new HashMap<String, String>();
+        if (isElementEnabled(editMealBreakTitle,5)) {
+            for (WebElement mealBreakTime:mealBreakTimes){
+                String mealTime = mealBreakTime.getText().trim();
+                mealAndRestBreaksTime.put("Meal Break",mealTime);
+            }
+            for (WebElement restBreakTime:restBreakTimes){
+                String restTime = restBreakTime.getText().trim();
+                mealAndRestBreaksTime.put("Rest Break",restTime);
+            }
+        }else
+            SimpleUtils.report("Breaks edit page don't display");
+        return mealAndRestBreaksTime;
     }
 }
 

@@ -16,23 +16,23 @@
         <classes>
             <class name="com.legion.tests.core.JobTest">
                 <methods>
-                    <include name="verifyJobLandingPage" />
-                    <include name="verifyJobSearchFunction" />
-                    <include name="verifyCheckJobDetailsFunction" />
-                    <include name="verifyCopyStopResumeAndArchiveJobFunctionFunction" />
-                    <include name="verifyFilterFunctionByJobTypeAndJobStatus" />
-                    <include name="verifyFilterFunctionByJobType" />
-                    <include name="verifyFilterFunctionByJobStatus" />
-                    <include name="verifyAbnormalCheatJobFunction" />
-                    <include name="verifyCreateReleaseScheduleJobFunction" />
-                    <include name="verifyCreateScheduleJobFunction" />
-                    <include name="verifyAbnormalCheatJobFunction" />
-                    <include name="verifyAdjustBudgetJobFunction" />
-                    <include name="verifyAdjustForecastJobFunction"/>
-                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJob"/>
-                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJob"/>
-                    <include name="verifyExportResultFileFunctionInReleaseScheduleJob"/>
-                    <include name="verifyExportResultFileFunctionInAdjustForecastJob"/>
+                    <include name="verifyJobLandingPageAsInternalAdminForJob" />
+                    <include name="verifyJobSearchFunctionAsInternalAdminForJob" />
+                    <include name="verifyCheckJobDetailsFunctionAsInternalAdminForJob" />
+                    <include name="verifyCopyStopResumeAndArchiveJobFunctionFunctionAsInternalAdminForJob" />
+                    <include name="verifyFilterFunctionByJobTypeAndJobStatusAsInternalAdminForJob" />
+                    <include name="verifyFilterFunctionByJobTypeAsInternalAdminForJob" />
+                    <include name="verifyFilterFunctionByJobStatusAsInternalAdminForJob" />
+                    <include name="verifyAbnormalCheatJobFunctionAsInternalAdminForJob" />
+                    <include name="verifyCreateReleaseScheduleJobFunctionAsInternalAdminForJob" />
+                    <include name="verifyCreateScheduleJobFunctionAsInternalAdminForJob" />
+                    <include name="verifyAbnormalCheatJobFunctionAsInternalAdminForJob" />
+                    <include name="verifyAdjustBudgetJobFunctionAsInternalAdminForJob" />
+                    <include name="verifyAdjustForecastJobFunctionAsInternalAdminForJob"/>
+                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJobAsInternalAdminForJob"/>
+                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJobAsInternalAdminForJob"/>
+                    <include name="verifyExportResultFileFunctionInReleaseScheduleJobAsInternalAdminForJob"/>
+                    <include name="verifyExportResultFileFunctionInAdjustForecastJobAsInternalAdminForJob"/>
 
 
 

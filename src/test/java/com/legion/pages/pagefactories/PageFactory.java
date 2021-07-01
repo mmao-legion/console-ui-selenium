@@ -70,4 +70,16 @@ public interface PageFactory {
     ComplianceDMViewPage createComplianceDMViewPage();
 
     NewsPage createNewsPage();
+
+    ReportPage createConsoleReportPage();
+
+    InsightPage createConsoleInsightPage();
+
+    NewsPage createConsoleNewsPage();
+
+    IntegrationPage createConsoleIntegrationPage();
+
+    UserManagementPage createOpsPortalUserManagementPage();
+
+    LaborModelPage createOpsPortalLaborModelPage();
 }

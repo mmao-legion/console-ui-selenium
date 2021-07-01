@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -51,8 +52,18 @@ public class ConsoleControlsPage extends BasePage implements ControlsPage{
   		}
 		
 	}
-	
-	
+
+	@Override
+	public void clickOnConsoleInsightPage() throws Exception {
+		if(isElementLoaded(controlsConsoleName,5)) {
+			click(controlsConsoleName);
+			if (controlsConsoleName.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
+				SimpleUtils.pass("Controls Page: Click on Controls console menu successfully");
+			else
+				SimpleUtils.fail("Controls Page: It doesn't navigate to Controls console menu after clicking", false);
+		} else
+			SimpleUtils.fail("Controls Console Menu not loaded Successfully!", false);
+	}
 	
 
 }

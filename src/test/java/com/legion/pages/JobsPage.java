@@ -55,7 +55,7 @@ public interface JobsPage {
 
     public void iCanArchiveJob(String jobTitle) throws Exception;
 
-    public void iCanSelectDistrictByAddLocation(String searchText, int index);
+    public void iCanSelectUpperFieldByAddLocation(String searchText, int index);
 
     public void filterJobsByJobTypeAndStatus() throws Exception;
 
@@ -116,4 +116,6 @@ public interface JobsPage {
     public void verifyExportResultFunction();
 
     public void verifyExportTaskSummaryFunction();
+
+    public void iCanSelectLocationsViaDynamicGroupInAddLocation(String searchText) throws Exception;
 }

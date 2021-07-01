@@ -21,10 +21,7 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.json.JSONException;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -32,10 +29,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.SessionId;
+import org.openqa.selenium.remote.*;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -96,25 +90,34 @@ public abstract class TestBase {
     private static AppiumServiceBuilder builder;
     public static final int TEST_CASE_PASSED_STATUS = 1;
     public static final int TEST_CASE_FAILED_STATUS = 5;
+    public static String testSuiteID = null;
+    public static String finalTestRailRunName = null;
+    public static boolean ifAddNewTestRun = true;
+    public static List<Integer> AllTestCaseIDList = null;
+    public static String testRailReportingFlag = null;
+    public static Integer testRailRunId = null;
+    public static String testRailProjectID = null;
 
     @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName","testRailRunName"})
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        if (System.getProperty("enterprise") !=null && System.getProperty("enterprise").equalsIgnoreCase("op")) {
-            MyThreadLocal.setTestSuiteID(testRailCfgOp.get("TEST_RAIL_SUITE_ID"));
-            MyThreadLocal.setTestRailRunName(testRailRunName);
-            MyThreadLocal.setIfAddNewTestRun(true);
+        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+            testSuiteID = testRailCfg.get("TEST_RAIL_SUITE_ID");
+            finalTestRailRunName = testRailRunName;
+            ifAddNewTestRun = true;
         }else{
-            MyThreadLocal.setTestSuiteID(testRailCfg.get("TEST_RAIL_SUITE_ID"));
-            MyThreadLocal.setTestRailRunName(testRailRunName);
-            MyThreadLocal.setIfAddNewTestRun(true);
+            testSuiteID = testRailCfgOp.get("TEST_RAIL_SUITE_ID");
+            finalTestRailRunName = testRailRunName;
+            ifAddNewTestRun = true;
         }
 
 
-        if (MyThreadLocal.getTestCaseIDList()==null){
-            MyThreadLocal.setTestCaseIDList(new ArrayList<Integer>());
+        if (AllTestCaseIDList==null){
+            AllTestCaseIDList = new ArrayList<Integer>();
         }
+
+        //For mobile.
         if(platform!= null && executionon!= null && runMode!= null){
             if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice")
                     && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
@@ -126,8 +129,9 @@ public abstract class TestBase {
         }else{
             Reporter.log("Script will be executing only for Web");
         }
+
         if(System.getProperty("testRail") != null && System.getProperty("testRail").equalsIgnoreCase("Yes")){
-            setTestRailReporting("Y");
+            testRailReportingFlag = "Y";
         }
     }
 
@@ -174,12 +178,12 @@ public abstract class TestBase {
                 + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
         //setTestRailRunId(0);
-        if (MyThreadLocal.getTestRailRunId()==null){
-            setTestRailRunId(0);
+        if (testRailRunId==null){
+            testRailRunId = 0;
         }
         List<Integer> testRailId =  new ArrayList<Integer>();
-        setTestRailRun(testRailId);
-        if(getTestRailReporting()!=null){
+        //setTestRailRun(testRailId);
+        if(testRailReportingFlag!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
         }
         setCurrentMethod(method);
@@ -265,10 +269,7 @@ public abstract class TestBase {
         caps.setCapability("video", true);
         caps.setCapability("console", true);
         caps.setCapability("name", ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()));
-        caps.setCapability("idleTimeout", 600);
 
-//        caps.setCapability("selenium_version","3.141.59");
-        caps.setCapability("chrome.driver","87.0");
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
             setDriver(new RemoteWebDriver(new URL(url),caps));
@@ -310,10 +311,10 @@ public abstract class TestBase {
 
     @AfterSuite
     public void afterSuiteWorker() throws IOException{
-        if(getTestRailReporting()!=null){
+        if(testRailReportingFlag!=null){
             List<Integer> testRunList = new ArrayList<Integer>();
-            testRunList.add(getTestRailRunId());
-            if (SimpleUtils.isTestRunEmpty(getTestRailRunId())){
+            testRunList.add(testRailRunId);
+            if (testRailRunId!=null && SimpleUtils.isTestRunEmpty(testRailRunId)){
                 SimpleUtils.deleteTestRail(testRunList);
             }
         }

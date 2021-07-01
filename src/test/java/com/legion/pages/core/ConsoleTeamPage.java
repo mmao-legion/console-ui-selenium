@@ -3609,10 +3609,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 @FindBy(css = "div[ng-if=\"showLocation\"]")
-private WebElement locationColumn;
+private List<WebElement> locationColumn;
 	@Override
 	public boolean verifyThereIsLocationColumnForMSLocationGroup() throws Exception {
-		if (isElementLoaded(locationColumn,5)) {
+		if (areListElementVisible(locationColumn,5)) {
 			return true;
 		}else
 			return  false;
@@ -4704,5 +4704,21 @@ private WebElement locationColumn;
 		} else
 			SimpleUtils.report("The Invite buttons fail to load! ");
 		return isInviteButtonExists;
+	}
+
+	@Override
+	public int getLocationName() {
+		int numberOfLocation = 0;
+		if (areListElementVisible(locationColumn,8)) {
+			for (int i = 1; i < locationColumn.size(); i++) {
+				if (!(locationColumn.get(i).getText().equalsIgnoreCase(locationColumn.get(i-1).getText()))) {
+					numberOfLocation= numberOfLocation+1;
+
+				}
+			}
+			return numberOfLocation;
+		}else
+
+			return 0;
 	}
 }

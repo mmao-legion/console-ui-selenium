@@ -670,4 +670,8 @@ public interface SchedulePage {
 	public boolean isShiftInDayPartOrNotInDayView(int shiftIndex, String dayPart) throws Exception;
 	public void deleteAllShiftsOfGivenDayPartInWeekView(String dayPart) throws Exception;
 	public void deleteAllShiftsOfGivenDayPartInDayView(String dayPart) throws Exception;
+	public List<String> verifyDaysHasShifts() throws Exception;
+	public void verifyShiftTimeInReadMode(String index,String shiftTime) throws Exception;
+	public List<String> getIndexOfDaysHaveShifts() throws Exception;
+	public HashMap<String, String> getMealAndRestBreaksTime() throws Exception;
 }

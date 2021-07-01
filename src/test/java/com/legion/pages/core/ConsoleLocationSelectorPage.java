@@ -5,12 +5,10 @@ import static com.legion.utils.MyThreadLocal.*;
 
 import java.util.*;
 
-import com.legion.api.ApiList;
 import com.legion.utils.JsonUtil;
-import com.legion.utils.ProxyUtils;
-import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -538,6 +536,41 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
+    //added by Estelle for upperfield view
+    @FindBy(css = "div[ng-repeat-start=\"hierarchy in $ctrl.getNavHierarchy()\"]")
+    private List<WebElement> levelDisplay;
+    @FindBy(css = "input[placeholder=\"Search BU\"]")
+    private WebElement buSearchInput;
+    @FindBy(css = "input[placeholder=\"Search Region\"]")
+    private WebElement regionSearchInput;
+
+    @Override
+    public void verifyDefaultLevelForBUOrAdmin() {
+        if (areListElementVisible(levelDisplay,5)) {
+            if (levelDisplay.size()==2) {
+                SimpleUtils.pass("The default location navigation level for BU ,admin or communication role is correct");
+            }else
+                SimpleUtils.fail("The default location navigation level for BU ,admin or communication role is wrong and the size is : "+levelDisplay.size(), false);
+        }else
+            SimpleUtils.fail("Location navigation bar load failed",false);
+
+    }
+
+    @Override
+    public void searchSpecificBUAndNavigateTo(String buText) {
+        click(levelDisplay.get(0));
+        if (isElementEnabled(buSearchInput,5)) {
+            buSearchInput.sendKeys(buText);
+            buSearchInput.sendKeys(Keys.ENTER);
+        }
+
+    }
+
+    @Override
+    public void searchSpecificRegionAndNavigateTo(String regionText) throws Exception {
+
+    }
+
     private void verifyDMDashboardIsFinishedRefreshing() throws Exception {
         if (isElementLoaded(refreshButton, 30)) {
             SimpleUtils.pass("DM Dashbord is finished refreshing!");
@@ -943,41 +976,46 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
 
     //added by Estelle for upperfield view
-    @FindBy(css = "div[ng-repeat-start=\"hierarchy in $ctrl.getNavHierarchy()\"]")
-    private List<WebElement> levelDisplay;
-    @FindBy(css = "input[placeholder=\"Search BU\"]")
-    private WebElement buSearchInput;
-    @FindBy(css = "input[placeholder=\"Search Region\"]")
-    private WebElement regionSearchInput;
-
-
+    @FindBy(id = "id_upperfield-search")
+    private  WebElement magnifyGlassIcon;
+    @FindBy(css = "lg-search-options[search-hint=\"Search\"] .lg-search-options>div.lg-search-options__scroller>div")
+    private List<WebElement> resentViewDropDownList;
     @Override
-    public void verifyDefaultLevelForBUOrAdmin() {
-        if (areListElementVisible(levelDisplay,5)) {
-            if (levelDisplay.size()==2) {
-                SimpleUtils.pass("The default location navigation level for BU ,admin or communication role is correct");
-            }else
-                SimpleUtils.fail("The default location navigation level for BU ,admin or communication role is wrong and the size is : "+levelDisplay.size(), false);
+    public Boolean verifyMagnifyGlassIconShowOrNot() {
+        if (isElementEnabled(magnifyGlassIcon,5)) {
+            SimpleUtils.pass("Magnifying glass icon show well");
+            return true;
         }else
-            SimpleUtils.fail("Location navigation bar load failed",false);
-
+            SimpleUtils.fail("Magnifying glass icon load failed",false);
+            return false;
     }
 
     @Override
-    public void searchSpecificBUAndNavigateTo(String buText) {
-       click(levelDisplay.get(0));
-        if (isElementEnabled(buSearchInput,5)) {
-            buSearchInput.sendKeys(buText);
-            buSearchInput.sendKeys(Keys.ENTER);
+    public List<String> getRecentlyViewedInfo() {
+        List<String> resentViewList= new ArrayList<String>();
+        if (verifyMagnifyGlassIconShowOrNot()) {
+            click(magnifyGlassIcon);
+            if (areListElementVisible(upperFieldsInResentView,5) && upperFieldsInResentView.size()>0 ) {
+                for (WebElement each:upperFieldsInResentView
+                     ) {
+                    resentViewList.add(each.getText());
+                }
+                return resentViewList;
+            }else
+                SimpleUtils.fail("Resent View list load failed",false);
         }
-
+        return null;
     }
 
     @Override
-    public void searchSpecificRegionAndNavigateTo(String regionText) {
+    public void changeUpperFieldsFromResentViewList(int index) {
+
 
     }
-
+    @FindBy(css="[search-hint=\"Search\"]>div>div>lg-search>input-field>ng-form>input")
+    private WebElement selectInputBoxForGlobalSearch;
+    @FindBy(css = "lg-search-options[search-hint='Search']>div> div.lg-search-options__scroller>div[ng-repeat]")
+    private List<WebElement> upperFieldsInResentView;
     @Override
     public void searchSpecificUpperFieldAndNavigateTo(String upperFieldName) throws Exception {
         Boolean isUpperFieldMatched = false;
@@ -1039,10 +1077,75 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 //    }
 
     @Override
-    public void verifyMagnifyGlassIconShowOrNot() {
+    public void changeUpperFieldsByMagnifyGlassIcon(String upperfiledNavigaTo) {
+        try {
+            if (isElementEnabled(magnifyGlassIcon,5) ) {
+                click(magnifyGlassIcon);
+                if (isElementEnabled(selectInputBoxForGlobalSearch,5)) {
+                    SimpleUtils.pass("Magnifying glass icon is clickable");
+                    selectInputBoxForGlobalSearch.sendKeys(upperfiledNavigaTo);
+                    selectInputBoxForGlobalSearch.sendKeys(Keys.ENTER);
+                    waitForSeconds(5);
+                    if (areListElementVisible(upperFieldsInResentView,5)&& upperFieldsInResentView.size()>0) {
+                        for (WebElement each:upperFieldsInResentView) {
+                            if (each.getText().split("\n")[0].equalsIgnoreCase(upperfiledNavigaTo)) {
+                                click(each);
+                                break;
+                            }
+                        }
+                        //check whether navigate success
+                        List<String> navigatorText = new ArrayList();
 
+                        if (areListElementVisible(levelDisplay,5)) {
+                            for (WebElement ss :levelDisplay) {
+                                navigatorText.add(ss.getText());
+                            }
+                            if (navigatorText.contains(upperfiledNavigaTo)) {
+                                SimpleUtils.pass("Can navigate to :" + upperfiledNavigaTo +"  successfully");
+                            }
+                        }else
+                            SimpleUtils.fail("Navigate to specific location failed",false);
+
+                    }else
+                        SimpleUtils.fail("Resent View drop down list load failed or There are no upperfields that match your criteria ",false);
+                }else
+                    SimpleUtils.fail("Global search select input box load failed",false);
+            }else
+                SimpleUtils.fail("Magnifying glass icon load failed",false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    @FindBy(css = "input-field[placeholder=\"All HQs\"]")
+    private WebElement hqNavigate;
+    @Override
+    public boolean verifyHQViewShowOrNot() {
+        if (isElementEnabled(hqNavigate,5)) {
+            SimpleUtils.pass("HQ view show well in navigation bar");
+            return true;
+        }else
+            SimpleUtils.fail("HQ view load failed in navigation bar",false);
+            return false;
+    }
+    @FindBy(css = "div.console-navigation>div")
+    private List<WebElement> tabsName;
+    @Override
+    public List<String> getConsoleTabs() {
+        List<String> tabsText = new ArrayList<String>();;
+
+        if (tabsName.size()>0) {
+            for (WebElement tab:tabsName) {
+                tabsText.add(tab.getText().trim());
+            }
+            return tabsText;
+        }else
+            SimpleUtils.fail("Login failed",false);
+            return null;
+    }
+
+    @FindBy(className = "nodata-content")
+    private WebElement noData;
     @Override
     public void changeLocationDirect(String locationName) {
         try {
@@ -1102,7 +1205,43 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         catch(Exception e) {
             SimpleUtils.fail("Unable to change location! Get Exception: " + e.toString(), false);
         }
+    }
+    
+    public boolean isCurrentPageEmptyInHQView() throws Exception {
+        if (isElementLoaded(noData,5)) {
+            SimpleUtils.pass("Empty page show well");
+            return true;
+        }else
+            SimpleUtils.fail("It's not empty page",false);
+            return false;
+    }
 
+    @Override
+    public void verifyGreyOutPageInHQView() {
+        String enabledTabs = "Inbox, News, Moderation and Insights";
+        for (int i = 0; i <tabsName.size()-1 ; i++) {
+            String attribute = tabsName.get(i).getAttribute("class");
+            String text = tabsName.get(i).getText();
+            if (tabsName.get(i).getAttribute("class").contains("gray-item")|| tabsName.get(i).getAttribute("class").contains("active")) {
+                SimpleUtils.report(tabsName.get(i).getText()+": is gray out or active");
+
+            }else if (enabledTabs.contains(tabsName.get(i).getText())) {
+                SimpleUtils.report(tabsName.get(i).getText()+": is enabled");
+            }
+        }
+    }
+
+    @Override
+    public List<String> getNavigatorValue() {
+        List<String> navigatorText =new ArrayList<>() ;
+        if (areListElementVisible(levelDisplay,5)) {
+            for (WebElement each:levelDisplay) {
+                navigatorText.add(each.getText().trim());
+            }
+            return navigatorText;
+        }else
+            SimpleUtils.fail("Location navigator load failed",false);
+            return null;
     }
 
     @FindBy(css = "lg-select[search-hint='Search Region'] div.input-faked")
@@ -1218,5 +1357,13 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         } else
             SimpleUtils.report("The upperfield navigation fail to load! ");
         return isUpperFieldNavigationLoaded;
+    }
+    @Override
+    public void refreshTheBrowser() {
+        try {
+            getDriver().navigate().refresh();
+        } catch (TimeoutException ignored) {
+        }
+
     }
 }

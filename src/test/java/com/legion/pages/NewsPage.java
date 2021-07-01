@@ -12,4 +12,6 @@ public interface NewsPage {
     public void deletePost(String postTitle) throws Exception;
     public void clickNewsfeedTab() throws Exception;
     public void clickModerationTab() throws Exception;
+    public void clickOnConsoleNewsMenu() throws Exception;
+    public boolean isNewsTabLoadWell() throws Exception;
 }

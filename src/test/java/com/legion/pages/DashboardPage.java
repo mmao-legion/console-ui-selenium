@@ -132,4 +132,5 @@ public interface DashboardPage {
     public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception;
     public boolean isConsoleNavigationBarIsGray(String consoleNavigationBarName) throws Exception;
     public boolean isConsoleNavigationBarBeenSelected (String consoleNavigationBarName) throws Exception;
+
 }

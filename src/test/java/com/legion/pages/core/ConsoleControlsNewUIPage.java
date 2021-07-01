@@ -3070,15 +3070,20 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@FindBy(css = "input[placeholder*=\"You can search by name, job title\"]")
 	private WebElement usersAndRolesUserSearchBox;
+	@FindBy(css = "tr[ng-repeat=\"user in $ctrl.pagedUsers\"]")
+	private List<WebElement> userRows;
 
 	public void searchUserByFirstName(String userFirstName) throws Exception {
 		if (isElementLoaded(usersAndRolesUserSearchBox)) {
 			if (usersAndRolesUserSearchBox.isDisplayed() && usersAndRolesUserSearchBox.isEnabled()) {
 				usersAndRolesUserSearchBox.clear();
 				usersAndRolesUserSearchBox.sendKeys(userFirstName);
-				waitForSeconds(10);
-				SimpleUtils.pass("Users and Roles: '" + usersAndRolesAllUsersRows.size() + "' user(s) found with name '"
-						+ userFirstName + "'");
+				waitForSeconds(30);
+				if (userRows.size()>0) {
+					SimpleUtils.pass("Users and Roles: '" + usersAndRolesAllUsersRows.size() + "' user(s) found with name '"
+							+ userFirstName + "'");
+				}else
+					SimpleUtils.report("There is no user which match your search criteria");
 			}
 		}else
 			SimpleUtils.fail("Search filed in global model in controls load failed",false);
@@ -3106,7 +3111,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception {
 
 		searchUserByFirstName(userFirstName);
-		Thread.sleep(2000);
+		waitForSeconds(2);
 		if (usersAndRolesAllUsersRows.size() > 0) {
 			List<WebElement> userDetailsLinks = usersAndRolesAllUsersRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			if (userDetailsLinks.size() > 0) {
@@ -3117,9 +3122,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					scrollToBottom();
 					if (isElementLoaded(managerLocationBtn)) {
 						click(managerLocationBtn);
-						searchLocation(userFirstName);
+						searchLocation("Level:Region");
 						click(selectAllCheckBoxInManaLocationWin);
 						if (locationCheckBoxs.size()>0) {
+							SimpleUtils.pass("Can search upperfield of region");
 							for (int i = 2; i <5 ; i++) {
 								if (isElementLoaded(locationCheckBoxs.get(i)) && !locationCheckBoxs.get(i).getAttribute("class").contains("not-empty")) {
 									click(locationCheckBoxs.get(i));
@@ -3133,11 +3139,11 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					}else
 						SimpleUtils.fail("Manager location button load failed ",true);
 
-						String  locationAfterUpdated = getUserLocationsList();
-						if (locationAfterUpdated.equals(defaultLocation)) {
-							SimpleUtils.pass("User's location was updated successfully");
-						}else
-							SimpleUtils.fail("Manager location failed for this user",false);
+					String  locationAfterUpdated = getUserLocationsList();
+					if (!locationAfterUpdated.equals(defaultLocation)) {
+						SimpleUtils.pass("User's location was updated successfully");
+					}else
+						SimpleUtils.fail("Manager location failed for this user",false);
 					}else
 					SimpleUtils.fail("User profile edit button load failed ",true);
 
@@ -3174,14 +3180,28 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
  			}
 		return null;
 		}
-
-
+	//added by Estelle
+	@FindBy(css = "div.lg-paged-search-sortableNew")
+	private List<WebElement> tableColumns;
 	public void searchLocation(String userFirstName) throws Exception {
+			List<String> tableHeaders =new ArrayList<>();
+			for (WebElement tab:tableColumns) {
+				tableHeaders.add(tab.getText());
+				SimpleUtils.pass("Manager Location's table header include : " +tab.getText());
+			}
+			String tabHeaders = tableHeaders.toString();
+			if (tabHeaders.contains("Level")) {
+				SimpleUtils.pass("add level column in user management location search result list successfully");
+			}
 			if (isElementLoaded(managerLocationPopUpTitle,5)) {
 				managerLocationInputFiled.sendKeys(userFirstName);
 				managerLocationInputFiled.sendKeys(Keys.ENTER);
-				SimpleUtils.pass("Manager Location: '" + locationListRows.size() + "' location(s) found with name '"
-						+ userFirstName + "'");
+				waitForSeconds(10);
+				if (locationListRows.size()>1) {
+					SimpleUtils.pass("Manager Location: '" + locationListRows.size() + "' upperfield(s) found with name '"
+							+ userFirstName + "'");
+				}else
+					SimpleUtils.report("There is no upperfield now, create it pls");
 
 			}else
 				SimpleUtils.fail("search input field load failed",false);
