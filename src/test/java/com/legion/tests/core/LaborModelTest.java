@@ -72,4 +72,109 @@ public class LaborModelTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Global External Attributes")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateUpdateAndDeleteNewAttributeFunctionAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+        try{
+            SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime=dfs.format(new Date()).trim();
+            String attributeName="AutoCreate"+currentTime;
+            String attributeValue = "33";
+            String attributeDescription = attributeName;
+            String attributeValueUpdate = "34";
+            String attributeDescriptionUpdate = "Update";
+            String label = "External Attributes";
+
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborStandardRepositoryTile();
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+            laborModelPage.clickOnEditButton();
+            laborModelPage.clickOnAddAttributeButton();
+            //Cancel create attributes
+            laborModelPage.cancelCreateNewAttribute(attributeName,attributeValue,attributeDescription);
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+            if(!laborModelPage.isSpecifyAttributeExisting(attributeName)){
+                SimpleUtils.pass("User can cancel create attribute successfully!");
+            }else {
+                SimpleUtils.fail("User failed to cancel create attribute!",false);
+            }
+
+            //Create attributes
+            laborModelPage.clickOnEditButton();
+            laborModelPage.clickOnAddAttributeButton();
+            laborModelPage.createNewAttribute(attributeName,attributeValue,attributeDescription);
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+            if(laborModelPage.isSpecifyAttributeExisting(attributeName)){
+                SimpleUtils.pass("User created attribute successfully!");
+            }else {
+                SimpleUtils.fail("User failed to created attribute!",false);
+            }
+
+            //Update attribute
+            laborModelPage.clickOnEditButton();
+            List<String> updatedVal = laborModelPage.clickOnPencilButtonAndUpdateAttribute(attributeName,attributeValueUpdate,attributeDescriptionUpdate);
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+            if(updatedVal.get(0).equals(attributeValueUpdate) && updatedVal.get(1).equals(attributeDescriptionUpdate)){
+                SimpleUtils.pass("User can update attribute value and description successfully!");
+            }else {
+                SimpleUtils.fail("User failed to update attribute value and description!",false);
+            }
+
+            //Delete attribute
+            laborModelPage.checkDeleteAttributeButtonForEachAttribute();
+            laborModelPage.clickOnDeleteAttributeButton(attributeName);
+            laborModelPage.clickCancelBtnOnDeleteAttributeDialog();
+            laborModelPage.clickOnDeleteAttributeButton(attributeName);
+            laborModelPage.clickOkBtnOnDeleteAttributeDialog();
+            laborModelPage.clickOnSaveButton();
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+            if(!laborModelPage.isSpecifyAttributeExisting(attributeName)){
+                SimpleUtils.pass("User can delete attribute successfully!");
+            }else {
+                SimpleUtils.fail("User failed to delete attribute!",false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Template level external attributes")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTemplateLevelAttributeFunctionAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+        try{
+            String label = "External Attributes";
+            HashMap<String,List<String>> attributesInfoInGlobal = new HashMap<>();
+            HashMap<String,List<String>> attributesInfoInTemplate = new HashMap<>();
+
+            String templateName = "AutoUsingByFiona";
+            String mode = "edit";
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            //Check are the default value of attributes at template level correct or not?
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborStandardRepositoryTile();
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+            attributesInfoInGlobal = laborModelPage.getValueAndDescriptionForEachAttribute();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            attributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttribute();
+            //Compare two map info
+
+            //update template attribute value
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
 }

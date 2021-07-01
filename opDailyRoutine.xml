@@ -153,6 +153,7 @@
             <class name="com.legion.tests.core.LaborModelTest">
                 <methods>
                     <include name="verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdminForLaborModel"/>
+                    <include name="verifyCreateUpdateAndDeleteNewAttributeFunctionAsInternalAdminForLaborModel"/>
                 </methods>
             </class>
         </classes>
