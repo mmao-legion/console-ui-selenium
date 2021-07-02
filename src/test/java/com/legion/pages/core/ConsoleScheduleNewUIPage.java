@@ -1063,7 +1063,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
         HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("[ng-if=\"(!showNewScheduleGeneratePage() || showPublishedSchedule()) && !isTitleBasedBudget()\"] .card-carousel-card"));
+        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("[ng-if*=\"isTitleBasedBudget()\"] .card-carousel-card"));
         if(isElementEnabled(budgetedScheduledLabelsDivElement,5))
         {
 //			Thread.sleep(2000);
@@ -4969,7 +4969,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = ".redesigned-button-ok")
     private WebElement deleteButtonOnDeleteSchedulePopup;
 
-    @FindBy (css = ".redesigned-modal-button-cancel")
+    @FindBy (css = ".redesigned-button-cancel-gray")
     private WebElement cancelButtonOnDeleteSchedulePopup;
 
     @Override
