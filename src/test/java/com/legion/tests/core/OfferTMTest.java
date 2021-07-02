@@ -855,7 +855,16 @@ public class OfferTMTest extends TestBase {
             Object[][] adminCredentials = userCredentials.get("InternalAdmin");
             loginToLegionAndVerifyIsLoginDone(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1])
                     , String.valueOf(adminCredentials[0][2]));
-
+            // 1.Checking configuration in controls
+            String option = "Always";
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+            SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
+            //===================================
+            controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
