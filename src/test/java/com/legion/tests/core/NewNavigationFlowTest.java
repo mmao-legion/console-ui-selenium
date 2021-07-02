@@ -329,7 +329,7 @@ public class NewNavigationFlowTest extends TestBase {
             SimpleUtils.pass("Default navigate show well for DM");
         }
         // Validate navigate down one or more level for internal admin
-        locationSelectorPage.changeLocation(location);
+        locationSelectorPage.changeLocation(locationL);
         List<String> navigateTextAftNavDownForDM = locationSelectorPage.getNavigatorValue();
         locationSelectorPage.refreshTheBrowser();
         List<String> navigateTextAftRefreshForDM = locationSelectorPage.getNavigatorValue();
@@ -345,7 +345,7 @@ public class NewNavigationFlowTest extends TestBase {
         List<String> navigateTextAftNavUpForDM = locationSelectorPage.getNavigatorValue();
         String[] navigateTextAftNavUpForDMToStr = navigateTextAftNavUpForDM.toArray(new String[]{});
         String[] navigateDefaultTextForDMToStr = navigateDefaultTextForDM.toArray(new String[]{});
-        if (Arrays.equals(navigateTextAftNavUpForDMToStr,navigateDefaultTextForDMToStr)) {
+        if (!Arrays.equals(navigateTextAftNavUpForDMToStr,navigateDefaultTextForDMToStr)) {
             SimpleUtils.pass("DM can navigate up one or more level successfully");
         }else
             SimpleUtils.fail("Navigate up one or more level failed",false);
@@ -362,7 +362,6 @@ public class NewNavigationFlowTest extends TestBase {
         String homeStore = userHRProfileInfo.get("home store");
         dashboardPage.clickOnDashboardConsoleMenu();
         List<String> navigateDefaultTextForSMTM = locationSelectorPage.getNavigatorValue();
-        locationSelectorPage.getNavigatorValue();
         if (navigateDefaultTextForSMTM.get(0).equalsIgnoreCase(homeStore) ) {
             SimpleUtils.pass("SM/TM navigation show well");
         }else
