@@ -146,9 +146,6 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.navigateDayViewWithDayName("Sat");
             Map<String, String> dayInfo = schedulePage.getActiveDayInfo();
 
-            // TODO: as a workaround for bug: https://legiontech.atlassian.net/browse/SCH-4507, after it is fixed, will remove the code
-            dashboardPage.clickOnDashboardConsoleMenu();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
