@@ -301,7 +301,7 @@
                     </systemPropertyVariables>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <forkCount>5</forkCount>
-                    <reuseForks>true</reuseForks>
+                    <reuseForks>false</reuseForks>
                     <redirectTestOutputToFile>false</redirectTestOutputToFile>
                 </configuration>
             </plugin>
