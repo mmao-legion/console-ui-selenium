@@ -35,7 +35,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify My Profile details by updating the information")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember2(String browser, String username, String password, String location) throws Exception {
+    public void verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
