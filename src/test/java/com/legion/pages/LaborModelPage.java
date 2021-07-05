@@ -18,7 +18,7 @@ public interface LaborModelPage {
 
     public void deleteDraftLaborModelTemplate(String templateName) throws Exception;
 
-    public void publishNewLaborModelTemplate(String templateName,String dynamicGroupName) throws Exception;
+    public void publishNewLaborModelTemplate(String templateName,String dynamicGroupName,String dynamicGroupCriteria,String dynamicGroupFormula) throws Exception;
 
     public void selectLaborStandardRepositorySubTabByLabel(String label) throws Exception;
 

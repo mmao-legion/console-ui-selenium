@@ -38,8 +38,6 @@ public class LaborModelTest extends TestBase {
         this.createDriver((String)params[0],"83","Window");
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -57,13 +55,15 @@ public class LaborModelTest extends TestBase {
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
             String templateName="AutoCreate"+currentTime;
-            String dynamicGroupName ="For Auto";
+            String dynamicGroupName ="AutoDynamic"+currentTime;
+            String dynamicGroupCriteria =  "Custom";
+            String dynamicGroupFormula = dynamicGroupName;
             String action = "Archive";
 
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             laborModelPage.addNewLaborModelTemplate(templateName);
             laborModelPage.deleteDraftLaborModelTemplate(templateName);
-            laborModelPage.publishNewLaborModelTemplate(templateName,dynamicGroupName);
+            laborModelPage.publishNewLaborModelTemplate(templateName,dynamicGroupName,dynamicGroupCriteria,dynamicGroupFormula);
 //            laborModelPage.clickOnLaborModelTab();
 //            laborModelPage.goToLaborModelTile();
 //            laborModelPage.archivePublishedOrDeleteDraftTemplate(templateName,action);
@@ -125,6 +125,7 @@ public class LaborModelTest extends TestBase {
             }
 
             //Delete attribute
+            laborModelPage.clickOnEditButton();
             laborModelPage.checkDeleteAttributeButtonForEachAttribute();
             laborModelPage.clickOnDeleteAttributeButton(attributeName);
             laborModelPage.clickCancelBtnOnDeleteAttributeDialog();

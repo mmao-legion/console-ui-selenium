@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ConfigurationPage;
+import com.legion.pages.LocationSelectorPage;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
@@ -1702,10 +1703,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void deleteNewCreatedTemplate(String templateName) throws Exception{
+		String newTemplateName = templateNameList.get(0).getText().trim();
 		if(templateName.equals(newTemplateName)){
 			clickTheElement(templateNameList.get(0));
-			waitForSeconds(5);		String newTemplateName = templateNameList.get(0).getText().trim();
-
+			waitForSeconds(5);
 			if(isElementEnabled(deleteTemplateButton,3)){
 				clickTheElement(deleteTemplateButton);
 				if(isElementEnabled(deleteTemplateDialog,3)){
@@ -2318,10 +2319,46 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 		clickTheElement(saveBTNOnAssociationPage);
+		waitForSeconds(10);
+	}
+
+	@FindBy(css="div.groupAction lg-button[ng-click=\"$ctrl.addDynamicGroup()\"] button")
+	private WebElement addDynamicGroupButton;
+	@FindBy(css="div.lg-modal h1.lg-modal__title")
+	private WebElement manageDynamicGroupPopupTitle;
+	@FindBy(css="input-field[label=\"Group Name\"] input")
+	private WebElement dynamicGroupName;
+	@FindBy(css="input-field[value=\"$ctrl.dynamicGroup.description\"] input")
+	private WebElement dynamicGroupDescription;
+	@FindBy(css="input-field[type=\"select\"] select")
+	private WebElement dynamicGroupCriteria;
+	@FindBy(css="div.CodeMirror textarea")
+	private WebElement formulaTextAreaOfDynamicGroup;
+	@FindBy(css="lg-button[label=\"OK\"]")
+	private WebElement okButtonOnManageDynamicGroupPopup;
+
+	@Override
+	public void createDynamicGroup(String name,String criteria,String formula) throws Exception{
+		clickOnAssociationTabOnTemplateDetailsPage();
+		clickTheElement(addDynamicGroupButton);
+		if(isElementEnabled(manageDynamicGroupPopupTitle,5)){
+			SimpleUtils.pass("User click add DynamicGroup button successfully!");
+			clickTheElement(dynamicGroupName);
+			dynamicGroupName.sendKeys(name);
+			waitForSeconds(5);
+			selectByVisibleText(dynamicGroupCriteria,criteria);
+			clickTheElement(formulaTextAreaOfDynamicGroup);
+			formulaTextAreaOfDynamicGroup.sendKeys(formula);
+			clickTheElement(okButtonOnManageDynamicGroupPopup);
+			waitForSeconds(5);
+		}else {
+			SimpleUtils.fail("User failed to clicking add DynamicGroup button!",false);
+		}
 	}
 
 	@Override
-	public void publishNewTemplate(String templateName,String dynamicGroupName) throws Exception{
+	public void publishNewTemplate(String templateName,String name,String criteria,String formula) throws Exception{
+		LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
 		if(isTemplateListPageShow()){
 			clickTheElement(newTemplateBTN);
 			waitForSeconds(1);
@@ -2341,7 +2378,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
 					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 				}
-				selectOneDynamicGroup(dynamicGroupName);
+				createDynamicGroup(name,criteria,formula);
+				selectOneDynamicGroup(name);
+				locationSelectorPage.refreshTheBrowser();
 				waitForSeconds(5);
 				clickTheElement(templateDetailsBTN);
 				waitForSeconds(2);

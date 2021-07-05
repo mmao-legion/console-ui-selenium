@@ -85,7 +85,8 @@ public interface ConfigurationPage {
                                                                   String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
                                                                   List<String> days,String shiftsNumber) throws Exception;
     public void selectOneDynamicGroup(String dynamicGroupName) throws Exception;
-    public void publishNewTemplate(String templateName,String dynamicGroupName) throws Exception;
+    public void publishNewTemplate(String templateName,String name,String criteria,String formula) throws Exception;
     public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
     public void archivePublishedOrDeleteDraftTemplate(String templateName, String action);
+    public void createDynamicGroup(String name,String criteria,String formula) throws Exception;
 }

@@ -216,7 +216,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	}
 
 	@Override
-	public void publishNewLaborModelTemplate(String templateName,String dynamicGroupName) throws Exception {
+	public void publishNewLaborModelTemplate(String templateName,String dynamicGroupName,String dynamicGroupCriteria,String dynamicGroupFormula) throws Exception {
 		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
 		if(isElementEnabled(laborModelTab)){
 			clickOnLaborModelTab();
@@ -226,7 +226,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 				waitForSeconds(5);
 				if(isTemplateListPageShow()){
 					SimpleUtils.pass("Labor model template list is showing now");
-					configurationPage.publishNewTemplate(templateName,dynamicGroupName);
+					configurationPage.publishNewTemplate(templateName,dynamicGroupName,dynamicGroupCriteria,dynamicGroupFormula);
 				}else {
 					SimpleUtils.fail("Labor model template list is not loaded well",false);
 				}
@@ -503,8 +503,6 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 					}else{
 						SimpleUtils.fail("User failed to click delete attribute!",false);
 					}
-				}else {
-					SimpleUtils.fail("There is no " + attributeName + " in attributes list.",false);
 				}
 			}
 		}
@@ -519,13 +517,16 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 				if (name.equals(attributeName)) {
 					WebElement editBTN = attribute.findElement(By.cssSelector("td:nth-child(4) i.fa-pencil"));
 					clickTheElement(editBTN);
-					clickTheElement(newAttributeValueInputField);
-					newAttributeValueInputField.clear();
-					newAttributeValueInputField.sendKeys(attributeValueUpdate);
-					clickTheElement(newAttributeDescriptionInputField);
-					newAttributeDescriptionInputField.clear();
-					newAttributeDescriptionInputField.sendKeys(attributeDescriptionUpdate);
-					clickTheElement(newAttributeCheckButton);
+					WebElement updateAttributeValueInputField = attribute.findElement(By.cssSelector("td:nth-child(2) input"));
+					clickTheElement(updateAttributeValueInputField);
+					updateAttributeValueInputField.clear();
+					updateAttributeValueInputField.sendKeys(attributeValueUpdate);
+					WebElement updateAttributeDescriptionInputField = attribute.findElement(By.cssSelector("td:nth-child(3) input"));
+					clickTheElement(updateAttributeDescriptionInputField);
+					updateAttributeDescriptionInputField.clear();
+					updateAttributeDescriptionInputField.sendKeys(attributeDescriptionUpdate);
+					WebElement updateAttributeCheckButton = attribute.findElement(By.cssSelector("td:nth-child(4) i.fa-check-circle"));
+					clickTheElement(updateAttributeCheckButton);
 					String updateValue = attribute.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
 					String updateDes = attribute.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
 					updateValues.add(updateValue);
