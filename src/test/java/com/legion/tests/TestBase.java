@@ -110,6 +110,7 @@ public abstract class TestBase {
         StoreManagerOtherLocation1("StoreManagerOtherLocation1"),
         TeamLead("TeamLead"),
         TeamMember("TeamMember"),
+        TeamMemberOtherLocation1("TeamMemberOtherLocation1"),
         TeamMember2("TeamMember2"),
         StoreManagerLG("StoreManagerLG"),
         DistrictManager("DistrictManager");
@@ -634,5 +635,10 @@ public abstract class TestBase {
         }
     }
 
-
+    public String getCurrentClassName() {
+        String className = "";
+        StackTraceElement[] stacks = (new Throwable()).getStackTrace();
+        className = stacks[1].getFileName().replace(".java", "");
+        return className;
+    }
 }
