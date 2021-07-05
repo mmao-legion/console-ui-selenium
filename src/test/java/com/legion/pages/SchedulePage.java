@@ -337,6 +337,8 @@ public interface SchedulePage {
 
 	public void deleteTMShiftInWeekView(String teamMemberName) throws Exception;
 
+	public Map<String, String> getHomeLocationInfo() throws Exception;
+
 	public WebElement clickOnProfileOfUnassignedShift() throws Exception;
 
 	public void clickOnCancelPublishBtn() throws Exception;

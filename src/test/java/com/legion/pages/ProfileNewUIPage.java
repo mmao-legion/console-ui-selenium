@@ -1,9 +1,6 @@
 package com.legion.pages;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 public interface ProfileNewUIPage {
 
@@ -74,6 +71,8 @@ public interface ProfileNewUIPage {
 	public void clickOnShiftPreferenceCollapsibleWindowHeader() throws Exception;
 
 	public ArrayList<String> getUserProfileBadgesDetails() throws Exception;
+
+	public ArrayList<String> getUserBadgesDetailsFromProfilePage() throws Exception;
 
 	public HashMap<String, String> getMyShiftPreferenceData() throws Exception;
 
@@ -176,6 +175,8 @@ public interface ProfileNewUIPage {
 	public void verifyUserProfileSectionIsLoaded() throws Exception;
 
 	public void verifyHRProfileInformationSectionIsLoaded() throws Exception;
+
+	public Map<String, String> getHRProfileInfo() throws Exception;
 
 	public void verifyLegionInformationSectionIsLoaded() throws Exception;
 
