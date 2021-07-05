@@ -37,8 +37,7 @@ public class LaborModelTest extends TestBase {
 
         this.createDriver((String)params[0],"83","Window");
         visitPage(testMethod);
-        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
-//        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -156,7 +155,7 @@ public class LaborModelTest extends TestBase {
             HashMap<String,List<String>> attributesUpdatedInfoInTemplate = new HashMap<>();
             String attributeName ="AutoUsingAttribute";
             String attributeValueUpdate = "23";
-            
+
             String templateName = "AutoUsingByFiona";
             String mode = "edit";
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
