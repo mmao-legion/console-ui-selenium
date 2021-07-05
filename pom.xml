@@ -299,10 +299,7 @@
                         <enterprise>${enterprise}</enterprise>
                         <testRail>${testRail}</testRail>
                     </systemPropertyVariables>
-
-                    <systemPropertyVariables>
-
-                    </systemPropertyVariables>
+                    <useSystemClassLoader>false</useSystemClassLoader>
                     <forkCount>5</forkCount>
                     <reuseForks>true</reuseForks>
                     <redirectTestOutputToFile>false</redirectTestOutputToFile>
