@@ -54,6 +54,7 @@ import static com.jayway.restassured.RestAssured.baseURI;
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.SimpleUtils.addResultForTest;
 
 //import org.apache.log4j.Logger;
 
@@ -291,6 +292,7 @@ public abstract class TestBase {
 
     @AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
+        addResultForTest();
         ExtentTestManager.getTest().info("tearDown started");
         if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
