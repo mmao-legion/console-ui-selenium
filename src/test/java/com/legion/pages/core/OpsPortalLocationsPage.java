@@ -764,7 +764,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean verifyUpdateLocationResult(String locationName) throws Exception {
 		searchLocation(locationName);
-		if (locationsName.getText().contains(locationName)) {
+		if (isElementLoaded(locationsName, 10) && locationsName.getText().contains(locationName)) {
 			return true;
 		}
 		return false;
