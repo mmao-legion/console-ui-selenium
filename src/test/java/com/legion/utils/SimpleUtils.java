@@ -77,6 +77,7 @@ public class SimpleUtils {
 	public static void fail(String message, boolean continueExecution, String... severity) {
 //		SimpleUtils.addTestResultIntoTestRail(5, message);
 		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
+			MyThreadLocal.setTestResultFlag(false);
 			SimpleUtils.addTestResultIntoTestRailN(5, message);
 		}
 		if (continueExecution) {
@@ -89,6 +90,16 @@ public class SimpleUtils {
 		} else {
 			ExtentTestManager.getTest().log(Status.FAIL, message);
 			throw new AssertionError(message);
+		}
+	}
+
+	public static void addResultForTest() {
+		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
+			if (MyThreadLocal.getTestResultFlag()){
+				SimpleUtils.addTestResultIntoTestRailN(1, "");
+			} else {
+				SimpleUtils.addTestResultIntoTestRailN(5, "");
+			}
 		}
 	}
 
@@ -160,16 +171,20 @@ public class SimpleUtils {
 		if (isExecutionContinue) {
 			try {
 				assertTrue(isAssert);
+				MyThreadLocal.setTestResultFlag(true);
 			} catch (Throwable e) {
 				addVerificationFailure(e);
 				ExtentTestManager.getTest().log(Status.ERROR, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
 						+ "</div>");
+				MyThreadLocal.setTestResultFlag(false);
 			}
 		} else {
 			try {
 				assertTrue(isAssert);
+				MyThreadLocal.setTestResultFlag(true);
 			} catch (Throwable e) {
 				ExtentTestManager.getTest().log(Status.FAIL, message);
+				MyThreadLocal.setTestResultFlag(false);
 				throw new AssertionError(message);
 			}
 		}
@@ -237,10 +252,11 @@ public class SimpleUtils {
 
 		ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
+		MyThreadLocal.setTestResultFlag(true);
+/*		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
 			SimpleUtils.addTestResultIntoTestRailN(1, message);
 		}
-
+*/
 	}
 
 	public static void report(String message) {
