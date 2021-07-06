@@ -48,7 +48,7 @@ public interface LaborModelPage {
 
     public List<String> clickOnPencilButtonAndUpdateAttribute(String attributeName,String attributeValueUpdate,String attributeDescriptionUpdate) throws Exception;
 
-    public HashMap<String, List<String>> getValueAndDescriptionForEachAttribute() throws Exception;
+    public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtGlobalLevel() throws Exception;
 
     public void selectLaborModelTemplateDetailsPageSubTabByLabel(String label) throws Exception;
 
@@ -58,7 +58,11 @@ public interface LaborModelPage {
 
     public void clickOnEditButtonOnTemplateDetailsPage() throws Exception;
 
-    public String updateAttributeValueInTemplate(String attributeName,String attributeValueUpdate) throws Exception;
+    public void updateAttributeValueInTemplate(String attributeName,String attributeValueUpdate) throws Exception;
 
     public void saveAsDraftTemplate() throws Exception;
+
+    public void createNewTemplatePageWithoutSaving(String templateName) throws Exception;
+
+    public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtTemplateLevel() throws Exception;
 }

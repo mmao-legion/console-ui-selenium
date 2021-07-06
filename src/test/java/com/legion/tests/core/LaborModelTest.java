@@ -61,8 +61,8 @@ public class LaborModelTest extends TestBase {
             String action = "Archive";
 
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
-            laborModelPage.addNewLaborModelTemplate(templateName);
-            laborModelPage.deleteDraftLaborModelTemplate(templateName);
+//            laborModelPage.addNewLaborModelTemplate(templateName);
+//            laborModelPage.deleteDraftLaborModelTemplate(templateName);
             laborModelPage.publishNewLaborModelTemplate(templateName,dynamicGroupName,dynamicGroupCriteria,dynamicGroupFormula);
 //            laborModelPage.clickOnLaborModelTab();
 //            laborModelPage.goToLaborModelTile();
@@ -150,26 +150,29 @@ public class LaborModelTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTemplateLevelAttributeFunctionAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
         try{
+            SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime=dfs.format(new Date()).trim();
             String label = "External Attributes";
             HashMap<String,List<String>> attributesInfoInGlobal = new HashMap<>();
             HashMap<String,List<String>> attributesInfoInTemplate = new HashMap<>();
             HashMap<String,List<String>> attributesUpdatedInfoInTemplate = new HashMap<>();
             String attributeName ="AutoUsingAttribute";
             String attributeValueUpdate = "23";
-
-            String templateName = "AutoUsingByFiona";
+            String templateName = "AutoCreated" + currentTime;
             String mode = "edit";
+
+
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             //Check are the default value of attributes at template level correct or not?
             laborModelPage.clickOnLaborModelTab();
             laborModelPage.goToLaborStandardRepositoryTile();
             laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
-            attributesInfoInGlobal = laborModelPage.getValueAndDescriptionForEachAttribute();
+            attributesInfoInGlobal = laborModelPage.getValueAndDescriptionForEachAttributeAtGlobalLevel();
             laborModelPage.clickOnLaborModelTab();
             laborModelPage.goToLaborModelTile();
-            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.createNewTemplatePageWithoutSaving(templateName);
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            attributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttribute();
+            attributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
             //Compare two map info
             for(String key:attributesInfoInTemplate.keySet()){
                 for(String key1:attributesInfoInGlobal.keySet()){
@@ -186,15 +189,20 @@ public class LaborModelTest extends TestBase {
                     }
                 }
             }
+
             //update template attribute value
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
             laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
             laborModelPage.updateAttributeValueInTemplate(attributeName,attributeValueUpdate);
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Details");
             laborModelPage.saveAsDraftTemplate();
             //go to template details page check updated or not?
             laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            attributesUpdatedInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttribute();
+            attributesUpdatedInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
             for(String key2:attributesUpdatedInfoInTemplate.keySet()){
                 if(key2.equals(attributeName)){
                     if(attributesUpdatedInfoInTemplate.get(key2).get(0).equals(attributeValueUpdate)){

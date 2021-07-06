@@ -6,6 +6,7 @@ import com.legion.pages.LocationSelectorPage;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -2348,6 +2349,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			waitForSeconds(5);
 			selectByVisibleText(dynamicGroupCriteria,criteria);
 			clickTheElement(formulaTextAreaOfDynamicGroup);
+			formulaTextAreaOfDynamicGroup.clear();
+//			String text = formula;
+//			String js = "var sum=document.getElementByCss('div.CodeMirror textarea'); sum.value='" + text + "';";
+//			((JavascriptExecutor)driver).executeScript(js);
 			formulaTextAreaOfDynamicGroup.sendKeys(formula);
 			clickTheElement(okButtonOnManageDynamicGroupPopup);
 			waitForSeconds(5);

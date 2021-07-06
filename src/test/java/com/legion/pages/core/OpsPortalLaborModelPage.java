@@ -191,6 +191,52 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}
 	}
 
+	@FindBy(css="div.lg-modal")
+	private WebElement createNewTemplatePopupWindow;
+	@FindBy(css="input-field[label=\"Name this template\"] input")
+	private WebElement newTemplateName;
+	@FindBy(css="input-field[label=\"Description\"] textarea")
+	WebElement newTemplateDescription;
+	@FindBy(css="lg-button[label=\"Continue\"] button")
+	private WebElement continueBTN;
+	@FindBy(css="span.wm-close-link")
+	private WebElement welcomeCloseButton;
+	@FindBy(css="question-input[question-title=\"How many minutes late can employees clock in to scheduled shifts?\"]")
+	private WebElement taTemplateSpecialField;
+
+	@Override
+	public void createNewTemplatePageWithoutSaving(String templateName) throws Exception{
+		if(isTemplateListPageShow()){
+			clickTheElement(newTemplateBTN);
+			waitForSeconds(1);
+			if(isElementEnabled(createNewTemplatePopupWindow)){
+				SimpleUtils.pass("User can click new template button successfully!");
+				clickTheElement(newTemplateName);
+				newTemplateName.sendKeys(templateName);
+				clickTheElement(newTemplateDescription);
+				newTemplateDescription.sendKeys(templateName);
+				clickTheElement(continueBTN);
+				waitForSeconds(5);
+				if(isElementEnabled(welcomeCloseButton)){
+					clickTheElement(welcomeCloseButton);
+				}
+				if(isElementEnabled(taTemplateSpecialField)){
+					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+				}
+				if(isElementEnabled(saveAsDraftButton)){
+					SimpleUtils.pass("User can click continue button successfully!");
+					waitForSeconds(5);
+				}else {
+					SimpleUtils.fail("User can't click continue button successfully!",false);
+				}
+			}else {
+				SimpleUtils.fail("User can't click new template button successfully!",false);
+			}
+		}
+	}
+
 	@Override
 	public void deleteDraftLaborModelTemplate(String templateName) throws Exception {
 		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
@@ -497,6 +543,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 				if(name.equals(attributeName)){
 					WebElement deleteBTN = attribute.findElement(By.cssSelector("td:nth-child(4) i.fa-times"));
 					clickTheElement(deleteBTN);
+					waitForSeconds(5);
 					String title = disableExternalAttributePopupTitle.getText().trim();
 					if(isElementEnabled(disableExternalAttributePopupTitle,3) && title.contains("Disable External Attribute")){
 						SimpleUtils.pass("User can click delete attribute successfully!");
@@ -562,13 +609,30 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	}
 
 	@Override
-	public HashMap<String, List<String>> getValueAndDescriptionForEachAttribute() throws Exception{
+	public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtGlobalLevel() throws Exception{
 		HashMap<String, List<String>> infoForEachAttribute = new HashMap<>();
 		if(areListElementVisible(attributesList,5)){
 			for (WebElement attribute : attributesList) {
 				List<String> infos = new ArrayList<>();
 				String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
 				String value = attribute.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+				String des = attribute.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
+				infos.add(0,value);
+				infos.add(1,des);
+				infoForEachAttribute.put(name,infos);
+			}
+		}
+		return infoForEachAttribute;
+	}
+
+	@Override
+	public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtTemplateLevel() throws Exception{
+		HashMap<String, List<String>> infoForEachAttribute = new HashMap<>();
+		if(areListElementVisible(attributesList,5)){
+			for (WebElement attribute : attributesList) {
+				List<String> infos = new ArrayList<>();
+				String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+				String value = attribute.findElement(By.cssSelector("td:nth-child(2) div")).getAttribute("innerText").trim();
 				String des = attribute.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
 				infos.add(0,value);
 				infos.add(1,des);
@@ -663,23 +727,20 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	}
 
 	@Override
-	public String updateAttributeValueInTemplate(String attributeName,String attributeValueUpdate) throws Exception {
-		String updateValue = null;
+	public void updateAttributeValueInTemplate(String attributeName,String attributeValueUpdate) throws Exception {
 		if (areListElementVisible(attributesList, 10)) {
 			for (WebElement attribute : attributesList) {
 				String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
 				if (name.equals(attributeName)) {
-					clickTheElement(newAttributeValueInputField);
-					newAttributeValueInputField.clear();
-					newAttributeValueInputField.sendKeys(attributeValueUpdate);
-					clickTheElement(newAttributeCheckButton);
-					updateValue = attribute.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+					WebElement updateAttributeValueInputField = attribute.findElement(By.cssSelector("td:nth-child(2) input"));
+					clickTheElement(updateAttributeValueInputField);
+					updateAttributeValueInputField.clear();
+					updateAttributeValueInputField.sendKeys(attributeValueUpdate);
 					clickOnSaveButton();
 					break;
 				}
 			}
 		}
-		return updateValue;
 	}
 	@FindBy(css="lg-button[label=\"Save as draft\"] button.pre-saveas")
 	private WebElement saveAsDraftButton;
