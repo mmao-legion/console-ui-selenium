@@ -1028,7 +1028,7 @@ public class LocationNavigationTest extends TestBase {
             String regionName = upperFields[upperFields.length-2].trim();
             String districtName = upperFields[upperFields.length-1].trim();
 
-            LoginAsDifferentRole("InternalAdmin");
+            loginAsDifferentRole("InternalAdmin");
 
             //Check Report page is display after click Report tab
             newsPage.clickOnNewsConsoleMenu();
@@ -1107,7 +1107,7 @@ public class LocationNavigationTest extends TestBase {
             String regionName = upperFields[upperFields.length-2].trim();
             String districtName = upperFields[upperFields.length-1].trim();
 
-            LoginAsDifferentRole("InternalAdmin");
+            loginAsDifferentRole("InternalAdmin");
             newsPage.clickOnNewsConsoleMenu();
             SimpleUtils.assertOnFail("The news page fail to load! ",
                     newsPage.checkIfNewsPageLoaded(), false);
