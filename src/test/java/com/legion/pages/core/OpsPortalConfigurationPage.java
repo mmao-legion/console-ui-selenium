@@ -4,6 +4,8 @@ import com.legion.pages.BasePage;
 import com.legion.pages.ConfigurationPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.utils.SimpleUtils;
+import com.sun.glass.events.KeyEvent;
+import com.sun.glass.ui.Robot;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -1524,12 +1526,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
 	}
 
+	@FindBy(css="[ng-if=\"$ctrl.saveAsLabel\"] button")
+	private WebElement publishNowBTN;
+
 	@Override
 	public void publishNowTemplate() throws Exception {
 		if (isElementLoaded(dropdownArrowBTN,5)) {
-			click(dropdownArrowBTN);
-			click(publishNowButton);
-			click(publishTemplateButton);
+			clickTheElement(dropdownArrowBTN);
+			waitForSeconds(2);
+			clickTheElement(publishNowButton);
+			waitForSeconds(2);
+			clickTheElement(publishNowBTN);
+			waitForSeconds(5);
 			if(isElementLoaded(publishTemplateConfirmModal, 5)){
 				click(okButtonOnPublishTemplateConfirmModal);
 				displaySuccessMessage();
@@ -2348,14 +2356,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			dynamicGroupName.sendKeys(name);
 			waitForSeconds(5);
 			selectByVisibleText(dynamicGroupCriteria,criteria);
-			clickTheElement(formulaTextAreaOfDynamicGroup);
-			formulaTextAreaOfDynamicGroup.clear();
-//			String text = formula;
-//			String js = "var sum=document.getElementByCss('div.CodeMirror textarea'); sum.value='" + text + "';";
-//			((JavascriptExecutor)driver).executeScript(js);
+			waitForSeconds(3);
+			formulaTextAreaOfDynamicGroup.sendKeys(Keys.TAB);
 			formulaTextAreaOfDynamicGroup.sendKeys(formula);
 			clickTheElement(okButtonOnManageDynamicGroupPopup);
-			waitForSeconds(5);
+			waitForSeconds(3);
 		}else {
 			SimpleUtils.fail("User failed to clicking add DynamicGroup button!",false);
 		}
@@ -2387,8 +2392,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				selectOneDynamicGroup(name);
 				locationSelectorPage.refreshTheBrowser();
 				waitForSeconds(5);
-				clickTheElement(templateDetailsBTN);
-				waitForSeconds(2);
 				publishNowTemplate();
 			}else {
 				SimpleUtils.fail("User can't click new template button successfully!",false);

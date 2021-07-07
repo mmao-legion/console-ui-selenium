@@ -61,8 +61,8 @@ public class LaborModelTest extends TestBase {
             String action = "Archive";
 
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
-//            laborModelPage.addNewLaborModelTemplate(templateName);
-//            laborModelPage.deleteDraftLaborModelTemplate(templateName);
+            laborModelPage.addNewLaborModelTemplate(templateName);
+            laborModelPage.deleteDraftLaborModelTemplate(templateName);
             laborModelPage.publishNewLaborModelTemplate(templateName,dynamicGroupName,dynamicGroupCriteria,dynamicGroupFormula);
 //            laborModelPage.clickOnLaborModelTab();
 //            laborModelPage.goToLaborModelTile();
