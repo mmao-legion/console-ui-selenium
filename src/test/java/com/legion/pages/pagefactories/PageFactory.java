@@ -1,5 +1,6 @@
 package com.legion.pages.pagefactories;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleCompliancePage;
 
 /**
  * Yanming
@@ -13,8 +14,6 @@ public interface PageFactory {
      * Aug 03- Zorang Added Below code 
      * */
     TeamPage createConsoleTeamPage();
-    
-    SchedulePage createConsoleSchedulePage();
     
     UserAuthorizationPage createConsoleUserAuthorizationPage();
     
@@ -45,4 +44,42 @@ public interface PageFactory {
     ForecastPage createForecastPage();
 
     GmailPage createConsoleGmailPage();
+
+    ActivityPage createConsoleActivityPage();
+
+    LocationsPage createOpsPortalLocationsPage();
+
+    LiquidDashboardPage createConsoleLiquidDashboardPage();
+
+    JobsPage createOpsPortalJobsPage();
+    ScheduleDMViewPage createScheduleDMViewPage();
+
+    InboxPage createConsoleInboxPage();
+
+    CinemarkMinorPage createConsoleCinemarkMinorPage();
+
+    AdminPage createConsoleAdminPage();
+
+    ConfigurationPage createOpsPortalConfigurationPage();
+    CompliancePage createConsoleCompliancePage();
+
+    IntegrationPage createIntegrationPage();
+
+    OnboardingPage createOnboardingPage();
+
+    ComplianceDMViewPage createComplianceDMViewPage();
+
+    NewsPage createNewsPage();
+
+    ReportPage createConsoleReportPage();
+
+    InsightPage createConsoleInsightPage();
+
+    NewsPage createConsoleNewsPage();
+
+    IntegrationPage createConsoleIntegrationPage();
+
+    UserManagementPage createOpsPortalUserManagementPage();
+
+    LaborModelPage createOpsPortalLaborModelPage();
 }

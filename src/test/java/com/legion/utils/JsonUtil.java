@@ -33,7 +33,7 @@ public class JsonUtil {
                 System.err.println("The json configuration file is not valid. Please verify the file.");
 
             } catch (IOException e) {
-                System.err.println("No configuration file available.");
+                System.err.println("No configuration file available. Cannot Find file: " + pathname);
             }
             return parameterList;
 
@@ -57,7 +57,7 @@ public class JsonUtil {
             System.err.println("The json configuration file is not valid. Please verify the file.");
 
         } catch (IOException e) {
-            System.err.println("No configuration file available.");
+            System.err.println("No configuration file available. Cannot Find file: " + pathname);
         }
         return objects;
     }
@@ -83,7 +83,7 @@ public class JsonUtil {
             System.err.println("The json configuration file is not valid. Please verify the file."+pathname);
 
         } catch (IOException e) {
-            System.err.println("No configuration file available.");
+            System.err.println("No configuration file available. Cannot Find file: " + pathname);
         }
         return parameterList;
 
@@ -106,7 +106,7 @@ public class JsonUtil {
             System.err.println("The json configuration file is not valid. Please verify the file.");
 
         } catch (IOException e) {
-            System.err.println("No configuration file available.");
+            System.err.println("No configuration file available. Cannot Find file: " + pathname);
         }
         return parameterList;
 

@@ -5,6 +5,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 import java.util.HashMap;
 import java.util.List;
 
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -97,8 +98,8 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 	 @FindBy(css = "tr[ng-repeat=\"kpi in kpiReports\"]")
 	 private List<WebElement> kpiReportRows;
 
-	 @FindBy(css = "div.console-navigation-item-label.Analytics")
-	 private WebElement consoleNavigationAnalytics;
+	 @FindBy(css = "div.console-navigation-item-label.Report")
+	 private WebElement consoleNavigationReport;
 
 	 @FindBy(css = "div.lgnCheckBox")
 	 private List<WebElement> forecstAndScheduleCheckBoxes;
@@ -409,8 +410,8 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 
 	@Override
 	public void clickOnAnalyticsConsoleMenu() throws Exception {
-		if(isElementLoaded(consoleNavigationAnalytics))
-			click(consoleNavigationAnalytics);
+		if(isElementLoaded(consoleNavigationReport))
+			click(consoleNavigationReport);
 		else
 			SimpleUtils.fail("Unable to click on 'Analytics' console menu.", false);
 	}
@@ -461,5 +462,133 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 			}
 		}
 		return analyticsKPIHours;
+	}
+
+	// Added by Nora: For GFE reports
+	@FindBy (className = "sub-navigation-view-link")
+	private List<WebElement> subNavigations;
+	@FindBy (css = "[ng-attr-disabled*=\"DownloadAllLocationReports\"] .lg-button-group-first")
+	private WebElement firstGroup;
+	@FindBy (css = "[ng-attr-disabled*=\"DownloadAllLocationReports\"] .lg-button-group-last")
+	private WebElement lastGroup;
+	@FindBy (css = "tbody .sch-kpi-title-text")
+	private List<WebElement> reportTitleTexts;
+	@FindBy (css = "[ng-repeat*=\"kpi in kpiReports\"]")
+	private List<WebElement> reportRows;
+
+	@Override
+	public boolean isReportsPageLoaded() throws Exception {
+		boolean isLoaded = false;
+		String subTitle = "Reports";
+		if (areListElementVisible(subNavigations, 10)) {
+			for (WebElement subNavigation : subNavigations) {
+				if (subNavigation.getText().contains(subTitle) && subNavigation.getAttribute("class").contains("active")) {
+					isLoaded = true;
+					SimpleUtils.pass("Analytics Page: Reports page is loaded Successfully!");
+					break;
+				}
+			}
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void switchAllLocationsOrSingleLocation(boolean isAllLocations) throws Exception {
+		String allLocations = "All Locations";
+		if (isElementLoaded(firstGroup, 5) && isElementLoaded(lastGroup, 5)) {
+			if (isAllLocations) {
+				if (firstGroup.getText().equals(allLocations) && !firstGroup.getAttribute("class").contains("lg-button-group-selected")) {
+					click(firstGroup);
+					SimpleUtils.pass("Analytics: Select " + firstGroup.getText() + " Successfully!");
+				}
+				if (lastGroup.getText().equals(allLocations) && !lastGroup.getAttribute("class").contains("lg-button-group-selected")) {
+					click(lastGroup);
+					SimpleUtils.pass("Analytics: Select " + lastGroup.getText() + " Successfully!");
+				}
+			} else {
+				if (!firstGroup.getText().equals(allLocations) && !firstGroup.getAttribute("class").contains("lg-button-group-selected")) {
+					click(firstGroup);
+					SimpleUtils.pass("Analytics: Select " + firstGroup.getText() + " Successfully!");
+				}
+				if (!lastGroup.getText().equals(allLocations) && !lastGroup.getAttribute("class").contains("lg-button-group-selected")) {
+					click(lastGroup);
+					SimpleUtils.pass("Analytics: Select " + lastGroup.getText() + " Successfully!");
+				}
+			}
+		} else {
+			SimpleUtils.fail("Analytics: All Locations and Single Location not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public boolean isSpecificReportLoaded(String reportName) throws Exception {
+		boolean isLoaded = false;
+		if (areListElementVisible(reportTitleTexts, 10)) {
+			for (WebElement reportTitle : reportTitleTexts) {
+				if (reportTitle.getText().equalsIgnoreCase(reportName)) {
+					isLoaded = true;
+					SimpleUtils.pass("Analytics: Find the report: " + reportName + " Successfully!");
+					break;
+				}
+			}
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void mouseHoverAndExportReportByName(String reportName) throws Exception {
+		if (areListElementVisible(reportRows, 5)) {
+			for (WebElement reportRow : reportRows) {
+				WebElement text = reportRow.findElement(By.className("sch-kpi-title-text"));
+				if (text != null && text.getText().equalsIgnoreCase(reportName)) {
+					mouseToElement(text);
+					WebElement exportBtn = reportRow.findElement(By.className("sch-kpi-action-text"));
+					if (exportBtn != null) {
+						moveToElementAndClick(exportBtn);
+						break;
+					} else {
+						SimpleUtils.fail("Analytics: Failed to find the Export button for report: " + reportName, false);
+					}
+				}
+			}
+		} else {
+			SimpleUtils.fail("Analytics: Report rows not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void mouseHoverAndRefreshByName(String reportName) throws Exception {
+		if (areListElementVisible(reportRows, 5)) {
+			for (WebElement reportRow : reportRows) {
+				WebElement text = reportRow.findElement(By.className("sch-kpi-title-text"));
+				if (text != null && text.getText().equalsIgnoreCase(reportName)) {
+					mouseToElement(text);
+					WebElement refreshBtn = reportRow.findElement(By.cssSelector("span.sch-control-button-label"));
+					if (refreshBtn != null) {
+						moveToElementAndClick(refreshBtn);
+						break;
+					} else {
+						SimpleUtils.fail("Analytics: Failed to find the Refresh button for report: " + reportName, false);
+					}
+				}
+			}
+		} else {
+			SimpleUtils.fail("Analytics: Report rows not loaded Successfully!", false);
+		}
+	}
+
+
+	@FindBy (css = "[ng-if=\"canDownloadAllLocationReports\"] div.lg-button-group-selected")
+	private WebElement selectedReportsTab;
+	@Override
+	public boolean isSpecificReportsTabBeenSelected(String reportsTabName) throws Exception {
+		boolean isSelected = false;
+		if (isElementLoaded(selectedReportsTab, 10)
+				&& selectedReportsTab.getText().equalsIgnoreCase(reportsTabName)) {
+			isSelected = true;
+			SimpleUtils.report("The tab: "+ reportsTabName+" is selected! ");
+		} else
+			SimpleUtils.report("The tab: "+ reportsTabName+" is not selected! ");
+		return isSelected;
 	}
 }

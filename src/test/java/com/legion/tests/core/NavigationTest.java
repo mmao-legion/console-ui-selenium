@@ -34,7 +34,7 @@ public class NavigationTest extends TestBase {
 	public void firstTest(Method testMethod, Object[] params) throws Exception{
 	  this.createDriver((String)params[0],"69","Window");
       visitPage(testMethod);
-      loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+        loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
 	}
     
     @Automated(automated = "Automated")
@@ -90,7 +90,7 @@ public class NavigationTest extends TestBase {
        salesForecastPage.loadSalesForecast();
        StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
        staffingGuidancePage.loadStaffingGuidance();
-       SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+       SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
        schedulePage.loadSchedule();
        AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
        analyticsPage.loadAnalyticsTab();
@@ -107,7 +107,7 @@ public class NavigationTest extends TestBase {
     public void scheduleSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
         scheduleOverviewPage.loadScheduleOverview();
-        SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.navigateScheduleDayWeekView(ScheduleTest.weekViewType.Next.getValue(), ScheduleTest.weekCount.Three.getValue());
 
     }

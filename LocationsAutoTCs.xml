@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose ="0" thread-count="10" name="LegionTest">
+    <parameter name="environment" value="QA"/>
+    <parameter name="testRail" value="Yes"/>
+    <parameter name="testRailRunName" value="Location Regression OP"/>
+    <listeners>
+        <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
+    </listeners>
+
+<!--======================================================Start - This is OP tests===================================================-->
+
+    <test name="Location Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationsTest">
+                <methods>
+                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
+<!--                    <include name="verifyCreateMockLocationAndNavigate" />-->
+                    <include name="verifyCreateNSOLocationAndNavigate" />
+                    <include name="verifyDisableEnableLocationFunction" />
+<!--                    <include name="verifyImportLocationDistrict" />-->
+                    <include name="verifyExportLocationDistrict" />
+                    <!--                    Global dynamic group test cases-->
+                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
+                    <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
+                    <include name="verifyGlobalDynamicGroupInClockInFunction" />
+                    <include name="verifyGlobalDynamicGroupInWFS" />
+                    <!--                    Location level template overridden-->
+                    <include name="verifyUserCanSeeEachTypeOfTemViaClickingTemName" />
+                    <include name="verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevel" />
+                    <include name="verifyOverriddenSchedulingRulesInLocationLevel" />
+
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+
+</suite> <!-- Suite -->

@@ -77,11 +77,11 @@ public class AnalyticsTestKendraScott2 extends TestBase{
         
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
         SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+        		schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
         
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-        		schedulePage.varifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+        		schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
         
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
         List<WebElement> scheduleOverViewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
@@ -161,7 +161,7 @@ public class AnalyticsTestKendraScott2 extends TestBase{
 		   }
 		   System.out.println("totalDaysStaffingGuidanceHours: "+totalDaysStaffingGuidanceHours);
 		   System.out.println("totalDaysProjectedSalesHours: "+totalDaysProjectedSalesHours);
-		   SchedulePage schedulePage = pageFactory.createConsoleSchedulePage();
+		   SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		   schedulePage.clickOnScheduleConsoleMenuItem();
 		   SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.isSchedule(),false);
 		   StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();

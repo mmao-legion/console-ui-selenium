@@ -1,5 +1,5 @@
 {
-  "CHROME_DRIVER_PATH": "D:\\chromedriver.exe",
+ "CHROME_DRIVER_PATH": "D:\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
  "QAURL": "https://rc-enterprise.dev.legion.work/",
@@ -11,8 +11,12 @@
  "Tech_Enterprise" : "LegionTech",
  "Reverted_Enterprise" : "LegionReverted",
  "KendraScott2_Enterprise" : "KendraScott2",
+ "Op_Enterprise" : "op",
+ "CinemarkWkdy_Enterprise" : "cinemark-wkdy",
  "DGStage_Enterprise" : "DGStage",
  "ChezAldo_Enterprise" : "ChezAldo",
+ "CinemarkWkdy_Enterprise" : "cinemark-wkdy",
+ "Dgch_Enterprise" : "dgch",
  "ALL_LOCATIONS" : "false",
  "GreenTrailCafe_Enterprise" : "greentrailcafe",
  "DEFAULT_USERNAME" : "admin2.a",
@@ -36,11 +40,13 @@
  "appiumJsPath" : "C:\\Users\\Lenovo\\AppData\\Local\\Programs\\Appium\\resources\\app\\node_modules\\appium\\lib\\appium.js",
  "deviceName" : "OnePlus 6T",
  "platformVersion" : "9",
- "isParallelBrowser" : "false",
+ "isParallelBrowser" : "true",
  "Download_File_Default_Dir" : "C:\\Users\\Lenovo\\Downloads",
- "isHeadlessBrowser" : "true",
+ "isHeadlessBrowser" : "false",
  "legion.cucumber.extent.report.name" : "TA_Report",
  "legion.cucumber.extent.report.path" : "legion_bdd_report",
  "legion.cucumber.extent.report.theme" : "dark",
- "legion.cucumber.extent.report.title" : "Legion Cucumber Report"
+ "legion.cucumber.extent.report.title" : "Legion Cucumber Report",
+ "isGridEnabled" : "false",
+ "URL" : "http://localhost:4466/wd/hub"
 }

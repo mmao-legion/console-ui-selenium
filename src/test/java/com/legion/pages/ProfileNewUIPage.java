@@ -86,10 +86,15 @@ public interface ProfileNewUIPage {
 
 	boolean isMyAvailabilityLocked() throws Exception;
 
+	boolean isMyAvailabilityLockedNewUI() throws Exception;
+
 	public ArrayList<HashMap<String, ArrayList<String>>> getMyAvailabilityPreferredAndBusyHours();
 
 	public void updateLockedAvailabilityPreferredOrBusyHoursSlider(String hoursType, int sliderIndex,
 			String leftOrRightSliderArrow, int durationMinutes, String repeatChanges) throws Exception;
+
+	public void updateMyAvailability(String hoursType, int sliderIndex,
+												   String leftOrRightSliderArrow, double durationHours, String repeatChanges) throws Exception;
 
 	public HashMap<String, Integer> getTimeOffRequestsStatusCount() throws Exception;
 
@@ -108,6 +113,8 @@ public interface ProfileNewUIPage {
 
 	public List<String> selectStartAndEndDate() throws Exception;
 
+	public String selectStartAndEndDateAtSameDay() throws Exception;
+
 	public boolean areAllDayCheckboxesLoaded() throws Exception;
 
 	public void deSelectAllDayCheckboxes() throws Exception;
@@ -121,4 +128,127 @@ public interface ProfileNewUIPage {
 	public int getTimeOffCountByStatusLabel(String status) throws Exception;
 
 	public HashMap<String, List<String>> selectCurrentDayAsStartNEndDate() throws Exception;
+
+	public void validateTheEditFunctionalityOnMyProfile(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception;
+
+	public void validateTheFeatureOfChangePassword(String oldPassword) throws Exception;
+
+	public String getNewPassword(String oldPassword) throws Exception;
+
+	public void validateTheUpdateOfShiftPreferences(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional) throws Exception;
+
+	public void validateTheUpdateOfAvailability(String hoursType, int sliderIndex, String leftOrRightDuration,
+												int durationMinutes, String repeatChanges) throws Exception;
+
+	public void reasonsOfLeaveOnNewTimOffRequest() throws Exception;
+
+	public String selectRandomReasonOfLeaveOnNewTimeOffRequest() throws Exception;
+
+	public void createNewTimeOffRequestAndVerify(String timeOffReasonLabel, String timeOffExplanationText) throws Exception;
+
+	public void validateTheFunctionalityOfTimeOffCancellation() throws Exception;
+
+	public void newApproveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration,
+															 String timeOffEndDuration, String action) throws Exception;
+
+	public void clickNextWeek() throws Exception;
+
+	public String getAvailabilityWeek() throws Exception;
+
+	public void cancelAllTimeOff() throws Exception;
+
+	public void rejectAllTimeOff() throws Exception;
+
+	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception;
+
+	public void approveAllPendingAvailabilityRequest() throws Exception;
+
+	public void clickOnEditUserProfilePencilIcon() throws Exception;
+
+	public void clickOnSaveUserProfileBtn() throws Exception;
+
+	public void clickOnCancelUserProfileBtn() throws Exception;
+
+	public void verifyUserProfileSectionIsLoaded() throws Exception;
+
+	public void verifyHRProfileInformationSectionIsLoaded() throws Exception;
+
+	public void verifyLegionInformationSectionIsLoaded() throws Exception;
+
+	public void verifyActionSectionIsLoaded() throws Exception;
+
+	public void verifyFieldsInUserProfileSection() throws Exception;
+
+	public void verifyFieldsInHRProfileInformationSection() throws Exception;
+
+	public void verifyFieldsInLegionInformationSection() throws Exception;
+
+	public void verifyContentsInActionsSection() throws Exception;
+
+	public void verifyEditUserProfileButtonIsLoaded() throws Exception;
+
+	public void verifySyncTMInfoButtonIsLoaded() throws Exception;
+
+	public void verifyContentsInActionsSectionInTMView() throws Exception;
+
+	public void isRequiredErrorShowUp(String field) throws Exception;
+
+	public boolean isSaveBtnDisabled() throws Exception;
+
+	public void verifyHRProfileSectionIsNotEditable() throws Exception;
+
+	public void verifyLegionInfoSectionIsNotEditable() throws Exception;
+
+	public void verifyTheEmailFormatInProfilePage(List<String> testEmails) throws Exception;
+
+	public HashMap<String, String> getValuesOfFields() throws Exception;
+
+	public void updateAllFields(HashMap<String, String> values) throws Exception;
+
+	public void clickOnOKBtnOnAlert() throws Exception;
+
+	public boolean verifyManageBadgeBtn() throws Exception;
+
+	public void verifySelectBadge() throws Exception;
+
+	public void saveBadgeBtn() throws Exception;
+
+	public void cancelBadgeBtn() throws Exception;
+
+	public boolean ifMatchEmailRegex(String email) throws Exception;
+
+	public boolean isMINORDisplayed() throws Exception;
+
+	public boolean isMINORYesOrNo() throws Exception;
+
+	public void verifyMINORField(boolean isMinor) throws Exception;
+
+	public void verifySMCanSelectACalendarForMinor() throws Exception;
+
+	public void selectAGivenCalendarForMinor(String givenCalendar) throws Exception;
+
+	public HashMap<String, String> getUserProfileName() throws Exception;
+
+	public void clickOnShowOrHideInvitationCodeButton(boolean toShowCode) throws Exception;
+
+	public String getInvitationCode() throws Exception;
+
+	public boolean isInvitationCodeLoaded() throws Exception;
+
+	public String getShowOrHideInvitationCodeButtonTooltip() throws Exception;
+
+	public boolean isInviteToLegionButtonLoaded() throws Exception;
+
+	public boolean isShowOrHideInvitationCodeButtonLoaded() throws Exception;
+
+	public void createTimeOffOnSpecificDays(String timeOffReasonLabel, String timeOffExplanationText,String fromDay, int duration) throws Exception;
+
+	public void updatePreferredOrBusyHoursToAllDay(int dayIndex, String hoursType) throws Exception;
+
+	public void clickAvailabilityEditButton() throws Exception;
+
+	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception;
+
+	public String getStatusOnProfilePage () throws Exception;
+	public HashMap<String, String> getOneUserHRProfileInfo() throws Exception;
 }

@@ -1,7 +1,5 @@
 package com.legion.pages;
 
-import cucumber.api.java.it.Ma;
-import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
@@ -20,7 +18,7 @@ public interface TeamPage {
 	public void coverage();
 	public void coverageViewToPastOrFuture(String nextWeekView, int weekCount);
 	public boolean loadTeamTab() throws Exception;
-	public void searchAndSelectTeamMemberByName(String username) throws Exception;
+	public String searchAndSelectTeamMemberByName(String username) throws Exception;
 	public void approvePendingTimeOffRequest() throws Exception;
 	public int getPendingTimeOffRequestCount() throws Exception;
 	public void openToDoPopupWindow() throws Exception;
@@ -57,7 +55,7 @@ public interface TeamPage {
 	public String fillInMandatoryFieldsOnNewTMPage(Map<String, String> newTMDetails, String mandatoryField) throws Exception;
 	public boolean isSaveButtonOnNewTMPageEnabled() throws Exception;
 	public void verifyContactNumberFormatOnNewTMPage(List<String> contactNumbers) throws Exception;
-	public void verifyTMCountIsCorrectOnRoster() throws Exception;
+	public int verifyTMCountIsCorrectOnRoster() throws Exception;
 	public void verifyCancelButtonOnAddTMIsEnabled() throws Exception;
 	public void verifyTheMandatoryFieldsCannotEmpty() throws Exception;
 	public void verifyTMIsVisibleAndInvitedOnTODO(String name) throws Exception;
@@ -121,4 +119,62 @@ public interface TeamPage {
 	public void	selectTheJobTitleByName(String jobTitleName) throws Exception;
 	public HashMap<Integer, List<String>> getTimeOffWeekTableByDateNTime(HashMap<Integer, List<String>> previousTimeOffs,
 																		 HashMap<String, List<String>> selectedDateNTime, HashMap<Integer, String> indexAndTimes) throws Exception;
+	public void updateBusinessProfilePicture(String filePath) throws Exception;
+	public void rejectAllTheTimeOffRequests() throws Exception;
+	public List<String> getTMNameList() throws Exception;
+	public void rejectAllTeamMembersTimeOffRequest(ProfileNewUIPage profileNewUIPage, int index) throws Exception;
+	public boolean verifyThereIsLocationColumnForMSLocationGroup() throws Exception;
+	public boolean isCalendarTabLoad() throws Exception;
+	public void clickOnTeamSubTab(String subTabString) throws Exception;
+	public boolean verifyActivatedSubTab(String SubTabText) throws Exception;
+	public void clickOnSchoolSessionStart() throws Exception;
+	public void clickOnSchoolSessionEnd() throws Exception;
+	public void inputCalendarName(String calendarName) throws Exception;
+	public void clickOnCreateNewCalendarButton() throws Exception;
+	public void selectSchoolSessionStartNEndDate() throws Exception;
+	public void clickOnSaveSchoolSessionCalendarBtn() throws Exception;
+	public void clickOnSaveSchoolCalendarBtn() throws Exception;
+	public void deleteCalendarByName(String calendarName) throws Exception;
+	public void setTheCalendarForMinors(List<String> minorNames, String calendarName, ProfileNewUIPage profileNewUIPage) throws Exception;
+	public String selectRandomDayInSessionStart() throws Exception;
+	public String selectRandomDayInSessionEnd() throws Exception;
+	public void clickOnSaveCalendar() throws Exception;
+	public void verifyDatesInCalendar(String startDate, String EndDate) throws Exception;
+	public void checkNextYearInEditMode() throws Exception;
+	public void checkPriorYearInEditMode() throws Exception;
+	public void clickOnPriorYearInEditMode() throws Exception;
+	public boolean verifyMandatoryElement(WebElement element) throws Exception;
+	public void verifySessionStartNEndIsMandatory() throws Exception;
+	public void verifyCreateCalendarLoaded() throws Exception;
+	public void clickTheCalendarByRandom() throws Exception;
+	public void clickOnEditCalendarButton() throws Exception;
+	public void verifyEditCalendarAlertModelPopsUp() throws Exception;
+	public void clickOnEditAnywayButton() throws Exception;
+	public boolean isEditCalendarModeLoaded() throws Exception;
+	public void verifyClickedDayIsHighlighted() throws Exception;
+	public void verifySchoolSessionPageLoaded() throws Exception;
+	public boolean isCreateCalendarBtnLoaded() throws Exception;
+	public void createNewCalendarByName(String calendarName) throws Exception;
+	public boolean isCalendarDisplayedByName(String calendarName) throws Exception;
+	public void clickOnCancelEditCalendarBtn() throws Exception;
+	public void verifyTheCalendarListLoaded() throws Exception;
+	public void verifyTheContentOnEachCalendarList() throws Exception;
+	public void verifyTheContentOnDetailedCalendarPage() throws Exception;
+	public void clickOnSchoolSchedulesButton() throws Exception;
+	public void	clickOnDeleteCalendarButton() throws Exception;
+	public void clickOnCancelButtonOnPopup() throws Exception;
+	public void clickOnDELETEANYWAYButton() throws Exception;
+	public void verifyTheColumnInRosterPage(boolean isLocationGroup) throws Exception;
+	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception;
+	public void selectARandomOnboardedOrNotTeamMemberToViewProfile(boolean selectOnboardedTM) throws Exception;
+	public void selectSchoolYear() throws Exception;
+	public void terminateOrDeactivateTheTeamMemberFromSpecificDate(Boolean isTerminate,String fromDate) throws Exception;
+	public boolean checkIfTMExists(String tmName) throws Exception;
+	public void cancelTMTerminate() throws Exception;
+	public void cancelTMDeactivate() throws Exception;
+	public boolean isCancelDeactivateButtonLoaded () throws Exception;
+	public void selectSchoolSessionStartAndEndDate(String startDate, String endDate) throws Exception;
+	public void activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(String firstName) throws Exception;
+	public boolean checkIsInviteButtonExists();
+	public int getLocationName();
 }

@@ -52,6 +52,16 @@ public class BasePage {
         }
     }
 
+    public void doubleClick(WebElement element, boolean... shouldWait) {
+        try {
+            waitUntilElementIsVisible(element);
+            Actions actions = new Actions(getDriver());
+            actions.doubleClick(element).perform();
+        } catch (TimeoutException te) {
+            ExtentTestManager.getTest().log(Status.WARNING,te);
+        }
+    }
+
     public void moveToElementAndClick(WebElement element, boolean... shouldWait) {
         try {
             waitUntilElementIsVisible(element);
@@ -139,7 +149,7 @@ public class BasePage {
     
     public void checkElementVisibility(WebElement element)
     {
-        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 30);
+        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 60);
         try {
         	wait.until(ExpectedConditions.visibilityOf(element));
         }
@@ -535,8 +545,8 @@ public class BasePage {
     }
 
     public void selectByVisibleText(WebElement element, String text) throws Exception {
-        if (isElementLoaded(element, 5)) {
-            click(element);
+        if (isElementLoaded(element, 10)) {
+            clickTheElement(element);
             Select select = new Select(element);
             List<WebElement> options = select.getOptions();
             List<String> optionTexts = new ArrayList<>();
@@ -548,8 +558,23 @@ public class BasePage {
                     select.selectByVisibleText(text);
                     SimpleUtils.pass("Select:" + text + " Successfully!");
                 } else {
-                    SimpleUtils.fail(text + " doesn't exist in options!", true);
+                    SimpleUtils.fail(text + " doesn't exist in options!", false);
                 }
+            } else {
+                SimpleUtils.fail("Select options are empty!", false);
+            }
+        }else {
+            SimpleUtils.fail("Select Element failed to load!", false);
+        }
+    }
+
+    public void selectByIndex(WebElement element, int index) throws Exception {
+        if (isElementLoaded(element, 5)) {
+            click(element);
+            Select select = new Select(element);
+            List<WebElement> options = select.getOptions();
+            if (options.size() > 0) {
+               select.selectByIndex(index);
             } else {
                 SimpleUtils.fail("Select options are empty!", true);
             }
@@ -559,11 +584,16 @@ public class BasePage {
     }
 
     public void selectDate(int daysFromToday) {
+        int numClicks = -1;
         LocalDate now = LocalDate.now();
         LocalDate wanted = LocalDate.now().plusDays(daysFromToday);
         WebElement btnNextMonth = null;
         List<String> listMonthText = new ArrayList<>();
-        int numClicks = wanted.getMonthValue() - now.getMonthValue();
+        if (wanted.getYear() == now.getYear()) {
+            numClicks = wanted.getMonthValue() - now.getMonthValue();
+        } else {
+            numClicks = 12 + wanted.getMonthValue() - now.getMonthValue();
+        }
         if (numClicks < 0) {
             numClicks = daysFromToday / 30;
         }
@@ -582,14 +612,14 @@ public class BasePage {
 
         for (int i = 0; i < numClicks; i++) {
             if(!listMonthText.get(0).equalsIgnoreCase(wanted.getMonth().toString())){
-                click(btnNextMonth);
+                clickTheElement(btnNextMonth);
             }
         }
 
-        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day"));
+        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.ranged-calendar__day.ng-binding.ng-scope.real-day:not(.can-not-select)"));
         for (WebElement mDate : mCalendarDates) {
             if (Integer.parseInt(mDate.getText()) == wanted.getDayOfMonth()) {
-                mDate.click();
+                clickTheElement(mDate);
                 return;
             }
         }
@@ -794,7 +824,7 @@ public class BasePage {
     //added by Nishant
     public String getActiveWeekText() throws Exception {
         WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
-        if (isElementLoaded(activeWeek))
+        if (isElementLoaded(activeWeek,10))
             return activeWeek.getText().replace("\n", " ");
         return "";
     }
@@ -822,6 +852,32 @@ public class BasePage {
                 .release()
                 .build()
                 .perform();
+    }
+
+    public void clickTheElement(WebElement element) {
+        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", element);
+    }
+
+    public void moveElement(WebElement webElement, int yOffSet)
+    {
+        Actions builder = new Actions(MyThreadLocal.getDriver());
+        builder.moveToElement(webElement)
+                .clickAndHold()
+                .moveByOffset(0, yOffSet)
+                .release()
+                .build()
+                .perform();
+    }
+
+    public void closeAuditLogDialog() throws Exception {
+        try {
+            if (isElementLoaded(getDriver().findElement(By.cssSelector(".lg-slider-pop__title-dismiss")), 10)) {
+                clickTheElement(getDriver().findElement(By.cssSelector(".lg-slider-pop__title-dismiss")));
+                SimpleUtils.pass("Cilck on Close button on Audit log dialog successfully!");
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
     }
 //
 //

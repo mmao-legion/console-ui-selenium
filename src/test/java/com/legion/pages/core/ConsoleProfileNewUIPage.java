@@ -1,11 +1,15 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.setTimeOffEndTime;
-import static com.legion.utils.MyThreadLocal.setTimeOffStartTime;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
+import com.google.inject.internal.cglib.reflect.$FastClass;
+import com.legion.utils.JsonUtil;
+import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -19,6 +23,8 @@ import com.legion.tests.core.TeamTestKendraScott2.timeOffRequestAction;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
+import static com.legion.utils.MyThreadLocal.*;
+
 public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPage{
 	
 	public ConsoleProfileNewUIPage(){
@@ -31,7 +37,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement>consoleNavigationMenuItems;
 	@FindBy(css = "div.profile")
 	private WebElement profilePageSection;
-	@FindBy(css="div.collapsible-title-text")
+	@FindBy(css="div.collapsible-title-text span")
 	private List<WebElement> profilePageSubSections;
 	@FindBy(css="a[ng-click=\"newTimeOff()\"]")
 	private WebElement newTimeOffBtn;
@@ -75,7 +81,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement timeOffRequestsSection;
 	@FindBy(css="div.location-selector-location-name-text")
 	private WebElement locationSelectorLocationName;
-	@FindBy(css="div.timeoff-requests-request.row-fx")
+	@FindBy(css="[timeoff=\"timeoff\"] .timeoff-requests-request.row-fx")
 	private List<WebElement> timeOffRequestRows;
 	@FindBy(css="i[ng-click=\"editProfile()\"]")
 	private WebElement profileEditPencilIcon;
@@ -105,7 +111,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement profileContactPhoneInputBox;
 	@FindBy(css="input[name=\"email\"]")
 	private WebElement profileContactEmailInputBox;
-	@FindBy(css="lgn-action-button[ng-click=\"invite()\"]")
+	@FindBy(css="lg-button[ng-click=\"invite()\"]")
 	private WebElement userProfileInviteBtn;
 	@FindBy(css="section[ng-form=\"inviteTm\"]")
 	private WebElement inviteTeamMemberPopUp;
@@ -119,7 +125,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement inviteTeamMemberPopUpCancelBtn;
 	@FindBy(css="button[ng-click=\"send()\"]")
 	private WebElement inviteTeamMemberPopUpSendBtn;
-	@FindBy(css="lgn-action-button[ng-click=\"changePassword()\"]")
+	@FindBy(xpath="//span[text()=\"Change Password\"]")
 	private WebElement userProfileChangePasswordBtn;
 	@FindBy(css="div[ng-form=\"changePassword\"]")
 	private WebElement changePasswordPopUp;
@@ -173,12 +179,14 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> myAvailabilityDayOfWeekRows;
 	@FindBy(css="button.lgn-action-button-success")
 	private WebElement myAvailabilityUnLockBtn;
-	@FindBy(css="button[ng-click=\"saveAvailability($event)\"]")
+	@FindBy(css="lg-button[ng-click=\"onSave()\"]")
 	private WebElement myAvailabilityEditModeSaveBtn;
-	@FindBy(css="button[ng-click=\"save(false)\"]")
+	@FindBy(css="input-field[label=\"This week only\"] label")
 	private WebElement MyAvailabilityEditSaveThisWeekOnlyBtn;
-	@FindBy(css="button[ng-click=\"save(false)\"]")
+	@FindBy(css="input-field[label=\"Repeat forward\"] label")
 	private WebElement MyAvailabilityEditSaveRepeatForwordBtn;
+	@FindBy(css = "[ng-click=\"save()\"]")
+	private WebElement myAvailabilityConfirmSubmitBtn;
 	@FindBy(css="div.hour-cell.hour-cell-ghost.cursor-resizableE")
 	private List<WebElement> hourCellsResizableCursorsRight;
 	@FindBy(css="div.hour-cell.hour-cell-ghost.cursor-resizableW")
@@ -197,7 +205,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement nextToDoCardArrow;
 	@FindBy(css="button.lgn-action-button-success")
 	private WebElement confirmTimeOffApprovalBtn;
-	@FindBy(css="span[ng-if=\"canCancel(r)\"]")
+	//timeOffRequestCancelBtn last updated by Haya
+	@FindBy(css="span[ng-if=\"canCancel(timeoff)\"]")
 	private WebElement timeOffRequestCancelBtn;
 	@FindBy(xpath="//div[contains(text(),'Starts')]/b")
 	private WebElement timeOffRequestStartDate;
@@ -211,6 +220,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement userProfileImage;
 	@FindBy(css=".header-user-switch-menu-item-main")
 	private WebElement userNickName;
+	@FindBy(className = "request-buttons-reject")
+	private WebElement timeOffRejectBtn;
+	@FindBy(css = "form-section[on-action=\"editProfile()\"]")
+	private WebElement profileSection;
 	
 	@Override
 	public void clickOnProfileConsoleMenu() throws Exception {
@@ -228,7 +241,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isProfilePageLoaded() throws Exception
 	{
-		if(isElementLoaded(profilePageSection)) {
+		if(isElementLoaded(profileSection, 15)) {
 			return true;
 		}
 		return false;
@@ -237,10 +250,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void selectProfilePageSubSectionByLabel(String profilePageSubSectionLabel) throws Exception {
 		boolean isSubSectionSelected = false;
-		if(areListElementVisible(profilePageSubSections,10)) {
+		if(areListElementVisible(profilePageSubSections,60)) {
 			for(WebElement profilePageSubSection : profilePageSubSections) {
 				if(profilePageSubSection.getText().toLowerCase().contains(profilePageSubSectionLabel.toLowerCase())) {
-					click(profilePageSubSection);
+					clickTheElement(profilePageSubSection);
 					isSubSectionSelected = true;
 					break;
 				}
@@ -256,7 +269,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void clickOnCreateTimeOffBtn() throws Exception {
-		if(isElementLoaded(newTimeOffBtn)) {
+		if(isElementLoaded(newTimeOffBtn, 10)) {
 			click(newTimeOffBtn);
 			SimpleUtils.pass("Controls Page: 'Create Time Off' button Clicked.");
 		}
@@ -269,7 +282,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void selectTimeOffReason(String reasonLabel) throws Exception
 	{
 		boolean isTimeOffReasonSelected = false;
-		if(timeOffReasons.size() > 0) {
+		if(areListElementVisible(timeOffReasons, 20)) {
 			for(WebElement timeOffReason : timeOffReasons) {
 				if(timeOffReason.getText().toLowerCase().contains(reasonLabel.toLowerCase())) {
 					click(timeOffReason);
@@ -281,8 +294,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			else
 				SimpleUtils.fail("Controls Page: Time Off Reason '"+ reasonLabel +"' not found.", false);
 		}
-		else
-			SimpleUtils.fail("Controls Page: 'Time Off Reasons' not loaded.", false);
 	}
 	
 	
@@ -377,6 +388,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void clickOnSaveTimeOffRequestBtn() throws Exception
 	{
+		waitForSeconds(3);
 		if(timeOffApplyBtn.isEnabled()) {
 			click(timeOffApplyBtn);
 		}
@@ -415,28 +427,55 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 //		String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
 		String timeOffEndDate = timeOffEndDuration.split(", ")[1].toUpperCase();
 //		String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
-		
+
 		String requestStatusText = "";
-		int timeOffRequestCount = timeOffRequestRows.size();
-		if(timeOffRequestCount > 0) {
-			for(WebElement timeOffRequest : timeOffRequestRows) {
-				WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
-				if(requestType.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
-					WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
-					String[] requestDateText = requestDate.getText().replace("\n", "").split("-");
-					if(requestDateText.length > 1) {
-						if(requestDateText[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
-								&& requestDateText[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
-							WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
+		if(areListElementVisible(timeOffRequestRows, 10)) {
+			int timeOffRequestCount = timeOffRequestRows.size();
+			if (timeOffRequestCount > 0) {
+				for (int i = 0; i < timeOffRequestRows.size(); i++) {
+					WebElement timeOffRequest = timeOffRequestRows.get(i);
+					WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
+					WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
+					String requestTypeText = requestType.getText();
+					if (timeOffReasonLabel.toLowerCase().contains(requestTypeText.toLowerCase())) {
+						WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
+						String requestDateText = requestDate.getText().replaceAll("\n", " ");
+						if (requestDateText.contains("-")) {
+							if (requestDateText.split("-")[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
+									&& requestDateText.split("-")[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
+								requestStatusText = requestStatus.getText();
+							}
+						} else if ((requestDateText.split(" ")[2] + " " + requestDateText.split(" ")[1]).equalsIgnoreCase(timeOffStartDate)
+								&& timeOffStartDate.equals(timeOffEndDate)) {
 							requestStatusText = requestStatus.getText();
 						}
 					}
 				}
+			} else
+				SimpleUtils.fail("Profile Page: No Time off request found.", true);
+		} else
+			SimpleUtils.fail("Profile Page: Time off request failed to load",true);
+		return requestStatusText;
+	}
+
+	@Override
+	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception {
+		String requestStatusText = "";
+		if(areListElementVisible(timeOffRequestRows, 10) && timeOffRequestRows.size() > 0) {
+			for (WebElement timeOffRequest: timeOffRequestRows) {
+				WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
+				try {
+					WebElement timeOffReason = timeOffRequest.findElement(By.cssSelector("[ng-if=\"timeoff.reason\"]"));
+					if (timeOffReason.getText().contains(timeOffExplanationText)) {
+						requestStatusText = requestStatus.getText();
+						break;
+					}
+				}catch (Exception e) {
+					continue;
+				}
 			}
-		}
-		else
-			SimpleUtils.fail("Profile Page: No Time off request found.", false);
-		
+		} else
+			SimpleUtils.fail("Profile Page: Time off request failed to load",true);
 		return requestStatusText;
 	}
 	
@@ -649,36 +688,56 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		//clickOnSaveUserProfileBtn();
 		clickOnCancelUserProfileBtn();
 	}
-	
-	private void clickOnCancelUserProfileBtn() throws Exception {
-		if(isElementLoaded(userProfileCancelBtn))
-			click(userProfileCancelBtn);
-		if(!isElementLoaded(profileEditForm))
+
+	@Override
+	public void clickOnCancelUserProfileBtn() throws Exception {
+		if(areListElementVisible(cancelBtnsOnProfile,5))
+			clickTheElement(cancelBtnsOnProfile.get(0));
+		waitForSeconds(2);
+		if(isElementLoaded(getDriver().findElement(By.cssSelector("[on-action=\"editProfile()\"] lg-button[label=\"Edit\"]")), 10))
 			SimpleUtils.pass("Profile Page: User profile Cancel Button clicked.");
 		else
 			SimpleUtils.fail("Profile Page: unable to cancel edit User profile popup.", false);
 	}
 
-	
+	@FindBy (css = "[ng-click=\"editProfile()\"]")
+	private WebElement editProfileButton;
+	@FindBy (className = "btn-success")
+	private WebElement saveTMBtn;
+	@FindBy (css = "[label=\"Cancel\"]")
+	private List<WebElement> cancelBtnsOnProfile;
+
+	@Override
 	public void clickOnEditUserProfilePencilIcon() throws Exception
 	{
-		if(isElementLoaded(profileEditPencilIcon))
-			click(profileEditPencilIcon);
-		if(isElementLoaded(profileEditForm))
+		if(isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")),10))
+			clickTheElement(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+		//verify if edit profile mode load
+		if(areListElementVisible(saveBtnsOfProfile,10))
 			SimpleUtils.pass("Profile Page: User profile edit form loaded successfully.");
 		else
 			SimpleUtils.fail("Profile Page: User profile edit form not loaded.", false);
 	}
-	
+
+	@Override
 	public void clickOnSaveUserProfileBtn() throws Exception
 	{
-		if(isElementLoaded(userProfileSaveBtn))
-			click(userProfileSaveBtn);
-		if(!isElementLoaded(profileEditForm))
-			SimpleUtils.pass("Profile Page: User profile successfully saved.");
-		else
-			SimpleUtils.fail("Profile Page: unable to save User profile.", false);
+		try {
+			if (areListElementVisible(saveBtnsOfProfile, 5) && saveBtnsOfProfile.size() > 0) {
+				scrollToElement(saveBtnsOfProfile.get(0));
+				clickTheElement(saveBtnsOfProfile.get(0));
+			}
+			waitForSeconds(3);
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 15)) {
+				SimpleUtils.pass("Profile Page: User profile successfully saved.");
+			} else {
+				SimpleUtils.fail("Profile Page: unable to save User profile.", false);
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail(e.toString(), false);
+		}
 	}
+
 	
 	public void updateUserProfileName(String firstName, String lastname, String nickName) throws Exception
 	{
@@ -718,71 +777,134 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					
 	public void updateUserProfileHomeAddress(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception
 	{
-		// Updating Home Address Street Address 1
-		if(isElementLoaded(profileAddressStreetAddress1InputBox)) {
-			if(profileAddressStreetAddress1InputBox.getAttribute("value").toLowerCase().contains(streetAddress1.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' already updated with value: '"
-						+streetAddress1+"'.");
-			else {
-				profileAddressStreetAddress1InputBox.clear();
-				profileAddressStreetAddress1InputBox.sendKeys(streetAddress1);
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' updated with value: '"
-						+streetAddress1+"'.");
-			}
-		}
-		
-		// Updating Home Address Street Address 2
-		if(isElementLoaded(profileAddressStreetAddress2InputBox)) {
-			if(profileAddressStreetAddress2InputBox.getAttribute("value").toLowerCase().contains(streetAddress2.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' already updated with value: '"
-						+streetAddress2+"'.");
-			else {
-				profileAddressStreetAddress2InputBox.clear();
-				profileAddressStreetAddress2InputBox.sendKeys(streetAddress2);
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' updated with value: '"
-						+streetAddress2+"'.");
-			}
-		}
-		
-		// Updating Home Address City
-		if(isElementLoaded(profileAddressCityInputBox)) {
-			if(profileAddressCityInputBox.getAttribute("value").toLowerCase().contains(city.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'City' already updated with value: '"+city+"'.");
-			else {
-				profileAddressCityInputBox.clear();
-				profileAddressCityInputBox.sendKeys(city);
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'City' updated with value: '"+city+"'.");
-			}
-		}
-		
-		// Updating Home Address State
-		if(isElementLoaded(profileAddressStateInputBox)) {
-			boolean isStateSelected = false;
-			Select statesDropdown = new Select(profileAddressStateInputBox);
-			if(statesDropdown.getFirstSelectedOption().getText().toLowerCase().contains(state.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Nick Name already updated with value: '"+state+"'.");
-			else {
-				for(WebElement stateOption : statesDropdown.getOptions()) {
-					if(stateOption.getText().toLowerCase().contains(state.toLowerCase())) {
-						click(stateOption);
-						isStateSelected = true;
-					}
+		if (isElementLoaded(profileSection, 5)) {
+			// Updating Home Address Street Address 1
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")), 5)) {
+				if (profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).getAttribute("value").toLowerCase().contains(streetAddress1.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' already updated with value: '"
+							+ streetAddress1 + "'.");
+				else {
+					profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).clear();
+					profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).sendKeys(streetAddress1);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' updated with value: '"
+							+ streetAddress1 + "'.");
 				}
-				if(isStateSelected)
-					SimpleUtils.pass("Profile Page: User Profile Home Address 'State' updated with value: '"+state+"'.");
-				else
-					SimpleUtils.fail("Profile Page: User Profile Home Address State: '"+state+"' not found.", true);
 			}
-		}
-		
-		// Updating Home Address Zip
-		if(isElementLoaded(profileAddressZipInputBox)) {
-			if(profileAddressZipInputBox.getAttribute("value").toLowerCase().contains(zip.toLowerCase()))
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' already updated with value: '"+zip+"'.");
-			else {
-				profileAddressZipInputBox.clear();
-				profileAddressZipInputBox.sendKeys(zip);
-				SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' updated with value: '"+zip+"'.");
+
+			// Updating Home Address Street Address 2
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")), 5)) {
+				if (profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).getAttribute("value").toLowerCase().contains(streetAddress2.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' already updated with value: '"
+							+ streetAddress2 + "'.");
+				else {
+					profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).clear();
+					profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).sendKeys(streetAddress2);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' updated with value: '"
+							+ streetAddress2 + "'.");
+				}
+			}
+
+			// Updating Home Address City
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")), 5)) {
+				if (profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).getAttribute("value").toLowerCase().contains(city.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'City' already updated with value: '" + city + "'.");
+				else {
+					profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).clear();
+					profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).sendKeys(city);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'City' updated with value: '" + city + "'.");
+				}
+			}
+
+			// Updating Home Address State
+			try {
+				if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
+				} else if (isElementLoaded(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+					selectByVisibleText(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), state);
+				} else {
+					SimpleUtils.fail("Profile page: State/Province select failed to load!", false);
+				}
+			} catch (Exception e) {
+				// Do nothing
+			}
+
+			// Updating Home Address Zip
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")), 5)) {
+				if (profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).getAttribute("value").toLowerCase().contains(zip.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' already updated with value: '" + zip + "'.");
+				else {
+					profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).clear();
+					profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).sendKeys(zip);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' updated with value: '" + zip + "'.");
+				}
+			}
+		}else {
+			// Updating Home Address Street Address 1
+			if(isElementLoaded(profileAddressStreetAddress1InputBox)) {
+				if(profileAddressStreetAddress1InputBox.getAttribute("value").toLowerCase().contains(streetAddress1.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' already updated with value: '"
+							+streetAddress1+"'.");
+				else {
+					profileAddressStreetAddress1InputBox.clear();
+					profileAddressStreetAddress1InputBox.sendKeys(streetAddress1);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' updated with value: '"
+							+streetAddress1+"'.");
+				}
+			}
+
+			// Updating Home Address Street Address 2
+			if(isElementLoaded(profileAddressStreetAddress2InputBox)) {
+				if(profileAddressStreetAddress2InputBox.getAttribute("value").toLowerCase().contains(streetAddress2.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' already updated with value: '"
+							+streetAddress2+"'.");
+				else {
+					profileAddressStreetAddress2InputBox.clear();
+					profileAddressStreetAddress2InputBox.sendKeys(streetAddress2);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' updated with value: '"
+							+streetAddress2+"'.");
+				}
+			}
+
+			// Updating Home Address City
+			if(isElementLoaded(profileAddressCityInputBox)) {
+				if(profileAddressCityInputBox.getAttribute("value").toLowerCase().contains(city.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'City' already updated with value: '"+city+"'.");
+				else {
+					profileAddressCityInputBox.clear();
+					profileAddressCityInputBox.sendKeys(city);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'City' updated with value: '"+city+"'.");
+				}
+			}
+
+			// Updating Home Address State
+			if(isElementLoaded(profileAddressStateInputBox)) {
+				boolean isStateSelected = false;
+				Select statesDropdown = new Select(profileAddressStateInputBox);
+				if(statesDropdown.getFirstSelectedOption().getText().toLowerCase().contains(state.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Nick Name already updated with value: '"+state+"'.");
+				else {
+					for(WebElement stateOption : statesDropdown.getOptions()) {
+						if(stateOption.getText().toLowerCase().contains(state.toLowerCase())) {
+							click(stateOption);
+							isStateSelected = true;
+						}
+					}
+					if(isStateSelected)
+						SimpleUtils.pass("Profile Page: User Profile Home Address 'State' updated with value: '"+state+"'.");
+					else
+						SimpleUtils.fail("Profile Page: User Profile Home Address State: '"+state+"' not found.", true);
+				}
+			}
+
+			// Updating Home Address Zip
+			if(isElementLoaded(profileAddressZipInputBox)) {
+				if(profileAddressZipInputBox.getAttribute("value").toLowerCase().contains(zip.toLowerCase()))
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' already updated with value: '"+zip+"'.");
+				else {
+					profileAddressZipInputBox.clear();
+					profileAddressZipInputBox.sendKeys(zip);
+					SimpleUtils.pass("Profile Page: User Profile Home Address 'Zip' updated with value: '"+zip+"'.");
+				}
 			}
 		}
 	}
@@ -883,7 +1005,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 						SimpleUtils.fail("'Invite Team Member' popup 'Phone' Input field contains Blank value.", true);
 				}
 				else
-					SimpleUtils.fail("'Invite Team Member' popup 'Phone' Input field not loaded.", true);
+					SimpleUtils.report("'Invite Team Member' popup 'Phone' Input field not loaded.");
 				
 				if(isElementLoaded(inviteTeamMemberPopUpEmailField,5)) {
 					String inviteTeamMemberPopUpEmailFieldValue = inviteTeamMemberPopUpEmailField.getAttribute("value");
@@ -913,7 +1035,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				
 				if(isElementLoaded(inviteTeamMemberPopUpCancelBtn,5) && inviteTeamMemberPopUpCancelBtn.isEnabled()) {
 					SimpleUtils.pass("'Invite Team Member' popup 'Cancel' Button not loaded successfully.");
-					click(inviteTeamMemberPopUpCancelBtn);
+					click(inviteTeamMemberPopUpSendBtn);
 					SimpleUtils.pass("'Invite Team Member' popup 'Cancel' Button clicked successfully.");
 				}
 				else
@@ -924,7 +1046,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("Profile Page: user profile 'Invite Team Memeber' popup not loaded.", false);			
 		}
 		else
-			SimpleUtils.report("Profile Page: user profile 'Invite' button not Available.");
+			SimpleUtils.fail("Profile Page: user profile 'Invite' button not Available.", false);
 	}
 			
 	@Override
@@ -1023,9 +1145,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public HashMap<String, String> getMyShiftPreferenceData() throws Exception
 	{
 		HashMap<String, String> shiftPreferenceData = new HashMap<String, String>();
-		if(isElementLoaded(collapsibleWorkPreferenceSection)) {
-			List<WebElement> myShiftPreferenceDataLabels = collapsibleWorkPreferenceSection.findElements(By.cssSelector("div.quick-schedule-preference.label"));
-			List<WebElement> myShiftPreferenceDataValues = collapsibleWorkPreferenceSection.findElements(By.cssSelector("div.quick-schedule-preference.value"));
+		if(isElementLoaded(myAvailabilitySection, 10)) {
+			List<WebElement> myShiftPreferenceDataLabels = myAvailabilitySection.findElements(By.cssSelector("div.quick-schedule-preference.label"));
+			List<WebElement> myShiftPreferenceDataValues = myAvailabilitySection.findElements(By.cssSelector("div.quick-schedule-preference.value"));
 			if(myShiftPreferenceDataLabels.size() > 0 && myShiftPreferenceDataLabels.size() == myShiftPreferenceDataValues.size()) {
 				for(int index = 0; index < myShiftPreferenceDataLabels.size(); index++) {
 					if(myShiftPreferenceDataLabels.get(index).isDisplayed()) {
@@ -1057,7 +1179,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 							String[] preferenceOptionsText = preferenceOptions.getText().split("\n");
 							if(preferenceOptionsText.length > 0) {
 								for(String preferenceOptionsTextLine : preferenceOptionsText) {
-									if(preferenceOptionsTextLine.toLowerCase().contains("volunteer for additional work")) {
+									if(preferenceOptionsTextLine.toLowerCase().contains("volunteer for additional work") || preferenceOptionsTextLine.toLowerCase().contains("voluntary standby list")) {
 										String[] volunteerOptionText = preferenceOptionsTextLine.split(":");
 										if(volunteerOptionText.length > 1) {
 											shiftPreferenceData.put("volunteerForAdditionalWork",volunteerOptionText[1]);
@@ -1143,10 +1265,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.pass("Profile Page: 'Volunteers for Additional Work' CheckBox already Disabled.");
 			else if(! isOfferForOtherLocation && volunteerMoreHoursCheckButton.getAttribute("class").contains("enable")) {
 				click(volunteerMoreHoursCheckButton);
+				// Verify if "Agree" button loaded
+				if (isElementLoaded(OKButton, 5)) {
+					clickTheElement(OKButton);
+				}
 				SimpleUtils.pass("Profile Page: 'Volunteers for Additional Work' CheckBox Disabled successfully.");
 			}
 			else {
 				click(volunteerMoreHoursCheckButton);
+				// Verify if "Agree" button loaded
+				if (isElementLoaded(OKButton, 5)) {
+					clickTheElement(OKButton);
+				}
 				SimpleUtils.pass("Profile Page: 'Volunteers for Additional Work' CheckBox Enabled successfully.");
 			}
 		}
@@ -1334,10 +1464,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public HashMap<String, Object> getMyAvailabilityData() throws Exception {
 		
 		HashMap<String, Object> myAvailabilityData = new HashMap<String, Object>();
-		boolean isMyAvailabilityWindowOpen = isMyAvailabilityCollapsibleWindowOpen();
-	      if(! isMyAvailabilityWindowOpen)
-	    	  clickOnMyAvailabilityCollapsibleWindowHeader();
-	      
+
 	      float scheduleHoursValue = 0;
 	      float remainingHoursValue = 0;
 	      float totalHoursValue = 0;
@@ -1391,6 +1518,72 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return false;
 	}
 
+	//added by Haya
+	@FindBy(css="user-profile-section[editing-locked]")
+	private WebElement myAvailability;
+	@FindBy(css="i.fa-lock")
+	private WebElement lockIcon;
+	@FindBy(css="user-profile-section[editing-locked] div[class=\"user-profile-section__header\"] span")
+	private WebElement editBtn;
+
+	@Override
+	public boolean isMyAvailabilityLockedNewUI() throws Exception
+	{
+		if(isElementLoaded(myAvailability,10)) {
+			waitForSeconds(5);
+			if (isElementLoaded(lockIcon, 5)){
+				return true;
+			}
+		}else{
+			SimpleUtils.fail("My Availability section not loaded under 'My Work Preference' Tab.", true);
+		}
+		return false;
+	}
+
+	//added by Haya
+	@Override
+	public void updateMyAvailability(String hoursType, int sliderIndex,
+										String leftOrRightSliderArrow, double durationhours, String repeatChanges) throws Exception
+	{
+		if (isElementLoaded(editBtn,30)){
+			click(editBtn);
+			updatePreferredOrBusyHoursDurationNew(sliderIndex,durationhours,leftOrRightSliderArrow, hoursType);
+			saveMyAvailabilityEditMode(repeatChanges);
+		}else{
+			SimpleUtils.fail("Edit button is not loaded!", false);
+		}
+	}
+
+	//Haya: the old method updatePreferredOrBusyHoursDuration has problem with xOffSet. So add copied one and update it.
+	private void updatePreferredOrBusyHoursDurationNew(int rowIndex, double durationhours, String leftOrRightDuration, String hoursType) throws Exception {
+		String preferredHoursTabText = "Preferred";
+		String busyHoursTabText = "Busy";
+		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
+			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
+		else
+			selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+
+		int xOffSet = (int)(durationhours *  40);
+		if(leftOrRightDuration.toLowerCase().contains("right")) {
+			if(hourCellsResizableCursorsRight.size() > rowIndex) {
+				scrollToElement(hourCellsResizableCursorsRight.get(rowIndex));
+				moveElement(hourCellsResizableCursorsRight.get(rowIndex), xOffSet);
+				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
+			}
+			else {
+				SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
+			}
+		}
+		else {
+			if(hourCellsResizableCursorsLeft.size() > rowIndex) {
+				moveElement(hourCellsResizableCursorsLeft.get(rowIndex), xOffSet);
+				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
+			}
+			else {
+				SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
+			}
+		}
+	}
 	
 	@Override
 	public ArrayList<HashMap<String, ArrayList<String>>> getMyAvailabilityPreferredAndBusyHours() {
@@ -1453,29 +1646,31 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 	
-	
-	private void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception {
+	//updated by Haya
+	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception {
 		if(isElementLoaded(myAvailabilityEditModeSaveBtn)) {
 			click(myAvailabilityEditModeSaveBtn);
 			if(availabilityChangesRepeat.toLowerCase().contains("repeat forward")) {
-				if(isElementLoaded(MyAvailabilityEditSaveRepeatForwordBtn))
-					click(MyAvailabilityEditSaveRepeatForwordBtn);
+				if(isElementLoaded(MyAvailabilityEditSaveRepeatForwordBtn)){
+					moveToElementAndClick(MyAvailabilityEditSaveRepeatForwordBtn);
+					click(myAvailabilityConfirmSubmitBtn);
+				}
+			} else {
+				if(isElementLoaded(MyAvailabilityEditSaveThisWeekOnlyBtn)){
+					moveToElementAndClick(MyAvailabilityEditSaveThisWeekOnlyBtn);
+					click(myAvailabilityConfirmSubmitBtn);
+				}
 			}
-			else {
-				if(isElementLoaded(MyAvailabilityEditSaveThisWeekOnlyBtn))
-					click(MyAvailabilityEditSaveThisWeekOnlyBtn);
-			}
-			if(! isElementLoaded(myAvailabilityEditModeHeader, 2)) 
+			if(!isElementLoaded(myAvailabilityEditModeHeader, 5))
 				SimpleUtils.pass("Profile Page: 'My Availability section' edit mode Saved successfully.");
 			else
 				SimpleUtils.fail("Profile Page: 'My Availability section' edit mode not Saved.", false);
-		}
-		else
+		} else{
 			SimpleUtils.fail("Profile Page: 'My Availability section' edit mode 'save' button not loaded.", true);
-		
+		}
 	}
 
-	
+
 	private void updatePreferredOrBusyHoursDuration(int rowIndex, int durationMinutes, String leftOrRightDuration, String hoursType) throws Exception {
 		String preferredHoursTabText = "Preferred";
 		String busyHoursTabText = "Busy";
@@ -1487,6 +1682,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		int xOffSet = ((durationMinutes / 60) * 100) / 2;
 		if(leftOrRightDuration.toLowerCase().contains("right")) {
 			if(hourCellsResizableCursorsRight.size() > rowIndex) {
+				scrollToElement(hourCellsResizableCursorsRight.get(rowIndex));
 				moveElement(hourCellsResizableCursorsRight.get(rowIndex), xOffSet);
 				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
 			}
@@ -1561,7 +1757,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	// Added by Nora: Time Off
 	@FindBy (className = "modal-content")
 	private WebElement newTimeOffWindow;
-	@FindBy (className = "lgnCheckBox")
+	@FindBy (css = "[checked=\"options.fullDay\"] .lgnCheckBox")
 	private List<WebElement> allDayCheckboxes;
 	@FindBy (css = "button.btn-sm")
 	private List<WebElement> smButtons;
@@ -1573,7 +1769,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> profileSubPageLabels;
 	@FindBy (css = "div.in-range")
 	private List<WebElement> selectedDates;
-	@FindBy (css = "b.text-blue")
+	@FindBy (css = "b.day-selected")
 	private List<WebElement> startNEndDates;
 	@FindBy (css = "[options=\"startOptions\"] [selected=\"selected\"]")
 	private List<WebElement> startTimes;
@@ -1586,20 +1782,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void verifyTimeIsCorrectAfterDeSelectAllDay() throws Exception {
-		String actualStartTime = null;
-		String actualEndTime = null;
+		String expectedStartTime = "10:00 AM";
+		String expectedEndTime = "3:00 PM";
 		List<String> selectedStartNEndTimes = getSelectedStartNEndTime();
 		if (selectedStartNEndTimes.size() == 0) {
 			SimpleUtils.fail("Failed to get the selected start and End time!", false);
 		}
-		String expectedStartTime = selectedStartNEndTimes.get(0);
-		String expectedEndTime = selectedStartNEndTimes.get(1);
-		if (areListElementVisible(startNEndTimes, 5) && startNEndTimes.size() == 2) {
-			actualStartTime = startNEndTimes.get(0).getText();
-			actualEndTime = startNEndTimes.get(1).getText();
-		}
-		if (expectedStartTime != null && expectedEndTime != null && actualStartTime != null && actualEndTime != null &&
-				expectedStartTime.equals(actualStartTime) && expectedEndTime.equals(actualEndTime)) {
+		String actualStartTime = selectedStartNEndTimes.get(0);
+		String actualEndTime = selectedStartNEndTimes.get(1);
+
+		if (expectedStartTime.equals(actualStartTime) && expectedEndTime.equals(actualEndTime)) {
 			SimpleUtils.pass("Start and End time are correct!");
 		}else {
 			SimpleUtils.fail("Start and End time are incorrect!", true);
@@ -1709,6 +1901,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	@Override
+	public String selectStartAndEndDateAtSameDay() throws Exception {
+		selectDate(10);
+		selectDate(10);
+		HashMap<String, String> timeOffDateWithYear = getTimeOffDateWithYear(10, 10);
+		String timeOffStartDateWithYear = timeOffDateWithYear.get("startDateWithYearTimeOff");
+		SimpleUtils.report("Create Time Off on: " + timeOffStartDateWithYear);
+		return timeOffStartDateWithYear;
+	}
+
+	@Override
 	public HashMap<String, List<String>> selectCurrentDayAsStartNEndDate() throws Exception {
 		HashMap<String, List<String>> selectedDateNTime = new HashMap<>();
 		List<String> startNEndTimes = new ArrayList<>();
@@ -1813,11 +2015,119 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return isLoaded;
 	}
-	
+
+	//added by Haya
+	@FindBy(xpath = "//div[@class=\"timeoff-requests ng-scope\"]//timeoff-list-item")
+	private List<WebElement> timeOffRequestItems;
+	@FindBy(css = "[timeoff=\"timeoff\"] .request-status-Approved")
+	private List<WebElement> approvedTimeOffRequests;
+	@FindBy(css = "[timeoff=\"timeoff\"] .request-status-Pending")
+	private List<WebElement> pendingTimeOffRequests;
+	@FindBy(css = ".user-profile-section .request-status-Pending")
+	private List<WebElement> pendingAvailabilityRequests;
+	@FindBy(css = ".request-buttons-approve")
+	private WebElement approveAvailabilityButton;
+
+	@Override
+	public void approveAllPendingAvailabilityRequest() throws Exception {
+		if (areListElementVisible(pendingAvailabilityRequests, 10)) {
+			for (WebElement pendingRequest : pendingAvailabilityRequests) {
+				clickTheElement(pendingRequest);
+				if (isElementLoaded(approveAvailabilityButton, 10)) {
+					clickTheElement(approveAvailabilityButton);
+					SimpleUtils.pass("Approve the pending availability request successfully!");
+				}
+			}
+		}
+	}
+
+	@Override
+	public void newApproveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration,
+														  String timeOffEndDuration, String action) throws Exception{
+		String timeOffStartDate = timeOffStartDuration.split(", ")[1].split(" ")[1];
+		String timeOffStartMonth = timeOffStartDuration.split(", ")[1].split(" ")[0];
+		String timeOffEndDate = timeOffEndDuration.split(", ")[1].split(" ")[1];
+		String timeOffEndMonth = timeOffEndDuration.split(", ")[1].split(" ")[0];
+		if(areListElementVisible(timeOffRequestItems,10) && timeOffRequestItems.size() > 0) {
+			for(WebElement timeOffRequest : timeOffRequestItems) {
+				WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
+				if(requestType.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
+					WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
+					String[] requestDateText = requestDate.getText().replace("\n", "").split("-");
+					if(requestDateText[0].toLowerCase().contains(timeOffStartMonth.toLowerCase())
+							&& requestDateText[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
+							&& requestDateText[1].toLowerCase().contains(timeOffEndMonth.toLowerCase())
+							&& requestDateText[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
+						click(timeOffRequest);
+						if(action.toLowerCase().contains("cancel")) {
+							if(isElementLoaded(timeOffRequestCancelBtn)) {
+								scrollToElement(timeOffRequestCancelBtn);
+								click(timeOffRequestCancelBtn);
+								SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+							} else {
+								SimpleUtils.fail("My Time Off: Time off request cancel button not loaded.", true);
+							}
+						}
+						else if(action.toLowerCase().contains("approve")) {
+							if(isElementLoaded(timeOffRequestApproveBtn)) {
+								click(timeOffRequestApproveBtn);
+								SimpleUtils.pass("My Time Off: Time off request Approve button clicked.");
+							} else{
+								SimpleUtils.fail("My Time Off: Time off request Approve button not loaded.", true);
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("Profile Page: No Time off request found.", false);
+	}
+
+	@Override
+	public void cancelAllTimeOff() throws Exception {
+		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
+			for(WebElement timeOffRequest : approvedTimeOffRequests) {
+				scrollToElement(timeOffRequest);
+				waitForSeconds(3);
+				clickTheElement(timeOffRequest);
+				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
+					scrollToElement(timeOffRequestCancelBtn);
+					click(timeOffRequestCancelBtn);
+					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+				}
+			}
+		}
+		if(areListElementVisible(pendingTimeOffRequests,10) && pendingTimeOffRequests.size() > 0) {
+			for(WebElement timeOffRequest : pendingTimeOffRequests) {
+				scrollToElement(timeOffRequest);
+				clickTheElement(timeOffRequest);
+				if(isElementLoaded(timeOffRequestCancelBtn,5)) {
+					scrollToElement(timeOffRequestCancelBtn);
+					click(timeOffRequestCancelBtn);
+					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+				}
+			}
+		}
+	}
+
+	@Override
+	public void rejectAllTimeOff() throws Exception {
+		if(areListElementVisible(approvedTimeOffRequests,10) && approvedTimeOffRequests.size() > 0) {
+			for(WebElement timeOffRequest : approvedTimeOffRequests) {
+				clickTheElement(timeOffRequest);
+				if(isElementLoaded(timeOffRejectBtn,5)) {
+					scrollToElement(timeOffRejectBtn);
+					clickTheElement(timeOffRejectBtn);
+					SimpleUtils.pass("My Time Off: Time off request cancel button clicked.");
+				}
+			}
+		}
+	}
+
 	@Override
 	public void approveOrRejectTimeOffRequestFromToDoList(String timeOffReasonLabel, String timeOffStartDuration, 
 			String timeOffEndDuration, String action) throws Exception{
-		
 		String timeOffStartDate = timeOffStartDuration.split(",")[0].split(" ")[1];
 		String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
 		String timeOffEndDate = timeOffEndDuration.split(",")[0].split(" ")[1];
@@ -1864,20 +2174,20 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		String nickName = "";
 		try{
 			if(isElementLoaded(userProfileImage, 5)){
-				click(userProfileImage);
+				clickTheElement(userProfileImage);
 				if (isElementLoaded(userNickName, 5)) {
 					nickName = userNickName.getText();
 				}
 				if(nickName != null && !nickName.isEmpty()){
 					SimpleUtils.pass("Get User's NickName: " + nickName + "Successfully");
 				}else{
-					SimpleUtils.fail("The NickName is null!", true);
+					SimpleUtils.fail("The NickName is null!", false);
 				}
 			}else{
-				SimpleUtils.fail("User Profile Image doesn't Load Successfully!", true);
+				SimpleUtils.fail("User Profile Image doesn't Load Successfully!", false);
 			}
 		}catch (Exception e){
-			SimpleUtils.fail("Get NickName of the logged in user failed", true);
+			SimpleUtils.fail("Get NickName of the logged in user failed", false);
 		}
 		return nickName;
 	}
@@ -1896,12 +2206,1482 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if (areListElementVisible(profileSubPageLabels, 5)) {
 			for (WebElement label : profileSubPageLabels) {
 				if (label.getText().equals(profilePageSubSectionLabel)) {
-					click(label);
+					clickTheElement(label);
 					break;
 				}
 			}
 		}else {
 			SimpleUtils.fail("Profile sub labels failed to load after clicking on Profile Image!", false);
 		}
+	}
+
+	//Added by Julie
+	@FindBy(css = ".user-readonly-details")
+	private List<WebElement> profileAddressInformation;
+
+	@FindBy(css = ".lgn-alert-message")
+	private WebElement alertMessage;
+
+	@FindBy(css = ".ng-binding[ng-if=\"noticePeriodToRequestTimeOff\"]")
+	private WebElement noticePeriodToRequestTimeOff;
+
+	@FindBy(css = ".ranged-calendar__day.is-today")
+	private WebElement todayInCalendarDates;
+
+	@FindBy(css = ".request-buttons-reject")
+	private WebElement cancelButtonOfPendingRequest;
+
+	@FindBy(css = ".lgn-alert-modal")
+	private WebElement alertDialog;
+
+	@FindBy(css = ".lgn-action-button-success")
+	private WebElement OKButton;
+
+	@FindBy(css = "lg-button[label=\"Edit\"]")
+	private WebElement editBtnOfMyShiftPreferences;
+
+	@FindBy(css = "lg-button[label=\"Save\"]")
+	private WebElement saveBtnOfMyShiftPreference;
+
+	private ArrayList<String> minMaxArray = new ArrayList<>();
+
+	public void checkUserProfileHomeAddress(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception {
+		if (areListElementVisible(profileAddressInformation, 5)) {
+			if (profileAddressInformation.get(1).getText().contains(streetAddress1) && profileAddressInformation.get(1).getText().contains(streetAddress2) && profileAddressInformation.get(1).getText().contains(city) && profileAddressInformation.get(1).getText().contains("CA") && profileAddressInformation.get(1).getText().contains(zip))
+				SimpleUtils.pass("Profile Page: User Profile Address already updated with value: '" + streetAddress1 + " " + streetAddress2 + " " + city + " " + state + " " + zip + "'.");
+			SimpleUtils.pass("Profile Page: User Profile changes reflects after saving successfully");
+		} else {
+			SimpleUtils.fail("Profile Page: User Profile Address not updated", true);
+		}
+	}
+
+	@Override
+	public void validateTheEditFunctionalityOnMyProfile(String streetAddress1, String streetAddress2, String city, String state, String zip) throws Exception {
+		clickOnEditUserProfilePencilIcon();
+		updateUserProfileHomeAddress(streetAddress1, streetAddress2, city, state, zip);
+		clickOnSaveUserProfileBtn();
+		scrollToTop();
+		checkUserProfileHomeAddress(streetAddress1, streetAddress2, city, state, zip);
+/*		if (isEngagementDetrailsSectionLoaded()) {
+			if (engagementDetailsSection.findElements(By.tagName("input")).size() == 0 || engagementDetailsSection.findElements(By.tagName("i")).size() == 0) {
+				SimpleUtils.pass("Profile Page: Engagement Details are not be editable as expected");
+			} else {
+				SimpleUtils.fail("Profile Page: Engagement Details can be editable", true);
+			}
+		} else {
+			SimpleUtils.fail("Engagement Details not loaded", true);
+		}*/
+	}
+
+	@Override
+	public void validateTheFeatureOfChangePassword(String oldPassword) throws Exception {
+		if (isElementLoaded(userProfileChangePasswordBtn, 5)) {
+			click(userProfileChangePasswordBtn);
+			SimpleUtils.pass("Profile Page: user profile 'Change Password' button clicked successfully.");
+
+			if (isElementLoaded(changePasswordPopUp, 10)) {
+				String newPassword = "";
+				String confirmPassword = "";
+				SimpleUtils.pass("Profile Page: user profile 'Change Password' popup loaded successfully.");
+
+				newPassword = getNewPassword(oldPassword);
+				confirmPassword = getNewPassword(oldPassword);
+				changePasswordPopUpOldPasswordField.sendKeys(oldPassword);
+				changePasswordPopUpNewPasswordField.sendKeys(newPassword);
+				changePasswordPopUpConfirmPasswordField.sendKeys(confirmPassword);
+				click(changePasswordPopUpPopUpSendBtn);
+				if (isElementLoaded(alertMessage, 10) && alertMessage.getText().contains("Password changed successfully")) {
+					SimpleUtils.pass("Profile Page: New password is saved successfully");
+				} else {
+					SimpleUtils.fail("Profile Page: New password may be not saved since there isn't alert message", true);
+				}
+			} else
+				SimpleUtils.fail("Profile Page: user profile 'Change Password' popup not loaded.", false);
+		} else {
+			SimpleUtils.fail("Profile Page: user profile 'Change Password' button failed to load", true);
+		}
+	}
+
+	@Override
+	public String getNewPassword(String oldPassword) throws Exception {
+		String newPassword = "";
+		if (oldPassword.equals("legionco1")) {
+			newPassword = "legionco2";
+			return newPassword;
+		} else if (oldPassword.equals("legionco2")) {
+			newPassword = "legionco1";
+			return newPassword;
+		} else {
+			SimpleUtils.fail("Please check the current user password", true);
+			return "";
+		}
+	}
+
+	@Override
+	public void validateTheUpdateOfShiftPreferences(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional) throws Exception {
+		updateMyShiftPreferenceData(canReceiveOfferFromOtherLocation, isVolunteersForAdditional);
+		minMaxArray = updateMyShiftPreferencesAvailabilitySliders();
+		saveMyShiftPreferences();
+		checkMyShiftPreferenceData(canReceiveOfferFromOtherLocation, isVolunteersForAdditional, minMaxArray);
+	}
+
+	public void checkMyShiftPreferenceData(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional, ArrayList<String> minMaxArray) throws Exception {
+		HashMap<String, String> shiftPreferenceData = getMyShiftPreferenceData();
+		if (minMaxArray != null && minMaxArray.size() == 6 && (minMaxArray.get(0) + " - " + minMaxArray.get(1)).equals(shiftPreferenceData.get("hoursPerWeek")))
+			SimpleUtils.pass("Shift Preference Data: 'Hours/wk' value('"
+					+ minMaxArray.get(0) + " - " + minMaxArray.get(1) + "/" + shiftPreferenceData.get("hoursPerWeek") + "') matched.");
+		else
+			SimpleUtils.fail("Shift Preference Data: 'Hours/wk' value('"
+					+ minMaxArray.get(0) + " - " + minMaxArray.get(1) + "/" + shiftPreferenceData.get("hoursPerShift") + "') not matched.", true);
+		if (minMaxArray != null && minMaxArray.size() == 6 && (minMaxArray.get(2) + " - " + minMaxArray.get(3)).equals(shiftPreferenceData.get("hoursPerShift")))
+			SimpleUtils.pass("Shift Preference Data: 'Hours/shift' value('"
+					+ minMaxArray.get(2) + " - " + minMaxArray.get(3) + "/" + shiftPreferenceData.get("hoursPerShift") + "') matched.");
+		else
+			SimpleUtils.fail("Shift Preference Data: 'Hours/shift' value('"
+					+ minMaxArray.get(2) + " - " + minMaxArray.get(3) + "/" + shiftPreferenceData.get("hoursPerShift") + "') not matched.", true);
+		if (minMaxArray != null && minMaxArray.size() == 6 && (minMaxArray.get(4) + " - " + minMaxArray.get(5)).equals(shiftPreferenceData.get("shiftsPerWeek")))
+			SimpleUtils.pass("Shift Preference Data: 'Shifts/wk' value('"
+					+ minMaxArray.get(4) + " - " + minMaxArray.get(5) + "/" + shiftPreferenceData.get("shiftsPerWeek") + "') matched.");
+		else
+			SimpleUtils.fail("Shift Preference Data: 'Shifts/wk' value('"
+					+ minMaxArray.get(4) + " - " + minMaxArray.get(5) + "/" + shiftPreferenceData.get("shiftsPerWeek") + "') not matched.", true);
+		if (isElementLoaded(volunteerMoreHoursCheckButton, 10)) {
+			if (isVolunteersForAdditional == SimpleUtils.convertYesOrNoToTrueOrFalse(shiftPreferenceData.get("volunteerForAdditionalWork")))
+				SimpleUtils.pass("Shift Preference Data: ''Volunteer Standby List' value('"
+						+ isVolunteersForAdditional + "/" + shiftPreferenceData.get("volunteerForAdditionalWork") + "') matched.");
+			else
+				SimpleUtils.fail("Shift Preference Data: 'Volunteer Standby List' value('"
+						+ isVolunteersForAdditional + "/" + shiftPreferenceData.get("volunteerForAdditionalWork") + "') not matched.", true);
+		} else  {
+			SimpleUtils.report("Shift Preference Data: ''Volunteer Standby List' is disabled and cannot be set");
+		}
+		if (canReceiveOfferFromOtherLocation == SimpleUtils.convertYesOrNoToTrueOrFalse(shiftPreferenceData.get("otherPreferredLocations")))
+			SimpleUtils.pass("Shift Preference Data: 'Other preferred locations' value('"
+					+ canReceiveOfferFromOtherLocation + "/" + shiftPreferenceData.get("otherPreferredLocations") + "') matched.");
+		else
+			SimpleUtils.fail("Shift Preference Data: 'Other preferred locations' value('"
+					+ canReceiveOfferFromOtherLocation + "/" + shiftPreferenceData.get("otherPreferredLocations") + "') not matched.", true);
+
+	}
+
+	public void updateMyShiftPreferenceData(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional) throws Exception {
+		clickOnEditMyShiftPreferenceButton();
+		if (isMyShiftPreferenceEditContainerLoaded()) {
+			SimpleUtils.pass("Profile Page: 'My Shift Preference' edit Container loaded successfully.");
+			updateReceivesShiftOffersForOtherLocationCheckButton(canReceiveOfferFromOtherLocation);
+			if(isElementLoaded(volunteerMoreHoursCheckButton, 10)) {
+				updateVolunteersForAdditionalWorkCheckButton(isVolunteersForAdditional);
+			} else
+				SimpleUtils.report("Profile Page: 'Volunteers for Additional Work' Checkbox is disabled due to admin setting");
+		} else
+			SimpleUtils.fail("Profile Page: 'My Shift Preference' edit Container not loaded.", true);
+	}
+
+	public ArrayList<String> updateMyShiftPreferencesAvailabilitySliders() throws Exception {
+		String startValue = "";
+		String endValue = "";
+		String maxValue = "";
+		String minValue = "";
+		WebElement minSlider = null;
+		WebElement maxSlider = null;
+		WebElement sliderType = null;
+		if (areListElementVisible(availabilitySliders, 20) && availabilitySliders.size() > 0) {
+			for (WebElement availabilitySlider : availabilitySliders) {
+				minSlider = availabilitySlider.findElement(By.cssSelector("span[ng-style=\"minPointerStyle\"]"));
+				maxSlider = availabilitySlider.findElement(By.cssSelector("span[ng-style=\"maxPointerStyle\"]"));
+				sliderType = availabilitySlider.findElement(By.cssSelector(".edit-pref-label"));
+				startValue = minSlider.getAttribute("aria-valuenow");
+				endValue = maxSlider.getAttribute("aria-valuenow");
+				maxValue = maxSlider.getAttribute("aria-valuemax");
+				minValue = minSlider.getAttribute("aria-valuemin");
+				if (Integer.parseInt(endValue) > Integer.parseInt(maxValue)) {
+					endValue = maxValue;
+				}
+				if (Integer.parseInt(startValue) < Integer.parseInt(minValue)) {
+					startValue = minValue;
+				}
+				// Update Min/Max Slider
+				if (areListElementVisible(availabilitySlider.findElements(By.tagName("li")), 5)) {
+					int index = (new Random()).nextInt(availabilitySlider.findElements(By.tagName("li")).size());
+					String value = availabilitySlider.findElements(By.tagName("li")).get(index).findElement(By.tagName("span")) == null ? "" : availabilitySlider.findElements(By.tagName("li")).get(index).findElement(By.tagName("span")).getText();
+					if (!startValue.equals(value) && !endValue.equals(value)) {
+						clickTheElement(availabilitySlider.findElements(By.tagName("li")).get(index));
+						startValue = minSlider.getAttribute("aria-valuenow");
+						endValue = maxSlider.getAttribute("aria-valuenow");
+						if (Integer.parseInt(endValue) > Integer.parseInt(maxValue)) {
+							endValue = maxValue;
+						}
+						if (Integer.parseInt(startValue) < Integer.parseInt(minValue)) {
+							startValue = minValue;
+						}
+						SimpleUtils.report("Select value: " + value + " successfully!");
+						SimpleUtils.report("Profile Page: 'Min Slider' " + startValue + " for " + sliderType.getText() + "  is selected.");
+						SimpleUtils.report("Profile Page: 'Max Slide' " + endValue + " for " + sliderType.getText() + " is selected");
+					}
+				} else {
+					SimpleUtils.fail("Slider elements failed to load!", true);
+				}
+				minMaxArray.add(startValue);
+				minMaxArray.add(endValue);
+			}
+		} else
+			SimpleUtils.fail("Profile Page: Edit My Shift Preferences - Availability Sliders not loaded.", true);
+		return minMaxArray;
+	}
+
+	@Override
+	public void validateTheUpdateOfAvailability(String hoursType, int sliderIndex, String leftOrRightDuration,
+												int durationMinutes, String repeatChanges) throws Exception {
+		boolean isMyAvailabilityLocked = isMyAvailabilityLocked();
+		if (isMyAvailabilityLocked) {
+			ArrayList<HashMap<String, ArrayList<String>>> myAvailabilityPreferredAndBusyHoursBeforeUpdate = getMyAvailabilityPreferredAndBusyHours();
+			String availabilityPreferredAndBusyHoursHTMLBefore = "<table>";
+			for (HashMap<String, ArrayList<String>> preferredAndBusyHours : myAvailabilityPreferredAndBusyHoursBeforeUpdate) {
+				availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "<tr>";
+				for (Map.Entry<String, ArrayList<String>> entry : preferredAndBusyHours.entrySet()) {
+					if (entry.getValue().size() > 0) {
+						availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "<td><b>"
+								+ entry.getKey() + "</b></td>";
+						for (String value : entry.getValue()) {
+							availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "<td>"
+									+ value + "</td>";
+						}
+						availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "</td>";
+					}
+				}
+				availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "</tr>";
+			}
+			availabilityPreferredAndBusyHoursHTMLBefore = availabilityPreferredAndBusyHoursHTMLBefore + "</table>";
+
+			if (myAvailabilityPreferredAndBusyHoursBeforeUpdate.size() > 0)
+				SimpleUtils.pass("Profile page: 'My Availability Preferred & Busy Hours Duration Per Day <b>Before Updating</b> loaded as Below.<br>"
+						+ availabilityPreferredAndBusyHoursHTMLBefore);
+			else
+				SimpleUtils.fail("Profile page: 'My Availability Preferred & Busy Hours Duration not loaded", true);
+
+			//Update Preferred And Busy Hours
+			updateLockedAvailabilityPreferredOrBusyHoursSlider(hoursType, sliderIndex, leftOrRightDuration,
+					durationMinutes, repeatChanges);
+
+			ArrayList<HashMap<String, ArrayList<String>>> myAvailabilityPreferredAndBusyHoursAfterUpdate = getMyAvailabilityPreferredAndBusyHours();
+			String availabilityPreferredAndBusyHoursHTMLAfter = "<table>";
+			for (HashMap<String, ArrayList<String>> preferredAndBusyHours : myAvailabilityPreferredAndBusyHoursAfterUpdate) {
+				availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "<tr>";
+				for (Map.Entry<String, ArrayList<String>> entry : preferredAndBusyHours.entrySet()) {
+					if (entry.getValue().size() > 0) {
+						availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "<td><b>"
+								+ entry.getKey() + "</b></td>";
+						for (String value : entry.getValue()) {
+							availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "<td>"
+									+ value + "</td>";
+						}
+						availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "</td>";
+					}
+				}
+				availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "</tr>";
+			}
+			availabilityPreferredAndBusyHoursHTMLAfter = availabilityPreferredAndBusyHoursHTMLAfter + "</table>";
+
+			if (myAvailabilityPreferredAndBusyHoursAfterUpdate.size() > 0)
+				SimpleUtils.pass("Profile page: 'My Availability Preferred & Busy Hours Duration Per Day <b>After Updating</b> loaded as Below.<br>"
+						+ availabilityPreferredAndBusyHoursHTMLAfter);
+			else
+				SimpleUtils.fail("Profile page: 'My Availability Preferred & Busy Hours Duration not loaded", true);
+		} else
+			SimpleUtils.report("Profile Page: 'My Availability Section not locked for the week '"
+					+ getMyAvailabilityData().get("activeWeek") + "'");
+	}
+
+	public int verifyCannotSelectDates() throws Exception {
+		int cannotSelectDates = 0;
+		int periodToRequestTimeOff = getPeriodToRequestTimeOff();
+		if (areListElementVisible(calendarDates, 10)) {
+			for (WebElement calendarDate : calendarDates) {
+				if (calendarDate.getAttribute("class").contains("can-not-select")) {
+					cannotSelectDates++;
+				}
+			}
+			if (Integer.parseInt(calendarDates.get(cannotSelectDates).getText().trim()) == Integer.parseInt(todayInCalendarDates.getText().trim()) + periodToRequestTimeOff) {
+				SimpleUtils.pass("New Time Off Request: It should not be able to select a date within " + periodToRequestTimeOff + " days from today(Can be changed as per the Control settings)");
+			} else {
+				SimpleUtils.fail("New Time Off Request: It can be able to select a date within " + periodToRequestTimeOff + " days from today", true);
+			}
+		} else
+			SimpleUtils.fail("New Time Off Request: It failed to load", true);
+		return cannotSelectDates;
+	}
+
+	public int getPeriodToRequestTimeOff() throws Exception {
+		int periodToRequestTimeOff = 0;
+		if (isElementLoaded(noticePeriodToRequestTimeOff, 5)) {
+			Pattern pattern = Pattern.compile("\\d+");
+			Matcher matcher = pattern.matcher(noticePeriodToRequestTimeOff.getText());
+			while (matcher.find()) {
+				periodToRequestTimeOff = Integer.valueOf(matcher.group(0));
+			}
+		}
+		return periodToRequestTimeOff;
+	}
+
+	public void reasonsOfLeaveOnNewTimOffRequest() throws Exception {
+		if (areListElementVisible(timeOffReasons, 10) && timeOffReasons.size() > 0) {
+			for (WebElement timeOffReason : timeOffReasons) {
+				if (timeOffReason.isDisplayed())
+					SimpleUtils.pass("New Time Off Request: " + timeOffReason.getText() + " is displayed");
+				else
+					SimpleUtils.fail("New Time Off Request: " + timeOffReason.getText() + " isn't displayed", true);
+			}
+		} else if (areListElementVisible(calendarDates, 10))
+			SimpleUtils.report("New Time Off Request: No time off reason in the request required per the control settings");
+		else
+			SimpleUtils.fail("New Time Off Request: Reasons failed to load", true);
+	}
+
+	@Override
+	public String selectRandomReasonOfLeaveOnNewTimeOffRequest() throws Exception {
+		String timeoffReasonLabel = "";
+		if (areListElementVisible(timeOffReasons, 10)) {
+			int index = (new Random()).nextInt(timeOffReasons.size());
+			timeoffReasonLabel = timeOffReasons.get(index).getText().trim();
+			SimpleUtils.pass("New Time Off Request: " + timeoffReasonLabel + " is selected");
+		} else
+			SimpleUtils.fail("New Time Off Request: Reasons failed to load", true);
+		return timeoffReasonLabel;
+	}
+
+	public HashMap<String, String> getTimeOffDate() throws Exception {
+		int cannotSelectDates = verifyCannotSelectDates();
+		int daysStartFromToday = 0;
+		int daysEndFromToday = 0;
+		int periodToRequestTimeOff = getPeriodToRequestTimeOff();
+		daysStartFromToday = new Random().ints(1,periodToRequestTimeOff,calendarDates.size() - cannotSelectDates).findFirst().getAsInt();
+		daysEndFromToday = daysStartFromToday;
+		selectDate(daysStartFromToday);
+		selectDate(daysEndFromToday);
+		HashMap<String, String> timeOffDate = getTimeOffDate(daysStartFromToday, daysEndFromToday);
+		return timeOffDate;
+	}
+
+	@Override
+	public void createNewTimeOffRequestAndVerify(String timeOffReasonLabel, String timeOffExplanationText) throws Exception {
+		selectTimeOffReason(timeOffReasonLabel);
+		updateTimeOffExplanation(timeOffExplanationText);
+		HashMap<String, String> timeOffDate = getTimeOffDate();
+		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
+		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
+		setTimeOffStartTime(timeOffStartDate);
+		setTimeOffEndTime(timeOffEndDate);
+		scrollToBottom();
+		clickOnSaveTimeOffRequestBtn();
+		String expectedRequestStatus = "PENDING";
+		String requestStatus = getTimeOffRequestStatusByExplanationText(timeOffExplanationText);
+		if (requestStatus.contains(expectedRequestStatus))
+			SimpleUtils.pass("Profile Page: New Time Off Request reflects in '" + requestStatus + "' successfully after saving");
+		else
+			SimpleUtils.fail("Profile Page: New Time Off Request status is not '" + expectedRequestStatus
+					+ "', status found as '" + requestStatus + "'", true);
+	}
+
+	@Override
+	public void validateTheFunctionalityOfTimeOffCancellation() throws Exception {
+		Boolean pendingRequestCanBeCancelled = pendingRequestCanBeCancelled();
+		if (pendingRequestCanBeCancelled) {
+			SimpleUtils.pass("Profile Page: Time off request is cancelled successfully");
+		} else {
+			SimpleUtils.report("Profile Page: No Pending Time off request found or can be cancelled. We will create a new time off");
+			clickOnCreateTimeOffBtn();
+			String timeOffReasonLabel = selectRandomReasonOfLeaveOnNewTimeOffRequest();
+			String timeOffExplanation = (new Random()).nextInt(100) + "random" + (new Random()).nextInt(100) + "random" + (new Random()).nextInt(100);
+			createNewTimeOffRequestAndVerify(timeOffReasonLabel, timeOffExplanation);
+			String requestStatus = getTimeOffRequestStatusByExplanationText(timeOffExplanation);
+			if (requestStatus.toLowerCase().contains("pending")) {
+				pendingRequestCanBeCancelled = pendingRequestCanBeCancelled();
+				if (pendingRequestCanBeCancelled) {
+					SimpleUtils.pass("Profile Page: Time off request is cancelled successfully");
+				} else {
+					SimpleUtils.fail("Profile Page: Failed to cancel a pending time off request ", true);
+				}
+			} else
+				SimpleUtils.fail("Profile Page: Failed to create a new time off", true);
+		}
+	}
+
+	public boolean pendingRequestCanBeCancelled() throws Exception {
+		Boolean pendingRequestCanBeCancelled = false;
+		for (int i = 0; i < timeOffRequestRows.size(); i++) {
+			WebElement requestStatus = timeOffRequestRows.get(i).findElement(By.cssSelector("span.request-status"));
+			String requestStatusText = requestStatus.getText();
+			if (requestStatusText.toLowerCase().contains("pending")) {
+				clickTheElement(requestStatus);
+				if (isElementLoaded(cancelButtonOfPendingRequest, 5)) {
+					clickTheElement(cancelButtonOfPendingRequest);
+					if (timeOffRequestRows.get(i).findElement(By.cssSelector(".request-status-Cancelled")).getText().toLowerCase().contains("cancelled")) {
+						SimpleUtils.pass("Profile Page: The pending time off request is cancelled successfully");
+						pendingRequestCanBeCancelled = true;
+						break;
+					} else {
+						SimpleUtils.fail("Profile Page: The pending time off request failed to cancel", true);
+					}
+				}
+			}
+		}
+		return pendingRequestCanBeCancelled;
+	}
+
+	@FindBy(css = "work-preference-management")
+	private WebElement workPreferenceSection;
+	public void clickOnEditMyShiftPreferenceButton()  throws Exception {
+		if(isElementLoaded(workPreferenceSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")), 10))
+			click(workPreferenceSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+		else
+			SimpleUtils.fail("Profile Page: 'Edit' button not loaded under 'My Shift Preference' Header.", false);
+	}
+
+	private void saveMyShiftPreferences() throws Exception {
+		if(isElementLoaded(saveBtnOfMyShiftPreference, 10)) {
+			click(saveBtnOfMyShiftPreference);
+			if(! isMyShiftPreferenceEditContainerLoaded())
+				SimpleUtils.pass("Profile Page: 'My Shift Preference' data saved successfully.");
+			else
+				SimpleUtils.pass("Profile Page: Unable to save 'My Shift Preference' data.");
+		} else
+			SimpleUtils.fail("Profile Page: 'My Shift Preference' edit container 'Save' button not loaded.", false);
+	}
+
+	@FindBy(xpath = "//div[contains(text(),\"MINOR\")]")
+	private WebElement minorField;
+
+	@FindBy(xpath = "//div[contains(text(),\"MINOR\")]/../div[2]")
+	private WebElement minorValue;
+
+	@FindBy(css = ".lg-toast__highlight-text")
+	private WebElement popupMessage;
+
+
+	@Override
+	public boolean isMINORDisplayed() throws Exception {
+		Boolean isMINORDisplayed = false;
+		if(isElementLoaded(minorField,10))
+			isMINORDisplayed = true;
+		else
+			SimpleUtils.fail("Profile Page: MINOR field failed to load",false);
+		return isMINORDisplayed;
+	}
+
+	@Override
+	public boolean isMINORYesOrNo() throws Exception {
+		Boolean isMINORYesOrNo = false;
+		if(isElementLoaded(minorValue,10)) {
+			if (minorValue.getText().contains("Yes"))
+				isMINORYesOrNo = true;
+		} else
+			SimpleUtils.fail("Profile Page: MINOR value failed to load",false);
+		return isMINORYesOrNo;
+	}
+
+	@Override
+	public void verifyMINORField(boolean isMinor) throws Exception {
+		if (isMINORDisplayed())
+			SimpleUtils.pass("Profile Page: Minor filed is displayed on TM Profile");
+		else
+			SimpleUtils.fail("Profile Page: Minor filed failed to display on TM Profile",false);
+		if (isMINORYesOrNo()) {
+			if (isMinor == true)
+				SimpleUtils.pass("Profile Page: When this tm is minor, it shows \"Yes\" successfully");
+			else
+				SimpleUtils.fail("Profile Page: When this tm is minor, it failed to display \"Yes\"", false);
+		} else {
+			if (isMinor == false)
+				SimpleUtils.pass("Profile Page: When this tm is minor, it shows \"No\" successfully");
+			else
+				SimpleUtils.fail("Profile Page: When this tm is minor, it failed to display \"No\"", false);
+		}
+	}
+
+	@FindBy(css = "[ng-if=\"tm.isMinor\"] .profile-heading")
+	private WebElement schoolCalendar;
+
+	@FindBy(css = "[options=\"schoolCalendars\"]")
+	private WebElement schoolCalendarOptions;
+
+	@FindBy(css = "[options=\"schoolCalendars\"] select option")
+	private List<WebElement> schoolCalendarList;
+
+	@FindBy(css = "[label=\"Save\"] button")
+	private List<WebElement> saveBtnsOfProfile;
+
+	@FindBy(css = "[on-action=\"editProfile()\"] [label=\"Edit\"] button")
+	private WebElement editBtnOfProfile;
+
+	@FindBy(xpath = "//div[contains(text(),\"NAME\")]/../span")
+	private WebElement nameOfProfile;
+
+	@Override
+	public void verifySMCanSelectACalendarForMinor() throws Exception {
+		if (isElementLoaded(schoolCalendar,10)) {
+			SimpleUtils.pass("Profile Page: There should be \"School Calendar\" section loaded");
+			if (isElementLoaded(editBtnOfProfile,5)) {
+				click(editBtnOfProfile);
+				if (isElementLoaded(schoolCalendarOptions,5) && schoolCalendarList.size() > 1) {
+					click(schoolCalendarOptions);
+					int index = (new Random()).nextInt(schoolCalendarList.size() - 1) + 1;
+					if (!schoolCalendarList.get(index).getText().trim().equals("None")) {
+						click(schoolCalendarList.get(index));
+						SimpleUtils.pass("Profile Page: The calendars all are loaded and can be selected");
+					}
+					if (areListElementVisible(saveBtnsOfProfile,5)) {
+						clickTheElement(saveBtnsOfProfile.get(0));
+						if (isElementLoaded(popupMessage,5) && popupMessage.getText().contains("Success"))
+							SimpleUtils.pass("Profile Page: The selected calendar is saved successfully");
+						else
+							SimpleUtils.fail("Profile Page: No success message when saving the profile",false);
+					} else
+						SimpleUtils.fail("Profile Page: The selected calendar failed to save",false);
+				} else
+					SimpleUtils.fail("Profile Page: No calendar can be selected, please create one firstly",false);
+			} else
+					SimpleUtils.fail("Profile Page: \"Edit\" button failed to load",false);
+			} else
+				SimpleUtils.fail("Profile Page: Cannot find \"School Calendar\" section for a minor",false);
+	}
+
+	@FindBy(css = "[options=\"schoolCalendars\"] select")
+	private WebElement schoolCalendarSelect;
+	@FindBy(css = ".profile-assigned-school")
+	private WebElement assignedCalendar;
+
+	@Override
+	public void selectAGivenCalendarForMinor(String givenCalendar) throws Exception {
+		if (isElementLoaded(editBtnOfProfile,5)) {
+			clickTheElement(editBtnOfProfile);
+			selectByVisibleText(schoolCalendarSelect, givenCalendar);
+			if (areListElementVisible(saveBtnsOfProfile,5)) {
+				clickTheElement(saveBtnsOfProfile.get(0));
+				if (isElementLoaded(popupMessage,5) && popupMessage.getText().contains("Success"))
+					SimpleUtils.pass("Profile Page: The selected calendar is saved successfully");
+				else
+					SimpleUtils.fail("Profile Page: No success message when saving the profile",false);
+				waitForSeconds(3);
+				if (isElementLoaded(assignedCalendar, 10) && assignedCalendar.getText().trim().equalsIgnoreCase(givenCalendar))
+					SimpleUtils.pass("Profile Page: The given calendar is selected successfully");
+				else
+					SimpleUtils.fail("Profile Page: The given calendar failed to select",false);
+			} else
+				SimpleUtils.fail("Profile Page: The selected calendar failed to save",false);
+		} else
+			SimpleUtils.fail("Profile Page: \"Edit\" button failed to load",false);
+	}
+
+	@Override
+	public HashMap<String, String> getUserProfileName() throws Exception {
+		HashMap<String, String> userProfileNames = new HashMap<>();
+		String fullName = "";
+		String nickName = "";
+		if (isElementLoaded(nameOfProfile, 5)) {
+			String[] allNames = nameOfProfile.getText().replaceAll("\"", "").trim().split("\n");
+			fullName = allNames[0];
+			if(allNames.length ==2){
+				nickName = allNames[1];
+			}
+			userProfileNames.put("fullName", fullName);
+			userProfileNames.put("nickName", nickName);
+			SimpleUtils.pass("Get user profile names successfully! ");
+		} else
+			SimpleUtils.fail("Names on user profile failed to load! ", false);
+		return userProfileNames;
+	}
+
+	//added by Haya
+	@FindBy(css = "span[ng-click=\"getNextWeekData()\"]")
+	private WebElement nextWeekBtn;
+	@Override
+	public void clickNextWeek() throws Exception {
+		if (isElementLoaded(nextWeekBtn,10)){
+			click(nextWeekBtn);
+		}
+	}
+
+	//added by Haya
+	@Override
+	public String getAvailabilityWeek() throws Exception {
+		WebElement dateSpan = myAvailability.findElement(By.cssSelector(".week-nav-icon-main.ng-binding"));
+		if (isElementLoaded(dateSpan,5)){
+			return dateSpan.getText();
+		} else {
+			SimpleUtils.fail("Fail to load date info for availability!", true);
+		}
+		return null;
+	}
+
+	@FindBy(css = "[box-title=\"User Profile\"]")
+	private WebElement userProfileSection;
+
+	@FindBy(css = "[box-title=\"HR Profile Information\"]")
+	private WebElement hrProfileInfoSection;
+
+	@FindBy(css = "[box-title=\"Legion Information\"]")
+	private WebElement legionInfoSection;
+
+	@FindBy(css = "[box-title=\"Actions\"]")
+	private WebElement actionsSection;
+
+	@FindBy(css = "[value=\"tm.worker.pictureUrl\"]")
+	private WebElement primaryAvatarInUserProfileSection;
+
+	@FindBy(css = "[value=\"tm.worker.businessPictureUrl\"]")
+	private WebElement businessAvatarInUserProfileSection;
+
+	@FindBy(css = "div.user-readonly-details")
+	private List<WebElement> userProfileInfoInUserProfileSection;
+
+	@FindBy(css = ".quick-engagement .label")
+	private List<WebElement> fieldsInHRProfileInformationSection;
+
+	@FindBy(css = "[box-title=\"Legion Information\"] .col-xs-6.label")
+	private List<WebElement> fieldsInLegionInformationSection;
+
+	@FindBy(css = ".information-section.badge-section div")
+	private WebElement badgesSectionInLegionInformationSection;
+
+	@FindBy(css = "lg-button[ng-click=\"invite()\"]")
+	private WebElement inviteToLegionButton;
+
+	@FindBy(css = "div.invitation-status")
+	private WebElement inviteMessageInActionsSection;
+
+	@FindBy(css = "lg-button[ng-click=\"$ctrl.conformation($ctrl.sendUsername)\"]")
+	private WebElement sendUsernameInActionsSection;
+
+	@FindBy(css = "lg-button[ng-click=\"$ctrl.conformation($ctrl.resetPassword)\"]")
+	private WebElement resetPasswordInActionsSection;
+
+	@FindBy(css = "lg-button[ng-click=\"$ctrl.onAction()\"]")
+	private WebElement editUserProfileButton;
+
+	@FindBy(css = "button.lgn-action-button-light")
+	private WebElement syncTMInfoButton;
+
+	@FindBy(css = "lg-button[ng-click=\"changePassword()\"]")
+	private WebElement changePasswordButton;
+
+	@FindBy(css = ".console-navigation-item-label")
+	private List<WebElement> navigationTabs;
+
+
+
+	public void verifyEditUserProfileButtonIsLoaded() throws Exception {
+		if(isElementLoaded(editUserProfileButton, 5)){
+			SimpleUtils.pass("User Profile page: Edit user profile button loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: Edit user profile button fail to load!", false);
+		}
+	}
+
+	public void verifySyncTMInfoButtonIsLoaded() throws Exception {
+		if(isElementLoaded(syncTMInfoButton, 5)){
+			SimpleUtils.pass("User Profile page: Sync TM info button loaded successfully! ");
+		} else {
+			SimpleUtils.report("User Profile page: Sync TM info button  not loaded, please check the integration setting!");
+		}
+	}
+
+	public void verifyUserProfileSectionIsLoaded() throws Exception {
+		if(isElementLoaded(userProfileSection, 5)){
+			SimpleUtils.pass("User Profile page: User Profile section loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: User Profile section fail to load!", false);
+		}
+	}
+
+	public void verifyHRProfileInformationSectionIsLoaded() throws Exception {
+		if(isElementLoaded(hrProfileInfoSection, 5)){
+			SimpleUtils.pass("User Profile page: HR Profile Information section loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: HR Profile Information section fail to load!", false);
+		}
+	}
+
+	public void verifyLegionInformationSectionIsLoaded() throws Exception {
+		if(isElementLoaded(legionInfoSection, 5)){
+			SimpleUtils.pass("User Profile page: Legion Information section loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: Legion Information section fail to load!", false);
+		}
+	}
+
+	public void verifyActionSectionIsLoaded() throws Exception {
+		if(isElementLoaded(actionsSection, 5)){
+			SimpleUtils.pass("User Profile page: Actions section loaded successfully! ");
+		} else {
+			SimpleUtils.fail("User Profile page: Actions section fail to load!", false);
+		}
+	}
+
+	public void verifyFieldsInUserProfileSection() throws Exception {
+		if (isElementLoaded(primaryAvatarInUserProfileSection, 5) &&
+				isElementLoaded(businessAvatarInUserProfileSection, 5) &&
+				areListElementVisible(userProfileInfoInUserProfileSection, 5)
+				&& userProfileInfoInUserProfileSection.size() ==3
+				&& userProfileInfoInUserProfileSection.get(0).findElement(By.cssSelector(".userProfileHeading")).getText().equalsIgnoreCase("Name")
+				&& userProfileInfoInUserProfileSection.get(1).findElement(By.cssSelector(".userProfileHeading")).getText().equalsIgnoreCase("Address")
+				&& userProfileInfoInUserProfileSection.get(2).findElement(By.cssSelector(".userProfileHeading")).getText().equalsIgnoreCase("CONTACT INFORMATION")) {
+			SimpleUtils.pass("User Profile page: The fields in User Profile section display correctly! ");
+		} else
+			SimpleUtils.fail("User Profile page: The fields in User Profile section failed to display !", false);
+	}
+
+	public void verifyFieldsInHRProfileInformationSection() throws Exception {
+		if (areListElementVisible(fieldsInHRProfileInformationSection, 5)
+				&& fieldsInHRProfileInformationSection.size() == 13
+				&& fieldsInHRProfileInformationSection.get(0).getText().equalsIgnoreCase("Name")
+				&& fieldsInHRProfileInformationSection.get(1).getText().equalsIgnoreCase("JOB TITLE")
+				&& fieldsInHRProfileInformationSection.get(2).getText().equalsIgnoreCase("MANAGER NAME")
+				&& fieldsInHRProfileInformationSection.get(3).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("HOME STORE")
+				&& fieldsInHRProfileInformationSection.get(4).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("EMPLOYEE ID")
+				&& fieldsInHRProfileInformationSection.get(5).getText().equalsIgnoreCase("DATE HIRED")
+				&& fieldsInHRProfileInformationSection.get(6).getText().equalsIgnoreCase("EMPLOYMENT TYPE")
+				&& fieldsInHRProfileInformationSection.get(7).getText().equalsIgnoreCase("HOURLY RATE")
+				&& fieldsInHRProfileInformationSection.get(8).getText().equalsIgnoreCase("EMPLOYMENT STATUS")
+				&& fieldsInHRProfileInformationSection.get(9).getText().equalsIgnoreCase("EXEMPT")
+				&& fieldsInHRProfileInformationSection.get(10).getText().equalsIgnoreCase("ADDRESS")
+				&& fieldsInHRProfileInformationSection.get(11).getText().equalsIgnoreCase("MINOR")
+				&& fieldsInHRProfileInformationSection.get(12).getText().equalsIgnoreCase("CONTACT INFORMATION")) {
+			SimpleUtils.pass("User Profile page: The fields in HR Profile Information section display correctly! ");
+		} else
+			SimpleUtils.fail("User Profile page: The fields in HR Profile Information section failed to display !", false);
+	}
+
+	public void verifyFieldsInLegionInformationSection() throws Exception {
+		boolean isTimeSheetTabLoaded = isTimeSheetLoaded();
+		if (isTimeSheetTabLoaded) {
+			if (areListElementVisible(fieldsInLegionInformationSection, 5)
+					&& fieldsInLegionInformationSection.size() == 3
+					&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
+					&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
+					&& fieldsInLegionInformationSection.get(2).findElement(By.cssSelector(".highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("TIMECLOCK PIN")
+					&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
+					&& badgesSectionInLegionInformationSection.getText().equalsIgnoreCase("Badges")) {
+				SimpleUtils.pass("User Profile page: The fields in Legion Information section display correctly! ");
+			} else
+				SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
+		} else {
+			if (areListElementVisible(fieldsInLegionInformationSection, 5)
+					&& fieldsInLegionInformationSection.size() == 2
+					&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
+					&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
+					&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
+					&& badgesSectionInLegionInformationSection.getText().equalsIgnoreCase("Badges")) {
+				SimpleUtils.pass("User Profile page: The fields in Legion Information section display correctly! ");
+			} else
+				SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
+		}
+	}
+
+	private boolean isTimeSheetLoaded() throws Exception {
+		boolean isLoaded = false;
+		if (areListElementVisible(navigationTabs, 5)) {
+			for (WebElement navigationTab : navigationTabs) {
+				if (navigationTab.getText().toLowerCase().equals("timesheet")) {
+					isLoaded = true;
+					SimpleUtils.report("Timesheet tab is loaded!");
+					break;
+				}
+			}
+		}
+		return isLoaded;
+	}
+
+	public void verifyContentsInActionsSection() throws Exception {
+		if (isElementLoaded(inviteToLegionButton, 5)){
+			if (isElementLoaded(inviteMessageInActionsSection, 5)
+					&& (inviteMessageInActionsSection.getText().contains("Not invited yet")|| inviteMessageInActionsSection.getText().contains("Invited to onboard"))){
+				SimpleUtils.pass("User Profile page: The invite message in Actions section display correctly! ");
+			} else{
+				SimpleUtils.fail("User Profile page: The invite message in Action section failed to display! ", false);
+			}
+		} else{
+			if (isElementLoaded(sendUsernameInActionsSection, 5) && isElementLoaded(resetPasswordInActionsSection, 5)){
+				SimpleUtils.pass("User Profile page: The Send Username and Reset Password buttons in Actions section display correctly! ");
+			} else {
+				SimpleUtils.fail("User Profile page: The Send Username and Reset Password buttons in Actions section failed to display !", false);
+			}
+		}
+
+	}
+
+	public void verifyContentsInActionsSectionInTMView() throws Exception {
+		if (isElementLoaded(changePasswordButton, 5)){
+			SimpleUtils.pass("User Profile page: The change password button in Actions section display correctly! ");
+		} else{
+			SimpleUtils.fail("User Profile page: The change password button in Actions section display correctly! ", false);
+		}
+	}
+
+	//added by Haya
+	@FindBy(css = "span[ng-if=\"$ctrl.input.$error.required\"]")
+	private List<WebElement> mandatoryFieldsErrorMessage;
+	@Override
+	public void isRequiredErrorShowUp(String field) throws Exception {
+		if (areListElementVisible(mandatoryFieldsErrorMessage,10) && mandatoryFieldsErrorMessage.size()>0){
+			for (WebElement element: mandatoryFieldsErrorMessage){
+				if (element.getText().contains(field) && isSaveBtnDisabled()){
+					SimpleUtils.pass(field+" is a mandatory field!");
+				}
+			}
+		} else {
+			SimpleUtils.fail("No mandatory fields!", false);
+		}
+	}
+
+	@Override
+	public boolean isSaveBtnDisabled() throws Exception {
+		if(areListElementVisible(profileSection.findElements(By.cssSelector("button[disabled=\"disabled\"]")), 5)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public void verifyHRProfileSectionIsNotEditable() throws Exception {
+		if (areListElementVisible(profileSection.findElements(By.cssSelector("sub-content-box[box-title=\"HR Profile Information\"] input")),5) ||
+				areListElementVisible(profileSection.findElements(By.cssSelector("sub-content-box[box-title=\"HR Profile Information\"] select")),5)){
+			SimpleUtils.fail("Fields in HR profile section should not be editable!",false);
+		} else {
+			String s = profileSection.findElement(By.cssSelector("sub-content-box[box-title=\"HR Profile Information\"]")).getText();
+			if (s.contains("NAME")&&s.contains("JOB TITLE")&&s.contains("MANAGER NAME")&&s.contains("HOME STORE")&&s.contains("EMPLOYEE ID")&&s.contains("DATE HIRED")&&s.contains("EMPLOYMENT TYPE")
+					&&s.contains("HOURLY RATE")&&s.contains("EMPLOYMENT STATUS")&&s.contains("EXEMPT")&&s.contains("ADDRESS")&&s.contains("MINOR")&&s.contains("CONTACT INFORMATION")){
+				SimpleUtils.pass("Fields in HR profile section are existed and not editable!");
+			} else {
+				SimpleUtils.fail("Some fields you want in HR profile section are not loaded!",false);
+			}
+		}
+	}
+
+	@Override
+	public void verifyLegionInfoSectionIsNotEditable() throws Exception {
+		if (areListElementVisible(profileSection.findElements(By.cssSelector("sub-content-box[box-title=\"Legion Information\"] input")),5) ||
+				areListElementVisible(profileSection.findElements(By.cssSelector("sub-content-box[box-title=\"Legion Information\"] select")),5)){
+			SimpleUtils.fail("Fields in Legion Information section should not be editable!",false);
+		} else {
+			String s =profileSection.findElement(By.cssSelector("sub-content-box[box-title=\"Legion Information\"]")).getText();
+			if (s.contains("STATUS")&&s.contains("SCHEDULING POLICY GROUP")&&s.contains("TIMECLOCK PIN")){
+				SimpleUtils.pass("Fields in Legion Information section are existed and not editable!");
+			} else {
+				SimpleUtils.fail("Some fields you want in HR profile section are not loaded!",false);
+			}
+		}
+	}
+
+	@Override
+	public void verifyTheEmailFormatInProfilePage(List<String> testEmails) throws Exception {
+		String regex = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}" +
+				"\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,10}))$";
+		String errorMessage = "Email is invalid.";
+		if (isElementEnabled(profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")), 5) && testEmails.size() > 0) {
+			for (String testEmail : testEmails) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).sendKeys(testEmail);
+				if (!testEmail.matches(regex)) {
+					if(areListElementVisible(saveBtnsOfProfile, 5)){
+						scrollToElement(saveBtnsOfProfile.get(0));
+						clickTheElement(saveBtnsOfProfile.get(0));
+						verifyAlertDialog();
+					}
+				}
+			}
+		}else {
+			SimpleUtils.fail("Email Input failed to load!", true);
+		}
+	}
+
+	@Override
+	public boolean ifMatchEmailRegex(String email) throws Exception {
+		String regex = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}" +
+				"\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,10}))$";
+		if (email.matches(regex)){
+			return true;
+		}
+		return false;
+	}
+
+	private void verifyAlertDialog() throws Exception{
+		if (isElementLoaded(alertDialog,10) && alertDialog.findElement(By.cssSelector(".lgn-alert-message.ng-scope.warning")).getText().contains("Email address invalid")){
+			clickOnOKBtnOnAlert();
+			SimpleUtils.pass("Email is valid so can not save successfully!");
+		} else {
+			SimpleUtils.fail("No alert dialog for invalid email format!",false);
+		}
+	}
+
+	@Override
+	public HashMap<String, String> getValuesOfFields() throws Exception{
+		waitForSeconds(3);
+		HashMap<String, String> results= new HashMap<String,String>();
+		if (isElementLoaded(profileSection, 5)) {
+			// Home Address Street Address 1
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")), 5)) {
+				SimpleUtils.pass("Home Address loaded!");
+				results.put("address1",profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No Home Address field!",false);
+			}
+
+			// Home Address Street Address 2
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")), 5)) {
+				SimpleUtils.pass("Home address2 loaded!");
+				results.put("address2",profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No Home address2 field!",false);
+			}
+
+			// City
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")), 5)) {
+				SimpleUtils.pass("City loaded!");
+				results.put("City",profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No City field!",false);
+			}
+
+			try {
+				// State
+				if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+					SimpleUtils.pass("State loaded!");
+					Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")));
+					results.put("State", statesDropdown.getFirstSelectedOption().getText());
+					//selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), state);
+				} else if (isElementLoaded(getDriver().findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+					SimpleUtils.pass("Province loaded!");
+					Select statesDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")));
+					results.put("State", statesDropdown.getFirstSelectedOption().getText());
+				} else {
+					SimpleUtils.fail("No State field!", false);
+				}
+			} catch (Exception e) {
+				// Do nothing
+			}
+
+			// Zip Code
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")), 5)) {
+				SimpleUtils.pass("Zip Code loaded!");
+				results.put("Zip Code",profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No Zip Code field!",false);
+			}
+
+			// Country
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Country\"] select")), 5)) {
+				SimpleUtils.pass("Country loaded!");
+				Select countryDropdown = new Select(profileSection.findElement(By.cssSelector("input-field[label=\"Country\"] select")));
+				results.put("Country",countryDropdown.getFirstSelectedOption().getText());
+			} else {
+				SimpleUtils.fail("No Country field!",false);
+			}
+
+			//First Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")),5)) {
+				SimpleUtils.pass("First name field loaded!");
+				results.put("First Name",profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).getAttribute("value"));
+				//verify it is a mandatory field.
+				profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).clear();
+				isRequiredErrorShowUp("First Name");
+				profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).sendKeys(results.get("First Name"));
+			} else {
+				SimpleUtils.fail("No first name field!",false);
+			}
+
+			// Last Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")),5)) {
+				SimpleUtils.pass("Last name field loaded!");
+				results.put("Last Name",profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).getAttribute("value"));
+				//verify it is a mandatory field.
+				profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).clear();
+				isRequiredErrorShowUp("Last Name");
+				profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).sendKeys(results.get("Last Name"));
+			} else {
+				SimpleUtils.fail("No last name field!",false);
+			}
+
+			// Nick Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Nickname\"] input")),5)) {
+				SimpleUtils.pass("Nick name field loaded!");
+				results.put("Nickname",profileSection.findElement(By.cssSelector("input-field[label=\"Nickname\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No nick name field!",false);
+			}
+
+			// Phone
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Phone\"] input")),5)) {
+				SimpleUtils.pass("Phone field loaded!");
+				results.put("Phone",profileSection.findElement(By.cssSelector("input-field[label=\"Phone\"] input")).getAttribute("value"));
+			} else {
+				SimpleUtils.fail("No Phone field!",false);
+			}
+
+			// Email
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")),5)) {
+				SimpleUtils.pass("Email field loaded!");
+				String email = profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).getAttribute("value");
+				results.put("E-mail",profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).getAttribute("value"));
+				//verify it is a mandatory field.
+				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).clear();
+				isRequiredErrorShowUp("E-Mail");
+				profileSection.findElement(By.cssSelector("input-field[label=\"E-mail\"] input")).sendKeys(email);
+			} else {
+				SimpleUtils.fail("No Email field!",false);
+			}
+		}else{
+			SimpleUtils.fail("Profile section fail to load!",false);
+		}
+		return results;
+	}
+
+	@Override
+	public void updateAllFields(HashMap<String, String> values) throws Exception {
+		if (isElementLoaded(profileSection, 5)) {
+			// Home Address Street Address 1
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")), 5)) {
+				profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).clear();
+				profileSection.findElement(By.cssSelector("double-input input-field[label=\"Home Address\"] input")).sendKeys(values.get("address1"));
+				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 1' updated with value: '"
+						+ values.get("address1") + "'.");
+			} else {
+				SimpleUtils.fail("No Home Address field!",false);
+			}
+
+			// Home Address Street Address 2
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")), 5)) {
+				profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).clear();
+				profileSection.findElement(By.cssSelector("double-input input-field[class=\"address2 ng-scope ng-isolate-scope\"] input")).sendKeys(values.get("address2"));
+				SimpleUtils.pass("Profile Page: User Profile Home Address 'Street Address 2' updated with value: '"
+						+ values.get("address2") + "'.");
+			} else {
+				SimpleUtils.fail("No Home address2 field!",false);
+			}
+
+			// City
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")), 5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"City\"] input")).sendKeys(values.get("City"));
+				SimpleUtils.pass("Profile Page: User Profile Home Address 'City' updated with value: '" + values.get("City") + "'.");
+			} else {
+				SimpleUtils.fail("No City field!",false);
+			}
+
+			try {
+				// State
+				if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), 5)) {
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"State\"] select")), values.get("State"));
+					SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
+				} else if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")), 5)) {
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"Province\"] select")), values.get("State"));
+					SimpleUtils.pass("Profile Page: User Profile 'State' updated with value: '" + values.get("State") + "'.");
+				} else {
+					SimpleUtils.fail("No State field!", false);
+				}
+			} catch (Exception e) {
+				// Do nothing
+			}
+
+			// Zip Code
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")), 5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"Zip Code\"] input")).sendKeys(values.get("Zip Code"));
+				SimpleUtils.pass("Profile Page: User Profile 'Zip' updated with value: '" + values.get("Zip Code") + "'.");
+			} else {
+				SimpleUtils.fail("No Zip Code field!",false);
+			}
+
+			// Country
+			if (isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Country\"] select")), 5)) {
+				if (!values.get("Country").equals("")){
+					selectByVisibleText(profileSection.findElement(By.cssSelector("input-field[label=\"Country\"] select")), values.get("Country"));
+					SimpleUtils.pass("Profile Page: User Profile 'Country' updated with value: '" + values.get("Country") + "'.");
+				}
+			} else {
+				SimpleUtils.fail("No Country field!",false);
+			}
+
+			//First Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")),5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).clear();
+				if (values.get("First Name").equals("") && values.get("First Name")==null){
+					profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).sendKeys("First");
+				} else {
+					profileSection.findElement(By.cssSelector("input-field[label=\"First Name\"] input")).sendKeys(values.get("First Name"));
+					SimpleUtils.pass("Profile Page: User Profile 'First Name' updated with value: '"+values.get("First Name")+"'.");
+				}
+			} else {
+				SimpleUtils.fail("No first name field!",false);
+			}
+
+			// Last Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")),5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).clear();
+				if (values.get("First Name").equals("") && values.get("First Name")==null){
+					profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).sendKeys("Last");
+				} else {
+					profileSection.findElement(By.cssSelector("input-field[label=\"Last Name\"] input")).sendKeys(values.get("Last Name"));
+					SimpleUtils.pass("Profile Page: User Profile 'Last Name' updated with value: '"+values.get("Last Name")+"'.");
+				}
+			} else {
+				SimpleUtils.fail("No last name field!",false);
+			}
+
+			// Nick Name
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Nickname\"] input")),5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"Nickname\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"Nickname\"] input")).sendKeys(values.get("Nickname"));
+				SimpleUtils.pass("Profile Page: User Profile 'Nick Name' updated with value: '"+values.get("Nickname")+"'.");
+			} else {
+				SimpleUtils.fail("No nick name field!",false);
+			}
+
+			// Phone
+			if(isElementLoaded(profileSection.findElement(By.cssSelector("input-field[label=\"Phone\"] input")),5)) {
+				profileSection.findElement(By.cssSelector("input-field[label=\"Phone\"] input")).clear();
+				profileSection.findElement(By.cssSelector("input-field[label=\"Phone\"] input")).sendKeys(values.get("Phone"));
+				SimpleUtils.pass("Profile Page: User Profile Contact 'Phone' updated with value: '"+values.get("Phone")+"'.");
+			} else {
+				SimpleUtils.fail("No Phone field!",false);
+			}
+		}else{
+			SimpleUtils.fail("Profile section fail to load!",false);
+		}
+	}
+
+	@Override
+	public void clickOnOKBtnOnAlert() throws Exception {
+		if (isElementLoaded(alertDialog.findElement(By.cssSelector("button")),5)){
+			click(alertDialog.findElement(By.cssSelector("button")));
+			SimpleUtils.pass("OK button clicked!");
+		} else {
+			SimpleUtils.fail("No OK button!",false);
+		}
+	}
+
+	@FindBy(css = ".lg-badges button")
+	private WebElement manageBadgeBtn;
+	@Override
+	public boolean verifyManageBadgeBtn() throws Exception {
+		if (isElementLoaded(manageBadgeBtn,10)){
+			scrollToElement(manageBadgeBtn);
+			click(manageBadgeBtn);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@FindBy(css = "div.lgnCheckBox")
+	private List<WebElement> checkBoxOfBadge;
+	@Override
+	public void verifySelectBadge() throws Exception {
+		if (areListElementVisible(checkBoxOfBadge,5)){
+			for (WebElement element: checkBoxOfBadge){
+				if (element.getAttribute("class").contains("checked")){
+					click(element);
+				}
+			}
+			//select the first one
+			click(checkBoxOfBadge.get(0));
+			SimpleUtils.pass("The first badge is selected!");
+		} else {
+			SimpleUtils.fail("No checkbox for badge!",false);
+		}
+	}
+
+	@FindBy(css = ".lgn-action-button-success")
+	private WebElement saveBtnForBadge;
+	@Override
+	public void saveBadgeBtn() throws Exception {
+		if (isElementLoaded(saveBtnForBadge,5)){
+			click(saveBtnForBadge);
+			SimpleUtils.pass("Save button is clicked!");
+		}else{
+			SimpleUtils.fail("Save button is not loaded!", false);
+		}
+	}
+
+	@FindBy(css = ".lgn-action-button-default")
+	private WebElement cancelBtnForBadge;
+	@Override
+	public void cancelBadgeBtn() throws Exception {
+		if (isElementLoaded(cancelBtnForBadge,5)){
+			click(cancelBtnForBadge);
+			SimpleUtils.pass("Save button is clicked!");
+		}else{
+			SimpleUtils.fail("Save button is not loaded!", false);
+		}
+	}
+
+	@FindBy(css = "[ng-click=\"showInvitationCode.value = !showInvitationCode.value\"]")
+	private WebElement showOrHideInvitationCodeButton;
+
+	@FindBy(css = "[ng-if=\"showInvitationCode.value\"]")
+	private WebElement invitationCode;
+
+	@FindBy(css = "div.header-buttons-invite-code-wrapper")
+	private WebElement showOrHideInvitationCodeButtonHeader;
+
+
+	public void clickOnShowOrHideInvitationCodeButton(boolean toShowCode) throws Exception {
+		if (isElementLoaded(showOrHideInvitationCodeButton,5)){
+			if(toShowCode){
+				if(showOrHideInvitationCodeButton.getText().equalsIgnoreCase("Show Invitation Code")){
+					clickTheElement(showOrHideInvitationCodeButton);
+				}
+			} else{
+				if(showOrHideInvitationCodeButton.getText().equalsIgnoreCase("Hide Code")){
+					clickTheElement(showOrHideInvitationCodeButton);
+				}
+			}
+			SimpleUtils.pass("Show Or Hide Invitation Code button is clicked!");
+		}else{
+			SimpleUtils.fail("Show Or Hide Invitation Code button is not loaded!", false);
+		}
+	}
+
+	public String getInvitationCode() throws Exception {
+		String invitationCodeValue = "";
+		if (isElementLoaded(invitationCode,5)){
+			invitationCodeValue = invitationCode.getText();
+			SimpleUtils.pass("Get invitation Code successfully!");
+		}else{
+			SimpleUtils.fail("Invitation Code is not loaded!", false);
+		}
+		return invitationCodeValue;
+	}
+
+	public boolean isInvitationCodeLoaded() throws Exception {
+		boolean isInvitationCodeLoaded = false;
+		if (isElementLoaded(invitationCode,5)){
+			isInvitationCodeLoaded = true;
+			SimpleUtils.report("Invitation Code is loaded!");
+		}else{
+			SimpleUtils.report("Invitation Code is not loaded!");
+		}
+		return isInvitationCodeLoaded;
+	}
+
+	public String getShowOrHideInvitationCodeButtonTooltip() throws Exception {
+		String tooltip = "";
+		if(isElementLoaded(showOrHideInvitationCodeButtonHeader, 5)){
+			tooltip = showOrHideInvitationCodeButtonHeader.getAttribute("data-tootik");
+			SimpleUtils.pass("Get tooltip of Show Or Hide Invitation Code button successfully!");
+		} else
+			SimpleUtils.fail("Show Or Hide Invitation Code button is not loaded!", false);
+		return tooltip;
+	}
+
+	@Override
+	public boolean isInviteToLegionButtonLoaded() throws Exception {
+		boolean isInviteToLegionButtonLoaded = false;
+		if(isElementLoaded(userProfileInviteBtn, 10)) {
+			isInviteToLegionButtonLoaded =true;
+			SimpleUtils.report("Profile Page: Invite To Legion Button loaded successfully.");
+		} else
+			SimpleUtils.report("Profile Page: Invite To Legion Button failed to load.");
+
+		return isInviteToLegionButtonLoaded;
+	}
+
+	@Override
+	public boolean isShowOrHideInvitationCodeButtonLoaded() throws Exception {
+		boolean isShowOrHideInvitationCodeButtonLoaded = false;
+		if(isElementLoaded(showOrHideInvitationCodeButton, 5)) {
+			isShowOrHideInvitationCodeButtonLoaded =true;
+			SimpleUtils.report("Profile Page: Show Or Hide Invitation Code loaded successfully.");
+		} else
+			SimpleUtils.report("Profile Page: Show Or Hide Invitation Code failed to load.");
+
+		return isShowOrHideInvitationCodeButtonLoaded;
+	}
+
+	public void createTimeOffOnSpecificDays(String timeOffReasonLabel, String timeOffExplanationText,String fromDay, int duration) throws Exception {
+		final int timeOffRequestCount = timeOffRequestRows.size();
+		clickOnCreateTimeOffBtn();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
+//		String d="2021 Apr 15";
+		String d= fromDay;
+//		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT+8", dateFormat);
+		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("UTC-7", dateFormat);
+//		String today=SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT-4", dateFormat);
+		long to = dateFormat.parse(d).getTime();
+		long from = dateFormat.parse(today).getTime();
+		int days = (int) ((to - from)/(1000 * 60 * 60 * 24));
+		selectTimeOffReason(timeOffReasonLabel);
+		updateTimeOffExplanation(timeOffExplanationText);
+		selectDate(days);
+		selectDate(days+ duration);
+		HashMap<String, String> timeOffDate = getTimeOffDate(days, duration);
+		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
+		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
+		setTimeOffStartTime(timeOffStartDate);
+		setTimeOffEndTime(timeOffEndDate);
+		clickOnSaveTimeOffRequestBtn();
+		Thread.sleep(1000);
+		if(timeOffRequestRows.size() > timeOffRequestCount)
+			SimpleUtils.pass("Profile Page: New Time Off Save Successfully.");
+		else
+			SimpleUtils.fail("Profile Page: New Time Off not Save Successfully.", false);
+
+	}
+
+	@FindBy(css = "[ng-click=\"removeAvailability()\"]")
+	private WebElement removeAvailabilityIcon;
+
+	@FindBy(css = "div.cursor-empty")
+	private List<WebElement> emptyAvailabilities;
+
+	@FindBy(css = "span.tooltip-red")
+	private WebElement availabilityToolTip;
+
+
+	public void updatePreferredOrBusyHoursToAllDay(int dayIndex, String hoursType) throws Exception {
+
+		String preferredHoursTabText = "Preferred";
+		String busyHoursTabText = "Busy";
+		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
+			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
+		else
+			selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+
+		//Delete all availabilities in the day
+		WebElement dayRow = null;
+		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
+			dayRow = myAvailabilityDayOfWeekRows.get(dayIndex);
+			List<WebElement> availabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.cursor-resizableW"));
+			for (WebElement availability: availabilitiesInTheDay) {
+				moveToElementAndClick(availability);
+				clickTheElement(removeAvailabilityIcon);
+				SimpleUtils.report("Remove one availability successfully! ");
+			}
+		} else
+			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
+
+		//Click first two empty availabilities
+		List<WebElement> emptyAvailabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.cursor-empty"));
+		for (int i =0; i< 10; i++) {
+			click(emptyAvailabilitiesInTheDay.get(i));
+		}
+
+		WebElement rightCell = dayRow.findElement(By.cssSelector("div.cursor-resizableE"));
+		int i=0;
+		while (!availabilityToolTip.getText().contains("12:00am - 12:00am") && i<5){
+			//Drag the availability to the end of the day
+			scrollToElement(rightCell);
+			mouseHoverDragandDrop(rightCell,emptyAvailabilitiesInTheDay.get(emptyAvailabilitiesInTheDay.size()-1));
+			i++;
+			waitForSeconds(2);
+		}
+
+		if (!availabilityToolTip.getText().contains("12:00am - 12:00am")) {
+//			mouseHoverDragandDrop(rightCell,emptyAvailabilitiesInTheDay.get(emptyAvailabilitiesInTheDay.size()-1));
+			SimpleUtils.fail("Update availabilities fail! ", false);
+		} else
+			SimpleUtils.report("Update availabilities successfully! ");
+	}
+
+
+	public void clickAvailabilityEditButton() throws Exception{
+		if (isElementLoaded(editBtn,10)){
+			click(editBtn);
+		}else{
+			SimpleUtils.fail("Edit button is not loaded!", false);
+		}
+	}
+
+	@FindBy(tagName = "lg-eg-status")
+	private WebElement statusOnProfilePage;
+
+	public String getStatusOnProfilePage () throws Exception {
+		String status = "";
+		if (isElementLoaded(statusOnProfilePage, 10)){
+			status = statusOnProfilePage.getAttribute("type");
+			SimpleUtils.pass("Get status from profile page successfully! ");
+		} else
+			SimpleUtils.fail("Status on profile page fail to load! ", false);
+		return status;
+	}
+
+	//Added by Estelle to get home store location
+	@FindBy(css = "div[ng-if=\"canViewWorkerEngagement\"]")
+	private WebElement hrProfileInfoForm;
+	@Override
+	public HashMap<String, String> getOneUserHRProfileInfo() throws Exception {
+		HashMap<String, String> userProfileEngagementDetails = new HashMap<>();
+		if(isElementLoaded(hrProfileInfoForm)) {
+			List<WebElement> rows = hrProfileInfoForm.findElements(By.cssSelector("div.row"));
+
+			for(int index = 0; index < rows.size() ; index++) {
+				if(rows.get(index).getText().toLowerCase().contains("name")
+						&& rows.get(index).getText().toLowerCase().contains("job title")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("name", rowValues[0]);
+						userProfileEngagementDetails.put("jobTitle", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get Name and Job Title value from ' HR Profile Infomation form'", false);
+
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("manager name")
+						&& rows.get(index).getText().toLowerCase().contains("home store")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+//						userProfileEngagementDetails.put("manager name", rowValues[0]);//manager name are all blank
+						userProfileEngagementDetails.put("home store", rowValues[0]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get Manager Name and Home Store value from ' HR Profile Infomation form'", false);
+				}
+
+				else if(rows.get(index).getText().toLowerCase().contains("employee id")
+						&& rows.get(index).getText().toLowerCase().contains("date hired")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("employee id", rowValues[0]);
+						userProfileEngagementDetails.put("date hired", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get EMPLOYEE ID and DATE HIRED value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("employment type")
+						&& rows.get(index).getText().toLowerCase().contains("hourly rate")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("employment type", rowValues[0]);
+						userProfileEngagementDetails.put("hourly rate", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get EMPLOYMENT TYPE and HOURLY RATE value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("employment status")
+						&& rows.get(index).getText().toLowerCase().contains("exempt")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("employment status", rowValues[0]);
+						userProfileEngagementDetails.put("exempt", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get EMPLOYMENT STATUS and EXEMPT value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("address")
+						&& rows.get(index).getText().toLowerCase().contains("minor")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("address", rowValues[0]);
+						userProfileEngagementDetails.put("minor", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get ADDRESS and MINOR value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("contact information")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("phoneNumber", rowValues[0]);
+						userProfileEngagementDetails.put("email", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get phoneNumber and email value from ' HR Profile Infomation form'", false);
+				}
+
+			}
+		}
+		return userProfileEngagementDetails;
 	}
 }

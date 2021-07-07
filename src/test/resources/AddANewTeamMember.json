@@ -4,9 +4,9 @@
   "EMAIL": "nora@legion.co",
   "PHONE": "1234567890",
   "DATE_HIRED": "Feb 20, 2020",
-  "JOB_TITLE": "Admin",
-  "ENGAGEMENT_STATUS": "Full Time",
+  "JOB_TITLE": "Team Lead",
+  "ENGAGEMENT_STATUS": "FullTime",
   "HOURLY": "Yes",
-  "SALARIED": "Yes",
-  "EXEMPT": "Yes"
+  "SALARIED": "No",
+  "EXEMPT": "No"
 }

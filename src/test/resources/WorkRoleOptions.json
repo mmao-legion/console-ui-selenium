@@ -1,4 +1,11 @@
 {
 	  "WorkRole" : "MANAGER",
-	  "changeWorkRole" : "Manager"
+	  "WorkRole_BARISTA" : "BARISTA",
+	  "changeWorkRole" : "Manager",
+	  "MOD": "MOD",
+	  "EVENT_MANAGER": "EVENT MANAGER",
+	  "Lead_Sales_Associate": "LEAD SALES ASSOCIATE",
+	  "GENERAL MANAGER": "GENERAL MANAGER",
+	   "AMBASSADOR": "AMBASSADOR",
+	   "MGR ON DUTY": "MGR ON DUTY"
 }

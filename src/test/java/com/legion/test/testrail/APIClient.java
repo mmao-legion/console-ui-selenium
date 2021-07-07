@@ -132,6 +132,7 @@ public class APIClient
 		// (GET/POST) and headers (content type and basic auth).
 		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 		conn.addRequestProperty("Content-Type", "application/json");
+		//conn.getHeaderFieldDate("Retry-After",30);
 		
 		String auth = getAuthorization(this.m_user, this.m_password);
 		conn.addRequestProperty("Authorization", "Basic " + auth);
@@ -222,7 +223,7 @@ public class APIClient
 			}
 			
 			throw new APIException(
-				"TestRail API returned HTTP " + status +
+				"TestRail API" + uri + " returned HTTP " + status +
 				"(" + error + ")"
 			);
 		}

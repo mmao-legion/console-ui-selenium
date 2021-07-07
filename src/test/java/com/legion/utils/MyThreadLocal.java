@@ -2,6 +2,7 @@ package com.legion.utils;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.testng.ITestResult;
@@ -50,6 +51,8 @@ public class MyThreadLocal {
 	public static ThreadLocal<List<Integer>> testRailRun = new ThreadLocal<>();
 	public static final ThreadLocal<String> teamMemberName = new ThreadLocal<>();
 	public static final ThreadLocal<String> workerRole = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerStatus = new ThreadLocal<>();
+	public static final ThreadLocal<String> workerStatusDes = new ThreadLocal<>();
 	public static final ThreadLocal<String> workerLocation = new ThreadLocal<>();
 	public static final ThreadLocal<String> workerShiftTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> workerShiftDuration = new ThreadLocal<>();
@@ -57,11 +60,44 @@ public class MyThreadLocal {
 	public static ThreadLocal<String> screenShotURL = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffStartTime = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeOffEndTime = new ThreadLocal<>();
+	public static final ThreadLocal<String> currentComplianceTemplate = new ThreadLocal<>();
+	public static final ThreadLocal<String> currentOperatingTemplate = new ThreadLocal<>();
+	public static final ThreadLocal<String> testSuiteID = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> ifAddNewTestRun = new ThreadLocal<>();
+	public static final ThreadLocal<String> testRailRunName = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> testCaseExistsFlag = new ThreadLocal<>();
+	public static final ThreadLocal<List<Integer>> testCaseIDList = new ThreadLocal<>();
+	public static final ThreadLocal<String> testSuiteName = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeDuration = new ThreadLocal<>();
 	public static final ThreadLocal<String> moduleName = new ThreadLocal<>();
 	public static final ThreadLocal<Integer> sectionID = new ThreadLocal<>();
 	public static final ThreadLocal<Integer> budgetTolerance = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailReporting = new ThreadLocal<>();
+	public static final ThreadLocal<String> location = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGMSLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGMSChildLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGPTPLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGPTPChildLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGMSNsoLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> LGPTPNsoLocationName = new ThreadLocal<>();
+	public static final ThreadLocal<String> job = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> isNeedUpdateOperatingHours = new ThreadLocal<>();
+	//added by Estelle to catch up test rail login user info
+	public static final ThreadLocal<String> testRailURL = new ThreadLocal<>();
+	public static final ThreadLocal<String> testRailUser = new ThreadLocal<>();
+	public static final ThreadLocal<String> testRailPassword = new ThreadLocal<>();
+	public static final ThreadLocal<String> testRailProjectID = new ThreadLocal<>();
+	public static final ThreadLocal<String> emailAccount = new ThreadLocal<>();
+	public static final ThreadLocal<String> firstName = new ThreadLocal<>();
+	public static final ThreadLocal<String> lastName = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> isCompanyPolicySet = new ThreadLocal<>();
+	public static final ThreadLocal<String> phone = new ThreadLocal<>();
+	public static final ThreadLocal<String> employeeId = new ThreadLocal<>();
+	public static final ThreadLocal<String> consoleHandle = new ThreadLocal<>();
+
+	public static void setIsNeedEditingOperatingHours(Boolean value) { isNeedUpdateOperatingHours.set(value); }
+
+	public static Boolean getIsNeedEditingOperatingHours() { return isNeedUpdateOperatingHours.get(); }
 
 	public static void setScreenshotLocation(String value) { screenshotLoc.set(value); }
 
@@ -86,6 +122,14 @@ public class MyThreadLocal {
 
 	public static String getWorkerLocation() { return workerLocation.get(); }
 
+	public static void setWorkerStatus(String value) { workerStatus.set(value); }
+
+	public static String getWorkerStatus() { return workerStatus.get(); }
+
+	public static void setWorkerStatusDes(String value) { workerStatusDes.set(value); }
+
+	public static String getWorkerStatusDes() { return workerStatusDes.get(); }
+
 	public static void setWorkerShiftTime(String value) { workerShiftTime.set(value); }
 
 	public static String getWorkerShiftTime() { return workerShiftTime.get(); }
@@ -105,6 +149,38 @@ public class MyThreadLocal {
 	public static void setTimeOffEndTime(String value) { timeOffEndTime.set(value); }
 
 	public static String getTimeOffEndTime() { return timeOffEndTime.get(); }
+
+	public static void setCurrentComplianceTemplate(String value) { currentComplianceTemplate.set(value); }
+
+	public static String getCurrentComplianceTemplate() { return currentComplianceTemplate.get(); }
+
+	public static void setCurrentOperatingTemplate(String value) { currentOperatingTemplate.set(value); }
+
+	public static String getCurrentOperatingTemplate() { return currentOperatingTemplate.get(); }
+
+	public static void setTestSuiteID(String value) { testSuiteID.set(value); }
+
+	public static String getTestSuiteID() { return testSuiteID.get(); }
+
+	public static void setIfAddNewTestRun(boolean value) { ifAddNewTestRun.set(value); }
+
+	public static boolean getIfAddNewTestRun() { return ifAddNewTestRun.get(); }
+
+	public static void setTestRailRunName(String value) { testRailRunName.set(value); }
+
+	public static String getTestRailRunName() { return testRailRunName.get(); }
+
+	public static void setTestCaseExistsFlag(boolean value) { testCaseExistsFlag.set(value); }
+
+	public static boolean getTestCaseExistsFlag() { return testCaseExistsFlag.get(); }
+
+	public static void setTestCaseIDList(List<Integer> value) { testCaseIDList.set(value); }
+
+	public static List<Integer> getTestCaseIDList() { return testCaseIDList.get(); }
+
+	public static void setTestSuiteName(String value) { testSuiteName.set(value); }
+
+	public static String getTestSuiteName() { return testSuiteName.get(); }
 
 	public static void setScheduleHoursStartTime(String value) { scheduleHoursStartTime.set(value); }
 
@@ -400,6 +476,55 @@ public class MyThreadLocal {
 		return platformname.get();
 	}
 
+	//set/get location info
+	public static void setLocationName(String locationName) { location.set(locationName); }
 
+	public static String getLocationName() { return location.get(); }
 
+	public static void setLGMSLocationName(String value) { LGMSLocationName.set(value); }
+	public static void setLGMSChildLocationName(String value) { LGMSChildLocationName.set(value); }
+
+	public static String getLGMSLocationName() { return LGMSLocationName.get(); }
+	public static String getLGMSChildLocationName() { return LGMSChildLocationName.get(); }
+
+	public static void setLGPTPLocationName(String value) { LGPTPLocationName.set(value); }
+	public static void setLGPTPChildLocationName(String value) { LGPTPChildLocationName.set(value); }
+	public static String getLGPTPLocationName() { return LGPTPLocationName.get(); }
+	public static String getLGPTPChildLocationName() { return LGPTPChildLocationName.get(); }
+	//NSO location info
+	public static void setLGMSNsoLocationName(String value) { LGMSNsoLocationName.set(value); }
+
+	public static String getLGMSNsoLocationName() { return LGMSNsoLocationName.get(); }
+
+	public static void setLGPTPNsoLocationName(String value) { LGPTPNsoLocationName.set(value); }
+
+	public static String getLGPTPNsoLocationName() { return LGPTPNsoLocationName.get(); }
+
+	//added by Estelle for jobs
+	public static void setJobName(String jobName) { job.set(jobName); }
+
+	public static String getJobName() { return job.get(); }
+
+	public static void setTestRailURL(String value) { testRailURL.set(value); }
+	public static String getTestRailURL() { return testRailURL.get(); }
+	public static void setTestRailUser(String value){ testRailUser.set(value); }
+	public static String getTestRailUser() { return testRailUser.get(); }
+	public static void setTestRailPassword(String value){ testRailPassword.set(value); }
+	public static String getTestRailPassword() { return testRailPassword.get(); }
+	public static void setTestRailProjectID(String value){ testRailProjectID.set(value); }
+	public static String getTestRailProjectID() { return testRailProjectID.get(); }
+	public static void setEmailAccount(String value) { emailAccount.set(value);}
+	public static String getEmailAccount() { return emailAccount.get();}
+	public static void setFirstNameForNewHire(String value) { firstName.set(value);}
+	public static String getFirstNameForNewHire() { return firstName.get();}
+	public static void setLastNameForNewHire(String value) { lastName.set(value);}
+	public static String getLastNameForNewHire() { return lastName.get();}
+	public static void setCompanyPolicy(Boolean value) { isCompanyPolicySet.set(value);}
+	public static Boolean getCompanyPolicy() { return  isCompanyPolicySet.get();}
+	public static void setPhoneForNewHire(String value) { phone.set(value);}
+	public static String getPhoneForNewHire() { return  phone.get();}
+	public static void setEmployeeIdForNewHire(String value) { employeeId.set(value);}
+	public static String getEmployeeIdForNewHire() { return  employeeId.get();}
+	public static void setConsoleWindowHandle(String value) { consoleHandle.set(value);}
+	public static String getConsoleWindowHandle() { return consoleHandle.get();}
 }

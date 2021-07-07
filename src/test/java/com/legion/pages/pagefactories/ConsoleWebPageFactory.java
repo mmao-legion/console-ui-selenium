@@ -24,12 +24,7 @@ public class ConsoleWebPageFactory implements PageFactory {
     public TeamPage createConsoleTeamPage() {
     	return new ConsoleTeamPage();
     }
-    
-    @Override
-    public SchedulePage createConsoleSchedulePage() {
-    	return new ConsoleSchedulePage();
-    }
-    
+
     @Override
     public AnalyticsPage createConsoleAnalyticsPage() {
     	return new ConsoleAnalyticsPage();
@@ -102,4 +97,68 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public GmailPage createConsoleGmailPage() { return new ConsoleGmailPage(); }
+
+	@Override
+	public ActivityPage createConsoleActivityPage() { return new ConsoleActivityPage(); }
+
+	@Override
+	public LocationsPage createOpsPortalLocationsPage() { return new OpsPortalLocationsPage();
+	}
+
+	@Override
+	public LiquidDashboardPage createConsoleLiquidDashboardPage() { return new ConsoleLiquidDashboardPage(); }
+
+	@Override
+	public JobsPage createOpsPortalJobsPage() { return new OpsPortalJobsPage();}
+
+	@Override
+	public ScheduleDMViewPage createScheduleDMViewPage() { return new ConsoleScheduleDMViewPage(); }
+
+	@Override
+	public InboxPage createConsoleInboxPage() { return new ConsoleInboxPage(); }
+
+	@Override
+	public CinemarkMinorPage createConsoleCinemarkMinorPage() { return new ConsoleCinemarkMinorPage(); }
+
+	@Override
+	public AdminPage createConsoleAdminPage() { return new ConsoleAdminPage(); }
+
+	@Override
+	public ConfigurationPage createOpsPortalConfigurationPage() { return new OpsPortalConfigurationPage();}
+
+	@Override
+	public CompliancePage createConsoleCompliancePage() { return new ConsoleCompliancePage(); }
+
+	@Override
+	public IntegrationPage createIntegrationPage() { return new ConsoleIntegrationPage(); }
+
+	@Override
+	public OnboardingPage createOnboardingPage() { return new ConsoleOnboardingPage(); }
+
+
+	@Override
+	public ComplianceDMViewPage createComplianceDMViewPage() { return new ConsoleComplianceDMViewPage(); }
+
+	@Override
+	public NewsPage createNewsPage (){ return new ConsoleNewsPage() ;}
+	@Override
+	public ReportPage createConsoleReportPage() { return new ConsoleReportPage(); }
+	@Override
+	public InsightPage createConsoleInsightPage() { return new ConsoleInsightPage(); }
+	@Override
+	public NewsPage createConsoleNewsPage() { return new ConsoleNewsPage(); }
+
+	@Override
+	public IntegrationPage createConsoleIntegrationPage() { return new ConsoleIntegrationPage(); }
+
+	@Override
+	public UserManagementPage createOpsPortalUserManagementPage() {
+		return new OpsPortalUserManagementPage();
+	}
+
+	@Override
+	public LaborModelPage createOpsPortalLaborModelPage() {
+		return new OpsPortalLaborModelPage();
+	}
+
 }
