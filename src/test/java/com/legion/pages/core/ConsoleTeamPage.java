@@ -2484,7 +2484,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void rejectAllTeamMembersTimeOffRequest(ProfileNewUIPage profileNewUIPage, int index) throws Exception {
-		if (areListElementVisible(teamMemberNames, 15)) {
+		if (areListElementVisible(teamMemberNames, 30)) {
 			if (index < teamMemberNames.size()) {
 				clickTheElement(teamMemberNames.get(index));
 				String myTimeOffLabel = "Time Off";
@@ -3609,10 +3609,10 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 @FindBy(css = "div[ng-if=\"showLocation\"]")
-private WebElement locationColumn;
+private List<WebElement> locationColumn;
 	@Override
 	public boolean verifyThereIsLocationColumnForMSLocationGroup() throws Exception {
-		if (isElementLoaded(locationColumn,5)) {
+		if (areListElementVisible(locationColumn,5)) {
 			return true;
 		}else
 			return  false;
@@ -4205,7 +4205,7 @@ private WebElement locationColumn;
 	public void clickOnSaveSchoolCalendarBtn() throws Exception {
 		if (isElementLoaded(savePreferButton, 5) && isElementEnabled(savePreferButton, 5)) {
 			clickTheElement(savePreferButton);
-			if (isElementLoaded(deleteCalendarBtn, 10) && isElementLoaded(editCalendarBtn, 10)) {
+			if (isElementLoaded(deleteCalendarBtn, 20) && isElementLoaded(editCalendarBtn, 20)) {
 				SimpleUtils.pass("School Calendar: Save the calendar Successfully!");
 			} else {
 				SimpleUtils.fail("School Calendar: Failed to save the school calendar!", false);
@@ -4572,7 +4572,7 @@ private WebElement locationColumn;
 	@FindBy (css = "[ng-click=\"changeMonth(sessionStart, 1)\"]")
 	private WebElement sessionStartRightArrow;
 
-	@FindBy (css = "ng-click=\"changeMonth(sessionEnd, -1)\"")
+	@FindBy (css = "[ng-click=\"changeMonth(sessionEnd, -1)\"]")
 	private WebElement sessionEndLeftArrow;
 
 	@FindBy (css = "[ng-click=\"changeMonth(sessionEnd, 1, true)\"]")
@@ -4704,5 +4704,21 @@ private WebElement locationColumn;
 		} else
 			SimpleUtils.report("The Invite buttons fail to load! ");
 		return isInviteButtonExists;
+	}
+
+	@Override
+	public int getLocationName() {
+		int numberOfLocation = 0;
+		if (areListElementVisible(locationColumn,8)) {
+			for (int i = 1; i < locationColumn.size(); i++) {
+				if (!(locationColumn.get(i).getText().equalsIgnoreCase(locationColumn.get(i-1).getText()))) {
+					numberOfLocation= numberOfLocation+1;
+
+				}
+			}
+			return numberOfLocation;
+		}else
+
+			return 0;
 	}
 }

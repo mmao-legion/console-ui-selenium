@@ -88,7 +88,7 @@
                     <include name="verifyAccessControlsOnActivitiesPageAsInternalAdmin"/>
                     <include name="verifyTheContentOnActivityAsStoreManager"/>
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>
-                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
+<!--                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-4529/>-->
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
@@ -115,7 +115,7 @@
                 <methods>
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
-                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
+<!--                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" Blocked by SCH-4254/>-->
                 </methods>
             </class>
         </classes>
@@ -149,7 +149,7 @@
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
-                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />
+<!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" /> Blocked by SCH-3942 -->
 <!--                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" Blocked by SCH-4155/>-->
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
@@ -174,7 +174,7 @@
                     <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
                     <include name="verifyTurnOnGFEAsInternalAdmin" />
                     <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
-                    <include name="verifyContentOfGFEAsInternalAdmin" />
+<!--                    <include name="verifyContentOfGFEAsInternalAdmin" Blocked by SCH-4547/>-->
 <!--                    <include name="verifyVSLInfoAsInternalAdmin" Blocked by SCH-4012/>-->
                 </methods>
             </class>
@@ -218,8 +218,8 @@
         <classes>
             <class name="com.legion.tests.core.DragAndDropTest">
                 <methods>
-                    <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
-                    <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
+<!--                    <include name="verifyWarningModelForTimeOffAsInternalAdmin" Blocked by drag&drop new feature/>-->
+<!--                    <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" Blocked by drag&drop new feature/>-->
                     <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
                     <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
                     <include name="verifyWarningModelForClopeningAsInternalAdmin" />

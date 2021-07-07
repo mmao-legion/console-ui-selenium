@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest">
+<suite verbose ="10" name="Legion Test">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Automation - Daily Routine"/>
@@ -15,25 +15,10 @@
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
                     <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
-                    <include name="verifyCreateMockLocationAndNavigate" />
+<!--                    <include name="verifyCreateMockLocationAndNavigate" />-->
                     <include name="verifyCreateNSOLocationAndNavigate" />
                     <include name="verifyDisableEnableLocationFunction" />
                     <include name="verifyExportLocationDistrict" />
-                    <!--                    Location group test cases-->
-                    <include name="verifyMSLocationGroupFunctionForRegular" />
-                    <include name="verifyChangeMSToP2P" />
-                    <include name="verifyP2PLocationGroupFunctionForRegular" />
-                    <include name="verifyChangeP2PToMS" />
-
-                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
-<!--                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />-->
-                    <include name="verifyNoLocationGroupSettingForMock" />
-
-                    <include name="verifyChangeNoneLocationToChild" />
-                    <include name="verifyChangeNoneLocationToP2PParent" />
-                    <include name="verifyChangeNoneLocationToMSParent" />
-                    <include name="verifyChangeMSLocationsToNoneFunction" />
-                    <include name="verifyChangeP2PLocationsToNoneFunction" />
 
 
                     <!--                    Upperfield test cases-->
@@ -44,7 +29,7 @@
                     <include name="verifyAddUpperFieldsWithDiffLevel" />
                     <include name="verifyDisableEnableUpperFieldFunction"/>
                     <include name="verifyUpperFieldSmartCardData" />
-                    <include name="verifyUpdateUpperFieldFunction" />
+<!--                    <include name="verifyUpdateUpperFieldFunction" />-->
                     <include name="verifyCancelCreatingUpperfieldFunction" />
 
 
@@ -52,7 +37,13 @@
                     <include name="verifyGlobalDynamicGroupFunctionInLocationsTab" />
                     <include name="verifyGlobalDynamicGroupAbnormalScenarios" />
                     <include name="verifyGlobalDynamicGroupInClockInFunction" />
-<!--                    <include name="verifyGlobalDynamicGroupInWFS" />-->
+                    <include name="verifyGlobalDynamicGroupInWFS" />
+                    <!--                    Location level template overridden-->
+                    <include name="verifyUserCanSeeEachTypeOfTemViaClickingTemName" />
+                    <include name="verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevel" />
+                    <include name="verifyOverriddenSchedulingRulesInLocationLevel" />
+
+
 
                 </methods>
             </class>
@@ -60,11 +51,12 @@
     </test>
 
     <test name="Navigation Test">
+
         <classes>
             <class name="com.legion.tests.core.NewNavigationFlowTest">
                 <methods>
 <!--                    <include name="verifyLocationProfilePageInControls" />-->
-                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
+                    <include name="verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow" />
 <!--                    <include name="verifyDashboardViewAsInternalAdmin" />-->
 <!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
                     <include name="verifyDashboardViewAsStoreManager" />
@@ -72,6 +64,11 @@
 <!--                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />-->
 <!--                    <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>-->
 <!--                    <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/>-->
+                    <include name="verifyGlobalSearchFunctionOnNavigatorAsInternalCustomerAdmin" />
+                    <include name="verifyEachTabIfSelectHQAsInternalCustomerAdmin" />
+                    <include name="verifyNavigationFunctionByDifRoleAsInternalCustomerAdmin" />
+
+
                 </methods>
             </class>
         </classes>
@@ -80,27 +77,23 @@
         <classes>
             <class name="com.legion.tests.core.JobTest">
                 <methods>
-                    <include name="verifyJobLandingPage" />
-                    <include name="verifyJobSearchFunction" />
-                    <include name="verifyCheckJobDetailsFunction" />
-                    <include name="verifyCopyStopResumeAndArchiveJobFunctionFunction" />
-                    <include name="verifyFilterFunctionByJobTypeAndJobStatus" />
-                    <include name="verifyFilterFunctionByJobType" />
-                    <include name="verifyFilterFunctionByJobStatus" />
-                    <include name="verifyAbnormalCheatJobFunction" />
-                    <include name="verifyCreateReleaseScheduleJobFunction" />
-                    <include name="verifyCreateScheduleJobFunction" />
-                    <include name="verifyAbnormalCheatJobFunction" />
-                    <include name="verifyAdjustBudgetJobFunction" />
-                    <include name="verifyAdjustForecastJobFunction"/>
-                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJob"/>
-                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJob"/>
-                    <include name="verifyExportResultFileFunctionInReleaseScheduleJob"/>
-                    <include name="verifyExportResultFileFunctionInAdjustForecastJob"/>
-
-
-
-
+                    <include name="verifyJobLandingPageAsInternalAdminForJob" />
+                    <include name="verifyJobSearchFunctionAsInternalAdminForJob" />
+                    <include name="verifyCheckJobDetailsFunctionAsInternalAdminForJob" />
+                    <include name="verifyCopyStopResumeAndArchiveJobFunctionFunctionAsInternalAdminForJob" />
+                    <include name="verifyFilterFunctionByJobTypeAndJobStatusAsInternalAdminForJob" />
+                    <include name="verifyFilterFunctionByJobTypeAsInternalAdminForJob" />
+                    <include name="verifyFilterFunctionByJobStatusAsInternalAdminForJob" />
+                    <include name="verifyAbnormalCheatJobFunctionAsInternalAdminForJob" />
+                    <include name="verifyCreateReleaseScheduleJobFunctionAsInternalAdminForJob" />
+                    <include name="verifyCreateScheduleJobFunctionAsInternalAdminForJob" />
+                    <include name="verifyAbnormalCheatJobFunctionAsInternalAdminForJob" />
+                    <include name="verifyAdjustBudgetJobFunctionAsInternalAdminForJob" />
+                    <include name="verifyAdjustForecastJobFunctionAsInternalAdminForJob"/>
+                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJobAsInternalAdminForJob"/>
+                    <include name="verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJobAsInternalAdminForJob"/>
+                    <include name="verifyExportResultFileFunctionInReleaseScheduleJobAsInternalAdminForJob"/>
+                    <include name="verifyExportResultFileFunctionInAdjustForecastJobAsInternalAdminForJob"/>
                 </methods>
             </class>
         </classes>
@@ -110,25 +103,79 @@
         <classes>
             <class name="com.legion.tests.core.ConfigurationTest">
                 <methods>
-                    <include name="verifyUserCanOpenEachTypeTemplate"/>
-                    <include name="verifyNewAdvancedStaffingRulePage"/>
-                    <include name="verifyCheckBoxOfDaysOfWeek"/>
-                    <include name="verifyInputFormulaForDaysOfWeek"/>
-                    <include name="verifyTimeOfDayStartSection"/>
-                    <include name="verifyTimeOfDayDuringSection"/>
-                    <include name="verifyTimeOfDayEndSection"/>
-                    <include name="verifyTimeOfDayFormulaSection"/>
-                    <include name="verifyMealAndRestBreaks"/>
-                    <include name="verifyNumberOfShifts"/>
-                    <include name="verifyBadgesOfAdvanceStaffingRules"/>
-                    <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRules"/>
-                    <include name="verifySaveAndCancelButtonOfAdvanceStaffingRules"/>
-                    <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRules"/>
-                    <include name="verifyCreateAllTypeTemplate"/>
-                    <include name="verifyAdvancedStaffingRulesShowWell"/>
+                    <include name="verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration"/>
+                    <include name="verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration"/>
+                    <include name="verifyCheckBoxOfDaysOfWeekAsInternalAdminForConfiguration"/>
+                    <include name="verifyInputFormulaForDaysOfWeekAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayStartSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayDuringSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayEndSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayFormulaSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyMealAndRestBreaksAsInternalAdminForConfiguration"/>
+                    <include name="verifyNumberOfShiftsAsInternalAdminForConfiguration"/>
+                    <include name="verifyBadgesOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifySaveAndCancelButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifyCreateAllTypeTemplateAsInternalAdminForConfiguration"/>
+                    <include name="verifyAdvancedStaffingRulesShowWellAsInternalAdminForConfiguration"/>
+                    <include name="daysOfWeekE2EAsInternalAdminForConfiguration"/>
+                    <include name="numberOfShiftsInADVRuleE2EAsInternalAdminForConfiguration"/>
+                    <include name="timeOfDayInADVRuleE2EAsInternalAdminForConfiguration"/>
+                    <include name="mealAndRestBreakInADVRuleE2EAsInternalAdminForConfiguration"/>
+                    <include name="locationLevelAdvanceStaffingRuleAsInternalAdminForConfiguration"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="User Management Test">
+        <classes>
+            <class name="com.legion.tests.core.UserManagementTest">
+                <methods>
+                    <include name="verifyAddUpdateWorkRoleAsInternalAdminForUserManagement"/>
+                    <include name="verifyDynamicGroupFunctionInUserManagementTabAsInternalAdminForUserManagement"/>
+<!--                    <include name="verifyRemoveTheConditionFromDropDownListIfItSelectedAsInternalAdminForUserManagement"/>-->
+                    <include name="verifyManageItemInUserManagementAccessRoleTabAsInternalAdminForUserManagement"/>
+
+
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Labor Model Test">
+        <classes>
+            <class name="com.legion.tests.core.LaborModelTest">
+                <methods>
+                    <include name="verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdminForLaborModel"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Location Group Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationsGroupTestInOP">
+                <methods>
+                    <include name="verifyMSLocationGroupFunctionForRegularAsInternalAdminForLocationGroup"/>
+                    <include name="verifyChangeMSToP2PAsInternalAdminForLocationGroup"/>
+                    <include name="verifyP2PLocationGroupFunctionForRegularAsInternalAdminForLocationGroup"/>
+                    <include name="verifyChangeP2PToMSAsInternalAdminForLocationGroup"/>
+                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunctionAsInternalAdminForLocationGroup"/>
+                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunctionAsInternalAdminForLocationGroup"/>
+                    <include name="verifyNoLocationGroupSettingForMockAsInternalAdminForLocationGroup"/>
+                    <include name="verifyChangeNoneLocationToMSParentAsInternalAdminForLocationGroup"/>
+                    <include name="verifyChangeNoneLocationToP2PParentAsInternalAdminForLocationGroup"/>
+                    <include name="verifyChangeNoneLocationToChildAsInternalAdminForLocationGroup"/>
+                    <include name="verifyTeamTabFunctionForParentChildAndP2pLocationGroupAsInternalAdminForLocationGroup"/>
+
                 </methods>
             </class>
         </classes>
     </test>
 
 </suite> <!-- Suite -->
+
+

@@ -1,7 +1,5 @@
 package com.legion.pages;
 
-import cucumber.api.java.it.Ma;
-import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
@@ -178,4 +176,5 @@ public interface TeamPage {
 	public void selectSchoolSessionStartAndEndDate(String startDate, String endDate) throws Exception;
 	public void activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(String firstName) throws Exception;
 	public boolean checkIsInviteButtonExists();
+	public int getLocationName();
 }

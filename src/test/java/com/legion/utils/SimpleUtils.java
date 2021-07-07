@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -71,6 +72,9 @@ public class SimpleUtils {
 	 */
 	public static String getURL() {
 		String uRL = parameterMap.get("URL");
+		if (uRL.contains("{0}") && System.getProperty("seleniumGridPort") != null && !System.getProperty("seleniumGridPort").isEmpty()) {
+			uRL = MessageFormat.format(uRL, System.getProperty("seleniumGridPort"));
+		}
 		return uRL;
 	}
 
@@ -913,19 +917,7 @@ public class SimpleUtils {
 		String testRailPassword =   "";
 		String testRailProjectID =  "";
 		String testRailSuiteID =    "";
-		if (System.getProperty("enterprise") != null && System.getProperty("enterprise").equalsIgnoreCase("op")) {
-			testRailURL = testRailCfgOp.get("TEST_RAIL_URL");
-			setTestRailURL(testRailURL);
-			testRailUser = testRailCfgOp.get("TEST_RAIL_USER");
-			setTestRailUser(testRailUser);
-			testRailPassword = testRailCfgOp.get("TEST_RAIL_PASSWORD");
-			setTestRailPassword(testRailPassword);
-			testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
-			TestBase.testRailProjectID = testRailProjectID;
-			//setTestRailProjectID(testRailProjectID);
-			//testRailSuiteID = MyThreadLocal.getTestSuiteID();
-			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
-		}else {
+		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
 			testRailURL = testRailConfig.get("TEST_RAIL_URL");
 			setTestRailURL(testRailURL);
 			testRailUser = testRailConfig.get("TEST_RAIL_USER");
@@ -933,6 +925,18 @@ public class SimpleUtils {
 			testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
 			setTestRailPassword(testRailPassword);
 			testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+			TestBase.testRailProjectID = testRailProjectID;
+			//setTestRailProjectID(testRailProjectID);
+			//testRailSuiteID = MyThreadLocal.getTestSuiteID();
+			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
+		}else {
+			testRailURL = testRailCfgOp.get("TEST_RAIL_URL");
+			setTestRailURL(testRailURL);
+			testRailUser = testRailCfgOp.get("TEST_RAIL_USER");
+			setTestRailUser(testRailUser);
+			testRailPassword = testRailCfgOp.get("TEST_RAIL_PASSWORD");
+			setTestRailPassword(testRailPassword);
+			testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
 			TestBase.testRailProjectID = testRailProjectID;
 			//testRailSuiteID = MyThreadLocal.getTestSuiteID();
 			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");

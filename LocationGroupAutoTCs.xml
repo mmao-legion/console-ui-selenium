@@ -14,18 +14,18 @@
         <classes>
             <class name="com.legion.tests.core.LocationsTest">
                 <methods>
-                    <include name="verifyMSLocationGroupFunctionForRegular" />
-                    <include name="verifyChangeMSToP2P" />
-                    <include name="verifyP2PLocationGroupFunctionForRegular" />
-                    <include name="verifyChangeP2PToMS" />
-                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
-                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
-                    <include name="verifyNoLocationGroupSettingForMock" />
-                    <include name="verifyChangeNoneLocationToChild" />
-                    <include name="verifyChangeNoneLocationToP2PParent" />
-                    <include name="verifyChangeNoneLocationToMSParent" />
-                    <include name="verifyChangeMSLocationsToNoneFunction" />
-                    <include name="verifyChangeP2PLocationsToNoneFunction" />
+                    <include name="verifyMSLocationGroupFunctionForRegularAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeMSToP2PAsInternalAdminForLocationGroup" />
+                    <include name="verifyP2PLocationGroupFunctionForRegularAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeP2PToMSAsInternalAdminForLocationGroup" />
+                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunctionAsInternalAdminForLocationGroup" />
+                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunctionAsInternalAdminForLocationGroup" />
+                    <include name="verifyNoLocationGroupSettingForMockAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeNoneLocationToChildAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeNoneLocationToP2PParentAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeNoneLocationToMSParentAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeMSLocationsToNoneFunctionAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeP2PLocationsToNoneFunctionAsInternalAdminForLocationGroup" />
 
 
                 </methods>

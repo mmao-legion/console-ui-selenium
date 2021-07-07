@@ -484,27 +484,31 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
 
     @Override
     public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String linkName) throws Exception {
-        if (areListElementVisible(widgets, 10)) {
-            for (WebElement widget : widgets) {
-                // wait for all the widget content loaded Successfully
-                waitForSeconds(5);
-                WebElement widgetTitle = widget.findElement(By.className("dms-box-title"));
-                if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)) ||
-                        widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)))) {
-                    try {
-                        WebElement link = widget.findElement(By.className("dms-action-link"));
-                        if (link != null && linkName.toLowerCase().equals(link.getText().toLowerCase().trim())) {
-                            clickTheElement(link);
-                            SimpleUtils.pass("Click on: \"" + linkName + "\" on Widget: \"" + widgetName + "\" Successfully!");
-                            break;
+        try {
+            if (areListElementVisible(widgets, 10)) {
+                for (WebElement widget : widgets) {
+                    // wait for all the widget content loaded Successfully
+                    waitForSeconds(5);
+                    WebElement widgetTitle = widget.findElement(By.className("dms-box-title"));
+                    if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)) ||
+                            widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)))) {
+                        try {
+                            WebElement link = widget.findElement(By.className("dms-action-link"));
+                            if (link != null && linkName.toLowerCase().equals(link.getText().toLowerCase().trim())) {
+                                clickTheElement(link);
+                                SimpleUtils.pass("Click on: \"" + linkName + "\" on Widget: \"" + widgetName + "\" Successfully!");
+                                break;
+                            }
+                        } catch (Exception e) {
+                            continue;
                         }
-                    }catch (Exception e) {
-                        continue;
                     }
                 }
+            } else {
+                SimpleUtils.report("There are no widgets on dashboard, please turn on them!");
             }
-        }else {
-            SimpleUtils.report("There are no widgets on dashboard, please turn on them!");
+        } catch (Exception e) {
+            SimpleUtils.fail("Execute method: clickOnLinkByWidgetNameAndLinkName() failed!", false);
         }
     }
 

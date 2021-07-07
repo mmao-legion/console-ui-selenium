@@ -21,10 +21,7 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.json.JSONException;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -32,10 +29,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.SessionId;
+import org.openqa.selenium.remote.*;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -128,7 +122,7 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        if (System.getProperty("enterprise") !=null && System.getProperty("enterprise").equalsIgnoreCase("op")) {
+        if (System.getProperty("enterprise") != null && System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
             testSuiteID = testRailCfgOp.get("TEST_RAIL_SUITE_ID");
             finalTestRailRunName = testRailRunName;
             ifAddNewTestRun = true;
@@ -295,10 +289,7 @@ public abstract class TestBase {
         caps.setCapability("video", true);
         caps.setCapability("console", true);
         caps.setCapability("name", ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()));
-        caps.setCapability("idleTimeout", 600);
 
-//        caps.setCapability("selenium_version","3.141.59");
-        caps.setCapability("chrome.driver","87.0");
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
             setDriver(new RemoteWebDriver(new URL(url),caps));
@@ -415,8 +406,9 @@ public abstract class TestBase {
         SimpleUtils.assertOnFail("Failed to login to the application!", loginPage.isLoginSuccess(), false);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
-        locationSelectorPage.changeLocation(location);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+//        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
+//        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
         MyThreadLocal.setIsNeedEditingOperatingHours(false);

@@ -147,21 +147,21 @@ public class CinemarkMinorTest extends TestBase {
             Map<String, String> dayInfo = schedulePage.getActiveDayInfo();
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-
             teamPage.goToTeam();
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 
             teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
             SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                     teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-            String calendarName = "Start Next Saturday1";
+            String calendarName = "Start Next Saturday2";
 
             teamPage.deleteCalendarByName(calendarName);
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartAndEndDate(dayInfo.get("year") +" Jan 1",
+            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year")) - 1) +" Jan 1",
                     dayInfo.get("year") +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.inputCalendarName(calendarName);
@@ -896,8 +896,6 @@ public class CinemarkMinorTest extends TestBase {
     public void getAndSetDefaultTemplate(String currentLocation) throws Exception{
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
         //Go to OP page
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();

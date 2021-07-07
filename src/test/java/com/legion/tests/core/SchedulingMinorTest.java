@@ -646,15 +646,17 @@ public class SchedulingMinorTest extends TestBase {
 
             schedulePage.clickOnOfferOrAssignBtn();
             schedulePage.saveSchedule();
-
+            schedulePage.clickOnOpenSearchBoxButton();
+            schedulePage.searchShiftOnSchedulePage(firstNameOfTM1);
             //check the violation in i icon popup of new create shift
             WebElement newAddedShift = schedulePage.getOneDayShiftByName(5, firstNameOfTM1).get(0);
+
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
                         schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max 15 hrs"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed! ", false);
-
+            schedulePage.clickOnCloseSearchBoxButton();
 
             //Create 4 shifts for TM2 and the shifts have 20 hours totally
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -708,6 +710,8 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.saveSchedule();
 
             //check the violation in i icon popup of new create shift
+            schedulePage.clickOnOpenSearchBoxButton();
+            schedulePage.searchShiftOnSchedulePage(firstNameOfTM2);
             newAddedShift = schedulePage.getOneDayShiftByName(4, firstNameOfTM2).get(0);
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
@@ -804,13 +808,15 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.saveSchedule();
 
             //check the violation in i icon popup of new create shift
+            schedulePage.clickOnOpenSearchBoxButton();
+            schedulePage.searchShiftOnSchedulePage(firstNameOfTM1);
             WebElement newAddedShift = schedulePage.getOneDayShiftByName(6, firstNameOfTM1).get(0);
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
                         schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max 6 days"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed! ", false);
-
+            schedulePage.clickOnCloseSearchBoxButton();
 
             //Create 5 shifts in 5 days for TM2
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -864,6 +870,8 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.saveSchedule();
 
             //check the violation in i icon popup of new create shift
+            schedulePage.clickOnOpenSearchBoxButton();
+            schedulePage.searchShiftOnSchedulePage(firstNameOfTM2);
             newAddedShift = schedulePage.getOneDayShiftByName(5, firstNameOfTM2).get(0);
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",

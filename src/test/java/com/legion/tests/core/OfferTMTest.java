@@ -382,7 +382,7 @@ public class OfferTMTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the functionality of \"Offer Team Members\" for Open Shift: Manual in Edit Mode")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember(String browser, String username, String password, String location) throws Exception{
@@ -623,6 +623,16 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+
+            // 1.Checking configuration in controls
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+            SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
+            String option = "Always";
+            controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -729,6 +739,17 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            
+            // 1.Checking configuration in controls
+            String option = "Always";
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+            SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
+            //===================================
+            controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);

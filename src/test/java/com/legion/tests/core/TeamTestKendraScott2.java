@@ -685,9 +685,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Remove access to Employee Profile in Team Schedule view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager(String browser, String username, String password, String location) throws Exception {
+	public void verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
-			// Login with Store manager Credential
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -704,15 +703,26 @@ public class TeamTestKendraScott2 extends TestBase{
 				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.saveSchedule();
 			schedulePage.publishActiveSchedule();
-			SimpleUtils.assertOnFail("SM should be able to view profile info in SM view", schedulePage.isProfileIconsClickable(), false);
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			// Login as Store Manager
+			String fileName  = "UsersCredentials.json";
+			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+			Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+					, String.valueOf(storeManagerCredentials[0][2]));
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			profileNewUIPage.clickOnUserProfileImage();//.getNickNameFromProfile();
 			dashboardPage.clickOnSwitchToEmployeeView();
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			schedulePage.clickOnScheduleSubTab("Team Schedule");
 			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
-			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 
 
@@ -810,24 +820,23 @@ public class TeamTestKendraScott2 extends TestBase{
 			teamPage.searchAndSelectTeamMemberByName(tm);
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
-			//Login as TL Blocked by SCH-3703
-//			storeManagerCredentials = userCredentials.get("TeamLead");
-//			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-//					, String.valueOf(storeManagerCredentials[0][2]));
-//			dashboardPage = pageFactory.createConsoleDashboardPage();
-//			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//
-//			//Go to team page and check the invite button
-//			teamPage.goToTeam();
-//			SimpleUtils.assertOnFail("The invite buttons fail to load on Roster page! ", teamPage.checkIsInviteButtonExists(), false);
-//			teamPage.searchAndSelectTeamMemberByName(tm);
-//			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
-//			loginPage.logOut();
+
+			storeManagerCredentials = userCredentials.get("TeamLead");
+			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
+					, String.valueOf(storeManagerCredentials[0][2]));
+			dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			//Go to team page and check the invite button
+			teamPage.goToTeam();
+			SimpleUtils.assertOnFail("The invite buttons fail to load on Roster page! ", teamPage.checkIsInviteButtonExists(), false);
+			teamPage.searchAndSelectTeamMemberByName(tm);
+			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
+			loginPage.logOut();
 			//Login as admin
 			loginToLegionAndVerifyIsLoginDone(username, password, location);
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-
 
 			controlsPage.gotoControlsPage();
 			controlsNewUIPage.isControlsPageLoaded();

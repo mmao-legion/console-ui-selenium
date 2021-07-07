@@ -37,7 +37,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement>consoleNavigationMenuItems;
 	@FindBy(css = "div.profile")
 	private WebElement profilePageSection;
-	@FindBy(css="div.collapsible-title-text")
+	@FindBy(css="div.collapsible-title-text span")
 	private List<WebElement> profilePageSubSections;
 	@FindBy(css="a[ng-click=\"newTimeOff()\"]")
 	private WebElement newTimeOffBtn;
@@ -250,7 +250,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void selectProfilePageSubSectionByLabel(String profilePageSubSectionLabel) throws Exception {
 		boolean isSubSectionSelected = false;
-		if(areListElementVisible(profilePageSubSections,10)) {
+		if(areListElementVisible(profilePageSubSections,60)) {
 			for(WebElement profilePageSubSection : profilePageSubSections) {
 				if(profilePageSubSection.getText().toLowerCase().contains(profilePageSubSectionLabel.toLowerCase())) {
 					clickTheElement(profilePageSubSection);
@@ -3542,7 +3542,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isInviteToLegionButtonLoaded() throws Exception {
 		boolean isInviteToLegionButtonLoaded = false;
-		if(isElementLoaded(userProfileInviteBtn, 5)) {
+		if(isElementLoaded(userProfileInviteBtn, 10)) {
 			isInviteToLegionButtonLoaded =true;
 			SimpleUtils.report("Profile Page: Invite To Legion Button loaded successfully.");
 		} else
@@ -3670,4 +3670,83 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return status;
 	}
 
+	//Added by Estelle to get home store location
+	@FindBy(css = "div[ng-if=\"canViewWorkerEngagement\"]")
+	private WebElement hrProfileInfoForm;
+	@Override
+	public HashMap<String, String> getOneUserHRProfileInfo() throws Exception {
+		HashMap<String, String> userProfileEngagementDetails = new HashMap<>();
+		if(isElementLoaded(hrProfileInfoForm)) {
+			List<WebElement> rows = hrProfileInfoForm.findElements(By.cssSelector("div.row"));
+
+			for(int index = 0; index < rows.size() ; index++) {
+				if(rows.get(index).getText().toLowerCase().contains("name")
+						&& rows.get(index).getText().toLowerCase().contains("job title")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("name", rowValues[0]);
+						userProfileEngagementDetails.put("jobTitle", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get Name and Job Title value from ' HR Profile Infomation form'", false);
+
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("manager name")
+						&& rows.get(index).getText().toLowerCase().contains("home store")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+//						userProfileEngagementDetails.put("manager name", rowValues[0]);//manager name are all blank
+						userProfileEngagementDetails.put("home store", rowValues[0]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get Manager Name and Home Store value from ' HR Profile Infomation form'", false);
+				}
+
+				else if(rows.get(index).getText().toLowerCase().contains("employee id")
+						&& rows.get(index).getText().toLowerCase().contains("date hired")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("employee id", rowValues[0]);
+						userProfileEngagementDetails.put("date hired", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get EMPLOYEE ID and DATE HIRED value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("employment type")
+						&& rows.get(index).getText().toLowerCase().contains("hourly rate")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("employment type", rowValues[0]);
+						userProfileEngagementDetails.put("hourly rate", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get EMPLOYMENT TYPE and HOURLY RATE value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("employment status")
+						&& rows.get(index).getText().toLowerCase().contains("exempt")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("employment status", rowValues[0]);
+						userProfileEngagementDetails.put("exempt", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get EMPLOYMENT STATUS and EXEMPT value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("address")
+						&& rows.get(index).getText().toLowerCase().contains("minor")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("address", rowValues[0]);
+						userProfileEngagementDetails.put("minor", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get ADDRESS and MINOR value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("contact information")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("phoneNumber", rowValues[0]);
+						userProfileEngagementDetails.put("email", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get phoneNumber and email value from ' HR Profile Infomation form'", false);
+				}
+
+			}
+		}
+		return userProfileEngagementDetails;
+	}
 }

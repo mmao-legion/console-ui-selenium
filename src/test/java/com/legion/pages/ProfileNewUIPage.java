@@ -255,4 +255,5 @@ public interface ProfileNewUIPage {
 	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception;
 
 	public String getStatusOnProfilePage () throws Exception;
+	public HashMap<String, String> getOneUserHRProfileInfo() throws Exception;
 }
