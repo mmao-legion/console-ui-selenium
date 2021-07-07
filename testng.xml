@@ -430,6 +430,9 @@
                     <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
                     <include name="verifyComplianceWarningInPublishConfirmModalAsInternalAdmin" />
                     <include name="verifyHrsOverBudgetInPublishConfirmModalForNonDGAsInternalAdmin" />
+                    <include name="verifyCanSeeEmployeeHomeLocationAsInternalAdmin" />
+                    <include name="verifyCanSeeEmployeeHomeLocationAsStoreManager" />
+                    <include name="verifyCanSeeEmployeeHomeLocationAsDistrictManager" />
                 </methods>
             </class>
         </classes>
