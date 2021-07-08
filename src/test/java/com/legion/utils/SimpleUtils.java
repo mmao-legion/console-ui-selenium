@@ -72,8 +72,9 @@ public class SimpleUtils {
 	 */
 	public static String getURL() {
 		String uRL = parameterMap.get("URL");
-		if (uRL.contains("{0}") && System.getProperty("seleniumGridPort") != null && !System.getProperty("seleniumGridPort").isEmpty()) {
-			uRL = MessageFormat.format(uRL, System.getProperty("seleniumGridPort"));
+		if (uRL.contains("{0}") && uRL.contains("{1}") && System.getProperty("seleniumGridPort") != null && !System.getProperty("seleniumGridPort").isEmpty()) {
+			uRL = MessageFormat.format(uRL, System.getProperty("domainName"), System.getProperty("seleniumGridPort"));
+			System.out.println("----------------------------------" + uRL + "----------------------------------");
 		}
 		return uRL;
 	}

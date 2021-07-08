@@ -21,6 +21,7 @@
         <env>https://rc-enterprise.dev.legion.work/</env>
         <testRail>Yes</testRail>
         <seleniumGridPort>4466</seleniumGridPort>
+        <domainName>localhost</domainName>
     </properties>
 
     <profiles>
@@ -300,6 +301,7 @@
                         <enterprise>${enterprise}</enterprise>
                         <testRail>${testRail}</testRail>
                         <seleniumGridPort>${seleniumGridPort}</seleniumGridPort>
+                        <domainName>${domainName}</domainName>
                     </systemPropertyVariables>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <forkCount>5</forkCount>

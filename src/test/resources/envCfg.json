@@ -49,5 +49,5 @@
  "legion.cucumber.extent.report.theme" : "dark",
  "legion.cucumber.extent.report.title" : "Legion Cucumber Report",
  "isGridEnabled" : "false",
- "URL" : "http://localhost:{0}/wd/hub"
+ "URL" : "http://{0}:{1}/wd/hub"
 }
