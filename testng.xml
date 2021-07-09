@@ -9,70 +9,70 @@
     </listeners>
 <!--======================================================Start - This is OP tests===================================================-->
 
-    <test name="Location Test">
-        <classes>
-            <class name="com.legion.tests.core.LocationsTest">
-                <methods>
-                    <include name="verifyCreateRegularLocationWithMandatoryFields" />
-                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
-                    <include name="verifyCreateMockLocationAndNavigate" />
-                    <include name="verifyCreateNSOLocationAndNavigate" />
-                    <include name="verifyDisableEnableLocationFunction" />
-                    <include name="verifyImportLocationDistrict" />
-                    <include name="verifyExportLocationDistrict" />
+<!--    <test name="Location Test">-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.LocationsTest">-->
+<!--                <methods>-->
+<!--                    <include name="verifyCreateRegularLocationWithMandatoryFields" />-->
+<!--                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />-->
+<!--                    <include name="verifyCreateMockLocationAndNavigate" />-->
+<!--                    <include name="verifyCreateNSOLocationAndNavigate" />-->
+<!--                    <include name="verifyDisableEnableLocationFunction" />-->
+<!--                    <include name="verifyImportLocationDistrict" />-->
+<!--                    <include name="verifyExportLocationDistrict" />-->
 
-                    <include name="verifyCreateMSLocationGroupWithRegularTypeFunction" />
-                    <include name="verifyUpdateMSLocationGroupDistrictFunction" />
-                    <include name="verifyDisableEnableParentChildLocationInLGMS" />
+<!--                    <include name="verifyCreateMSLocationGroupWithRegularTypeFunction" />-->
+<!--                    <include name="verifyUpdateMSLocationGroupDistrictFunction" />-->
+<!--                    <include name="verifyDisableEnableParentChildLocationInLGMS" />-->
 
-                    <include name="verifyCreateP2PLocationGroupWithRegularTypeFunction" />
-                    <include name="verifyUpdateP2PLocationGroupDistrictFunction" />
-                    <include name="verifyDisableEnableParentChildLocationInLGP2P" />
+<!--                    <include name="verifyCreateP2PLocationGroupWithRegularTypeFunction" />-->
+<!--                    <include name="verifyUpdateP2PLocationGroupDistrictFunction" />-->
+<!--                    <include name="verifyDisableEnableParentChildLocationInLGP2P" />-->
 
-                    <include name="verifyChangeNoneLocationToChild" />
-                    <include name="verifyChangeNoneLocationToP2PParent" />
-                    <include name="verifyChangeNoneLocationToMSParent" />
-                    <include name="verifyAddNewDistricBtnAsInternalAdmin" />
+<!--                    <include name="verifyChangeNoneLocationToChild" />-->
+<!--                    <include name="verifyChangeNoneLocationToP2PParent" />-->
+<!--                    <include name="verifyChangeNoneLocationToMSParent" />-->
+<!--                    <include name="verifyAddNewDistricBtnAsInternalAdmin" />-->
 
-                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
-                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
-                    <include name="verifyNoLocationGroupSettingForMock" />
+<!--                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />-->
+<!--                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />-->
+<!--                    <include name="verifyNoLocationGroupSettingForMock" />-->
 
-                    <include name="verifyChangeChildLocationToNoneFunction" />
-                    <include name="verifyChangeP2PToMS" />
-                    <include name="verifyChangeMSToP2P" />
-                    <include name="verifyChangeMSParentLocationToNoneFunction" />
-                    <include name="verifyChangeP2PParentLocationToNoneFunction" />
+<!--                    <include name="verifyChangeChildLocationToNoneFunction" />-->
+<!--                    <include name="verifyChangeP2PToMS" />-->
+<!--                    <include name="verifyChangeMSToP2P" />-->
+<!--                    <include name="verifyChangeMSParentLocationToNoneFunction" />-->
+<!--                    <include name="verifyChangeP2PParentLocationToNoneFunction" />-->
 
-                    <!--                    District test cases-->
-                    <include name="verifyDistrictListPageLoading" />
-                    <include name="verifySearchDistrictFunction" />
-                    <include name="verifyAddOrUpdateDistrictFunction" />
-                    <include name="verifyDisableEnableDistrictFunction" />
+<!--                    &lt;!&ndash;                    District test cases&ndash;&gt;-->
+<!--                    <include name="verifyDistrictListPageLoading" />-->
+<!--                    <include name="verifySearchDistrictFunction" />-->
+<!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
+<!--                    <include name="verifyDisableEnableDistrictFunction" />-->
 
 
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 
-    <test name="Navigation Test">
-        <classes>
-            <class name="com.legion.tests.core.NewNavigationFlowTest">
-                <methods>
-                    <include name="verifyLocationProfilePageInControls" />
-                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
-                    <include name="verifyLocationListFunctionInTimesheet" />
-                    <include name="verifyLegionBasicNavigationFunctionIn" />
-                    <include name="verifyDashboardViewAsInternalAdmin" />
-                    <include name="verifyDashboardViewAsDistrictManager" />
-                    <include name="verifyDashboardViewAsStoreManager" />
-                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />
-                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--    <test name="Navigation Test">-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.NewNavigationFlowTest">-->
+<!--                <methods>-->
+<!--                    <include name="verifyLocationProfilePageInControls" />-->
+<!--                    <include name="verifyManagerLocationForOneUserInControlsInControls" />-->
+<!--                    <include name="verifyLocationListFunctionInTimesheet" />-->
+<!--                    <include name="verifyLegionBasicNavigationFunctionIn" />-->
+<!--                    <include name="verifyDashboardViewAsInternalAdmin" />-->
+<!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
+<!--                    <include name="verifyDashboardViewAsStoreManager" />-->
+<!--                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />-->
+<!--                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 
 <!--======================================================End - This is OP tests===================================================-->
 

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite  verbose ="10" name="Legion Test" parallel="classes" thread-count="5">
-    <parameter name="para" value="test_para1"/>
+    <parameter name="environment" value="QA"/>
+    <parameter name="testRail" value="Yes"/>
+    <parameter name="testRailRunName" value="Automation - Daily Routine"/>
     <test name="Legion Test">
         <classes>
             <class name = "com.legion.tests.core.LocationsTest"/>
