@@ -4,8 +4,6 @@ import com.legion.pages.BasePage;
 import com.legion.pages.ConfigurationPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.utils.SimpleUtils;
-import com.sun.glass.events.KeyEvent;
-import com.sun.glass.ui.Robot;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
