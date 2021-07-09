@@ -907,37 +907,29 @@ public class SimpleUtils {
 
 	public static List<Integer> addNUpdateTestCaseIntoTestRail(String testName,ITestContext context)
 	{
-		int testCaseID = 0;
+		//int testCaseID = 0;
 		List<Integer> testCaseIDList = new ArrayList<>();
 		List<Integer> testCasesToAdd = new ArrayList<>();
 //	    String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-		String addResultString = "add_case/"+sectionID;
+		//String addResultString = "add_case/"+sectionID;
 		String testRailURL =        "";
 		String testRailUser =       "";
 		String testRailPassword =   "";
-		String testRailProjectID =  "";
-		String testRailSuiteID =    "";
+		//String testRailSuiteID =    "";
 		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
 			testRailURL = testRailConfig.get("TEST_RAIL_URL");
-			setTestRailURL(testRailURL);
+			//setTestRailURL(testRailURL);
 			testRailUser = testRailConfig.get("TEST_RAIL_USER");
-			setTestRailUser(testRailUser);
+			//setTestRailUser(testRailUser);
 			testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-			setTestRailPassword(testRailPassword);
-			testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-			TestBase.testRailProjectID = testRailProjectID;
-			//setTestRailProjectID(testRailProjectID);
-			//testRailSuiteID = MyThreadLocal.getTestSuiteID();
-			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
+			//setTestRailPassword(testRailPassword);
 		}else {
 			testRailURL = testRailCfgOp.get("TEST_RAIL_URL");
-			setTestRailURL(testRailURL);
+			//setTestRailURL(testRailURL);
 			testRailUser = testRailCfgOp.get("TEST_RAIL_USER");
-			setTestRailUser(testRailUser);
+			//setTestRailUser(testRailUser);
 			testRailPassword = testRailCfgOp.get("TEST_RAIL_PASSWORD");
-			setTestRailPassword(testRailPassword);
-			testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
-			TestBase.testRailProjectID = testRailProjectID;
+			//setTestRailPassword(testRailPassword);
 			//testRailSuiteID = MyThreadLocal.getTestSuiteID();
 			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
 		}
@@ -947,7 +939,7 @@ public class SimpleUtils {
 			client.setUser(testRailUser);
 			client.setPassword(testRailPassword);
 			testCaseIDList = TestBase.AllTestCaseIDList;
-			testCasesToAdd = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client);
+			testCasesToAdd = getTestCaseIDFromTitle(testName, Integer.parseInt(TestBase.testRailProjectID), client);
 			if (testCasesToAdd.isEmpty()){
 				MyThreadLocal.setTestCaseExistsFlag(false);
 				System.out.println("-------------------Cannot find the test cases for: " + testName + "-------------------");
@@ -956,8 +948,7 @@ public class SimpleUtils {
 				testCaseIDList.addAll(testCasesToAdd);
 				TestBase.AllTestCaseIDList = testCaseIDList;
 			}
-//				addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
-			addNUpdateTestCaseIntoTestRunSample(testName,context,testCaseIDList);
+			updateTestCaseIntoTestRunSample(testName,context,testCaseIDList);
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}
@@ -1049,6 +1040,28 @@ public class SimpleUtils {
 			}
 		}
 
+	}
+
+	public static String getTestRailURL(){
+		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+			return testRailConfig.get("TEST_RAIL_URL");
+		}else {
+			return testRailCfgOp.get("TEST_RAIL_URL");
+		}
+	}
+	public static String getTestRailUser(){
+		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+			return testRailConfig.get("TEST_RAIL_USER");
+		}else {
+			return testRailCfgOp.get("TEST_RAIL_USER");
+		}
+	}
+	public static String getTestRailPassword(){
+		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+			return testRailConfig.get("TEST_RAIL_PASSWORD");
+		}else {
+			return testRailCfgOp.get("TEST_RAIL_PASSWORD");
+		}
 	}
 
 	//added by Nishant
@@ -1719,13 +1732,59 @@ public class SimpleUtils {
 
 	}
 
-
-	public static int addNUpdateTestCaseIntoTestRunSample(String testName, ITestContext context, List<Integer> testCaseIDList)
+	public static void addTestRun()
 	{
 		String testRailURL = getTestRailURL();
 		String testRailUser = getTestRailUser();
 		String testRailPassword = getTestRailPassword();
-		String testRailProjectID = TestBase.testRailProjectID;
+		int suiteId = Integer.valueOf(TestBase.testSuiteID);
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date =null;
+		String strDate = null;
+		String addResultString = "";
+		String name = "";
+		addResultString = "add_run/" + TestBase.testRailProjectID;
+		try {
+			// Make a connection with TestRail Server
+			APIClient client = new APIClient(testRailURL);
+			client.setUser(testRailUser);
+			client.setPassword(testRailPassword);
+
+			Map<String, Object> data = new HashMap<String, Object>();
+			try{
+				date = format.parse(timestamp.toString());
+				//String[] arrDate = format.format(date).split(" ");
+				//strDate = arrDate[1];
+				strDate = format.format(date);
+			}catch(ParseException e){
+				System.err.println(e.getMessage());
+			}
+			data.put("include_all", false);
+			data.put("suite_id", suiteId);
+			if (TestBase.finalTestRailRunName==null||TestBase.finalTestRailRunName.equals("")){
+				name = "Automation - Regression " + strDate;
+			} else {
+				name = TestBase.finalTestRailRunName+ " " + strDate;
+			}
+			data.put("name", name);
+			//data.put("case_ids", testCaseIDList);
+			JSONObject jSONObject = (JSONObject) client.sendPost(addResultString, data);
+			long longTestRailRunId = (Long) jSONObject.get("id");
+			//add test rail run ID=================================
+			TestBase.testRailRunId = (int) longTestRailRunId;
+		} catch (IOException ioException) {
+			System.err.println(ioException.getMessage());
+		} catch (APIException aPIException) {
+			System.err.println(aPIException.getMessage());
+		}
+	}
+
+	public static int updateTestCaseIntoTestRunSample(String testName, ITestContext context, List<Integer> testCaseIDList)
+	{
+		String testRailURL = getTestRailURL();
+		String testRailUser = getTestRailUser();
+		String testRailPassword = getTestRailPassword();
 		int suiteId = Integer.valueOf(TestBase.testSuiteID);
 //		int suiteId = Integer.valueOf(testRailConfig.get("TEST_CASE_SUITE_ID"));
 		//int TestRailRunId = 0;
@@ -1735,13 +1794,8 @@ public class SimpleUtils {
 		String strDate = null;
 		String addResultString = "";
 		String name = "";
-		if(TestBase.ifAddNewTestRun){
-			TestBase.ifAddNewTestRun = false;
-			addResultString = "add_run/" + testRailProjectID;
-			System.out.println("----------------------Add test run for project: " + testRailProjectID + "--------------------");
-		} else {
-			addResultString = "update_run/" + TestBase.testRailRunId;
-		}
+		addResultString = "update_run/" + TestBase.testRailRunId;
+
 
 		try {
 			// Make a connection with TestRail Server

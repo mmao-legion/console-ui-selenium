@@ -55,6 +55,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.SimpleUtils.addResultForTest;
+import static com.legion.utils.SimpleUtils.addTestRun;
 
 //import org.apache.log4j.Logger;
 
@@ -105,12 +106,12 @@ public abstract class TestBase {
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
         if (System.getProperty("enterprise") != null && System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
             testSuiteID = testRailCfgOp.get("TEST_RAIL_SUITE_ID");
+            testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
             finalTestRailRunName = testRailRunName;
-            ifAddNewTestRun = true;
         }else{
             testSuiteID = testRailCfg.get("TEST_RAIL_SUITE_ID");
+            testRailProjectID = testRailCfg.get("TEST_RAIL_PROJECT_ID");
             finalTestRailRunName = testRailRunName;
-            ifAddNewTestRun = true;
         }
 
 
@@ -133,6 +134,7 @@ public abstract class TestBase {
 
         if(System.getProperty("testRail") != null && System.getProperty("testRail").equalsIgnoreCase("Yes")){
             testRailReportingFlag = "Y";
+            addTestRun();
         }
     }
 
@@ -186,6 +188,7 @@ public abstract class TestBase {
         //setTestRailRun(testRailId);
         if(testRailReportingFlag!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
+            MyThreadLocal.setTestResultFlag(false);
         }
         setCurrentMethod(method);
         setBrowserNeeded(true);
@@ -263,7 +266,7 @@ public abstract class TestBase {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("browserName", "chrome");
 //        caps.setCapability("version", "5.4.0-1029-aws");
-        caps.setCapability("platform", "LINUX");
+        caps.setCapability("platform", "WINDOWS");
         caps.setCapability("idleTimeout", 150);
         caps.setCapability("network", true);
         caps.setCapability("visual", true);
