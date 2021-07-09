@@ -97,7 +97,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(goToLocationsButton, 10))
+		waitForSeconds(10);
+		if (isElementLoaded(getDriver().findElement(By.cssSelector(".console-navigation-item-label.Locations")), 10))
 			isLoaded = true;
 		return isLoaded;
 	}
@@ -763,7 +764,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean verifyUpdateLocationResult(String locationName) throws Exception {
 		searchLocation(locationName);
-		if (locationsName.getText().contains(locationName)) {
+		if (isElementLoaded(locationsName, 10) && locationsName.getText().contains(locationName)) {
 			return true;
 		}
 		return false;

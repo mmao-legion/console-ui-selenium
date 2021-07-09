@@ -1232,6 +1232,23 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return badgesText;
 	}
+
+	@FindBy(css = ".information-section.badge-section")
+	private WebElement badgeSectionInProfilePage;
+	@FindBy(css = ".lg-badges-badge")
+	private List<WebElement> badgeList;
+	@Override
+	public ArrayList<String> getUserBadgesDetailsFromProfilePage() throws Exception {
+		ArrayList<String> badgesText = new ArrayList<String>();
+		if(isElementLoaded(badgeSectionInProfilePage, 10)) {
+			if (badgeList.size()>0){
+				for (WebElement element: badgeList){
+					badgesText.add(element.getAttribute("popover-title"));
+				}
+			}
+		}
+		return badgesText;
+	}
 	
 	
 	public void updateReceivesShiftOffersForOtherLocationCheckButton(boolean isOfferForOtherLocation) throws Exception 
@@ -2899,6 +2916,21 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		} else {
 			SimpleUtils.fail("User Profile page: HR Profile Information section fail to load!", false);
 		}
+	}
+
+	@FindBy(css = ".field-content")
+	private List<WebElement> profileInfoFields;
+	@Override
+	public Map<String, String> getHRProfileInfo() throws Exception {
+		Map<String, String> result = new HashMap<>();
+		if(isElementLoaded(hrProfileInfoSection, 5) && areListElementVisible(profileInfoFields, 10)){
+			for (WebElement element: profileInfoFields){
+				result.put(element.findElement(By.cssSelector(".label")).getText(), element.findElement(By.cssSelector(".value")).getText());
+			}
+		} else {
+			SimpleUtils.fail("User Profile page: HR Profile Information section fail to load!", false);
+		}
+		return result;
 	}
 
 	public void verifyLegionInformationSectionIsLoaded() throws Exception {

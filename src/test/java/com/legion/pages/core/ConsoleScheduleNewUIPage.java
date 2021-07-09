@@ -1063,7 +1063,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
         HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("[ng-if=\"(!showNewScheduleGeneratePage() || showPublishedSchedule()) && !isTitleBasedBudget()\"] .card-carousel-card"));
+        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("[ng-if*=\"isTitleBasedBudget()\"] .card-carousel-card"));
         if(isElementEnabled(budgetedScheduledLabelsDivElement,5))
         {
 //			Thread.sleep(2000);
@@ -4969,7 +4969,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = ".redesigned-button-ok")
     private WebElement deleteButtonOnDeleteSchedulePopup;
 
-    @FindBy (css = ".redesigned-modal-button-cancel")
+    @FindBy (css = ".redesigned-button-cancel-gray")
     private WebElement cancelButtonOnDeleteSchedulePopup;
 
     @Override
@@ -11125,6 +11125,45 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("weekly overtime Flag is not present for team member " + propertySearchTeamMember.get("TeamMember"), false);
         }
+    }
+
+    @FindBy(css = ".sch-worker-h-view")
+    private WebElement workerInfoFromShift;
+    @Override
+    public Map<String, String> getHomeLocationInfo() throws Exception {
+        Map<String, String> resultInfo = new HashMap<String, String>();
+        if (isElementLoaded(workerInfoFromShift.findElement(By.cssSelector(".sch-worker-h-view-display-name")), 10)){
+            resultInfo.put("worker name", workerInfoFromShift.findElement(By.cssSelector(".sch-worker-h-view-display-name")).getText().replace("\n", ""));
+
+        } else {
+            SimpleUtils.fail("Worker name info fail to load!", false);
+        }
+        if (isElementLoaded(workerInfoFromShift.findElement(By.cssSelector(".sch-worker-role")), 10)){
+            if (workerInfoFromShift.findElement(By.cssSelector(".sch-worker-role")).getText().split("\n").length == 2){
+                resultInfo.put("job title", workerInfoFromShift.findElement(By.cssSelector(".sch-worker-role")).getText().split("\n")[0]);
+                resultInfo.put("PTorFT", workerInfoFromShift.findElement(By.cssSelector(".sch-worker-role")).getText().split("\n")[1]);
+            } else {
+                SimpleUtils.fail("Work role and PT or FT info are not expected!", false);
+            }
+        } else {
+            SimpleUtils.fail("Work role info fail to load!", false);
+        }
+        if (isElementLoaded(workerInfoFromShift.findElement(By.cssSelector(".sch-worker-h-view-role-name")), 10)){
+            resultInfo.put("homeLocation", workerInfoFromShift.findElement(By.cssSelector(".sch-worker-h-view-role-name")).getText());
+        } else {
+            SimpleUtils.fail("Home location info fail to load!", false);
+        }
+        if (areListElementVisible(workerInfoFromShift.findElements(By.cssSelector(".one-badge")), 10)){
+            resultInfo.put("badgeSum", String.valueOf(workerInfoFromShift.findElements(By.cssSelector(".one-badge")).size()));
+            String badgeInfo = "";
+            for (WebElement element: workerInfoFromShift.findElements(By.cssSelector(".one-badge"))){
+                badgeInfo = badgeInfo + " " + element.getAttribute("data-original-title");
+            }
+            resultInfo.put("badgeInfo", badgeInfo);
+        } else {
+            resultInfo.put("badgeSum", "0");
+        }
+        return resultInfo;
     }
 
     @Override
