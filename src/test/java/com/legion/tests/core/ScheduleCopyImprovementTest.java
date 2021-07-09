@@ -678,6 +678,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             schedulePage.clickOnFilterBtn();
+            Thread.sleep(5000);
             schedulePage.convertAllUnAssignedShiftToOpenShift();
             if (ifVerifyOOOHShifts){
                 HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();

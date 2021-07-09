@@ -112,6 +112,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(3000);
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
 
             // Edit the Schedule
@@ -190,7 +191,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             List<WebElement> shiftsOfFirstDay = schedulePage.getOneDayShiftByName(0, firstNameOfTM1);
             List<WebElement> shiftsOfSecondDay = schedulePage.getOneDayShiftByName(1, firstNameOfTM1);
             shiftsOfThirdDay = schedulePage.getOneDayShiftByName(2, firstNameOfTM1);
-            List<WebElement> shiftsOfForthDay = schedulePage.getOneDayShiftByName(3, firstNameOfTM1);
+//            List<WebElement> shiftsOfForthDay = schedulePage.getOneDayShiftByName(3, firstNameOfTM1);
 
             //Check the clopening violation shifts on the first and second day
             SimpleUtils.assertOnFail("Clopening compliance message display failed",
@@ -304,6 +305,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(3000);
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "08:00PM");
 
             schedulePage.clickOnFilterBtn();
