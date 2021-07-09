@@ -327,7 +327,6 @@ public abstract class TestBase {
         }
         ExtentTestManager.getTest().info("tearDown finished");
         extent.flush();
-        getDriver().quit();
 //        stopServer();
     }
 
