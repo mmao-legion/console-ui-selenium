@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -71,6 +72,9 @@ public class SimpleUtils {
 	 */
 	public static String getURL() {
 		String uRL = parameterMap.get("URL");
+		if (uRL.contains("{0}") && uRL.contains("{1}") && System.getProperty("seleniumGridPort") != null && !System.getProperty("seleniumGridPort").isEmpty()) {
+			uRL = MessageFormat.format(uRL, System.getProperty("domainName"), System.getProperty("seleniumGridPort"));
+		}
 		return uRL;
 	}
 

@@ -2901,6 +2901,150 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	}
 
 	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify internal admin can see employee home location on shift menu")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyCanSeeEmployeeHomeLocationAsInternalAdmin(String browser, String username, String password, String location) {
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.deleteTMShiftInWeekView("open");
+			schedulePage.saveSchedule();
+
+			//Click on one of the profile icons to get the home location and related info.
+			schedulePage.clickOnProfileIcon();
+			Map<String, String> workerInfo = schedulePage.getHomeLocationInfo();
+
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(workerInfo.get("worker name"));
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			ArrayList<String> badges = profileNewUIPage.getUserBadgesDetailsFromProfilePage();
+			profileNewUIPage.verifyHRProfileInformationSectionIsLoaded();
+			Map<String, String> result = profileNewUIPage.getHRProfileInfo();
+
+			SimpleUtils.assertOnFail("Employment status is not consistent!", result.get("EMPLOYMENT STATUS").contains(workerInfo.get("PTorFT").substring(0,1)), false);
+			SimpleUtils.assertOnFail("Home location is not consistent!", result.get("HOME STORE").contains(workerInfo.get("homeLocation").substring(0,1)), false);
+			SimpleUtils.assertOnFail("Badge info is not consistent!", workerInfo.get("badgeSum").contains(String.valueOf(badges.size())), false);
+			SimpleUtils.assertOnFail("Job title is not consistent!", result.get("JOB TITLE").contains(workerInfo.get("job title").substring(0,1)), false);
+
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify store manager can see employee home location on shift menu")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyCanSeeEmployeeHomeLocationAsStoreManager(String browser, String username, String password, String location) {
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.deleteTMShiftInWeekView("open");
+			schedulePage.saveSchedule();
+
+			//Click on one of the profile icons to get the home location and related info.
+			schedulePage.clickOnProfileIcon();
+			Map<String, String> workerInfo = schedulePage.getHomeLocationInfo();
+
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(workerInfo.get("worker name"));
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			ArrayList<String> badges = profileNewUIPage.getUserBadgesDetailsFromProfilePage();
+			profileNewUIPage.verifyHRProfileInformationSectionIsLoaded();
+			Map<String, String> result = profileNewUIPage.getHRProfileInfo();
+
+			SimpleUtils.assertOnFail("Employment status is not consistent!", result.get("EMPLOYMENT STATUS").contains(workerInfo.get("PTorFT").substring(0,1)), false);
+			SimpleUtils.assertOnFail("Home location is not consistent!", result.get("HOME STORE").contains(workerInfo.get("homeLocation").substring(0,1)), false);
+			SimpleUtils.assertOnFail("Badge info is not consistent!", workerInfo.get("badgeSum").contains(String.valueOf(badges.size())), false);
+			SimpleUtils.assertOnFail("Job title is not consistent!", result.get("JOB TITLE").contains(workerInfo.get("job title").substring(0,1)), false);
+
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify area manager can see employee home location on shift menu")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyCanSeeEmployeeHomeLocationAsDistrictManager(String browser, String username, String password, String location) {
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.deleteTMShiftInWeekView("open");
+			schedulePage.saveSchedule();
+
+			//Click on one of the profile icons to get the home location and related info.
+			schedulePage.clickOnProfileIcon();
+			Map<String, String> workerInfo = schedulePage.getHomeLocationInfo();
+
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(workerInfo.get("worker name"));
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			ArrayList<String> badges = profileNewUIPage.getUserBadgesDetailsFromProfilePage();
+			profileNewUIPage.verifyHRProfileInformationSectionIsLoaded();
+			Map<String, String> result = profileNewUIPage.getHRProfileInfo();
+
+			SimpleUtils.assertOnFail("Employment status is not consistent!", result.get("EMPLOYMENT STATUS").contains(workerInfo.get("PTorFT").substring(0,1)), false);
+			SimpleUtils.assertOnFail("Home location is not consistent!", result.get("HOME STORE").contains(workerInfo.get("homeLocation").substring(0,1)), false);
+			SimpleUtils.assertOnFail("Badge info is not consistent!", workerInfo.get("badgeSum").contains(String.valueOf(badges.size())), false);
+			SimpleUtils.assertOnFail("Job title is not consistent!", result.get("JOB TITLE").contains(workerInfo.get("job title").substring(0,1)), false);
+
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify assign TM warning: If SM wants to schedule a TM from another location and schedule hasn’t been generated")

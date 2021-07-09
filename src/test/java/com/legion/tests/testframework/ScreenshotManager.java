@@ -16,6 +16,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
 import com.legion.utils.MyThreadLocal;
+import org.openqa.selenium.WebDriverException;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -38,16 +39,18 @@ public class ScreenshotManager {
                 File.separator + getCurrentTestMethodName() +
                 File.separator + threadIdStr + File.separator + getScreenshotConsoleName();
         targetFile = new File(screenshotFinalLocation, screenShotName);
-        if(MyThreadLocal.getPlatformName()!=null && MyThreadLocal.getPlatformName().equalsIgnoreCase("mobile")){
-        	screenshotFile = ((TakesScreenshot) getAndroidDriver()).getScreenshotAs(OutputType.FILE);
-        	MyThreadLocal.setPlatformName("");
-        }else{
-        	screenshotFile = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
-        }
        
 //        File screenshotFile = ((TakesScreenshot) getAndroidDriver()).getScreenshotAs(OutputType.FILE);
         try {
+            if(MyThreadLocal.getPlatformName()!=null && MyThreadLocal.getPlatformName().equalsIgnoreCase("mobile")){
+                screenshotFile = ((TakesScreenshot) getAndroidDriver()).getScreenshotAs(OutputType.FILE);
+                MyThreadLocal.setPlatformName("");
+            }else{
+                screenshotFile = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
+            }
             FileUtils.copyFile(screenshotFile, targetFile);
+        }catch (WebDriverException webDriverException) {
+            webDriverException.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
