@@ -14564,13 +14564,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public List<String> getListByColInTimesheetDMView(int index) throws Exception{
         List<String> list = new ArrayList<String>();
-        for (WebElement element: locationsInTheList){
-            if (index > 0 && index <= getNumOfColInDMViewTable() && element.findElements(By.cssSelector(".ng-scope.col-fx-1")).size()>=getNumOfColInDMViewTable()-1){
+        for (int i = 0; i < getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).size(); i++){
+            List<WebElement> columns = getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).get(i).findElements(By.cssSelector(".ng-scope.col-fx-1"));
+            if (index > 0 && index <= getNumOfColInDMViewTable() && columns.size()>=getNumOfColInDMViewTable()-1){
                 if (index == 1){
                     list = getLocationsInScheduleDMViewLocationsTable();
                 } else {
-                    if (areListElementVisible(locationsInTheList,10)){
-                        list.add(element.findElements(By.cssSelector(".ng-scope.col-fx-1")).get(index-2).getText().replace("%",""));
+                    if (areListElementVisible(getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")),10)){
+                        list.add(columns.get(index-2).getText().replace("%",""));
                     }
                 }
             } else {
