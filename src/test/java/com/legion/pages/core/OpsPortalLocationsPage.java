@@ -3321,5 +3321,22 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Save buttons load failed",false);
 	}
 
+    @FindBy(css="table.lg-table tbody.ng-scope")
+    private List<WebElement> attributesList;
 
+    public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtLocationLevel() throws Exception{
+        HashMap<String, List<String>> infoForEachAttribute = new HashMap<>();
+        if(areListElementVisible(attributesList,5)){
+            for (WebElement attribute : attributesList) {
+                List<String> infos = new ArrayList<>();
+                String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+                String value = attribute.findElement(By.cssSelector("td:nth-child(2) div")).getAttribute("innerText").trim();
+                String des = attribute.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
+                infos.add(0,value);
+                infos.add(1,des);
+                infoForEachAttribute.put(name,infos);
+            }
+        }
+        return infoForEachAttribute;
+    }
 }

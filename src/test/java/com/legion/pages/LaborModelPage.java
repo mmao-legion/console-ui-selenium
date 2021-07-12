@@ -65,4 +65,6 @@ public interface LaborModelPage {
     public void createNewTemplatePageWithoutSaving(String templateName) throws Exception;
 
     public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtTemplateLevel() throws Exception;
+
+    public void publishNowTemplate() throws Exception;
 }

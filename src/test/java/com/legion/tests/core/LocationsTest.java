@@ -10,6 +10,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import org.apache.commons.collections.ListUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -1393,6 +1394,127 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.pass("Reset scheduling rules successfully");
             } else
                 SimpleUtils.fail("Reset scheduling rules failed",false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "User can view the default location level external attribute")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDefaultValueOfExternalAttributesInLocationLevel(String browser, String username, String password, String location) throws Exception {
+
+        try{
+
+            String locationName = "AutoUsingByFiona1";
+            String templateName = "AutoUsingByFiona";
+            String label = "External Attributes";
+            String attributeName ="AutoUsingAttribute";
+            String attributeValueUpdate = "23";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+
+            //Compare template level external attributes in location tab and configuration tab
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName("AutoUsingByFiona","view");
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            HashMap<String,List<String>>  templateLevelAttributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            HashMap<String,List<String>>  templateLevelAttributesInfoInLocation = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            for(String key:templateLevelAttributesInfoInLocation.keySet()){
+                for(String key1:templateLevelAttributesInfoInTemplate.keySet()){
+                    if(key.equals(key1)){
+                        List<String> valuesInGlobal = templateLevelAttributesInfoInLocation.get(key1);
+                        List<String> valuesInTemplate = templateLevelAttributesInfoInTemplate.get(key);
+
+                        if(ListUtils.isEqualList(valuesInGlobal,valuesInTemplate)){
+                            SimpleUtils.pass("The template level attribute " + key + " in location is correct.");
+                            break;
+                        }else{
+                            SimpleUtils.fail("The template level attribute " + key + " in location is NOT correct.",false);
+                        }
+                    }
+                }
+            }
+
+            //Compare location level default external attributes value should be same with template level.
+            locationsPage.backToConfigurationTabInLocationLevel();
+            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
+                SimpleUtils.pass("Labor model template is not overridden at location level");
+            } else{
+                SimpleUtils.pass("Labor model template is already overridden at location level");
+                locationsPage.editLocationBtnIsClickableInLocationDetails();
+                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
+            }
+
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            HashMap<String,List<String>>  locationLevelAttributesInfoInLocation = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            for(String key:templateLevelAttributesInfoInLocation.keySet()){
+                for(String key1:locationLevelAttributesInfoInLocation.keySet()){
+                    if(key.equals(key1)){
+                        List<String> valuesInGlobal = templateLevelAttributesInfoInLocation.get(key1);
+                        List<String> valuesInTemplate = locationLevelAttributesInfoInLocation.get(key);
+
+                        if(ListUtils.isEqualList(valuesInGlobal,valuesInTemplate)){
+                            SimpleUtils.pass("The location level attribute " + key + " in location is correct.");
+                            break;
+                        }else{
+                            SimpleUtils.fail("The location level attribute " + key + " in location is NOT correct.",false);
+                        }
+                    }
+                }
+            }
+
+            //After update template level attributes, the location level will updated accordingly.
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,"edit");
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            laborModelPage.updateAttributeValueInTemplate(attributeName,attributeValueUpdate);
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Details");
+            laborModelPage.publishNowTemplate();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,"view");
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            HashMap<String,List<String>>  templateLevelAttributesInfoInTemplate1 = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            HashMap<String,List<String>>  locationLevelAttributesInfoInLocation1 = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+
+            for(String key:templateLevelAttributesInfoInTemplate1.keySet()){
+                for(String key1:locationLevelAttributesInfoInLocation1.keySet()){
+                    if(key.equals(key1)){
+                        List<String> valuesInGlobal = templateLevelAttributesInfoInTemplate1.get(key1);
+                        List<String> valuesInTemplate = locationLevelAttributesInfoInLocation1.get(key);
+
+                        if(ListUtils.isEqualList(valuesInGlobal,valuesInTemplate)){
+                            SimpleUtils.pass("The location level attribute " + key + " in location is updated according to template correctly.");
+                            break;
+                        }else{
+                            SimpleUtils.fail("The location level attribute " + key + " in location is NOT updated correctly.",false);
+                        }
+                    }
+                }
+            }
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

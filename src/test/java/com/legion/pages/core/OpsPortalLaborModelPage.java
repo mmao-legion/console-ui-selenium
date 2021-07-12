@@ -753,5 +753,47 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}
 	}
 
+	@FindBy(css="[ng-if=\"$ctrl.saveAsLabel\"] button")
+	private WebElement publishNowBTN;
+	@FindBy(css="i.fa.fa-sort-down")
+	private WebElement dropdownArrowBTN;
+	@FindBy(css="lg-button[label=\"Save as draft\"] h3[ng-click*=\"publishNow\"]")
+	private WebElement publishNowButton;
+	@FindBy(css = "div.modal-dialog")
+	private WebElement publishTemplateConfirmModal;
+
+	@FindBy(css = "[ng-click=\"$ctrl.submit(true)\"]")
+	private WebElement okButtonOnPublishTemplateConfirmModal;
+
+	@FindBy(css = "div.lg-toast")
+	private WebElement successMsg;
+
+	public void displaySuccessMessage() throws Exception {
+		if (isElementLoaded(successMsg, 20) && successMsg.getText().contains("Success!")) {
+			SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
+			waitForSeconds(2);
+		} else {
+			SimpleUtils.report("Success pop up not displayed successfully.");
+			waitForSeconds(3);
+		}
+	}
+
+	@Override
+	public void publishNowTemplate() throws Exception {
+		if (isElementLoaded(dropdownArrowBTN,5)) {
+			clickTheElement(dropdownArrowBTN);
+			waitForSeconds(2);
+			clickTheElement(publishNowButton);
+			waitForSeconds(2);
+			clickTheElement(publishNowBTN);
+			waitForSeconds(5);
+			if(isElementLoaded(publishTemplateConfirmModal, 5)){
+				click(okButtonOnPublishTemplateConfirmModal);
+				displaySuccessMessage();
+			}
+		}else
+			SimpleUtils.fail("Publish template dropdown button load failed",false);
+	}
+
 }
 
