@@ -29,6 +29,7 @@
                     <include name="verifyUserCanSeeEachTypeOfTemViaClickingTemName" />
                     <include name="verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevel" />
                     <include name="verifyOverriddenSchedulingRulesInLocationLevel" />
+                    <include name="verifyDefaultValueOfExternalAttributesInLocationLevel"/>
 
                 </methods>
             </class>
