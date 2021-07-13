@@ -492,8 +492,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 				if(name.equals(attributeName)){
 					SimpleUtils.pass(attributeName + " is shown in attribute list");
 					flag = true;
-				}else {
-					SimpleUtils.fail(attributeName + " is NOT shown in attribute list",true);
+					break;
 				}
 			}
 		}
