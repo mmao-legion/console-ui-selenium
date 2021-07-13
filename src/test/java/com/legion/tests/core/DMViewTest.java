@@ -964,10 +964,9 @@ public class DMViewTest extends TestBase {
             List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
             schedulePage.verifySortByColForLocationsInDMView(1);
             schedulePage.verifySortByColForLocationsInDMView(1);
-            schedulePage.verifySortByColForLocationsInDMView(4);
-            schedulePage.verifySortByColForLocationsInDMView(4);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+            schedulePage.verifySortByColForLocationsInDMView(3);
             String weekInfo = schedulePage.getActiveWeekText();
-            System.out.println(weekInfo);
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToPreviousWeek();
