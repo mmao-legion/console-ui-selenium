@@ -149,7 +149,7 @@ public class BasePage {
     
     public void checkElementVisibility(WebElement element)
     {
-        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 60);
+        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 90);
         try {
         	wait.until(ExpectedConditions.visibilityOf(element));
         }
