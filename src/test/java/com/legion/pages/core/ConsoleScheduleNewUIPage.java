@@ -3215,7 +3215,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue())) {
             clickOnWeekView();
             clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            waitForSeconds(5);
             for (WebElement unAssignedShift : getUnAssignedShifts()) {
                 convertUnAssignedShiftToOpenShift(unAssignedShift);
             }
@@ -3250,7 +3249,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> getUnAssignedShifts() {
         String unAssignedShiftsLabel = "unassigned";
         List<WebElement> unAssignedShiftsObj = new ArrayList<WebElement>();
-        if (shiftsOnScheduleView.size() != 0) {
+        waitForSeconds(5);
+        if (areListElementVisible(shiftsOnScheduleView, 10) && shiftsOnScheduleView.size() != 0) {
             for (WebElement shift : shiftsOnScheduleView) {
                 if (shift.getText().toLowerCase().contains(unAssignedShiftsLabel) && shift.isDisplayed())
                     unAssignedShiftsObj.add(shift);
