@@ -13001,12 +13001,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (WebElement element: numberOfOffersMade){
                 if (element.getText().toLowerCase().contains(firstName.toLowerCase()) && element.getText().toLowerCase().contains(expectedStatus.toLowerCase())){
                     flag = true;
+                    break;
                 }
             }
             if (flag){
                 SimpleUtils.pass(firstName + " is in the offered list!");
             } else {
-                SimpleUtils.fail(firstName + " is in the offered list!", false);
+                SimpleUtils.fail(firstName + " is not in the offered list!", false);
             }
         } else {
             SimpleUtils.fail("The offer list is null!",false);
@@ -14226,9 +14227,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception {
         waitForSeconds(3);
         List<String> locations = new ArrayList<String>();
-        if (areListElementVisible(locationsInTheList,10)){
-            for (WebElement element: locationsInTheList){
-                locations.add(element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText());
+        if (areListElementVisible(getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")),10)){
+            for (int i=0; i< getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).size(); i++){
+                locations.add(getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).get(i).findElement(By.cssSelector("img.analytics-new-table-location~span")).getText());
             }
         }
         return locations;
@@ -14572,13 +14573,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public List<String> getListByColInTimesheetDMView(int index) throws Exception{
         List<String> list = new ArrayList<String>();
-        for (WebElement element: locationsInTheList){
-            if (index > 0 && index <= getNumOfColInDMViewTable() && element.findElements(By.cssSelector(".ng-scope.col-fx-1")).size()>=getNumOfColInDMViewTable()-1){
+        for (int i = 0; i<getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).size();i++){
+            if (index > 0 && index <= getNumOfColInDMViewTable() && getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).get(i).findElements(By.cssSelector(".ng-scope.col-fx-1")).size()>=getNumOfColInDMViewTable()-1){
                 if (index == 1){
                     list = getLocationsInScheduleDMViewLocationsTable();
                 } else {
                     if (areListElementVisible(locationsInTheList,10)){
-                        list.add(element.findElements(By.cssSelector(".ng-scope.col-fx-1")).get(index-2).getText().replace("%",""));
+                        list.add(getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).get(i).findElements(By.cssSelector(".ng-scope.col-fx-1")).get(index-2).getText().replace("%",""));
                     }
                 }
             } else {
@@ -15422,6 +15423,28 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
             clickOnClearShiftsBtnOnRequiredActionSmartCard();
+        }else
+            SimpleUtils.report("Schedule Week View: there is no shifts or Action Required smart card in this week");
+    }
+
+    @Override
+    public void deleteAllShiftsInWeekView() throws Exception {
+
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            for (WebElement shiftWeekView : shiftsWeekView) {
+                WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
+                clickTheElement(image);
+                waitForSeconds(3);
+                if (isElementLoaded(deleteShift, 5)) {
+                    clickTheElement(deleteShift);
+                    if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
+                        click(deleteBtnInDeleteWindows);
+                        SimpleUtils.pass("Schedule Week View: OOOH shift been deleted successfully");
+                    } else
+                        SimpleUtils.fail("delete confirm button load failed", false);
+                } else
+                    SimpleUtils.fail("delete item for this OOOH shift load failed", false);
+            }
         }else
             SimpleUtils.report("Schedule Week View: there is no shifts or Action Required smart card in this week");
     }

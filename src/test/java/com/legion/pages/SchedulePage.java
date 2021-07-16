@@ -634,6 +634,7 @@ public interface SchedulePage {
 	public void verifyDeleteButtonEnabledWhenClickingCheckbox() throws Exception;
 	public void verifyClickOnCancelBtnOnDeleteScheduleDialog() throws Exception;
 	public void deleteAllOOOHShiftInWeekView() throws Exception;
+	public void deleteAllShiftsInWeekView() throws Exception;
 	public List<WebElement> getAllOOOHShifts() throws Exception;
 	public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception;
 	public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception;

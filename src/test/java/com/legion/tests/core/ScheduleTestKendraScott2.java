@@ -2036,6 +2036,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.deleteTMShiftInWeekView("open");
 			schedulePage.saveSchedule();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnFilterBtn();
+			schedulePage.selectShiftTypeFilterByText("Compliance Review");
+			schedulePage.deleteAllShiftsInWeekView();
+			schedulePage.clickOnFilterBtn();
+			schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+			schedulePage.saveSchedule();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnProfileIcon();
 			schedulePage.clickOnConvertToOpenShift();
 			schedulePage.convertToOpenShiftDirectly();
