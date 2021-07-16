@@ -1493,7 +1493,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
  
 	@Override
 	public HashMap<String, Object> getMyAvailabilityData() throws Exception {
-		
 		HashMap<String, Object> myAvailabilityData = new HashMap<String, Object>();
 
 	      float scheduleHoursValue = 0;
@@ -2081,6 +2080,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> pendingAvailabilityRequests;
 	@FindBy(css = ".request-buttons-approve")
 	private WebElement approveAvailabilityButton;
+	@FindBy(css = ".request-buttons-reject")
+	private WebElement rejectAvailabilityButton;
 
 	@Override
 	public void approveAllPendingAvailabilityRequest() throws Exception {
@@ -2090,6 +2091,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				if (isElementLoaded(approveAvailabilityButton, 10)) {
 					clickTheElement(approveAvailabilityButton);
 					SimpleUtils.pass("Approve the pending availability request successfully!");
+					approveAllPendingAvailabilityRequest();
+					break;
 				}
 			}
 		}
@@ -3604,17 +3607,24 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> emptyAvailabilities;
 
 	@FindBy(css = "span.tooltip-red")
-	private WebElement availabilityToolTip;
+	private WebElement busyAvailabilityToolTip;
+
+	@FindBy(css = "span.tooltip-green")
+	private WebElement preferredAvailabilityToolTip;
 
 
 	public void updatePreferredOrBusyHoursToAllDay(int dayIndex, String hoursType) throws Exception {
 
 		String preferredHoursTabText = "Preferred";
 		String busyHoursTabText = "Busy";
-		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
+		WebElement availabilityToolTip = null;
+		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase())) {
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
-		else
+			availabilityToolTip = preferredAvailabilityToolTip;
+		} else {
 			selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+			availabilityToolTip = busyAvailabilityToolTip;
+		}
 
 		//Delete all availabilities in the day
 		WebElement dayRow = null;
@@ -3637,6 +3647,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 		WebElement rightCell = dayRow.findElement(By.cssSelector("div.cursor-resizableE"));
 		int i=0;
+
 		while (!availabilityToolTip.getText().contains("12:00am - 12:00am") && i<5){
 			//Drag the availability to the end of the day
 			scrollToElement(rightCell);
@@ -3655,7 +3666,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	public void clickAvailabilityEditButton() throws Exception{
 		if (isElementLoaded(editBtn,10)){
-			click(editBtn);
+			moveToElementAndClick(editBtn);
 		}else{
 			SimpleUtils.fail("Edit button is not loaded!", false);
 		}
@@ -3752,5 +3763,94 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			}
 		}
 		return userProfileEngagementDetails;
+	}
+
+
+	@FindBy(css = "div.availability-zone.green-zone.changed")
+	private List<WebElement> changedPreferredAvailabilities;
+
+	@FindBy(css = "div.availability-zone.red-zone.changed")
+	private List<WebElement> changedBusyAvailabilities;
+
+	@FindBy(css = "div.timeoff-requests-request.row-fx")
+	private List<WebElement> allAvailabilityChangeRequests;
+
+	public List<WebElement> getChangedPreferredAvailabilities() throws Exception{
+		List<WebElement> changedAvailabilities = new ArrayList<>();
+		if (areListElementVisible(changedPreferredAvailabilities, 10)){
+			changedAvailabilities = changedPreferredAvailabilities;
+		}
+		return changedAvailabilities;
+	}
+
+	public List<WebElement> getChangedBusyAvailabilities() throws Exception{
+		List<WebElement> changedAvailabilities = new ArrayList<>();
+		if (areListElementVisible(changedBusyAvailabilities, 10)){
+			changedAvailabilities = changedBusyAvailabilities;
+		}
+		return changedAvailabilities;
+	}
+
+	@Override
+	public void approveOrRejectSpecificPendingAvailabilityRequest(String availabilityWeek, String action) throws Exception {
+		if (areListElementVisible(allAvailabilityChangeRequests, 10)) {
+			for (WebElement availabilityChangeRequest : allAvailabilityChangeRequests) {
+				if (isElementLoaded(availabilityChangeRequest, 5)
+						&& availabilityChangeRequest.findElement(By.cssSelector("div.request-date")).
+						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)
+						&& availabilityChangeRequest.findElement(By.cssSelector("span.request-status")).
+						getText().equalsIgnoreCase("pending")) {
+					clickTheElement(availabilityChangeRequest);
+					if (action.equalsIgnoreCase("approve")) {
+						if (isElementLoaded(approveAvailabilityButton, 10)) {
+							clickTheElement(approveAvailabilityButton);
+							SimpleUtils.pass("Approve the pending availability request successfully!");
+						}
+					} else {
+						if (isElementLoaded(rejectAvailabilityButton, 10)) {
+							clickTheElement(rejectAvailabilityButton);
+							SimpleUtils.pass("Reject the pending availability request successfully!");
+						}
+					}
+					break;
+				}
+
+			}
+		}
+	}
+
+
+	public void deleteAllAvailabilitiesForCurrentWeek() throws Exception {
+
+		String busyHoursTabText = "Busy";
+
+		//Delete all preferred availabilities in the day
+		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
+			for (WebElement myAvailabilityDayOfWeekRow: myAvailabilityDayOfWeekRows){
+				List<WebElement> availabilitiesInTheDay = myAvailabilityDayOfWeekRow.findElements(By.cssSelector("div.cursor-resizableW"));
+				for (WebElement availability: availabilitiesInTheDay) {
+					moveToElementAndClick(availability);
+					clickTheElement(removeAvailabilityIcon);
+					SimpleUtils.report("Remove one availability successfully! ");
+				}
+			}
+
+		} else
+			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
+
+		selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+		//Delete all busy availabilities in the week
+		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
+			for (WebElement myAvailabilityDayOfWeekRow: myAvailabilityDayOfWeekRows){
+				List<WebElement> availabilitiesInTheDay = myAvailabilityDayOfWeekRow.findElements(By.cssSelector("div.cursor-resizableW"));
+				for (WebElement availability: availabilitiesInTheDay) {
+					moveToElementAndClick(availability);
+					clickTheElement(removeAvailabilityIcon);
+					SimpleUtils.report("Remove one availability successfully! ");
+				}
+			}
+
+		} else
+			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
 	}
 }

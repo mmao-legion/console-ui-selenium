@@ -40,7 +40,6 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the manager need to approve the claimed open shift when enable the claim open shift in home location setting on OP env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
@@ -57,7 +56,6 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the manager doesn't need to approve the claimed open shift when disable the claim open shift in home location setting on OP env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
@@ -73,7 +71,6 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the manager and non-home manager need to approve the claimed open shift when enable the claim open shift in non-home location setting on OP env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
@@ -91,7 +88,6 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the managers doesn't need to approve the claimed open shift when disable the claim open shift in non-home location setting on OP env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
@@ -395,15 +391,15 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
 
         if (isOP) {
             // 1. Go to OP-> Schedule Collaboration -> Open Shifts -> enable -- Is approval required by Manager when an employee claims an Open Shift in a home location?
-//            OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-//            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-//            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-//            configurationPage.goToConfigurationPage();
-//            configurationPage.goToTemplateDetailsPage("Schedule Collaboration");
-//            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-//            configurationPage.enableOrDisableApproveShiftInHomeLocationSetting(option);
-//            configurationPage.publishNowTheTemplate();
-//            switchToConsoleWindow();
+            OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
+            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.goToTemplateDetailsPage("Schedule Collaboration");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.enableOrDisableApproveShiftInHomeLocationSetting(option);
+            configurationPage.publishNowTheTemplate();
+            switchToConsoleWindow();
         } else {
             // 1.Checking configuration in controls
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -511,7 +507,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
             configurationPage.goToConfigurationPage();
             configurationPage.goToTemplateDetailsPage("Schedule Collaboration");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.enableOrDisableApproveShiftInHomeLocationSetting("Yes");
+            configurationPage.enableOrDisableApproveShiftInNonHomeLocationSetting(option);
             configurationPage.publishNowTheTemplate();
             switchToConsoleWindow();
         } else {
@@ -526,12 +522,14 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         }
 
         //Go to TM's home location, to generate and publish schedule if current week is not generated
+        dashboardPage.clickOnDashboardConsoleMenu();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
         boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
         if(!isActiveWeekGenerated){
@@ -544,11 +542,11 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         schedulePage.publishActiveSchedule();
 
         // Admin create one manual open shift and assign to the TM from other location
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(nonHomeLocationName);
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
         isActiveWeekGenerated = schedulePage.isWeekGenerated();
         if(isActiveWeekGenerated){
@@ -584,13 +582,13 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         dashboardPage.goToTodayForNewUI();
         schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
         schedulePage.isSchedule();
         String cardName = "WANT MORE HOURS?";
         SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
         String linkName = "View Shifts";
         schedulePage.clickLinkOnSmartCardByName(linkName);
         SimpleUtils.assertOnFail("Open shifts not load Successfully!", schedulePage.areShiftsPresent(), false);
+        Thread.sleep(10000);
         List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
         schedulePage.selectOneShiftIsClaimShift(claimShift);
         schedulePage.clickTheShiftRequestByName(claimShift.get(0));
@@ -604,7 +602,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         activityPage.verifyActivityBellIconLoaded();
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
-        activityPage.verifyActivityOfShiftOffer(teamMemberName,location);
+        activityPage.verifyActivityOfShiftOffer(teamMemberName,nonHomeLocationName);
         activityPage.approveOrRejectShiftOfferRequestOnActivity(teamMemberName, ActivityTest.approveRejectAction.Approve.getValue());
         activityPage.verifyClickOnActivityCloseButton();
 
@@ -613,7 +611,6 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         //Check the shift is not assigned TM
@@ -629,13 +626,12 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
         activityPage.verifyActivityOfShiftOffer(teamMemberName,nonHomeLocationName);
         activityPage.approveOrRejectShiftOfferRequestOnActivity(teamMemberName, ActivityTest.approveRejectAction.Approve.getValue());
-        activityPage.verifyClickOnActivityIcon();
+        activityPage.verifyClickOnActivityCloseButton();
         //Go to schedule and check the shift
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
         //Check the shift is assigned TM

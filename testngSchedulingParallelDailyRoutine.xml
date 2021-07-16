@@ -293,8 +293,9 @@
             <class name="com.legion.tests.core.ApproveActivitiesByHomeOrNonHomeManagerTest">
                 <methods>
                     <include name="verifyManagerNeedToApproveShiftWhenEnableShiftInHomeLocationSettingOnOPAsTeamMember" />
-<!--                    <include name="verifyManagerDoesNotNeedToApproveShiftWhenDisableShiftInHomeLocationSettingOnOPAsTeamMember" /> Blocked by SCH-4614 -->
-<!--                    <include name="verifyNonHomeManagerNeedToApproveShiftWhenEnableShiftInNonHomeLocationSettingOnOPAsTeamMember" /> Blocked by OPS-2512 -->
+                    <include name="verifyManagerDoesNotNeedToApproveShiftWhenDisableShiftInHomeLocationSettingOnOPAsTeamMember" />
+                    <include name="verifyNonHomeManagerNeedToApproveShiftWhenEnableShiftInNonHomeLocationSettingOnOPAsTeamMember" />
+                    <include name="verifyActivityOfClaimOpenShiftNoNeedApprovalForHomeManagerWhenSetOpenShiftSettingToNonHomeLocationOnlyAsTeamMemberOfApproveActivitiesByHomeOrNonHomeManagerTest" />
                 </methods>
             </class>
         </classes>

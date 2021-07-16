@@ -1,5 +1,7 @@
 package com.legion.pages;
 
+import org.openqa.selenium.WebElement;
+
 import java.util.*;
 
 public interface ProfileNewUIPage {
@@ -255,5 +257,14 @@ public interface ProfileNewUIPage {
 	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception;
 
 	public String getStatusOnProfilePage () throws Exception;
+
 	public HashMap<String, String> getOneUserHRProfileInfo() throws Exception;
+
+	public List<WebElement> getChangedPreferredAvailabilities() throws Exception;
+
+	public List<WebElement> getChangedBusyAvailabilities () throws Exception;
+
+	public void approveOrRejectSpecificPendingAvailabilityRequest(String availabilityWeek, String action) throws Exception;
+
+	public void deleteAllAvailabilitiesForCurrentWeek() throws Exception;
 }
