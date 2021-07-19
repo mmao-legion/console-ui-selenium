@@ -436,6 +436,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		if(isActiveWeekGenerated){
 			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
+		Thread.sleep(5000);
 		schedulePage.createScheduleForNonDGFlowNewUI();
 		//In week view, Group by All filter have 4 filters:1.Group by all  2. Group by work role  3. Group by TM 4.Group by job title
 		schedulePage.validateGroupBySelectorSchedulePage(false);

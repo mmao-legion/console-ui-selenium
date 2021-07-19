@@ -4427,6 +4427,10 @@ private List<WebElement> locationColumn;
 				if(!isCurrentWeek) {
 					if (dayOnCalendar.getText().equalsIgnoreCase("1")){
 						isCurrentWeek = true;
+						if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
+							click (dayOnCalendar);
+							break;
+						}
 					}
 				} else {
 					if (dayOnCalendar.getText().equalsIgnoreCase(day)) {

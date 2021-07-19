@@ -1176,6 +1176,7 @@ public class CinemarkMinorTest extends TestBase {
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
+        Thread.sleep(5000);
         List<String> toCloseDays = new ArrayList<>();
         //schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
         schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
