@@ -568,6 +568,26 @@
         </classes>
     </test>
 
+        <test name="Upperfield Test">
+            <classes>
+                <class name="com.legion.tests.core.UpperfieldTest">
+                    <methods>
+                        <include name="verifyDashboardFunctionalityInBUViewAsInternalAdmin" />
+                        <include name="verifyDashboardFunctionalityInRegionViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyProjectedComplianceWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyProjectedComplianceWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyTimesheetApprovalRateWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyTimesheetApprovalRateWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifySchedulePublishStatusWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifySchedulePublishStatusWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                    </methods>
+                </class>
+            </classes>
+        </test>
 <!--======================================================End - This is Scheduling tests==============================================-->
 
 </suite> <!-- Suite -->

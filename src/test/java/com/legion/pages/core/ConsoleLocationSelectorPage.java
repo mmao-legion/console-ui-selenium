@@ -21,7 +21,7 @@ import com.legion.utils.SimpleUtils;
 
 public class ConsoleLocationSelectorPage extends BasePage implements LocationSelectorPage {
 
-    @FindBy(css = "lg-select[search-hint='Search Location'] div.input-faked")
+    @FindBy(css = "lg-select[search-hint='Search Location'] div>input-field div.input-faked")
     private WebElement locationSelectorButton;
 
     @FindBy(css = "div.console-navigation-item")
@@ -102,6 +102,15 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     public Boolean isChangeLocationButtonLoaded() throws Exception
     {
         if(isElementLoaded(locationSelectorButton,30)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean isChangeRegionButtonLoaded() throws Exception
+    {
+        if(isElementLoaded(regionButton,30)) {
             return true;
         }
         return false;
@@ -269,6 +278,15 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
 
     @Override
+    public Boolean isChangeBUButtonLoaded() throws Exception
+    {
+        if(isElementLoaded(buSelectorButton,10)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void verifyTheDisplayLocationWithSelectedLocationConsistent() throws Exception {
         Boolean isConsistent = false;
         String displayLocation = changeLocationButton.getText();
@@ -370,6 +388,38 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
         catch(Exception e) {
             SimpleUtils.fail("Change District Button not loaded!", true);
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean isBUSelected(String buName)
+    {
+        try {
+            if(isChangeBUButtonLoaded()) {
+                if(buSelectorButton.getText().contains(buName)) {
+                    return true;
+                }
+            }
+        }
+        catch(Exception e) {
+            SimpleUtils.fail("Change BU Button not loaded!", true);
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean isRegionSelected(String regionName)
+    {
+        try {
+            if(isChangeRegionButtonLoaded()) {
+                if(regionSelectorButton.getText().contains(regionName)) {
+                    return true;
+                }
+            }
+        }
+        catch(Exception e) {
+            SimpleUtils.fail("Change Region Button not loaded!", true);
         }
         return false;
     }
@@ -630,6 +680,40 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
+    @Override
+    public void isBUView() throws Exception {
+        String locationFieldsText = "All Regions";
+        if(getCurrentUserDefaultRegion().contains(locationFieldsText)){
+            SimpleUtils.pass("Dashboard page shows as BU view!");
+        }else {
+            SimpleUtils.fail("Dashboard page shows as NOT BU view!",true);
+        }
+    }
+
+    @Override
+    public void isRegionView() throws Exception {
+        String locationFieldsText = "All Districts";
+        if(getCurrentUserDefaultRegion().contains(locationFieldsText)){
+            SimpleUtils.pass("Dashboard page shows as Region view!");
+        }else {
+            SimpleUtils.fail("Dashboard page shows as NOT Region view!",true);
+        }
+    }
+
+    @FindBy(css = "lg-select[search-hint='Search Region']")
+    private WebElement regionButton;
+
+    public String getCurrentUserDefaultRegion() throws Exception
+    {
+        String defaultLocation = "";
+        if(isChangeRegionButtonLoaded()){
+            defaultLocation = regionButton.getText();
+        }else {
+            SimpleUtils.fail("Default Region not appear on Dashboard!", false);
+        }
+        return defaultLocation;
+    }
+
     @FindBy(css = "lg-search-options[search-hint='Search District'] div.lg-search-options__scroller div.cachedDisrictInfo")
     private WebElement districtCountInDropdownList;
 
@@ -786,6 +870,24 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
 
     @Override
+    public void verifyTheDisplayBUWithSelectedBUConsistent(String buName) throws Exception {
+        waitForSeconds(3);
+        if (isBUSelected(buName))
+            SimpleUtils.pass("Dashboard Page: Display BU is consistent with the selected BU");
+        else
+            SimpleUtils.fail("Dashboard Page: Display BU is not consistent with the selected BU", false);
+    }
+
+    @Override
+    public void verifyTheDisplayRegionWithSelectedRegionConsistent(String regionName) throws Exception {
+        waitForSeconds(3);
+        if (isRegionSelected(regionName))
+            SimpleUtils.pass("Dashboard Page: Display Region is consistent with the selected Region");
+        else
+            SimpleUtils.fail("Dashboard Page: Display Region is not consistent with the selected Region", false);
+    }
+
+    @Override
     public void reSelectDistrict(String districtName) throws Exception {
         waitForSeconds(4);
         Boolean isDistrictMatched = false;
@@ -893,6 +995,75 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             }
         } catch(Exception e) {
             SimpleUtils.fail("Unable to change District!", true);
+        }
+    }
+
+    @FindBy(css = "[search-hint='Search Business Unit'] div>input-field div.input-faked")
+    private WebElement buSelectorButton;
+
+    @FindBy(css = "[search-hint=\"Search Business Unit\"] div.lg-search-options")
+    private WebElement buDropDownButton;
+
+    @FindBy(css = "[search-hint=\"Search Business Unit\"] div.lg-search-options__option")
+    private List<WebElement> availableBUCardsName;
+
+    @FindBy(css = "[search-hint=\"Search Region\"] div.lg-search-options")
+    private WebElement regionDropDownButton;
+
+    @FindBy(css = "[search-hint=\"Search Region\"] div.lg-search-options__option")
+    private List<WebElement> availableRegionCardsName;
+
+    @Override
+    public void changeAnotherBUInBUView() throws Exception {
+        waitForSeconds(4);
+        String buName = buSelectorButton.getText();
+        try {
+            if (isChangeRegionButtonLoaded()) {
+                if(isElementLoaded(buSelectorButton, 10)){
+                    click(buSelectorButton);
+                }
+                if (isElementLoaded(buDropDownButton, 5)) {
+                    if (availableBUCardsName.size() != 0) {
+                        for (WebElement buCardName : availableBUCardsName) {
+                            if (!buCardName.getText().contains(buName)) {
+                                clickTheElement(buCardName);
+                                SimpleUtils.pass("BU changed successfully to '" + buCardName.getText() + "'");
+                                waitForSeconds(1);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch(Exception e) {
+            SimpleUtils.fail("Unable to change BU!", true);
+        }
+    }
+
+    @Override
+    public void changeAnotherRegionInRegionView() throws Exception {
+        waitForSeconds(4);
+        String regionName = regionSelectorButton.getText();
+        try {
+            if (isChangeRegionButtonLoaded()) {
+                if(isElementLoaded(regionSelectorButton, 10)){
+                    click(regionSelectorButton);
+                }
+                if (isElementLoaded(regionDropDownButton, 5)) {
+                    if (availableRegionCardsName.size() != 0) {
+                        for (WebElement regionCardName : availableRegionCardsName) {
+                            if (!regionCardName.getText().contains(regionName)) {
+                                clickTheElement(regionCardName);
+                                SimpleUtils.pass("Region changed successfully to '" + regionCardName.getText() + "'");
+                                waitForSeconds(1);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch(Exception e) {
+            SimpleUtils.fail("Unable to change region!", true);
         }
     }
 
@@ -1105,14 +1276,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
     }
 
-    @FindBy(css = "lg-select[search-hint='Search Region'] div.input-faked")
+    @FindBy(css = "lg-select[search-hint='Search Region'] div>input-field div.input-faked")
     private WebElement regionSelectorButton;
 
-    @FindBy(css = "lg-select[search-hint='Search HQ'] div.input-faked")
+    @FindBy(css = "lg-select[search-hint='Search HQ'] div>input-field div.input-faked")
     private WebElement hqSelectorButton;
-
-    @FindBy(css = "lg-select[search-hint='Search Business Unit'] div.input-faked")
-    private WebElement buSelectorButton;
 
     public Map<String, String> getSelectedUpperFields () throws Exception {
         Map<String, String> selectedUpperFields = new HashMap<String, String>();

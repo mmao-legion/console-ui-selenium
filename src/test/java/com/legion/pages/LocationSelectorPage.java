@@ -40,4 +40,14 @@ public interface LocationSelectorPage {
 	public void changeLocationDirect(String locationName);
 	public Map<String, String> getSelectedUpperFields () throws Exception;
 	public void changeUpperFieldDirect(String upperFieldType, String upperFieldName) throws Exception;
+	public void isBUView() throws Exception;
+	public void isRegionView() throws Exception;
+	public Boolean isChangeRegionButtonLoaded() throws Exception;
+	public void changeAnotherBUInBUView() throws Exception;
+	public Boolean isBUSelected(String buName);
+	public void verifyTheDisplayBUWithSelectedBUConsistent(String buName) throws Exception;
+	public Boolean isChangeBUButtonLoaded() throws Exception;
+	public Boolean isRegionSelected(String regionName);
+	public void verifyTheDisplayRegionWithSelectedRegionConsistent(String regionName) throws Exception;
+	public void changeAnotherRegionInRegionView() throws Exception;
 }
