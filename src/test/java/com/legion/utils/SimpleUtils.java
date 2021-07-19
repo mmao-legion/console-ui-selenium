@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -72,16 +71,12 @@ public class SimpleUtils {
 	 */
 	public static String getURL() {
 		String uRL = parameterMap.get("URL");
-		if (uRL.contains("{0}") && uRL.contains("{1}") && System.getProperty("seleniumGridPort") != null && !System.getProperty("seleniumGridPort").isEmpty()) {
-			uRL = MessageFormat.format(uRL, System.getProperty("domainName"), System.getProperty("seleniumGridPort"));
-		}
 		return uRL;
 	}
 
 	public static void fail(String message, boolean continueExecution, String... severity) {
 //		SimpleUtils.addTestResultIntoTestRail(5, message);
 		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
-			MyThreadLocal.setTestResultFlag(false);
 			SimpleUtils.addTestResultIntoTestRailN(5, message);
 		}
 		if (continueExecution) {
@@ -94,16 +89,6 @@ public class SimpleUtils {
 		} else {
 			ExtentTestManager.getTest().log(Status.FAIL, message);
 			throw new AssertionError(message);
-		}
-	}
-
-	public static void addResultForTest() {
-		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
-			if (MyThreadLocal.getTestResultFlag()){
-				SimpleUtils.addTestResultIntoTestRailN(1, "");
-			} else {
-				SimpleUtils.addTestResultIntoTestRailN(5, "");
-			}
 		}
 	}
 
@@ -175,20 +160,16 @@ public class SimpleUtils {
 		if (isExecutionContinue) {
 			try {
 				assertTrue(isAssert);
-				MyThreadLocal.setTestResultFlag(true);
 			} catch (Throwable e) {
 				addVerificationFailure(e);
 				ExtentTestManager.getTest().log(Status.ERROR, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
 						+ "</div>");
-				MyThreadLocal.setTestResultFlag(false);
 			}
 		} else {
 			try {
 				assertTrue(isAssert);
-				MyThreadLocal.setTestResultFlag(true);
 			} catch (Throwable e) {
 				ExtentTestManager.getTest().log(Status.FAIL, message);
-				MyThreadLocal.setTestResultFlag(false);
 				throw new AssertionError(message);
 			}
 		}
@@ -256,11 +237,10 @@ public class SimpleUtils {
 
 		ExtentTestManager.getTest().log(Status.PASS,"<div class=\"row\" style=\"background-color:#44aa44; color:white; padding: 7px 5px;\">" + message
 				+ "</div>");
-		MyThreadLocal.setTestResultFlag(true);
-/*		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
+		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
 			SimpleUtils.addTestResultIntoTestRailN(1, message);
 		}
-*/
+
 	}
 
 	public static void report(String message) {
@@ -907,29 +887,36 @@ public class SimpleUtils {
 
 	public static List<Integer> addNUpdateTestCaseIntoTestRail(String testName,ITestContext context)
 	{
-		//int testCaseID = 0;
+		int testCaseID = 0;
 		List<Integer> testCaseIDList = new ArrayList<>();
 		List<Integer> testCasesToAdd = new ArrayList<>();
 //	    String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-		//String addResultString = "add_case/"+sectionID;
+		String addResultString = "add_case/"+sectionID;
 		String testRailURL =        "";
 		String testRailUser =       "";
 		String testRailPassword =   "";
-		//String testRailSuiteID =    "";
-		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
-			testRailURL = testRailConfig.get("TEST_RAIL_URL");
-			//setTestRailURL(testRailURL);
-			testRailUser = testRailConfig.get("TEST_RAIL_USER");
-			//setTestRailUser(testRailUser);
-			testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-			//setTestRailPassword(testRailPassword);
-		}else {
+		String testRailProjectID =  "";
+		String testRailSuiteID =    "";
+		if (System.getProperty("enterprise") != null && System.getProperty("enterprise").equalsIgnoreCase("op")) {
 			testRailURL = testRailCfgOp.get("TEST_RAIL_URL");
-			//setTestRailURL(testRailURL);
+			setTestRailURL(testRailURL);
 			testRailUser = testRailCfgOp.get("TEST_RAIL_USER");
-			//setTestRailUser(testRailUser);
+			setTestRailUser(testRailUser);
 			testRailPassword = testRailCfgOp.get("TEST_RAIL_PASSWORD");
-			//setTestRailPassword(testRailPassword);
+			setTestRailPassword(testRailPassword);
+			testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
+			setTestRailProjectID(testRailProjectID);
+			//testRailSuiteID = MyThreadLocal.getTestSuiteID();
+			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
+		}else {
+			testRailURL = testRailConfig.get("TEST_RAIL_URL");
+			setTestRailURL(testRailURL);
+			testRailUser = testRailConfig.get("TEST_RAIL_USER");
+			setTestRailUser(testRailUser);
+			testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+			setTestRailPassword(testRailPassword);
+			testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+			TestBase.testRailProjectID = testRailProjectID;
 			//testRailSuiteID = MyThreadLocal.getTestSuiteID();
 			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
 		}
@@ -939,7 +926,7 @@ public class SimpleUtils {
 			client.setUser(testRailUser);
 			client.setPassword(testRailPassword);
 			testCaseIDList = TestBase.AllTestCaseIDList;
-			testCasesToAdd = getTestCaseIDFromTitle(testName, Integer.parseInt(TestBase.testRailProjectID), client);
+			testCasesToAdd = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client);
 			if (testCasesToAdd.isEmpty()){
 				MyThreadLocal.setTestCaseExistsFlag(false);
 				System.out.println("-------------------Cannot find the test cases for: " + testName + "-------------------");
@@ -948,7 +935,8 @@ public class SimpleUtils {
 				testCaseIDList.addAll(testCasesToAdd);
 				TestBase.AllTestCaseIDList = testCaseIDList;
 			}
-			updateTestCaseIntoTestRunSample(testName,context,testCaseIDList);
+//				addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
+			addNUpdateTestCaseIntoTestRunSample(testName,context,testCaseIDList);
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}
@@ -1040,28 +1028,6 @@ public class SimpleUtils {
 			}
 		}
 
-	}
-
-	public static String getTestRailURL(){
-		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
-			return testRailConfig.get("TEST_RAIL_URL");
-		}else {
-			return testRailCfgOp.get("TEST_RAIL_URL");
-		}
-	}
-	public static String getTestRailUser(){
-		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
-			return testRailConfig.get("TEST_RAIL_USER");
-		}else {
-			return testRailCfgOp.get("TEST_RAIL_USER");
-		}
-	}
-	public static String getTestRailPassword(){
-		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
-			return testRailConfig.get("TEST_RAIL_PASSWORD");
-		}else {
-			return testRailCfgOp.get("TEST_RAIL_PASSWORD");
-		}
 	}
 
 	//added by Nishant
@@ -1732,59 +1698,13 @@ public class SimpleUtils {
 
 	}
 
-	public static void addTestRun()
+
+	public static int addNUpdateTestCaseIntoTestRunSample(String testName, ITestContext context, List<Integer> testCaseIDList)
 	{
 		String testRailURL = getTestRailURL();
 		String testRailUser = getTestRailUser();
 		String testRailPassword = getTestRailPassword();
-		int suiteId = Integer.valueOf(TestBase.testSuiteID);
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date =null;
-		String strDate = null;
-		String addResultString = "";
-		String name = "";
-		addResultString = "add_run/" + TestBase.testRailProjectID;
-		try {
-			// Make a connection with TestRail Server
-			APIClient client = new APIClient(testRailURL);
-			client.setUser(testRailUser);
-			client.setPassword(testRailPassword);
-
-			Map<String, Object> data = new HashMap<String, Object>();
-			try{
-				date = format.parse(timestamp.toString());
-				//String[] arrDate = format.format(date).split(" ");
-				//strDate = arrDate[1];
-				strDate = format.format(date);
-			}catch(ParseException e){
-				System.err.println(e.getMessage());
-			}
-			data.put("include_all", false);
-			data.put("suite_id", suiteId);
-			if (TestBase.finalTestRailRunName==null||TestBase.finalTestRailRunName.equals("")){
-				name = "Automation - Regression " + strDate;
-			} else {
-				name = TestBase.finalTestRailRunName+ " " + strDate;
-			}
-			data.put("name", name);
-			//data.put("case_ids", testCaseIDList);
-			JSONObject jSONObject = (JSONObject) client.sendPost(addResultString, data);
-			long longTestRailRunId = (Long) jSONObject.get("id");
-			//add test rail run ID=================================
-			TestBase.testRailRunId = (int) longTestRailRunId;
-		} catch (IOException ioException) {
-			System.err.println(ioException.getMessage());
-		} catch (APIException aPIException) {
-			System.err.println(aPIException.getMessage());
-		}
-	}
-
-	public static int updateTestCaseIntoTestRunSample(String testName, ITestContext context, List<Integer> testCaseIDList)
-	{
-		String testRailURL = getTestRailURL();
-		String testRailUser = getTestRailUser();
-		String testRailPassword = getTestRailPassword();
+		String testRailProjectID = TestBase.testRailProjectID;
 		int suiteId = Integer.valueOf(TestBase.testSuiteID);
 //		int suiteId = Integer.valueOf(testRailConfig.get("TEST_CASE_SUITE_ID"));
 		//int TestRailRunId = 0;
@@ -1794,8 +1714,13 @@ public class SimpleUtils {
 		String strDate = null;
 		String addResultString = "";
 		String name = "";
-		addResultString = "update_run/" + TestBase.testRailRunId;
-
+		if(TestBase.ifAddNewTestRun){
+			TestBase.ifAddNewTestRun = false;
+			addResultString = "add_run/" + testRailProjectID;
+			System.out.println("----------------------Add test run for project: " + testRailProjectID + "--------------------");
+		} else {
+			addResultString = "update_run/" + TestBase.testRailRunId;
+		}
 
 		try {
 			// Make a connection with TestRail Server

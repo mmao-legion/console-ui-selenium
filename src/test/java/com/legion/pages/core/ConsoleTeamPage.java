@@ -3812,7 +3812,7 @@ private List<WebElement> locationColumn;
 	public void clickOnSaveCalendar() throws Exception {
 		if (isElementLoaded(savePreferButton,5)) {
 			clickTheElement(savePreferButton);
-			if (isElementLoaded(popMessage,10) && popMessage.getText().contains("Success"))
+			if (isElementLoaded(popMessage,60) && popMessage.getText().contains("Success"))
 				SimpleUtils.pass("School Calendars Page: School Calendar is saved successfully");
 			else
 				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",false);
@@ -3910,7 +3910,7 @@ private List<WebElement> locationColumn;
 	@Override
 	public boolean isCalendarDisplayedByName(String calendarName) throws Exception {
 		boolean isCalendarDisplayed = false;
-		if (areListElementVisible(calendarTitles, 10)) {
+		if (areListElementVisible(calendarTitles, 60)) {
 			for (WebElement title : calendarTitles) {
 				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
 					isCalendarDisplayed = true;
