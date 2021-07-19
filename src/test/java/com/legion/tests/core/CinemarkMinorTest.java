@@ -595,10 +595,11 @@ public class CinemarkMinorTest extends TestBase {
                     && teamPage.isCalendarDisplayedByName("Calendar" + random3) && teamPage.isCalendarDisplayedByName("Calendar" + random4))
                 SimpleUtils.pass("School Calendar: All the calendars have been created display in the list");
             else
-                SimpleUtils.fail("School Calendar: All the calendars have been created don't display in the list",true);
+                SimpleUtils.fail("School Calendar: All the calendars have been created don't display in the list",false);
             loginPage.logOut();
 
-            // Clean up data
+            // Login as Internal Admin to clean up data
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             teamPage.deleteCalendarByName("Calendar" + random1);
             teamPage.deleteCalendarByName("Calendar" + random2);
             teamPage.deleteCalendarByName("Calendar" + random3);
