@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.util.*;
 
+import static com.legion.tests.TestBase.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 
@@ -79,6 +80,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="lg-button[label=\"Save as draft\"] i.fa.fa-sort-down")
 	private WebElement dropdownArrowButton;
 
+	@FindBy(css="i.fa.fa-sort-down")
+	private WebElement dropdownArrowBTN;
+
 	@FindBy(css="lg-button[label=\"Save as draft\"] h3[ng-click*=\"publishNow\"]")
 	private WebElement publishNowButton;
 
@@ -118,7 +122,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="sub-content-box[box-title=\"Badges\"]")
 	private WebElement badgesSection;
 
-	@FindBy(css="lg-button[label=\"Save\"]")
+	@FindBy(css="lg-button[label=\"Save\"] button")
 	private WebElement saveButton;
 
 
@@ -238,7 +242,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(classValue!=null && classValue.contains("hasChildren")){
 				clickTheElement(templateToggleButton);
 				waitForSeconds(3);
-				clickTheElement(templatesList.get(0).findElements(By.cssSelector("button")).get(1));
+				clickTheElement(templatesList.get(0).findElement(By.cssSelector("button")));
 				waitForSeconds(20);
 				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 				&&isElementEnabled(templateDetailsPageForm)){
@@ -264,7 +268,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public void clickOnConfigurationCrad(String templateType) throws Exception {
 		if(templateType!=null){
-			waitForSeconds(15);
+			waitForSeconds(10);
 			if(configurationCardsList.size()!=0) {
 				for (WebElement configurationCard : configurationCardsList) {
 					if(configurationCard.getText().contains(templateType)){
@@ -304,7 +308,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	//open the specify template to edit or view details
 	@Override
 	public void clickOnSpecifyTemplateName(String templateName,String editOrViewMode) throws Exception {
-
+		waitForSeconds(5);
 		if(isTemplateListPageShow()){
 			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){
@@ -366,7 +370,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	@FindBy(css="table[ng-if*=\"template.workRoles\"] tbody")
+//	@FindBy(css="table[ng-if*=\"template.workRoles\"] tbody")
+//	private List<WebElement> workRoleList;
+
+	@FindBy(css="table[ng-if*=\"$ctrl.sortedRows.length\"] tbody")
 	private List<WebElement> workRoleList;
 
 	@Override
@@ -448,7 +455,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void verifyAdvancedStaffingRulePageShowWell() throws Exception {
 		if(isElementEnabled(dynamicGroupSection) && isElementEnabled(daysOfWeekSection) && isElementEnabled(timeOfDaySection)
 				&& isElementEnabled(mealAndRestBreaksSection) && isElementEnabled(numberOfShiftsSection)
-				&& isElementEnabled(badgesSection) && isElementEnabled(cancelButton) && isElementEnabled(saveButton)){
+				&& isElementEnabled(badgesSection) && isElementEnabled(cancelButton)){
 			SimpleUtils.pass("New advanced staffing rule page shows well");
 		}else{
 			SimpleUtils.fail("New advanced staffing rule page doesn't show well",false);
@@ -1124,7 +1131,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css="div.badges-edit-wrapper div.lg-button-group div")
 	private List<WebElement> badgeOptions;
-	@FindBy(css="div.badges-edit-wrapper-scroll tbody tr")
+	@FindBy(css="div.badges-edit-wrapper tbody tr")
 	private List<WebElement> badgesList;
 
 	@Override
@@ -1332,6 +1339,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		if(countOfAdvancedStaffingRule!=0){
 			WebElement deleteButton = advancedStaffingRuleList.get(0).findElement(By.cssSelector("span.settings-work-rule-edit-delete-icon"));
 			clickTheElement(deleteButton);
+			if(isElementEnabled(deleteButtonOnDialogPage,2)){
+				clickTheElement(deleteButtonOnDialogPage);
+			}
 			waitForSeconds(2);
 			if(advancedStaffingRuleList.get(0).findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size()==1){
 				SimpleUtils.pass("User can delete advance staffing rule successfully!");
@@ -1341,6 +1351,36 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}else {
 			SimpleUtils.fail("There is no advanced staffing rule.",false);
 		}
+	}
+	@FindBy(css="div.settings-work-role-detail-edit-rules div[ng-if=\"ifStaffingRule()\"]")
+	private List<WebElement> basicStaffingRuleList;
+	@Override
+	public void deleteBasicStaffingRule() throws Exception{
+		int countOfAdvancedStaffingRule = basicStaffingRuleList.size();
+		if(countOfAdvancedStaffingRule!=0){
+			WebElement deleteButton = basicStaffingRuleList.get(0).findElement(By.cssSelector("span.settings-work-rule-edit-delete-icon"));
+			clickTheElement(deleteButton);
+			if(isElementEnabled(deleteButtonOnDialogPage,2)){
+				clickTheElement(deleteButtonOnDialogPage);
+			}
+			waitForSeconds(2);
+			if(basicStaffingRuleList.get(0).findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size()==1){
+				SimpleUtils.pass("User can delete basic staffing rule successfully!");
+			}else {
+				SimpleUtils.fail("User can't delete advance staffing rule successfully!",false);
+			}
+		}else {
+			SimpleUtils.fail("There is no advanced staffing rule.",false);
+		}
+	}
+
+	@Override
+	public void saveBtnIsClickable() throws Exception {
+		scrollToBottom();
+		if (isElementLoaded(saveButton,5)) {
+			click(saveButton);
+		}else
+			SimpleUtils.fail("Save button load failed",false);
 	}
 
 	@FindBy(css="div.settings-work-rule-container")
@@ -1369,10 +1409,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception{
-		if(isElementEnabled(saveButton,3)){
+		if(isElementEnabled(saveButton,5)){
 			clickTheElement(saveButton);
-			waitForSeconds(5);
-			if (isElementEnabled(dropdownArrowButton,5)) {
+			waitForSeconds(30);
+			if (isElementEnabled(dropdownArrowBTN,5) || isElementEnabled(dropdownArrowBTN,5)) {
 				SimpleUtils.pass("User click on save button on schedule rule list page successfully!");
 			}else
 				SimpleUtils.fail("User failed to click on save button on schedule rule list page!",false);
@@ -1478,6 +1518,21 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			} else
 				SimpleUtils.fail("Publish template confirm modal fail to load", false);
 		}else
+
+			SimpleUtils.fail("Publish template dropdown button load failed",false);
+	}
+
+	@Override
+	public void publishNowTemplate() throws Exception {
+		if (isElementLoaded(dropdownArrowBTN,5)) {
+			click(dropdownArrowBTN);
+			click(publishNowButton);
+			click(publishTemplateButton);
+			if(isElementLoaded(publishTemplateConfirmModal, 5)){
+				click(okButtonOnPublishTemplateConfirmModal);
+				displaySuccessMessage();
+			}
+		}else
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
 	}
 
@@ -1506,6 +1561,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			String newDay = day.substring(0,3).toLowerCase();
 			newDays.add(newDay);
 		}
+		Collections.sort(newDaysInRule);
+		Collections.sort(newDays);
 		if(ListUtils.isEqualList(newDaysInRule,newDays)){
 			SimpleUtils.pass("The days info in rule are correct");
 		}else{
@@ -1603,7 +1660,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				clickTheElement(newTemplateDescription);
 				newTemplateDescription.sendKeys(templateName);
 				clickTheElement(continueBTN);
-				waitForSeconds(2);
+				waitForSeconds(5);
 				if(isElementEnabled(welcomeCloseButton)){
 					clickTheElement(welcomeCloseButton);
 				}
@@ -1615,7 +1672,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if(isElementEnabled(saveAsDraftButton)){
 					SimpleUtils.pass("User can click continue button successfully!");
 					clickTheElement(saveAsDraftButton);
-					waitForSeconds(3);
+					waitForSeconds(5);
 				}else {
 					SimpleUtils.fail("User can't click continue button successfully!",false);
 				}
@@ -1637,15 +1694,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="modal[modal-title=\"Deleting Template\"]")
 	private WebElement deleteTemplateDialog;
 
+	@FindBy(css="modal[modal-title=\"Archive Template\"]")
+	private WebElement archiveTemplateDialog;
+
 	@FindBy(css="modal[modal-title=\"Deleting Template\"] lg-button[label=\"OK\"] button")
 	private WebElement okButtonOnDeleteTemplateDialog;
 
 	@Override
 	public void deleteNewCreatedTemplate(String templateName) throws Exception{
-		String newTemplateName = templateNameList.get(0).getText().trim();
 		if(templateName.equals(newTemplateName)){
 			clickTheElement(templateNameList.get(0));
-			waitForSeconds(5);
+			waitForSeconds(5);		String newTemplateName = templateNameList.get(0).getText().trim();
+
 			if(isElementEnabled(deleteTemplateButton,3)){
 				clickTheElement(deleteTemplateButton);
 				if(isElementEnabled(deleteTemplateDialog,3)){
@@ -2101,5 +2161,349 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}else
 			SimpleUtils.fail("User management tab load failed",false);
+	}
+
+	@FindBy(css = "question-input[question-title=\"Is approval required by Manager when an employee claims an Open Shift in a home location?\"] yes-no")
+	private WebElement approveShiftInHomeLocationSetting;
+
+	@FindBy(css = "question-input[question-title=\"Is approval required by Manager and non-home Manager when an employee claims an Open Shift in a non-home location?\"] yes-no")
+	private WebElement approveShiftInNonHomeLocationSetting;
+
+	@Override
+	public void enableOrDisableApproveShiftInHomeLocationSetting(String yesOrNo) throws Exception {
+		if (isElementLoaded(approveShiftInHomeLocationSetting,10)){
+			scrollToElement(approveShiftInHomeLocationSetting);
+			if (yesOrNo.equalsIgnoreCase("yes")){
+				if (isElementLoaded(approveShiftInHomeLocationSetting.findElement(By.cssSelector(".lg-button-group-first")),10)){
+					click(approveShiftInHomeLocationSetting.findElement(By.cssSelector(".lg-button-group-first")));
+					SimpleUtils.pass("Turned on 'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting successfully! ");
+				} else {
+					SimpleUtils.fail("Yes button fail to load!", false);
+				}
+			} else if (yesOrNo.equalsIgnoreCase("no")){
+				if (isElementLoaded(approveShiftInHomeLocationSetting.findElement(By.cssSelector(".lg-button-group-last")),10)){
+					click(approveShiftInHomeLocationSetting.findElement(By.cssSelector(".lg-button-group-last")));
+					SimpleUtils.pass("Turned off 'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting successfully! ");
+				} else {
+					SimpleUtils.fail("No button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.warn("You have to input the right command: yes or no");
+			}
+		} else {
+			SimpleUtils.fail("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is not loaded!", false);
+		}
+	}
+
+
+	@Override
+	public void enableOrDisableApproveShiftInNonHomeLocationSetting(String yesOrNo) throws Exception {
+		if (isElementLoaded(approveShiftInNonHomeLocationSetting,10)){
+			scrollToElement(approveShiftInNonHomeLocationSetting);
+			if (yesOrNo.equalsIgnoreCase("yes")){
+				if (isElementLoaded(approveShiftInNonHomeLocationSetting.findElement(By.cssSelector(".lg-button-group-first")),10)){
+					click(approveShiftInNonHomeLocationSetting.findElement(By.cssSelector(".lg-button-group-first")));
+					SimpleUtils.pass("Turned on 'Is approval required by Manager and non-home Manager when an employee claims an Open Shift in a non-home location?' setting successfully! ");
+				} else {
+					SimpleUtils.fail("Yes button fail to load!", false);
+				}
+			} else if (yesOrNo.equalsIgnoreCase("no")){
+				if (isElementLoaded(approveShiftInNonHomeLocationSetting.findElement(By.cssSelector(".lg-button-group-last")),10)){
+					click(approveShiftInNonHomeLocationSetting.findElement(By.cssSelector(".lg-button-group-last")));
+					SimpleUtils.pass("Turned off 'Is approval required by Manager and non-home Manager when an employee claims an Open Shift in a non-home location?' setting successfully! ");
+				} else {
+					SimpleUtils.fail("No button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.warn("You have to input the right command: yes or no");
+			}
+		} else {
+			SimpleUtils.fail("'Is approval required by Manager and non-home Manager when an employee claims an Open Shift in a non-home location?' setting is not loaded!", false);
+		}
+	}
+	
+	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]>tr>td:nth-child(2)>lg-button>button[type='button']")
+	private List<WebElement> staffingRulesForWorkRoleInSchedulingRoles;
+	@Override
+	public void goToWorkRolesWithStaffingRules() {
+		if (areListElementVisible(staffingRulesForWorkRoleInSchedulingRoles,5)) {
+			for (WebElement s:staffingRulesForWorkRoleInSchedulingRoles) {
+				if (!s.getText().contains("Add")) {
+					click(s);
+					break;
+				}
+			}
+		}else
+			SimpleUtils.fail("staffing rules link show wrong for each work role",false);
+
+	}
+
+	@Override
+	public void validateAdvanceStaffingRuleShowingAtLocationLevel(String startEvent,String startOffsetTime,String startEventPoint,String startTimeUnit,
+												   String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
+												   List<String> days,String shiftsNumber) throws Exception{
+		List<WebElement> staffingRuleText = staffingRulesList.get(staffingRulesList.size()-1).findElements(By.cssSelector("span[ng-bind-html=\"$ctrl.ruleLabelText\"] span"));
+		List<String> daysInRule = Arrays.asList(staffingRuleText.get(2).getText().trim().split(","));
+		List<String> newDaysInRule = new ArrayList<>();
+		for(String dayInRules:daysInRule){
+			String newDayInRule = dayInRules.trim().toLowerCase();
+			newDaysInRule.add(newDayInRule);
+		}
+		List<String> newDays = new ArrayList<>();
+		for(String day:days){
+			String newDay = day.substring(0,3).toLowerCase();
+			newDays.add(newDay);
+		}
+		Collections.sort(newDaysInRule);
+		Collections.sort(newDays);
+		if(ListUtils.isEqualList(newDaysInRule,newDays)){
+			SimpleUtils.pass("The days info in rule are correct");
+		}else{
+			SimpleUtils.fail("The days info in rule are NOT correct",false);
+		}
+		String shiftsNumberInRule = staffingRuleText.get(1).getText().trim();
+		if(shiftsNumberInRule.equals(shiftsNumber)){
+			SimpleUtils.pass("The shifts number info in rule is correct");
+		}else {
+			SimpleUtils.fail("The shifts number info in rule is NOT correct",false);
+		}
+
+		String startTimeInfo = staffingRuleText.get(0).getText().trim().split(",")[0];
+		String endTimeInfo = staffingRuleText.get(0).getText().trim().split(",")[1];
+		String startEventInRule = "";
+		for(int i = 5;i<startTimeInfo.split(" ").length;i++){
+			startEventInRule = startEventInRule + startTimeInfo.split(" ")[i] + " ";
+		}
+		startEventInRule.trim();
+		if(startEventInRule.contains(startEvent)){
+			SimpleUtils.pass("The start event info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start event info in rule is NOT correct",false);
+		}
+		String startOffsetTimeInRule = startTimeInfo.split(" ")[2].trim();
+		if(startOffsetTimeInRule.equals(startOffsetTime)){
+			SimpleUtils.pass("The start Offset Time info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start Offset Time info in rule is NOT correct",false);
+		}
+		String startEventPointInRule = startTimeInfo.split(" ")[4].trim();
+		if(startEventPointInRule.equals(startEventPoint)){
+			SimpleUtils.pass("The start Event Point info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start Event Point info in rule is NOT correct",false);
+		}
+		String startTimeUnitInRule = startTimeInfo.split(" ")[3].trim();
+		if(startTimeUnitInRule.equals(startTimeUnit)){
+			SimpleUtils.pass("The start Time Unit info in rule is correct");
+		}else {
+			SimpleUtils.fail("The start Time Unit info in rule is NOT correct",false);
+		}
+		String endEventInRule = "";
+		for(int i = 5;i<endTimeInfo.split(" ").length;i++){
+			endEventInRule = endEventInRule + endTimeInfo.split(" ")[i] + " ";
+		}
+		endEventInRule.trim();
+		if(endEventInRule.contains(endEvent)){
+			SimpleUtils.pass("The end Event info in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Event info in rule is NOT correct",false);
+		}
+		String endOffsetTimeInRule = endTimeInfo.split(" ")[3].trim();
+		if(endOffsetTimeInRule.contains(endOffsetTime)){
+			SimpleUtils.pass("The end Offset Time in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Offset Time in rule is NOT correct",false);
+		}
+		String endEventPointInRule = endTimeInfo.split(" ")[5].trim();
+		if(endEventPointInRule.contains(endEventPoint)){
+			SimpleUtils.pass("The end Event Point in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Event Point in rule is NOT correct",false);
+		}
+		String endTimeUnitInRule = endTimeInfo.split(" ")[4].trim();
+		if(endTimeUnitInRule.contains(endTimeUnit)){
+			SimpleUtils.pass("The end Time Unit in rule is correct");
+		}else {
+			SimpleUtils.fail("The end Time Unit in rule is NOT correct",false);
+		}
+	}
+
+	@FindBy(css = "lg-search input")
+	private WebElement searchAssociateFiled;
+	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(1)")
+	private WebElement templateDetailsBTN;
+	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(2)")
+	private WebElement templateExternalAttributesBTN;
+	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(3)")
+	private WebElement templateAssociationBTN;
+
+	public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception{
+		if(isElementEnabled(templateAssociationBTN,5)){
+			clickTheElement(templateAssociationBTN);
+			if(isElementEnabled(searchAssociateFiled,2)){
+				SimpleUtils.pass("Click Association Tab successfully!");
+			}else {
+				SimpleUtils.fail("Failed to Click Association Tab!",false);
+			}
+		}
+
+	}
+
+	@FindBy(css = "table.templateAssociation_table tr[ng-repeat=\"group in filterdynamicGroups\"]")
+	private List<WebElement> templateAssociationRows;
+
+	public void searchOneDynamicGroup(String dynamicGroupName) throws Exception{
+		clickOnAssociationTabOnTemplateDetailsPage();
+		searchAssociateFiled.sendKeys(dynamicGroupName);
+		waitForSeconds(5);
+		if(templateAssociationRows.size()!=0){
+			SimpleUtils.pass("User can search out association named: " + dynamicGroupName);
+		}else {
+			SimpleUtils.fail("User can NOT search out association named: \" + dynamicGroupName",false);
+		}
+	}
+
+	@FindBy(css="lg-tab[tab-title=\"Association\"] lg-button[label=\"Save\"] button")
+	private WebElement saveBTNOnAssociationPage;
+
+	@Override
+	public void selectOneDynamicGroup(String dynamicGroupName) throws Exception{
+		searchOneDynamicGroup(dynamicGroupName);
+		for(WebElement templateAssociationRow:templateAssociationRows){
+			String associationName = templateAssociationRow.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+			if(associationName.equals(dynamicGroupName)){
+				clickTheElement(templateAssociationRow.findElement(By.cssSelector("td:nth-child(1) input")));
+				break;
+			}
+		}
+		clickTheElement(saveBTNOnAssociationPage);
+	}
+
+	@Override
+	public void publishNewTemplate(String templateName,String dynamicGroupName) throws Exception{
+		if(isTemplateListPageShow()){
+			clickTheElement(newTemplateBTN);
+			waitForSeconds(1);
+			if(isElementEnabled(createNewTemplatePopupWindow)){
+				SimpleUtils.pass("User can click new template button successfully!");
+				clickTheElement(newTemplateName);
+				newTemplateName.sendKeys(templateName);
+				clickTheElement(newTemplateDescription);
+				newTemplateDescription.sendKeys(templateName);
+				clickTheElement(continueBTN);
+				waitForSeconds(5);
+				if(isElementEnabled(welcomeCloseButton)){
+					clickTheElement(welcomeCloseButton);
+				}
+				if(isElementEnabled(taTemplateSpecialField)){
+					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+				}
+				selectOneDynamicGroup(dynamicGroupName);
+				waitForSeconds(5);
+				clickTheElement(templateDetailsBTN);
+				waitForSeconds(2);
+				publishNowTemplate();
+			}else {
+				SimpleUtils.fail("User can't click new template button successfully!",false);
+			}
+		}
+		String newTemplateName = templateNameList.get(0).getText().trim();
+		if(newTemplateName.contains(templateName)){
+			SimpleUtils.pass("User can add new template successfully!");
+		}else {
+			SimpleUtils.fail("User can't add new template successfully",false);
+		}
+	}
+
+	//added by Estelle to edit operating hours
+	@FindBy(className = "lg-time-slider-notch-selector")
+	private List<WebElement> startEndSliderInBusinessHoursPopUp;
+	@FindBy(css = "div[ng-repeat=\"notch in $ctrl.notches\"]")
+	private List<WebElement> sliderScaleInBusinessHoursPopUp;
+	@Override
+	public void moveSliderAtSomePoint( int moveCount, String slideType) throws Exception {
+		try {
+			int startSelectTime = Integer.parseInt(startEndSliderInBusinessHoursPopUp.get(0).getText().trim().split(":")[0]);
+			int endSelectTime = Integer.parseInt(startEndSliderInBusinessHoursPopUp.get(1).getText().trim().split(":")[0]) + 12;
+			int endSliderTime = Integer.parseInt(sliderScaleInBusinessHoursPopUp.get(sliderScaleInBusinessHoursPopUp.size()-1).getText().trim().split(":")[0])+12;
+			int startSliderTime = Integer.parseInt(sliderScaleInBusinessHoursPopUp.get(0).getText().trim().split(":")[0]);
+			if (startSliderTime == 12) {
+				startSliderTime = 0;
+			}else
+				startSliderTime =startSliderTime;
+
+			if(slideType.equalsIgnoreCase("End")){
+				if(isElementLoaded(startEndSliderInBusinessHoursPopUp.get(1),5) && endSelectTime<endSliderTime){
+					SimpleUtils.pass("Business hours with Sliders loaded on page Successfully for End Point");
+					if (endSelectTime<endSliderTime) {
+						for(int i= endSelectTime*4+moveCount; i< startEndSliderInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+							break;
+						}
+					}else if (endSelectTime==endSliderTime){
+						for(int i= endSelectTime*4-moveCount; i> startEndSliderInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+							break;
+						}
+					}
+
+
+				}else{
+					SimpleUtils.fail("Business hours with End Sliders load failed", false);
+				}
+			}else if(slideType.equalsIgnoreCase("Start")){
+				if(isElementLoaded(startEndSliderInBusinessHoursPopUp.get(0),10) && startEndSliderInBusinessHoursPopUp.size()>0){
+					SimpleUtils.pass("Business hours with Sliders loaded on page Successfully for Starting point");
+					if (startSelectTime>endSliderTime) {
+						for(int i= endSelectTime*4-moveCount; i< startEndSliderInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+							break;
+						}
+					}else if (startSelectTime==endSliderTime){
+						for(int i= endSelectTime*4+moveCount; i> startEndSliderInBusinessHoursPopUp.size();i++){
+							WebElement element = getDriver().findElement(By.cssSelector("div.lg-time-slider-notch.droppable:nth-child("+(i+2)+")"));
+							mouseHoverDragandDrop(startEndSliderInBusinessHoursPopUp.get(1),element);
+							break;
+						}
+					}
+				}else{
+					SimpleUtils.fail("Business hours with Start Sliders load failed", false);
+				}
+			}
+		}catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
+	}
+
+	@Override
+	public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) {
+
+		clickTheElement(templateNameList.get(0));
+		waitForSeconds(5);
+		List<WebElement> deleteArchiveBtn = getDriver().findElements(By.cssSelector("button[type=\"button\"]"));
+		for (WebElement e: deleteArchiveBtn) {
+			if (e.getText().equalsIgnoreCase(action)) {
+				click(e);
+				break;
+			}
+		}
+		if(isElementEnabled(archiveTemplateDialog,3)){
+			clickTheElement(okButtonOnDeleteTemplateDialog);
+			waitForSeconds(5);
+			String firstTemplateName = templateNameList.get(0).getText().trim();
+			if(!firstTemplateName.equals(templateName)){
+				SimpleUtils.pass("User has " + action + "  template successfully!");
+			}else {
+				SimpleUtils.fail("User has " + action + "  template failed!",false);
+			}
+		} else
+			SimpleUtils.fail(action+" template dialog pop up window load failed.",false);
+
 	}
 }

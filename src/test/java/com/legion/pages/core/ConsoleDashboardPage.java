@@ -2969,4 +2969,29 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 		return results;
 	}
+
+	@Override
+	public boolean isConsoleNavigationBarIsGray(String consoleNavigationBarName) throws Exception {
+		boolean isConsoleNavigationBarIsGray = false;
+		WebElement consoleNavigationBar = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'console-navigation-item-label "+ consoleNavigationBarName +"')]//parent::div"));
+		if (consoleNavigationBar.getAttribute("class").contains("gray-item")){
+			isConsoleNavigationBarIsGray = true;
+			SimpleUtils.report("The console navigation bar: "+ consoleNavigationBarName+" is display as gray! ");
+		} else
+			SimpleUtils.report("The console navigation bar: "+ consoleNavigationBarName+" is not display as gray! ");
+		return isConsoleNavigationBarIsGray;
+	}
+
+	@Override
+	public boolean isConsoleNavigationBarBeenSelected (String consoleNavigationBarName) throws Exception {
+		boolean isConsoleNavigationBarBeenSelected = false;
+		WebElement consoleNavigationBar = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'console-navigation-item-label "+ consoleNavigationBarName +"')]//parent::div"));
+		if (consoleNavigationBar.getAttribute("class").contains("active")){
+			isConsoleNavigationBarBeenSelected = true;
+			SimpleUtils.report("The console navigation bar: "+ consoleNavigationBarName+" is selected! ");
+		} else
+			SimpleUtils.report("The console navigation bar: "+ consoleNavigationBarName+" is not selected! ");
+		return isConsoleNavigationBarBeenSelected;
+	}
+
 }

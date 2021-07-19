@@ -138,6 +138,8 @@ public interface ControlsNewUIPage {
 
 	public void clickOnSchedulingPoliciesTimeOffAdvanceBtn() throws Exception;
 
+	public int getDaysInAdvanceCreateTimeOff() throws Exception;
+
 	public void updateMaxEmployeeCanRequestForTimeOffOnSameDay(String maxWorkersTimeOfPerDayCount) throws Exception;
 
 	public void updateNoticePeriodToRequestTimeOff(String noticePeriodToRequestTimeOff) throws Exception;

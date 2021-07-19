@@ -21,10 +21,7 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.json.JSONException;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -32,10 +29,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.SessionId;
+import org.openqa.selenium.remote.*;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -60,6 +54,8 @@ import static com.jayway.restassured.RestAssured.baseURI;
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.SimpleUtils.addResultForTest;
+import static com.legion.utils.SimpleUtils.addTestRun;
 
 //import org.apache.log4j.Logger;
 
@@ -107,8 +103,11 @@ public abstract class TestBase {
     public enum AccessRoles {
         InternalAdmin("InternalAdmin"),
         StoreManager("StoreManager"),
+        StoreManagerOtherLocation1("StoreManagerOtherLocation1"),
         TeamLead("TeamLead"),
         TeamMember("TeamMember"),
+        TeamMemberOtherLocation1("TeamMemberOtherLocation1"),
+        TeamMember2("TeamMember2"),
         StoreManagerLG("StoreManagerLG"),
         DistrictManager("DistrictManager");
         private final String role;
@@ -124,14 +123,14 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        if (System.getProperty("enterprise") !=null && System.getProperty("enterprise").equalsIgnoreCase("op")) {
+        if (System.getProperty("enterprise") != null && System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
             testSuiteID = testRailCfgOp.get("TEST_RAIL_SUITE_ID");
+            testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
             finalTestRailRunName = testRailRunName;
-            ifAddNewTestRun = true;
         }else{
             testSuiteID = testRailCfg.get("TEST_RAIL_SUITE_ID");
+            testRailProjectID = testRailCfg.get("TEST_RAIL_PROJECT_ID");
             finalTestRailRunName = testRailRunName;
-            ifAddNewTestRun = true;
         }
 
 
@@ -154,6 +153,7 @@ public abstract class TestBase {
 
         if(System.getProperty("testRail") != null && System.getProperty("testRail").equalsIgnoreCase("Yes")){
             testRailReportingFlag = "Y";
+            addTestRun();
         }
     }
 
@@ -207,6 +207,7 @@ public abstract class TestBase {
         //setTestRailRun(testRailId);
         if(testRailReportingFlag!=null){
             SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
+            MyThreadLocal.setTestResultFlag(false);
         }
         setCurrentMethod(method);
         setBrowserNeeded(true);
@@ -291,10 +292,7 @@ public abstract class TestBase {
         caps.setCapability("video", true);
         caps.setCapability("console", true);
         caps.setCapability("name", ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod()));
-        caps.setCapability("idleTimeout", 600);
 
-//        caps.setCapability("selenium_version","3.141.59");
-        caps.setCapability("chrome.driver","87.0");
         Assert.assertNotNull(url,"Error grid url is not configured, please review it in envCFg.json file and add it.");
         try {
             setDriver(new RemoteWebDriver(new URL(url),caps));
@@ -316,6 +314,7 @@ public abstract class TestBase {
 
     @AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
+        addResultForTest();
         ExtentTestManager.getTest().info("tearDown started");
         if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
@@ -410,8 +409,9 @@ public abstract class TestBase {
         SimpleUtils.assertOnFail("Failed to login to the application!", loginPage.isLoginSuccess(), false);
         loginPage.verifyNewTermsOfServicePopUp();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
-        locationSelectorPage.changeLocation(location);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+//        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
+//        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, location);
         MyThreadLocal.setIsNeedEditingOperatingHours(false);
@@ -445,6 +445,9 @@ public abstract class TestBase {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
             locationSelectorPage.changeUpperFields(districtsMap.get("CinemarkWkdy_Enterprise"));
         }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("Vailqacn_Enterprise"))) {
+            locationSelectorPage.changeUpperFields(districtsMap.get("Vailqacn_Enterprise"));
+        }
     }
 
     public void loginAsDifferentRole(String roleName) throws Exception {
@@ -465,6 +468,23 @@ public abstract class TestBase {
         } catch (Exception e) {
             SimpleUtils.fail("Login as: " + roleName + " failed!", false);
         }
+    }
+
+    public HashMap<String, Object[][]> getSwapCoverUserCredentials(String locationName) throws Exception {
+        HashMap<String, Object[][]> swapCoverCredentials = new HashMap<>();
+        try {
+            String fileName = "UserCredentialsForComparableSwapShifts.json";
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
+                if (String.valueOf(entry.getValue()[0][2]).contains(locationName)) {
+                    swapCoverCredentials.put(entry.getKey(), entry.getValue());
+                    SimpleUtils.pass("Get Swap/Cover User Credential:" + entry.getKey());
+                }
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Failed to get the swap/cover name list for Location: " + locationName, false);
+        }
+        return swapCoverCredentials;
     }
 
     public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
@@ -612,5 +632,10 @@ public abstract class TestBase {
         }
     }
 
-
+    public String getCurrentClassName() {
+        String className = "";
+        StackTraceElement[] stacks = (new Throwable()).getStackTrace();
+        className = stacks[1].getFileName().replace(".java", "");
+        return className;
+    }
 }

@@ -9,8 +9,10 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import sun.rmi.runtime.Log;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -35,7 +37,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify My Profile details by updating the information")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember2(String browser, String username, String password, String location) throws Exception {
+    public void verifyMyProfileDetailsByUpdatingTheInformationAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -361,6 +363,157 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             profileNewUIPage.clickOnSaveUserProfileBtn();
             profileNewUIPage.clickOnEditUserProfilePencilIcon();
             profileNewUIPage.clickOnCancelUserProfileBtn();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate TM and SM can see the dotted lines to check the availability changes for This Week Only")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMemberOfProfileNewUITestKendraScott2(String browser, String username, String password, String location) throws Exception {
+        try {
+            //Login as TM
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String tmName = profileNewUIPage.getNickNameFromProfile();
+            String myProfileLabel = "My Work Preferences";
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+
+            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+                profileNewUIPage.clickNextWeek();
+            }
+            //Delete all availabilities of the first two editable weeks
+            profileNewUIPage.clickAvailabilityEditButton();
+            profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
+            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+            profileNewUIPage.clickNextWeek();
+            profileNewUIPage.clickAvailabilityEditButton();
+            profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
+            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            //Login as SM and approve all the pending request of the TM
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(tmName);
+            profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
+            Thread.sleep(5000);
+            profileNewUIPage.approveAllPendingAvailabilityRequest();
+            loginPage.logOut();
+
+            //Login back to TM and add availabilities
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+            profileNewUIPage.getNickNameFromProfile();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+                profileNewUIPage.clickNextWeek();
+            }
+            profileNewUIPage.clickAvailabilityEditButton();
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "Busy");
+            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+            List<WebElement> changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
+            List<WebElement> changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
+            SimpleUtils.assertOnFail("The changed preferred availabilities fail to load! ",
+                    changedPreferredAvailabilities.size()==1, false);
+            SimpleUtils.assertOnFail("The changed busy availabilities fail to load! ",
+                    changedBusyAvailabilities.size()==1, false);
+            String availabilityWeek1 = profileNewUIPage.getAvailabilityWeek();
+
+            profileNewUIPage.clickNextWeek();
+            profileNewUIPage.clickAvailabilityEditButton();
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "Busy");
+            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+
+            //Check the dotted line
+            changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
+            changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
+            SimpleUtils.assertOnFail("The changed preferred availabilities fail to load! ",
+                    changedPreferredAvailabilities.size()==1, false);
+            SimpleUtils.assertOnFail("The changed busy availabilities fail to load! ",
+                    changedBusyAvailabilities.size()==1, false);
+            String availabilityWeek2 = profileNewUIPage.getAvailabilityWeek();
+            loginPage.logOut();
+
+            //Login as SM and check the dotted line
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(tmName);
+            profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
+            while (!profileNewUIPage.getAvailabilityWeek().equalsIgnoreCase(availabilityWeek1)){
+                profileNewUIPage.clickNextWeek();
+            }
+            changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
+            changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
+            SimpleUtils.assertOnFail("The changed preferred availabilities fail to load! ",
+                    changedPreferredAvailabilities.size()==1, false);
+            SimpleUtils.assertOnFail("The changed busy availabilities fail to load! ",
+                    changedBusyAvailabilities.size()==1, false);
+
+            //Approve the availabilities, the dotted line will disappear
+            profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(availabilityWeek1, "Approve");
+            Thread.sleep(3000);
+            changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
+            changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
+            SimpleUtils.assertOnFail("The changed preferred availabilities should not load! ",
+                    changedPreferredAvailabilities.size()==0, false);
+            SimpleUtils.assertOnFail("The changed busy availabilities should not load! ",
+                    changedBusyAvailabilities.size()==0, false);
+
+            profileNewUIPage.clickNextWeek();
+            Thread.sleep(3000);
+            changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
+            changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
+            SimpleUtils.assertOnFail("The changed preferred availabilities fail to load! ",
+                    changedPreferredAvailabilities.size()==1, false);
+            SimpleUtils.assertOnFail("The changed busy availabilities fail to load! ",
+                    changedBusyAvailabilities.size()==1, false);
+
+            //Reject the availabilities, the dotted line will disappear
+            profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(availabilityWeek2, "Reject");
+            Thread.sleep(3000);
+            changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
+            changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
+            SimpleUtils.assertOnFail("The changed preferred availabilities should not load! ",
+                    changedPreferredAvailabilities.size()==0, false);
+            SimpleUtils.assertOnFail("The changed busy availabilities should not load! ",
+                    changedBusyAvailabilities.size()==0, false);
+            loginPage.logOut();
+
+            //Login back to TM and check the dotted lines are disappear
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+
+            profileNewUIPage.getNickNameFromProfile();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+                profileNewUIPage.clickNextWeek();
+            }
+            changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
+            changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
+            SimpleUtils.assertOnFail("The changed preferred availabilities should not load! ",
+                    changedPreferredAvailabilities.size()==0, false);
+            SimpleUtils.assertOnFail("The changed busy availabilities should not load! ",
+                    changedBusyAvailabilities.size()==0, false);
+
+            profileNewUIPage.clickNextWeek();
+            changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
+            changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
+            SimpleUtils.assertOnFail("The changed preferred availabilities should not load! ",
+                    changedPreferredAvailabilities.size()==0, false);
+            SimpleUtils.assertOnFail("The changed busy availabilities should not load! ",
+                    changedBusyAvailabilities.size()==0, false);
+
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

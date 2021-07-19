@@ -18,15 +18,15 @@
                 <methods>
 
                     <!--                    Upperfield test cases-->
-                    <include name="verifyDefaultOrganizationHierarchyShow"/>
-                    <include name="verifyAddEditRemoveOrganizationHierarchy"/>
-                    <include name="verifyAbnormalCasesOfOrganizationHierarchy"/>
-                    <include name="verifyUpperFieldsListPageAndSearchFunction" />
-                    <include name="verifyAddUpperFieldsWithDiffLevel" />
-                    <include name="verifyDisableEnableUpperFieldFunction"/>
-                    <include name="verifyUpperFieldSmartCardData" />
-                    <include name="verifyUpdateUpperFieldFunction" />
-                    <include name="verifyCancelCreatingUpperfieldFunction" />
+                    <include name="verifyDefaultOrganizationHierarchyShowAsInternalAdminForUpperFieldTile"/>
+                    <include name="verifyAddEditRemoveOrganizationHierarchyAsInternalAdminForUpperFieldTile"/>
+                    <include name="verifyAbnormalCasesOfOrganizationHierarchyAsInternalAdminForUpperFieldTile"/>
+                    <include name="verifyUpperFieldsListPageAndSearchFunctionAsInternalAdminForUpperFieldTile" />
+                    <include name="verifyAddUpperFieldsWithDiffLevelAsInternalAdminForUpperFieldTile" />
+                    <include name="verifyDisableEnableUpperFieldFunctionAsInternalAdminForUpperFieldTile"/>
+                    <include name="verifyUpperFieldSmartCardDataAsInternalAdminForUpperFieldTile" />
+<!--                    <include name="verifyUpdateUpperFieldFunctionAsInternalAdminForUpperFieldTile" />-->
+                    <include name="verifyCancelCreatingUpperfieldFunctionAsInternalAdminForUpperFieldTile" />
                 </methods>
             </class>
         </classes>

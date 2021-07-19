@@ -271,14 +271,15 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		waitForSeconds(5);
 		if (areListElementVisible(activityCards, 15)) {
 			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
-			if (message != null && message.getText().contains(requestUserName)
-					&& message.getText().toLowerCase().contains(expectedMessage) && message.getText().toLowerCase().contains("@"+location.toLowerCase())) {
-				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
-			}else if( message.getText().toLowerCase().contains("no activities available for the selected filter")) {
+			String messageText = message.getText();
+			if (message != null && messageText.contains(requestUserName)
+					&& messageText.toLowerCase().contains(expectedMessage) && messageText.toLowerCase().contains("@"+location.toLowerCase())) {
+				SimpleUtils.pass("Find Card: " + messageText + " Successfully!");
+			}else if( messageText.toLowerCase().contains("no activities available for the selected filter")) {
 				SimpleUtils.report("No activities available for the selected filter");
 			}else{
 				SimpleUtils.fail("Failed to find the card that is new and contain: " + requestUserName + ", "
-						+ ", " + expectedMessage + "! Actual card is: " + message.getText(), false);
+						+ ", " + expectedMessage + "! Actual card is: " + messageText, false);
 			}
 		}else {
 			SimpleUtils.fail("Shift Offer Activity failed to Load1", false);

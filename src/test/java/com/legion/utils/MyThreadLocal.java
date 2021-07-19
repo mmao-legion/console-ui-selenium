@@ -66,6 +66,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<Boolean> ifAddNewTestRun = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailRunName = new ThreadLocal<>();
 	public static final ThreadLocal<Boolean> testCaseExistsFlag = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> testResultFlag = new ThreadLocal<>();
 	public static final ThreadLocal<List<Integer>> testCaseIDList = new ThreadLocal<>();
 	public static final ThreadLocal<String> testSuiteName = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeDuration = new ThreadLocal<>();
@@ -83,9 +84,9 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> job = new ThreadLocal<>();
 	public static final ThreadLocal<Boolean> isNeedUpdateOperatingHours = new ThreadLocal<>();
 	//added by Estelle to catch up test rail login user info
-	public static final ThreadLocal<String> testRailURL = new ThreadLocal<>();
-	public static final ThreadLocal<String> testRailUser = new ThreadLocal<>();
-	public static final ThreadLocal<String> testRailPassword = new ThreadLocal<>();
+	//public static final ThreadLocal<String> testRailURL = new ThreadLocal<>();
+	//public static final ThreadLocal<String> testRailUser = new ThreadLocal<>();
+	//public static final ThreadLocal<String> testRailPassword = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailProjectID = new ThreadLocal<>();
 	public static final ThreadLocal<String> emailAccount = new ThreadLocal<>();
 	public static final ThreadLocal<String> firstName = new ThreadLocal<>();
@@ -173,6 +174,10 @@ public class MyThreadLocal {
 	public static void setTestCaseExistsFlag(boolean value) { testCaseExistsFlag.set(value); }
 
 	public static boolean getTestCaseExistsFlag() { return testCaseExistsFlag.get(); }
+
+	public static void setTestResultFlag(boolean value) { testResultFlag.set(value); }
+
+	public static boolean getTestResultFlag() { return testResultFlag.get(); }
 
 	public static void setTestCaseIDList(List<Integer> value) { testCaseIDList.set(value); }
 
@@ -505,12 +510,12 @@ public class MyThreadLocal {
 
 	public static String getJobName() { return job.get(); }
 
-	public static void setTestRailURL(String value) { testRailURL.set(value); }
-	public static String getTestRailURL() { return testRailURL.get(); }
-	public static void setTestRailUser(String value){ testRailUser.set(value); }
-	public static String getTestRailUser() { return testRailUser.get(); }
-	public static void setTestRailPassword(String value){ testRailPassword.set(value); }
-	public static String getTestRailPassword() { return testRailPassword.get(); }
+	//public static void setTestRailURL(String value) { testRailURL.set(value); }
+	//public static String getTestRailURL() { return testRailURL.get(); }
+	//public static void setTestRailUser(String value){ testRailUser.set(value); }
+	//public static String getTestRailUser() { return testRailUser.get(); }
+	//public static void setTestRailPassword(String value){ testRailPassword.set(value); }
+	//public static String getTestRailPassword() { return testRailPassword.get(); }
 	public static void setTestRailProjectID(String value){ testRailProjectID.set(value); }
 	public static String getTestRailProjectID() { return testRailProjectID.get(); }
 	public static void setEmailAccount(String value) { emailAccount.set(value);}

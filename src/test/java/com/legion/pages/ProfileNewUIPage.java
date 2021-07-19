@@ -1,9 +1,8 @@
 package com.legion.pages;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
+import org.openqa.selenium.WebElement;
+
+import java.util.*;
 
 public interface ProfileNewUIPage {
 
@@ -20,6 +19,8 @@ public interface ProfileNewUIPage {
 	public void updateTimeOffExplanation(String explanationText) throws Exception;
 
 	public void selectTimeOffReason(String reasonLabel) throws Exception;
+
+	public boolean isReasonLoad(String timeOffReasonLabel) throws Exception;
 
 	public void createNewTimeOffRequest(String timeOffReasonLabel, String timeOffExplanationText) throws Exception;
 
@@ -73,6 +74,8 @@ public interface ProfileNewUIPage {
 
 	public ArrayList<String> getUserProfileBadgesDetails() throws Exception;
 
+	public ArrayList<String> getUserBadgesDetailsFromProfilePage() throws Exception;
+
 	public HashMap<String, String> getMyShiftPreferenceData() throws Exception;
 
 	public void updateMyShiftPreferenceData(boolean canReceiveOfferFromOtherLocation, boolean isVolunteersForAdditional, int minHoursPerShift,
@@ -112,6 +115,8 @@ public interface ProfileNewUIPage {
 	public void selectProfileSubPageByLabelOnProfileImage(String profilePageSubSectionLabel) throws Exception;
 
 	public List<String> selectStartAndEndDate() throws Exception;
+
+	public List<String> selectStartAndEndDate(int daysInadvance) throws Exception;
 
 	public String selectStartAndEndDateAtSameDay() throws Exception;
 
@@ -172,6 +177,8 @@ public interface ProfileNewUIPage {
 	public void verifyUserProfileSectionIsLoaded() throws Exception;
 
 	public void verifyHRProfileInformationSectionIsLoaded() throws Exception;
+
+	public Map<String, String> getHRProfileInfo() throws Exception;
 
 	public void verifyLegionInformationSectionIsLoaded() throws Exception;
 
@@ -250,4 +257,14 @@ public interface ProfileNewUIPage {
 	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception;
 
 	public String getStatusOnProfilePage () throws Exception;
+
+	public HashMap<String, String> getOneUserHRProfileInfo() throws Exception;
+
+	public List<WebElement> getChangedPreferredAvailabilities() throws Exception;
+
+	public List<WebElement> getChangedBusyAvailabilities () throws Exception;
+
+	public void approveOrRejectSpecificPendingAvailabilityRequest(String availabilityWeek, String action) throws Exception;
+
+	public void deleteAllAvailabilitiesForCurrentWeek() throws Exception;
 }

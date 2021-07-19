@@ -88,7 +88,7 @@ public interface LocationsPage {
 
     public boolean isItMSLG();
 
-    public void changeLGToMSOrP2P(String value) throws Exception;
+    public void changeLGToMSOrP2P(String locationName, String value) throws Exception;
 
     public boolean verifyUpperFieldListShowWellOrNot() throws Exception;
 
@@ -186,4 +186,59 @@ public interface LocationsPage {
     public HashMap<String,String> getTemplateTypeAndNameFromLocation() throws Exception;
 
     public void enableDaypart(String dayPart) throws Exception;
+    public void goToLocationDetailsPage(String locationName) throws Exception;
+
+    public void goToConfigurationTabInLocationLevel();
+
+    public void canGoToAssignmentRoleViaTemNameInLocationLevel();
+
+    public List<HashMap<String, String>> getAssignmentRolesInLocationLevel();
+
+    public void canGoToOperationHoursViaTemNameInLocationLevel();
+
+    public String getOHTemplateValueInLocationLevel();
+
+    public void canGoToSchedulingRulesViaTemNameInLocationLevel();
+
+    public List<HashMap<String,String>> getScheRulesTemplateValueInLocationLevel();
+
+    public void canGoToScheduleCollaborationViaTemNameInLocationLevel();
+
+    public String getScheCollTemplateValueInLocationLevel();
+
+    public void canGoToTAViaTemNameInLocationLevel();
+
+    public String getTATemplateValueInLocationLevel();
+
+    public void canGoToSchedulingPoliciesViaTemNameInLocationLevel();
+
+    public String getSchedulingPoliciesTemplateValueInLocationLevel();
+
+    public void canGoToComplianceViaTemNameInLocationLevel();
+
+    public String getComplianceTemplateValueInLocationLevel();
+
+    public void canGoToLaborModelViaTemNameInLocationLevel();
+
+    public List<HashMap<String, String>> getLaborModelInLocationLevel();
+
+    public void backToConfigurationTabInLocationLevel();
+
+    public List<HashMap<String, String>> getLocationTemplateInfoInLocationLevel();
+
+    public void editLocationBtnIsClickableInLocationDetails();
+
+    public void actionsForEachTypeOfTemplate(String template_type, String action);
+
+    public void okBtnIsClickable() throws Exception;
+
+    public void goToScheduleRulesListAtLocationLevel(String workRole);
+
+    public void editBtnIsClickableInBusinessHours();
+
+    public void selectDayInWorkingHoursPopUpWin(int i);
+
+    public void clickSaveBtnInWorkingHoursPopUpWin();
+
+//    public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
 }

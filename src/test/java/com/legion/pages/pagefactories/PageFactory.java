@@ -66,4 +66,20 @@ public interface PageFactory {
     IntegrationPage createIntegrationPage();
 
     OnboardingPage createOnboardingPage();
+
+    ComplianceDMViewPage createComplianceDMViewPage();
+
+    NewsPage createNewsPage();
+
+    ReportPage createConsoleReportPage();
+
+    InsightPage createConsoleInsightPage();
+
+    NewsPage createConsoleNewsPage();
+
+    IntegrationPage createConsoleIntegrationPage();
+
+    UserManagementPage createOpsPortalUserManagementPage();
+
+    LaborModelPage createOpsPortalLaborModelPage();
 }

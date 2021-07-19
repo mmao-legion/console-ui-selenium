@@ -180,31 +180,34 @@
         <classes>
             <class name="com.legion.tests.core.LocationGroupTest">
                 <methods>
-                    <include name="validateTheGenerationOfLGScheduleForMSAsInternalAdmin" />
-                    <include name="validateTheGenerationOfLGScheduleForP2PAsInternalAdmin" />
-                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForMSAsInternalAdmin" />
-                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PAsInternalAdmin" />
-                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForMSAsInternalAdmin" />
-                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForP2PAsInternalAdmin"/>
-                    <include name="validateTheButtonsOnSchedulePageForMSAsInternalAdmin" />
-                    <include name="validateTheButtonsOnSchedulePageForP2PAsInternalAdmin" />
-                    <include name="validateTheGroupByDropdownListForMSAsInternalAdmin" />
-                    <include name="validateTheGroupByDropdownListForP2PAsInternalAdmin" />
-                    <include name="verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG" />
-                    <include name="verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForP2PAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForMSAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForMSInDayViewAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForP2PInDayViewAsInternalAdmin" />
-                    <!--           <include name="validateTheFunctionOfManualOpenShiftForP2PAsInternalAdmin" />   P2P doesn't turn on travel time needed violation -->
-                    <include name="validateTheFunctionOfManualOpenShiftForMSAsInternalAdmin" />
-                    <include name="validateTheFunctionOfManualOpenShiftInDayViewForMSAsInternalAdmin" />
-                    <include name="validateOperateLGScheduleByDifferentUserForMSAsInternalAdmin" />
-                    <include name="validateOperateLGScheduleByDifferentUserForP2PAsInternalAdmin" />
-                    <include name="validateUIPerformanceForLargeRosterForMSAsInternalAdmin" />
-                    <include name="validateUIPerformanceForLargeRosterForP2PAsInternalAdmin" />
-                    <include name="validatePrintScheduleForMSAsInternalAdmin" />
-                    <include name="validatePrintScheduleForP2PAsInternalAdmin" />
+                    <include name="validateTheGenerationOfLGScheduleAsInternalAdminPC" />
+                    <include name="validateTheGenerationOfLGScheduleAsInternalAdminP2P" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdminPC" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdminP2P" />
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleAsInternalAdminPC" />
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleAsInternalAdminP2P"/>
+                    <include name="validateTheButtonsOnSchedulePageAsInternalAdminPC" />
+                    <include name="validateTheButtonsOnSchedulePageAsInternalAdminP2P" />
+                    <include name="validateTheGroupByDropdownListAsInternalAdminPC" />
+                    <include name="validateTheGroupByDropdownListAsInternalAdminP2P" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamMemberLGPC" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamMemberLGP2P" />
+                    <include name="validateTheFunctionOfAutoOpenShiftAsInternalAdminP2P" />
+                    <include name="validateTheFunctionOfAutoOpenShiftAsInternalAdminPC" />
+                    <include name="validateTheFunctionOfAutoOpenShiftInDayViewAsInternalAdminPC" />
+                    <include name="validateTheFunctionOfAutoOpenShiftInDayViewAsInternalAdminP2P" />
+                    <!--           <include name="validateTheFunctionOfManualOpenShiftAsInternalAdminP2P" />   P2P doesn't turn on travel time needed violation -->
+                    <include name="validateTheFunctionOfManualOpenShiftAsInternalAdminPC" />
+                    <include name="validateTheFunctionOfManualOpenShiftInDayViewAsInternalAdminPC" />
+                    <include name="validateOperateLGScheduleByDifferentUserAsInternalAdminPC" />
+                    <include name="validateOperateLGScheduleByDifferentUserAsInternalAdminP2P" />
+                    <include name="validateUIPerformanceForLargeRosterAsInternalAdminPC" />
+                    <include name="validateUIPerformanceForLargeRosterAsInternalAdminP2P" />
+                    <include name="validatePrintScheduleAsInternalAdminPC" />
+                    <include name="validatePrintScheduleAsInternalAdminP2P" />
+                    <include name="validateTheFilterOnSchedulePageAsInternalAdminPC" />
+                    <include name="validateTheFilterOnSchedulePageAsInternalAdminP2P" />
+
                 </methods>
             </class>
         </classes>
@@ -230,7 +233,7 @@
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
-                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                    <include name="verifyShiftTypeContentInFilterWithLGAsInternalAdmin" />
 <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG been generated slow-->
                 </methods>
             </class>
@@ -242,7 +245,7 @@
         <classes>
             <class name="com.legion.tests.core.LocationNavigationTest">
                 <methods>
-                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                    <include name="verifyChangingLocationOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" />
@@ -251,6 +254,17 @@
                     <include name="verifyChangingRegionOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheRegionOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifyChangingBusinessUnitOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheBusinessUnitOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySelectingHQOnBusinessUnitScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheHQOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQScheduleTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQComplianceTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" />
+                    <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" />
                  </methods>
             </class>
         </classes>

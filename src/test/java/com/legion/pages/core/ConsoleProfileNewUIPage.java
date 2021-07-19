@@ -37,7 +37,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement>consoleNavigationMenuItems;
 	@FindBy(css = "div.profile")
 	private WebElement profilePageSection;
-	@FindBy(css="div.collapsible-title-text")
+	@FindBy(css="div.collapsible-title-text span")
 	private List<WebElement> profilePageSubSections;
 	@FindBy(css="a[ng-click=\"newTimeOff()\"]")
 	private WebElement newTimeOffBtn;
@@ -250,7 +250,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void selectProfilePageSubSectionByLabel(String profilePageSubSectionLabel) throws Exception {
 		boolean isSubSectionSelected = false;
-		if(areListElementVisible(profilePageSubSections,10)) {
+		if(areListElementVisible(profilePageSubSections,60)) {
 			for(WebElement profilePageSubSection : profilePageSubSections) {
 				if(profilePageSubSection.getText().toLowerCase().contains(profilePageSubSectionLabel.toLowerCase())) {
 					clickTheElement(profilePageSubSection);
@@ -276,7 +276,21 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		else
 			SimpleUtils.fail("Controls Page: 'Create Time Off' button not loaded.", false);
 	}
-	
+
+	@Override
+	public boolean isReasonLoad(String timeOffReasonLabel) throws Exception{
+		boolean result = false;
+		if(areListElementVisible(timeOffReasons, 20)) {
+			for(WebElement timeOffReason : timeOffReasons) {
+				if(timeOffReason.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
+					result = true;
+				}
+			}
+		} else {
+			result = true;
+		}
+		return result;
+	}
 	
 	@Override
 	public void selectTimeOffReason(String reasonLabel) throws Exception
@@ -1232,6 +1246,23 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return badgesText;
 	}
+
+	@FindBy(css = ".information-section.badge-section")
+	private WebElement badgeSectionInProfilePage;
+	@FindBy(css = ".lg-badges-badge")
+	private List<WebElement> badgeList;
+	@Override
+	public ArrayList<String> getUserBadgesDetailsFromProfilePage() throws Exception {
+		ArrayList<String> badgesText = new ArrayList<String>();
+		if(isElementLoaded(badgeSectionInProfilePage, 10)) {
+			if (badgeList.size()>0){
+				for (WebElement element: badgeList){
+					badgesText.add(element.getAttribute("popover-title"));
+				}
+			}
+		}
+		return badgesText;
+	}
 	
 	
 	public void updateReceivesShiftOffersForOtherLocationCheckButton(boolean isOfferForOtherLocation) throws Exception 
@@ -1462,7 +1493,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
  
 	@Override
 	public HashMap<String, Object> getMyAvailabilityData() throws Exception {
-		
 		HashMap<String, Object> myAvailabilityData = new HashMap<String, Object>();
 
 	      float scheduleHoursValue = 0;
@@ -1554,6 +1584,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
+	@FindBy(css = ".availability-box.availability-box-ghost")
+	List<WebElement> availabilityGrid;
+
 	//Haya: the old method updatePreferredOrBusyHoursDuration has problem with xOffSet. So add copied one and update it.
 	private void updatePreferredOrBusyHoursDurationNew(int rowIndex, double durationhours, String leftOrRightDuration, String hoursType) throws Exception {
 		String preferredHoursTabText = "Preferred";
@@ -1569,17 +1602,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				scrollToElement(hourCellsResizableCursorsRight.get(rowIndex));
 				moveElement(hourCellsResizableCursorsRight.get(rowIndex), xOffSet);
 				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
+			} else if (areListElementVisible(availabilityGrid, 10) && availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).size()==48) {
+				clickTheElement(availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).get(23));
+			} else{
+					SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
 			}
-			else {
-				SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
-			}
-		}
-		else {
+		} else {
 			if(hourCellsResizableCursorsLeft.size() > rowIndex) {
 				moveElement(hourCellsResizableCursorsLeft.get(rowIndex), xOffSet);
 				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
-			}
-			else {
+			} else if (areListElementVisible(availabilityGrid, 10) && availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).size()==48) {
+				clickTheElement(availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).get(23));
+			} else{
 				SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
 			}
 		}
@@ -1900,6 +1934,25 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return startNEndDates;
 	}
 
+	public List<String> selectStartAndEndDate(int daysInadvance) throws Exception {
+		List<String> startNEndDates = new ArrayList<>();
+		selectDate(daysInadvance+1);
+		selectDate(daysInadvance+6);
+		HashMap<String, String> timeOffDate = getTimeOffDate(daysInadvance+1, daysInadvance+6);
+		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
+		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
+		setTimeOffStartTime(timeOffStartDate);
+		setTimeOffEndTime(timeOffEndDate);
+		HashMap<String, String> timeOffDateWithYear = getTimeOffDateWithYear(10, 15);
+		String timeOffStartDateWithYear = timeOffDateWithYear.get("startDateWithYearTimeOff");
+		String timeOffEndDateWithYear = timeOffDateWithYear.get("endDateWithYearTimeOff");
+		startNEndDates.add(timeOffStartDateWithYear);
+		startNEndDates.add(timeOffEndDateWithYear);
+		return startNEndDates;
+	}
+
+
+
 	@Override
 	public String selectStartAndEndDateAtSameDay() throws Exception {
 		selectDate(10);
@@ -2027,6 +2080,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> pendingAvailabilityRequests;
 	@FindBy(css = ".request-buttons-approve")
 	private WebElement approveAvailabilityButton;
+	@FindBy(css = ".request-buttons-reject")
+	private WebElement rejectAvailabilityButton;
 
 	@Override
 	public void approveAllPendingAvailabilityRequest() throws Exception {
@@ -2036,6 +2091,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				if (isElementLoaded(approveAvailabilityButton, 10)) {
 					clickTheElement(approveAvailabilityButton);
 					SimpleUtils.pass("Approve the pending availability request successfully!");
+					approveAllPendingAvailabilityRequest();
+					break;
 				}
 			}
 		}
@@ -2901,6 +2958,21 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
+	@FindBy(css = ".field-content")
+	private List<WebElement> profileInfoFields;
+	@Override
+	public Map<String, String> getHRProfileInfo() throws Exception {
+		Map<String, String> result = new HashMap<>();
+		if(isElementLoaded(hrProfileInfoSection, 5) && areListElementVisible(profileInfoFields, 10)){
+			for (WebElement element: profileInfoFields){
+				result.put(element.findElement(By.cssSelector(".label")).getText(), element.findElement(By.cssSelector(".value")).getText());
+			}
+		} else {
+			SimpleUtils.fail("User Profile page: HR Profile Information section fail to load!", false);
+		}
+		return result;
+	}
+
 	public void verifyLegionInformationSectionIsLoaded() throws Exception {
 		if(isElementLoaded(legionInfoSection, 5)){
 			SimpleUtils.pass("User Profile page: Legion Information section loaded successfully! ");
@@ -3477,7 +3549,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isInviteToLegionButtonLoaded() throws Exception {
 		boolean isInviteToLegionButtonLoaded = false;
-		if(isElementLoaded(userProfileInviteBtn, 5)) {
+		if(isElementLoaded(userProfileInviteBtn, 10)) {
 			isInviteToLegionButtonLoaded =true;
 			SimpleUtils.report("Profile Page: Invite To Legion Button loaded successfully.");
 		} else
@@ -3535,17 +3607,24 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> emptyAvailabilities;
 
 	@FindBy(css = "span.tooltip-red")
-	private WebElement availabilityToolTip;
+	private WebElement busyAvailabilityToolTip;
+
+	@FindBy(css = "span.tooltip-green")
+	private WebElement preferredAvailabilityToolTip;
 
 
 	public void updatePreferredOrBusyHoursToAllDay(int dayIndex, String hoursType) throws Exception {
 
 		String preferredHoursTabText = "Preferred";
 		String busyHoursTabText = "Busy";
-		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
+		WebElement availabilityToolTip = null;
+		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase())) {
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
-		else
+			availabilityToolTip = preferredAvailabilityToolTip;
+		} else {
 			selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+			availabilityToolTip = busyAvailabilityToolTip;
+		}
 
 		//Delete all availabilities in the day
 		WebElement dayRow = null;
@@ -3568,6 +3647,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 		WebElement rightCell = dayRow.findElement(By.cssSelector("div.cursor-resizableE"));
 		int i=0;
+
 		while (!availabilityToolTip.getText().contains("12:00am - 12:00am") && i<5){
 			//Drag the availability to the end of the day
 			scrollToElement(rightCell);
@@ -3586,7 +3666,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	public void clickAvailabilityEditButton() throws Exception{
 		if (isElementLoaded(editBtn,10)){
-			click(editBtn);
+			moveToElementAndClick(editBtn);
 		}else{
 			SimpleUtils.fail("Edit button is not loaded!", false);
 		}
@@ -3605,4 +3685,172 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return status;
 	}
 
+	//Added by Estelle to get home store location
+	@FindBy(css = "div[ng-if=\"canViewWorkerEngagement\"]")
+	private WebElement hrProfileInfoForm;
+	@Override
+	public HashMap<String, String> getOneUserHRProfileInfo() throws Exception {
+		HashMap<String, String> userProfileEngagementDetails = new HashMap<>();
+		if(isElementLoaded(hrProfileInfoForm)) {
+			List<WebElement> rows = hrProfileInfoForm.findElements(By.cssSelector("div.row"));
+
+			for(int index = 0; index < rows.size() ; index++) {
+				if(rows.get(index).getText().toLowerCase().contains("name")
+						&& rows.get(index).getText().toLowerCase().contains("job title")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("name", rowValues[0]);
+						userProfileEngagementDetails.put("jobTitle", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get Name and Job Title value from ' HR Profile Infomation form'", false);
+
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("manager name")
+						&& rows.get(index).getText().toLowerCase().contains("home store")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+//						userProfileEngagementDetails.put("manager name", rowValues[0]);//manager name are all blank
+						userProfileEngagementDetails.put("home store", rowValues[0]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get Manager Name and Home Store value from ' HR Profile Infomation form'", false);
+				}
+
+				else if(rows.get(index).getText().toLowerCase().contains("employee id")
+						&& rows.get(index).getText().toLowerCase().contains("date hired")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("employee id", rowValues[0]);
+						userProfileEngagementDetails.put("date hired", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get EMPLOYEE ID and DATE HIRED value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("employment type")
+						&& rows.get(index).getText().toLowerCase().contains("hourly rate")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("employment type", rowValues[0]);
+						userProfileEngagementDetails.put("hourly rate", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get EMPLOYMENT TYPE and HOURLY RATE value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("employment status")
+						&& rows.get(index).getText().toLowerCase().contains("exempt")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("employment status", rowValues[0]);
+						userProfileEngagementDetails.put("exempt", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get EMPLOYMENT STATUS and EXEMPT value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("address")
+						&& rows.get(index).getText().toLowerCase().contains("minor")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("address", rowValues[0]);
+						userProfileEngagementDetails.put("minor", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get ADDRESS and MINOR value from ' HR Profile Infomation form'", false);
+				}
+				else if(rows.get(index).getText().toLowerCase().contains("contact information")) {
+					String[] rowValues = rows.get(index + 1).getText().split("\n");
+					if(rowValues.length > 0) {
+						userProfileEngagementDetails.put("phoneNumber", rowValues[0]);
+						userProfileEngagementDetails.put("email", rowValues[1]);
+					} else
+						SimpleUtils.fail("Profile Page: Unable to get phoneNumber and email value from ' HR Profile Infomation form'", false);
+				}
+
+			}
+		}
+		return userProfileEngagementDetails;
+	}
+
+
+	@FindBy(css = "div.availability-zone.green-zone.changed")
+	private List<WebElement> changedPreferredAvailabilities;
+
+	@FindBy(css = "div.availability-zone.red-zone.changed")
+	private List<WebElement> changedBusyAvailabilities;
+
+	@FindBy(css = "div.timeoff-requests-request.row-fx")
+	private List<WebElement> allAvailabilityChangeRequests;
+
+	public List<WebElement> getChangedPreferredAvailabilities() throws Exception{
+		List<WebElement> changedAvailabilities = new ArrayList<>();
+		if (areListElementVisible(changedPreferredAvailabilities, 10)){
+			changedAvailabilities = changedPreferredAvailabilities;
+		}
+		return changedAvailabilities;
+	}
+
+	public List<WebElement> getChangedBusyAvailabilities() throws Exception{
+		List<WebElement> changedAvailabilities = new ArrayList<>();
+		if (areListElementVisible(changedBusyAvailabilities, 10)){
+			changedAvailabilities = changedBusyAvailabilities;
+		}
+		return changedAvailabilities;
+	}
+
+	@Override
+	public void approveOrRejectSpecificPendingAvailabilityRequest(String availabilityWeek, String action) throws Exception {
+		if (areListElementVisible(allAvailabilityChangeRequests, 10)) {
+			for (WebElement availabilityChangeRequest : allAvailabilityChangeRequests) {
+				if (isElementLoaded(availabilityChangeRequest, 5)
+						&& availabilityChangeRequest.findElement(By.cssSelector("div.request-date")).
+						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)
+						&& availabilityChangeRequest.findElement(By.cssSelector("span.request-status")).
+						getText().equalsIgnoreCase("pending")) {
+					clickTheElement(availabilityChangeRequest);
+					if (action.equalsIgnoreCase("approve")) {
+						if (isElementLoaded(approveAvailabilityButton, 10)) {
+							clickTheElement(approveAvailabilityButton);
+							SimpleUtils.pass("Approve the pending availability request successfully!");
+						}
+					} else {
+						if (isElementLoaded(rejectAvailabilityButton, 10)) {
+							clickTheElement(rejectAvailabilityButton);
+							SimpleUtils.pass("Reject the pending availability request successfully!");
+						}
+					}
+					break;
+				}
+
+			}
+		}
+	}
+
+
+	public void deleteAllAvailabilitiesForCurrentWeek() throws Exception {
+
+		String busyHoursTabText = "Busy";
+
+		//Delete all preferred availabilities in the day
+		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
+			for (WebElement myAvailabilityDayOfWeekRow: myAvailabilityDayOfWeekRows){
+				List<WebElement> availabilitiesInTheDay = myAvailabilityDayOfWeekRow.findElements(By.cssSelector("div.cursor-resizableW"));
+				for (WebElement availability: availabilitiesInTheDay) {
+					moveToElementAndClick(availability);
+					clickTheElement(removeAvailabilityIcon);
+					SimpleUtils.report("Remove one availability successfully! ");
+				}
+			}
+
+		} else
+			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
+
+		selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+		//Delete all busy availabilities in the week
+		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
+			for (WebElement myAvailabilityDayOfWeekRow: myAvailabilityDayOfWeekRows){
+				List<WebElement> availabilitiesInTheDay = myAvailabilityDayOfWeekRow.findElements(By.cssSelector("div.cursor-resizableW"));
+				for (WebElement availability: availabilitiesInTheDay) {
+					moveToElementAndClick(availability);
+					clickTheElement(removeAvailabilityIcon);
+					SimpleUtils.report("Remove one availability successfully! ");
+				}
+			}
+
+		} else
+			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
+	}
 }

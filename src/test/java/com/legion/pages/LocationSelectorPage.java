@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,10 +37,21 @@ public interface LocationSelectorPage {
 	public void searchSpecificRegionAndNavigateTo(String regionText) throws Exception;
 	public void searchSpecificUpperFieldAndNavigateTo(String districtText) throws Exception;
 //	public void searchSpecificLocationAndNavigateTo(String locationName) throws Exception;
-	public void verifyMagnifyGlassIconShowOrNot();
 	public void changeLocationDirect(String locationName);
 	public Map<String, String> getSelectedUpperFields () throws Exception;
 	public void changeUpperFieldDirect(String upperFieldType, String upperFieldName) throws Exception;
+	public boolean isNoDataToShowPageLoaded() throws Exception;
+	public boolean isUpperFieldNavigationLoaded() throws Exception;
+	public Boolean verifyMagnifyGlassIconShowOrNot();
+	public List<String> getRecentlyViewedInfo();
+	public void changeUpperFieldsFromResentViewList(int index);
+	public void changeUpperFieldsByMagnifyGlassIcon(String upperfiledNavigaTo);
+	public boolean verifyHQViewShowOrNot();
+	public List<String> getConsoleTabs();
+	public boolean isCurrentPageEmptyInHQView() throws Exception;
+	public void verifyGreyOutPageInHQView();
+	public List<String> getNavigatorValue();
+	public void refreshTheBrowser();
 	public void isBUView() throws Exception;
 	public void isRegionView() throws Exception;
 	public Boolean isChangeRegionButtonLoaded() throws Exception;

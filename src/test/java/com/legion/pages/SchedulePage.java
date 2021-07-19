@@ -337,6 +337,8 @@ public interface SchedulePage {
 
 	public void deleteTMShiftInWeekView(String teamMemberName) throws Exception;
 
+	public Map<String, String> getHomeLocationInfo() throws Exception;
+
 	public WebElement clickOnProfileOfUnassignedShift() throws Exception;
 
 	public void clickOnCancelPublishBtn() throws Exception;
@@ -429,7 +431,7 @@ public interface SchedulePage {
 
 	void clickOnDayViewAddNewShiftButton() throws Exception;
 
-	void addNewShiftsByNames(List<String> names) throws Exception;
+	void addNewShiftsByNames(List<String> names, String workRole) throws Exception;
 	boolean displayAlertPopUp() throws Exception;
 	public void displayAlertPopUpForRoleViolation() throws Exception;
 
@@ -632,6 +634,7 @@ public interface SchedulePage {
 	public void verifyDeleteButtonEnabledWhenClickingCheckbox() throws Exception;
 	public void verifyClickOnCancelBtnOnDeleteScheduleDialog() throws Exception;
 	public void deleteAllOOOHShiftInWeekView() throws Exception;
+	public void deleteAllShiftsInWeekView() throws Exception;
 	public List<WebElement> getAllOOOHShifts() throws Exception;
 	public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception;
 	public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception;
@@ -671,4 +674,8 @@ public interface SchedulePage {
 	public boolean isShiftInDayPartOrNotInDayView(int shiftIndex, String dayPart) throws Exception;
 	public void deleteAllShiftsOfGivenDayPartInWeekView(String dayPart) throws Exception;
 	public void deleteAllShiftsOfGivenDayPartInDayView(String dayPart) throws Exception;
+	public List<String> verifyDaysHasShifts() throws Exception;
+	public void verifyShiftTimeInReadMode(String index,String shiftTime) throws Exception;
+	public List<String> getIndexOfDaysHaveShifts() throws Exception;
+	public HashMap<String, String> getMealAndRestBreaksTime() throws Exception;
 }

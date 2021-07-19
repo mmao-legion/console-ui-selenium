@@ -24,6 +24,9 @@ public class ActivityTest extends TestBase {
     private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
     private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
     private static HashMap<String, String> imageFilePath = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ProfileImageFilePath.json");
+    private HashMap<String, Object[][]> swapCoverCredentials = null;
+    private List<String> swapCoverNames = null;
+    private String workRoleName = "";
 
     @Override
     @BeforeMethod()
@@ -62,6 +65,22 @@ public class ActivityTest extends TestBase {
         public String getValue() { return value; }
     }
 
+    public enum timeOffReasonType{
+        Vacation("VACATION"),
+        JuryDuty("JURY DUTY"),
+        Bereavement("BEREAVEMENT"),
+        UnpaidTimeOff("UNPAID TIME OFF"),
+        PersonalEmergency("PERSONAL EMERGENCY"),
+        FamilyEmergency("FAMILY EMERGENCY"),
+        FloatingHoliday("FLOATING HOLIDAY"),
+        Sick("SICK");
+        private final String value;
+        timeOffReasonType(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
+    }
+
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
     @Enterprise(name = "KendraScott2_Enterprise")
@@ -69,15 +88,13 @@ public class ActivityTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void prepareTheSwapShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            List<String> swapNames = new ArrayList<>();
-            String fileName = "UserCredentialsForComparableSwapShifts.json";
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
-                if (!entry.getKey().equals("Cover TM")) {
-                    swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Swap User name:" + entry.getKey());
-                }
+            swapCoverNames = new ArrayList<>();
+            swapCoverCredentials = getSwapCoverUserCredentials(location);
+            for (Map.Entry<String, Object[][]> entry : swapCoverCredentials.entrySet()) {
+                swapCoverNames.add(entry.getKey());
             }
+            workRoleName = String.valueOf(swapCoverCredentials.get(swapCoverNames.get(0))[0][3]);
+
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -97,14 +114,14 @@ public class ActivityTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUI();
             // Deleting the existing shifts for swap team members
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView(swapNames.get(0));
-            schedulePage.deleteTMShiftInWeekView(swapNames.get(1));
+            schedulePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
+            schedulePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.saveSchedule();
             // Add the new shifts for swap team members
             Thread.sleep(5000);
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addNewShiftsByNames(swapNames);
+            schedulePage.addNewShiftsByNames(swapCoverNames, workRoleName);
             schedulePage.saveSchedule();
             schedulePage.publishActiveSchedule();
         } catch (Exception e){
@@ -132,17 +149,7 @@ public class ActivityTest extends TestBase {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 
-        List<String> swapNames = new ArrayList<>();
-        String fileName = "UserCredentialsForComparableSwapShifts.json";
-        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
-            if (!entry.getKey().equals("Cover TM")) {
-                swapNames.add(entry.getKey());
-                SimpleUtils.pass("Get Swap User name: " + entry.getKey());
-            }
-        }
-        Object[][] credential = null;
-        credential = userCredentials.get(swapNames.get(0));
+        Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
         loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                 , String.valueOf(credential[0][2]));
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -180,7 +187,7 @@ public class ActivityTest extends TestBase {
         }
 
         loginPage.logOut();
-        credential = userCredentials.get(swapNames.get(1));
+        credential = swapCoverCredentials.get(swapCoverNames.get(1));
         loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                 , String.valueOf(credential[0][2]));
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -206,12 +213,7 @@ public class ActivityTest extends TestBase {
         loginPage.logOut();
 
         // Login as Store Manager
-        fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-        userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
+        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
         dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -247,17 +249,7 @@ public class ActivityTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            List<String> swapNames = new ArrayList<>();
-            String fileName = "UserCredentialsForComparableSwapShifts.json";
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
-                if (!entry.getKey().equals("Cover TM")) {
-                    swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Swap User name: " + entry.getKey());
-                }
-            }
-            Object[][] credential = null;
-            credential = userCredentials.get(swapNames.get(0));
+            Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -296,7 +288,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
 
-            credential = userCredentials.get(swapNames.get(1));
+            credential = swapCoverCredentials.get(swapCoverNames.get(1));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -322,12 +314,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager
-            fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-            userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -365,17 +352,7 @@ public class ActivityTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            List<String> swapNames = new ArrayList<>();
-            String fileName = "UserCredentialsForComparableSwapShifts.json";
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
-                if (!entry.getKey().equals("Cover TM")) {
-                    swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Swap User name: " + entry.getKey());
-                }
-            }
-            Object[][] credential = null;
-            credential = userCredentials.get(swapNames.get(0));
+            Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -414,7 +391,7 @@ public class ActivityTest extends TestBase {
 
             loginPage.logOut();
 
-            credential = userCredentials.get(swapNames.get(1));
+            credential = swapCoverCredentials.get(swapCoverNames.get(1));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -440,12 +417,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager
-            fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-            userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -494,17 +466,7 @@ public class ActivityTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            List<String> swapNames = new ArrayList<>();
-            String fileName = "UserCredentialsForComparableSwapShifts.json";
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
-                if (!entry.getKey().equals("Cover TM")) {
-                    swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Swap User name: " + entry.getKey());
-                }
-            }
-            Object[][] credential = null;
-            credential = userCredentials.get(swapNames.get(0));
+            Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -543,7 +505,7 @@ public class ActivityTest extends TestBase {
 
             loginPage.logOut();
 
-            credential = userCredentials.get(swapNames.get(1));
+            credential = swapCoverCredentials.get(swapCoverNames.get(1));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -569,12 +531,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager
-            fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-            userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -613,17 +570,8 @@ public class ActivityTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            List<String> swapNames = new ArrayList<>();
-            String fileName = "UserCredentialsForComparableSwapShifts.json";
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
-                if (!entry.getKey().equals("Cover TM")) {
-                    swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Swap User name: " + entry.getKey());
-                }
-            }
             Object[][] credential = null;
-            credential = userCredentials.get(swapNames.get(0));
+            credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -662,7 +610,7 @@ public class ActivityTest extends TestBase {
 
             loginPage.logOut();
 
-            credential = userCredentials.get(swapNames.get(1));
+            credential = swapCoverCredentials.get(swapCoverNames.get(1));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -687,7 +635,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             //log in as the first TM to cancel the request.
-            credential = userCredentials.get(swapNames.get(0));
+            credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             if (dashboardPage.isSwitchToEmployeeViewPresent()) {
@@ -704,12 +652,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager
-            fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-            userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -1056,17 +999,7 @@ public class ActivityTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            List<String> swapNames = new ArrayList<>();
-            String fileName = "UserCredentialsForComparableSwapShifts.json";
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
-                if (!entry.getKey().equals("Cover TM")) {
-                    swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Cover User name: " + entry.getKey());
-                }
-            }
-            Object[][] credential = null;
-            credential = userCredentials.get(swapNames.get(0));
+            Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1093,7 +1026,7 @@ public class ActivityTest extends TestBase {
 
             loginPage.logOut();
 
-            credential = userCredentials.get(swapNames.get(1));
+            credential = swapCoverCredentials.get(swapCoverNames.get(1));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1162,17 +1095,7 @@ public class ActivityTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            List<String> swapNames = new ArrayList<>();
-            String fileName = "UserCredentialsForComparableSwapShifts.json";
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
-                if (!entry.getKey().equals("Cover TM")) {
-                    swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Cover User name: " + entry.getKey());
-                }
-            }
-            Object[][] credential = null;
-            credential = userCredentials.get(swapNames.get(0));
+            Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1199,7 +1122,7 @@ public class ActivityTest extends TestBase {
 
             loginPage.logOut();
 
-            credential = userCredentials.get(swapNames.get(1));
+            credential = swapCoverCredentials.get(swapCoverNames.get(1));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1227,12 +1150,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager
-            fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -1272,17 +1190,7 @@ public class ActivityTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            List<String> swapNames = new ArrayList<>();
-            String fileName = "UserCredentialsForComparableSwapShifts.json";
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
-                if (!entry.getKey().equals("Cover TM")) {
-                    swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Swap User name: " + entry.getKey());
-                }
-            }
-            Object[][] credential = null;
-            credential = userCredentials.get(swapNames.get(0));
+            Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1309,7 +1217,7 @@ public class ActivityTest extends TestBase {
 
             loginPage.logOut();
 
-            credential = userCredentials.get(swapNames.get(1));
+            credential = swapCoverCredentials.get(swapCoverNames.get(1));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1336,12 +1244,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager
-            fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -1382,17 +1285,7 @@ public class ActivityTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            List<String> swapNames = new ArrayList<>();
-            String fileName = "UserCredentialsForComparableSwapShifts.json";
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
-                if (!entry.getKey().equals("Cover TM")) {
-                    swapNames.add(entry.getKey());
-                    SimpleUtils.pass("Get Swap User name: " + entry.getKey());
-                }
-            }
-            Object[][] credential = null;
-            credential = userCredentials.get(swapNames.get(0));
+            Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1418,7 +1311,7 @@ public class ActivityTest extends TestBase {
             schedulePage.verifyClickOnSubmitButton();
             loginPage.logOut();
 
-            credential = userCredentials.get(swapNames.get(1));
+            credential = swapCoverCredentials.get(swapCoverNames.get(1));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1445,7 +1338,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             //log in as the first TM to cancel the request.
-            credential = userCredentials.get(swapNames.get(0));
+            credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             if (dashboardPage.isSwitchToEmployeeViewPresent()) {
@@ -1462,12 +1355,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager
-            fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -1488,12 +1376,22 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify the notification when TM is requesting time off")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyTheNotificationForRequestTimeOffAsTeamMember(String browser, String username, String password, String location) {
+    public void verifyTheNotificationForRequestTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+            int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
             // Login as Team Member to create time off
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
 
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String requestUserName = profileNewUIPage.getNickNameFromProfile();
@@ -1502,10 +1400,19 @@ public class ActivityTest extends TestBase {
             profileNewUIPage.cancelAllTimeOff();
             profileNewUIPage.clickOnCreateTimeOffBtn();
             SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-            String timeOffReasonLabel = "FAMILY EMERGENCY";
             // select time off reason
-            profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-            profileNewUIPage.selectStartAndEndDate();
+            if (profileNewUIPage.isReasonLoad(timeOffReasonType.FamilyEmergency.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.FamilyEmergency.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.PersonalEmergency.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.PersonalEmergency.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.JuryDuty.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.JuryDuty.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Sick.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Sick.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
+            }
+            profileNewUIPage.selectStartAndEndDate(advancedDays);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
             loginPage.logOut();
 
@@ -1522,14 +1429,24 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Team Member to create time off
-            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
             profileNewUIPage.clickOnCreateTimeOffBtn();
             SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
             //select time off reason
-            profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-            profileNewUIPage.selectStartAndEndDate();
+            if (profileNewUIPage.isReasonLoad(timeOffReasonType.FamilyEmergency.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.FamilyEmergency.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.PersonalEmergency.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.PersonalEmergency.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.JuryDuty.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.JuryDuty.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Sick.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Sick.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
+            }
+            profileNewUIPage.selectStartAndEndDate(advancedDays);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
             loginPage.logOut();
 
@@ -1543,7 +1460,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Team Member to cancel time off
-            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
             profileNewUIPage.cancelAllTimeOff();
@@ -1557,9 +1474,21 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify the notification when TM cancels time off request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyTheNotificationForCancelTimeOffAsTeamMember(String browser, String username, String password, String location) {
+    public void verifyTheNotificationForCancelTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+            int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+
             // Login as Team member to create the time off request
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -1571,16 +1500,24 @@ public class ActivityTest extends TestBase {
             profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
             String myTimeOffLabel = "My Time Off";
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-            String timeOffReasonLabel = "FAMILY EMERGENCY";
             profileNewUIPage.cancelAllTimeOff();
             profileNewUIPage.clickOnCreateTimeOffBtn();
             SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
             // select time off reason
-            profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-            List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate();
+            if (profileNewUIPage.isReasonLoad(timeOffReasonType.FamilyEmergency.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.FamilyEmergency.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.PersonalEmergency.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.PersonalEmergency.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.JuryDuty.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.JuryDuty.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Sick.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Sick.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
+            }
+            List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate(advancedDays);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
             profileNewUIPage.cancelAllTimeOff();
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
             // Login as Store Manager again to check message

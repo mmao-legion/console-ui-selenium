@@ -8,9 +8,11 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -41,8 +43,8 @@ public class NewNavigationFlowTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate manager location for one user in controls")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyManagerLocationForOneUserInControlsInControls(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow(String browser, String username, String password, String location) throws Exception {
 
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -73,21 +75,189 @@ public class NewNavigationFlowTest extends TestBase {
         locationSelectorPage.isSMView();
     }
 
-    //add new upperfield test cases
+
     //added by Estelle for magnifying glass icon
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "New console global navigation location picker")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalSearchFunctionOnNavigator(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyGlobalSearchFunctionOnNavigatorAsInternalCustomerAdmin(String browser, String username, String password, String location) throws Exception {
 
-        String LocationText = "";
+        String[]  upperFieldList = {"HQ","OMLocation16","District-ForAutomation","Region-ForAutomation","BU-ForAutomation"};
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.verifyMagnifyGlassIconShowOrNot();
+        if (locationSelectorPage.verifyMagnifyGlassIconShowOrNot()) {
+            //navigate to different upperField via magnifying glass icon
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(upperFieldList[4]);
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(upperFieldList[3]);
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(upperFieldList[2]);
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(upperFieldList[1]);
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(upperFieldList[0]);
+            //verify recently viewed (5 items)
+            List<String> upperFieldNameInResentView = new ArrayList<>();
+            List<String> recentViewText = locationSelectorPage.getRecentlyViewedInfo();
 
+            for (String ss: recentViewText) {
+                 upperFieldNameInResentView.add(ss.split("\n")[0]);
+            }
+            String[] upperFieldNameInResentView1 = upperFieldNameInResentView.toArray(new String[]{});
+            if (Arrays.equals(upperFieldNameInResentView1,upperFieldList)) {
+                SimpleUtils.pass("Resent view list show well");
+            }else
+                SimpleUtils.fail("Resent view list is not the latest one",false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Make HQ the top node of the hierarchy")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEachTabIfSelectHQAsInternalCustomerAdmin(String browser, String username, String password, String location) throws Exception {
+
+
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("HQ");
+        if (locationSelectorPage.verifyHQViewShowOrNot()) {
+            locationSelectorPage.verifyGreyOutPageInHQView();
+            List<String> tabsName = locationSelectorPage.getConsoleTabs();
+            //check dashboard is empty or not
+            if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                SimpleUtils.pass("Dashboard tab show empty page successfully");
+            }else
+                SimpleUtils.fail("Dashboard tab show empty page failed",false);
+
+            //go to "Team" tab
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                SimpleUtils.pass("Team tab is grey out and show empty page successfully");
+            }else
+                SimpleUtils.fail("Team tab is not grey out and show empty page failed",false);
+
+
+            // Go to schedule page, schedule tab
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                SimpleUtils.pass("Schedule tab is grey out and show empty page successfully");
+            }else
+                SimpleUtils.fail("Schedule tab is not grey out and show empty page failed",false);
+
+
+            //Go to "Timesheet" option menu.
+            if (tabsName.contains("TimeSheet")) {
+                TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+                timeSheetPage.clickOnTimeSheetConsoleMenu();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("TimeSheet tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("TimeSheet tab is not grey out and show empty page failed",false);
+            }else
+                SimpleUtils.report("TimeSheet tab is disabled");
+
+
+            //Go to "Compliance"  tab
+            if (tabsName.contains("Compliance")) {
+                CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+                compliancePage.clickOnComplianceConsoleMenu();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("Compliance tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("Compliance tab is not grey out and show empty page failed",false);
+            }else
+                SimpleUtils.report("Compliance tab is disabled");
+
+
+
+//            Go to "Report"  tab
+            ReportPage reportPage = pageFactory.createConsoleReportPage();
+            reportPage.clickOnConsoleReportMenu();
+            if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                SimpleUtils.pass("Report tab is grey out and show empty page successfully");
+            }else
+                SimpleUtils.fail("Report tab is not grey out and show empty page failed",false);
+
+
+            //Go to "Insight" tab
+            if (tabsName.contains("Insights")) {
+                InsightPage insightPage = pageFactory.createConsoleInsightPage();
+                insightPage.clickOnConsoleInsightPage();
+                if (insightPage.isInsightsPageDisplay()) {
+                    SimpleUtils.pass("Insight page load well ");
+                }else
+                    SimpleUtils.fail("Insight page load failed",false);
+
+            }else
+                SimpleUtils.report("Insight tab is disabled");
+
+            //Go to "Inbox" tab
+            if (tabsName.contains("Inbox")) {
+                InboxPage inboxPage = pageFactory.createConsoleInboxPage();
+                inboxPage.clickOnInboxConsoleMenuItem();
+                if (inboxPage.isAnnouncementListPanelDisplay()) {
+                    SimpleUtils.pass("Inbox page show well");
+                }else
+                    SimpleUtils.fail("Inbox page load failed",false);
+
+            }else
+                SimpleUtils.report("Inbox tab is disabled");
+
+
+            //Go to "News" tab
+             if (tabsName.contains("News")) {
+                 NewsPage newsPage = pageFactory.createConsoleNewsPage();
+                 newsPage.clickOnConsoleNewsMenu();
+                 if (newsPage.isNewsTabLoadWell()) {
+                     SimpleUtils.pass("News tab is grey out and show empty page successfully");
+                 }else
+                     SimpleUtils.fail("News tab is not grey out and show empty page failed",false);
+
+             }else
+                 SimpleUtils.report("News tab is disabled");
+
+            //Go to "Admin" tab
+            if (tabsName.contains("Admin")) {
+                AdminPage adminPage = pageFactory.createConsoleAdminPage();
+                adminPage.clickOnConsoleAdminMenu();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("Admin tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("Admin tab is not grey out and show empty page failed",false);
+
+            }else
+                SimpleUtils.report("Admin tab is disabled");
+
+            //Go to "Integration" tab
+            if (tabsName.contains("Integration")) {
+                IntegrationPage integrationPage = pageFactory.createConsoleIntegrationPage();
+                integrationPage.clickOnConsoleIntegrationPage();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("Integration tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("Integration tab is not grey out and show empty page failed",false);
+
+            }else
+                SimpleUtils.report("Integration tab is disabled");
+
+            //Go to "Controls" tab
+            if (tabsName.contains("Controls")) {
+                ControlsPage controlsPage  = pageFactory.createConsoleControlsPage();
+                controlsPage.clickOnConsoleInsightPage();
+                if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
+                    SimpleUtils.pass("Integration tab is grey out and show empty page successfully");
+                }else
+                    SimpleUtils.fail("Integration tab is not grey out and show empty page failed",false);
+
+            }else
+                SimpleUtils.report("Integration tab is disabled");
+
+        }else
+                SimpleUtils.fail("It's not HQ view",false);
 
 
     }
@@ -95,26 +265,111 @@ public class NewNavigationFlowTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate location navigation function for BU manager")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationNavigationFunctionForBUManager(String browser, String username, String password, String location) throws Exception {
+    @TestName(description = "Location navigation via different role")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyNavigationFunctionByDifRoleAsInternalCustomerAdmin(String browser, String username, String password, String location) throws Exception {
 
-        String BUText = "";
-        String RegionText = "";
-        String DistrictText = "";
-        String LocationText = "";
+        String firstLevel = "HQ";
+        String secondLevel = "All Business Units";
+        String bu = "BU-ForAutomation";
+        String region = "Region-ForAutomation";
+        String district ="District-ForAutomation";
+        String locationL ="OMLocation16";
+//
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.verifyDefaultLevelForBUOrAdmin();
-        locationSelectorPage.searchSpecificBUAndNavigateTo(BUText);
-        locationSelectorPage.searchSpecificRegionAndNavigateTo(RegionText);
-        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(DistrictText);
-        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(LocationText);
-        locationSelectorPage.searchSpecificBUAndNavigateTo(BUText);
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(firstLevel);
+        List<String> navigateDefaultText = locationSelectorPage.getNavigatorValue();
+        if (navigateDefaultText.get(0).equalsIgnoreCase(firstLevel)&& navigateDefaultText.get(1).equalsIgnoreCase(secondLevel)) {
+            SimpleUtils.pass("Default navigate show well");
+        }
+          // Validate navigate down one or more level for internal admin
+         locationSelectorPage.changeUpperFields(bu);
+         locationSelectorPage.changeUpperFields(region);
+         locationSelectorPage.changeUpperFields(district);
+         locationSelectorPage.changeUpperFields(locationL);
+         //Validate User current location selection should persist upon browser refresh
+         List<String> navigateText = locationSelectorPage.getNavigatorValue();
+         locationSelectorPage.refreshTheBrowser();
+         List<String> navigateTextAftRefresh = locationSelectorPage.getNavigatorValue();
+         String[] navigateTextToStr = navigateText.toArray(new String[]{});
+         String[] navigateTextAftRefreshToStr = navigateTextAftRefresh.toArray(new String[]{});
+         if (Arrays.equals(navigateTextToStr,navigateTextAftRefreshToStr)) {
+             SimpleUtils.pass("current location selection persist upon browser refresh");
+         }else
+             SimpleUtils.fail("After refresh ,the navigator value doesn't persist upon browser refresh",false);
 
+         //Validate navigate up one or more level for internal admin
+         locationSelectorPage.changeUpperFields(district);
+         locationSelectorPage.changeUpperFields(region);
+         locationSelectorPage.changeUpperFields(region);
+         locationSelectorPage.changeUpperFields(bu);
+         locationSelectorPage.changeUpperFields(firstLevel);
+         List<String> navigateTextAftNavigateUp = locationSelectorPage.getNavigatorValue();
+         String[] navigateTextAftNavigateUpToStr = navigateTextAftNavigateUp.toArray(new String[]{});
+         if (Arrays.equals(navigateTextToStr,navigateTextAftNavigateUpToStr)) {
+             SimpleUtils.pass("Internal admin can navigate up one or more level successfully");
+         }else
+             SimpleUtils.fail("Navigate up one or more level failed",false);
+         //logout
+         LoginPage loginPage = pageFactory.createConsoleLoginPage();
+         loginPage.logOut();
+
+         //verify navigation function by DM
+        String fileName="UsersCredentials.json";
+        fileName=SimpleUtils.getEnterprise("Op_Enterprise")+fileName;
+        HashMap<String,Object[][]>userCredentials=SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][]teamMemberCredentials=userCredentials.get("DistrictManager");
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String.valueOf(teamMemberCredentials[0][0]),String.valueOf(teamMemberCredentials[0][1])
+                ,String.valueOf(teamMemberCredentials[0][2]));
+
+        List<String> navigateDefaultTextForDM = locationSelectorPage.getNavigatorValue();
+        if (navigateDefaultTextForDM.get(0).equalsIgnoreCase(district)&& navigateDefaultTextForDM.get(1).equalsIgnoreCase("All Locations")) {
+            SimpleUtils.pass("Default navigate show well for DM");
+        }
+        // Validate navigate down one or more level for internal admin
+        locationSelectorPage.changeLocation(location);
+        List<String> navigateTextAftNavDownForDM = locationSelectorPage.getNavigatorValue();
+        locationSelectorPage.refreshTheBrowser();
+        List<String> navigateTextAftRefreshForDM = locationSelectorPage.getNavigatorValue();
+        String[] navigateTextAftNavDownForDMToStr = navigateTextAftNavDownForDM.toArray(new String[]{});
+        String[] navigateTextAftRefreshForDMToStr = navigateTextAftRefreshForDM.toArray(new String[]{});
+
+        if (Arrays.equals(navigateTextAftNavDownForDMToStr,navigateTextAftRefreshForDMToStr)) {
+            SimpleUtils.pass("current location selection persist upon browser refresh");
+        }else
+            SimpleUtils.fail("After refresh ,the navigator value doesn't persist upon browser refresh",false);
+        //Navigate up
+        locationSelectorPage.changeUpperFields(district);
+        List<String> navigateTextAftNavUpForDM = locationSelectorPage.getNavigatorValue();
+        String[] navigateTextAftNavUpForDMToStr = navigateTextAftNavUpForDM.toArray(new String[]{});
+        String[] navigateDefaultTextForDMToStr = navigateDefaultTextForDM.toArray(new String[]{});
+        if (Arrays.equals(navigateTextAftNavUpForDMToStr,navigateDefaultTextForDMToStr)) {
+            SimpleUtils.pass("DM can navigate up one or more level successfully");
+        }else
+            SimpleUtils.fail("Navigate up one or more level failed",false);
+
+        loginPage.logOut();
+
+        //verify navigation function by SM
+        Object[][]teamMemberCredentialsF=userCredentials.get("StoreManager");
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String.valueOf(teamMemberCredentialsF[0][0]),String.valueOf(teamMemberCredentialsF[0][1])
+                ,String.valueOf(teamMemberCredentialsF[0][2]));
+        dashboardPage.clickOnSubMenuOnProfile("My Profile");
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        HashMap<String, String> userHRProfileInfo  = profileNewUIPage.getOneUserHRProfileInfo();
+        String homeStore = userHRProfileInfo.get("home store");
+        dashboardPage.clickOnDashboardConsoleMenu();
+        List<String> navigateDefaultTextForSMTM = locationSelectorPage.getNavigatorValue();
+        locationSelectorPage.getNavigatorValue();
+        if (navigateDefaultTextForSMTM.get(0).equalsIgnoreCase(homeStore) ) {
+            SimpleUtils.pass("SM/TM navigation show well");
+        }else
+            SimpleUtils.report("Default navigation for SM/TM is not home store");
 
     }
+
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
@@ -126,7 +381,7 @@ public class NewNavigationFlowTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.selectLocationByIndex(1);
+        locationSelectorPage.changeLocation("OMLocation16");
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         controlsNewUIPage.clickOnControlsConsoleMenu();
         SimpleUtils.assertOnFail("Controls Page not loaded Successfully!",controlsNewUIPage.isControlsPageLoaded() , false);

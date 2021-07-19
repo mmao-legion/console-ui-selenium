@@ -9,4 +9,6 @@ public interface AdminPage {
     public void goToAdminTab() throws Exception;
 
     public void rebuildSearchIndex() throws Exception;
+
+    public void clickOnConsoleAdminMenu() throws Exception;
 }
