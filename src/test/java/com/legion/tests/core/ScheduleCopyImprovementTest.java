@@ -317,7 +317,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
         if (isWeekGenerated) {
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-
+        Thread.sleep(5000);
         if(!isCopySchedule && option.equalsIgnoreCase("Yes, except opening/closing shifts")) {
             schedulePage.clickCreateScheduleBtn();
             schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "09:00PM");

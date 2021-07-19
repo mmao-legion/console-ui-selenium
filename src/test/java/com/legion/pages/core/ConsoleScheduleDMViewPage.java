@@ -48,7 +48,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         if (areListElementVisible(budgetHours, 5)){
                             budgetedHours = Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText().replace(",", ""));
                         } else
-                            budgetedHours = Float.parseFloat(schedule.findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(2).getText().replace("", ""));
+                            budgetedHours = Float.parseFloat(schedule.findElements(By.cssSelector("[class=\"ng-binding ng-scope\"]")).get(2).getText().replace("", ""));
                         break;
                     }
                 } else{

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.teamMemberName;
 
 public class DragAndDropTest extends TestBase {
 
@@ -626,19 +627,7 @@ public class DragAndDropTest extends TestBase {
             //turn on clopening toggle and set hours
             controlsNewUIPage.selectClopeningHours(12);
 
-
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            HashMap<String, Object[][]> teamMembers = kendraScott2TeamMembers;
-            String firstNameOfTM1 = teamMembers.get("TeamMember2")[0][0].toString();
-            String workRoleOfTM1 = teamMembers.get("TeamMember2")[0][2].toString();
-
-            teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstNameOfTM1);
-            String firstNameOfTM2 = teamMembers.get("TeamMember3")[0][0].toString();
-            String workRoleOfTM2 = teamMembers.get("TeamMember3")[0][2].toString();
-
-            teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstNameOfTM2);
-
-        // Go to Schedule page, Schedule tab
+            // Go to Schedule page, Schedule tab
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -659,7 +648,34 @@ public class DragAndDropTest extends TestBase {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
+            List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+            String firstNameOfTM1 = shiftInfo.get(0);
+            String workRoleOfTM1 = shiftInfo.get(4);
+            while (shiftInfo.get(0).equalsIgnoreCase(firstNameOfTM1)) {
+                shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+            }
+            String firstNameOfTM2 = shiftInfo.get(0);
+            String workRoleOfTM2 = shiftInfo.get(4);
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(firstNameOfTM1);
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String myTimeOffLabel = "Time Off";
+            profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+            teamPage.rejectAllTheTimeOffRequests();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(firstNameOfTM2);
+            profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+            teamPage.rejectAllTheTimeOffRequests();
             // Edit the Schedule
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Delete all the shifts that are assigned to the team member
