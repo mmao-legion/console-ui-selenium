@@ -5,8 +5,6 @@ import static com.legion.utils.SimpleUtils.getCurrentDateMonthYearWithTimeZone;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.legion.pages.BasePage;
@@ -105,9 +103,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
     @FindBy(css = "div.fx-center.welcome-text h1")
     private WebElement detailWelcomeText;
-
-	@FindBy(css = ".sc-jogDgT.hBPNLh")
-	private WebElement detailWelcomeTextUppferfield;
 
     public ConsoleDashboardPage() {
         PageFactory.initElements(getDriver(), this);
@@ -352,26 +347,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 		else{
 			SimpleUtils.fail("Welcome Text Section doesn't Load successfully!", true);
-		}
-	}
-
-	@Override
-	public void verifyTheWelcomeMessageForUpperfield(String userName) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		String time= sdf.format(new Date());
-		String greetingTime = getTimePeriod(time);
-		String expectedText = "Good " + greetingTime + ", " + userName + "." + "\n" + "Welcome to Legion" + "\n" + "Your Complete Workforce Engagement Solution";
-		String actualText = "";
-		if(isElementLoaded(detailWelcomeTextUppferfield, 5)){
-			actualText = detailWelcomeTextUppferfield.getText();
-			if(actualText.equals(expectedText)){
-				SimpleUtils.pass("Verified Welcome Text is as expected!");
-			}else{
-				SimpleUtils.fail("Verify Welcome Text failed! Expected is: " + expectedText + "\n" + "Actual is: " + actualText, false);
-			}
-		}
-		else{
-			SimpleUtils.fail("Welcome Text Section doesn't Load successfully!", false);
 		}
 	}
 
@@ -1356,9 +1331,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = ".sc-lgWdIC.cRRXke")
 	private List<WebElement> districtWeekOnDashboardDM;
 
-	@FindBy (css = ".sc-iQQLPo.eVFQLq")
-	private List<WebElement> upperfiledNameNWeekOnDashboard;
-
 	@FindBy (css = ".dashboard-time .text-right")
 	private WebElement weekOnDashboardDM;
 
@@ -1399,26 +1371,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
-	@FindBy (css = "div.react-dm-dashboard div.sc-cTsKDU.iKqGfS > div:nth-child(1)")
-	private WebElement upperfieldNameOnDashboard;
-
-	@Override
-	public void validateThePresenceOfUpperfield() throws Exception {
-		if (isElementEnabled(upperfieldNameOnDashboard, 10)) {
-			if (upperfieldNameOnDashboard.isDisplayed() && !upperfieldNameOnDashboard.getText().isEmpty() && upperfieldNameOnDashboard.getText() != null) {
-				if (getDriver().findElement(By.xpath("//body//div[contains(text(),'Welcome')]/..//following-sibling::div[1]/div[1]")).equals(upperfieldNameOnDashboard)) {
-					SimpleUtils.pass("Dashboard Page: Upperfield shows at left corner below welcome section successfully");
-				} else {
-					SimpleUtils.fail("Dashboard Page: Upperfield is not at left corner below welcome section", true);
-				}
-			} else {
-				SimpleUtils.fail("Dashboard Page: Upperfield isn't present", true);
-			}
-		} else {
-			SimpleUtils.fail("Dashboard Page: Upperfield failed to load", true);
-		}
-	}
-
 	@Override
 	public void validateTheVisibilityOfWeek() throws Exception {
 		if (isElementEnabled(weekOnDashboardDM, 10)) {
@@ -1434,17 +1386,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		} else {
 			SimpleUtils.fail("Dashboard Page: Week failed to load", true);
 		}
-	}
-
-	@Override
-	public String getWeekInfoFromUpperfieldView() throws Exception {
-		String week = "";
-		if (areListElementVisible(upperfiledNameNWeekOnDashboard, 10)) {
-			week = upperfiledNameNWeekOnDashboard.get(1).getText();
-		} else {
-			SimpleUtils.fail("Dashboard Page: Week failed to load", true);
-		}
-		return week;
 	}
 
 	@Override
@@ -1471,63 +1412,19 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public String getUpperfieldNameOnDashboard() throws Exception {
-		String upperfiledName = "";
-		if (areListElementVisible(upperfiledNameNWeekOnDashboard, 10)) {
-			upperfiledName = upperfiledNameNWeekOnDashboard.get(0).getText();
-			SimpleUtils.pass("Dashboard Page: Current organization name is '" + upperfiledName + "'");
-		} else {
-			SimpleUtils.fail("Dashboard Page: Organization failed to load", true);
-		}
-		return upperfiledName;
-	}
-
-	@Override
 	public void validateThePresenceOfRefreshButton() throws Exception {
 		if (isElementLoaded(refreshButton,10)) {
 			if (refreshButton.isDisplayed() && !refreshButton.getText().isEmpty() && refreshButton.getText() != null) {
 				if (getDriver().findElement(By.xpath("//body//div[contains(@class,'welcome-text')]/preceding-sibling::last-updated-countdown/div/lg-button")).equals(refreshButton)) {
 					SimpleUtils.pass("Dashboard Page: Refresh button shows above welcome section successfully");
 				} else {
-					SimpleUtils.fail("Dashboard Page: Refresh button is not above welcome section", false);
+					SimpleUtils.fail("Dashboard Page: Refresh button is not above welcome section", true);
 				}
 			} else {
-				SimpleUtils.fail("Dashboard Page: Refresh button isn't present", false);
+				SimpleUtils.fail("Dashboard Page: Refresh button isn't present", true);
 			}
 		} else {
-			SimpleUtils.fail("Dashboard Page: Refresh button failed to load", false);
-		}
-	}
-
-	@FindBy(css = ".sc-exqIPC.egNJHS")
-	private WebElement refreshButtonUpperfield;
-
-	@FindBy(css = ".MuiSvgIcon-root.sc-bKoJNE")
-	private WebElement lastUpdatedIconUpperfield;
-
-	@FindBy (css = ".sc-jhDJEt.ciiXUl p")
-	private WebElement justUpdatedUpperfield;
-
-	@FindBy (css = ".sc-jhDJEt.ciiXUl p")
-	private WebElement lastUpdatedUpperfield;
-
-	@FindBy (css = ".sc-jhDJEt.ciiXUl span")
-	private WebElement lastUpdatedMinutesUpperfield;
-
-	@Override
-	public void validateThePresenceOfRefreshButtonUpperfield() throws Exception {
-		if (isElementLoaded(refreshButtonUpperfield,10)) {
-			if (refreshButtonUpperfield.isDisplayed() && !refreshButtonUpperfield.getText().isEmpty() && refreshButtonUpperfield.getText() != null) {
-				if (getDriver().findElement(By.xpath("//div[contains(text(),'Welcome')]/../preceding-sibling::div[1]//button")).equals(refreshButtonUpperfield)) {
-					SimpleUtils.pass("Dashboard Page: Refresh button shows above welcome section successfully");
-				} else {
-					SimpleUtils.fail("Dashboard Page: Refresh button is not above welcome section", false);
-				}
-			} else {
-				SimpleUtils.fail("Dashboard Page: Refresh button isn't present", false);
-			}
-		} else {
-			SimpleUtils.fail("Dashboard Page: Refresh button failed to load", false);
+			SimpleUtils.fail("Dashboard Page: Refresh button failed to load", true);
 		}
 	}
 
@@ -1574,64 +1471,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public void validateRefreshFunctionUpperfield() throws Exception {
-		int minutes = 0;
-		if (isElementLoaded(lastUpdatedMinutesUpperfield,10) ) {
-			minutes = lastUpdatedMinutesUpperfield.getText().contains(" ")? Integer.valueOf(lastUpdatedMinutesUpperfield.getText().split(" ")[0]):Integer.valueOf(lastUpdatedMinutesUpperfield.getText());
-			if (minutes >= 30 ) {
-				if (lastUpdatedMinutesUpperfield.getAttribute("class").contains("last-updated-countdown-time-orange"))
-					SimpleUtils.pass("Dashboard Page: When the Last Updated time >= 30 mins, the color changes to orange");
-				else
-					SimpleUtils.fail("Dashboard Page: When the Last Updated time >= 30 mins, the color failed to change to orange",false);
-			}
-		}
-		if (isElementLoaded(refreshButtonUpperfield, 10)) {
-			clickTheElement(refreshButtonUpperfield);
-			SimpleUtils.pass("Dashboard Page: Click on Refresh button Successfully!");
-			if (dashboardSection.getAttribute("class").contains("home-dashboard-loading") && refreshButtonUpperfield.getAttribute("label").equals("Refreshing...")) {
-				SimpleUtils.pass("Dashboard Page: After clicking Refresh button, the background is muted and it shows an indicator 'Refreshing...' that we are processing the info");
-				if (isElementLoaded(justUpdatedUpperfield,60) && !dashboardSection.getAttribute("class").contains("home-dashboard-loading"))
-					SimpleUtils.pass("Dashboard Page: Once the data is done refreshing, the page shows 'JUST UPDATED' and page becomes brighter again");
-				else
-					SimpleUtils.fail("Dashboard Page: When the data is done refreshing, the page doesn't show 'JUST UPDATED' and page doesn't become brighter again",false);
-				if (isElementLoaded(lastUpdatedUpperfield,60) && lastUpdatedMinutesUpperfield.getAttribute("class").contains("last-updated-countdown-time-blue"))
-					SimpleUtils.pass("Dashboard Page: The Last Updated info provides the minutes last updated in blue");
-				else
-					SimpleUtils.fail("Dashboard Page: The Last Updated info doesn't provide the minutes last updated in blue",false);
-			} else {
-				SimpleUtils.fail("Dashboard Page: After clicking Refresh button, the background isn't muted and it doesn't show 'Refreshing...'",true);
-			}
-		} else {
-			SimpleUtils.fail("Dashboard Page: Refresh button not Loaded!", true);
-		}
-	}
-
-	@Override
 	public void validateRefreshPerformance() throws Exception {
 		if (isElementLoaded(refreshButton, 10)) {
 			clickTheElement(refreshButton);
 			if (refreshButton.getAttribute("label").equals("Refreshing...")) {
-				SimpleUtils.pass("Dashboard Page: After clicking Refresh button, the button becomes 'Refreshing...'");
-				WebElement element = (new WebDriverWait(getDriver(), 60))
-						.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[label=\"Refresh\"]")));
-				if (element.isDisplayed()) {
-					SimpleUtils.pass("Dashboard Page: Page refreshes within 1 minute successfully");
-				} else {
-					SimpleUtils.fail("Dashboard Page: Page doesn't refresh within 1 minute", false);
-				}
-			} else {
-				SimpleUtils.fail("Dashboard Page: After clicking Refresh button, the background isn't muted and it doesn't show 'Refreshing...'",true);
-			}
-		} else {
-			SimpleUtils.fail("Dashboard Page: Refresh button not Loaded!", true);
-		}
-	}
-
-	@Override
-	public void validateRefreshPerformanceUpperfield() throws Exception {
-		if (isElementLoaded(refreshButtonUpperfield, 10)) {
-			clickTheElement(refreshButtonUpperfield);
-			if (refreshButtonUpperfield.getAttribute("label").equals("Refreshing...")) {
 				SimpleUtils.pass("Dashboard Page: After clicking Refresh button, the button becomes 'Refreshing...'");
 				WebElement element = (new WebDriverWait(getDriver(), 60))
 						.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[label=\"Refresh\"]")));
@@ -1674,42 +1517,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
 	}
 
-	@Override
-	public void validateRefreshTimestampUpperfield() throws Exception {
-		String timestamp = "";
-		if (isElementLoaded(justUpdatedUpperfield, 5)) {
-			SimpleUtils.pass("Dashboard Page:  The page just refreshed");
-		} else if (isElementLoaded(lastUpdatedMinutesUpperfield, 5)) {
-			timestamp = lastUpdatedMinutesUpperfield.getText();
-			if (timestamp.contains("HOURS") && timestamp.contains(" ")) {
-				timestamp = timestamp.split(" ")[0];
-				if (Integer.valueOf(timestamp) == 1)
-					SimpleUtils.pass("Dashboard Page:  The backstop is 1 hour so that the data is not older than 1 hour stale");
-				else
-					// SimpleUtils.fail("Dashboard Page:  The backstop is older than 1 hour stale",false);
-					SimpleUtils.warn("SCH-2589: [DM View] Refresh time is older than 1 hour stale");
-			} else if (timestamp.contains("MINS") && timestamp.contains(" ")) {
-				timestamp = timestamp.split(" ")[0];
-				if (Integer.valueOf(timestamp) < 60 && Integer.valueOf(timestamp) >= 1)
-					SimpleUtils.pass("Dashboard Page:  The backstop is last updated " + timestamp + " mins ago");
-				else
-					SimpleUtils.fail("Dashboard Page: The backup is last updated " + timestamp + " mins ago actually", false);
-			} else
-				SimpleUtils.fail("Dashboard Page: The backup display \'" + lastUpdatedUpperfield.getText() + "\'",false);
-		} else
-			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
-	}
-
-	@FindBy (css = ".sc-hlXxXZ.fufNMd")
+	@FindBy (css = "div.sc-jCPRHX.dUJIHI div")
 	private WebElement projectedComplianceWidget;
 
-	@FindBy (css = ".sc-cApVyb.eHJCkP")
+	@FindBy (css = "div.sc-jhDJEt.ciiXUl")
 	private WebElement totalViolationHrs;
 
-	@FindBy (css = ".sc-gpEJdM.hcdwWY")
+	@FindBy (css = "div.sc-enrZtP.fzMHFO")
 	private WebElement totalViolationHrsMessage;
 
-	@FindBy (css = ".sc-hlXxXZ.fufNMd div.sc-dYXZXt.jzZUwL")
+	@FindBy (css = "div.sc-jCPRHX.dUJIHI div.sc-dHMioH.jeOpi")
 	private WebElement viewComplianceLink;
 
 
@@ -1724,17 +1541,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	public void verifyTheContentInProjectedComplianceWidget() throws Exception {
-		if(isElementLoaded(projectedComplianceWidget, 10)) {
+		if(isElementLoaded(projectedComplianceWidget, 5)) {
 			WebElement projectedComplianceWidgetTitle = projectedComplianceWidget.findElement(By.tagName("h3"));
-			System.out.println(projectedComplianceWidgetTitle.getText());
-	    	System.out.println(viewComplianceLink.getText());
 			if (isElementLoaded(projectedComplianceWidgetTitle, 5)
 					&& projectedComplianceWidgetTitle.getText().equalsIgnoreCase("Projected Compliance")
 					&& isElementLoaded(totalViolationHrs, 5)
 					&& isElementLoaded(totalViolationHrsMessage, 5)
-					&& totalViolationHrsMessage.getText().equalsIgnoreCase("Total Hours")
+					&& totalViolationHrsMessage.getText().equalsIgnoreCase("Total Violation Hrs")
 					&& isElementLoaded(viewComplianceLink, 5)
-					&& viewComplianceLink.getText().equalsIgnoreCase("View Violations")){
+					&& viewComplianceLink.getText().equalsIgnoreCase("View Compliance")){
 				SimpleUtils.pass("The content in Projected Compliance widget display correctly");
 			} else {
 				SimpleUtils.fail("The content in Projected Compliance widget display incorrectly", false);
@@ -1764,23 +1579,23 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
-	@FindBy(className = "timesheet-approval-rate")
+	@FindBy(className = "dms-timesheet-chart-pos")
 	private WebElement timesheetApprovalRateWidgetChart;
 
-	@FindBy(xpath = "//h3[contains(text(),'Timesheet Approval Rate')]")
+	@FindBy(xpath = "//div[contains(text(),'Timesheet Approval Rate')]")
 	private WebElement timesheetApprovalRateWidgetTitle;
 
-	@FindBy(xpath = "//div[contains(text(),'View Timesheets')]")
+	@FindBy(css = "[ng-click=\"viewTimesheet()\"]")
 	private WebElement viewTimesheetsButton;
 
-	@FindBy(css = "g.timesheet-approval-rate > text[font-size=\"11\"][text-anchor]")
+	@FindBy(css = "timesheet-approval-chart > div > svg > g > text[font-size=\"11\"][text-anchor]")
 	private List<WebElement> timesheetApprovalRateItems;
 
-	@FindBy(css = "g.timesheet-approval-rate > text[text-anchor][style=\"font-size: 11px;\"]")
+	@FindBy(css = "timesheet-approval-chart > div > svg > g > text[text-anchor][style]")
 	private List<WebElement> timesheetApprovalRatePercentages;
 
 	@Override
-	public void validateTheContentOnTimesheetApprovalRateWidgetInUpperfieldView() throws Exception {
+	public void validateTheContentOnTimesheetApprovalRateWidgetInDMView() throws Exception {
         /*Timesheet Approval Rate widget should show:
          a. Title: Timesheet Approval Rate
          b. Timesheet approval chart with 0 Hrs, 24 Hrs, 48 Hrs and > 48 Hrs
@@ -1871,13 +1686,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = "[ng-repeat=\"cv in scheduleComplianceKPI\"]")
     private List<WebElement> scheduleComplianceKPIOnComplianceViolationsWidget;
 
-	@FindBy (css = ".sc-iKUVsf.hFacPf")
+	@FindBy (className = "timesheet-approval-chart__svg")
 	private WebElement timesheetApprovalRateWidget;
 
 	@Override
 	public boolean isTimesheetApprovalRateWidgetDisplay() throws Exception {
 		boolean isTimesheetApprovalRateWidgetDisplay = false;
-		if(isElementLoaded(timesheetApprovalRateWidget, 30) && isElementLoaded(refreshButtonUpperfield, 30)) {
+		if(isElementLoaded(timesheetApprovalRateWidget, 30) && isElementLoaded(refreshButton, 30)) {
 			isTimesheetApprovalRateWidgetDisplay = true;
 			SimpleUtils.report("Timesheet Approval Rate WidgetDisplay Widget is loaded Successfully!");
 		} else
@@ -1888,7 +1703,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public boolean isComplianceViolationsWidgetDisplay() throws Exception {
 		boolean isComplianceViolationsWidgetDisplay = false;
-		if(areListElementVisible(scheduleComplianceKPIOnComplianceViolationsWidget, 30) && isElementLoaded(refreshButtonUpperfield, 30)) {
+		if(areListElementVisible(scheduleComplianceKPIOnComplianceViolationsWidget, 30) && isElementLoaded(refreshButton, 30)) {
 			isComplianceViolationsWidgetDisplay = true;
 			SimpleUtils.report("Compliance Violations Widget is loaded Successfully!");
 		} else
@@ -2206,18 +2021,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Dashboard Page: Hours on Timesheet Approval Rate widget failed to load",false);
 	}
 
-	@Override
-	public void validateTooltipsOfSchedulePublishStatusWidget() throws Exception {
-		if (areListElementVisible(schedulePublishStatus,5) && schedulePublishStatus.size() > 3) {
-			for (WebElement rect: schedulePublishStatus) {
-				// mouseHover(rect);
-				// todo: Locate the tooltip web element and if it loads, it will pass, or else it will fail.
-			}
-			SimpleUtils.warn("SCH-2635: [DM Dashboard]The value tooltips should display when hover the mouse on the chart in Schedule Publish Status widget");
-		} else
-			SimpleUtils.fail("Dashboard Page: Chart on Schedule Publish Status widget failed to load",false);
-	}
-
     @Override
     public void validateTheDataOfMyProfile() throws Exception {
         clickOnSubMenuOnProfile("My Profile");
@@ -2346,30 +2149,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         }
     }
 
-	@Override
-	public void validateRefreshWhenNavigationBackUpperfied() throws Exception {
-		String timestamp1 = "";
-		String timestamp2 = "";
-		if (isElementLoaded(lastUpdatedUpperfield, 5)) {
-			timestamp1 = lastUpdatedUpperfield.getText();
-		} else if (isElementLoaded(justUpdatedUpperfield, 5)) {
-			timestamp1 = justUpdatedUpperfield.getText();
-		} else
-			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
-		click(scheduleConsoleNameInTM);
-		navigateToDashboard();
-		if (isElementLoaded(lastUpdatedUpperfield, 5)) {
-			timestamp2 = lastUpdatedUpperfield.getText();
-		} else if (isElementLoaded(justUpdatedUpperfield, 5)) {
-			timestamp2 = justUpdatedUpperfield.getText();
-		} else
-			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
-		if (timestamp2.equals(timestamp1) && !timestamp1.equals("") && !refreshButtonUpperfield.getAttribute("label").equals("Refreshing...")) {
-			SimpleUtils.pass("Dashboard Page: It keeps the previous Last Updated time, not refreshing every time");
-		} else {
-			SimpleUtils.fail("Dashboard Page: It doesn't keep the previous Last Updated time", false);
-		}
-	}
 
     @FindBy(css = "div.dms-row221")
     private WebElement schedulePublishStatusWidget;
@@ -2383,28 +2162,28 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @FindBy(css = "div.dms-published")
     private WebElement publishedLegend;
 
-    @FindBy(css = ".sc-ezHeEz.cIKEHp")
+    @FindBy(css = "svg.schedule-publish-status-chart__svg")
     private WebElement schedulePublishStatusChart;
 
-    @FindBy(css = ".sc-ezHeEz.cIKEHp rect")
+    @FindBy(css = "svg.schedule-publish-status-chart__svg rect")
     private List<WebElement> schedulePublishStatus;
 
-    @FindBy(xpath = "//h3[contains(text(),\"Schedule Publish Status\")]")
+    @FindBy(css = "div[class=\"dms-box-title dms-box-item-title-row ng-binding ng-scope\"]")
     private WebElement schedulePublishStatusWidgetTitle;
 
 
-	public Map<String, Integer> getAllScheduleStatusFromSchedulePublishStatusWidget() throws Exception {
+    public Map<String, Integer> getAllScheduleStatusFromSchedulePublishStatusWidget() {
 
         int scheduleNumber = Integer.parseInt(schedulePublishStatusWidget.findElements(By.cssSelector("[class=\"tick\"]")).get(1).getText());
-        int notStartedNumberForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(1).getAttribute("height"))).intValue();
-        int inProgressForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(2).getAttribute("height"))).intValue();
-        int publishedForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(3).getAttribute("height"))).intValue();
-        int notStartedNumberForNextWeek = (Double.valueOf(schedulePublishStatus.get(4).getAttribute("height"))).intValue();
-        int inProgressForNextWeek = (Double.valueOf(schedulePublishStatus.get(5).getAttribute("height"))).intValue();
-        int publishedForNextWeek = (Double.valueOf(schedulePublishStatus.get(6).getAttribute("height"))).intValue();
-        int notStartedNumberForTheWeekAfterNext = (Double.valueOf(schedulePublishStatus.get(7).getAttribute("height"))).intValue();
-        int inProgressForTheWeekAfterNext = (Double.valueOf(schedulePublishStatus.get(8).getAttribute("height"))).intValue();
-        int publishedForTheWeekAfterNext = (Double.valueOf(schedulePublishStatus.get(9).getAttribute("height"))).intValue();
+        int notStartedNumberForCurrentWeek = Integer.parseInt(schedulePublishStatus.get(1).getAttribute("height").toString());
+        int inProgressForCurrentWeek = Integer.parseInt(schedulePublishStatus.get(2).getAttribute("height").toString());
+        int publishedForCurrentWeek = Integer.parseInt(schedulePublishStatus.get(3).getAttribute("height").toString());
+        int notStartedNumberForNextWeek = Integer.parseInt(schedulePublishStatus.get(4).getAttribute("height").toString());
+        int inProgressForNextWeek = Integer.parseInt(schedulePublishStatus.get(5).getAttribute("height").toString());
+        int publishedForNextWeek = Integer.parseInt(schedulePublishStatus.get(6).getAttribute("height").toString());
+        int notStartedNumberForTheWeekAfterNext = Integer.parseInt(schedulePublishStatus.get(7).getAttribute("height").toString());
+        int inProgressForTheWeekAfterNext = Integer.parseInt(schedulePublishStatus.get(8).getAttribute("height").toString());
+        int publishedForTheWeekAfterNext = Integer.parseInt(schedulePublishStatus.get(9).getAttribute("height").toString());
 
         Map<String, Integer> scheduleStatusFromSchedulePublisStatusWidget = new HashMap<>();
         int r = 10;
@@ -2427,10 +2206,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
     }
 
-    private int rate(int sum, int a, int b, int c) throws Exception {
+    private int rate(int sum, int a, int b, int c) {
         int r = 10;
-		while (a + b + c != sum * r)
-			r++;
+        while (a / r + b / r + c / r != sum)
+            r++;
         return r;
     }
 
@@ -2459,15 +2238,19 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
     public void verifyTheContentInSchedulePublishStatusWidget() throws Exception {
         if (isElementLoaded(schedulePublishStatusWidget, 5)) {
+
             List<String> weekTextsFromSchedulePage = getThreeWeeksInfoFromSchedulePage();
-            List<WebElement> legendTexts = schedulePublishStatusWidget.findElements(By.cssSelector(".sc-ekA-drt.dUxFWE"));
+            List<WebElement> legendTexts = schedulePublishStatusWidget.findElements(By.className("dms-legend-text"));
             List<WebElement> weekTexts = schedulePublishStatusChart.findElements(By.cssSelector("text[text-anchor=\"middle\"]"));
             String test1 = weekTexts.get(0).getText().replace(" 0", " ");
             String test2 = weekTextsFromSchedulePage.get(0);
-            WebElement viewSchedulesLink = schedulePublishStatusWidget.findElement(By.cssSelector(".sc-hmvkKb.gsyRVd"));
-            if (isElementLoaded(schedulePublishStatusWidgetTitle, 5)
-                    && schedulePublishStatusWidgetTitle.getText().equalsIgnoreCase("Schedule Publish Status")
-                    && areListElementVisible(legendTexts,5) && legendTexts.size() == 3
+            WebElement viewSchedulesLink = schedulePublishStatusWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
+            if (schedulePublishStatusWidgetTitle.getText().equalsIgnoreCase("Schedule Publish Status")
+                    && isElementLoaded(schedulePublishStatusWidgetTitle, 5)
+                    && isElementLoaded(notStartedLegend, 5)
+                    && isElementLoaded(inProgressLegend, 5)
+                    && isElementLoaded(publishedLegend, 5)
+                    && areListElementVisible(legendTexts) && legendTexts.size() == 3
                     && legendTexts.get(0).getText().equalsIgnoreCase("Not Started")
                     && legendTexts.get(1).getText().equalsIgnoreCase("In Progress")
                     && legendTexts.get(2).getText().equalsIgnoreCase("Published")
@@ -2534,7 +2317,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "span.sc-irqbAE.emlRte")
 	private WebElement budgetHoursCaret;
 
-	@FindBy(css = "div.sc-fJxALz.sc-hoPuav.bCdNiG.liDpdV")
+	@FindBy(css = "div.sc-eCbnUT.sc-kBqmDu.dyrrwW.joLJeQ")
 	private WebElement budgetHoursMessageSpan;
 
 	public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception {
@@ -2547,146 +2330,18 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return isScheduleVsGuidanceByDayWidgetDisplay;
 	}
 
-	@Override
-	public String getWeekOnScheduleVsGuidanceByDayWidget() throws Exception {
-		String week = "";
-		if (isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)) {
-			week = weekInfoOnScheduleVsGuidanceByDayWidget.getText();
-			SimpleUtils.pass("Dashboard Page: Get week \""+ week + "\" on \"Schedules vs Guidance By Day\" widget");
-		} else {
-			SimpleUtils.fail("Dashboard Page: Current week not loaded on \"Payroll Projection\" widget", false);
-		}
-		return week;
-	}
-
-	@Override
-	public void clickOnViewSchedulesOnScheduleVsGuidanceByDayWidget() throws Exception {
-		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector(".sc-hmvkKb.gsyRVd"));
-		if (isElementLoaded(viewSchedulesLink, 5)) {
-			clickTheElement(viewSchedulesLink);
-			if (scheduleConsoleMenu.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
-				SimpleUtils.pass("Dashboard Page: Click on \"View Schedules\" link on \"Schedules vs Guidance By Day\" successfully");
-			else
-				SimpleUtils.fail("Dashboard Page: Failed to click on \"View Schedules\" link on \"Schedules vs Guidance By Day\"",false);
-		} else {
-			SimpleUtils.fail("Dashboard Page: \"View Schedules\" link not loaded on \"Schedules vs Guidance By Day\"", false);
-		}
-	}
-
-	@Override
-	public void validateWeekOnScheduleVsGuidanceByDayWidget(String weekOnScheduleVsGuidanceByDayWidget, String currentWeekInScheduleTab) throws Exception {
-		if (weekOnScheduleVsGuidanceByDayWidget.contains(" - ")) {
-			if (weekOnScheduleVsGuidanceByDayWidget.split(" - ")[0].contains(" ") && weekOnScheduleVsGuidanceByDayWidget.split(" - ")[1].contains(" ")) {
-				weekOnScheduleVsGuidanceByDayWidget = weekOnScheduleVsGuidanceByDayWidget.split(" - ")[0].split(" ")[0] + " " + weekOnScheduleVsGuidanceByDayWidget.split(" - ")[0].split(" ")[1].replaceFirst("^(0*)", "") + " - "
-						+ weekOnScheduleVsGuidanceByDayWidget.split(" - ")[1].split(" ")[0] + " " + weekOnScheduleVsGuidanceByDayWidget.split(" - ")[1].split(" ")[1].replaceFirst("^(0*)", "");
-			}
-		}
-		SimpleUtils.report("Dashboard Page: The week on Schedule vs Guidance By Day widget is \"" + weekOnScheduleVsGuidanceByDayWidget + "\"");
-		if (currentWeekInScheduleTab.contains("\n")) {
-			currentWeekInScheduleTab = currentWeekInScheduleTab.split("\n")[1];
-		}
-		SimpleUtils.report("Schedule Page: The current week is \"" + currentWeekInScheduleTab + "\" in Schedule tab");
-		if (currentWeekInScheduleTab.equals(weekOnScheduleVsGuidanceByDayWidget)) {
-			SimpleUtils.pass("Dashboard Page: The week on Schedule vs Guidance By Day widget is consistent with the week in Schedule tab");
-		} else {
-			SimpleUtils.fail("Dashboard Page: The week on Schedule vs Guidance By Day widget is inconsistent with the week in Schedule tab",false);
-		}
-	}
-
-	@FindBy(css = ".grouped-bar-chart rect")
-	private List<WebElement> barsOnScheduleVsGuidanceByDayWidget;
-
-	@FindBy(css = ".legion-ui__grouped-bar-chart-tooltip")
-	private WebElement tooltiponBardOnScheduleVsGuidanceByDayWidget;
-
-	@Override
-	public void validateValueInScheduleVsGuidanceByDayWidget() throws Exception {
-		if (areListElementVisible(barsOnScheduleVsGuidanceByDayWidget,10)) {
-			for (int i = 0; i < barsOnScheduleVsGuidanceByDayWidget.size(); i++) {
-				scrollToElement(barsOnScheduleVsGuidanceByDayWidget.get(i));
-				mouseToElement(barsOnScheduleVsGuidanceByDayWidget.get(i));
-				/*
-				 *wait for tooltip data to load
-				 * */
-				waitForSeconds(2);
-				if (isElementLoaded(tooltiponBardOnScheduleVsGuidanceByDayWidget,10))
-					SimpleUtils.pass("Dashboard Page: The values are present on \"Schedules vs Guidance By Day\"");
-				else
-					SimpleUtils.fail("Dashboard Page: Tooltip failed to load on \"Schedules vs Guidance By Day\"", false);
-			}
-		} else
-			SimpleUtils.fail("Dashboard Page: Bars in bar chart not loaded on \"Schedules vs Guidance By Day\"", false);
-	}
-
-	public HashMap<String, Integer> getTheSumOfValuesOnScheduleVsGuidanceByDayWidget() throws Exception {
-		HashMap<String, Integer> theSumOfValues = new HashMap<>();
-		String tooltip = "";
-		String key = "";
-		int sum1 = 0;
-		int sum2 = 0;
-		if (areListElementVisible(barsOnScheduleVsGuidanceByDayWidget,10)) {
-			for (int i = 0; i < barsOnScheduleVsGuidanceByDayWidget.size(); i++) {
-				scrollToElement(barsOnScheduleVsGuidanceByDayWidget.get(i));
-				mouseToElement(barsOnScheduleVsGuidanceByDayWidget.get(i));
-				/*
-				 *wait for tooltip data to load
-				 * */
-				waitForSeconds(2);
-				if (isElementLoaded(tooltiponBardOnScheduleVsGuidanceByDayWidget,10)){
-					// tooltip = "Guidance 93.8 Hrs" or "Scheduled 61 Hrs";
-					tooltip = tooltiponBardOnScheduleVsGuidanceByDayWidget.getText();
-					if (tooltip.contains(" ")) {
-						tooltip = tooltip.split(" ")[1];
-					}
-					if ((i + 1) % 2 != 0)
-						sum1 += Integer.valueOf(tooltip);
-					else
-						sum2 += Integer.valueOf(tooltip);
-				} else {
-					SimpleUtils.fail("Dashboard Page: Tooltip failed to load on \"Schedules vs Guidance By Day\"", false);
-				}
-			}
-			theSumOfValues.put("Guidance", sum1);
-			theSumOfValues.put("Scheduled", sum2);
-		} else
-			SimpleUtils.fail("Dashboard Page: Bars in bar chart not loaded on \"Schedules vs Guidance By Day\"", false);
-		return theSumOfValues;
-	}
-
-	@Override
-	public void verifyTheContentOnScheduleVsBudgetByDayWidget() throws Exception {
+	public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception {
 		List<WebElement> legendTexts = scheduleVsGuidanceByDayWidget.findElements(By.cssSelector(".sc-biHcxt.duZDU"));
 		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector(".sc-dHMioH.jeOpiX"));
 		if(isElementLoaded(scheduleVsGuidanceByDayWidgetTitle, 15)
-				&& scheduleVsGuidanceByDayWidgetTitle.getText().contains("Schedule vs. Budget by Day")
 				&& areListElementVisible(legendTexts, 5) && legendTexts.size() ==2
-				&& isElementLoaded(budgetedLegend, 5) && budgetedLegend.getText().contains("Budgeted")
 				&& isElementLoaded(budgetedLegend, 5)
 				&& isElementLoaded(scheduledLegend, 5)
 				&& isElementLoaded(scheduleVsGuidanceChart, 5)
 				&& isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)
 				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromDMView().substring(8))
 //				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
-				&& isElementLoaded(budgetHoursCaret, 5) && budgetHoursCaret.getText().contains("Budget")
-				&& isElementLoaded(viewSchedulesLink, 5)){
-			SimpleUtils.pass("The content on Schedule Vs Budget By Day Widget display correctly! ");
-		} else
-			SimpleUtils.fail("The content on Schedule Vs Budget By Day Widget display incorrectly! ", false);
-	}
-
-	public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception {
-		List<WebElement> legendTexts = scheduleVsGuidanceByDayWidget.findElements(By.cssSelector(".sc-biHcxt.duZDU"));
-		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector(".sc-dHMioH.jeOpiX"));
-		if(isElementLoaded(scheduleVsGuidanceByDayWidgetTitle, 15)
-				&& scheduleVsGuidanceByDayWidgetTitle.getText().contains("Schedule vs. Guidance by Day")
-				&& areListElementVisible(legendTexts, 5) && legendTexts.size() ==2
-				&& isElementLoaded(budgetedLegend, 5) && budgetedLegend.getText().contains("Guidance")
-				&& isElementLoaded(scheduledLegend, 5)
-				&& isElementLoaded(scheduleVsGuidanceChart, 5)
-				&& isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)
-				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromDMView().substring(8))
-//				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
-				&& isElementLoaded(budgetHoursCaret, 5) && budgetHoursCaret.getText().contains("Guidance")
+				&& isElementLoaded(budgetHoursCaret, 5)
 				&& isElementLoaded(viewSchedulesLink, 5)){
 			SimpleUtils.pass("The content on Schedule Vs Guidance By Day Widget display correctly! ");
 		} else
@@ -2713,15 +2368,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 						SimpleUtils.fail("Budget hrs message display incorrectly when scheduled hours under budget!", false);
 					}
 				}
-                //compare the hours between widgets on dashboard page
-				String budgetHoursFromDashboard = budgetHoursMessageSpan.getText().split(" ")[0];
-				if (budgetHoursMessageOnLocationSummaryWidget.getText().split(" ")[0].equalsIgnoreCase(budgetHoursFromDashboard)) {
-					SimpleUtils.pass("Budget hrs display correctly on Schedule Vs Guidance By Day Widget!");
-				} else
-					SimpleUtils.fail("Budget hrs display incorrectly on Schedule Vs Guidance By Day Widget! The budget hours from dashboard is: " + budgetHoursFromDashboard
-							+ ". The budget hours on upperfield summary widget on dashboard page is: " +budgetHoursMessageOnLocationSummaryWidget.getText().split(" ")[0], false);
 
 				//compare the hours on widget and on schedule page
+				String budgetHoursFromDashboard = budgetHoursMessageSpan.getText().split(" ")[0];
 				click(scheduleConsoleMenu);
 				waitForSeconds(3);
 				ScheduleDMViewPage scheduleDMViewPage = new ConsoleScheduleDMViewPage();
@@ -2732,7 +2381,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				} else
 					SimpleUtils.fail("Budget hrs display incorrectly on Schedule Vs Guidance By Day Widget! The budget hours from dashboard is: " + budgetHoursFromDashboard
 							+ ". The budget hours from schedule page is: " +budgetHoursFromSchedulePage, false);
-				navigateToDashboard();
 			}
 		} else {
 			if (isElementLoaded(budgetHoursCaret, 5)&& !isElementLoaded(budgetHoursMessageSpan)){
@@ -2796,7 +2444,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "i.dms-caret-small")
 	private WebElement budgetHoursCaretOnLocationSummaryWidget;
 
-	@FindBy(css = "div.sc-bKoJNE.bflUSK")
+	@FindBy(css = "div.sc-hLyimJ.bSSXNe")
 	private WebElement budgetHoursMessageOnLocationSummaryWidget;
 
 	public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception {
