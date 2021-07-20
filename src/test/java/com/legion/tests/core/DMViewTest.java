@@ -174,7 +174,7 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Timesheet Approval Rate widget not loaded successfully", dashboardPage.isTimesheetApprovalRateWidgetDisplay(), false);
 
             // Validate the content on Timesheet Approval Rate widget on TA env
-            dashboardPage.validateTheContentOnTimesheetApprovalRateWidgetInUpperfieldView();
+            dashboardPage.validateTheContentOnTimesheetApprovalRateWidgetInDMView();
 
             // Validate status value of Timesheet Approval Rate widget on TA env
             dashboardPage.validateStatusValueOfTimesheetApprovalRateWidget();

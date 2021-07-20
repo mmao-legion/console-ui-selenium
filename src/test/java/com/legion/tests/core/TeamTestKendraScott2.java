@@ -63,11 +63,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     private static HashMap<String, String> imageFilePath = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ProfileImageFilePath.json");
-//	private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
-	private static HashMap<String, Object[][]> controlTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("VailqacnTeamMembers.json");
-	private static HashMap<String, Object[][]> opTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
-	private static String controlEnterprice = "Vailqacn_Enterprise";
-	private static String opEnterprice = "CinemarkWkdy_Enterprise";
+	private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
+	private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
 
 
 	@Override
@@ -149,7 +146,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		
         // Login as Store Manager
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise(controlEnterprice)+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -222,7 +219,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		
         // Login as Store Manager
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise(controlEnterprice)+fileName;
+        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -715,7 +712,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			// Login as Store Manager
 			String fileName  = "UsersCredentials.json";
-			fileName = SimpleUtils.getEnterprise(controlEnterprice)+fileName;
+			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
 			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
 			Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
 			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -746,7 +743,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@TestName(description = "Validate the SM, DM, TL can or cannot see the invite button on TM list and profile page when grant or ungrant Invite Employee permission to them")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyAbilityToHideInviteButtonAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//		try {
+		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -762,7 +759,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			String permission = "Invite Employee";
 			String actionOff = "off";
 			String actionOn = "on";
-			if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
 				controlsPage.gotoControlsPage();
 				controlsNewUIPage.isControlsPageLoaded();
 				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
@@ -773,7 +770,7 @@ public class TeamTestKendraScott2 extends TestBase{
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOn);
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOn);
 
-			} else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
+			} else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
 				OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
 				opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
 				ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -800,10 +797,10 @@ public class TeamTestKendraScott2 extends TestBase{
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			teamPage.goToTeam();
 			HashMap<String, Object[][]> teamMembers = null;
-			if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
-				teamMembers = controlTeamMembers;
+			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+				teamMembers = kendraScott2TeamMembers;
 			} else {
-				teamMembers = opTeamMembers;
+				teamMembers = cinemarkWkdyTeamMembers;
 			}
 
 			String tm = teamMembers.get("TeamMember1")[0][0].toString();
@@ -884,8 +881,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", !profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 
 
-//		} catch (Exception e){
-//			SimpleUtils.fail(e.getMessage(), false);
-//		}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 }

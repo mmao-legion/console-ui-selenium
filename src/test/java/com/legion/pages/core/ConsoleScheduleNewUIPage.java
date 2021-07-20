@@ -15819,7 +15819,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return index;
     }
-
+    
     // added by Fiona
     public List<String> verifyDaysHasShifts() throws Exception {
         List<String> dayHasShifts = new ArrayList<String>();
@@ -15950,7 +15950,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (!isFound)
             SimpleUtils.report("Schedule Page: Not find the given day part in week view");
     }
-
+    
     @FindBy(css = "div.slider-section-description-break-time-item-rest")
     private List<WebElement> restBreakTimes;
 

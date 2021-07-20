@@ -12,7 +12,7 @@
   "Reverted_Enterprise" : "LegionReverted",
   "KendraScott2_Enterprise" : "KendraScott2",
   "DGStage_Enterprise" : "dgstage",
-  "Op_Enterprise" : "op",
+  "Op_Enterprise" : "opauto",
   "CinemarkWkdy_Enterprise" : "cinemark-wkdy",
   "Dgch_Enterprise" : "dgch",
   "Vailqacn_Enterprise": "vailqacn",
@@ -38,5 +38,5 @@
   "Download_File_Default_Dir" : "/var/lib/jenkins/workspace/createRemoteSeleniumGridForHydsoft/chinaQA",
   "isHeadlessBrowser" : "false",
   "isGridEnabled" : "true",
-  "URL" : "http://localhost:4455/wd/hub"
+  "URL" : "http://{0}:{1}/wd/hub"
 }

@@ -90,7 +90,7 @@ public interface DashboardPage {
     public void validateRefreshPerformance() throws Exception;
     public void validateRefreshWhenNavigationBack() throws Exception;
     public void validateRefreshTimestamp() throws Exception;
-    public void validateTheContentOnTimesheetApprovalRateWidgetInUpperfieldView() throws Exception;
+    public void validateTheContentOnTimesheetApprovalRateWidgetInDMView() throws Exception;
     public void validateStatusValueOfTimesheetApprovalRateWidget() throws Exception;
     public List<String> getTimesheetApprovalRateOnDMViewWidget() throws Exception;
     public void clickOnViewTimesheets() throws Exception;
@@ -118,7 +118,7 @@ public interface DashboardPage {
     public void clickOnViewSchedulesLinkInSchedulePublishStatusWidget() throws Exception;
     public boolean isSchedulePublishStatusWidgetDisplay() throws Exception;
     public void verifyTheContentInSchedulePublishStatusWidget() throws Exception;
-    public Map<String,Integer> getAllScheduleStatusFromSchedulePublishStatusWidget() throws Exception;
+    public Map<String,Integer> getAllScheduleStatusFromSchedulePublishStatusWidget();
     public String getWeekInfoFromDMView() throws Exception;
     public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception;
     public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception;
@@ -133,20 +133,4 @@ public interface DashboardPage {
     public boolean isConsoleNavigationBarIsGray(String consoleNavigationBarName) throws Exception;
     public boolean isConsoleNavigationBarBeenSelected (String consoleNavigationBarName) throws Exception;
 
-    public void validateThePresenceOfUpperfield() throws Exception;
-    public String getUpperfieldNameOnDashboard() throws Exception;
-    public void verifyTheWelcomeMessageForUpperfield(String userName) throws Exception;
-    public void validateThePresenceOfRefreshButtonUpperfield() throws Exception;
-    public void validateRefreshTimestampUpperfield() throws Exception;
-    public void validateRefreshWhenNavigationBackUpperfied() throws Exception;
-    public void validateRefreshFunctionUpperfield()  throws Exception;
-    public void validateRefreshPerformanceUpperfield() throws Exception;
-    public void validateTooltipsOfSchedulePublishStatusWidget() throws Exception;
-    public String getWeekOnScheduleVsGuidanceByDayWidget() throws Exception;
-    public String getWeekInfoFromUpperfieldView() throws Exception;
-    public void clickOnViewSchedulesOnScheduleVsGuidanceByDayWidget() throws Exception;
-    public void validateWeekOnScheduleVsGuidanceByDayWidget(String weekOnScheduleVsGuidanceByDayWidget, String currentWeekInScheduleTab) throws Exception;
-    public void validateValueInScheduleVsGuidanceByDayWidget() throws Exception;
-    public HashMap<String, Integer> getTheSumOfValuesOnScheduleVsGuidanceByDayWidget() throws Exception;
-    public void verifyTheContentOnScheduleVsBudgetByDayWidget() throws Exception;
 }
