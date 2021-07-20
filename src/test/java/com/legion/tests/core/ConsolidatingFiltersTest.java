@@ -284,6 +284,7 @@ public class ConsolidatingFiltersTest extends TestBase {
                 configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
                 configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
                 configurationPage.publishNowTheTemplate();
+                Thread.sleep(3000);
                 switchToConsoleWindow();
             }
 
