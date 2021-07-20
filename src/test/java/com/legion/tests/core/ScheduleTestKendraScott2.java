@@ -1890,7 +1890,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
-			String nearByLocation = "NY CENTRAL";
+			String nearByLocation = getCrendentialInfo("NearByLocationInfo");
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -2296,7 +2296,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			dashboardPage.navigateToDashboard();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-			String nyLocation = "NY CENTRAL (Previously New York Central Park)";
+			String nyLocation = getCrendentialInfo("NearByLocationInfo");
 			locationSelectorPage.changeLocation(nyLocation);
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -2331,7 +2331,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Select AUSTIN DOWNTOWN location
 			dashboardPage.navigateToDashboard();
-			locationSelectorPage.changeLocation("AUSTIN DOWNTOWN");
+			locationSelectorPage.changeLocation(location);
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

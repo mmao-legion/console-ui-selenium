@@ -470,6 +470,21 @@ public abstract class TestBase {
         }
     }
 
+    public String getCrendentialInfo(String roleName) throws Exception {
+            Object[][] credentials = null;
+            StackTraceElement[] stacks = (new Throwable()).getStackTrace();
+            String simpleClassName = stacks[1].getFileName().replace(".java", "");
+            String fileName = "UsersCredentials.json";
+            fileName = MyThreadLocal.getEnterprise() + fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            if (userCredentials.containsKey(roleName + "Of" + simpleClassName)) {
+                credentials = userCredentials.get(roleName + "Of" + simpleClassName);
+            } else {
+                credentials = userCredentials.get(roleName);
+            }
+            return String.valueOf(credentials[0][0]);
+    }
+
     public HashMap<String, Object[][]> getSwapCoverUserCredentials(String locationName) throws Exception {
         HashMap<String, Object[][]> swapCoverCredentials = new HashMap<>();
         try {
