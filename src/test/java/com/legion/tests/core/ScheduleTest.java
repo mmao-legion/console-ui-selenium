@@ -1105,10 +1105,11 @@ public class ScheduleTest extends TestBase{
 				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
+			String workRole = schedulePage.getRandomWorkRole();
 			// Deleting the existing shifts for swap team members
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.deleteTMShiftInWeekView("Unassigned");
-			schedulePage.addOpenShiftWithLastDay("MOD");
+			schedulePage.addOpenShiftWithLastDay(workRole);
 			schedulePage.saveSchedule();
 			schedulePage.publishActiveSchedule();
 
