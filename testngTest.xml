@@ -9,29 +9,12 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="Activity Test">
+    <test name="Consolidating Filters Test">
         <classes>
-            <class name="com.legion.tests.core.ActivityTest">
+            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
                 <methods>
-                    <include name="verifyAccessControlsOnActivitiesPage"/>
-                    <include name="verifyTheContentOnActivityAsStoreManager"/>
-                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>
-                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyTheContentOfActivityPageAsStoreManager" />
-                    <include name="verifyToCloseActivityFeedAsStoreManager" />
-                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
-                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
-                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
-                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
-                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
-                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
-                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
-                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />
-                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
-                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
-                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
-                    <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
+                    <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
                 </methods>
             </class>
         </classes>
