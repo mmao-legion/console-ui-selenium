@@ -189,11 +189,11 @@
                                         <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />  Blocking by SCH-3800
                                          <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800
                                          <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800
-                      SCH-3620,SCH-4171   <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
-                      SCH-3620,SCH-4171   <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
+                      SCH-4422   <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
+                      SCH-4422   <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
                       SCH-3942                   <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
-                      SCH-3620,SCH-4171  <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
-                     SCH-3620,SCH-4171   <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
+                      SCH-4422  <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
+                     SCH-4422   <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
