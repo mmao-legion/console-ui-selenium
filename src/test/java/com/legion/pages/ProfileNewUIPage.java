@@ -267,4 +267,8 @@ public interface ProfileNewUIPage {
 	public void approveOrRejectSpecificPendingAvailabilityRequest(String availabilityWeek, String action) throws Exception;
 
 	public void deleteAllAvailabilitiesForCurrentWeek() throws Exception;
+
+	public void clickPreviousWeek() throws Exception;
+
+	public void cancelSpecificPendingAvailabilityRequest(String availabilityWeek) throws Exception;
 }

@@ -2858,6 +2858,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
+	@Override
+	public void clickPreviousWeek() throws Exception {
+		if (isElementLoaded(pastWeekArrow,10)){
+			click(pastWeekArrow);
+		}
+	}
+
 	//added by Haya
 	@Override
 	public String getAvailabilityWeek() throws Exception {
@@ -3852,5 +3859,27 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 		} else
 			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
+	}
+
+
+	@Override
+	public void cancelSpecificPendingAvailabilityRequest(String availabilityWeek) throws Exception {
+		if (areListElementVisible(allAvailabilityChangeRequests, 10)) {
+			for (WebElement availabilityChangeRequest : allAvailabilityChangeRequests) {
+				if (isElementLoaded(availabilityChangeRequest, 5)
+						&& availabilityChangeRequest.findElement(By.cssSelector("div.request-date")).
+						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)
+						&& availabilityChangeRequest.findElement(By.cssSelector("span.request-status")).
+						getText().equalsIgnoreCase("pending")) {
+					clickTheElement(availabilityChangeRequest);
+					if (isElementLoaded(rejectAvailabilityButton, 10)) {
+						clickTheElement(rejectAvailabilityButton);
+						SimpleUtils.pass("Reject the pending availability request successfully!");
+					}
+					break;
+				}
+
+			}
+		}
 	}
 }
