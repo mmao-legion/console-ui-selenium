@@ -284,12 +284,11 @@ public class ConsolidatingFiltersTest extends TestBase {
                 configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
                 configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
                 configurationPage.publishNowTheTemplate();
-                Thread.sleep(3000);
                 switchToConsoleWindow();
             }
 
             if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
-                Thread.sleep(300000);
+                Thread.sleep(180000);
             }
 
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
