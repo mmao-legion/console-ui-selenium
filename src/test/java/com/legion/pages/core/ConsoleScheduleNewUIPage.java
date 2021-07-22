@@ -2803,7 +2803,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
                 } else {
                     click(firstTableRow.findElement(By.cssSelector("td.table-field.action-field")));
-                    newSelectedTM = firstnameOfTM.getText();
+                    newSelectedTM = firstnameOfTM.getText().split(" ")[0];
                 }
             } else {
                 click(btnSearchteamMember.get(0));
@@ -2903,7 +2903,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 waitForSeconds(5);
                 WebElement selectedTM = selectAndGetTheSelectedTM();
                 if (selectedTM != null) {
-                    selectedTMName = selectedTM.findElement(By.className("worker-edit-search-worker-name")).getText().split("\n")[0];
+                    selectedTMName = selectedTM.findElement(By.className("worker-edit-search-worker-display-name")).getText().split(" ")[0];
                     break;
                 } else {
                     textSearch.clear();
@@ -10792,6 +10792,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementEnabled(radioBtnManualOpenShift, 5) && isElementEnabled(btnYesOpenSchedule)) {
             click(radioBtnManualOpenShift);
             click(btnYesOpenSchedule);
+            waitForSeconds(3);
             selectedTMName = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
             clickOnOfferOrAssignBtn();
             SimpleUtils.pass("Shift been convert to open shift and offer to Specific TM successfully");

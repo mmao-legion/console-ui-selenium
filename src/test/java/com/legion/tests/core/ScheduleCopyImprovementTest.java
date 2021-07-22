@@ -107,7 +107,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             String option = "Yes, all unassigned shifts";
             changeConvertToOpenShiftsSettings(option);
             if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
-                Thread.sleep(300000);
+                Thread.sleep(180000);
             }
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(false, option, false);
 
@@ -200,7 +200,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             String option = "Yes, except opening/closing shifts";
             changeConvertToOpenShiftsSettings(option);
             if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
-                Thread.sleep(300000);
+                Thread.sleep(180000);
             }
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(false, option, false);
 
@@ -763,7 +763,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
             configurationPage.publishNowTheTemplate();
-            Thread.sleep(3000);
             switchToConsoleWindow();
         }
     }
@@ -1792,6 +1791,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(5000);
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("unassigned");
