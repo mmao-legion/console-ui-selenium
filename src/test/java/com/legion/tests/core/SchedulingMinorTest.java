@@ -317,8 +317,6 @@ public class SchedulingMinorTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict("Demo District");
-            locationSelectorPage.changeLocation("Santana Row");
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -348,6 +346,7 @@ public class SchedulingMinorTest extends TestBase {
             String lastNameOfTM = "RC";
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            String workRole = schedulePage.getRandomWorkRole();
             //Create new shift for TM1
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
@@ -371,7 +370,7 @@ public class SchedulingMinorTest extends TestBase {
             //set shift time as 10:00 AM - 6:00 PM
             schedulePage.moveSliderAtCertainPoint("4", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
@@ -409,7 +408,7 @@ public class SchedulingMinorTest extends TestBase {
             //set shift time as 10:00 AM - 6:00 PM
             schedulePage.moveSliderAtCertainPoint("4", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
