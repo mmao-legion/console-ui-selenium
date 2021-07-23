@@ -4984,7 +4984,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(deleteScheduleCheckBox);
                 waitForSeconds(1);
                 click(deleteButtonOnDeleteSchedulePopup);
-                SimpleUtils.pass("Schedule Page: Active Week ('" + getActiveWeekText() + "') Ungenerated Successfully.");
+                if (isElementLoaded(generateSheduleButton, 60)) {
+                    SimpleUtils.pass("Schedule Page: Active Week ('" + getActiveWeekText() + "') Ungenerated Successfully.");
+                } else {
+                    SimpleUtils.fail("Schedule Page: Active Week ('" + getActiveWeekText() + "') isn't deleted successfully!", false);
+                }
             } else
                 SimpleUtils.fail("Schedule Page: Delete schedule popup or delete schedule Button not loaded for the week: '"
                         + getActiveWeekText() + "'.", false);
@@ -8354,14 +8358,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (isElementLoaded(agreeButton, 5)) {
                 click(agreeButton);
                 verifyThePopupMessageOnTop(expectedMessage);
+                verifySwapRequestDeclinedDialogPopUp();
                 if (isElementLoaded(closeDialogBtn, 5)) {
-                    click(closeDialogBtn);
+                    clickTheElement(closeDialogBtn);
                 }
             }else {
                 SimpleUtils.fail("I Agree button not loaded Successfully!", false);
             }
         }else {
             SimpleUtils.fail("Accept Button not loaded Successfully!", false);
+        }
+    }
+
+    private void verifySwapRequestDeclinedDialogPopUp() throws Exception {
+        try {
+            // Same elements sa Delete Schedule pop up
+            if (isElementLoaded(deleteScheduleTitle, 10) && deleteScheduleTitle.getText().equalsIgnoreCase("Swap Request Declined")) {
+                if (isElementLoaded(deleteButtonOnDeleteSchedulePopup, 10)) {
+                    clickTheElement(deleteButtonOnDeleteSchedulePopup);
+                    SimpleUtils.pass("Click on 'OK' button Successfully on 'Swap Request Declined' dialog!");
+                }
+            }
+        } catch (Exception e) {
+            // Do nothing
         }
     }
 
