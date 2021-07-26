@@ -23,6 +23,8 @@ import java.util.List;
 public class SchedulingMinorTest extends TestBase {
 
     private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
+    private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+    private static String workRole = scheduleWorkRoles.get("RETAIL_ASSOCIATE");
 
     @Override
     @BeforeMethod()
@@ -43,8 +45,8 @@ public class SchedulingMinorTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict("Demo District");
-            locationSelectorPage.changeLocation("Santana Row");
+//            locationSelectorPage.changeDistrict("Demo District");
+//            locationSelectorPage.changeLocation("Santana Row");
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -74,7 +76,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("1", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchText(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
@@ -111,7 +113,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("1", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchText(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
@@ -220,7 +222,7 @@ public class SchedulingMinorTest extends TestBase {
             //set shift time as 10:00 AM - 6:00 PM
             schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
@@ -276,7 +278,7 @@ public class SchedulingMinorTest extends TestBase {
             //set shift time as 10:00 AM - 6:00 PM
             schedulePage.moveSliderAtCertainPoint("6", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("10", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
@@ -480,7 +482,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("2", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("9", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchText(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
@@ -524,7 +526,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("2", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("9", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchText(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
@@ -604,7 +606,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(5);
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
@@ -620,7 +622,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clearAllSelectedDays();
             schedulePage.selectDaysByIndex(5,5,5);
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchText(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
@@ -666,7 +668,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(4);
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
@@ -682,7 +684,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clearAllSelectedDays();
             schedulePage.selectDaysByIndex(4,4,4);
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchText(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
@@ -764,7 +766,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(6);
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
@@ -780,7 +782,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clearAllSelectedDays();
             schedulePage.selectDaysByIndex(6,6,6);
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchText(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));
@@ -826,7 +828,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(5);
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchTeamMemberByName(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
@@ -842,7 +844,7 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.moveSliderAtCertainPoint("11", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             schedulePage.clearAllSelectedDays();
             schedulePage.selectDaysByIndex(5,5,5);
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchText(firstNameOfTM2 + " " + lastNameOfTM.substring(0,1));
@@ -921,7 +923,7 @@ public class SchedulingMinorTest extends TestBase {
             //set shift time as 0:00 AM - 1:00 PM
             schedulePage.moveSliderAtCertainPoint("1", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             schedulePage.moveSliderAtCertainPoint("9", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.selectWorkRole("Lift Maintenance");
+            schedulePage.selectWorkRole(workRole);
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.searchText(firstNameOfTM1 + " " + lastNameOfTM.substring(0,1));

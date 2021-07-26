@@ -3045,7 +3045,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
 		} else {
 			if (areListElementVisible(fieldsInLegionInformationSection, 5)
-					&& fieldsInLegionInformationSection.size() == 2
+					&& fieldsInLegionInformationSection.size() >= 2
 					&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
 					&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
 					&& isElementLoaded(badgesSectionInLegionInformationSection, 5)

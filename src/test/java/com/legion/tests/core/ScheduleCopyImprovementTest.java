@@ -28,9 +28,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
     private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     private static Map<String, String> newTMDetails1 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
     private static Map<String, String> newTMDetails2 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember2.json");
-    private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
-    private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
-
+    private static HashMap<String, Object[][]> controlTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("VailqacnTeamMembers.json");
+    private static HashMap<String, Object[][]> opTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
+    private static String controlEnterprice = "Vailqacn_Enterprise";
+    private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
     @Override
     @BeforeMethod()
@@ -106,7 +107,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             String option = "Yes, all unassigned shifts";
             changeConvertToOpenShiftsSettings(option);
-            if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
+            if(getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))){
                 Thread.sleep(300000);
             }
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(false, option, false);
@@ -199,7 +200,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             String option = "Yes, except opening/closing shifts";
             changeConvertToOpenShiftsSettings(option);
-            if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
+            if(getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))){
                 Thread.sleep(300000);
             }
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(false, option, false);
@@ -262,10 +263,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
         String workRoleOfTM = "";
         if (isCopySchedule){
             HashMap<String, Object[][]> teamMembers = null;
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                teamMembers = kendraScott2TeamMembers;
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+                teamMembers = controlTeamMembers;
             } else {
-                teamMembers = cinemarkWkdyTeamMembers;
+                teamMembers = opTeamMembers;
             }
 
             firstNameOfTM = teamMembers.get("TeamMember1")[0][0].toString();
@@ -311,13 +312,11 @@ public class ScheduleCopyImprovementTest extends TestBase {
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
         schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
-        schedulePage.navigateToNextWeek();
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated) {
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-
+        Thread.sleep(5000);
         if(!isCopySchedule && option.equalsIgnoreCase("Yes, except opening/closing shifts")) {
             schedulePage.clickCreateScheduleBtn();
             schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "09:00PM");
@@ -406,8 +405,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             isWeekGenerated = schedulePage.isWeekGenerated();
@@ -738,7 +735,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
 
     private void changeConvertToOpenShiftsSettings(String option) throws Exception {
-        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+        if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             controlsPage.gotoControlsPage();
@@ -750,7 +747,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
             controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption(option);
 
-        } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+        } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
             OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
             opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -765,7 +762,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
     }
 
     private void disableCopyRestriction() throws Exception {
-        if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+        if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             controlsPage.gotoControlsPage();
             controlsPage.clickGlobalSettings();
@@ -774,7 +771,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
 
-        } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+        } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
             OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
             opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -1064,10 +1061,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             HashMap<String, Object[][]> teamMembers = null;
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                teamMembers = kendraScott2TeamMembers;
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+                teamMembers = controlTeamMembers;
             } else {
-                teamMembers = cinemarkWkdyTeamMembers;
+                teamMembers = opTeamMembers;
             }
 
             String firstNameOfTM = teamMembers.get("TeamMember1")[0][0].toString();
@@ -1336,10 +1333,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
             changeConvertToOpenShiftsSettings(option);
 
             HashMap<String, Object[][]> teamMembers = null;
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                teamMembers = kendraScott2TeamMembers;
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+                teamMembers = controlTeamMembers;
             } else {
-                teamMembers = cinemarkWkdyTeamMembers;
+                teamMembers = opTeamMembers;
             }
 
 
@@ -1544,10 +1541,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             HashMap<String, Object[][]> teamMembers = null;
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                teamMembers = kendraScott2TeamMembers;
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+                teamMembers = controlTeamMembers;
             } else {
-                teamMembers = cinemarkWkdyTeamMembers;
+                teamMembers = opTeamMembers;
             }
 
 
