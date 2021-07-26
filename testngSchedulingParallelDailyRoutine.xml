@@ -80,7 +80,7 @@
             </class>
         </classes>
     </test>
-
+<!--  SCH-4672
     <test name="Activity Test">
         <classes>
             <class name="com.legion.tests.core.ActivityTest">
@@ -94,7 +94,7 @@
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
-                    <!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" Blocked by SCH-4171/>-->
+                                       <include name="verifyActivityOfClaimOpenShiftAsTeamLead" Blocked by SCH-4171/>
                     <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
                     <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
                     <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
@@ -108,7 +108,7 @@
             </class>
         </classes>
     </test>
-
+-->
     <test name="Profile Test">
         <classes>
             <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
