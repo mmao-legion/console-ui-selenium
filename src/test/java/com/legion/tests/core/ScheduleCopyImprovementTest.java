@@ -153,9 +153,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option);
-//            if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
-//                Thread.sleep(300000);
-//            }
+            if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
+                Thread.sleep(180000);
+            }
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(false, option, false);
 
         } catch (Exception e) {
