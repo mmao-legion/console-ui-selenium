@@ -793,7 +793,7 @@ public class OfferTMTest extends TestBase {
             List<String> shiftInfoFromTMView = schedulePage.getTheShiftInfoInDayViewByIndex(0);
             SimpleUtils.assertOnFail("shift info is not consistent", shiftInfo.get(2).contains(shiftInfoFromTMView.get(2)) && shiftInfo.get(4).contains(shiftInfoFromTMView.get(4)), false);
 
-            List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+            List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             schedulePage.selectOneShiftIsClaimShift(claimShift);
             schedulePage.clickTheShiftRequestByName(claimShift.get(0));
             schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
@@ -924,7 +924,7 @@ public class OfferTMTest extends TestBase {
             List<String> shiftInfoFromTMView = schedulePage.getTheShiftInfoInDayViewByIndex(0);
             SimpleUtils.assertOnFail("shift info is not consistent", shiftInfo.get(2).contains(shiftInfoFromTMView.get(2)) && shiftInfo.get(4).contains(shiftInfoFromTMView.get(4)), false);
 
-            List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+            List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             schedulePage.selectOneShiftIsClaimShift(claimShift);
             schedulePage.clickTheShiftRequestByName(claimShift.get(0));
             schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
@@ -1186,7 +1186,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
-            List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+            List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             schedulePage.selectOneShiftIsClaimShift(claimShift);
             schedulePage.clickTheShiftRequestByName(claimShift.get(0));
             schedulePage.verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval();
@@ -1307,7 +1307,7 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             schedulePage.clickLinkOnSmartCardByName("View Shifts");
-            List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+            List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             schedulePage.selectOneShiftIsClaimShift(claimShift);
             schedulePage.clickTheShiftRequestByName(claimShift.get(0));
             schedulePage.verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval();

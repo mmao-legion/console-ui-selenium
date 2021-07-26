@@ -4645,15 +4645,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     //added by Haya
     @FindBy (css = "button.dropdown-toggle")
     private WebElement dropdownToggle;
-    @FindBy (css = "options.ng-scope div[ng-repeat]")
-    private List<WebElement> dropdownMenuFormDropdownToggle;
+    @FindBy (css = "div[ng-repeat*=\"action in supportedAdminActions.actions\"]")
+    private WebElement dropdownMenuFormDropdownToggle;
     @Override
     public void goToToggleSummaryView() throws Exception {
         waitForSeconds(2);
         if (isElementLoaded(dropdownToggle,10)){
             click(dropdownToggle);
-            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)){
-                click(dropdownMenuFormDropdownToggle.get(dropdownMenuFormDropdownToggle.size()-1));
+            if (isElementLoaded(dropdownMenuFormDropdownToggle,10)){
+                waitForSeconds(3);
+                click(dropdownMenuFormDropdownToggle);
                 SimpleUtils.pass("Toggle Summary View has been clicked!");
             } else {
                 SimpleUtils.fail("After clicking dropdown toggle button, no menu drop down", false);
@@ -4665,8 +4666,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void clickToggleSummaryViewButton() throws Exception {
-        if (areListElementVisible(dropdownMenuFormDropdownToggle,10)){
-            click(dropdownMenuFormDropdownToggle.get(dropdownMenuFormDropdownToggle.size()-1));
+        if (isElementLoaded(dropdownMenuFormDropdownToggle,10)){
+            click(dropdownMenuFormDropdownToggle);
             SimpleUtils.pass("Toggle Summary View has been clicked!");
         } else {
             if (isElementLoaded(dropdownToggle,10)){
@@ -6437,7 +6438,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned")) {
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
                 String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
-                String jobTitle = weekShifts.get(index).findElement(By.className("week-schedule-role-name")).getText();
+                String jobTitle = weekShifts.get(index).findElement(By.cssSelector(".rows .week-schedule-role-name")).getText();
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
                 clickTheElement(infoIcon);
@@ -8792,7 +8793,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> filters;
     @FindBy(className = "sch-claim-shift-confirm")
     private WebElement claimShiftWindow;
-    @FindBy(className = "agree")
+    @FindBy(css = ".redesigned-button-ok")
     private WebElement agreeClaimBtn;
     @FindBy(className = "cancel")
     private WebElement cancelClaimBtn;
@@ -13085,7 +13086,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             searchBox.clear();
             waitForSeconds(3);
             searchBox.sendKeys(searchText);
-            waitForSeconds(3);
+            waitForSeconds(5);
             if (areListElementVisible(weekShifts, 5) && weekShifts.size() >0) {
                 searchResult = weekShifts;
             } else if (areListElementVisible(dayViewAvailableShifts, 5) && dayViewAvailableShifts.size() >0) {
@@ -13103,7 +13104,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (firstNameOfTM != null) {
                 for (int i=0; i< searchResults.size(); i++) {
                     String[] tmDetailName = getTMDetailNameFromProfilePage(searchResults.get(i)).split(" ");
-                    if (firstNameOfTM.equals(tmDetailName[0])|| firstNameOfTM.equals(tmDetailName[1])) {
+                    if (firstNameOfTM.equals(tmDetailName[0])|| firstNameOfTM.equals(tmDetailName[1]) || tmDetailName[0].contains(firstNameOfTM)
+                            || tmDetailName[1].contains(firstNameOfTM)) {
                         SimpleUtils.pass("The search result display correctly when search by TM first name");
                     } else {
                         SimpleUtils.fail("The search result incorrect when search by TM first name, the expected name is: " + firstNameOfTM+ ". The actual name is: " + tmDetailName[0] +" " +tmDetailName[1],false);
@@ -15590,7 +15592,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(filterPopup,5)) {
             String shiftTypeFilterKey = "shifttype";
             ArrayList<WebElement> shiftTypeFilters = getAvailableFilters().get(shiftTypeFilterKey);
-            if (shiftTypeFilters.size() >= 7) {
+            if (shiftTypeFilters.size() >= 8) {
                 if (shiftTypeFilters.get(0).getText().contains("Action Required")
                         && shiftTypeFilters.get(1).getText().contains("Assigned")
                         && shiftTypeFilters.get(2).getText().contains("Compliance Review")
@@ -15598,8 +15600,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         && shiftTypeFilters.get(4).getText().contains("Unavailable")
                         && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
                         && shiftTypeFilters.get(6).getText().contains("Unpublished changes")
-                        && (shiftTypeFilters.size()> 7? (shiftTypeFilters.get(7).getText().contains("Minor (14-15)") ||
-                        shiftTypeFilters.get(7).getText().contains("Minor (16-17)")): true)){
+                        && shiftTypeFilters.get(7).getText().contains("New or Borrowed TM")
+                        && (shiftTypeFilters.size()> 8? (shiftTypeFilters.get(8).getText().contains("Minor (14-15)") ||
+                        shiftTypeFilters.get(8).getText().contains("Minor (16-17)")): true)){
                     SimpleUtils.pass("The shift types display correctly in Filter dropdown list! ");
                 } else
                     SimpleUtils.fail("The shift types display incorrectly in Filter dropdown list! ", false);
