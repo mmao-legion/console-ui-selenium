@@ -2302,14 +2302,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			// Select one team member to view profile
-			HashMap<String, Object[][]> teamMembers = null;
-			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-				teamMembers = kendraScott2TeamMembers;
-			} else {
-				teamMembers = cinemarkWkdyTeamMembers;
-			}
-			String firstName = teamMembers.get("TeamMember1")[0][0].toString();
+
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			List<String> tmList = teamPage.getTMNameList();
+			String firstName = tmList.get(0);
 			teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstName);
 
 			//Go to schedule page
