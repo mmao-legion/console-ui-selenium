@@ -171,8 +171,8 @@ public class ScheduleOverviewTest extends TestBase{
 			for (int i = 0; i < overviewPageScheduledWeeks.size(); i++) {
 				if (overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(LoginTest.overviewWeeksStatus.Guidance.getValue().toLowerCase())) {
 					HashMap<String, Float> overviewDataInGuidance = scheduleOverviewPage.getWeekHoursByWeekElement(scheduleOverViewWeeks.get(i));
-					if (!overviewDataInGuidance.get("guidanceHours").equals(guidanceHoursForGuidanceSchedule) & overviewDataInGuidance.get("scheduledHours").equals(scheduledHoursForGuidanceSchedule) & overviewDataInGuidance.get("otherHours").equals(otherHoursForGuidanceSchedule)) {
-						SimpleUtils.pass("If any week is in Guidance status, then only Budgeted hours are showing, scheduledHours and otherHours are all zero");
+					if (overviewDataInGuidance.get("scheduledHours").equals(scheduledHoursForGuidanceSchedule) & overviewDataInGuidance.get("otherHours").equals(otherHoursForGuidanceSchedule)) {
+						SimpleUtils.pass("If any week is in Guidance status, then only Budgeted hours should be consistent with schedule page, scheduledHours and otherHours are all zero");
 					} else
 						SimpleUtils.fail("this status of this week is not in Guidance", false);
 

@@ -783,8 +783,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void verifyTheColumnInRosterPage(boolean isLocationGroup) throws Exception {
 		try {
-			List<String> expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "STATUS", "BADGES", "ACTION"));
-			List<String> expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "LOCATION", "STATUS", "BADGES", "ACTION"));
+			List<String> expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "STATUS", "BADGES", "ACTION"));
+			List<String> expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "LOCATION", "STATUS", "BADGES", "ACTION"));
 			List<String> actualColumns = new ArrayList<>();
 			if (areListElementVisible(columnsInRoster, 5)) {
 				for (WebElement column : columnsInRoster) {
@@ -4427,6 +4427,10 @@ private List<WebElement> locationColumn;
 				if(!isCurrentWeek) {
 					if (dayOnCalendar.getText().equalsIgnoreCase("1")){
 						isCurrentWeek = true;
+						if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
+							click (dayOnCalendar);
+							break;
+						}
 					}
 				} else {
 					if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
