@@ -6896,7 +6896,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 for (WebElement searchResult : searchResults) {
                     WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
                     WebElement status = searchResult.findElement(By.className("worker-edit-availability-status"));
-                    if (workerName != null && optionCircle != null && workerName.getText().toLowerCase().trim().equals(userName.trim().toLowerCase())) {
+                    if (workerName != null && optionCircle != null && workerName.getText().toLowerCase().trim().contains(userName.trim().toLowerCase())) {
                         if (status.getText().contains(scheduled) && status.getText().contains(shiftTime)) {
                             SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
                             isWarningShown = true;

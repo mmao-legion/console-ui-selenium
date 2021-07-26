@@ -1895,7 +1895,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (!isWeekGenerated) {
 				schedulePage.createScheduleForNonDGFlowNewUI();
 			}
-			List<String> firstShiftInfo = schedulePage.getTheShiftInfoByIndex(0);
+			schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
+			List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(0);
 			if (!schedulePage.isWeekPublished()) {
 				schedulePage.publishActiveSchedule();
 			}
@@ -1923,10 +1924,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.customizeNewShiftPage();
 			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
 			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-			schedulePage.selectWorkingDaysOnNewShiftPageByIndex(Integer.parseInt(firstShiftInfo.get(1)));
+			schedulePage.selectWorkingDaysOnNewShiftPageByIndex(Integer.parseInt(shiftInfo.get(1)));
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
-			schedulePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0), firstShiftInfo.get(2));
+			schedulePage.verifyScheduledWarningWhenAssigning(shiftInfo.get(0), shiftInfo.get(2));
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
