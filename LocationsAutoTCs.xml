@@ -30,7 +30,7 @@
                     <include name="verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevel" />
                     <include name="verifyOverriddenSchedulingRulesInLocationLevel" />
                     <include name="verifyDefaultValueOfExternalAttributesInLocationLevel"/>
-
+                    <include name="verifyUpdateExternalAttributesInLocationLevel"/>
                 </methods>
             </class>
         </classes>

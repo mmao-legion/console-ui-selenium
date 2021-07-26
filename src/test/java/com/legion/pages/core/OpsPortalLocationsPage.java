@@ -3324,6 +3324,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
     @FindBy(css="table.lg-table tbody.ng-scope")
     private List<WebElement> attributesList;
 
+	@Override
     public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtLocationLevel() throws Exception{
         HashMap<String, List<String>> infoForEachAttribute = new HashMap<>();
         if(areListElementVisible(attributesList,5)){
@@ -3339,4 +3340,32 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
         }
         return infoForEachAttribute;
     }
+	@FindBy(css="lg-button[label=\"Save\"] button")
+	private WebElement saveButtonOnLocationLevelExternalAttributesPage;
+
+	@Override
+	public void clickOnSaveButton() throws Exception {
+		if(isElementEnabled(saveButtonOnLocationLevelExternalAttributesPage,5)){
+			clickTheElement(saveButtonOnLocationLevelExternalAttributesPage);
+			waitForSeconds(5);
+		}
+	}
+
+	@Override
+    public void updateLocationLevelExternalAttributes(String attributeName,String attributeValue) throws Exception{
+		if(areListElementVisible(attributesList,5)){
+			for(WebElement attributeRow:attributesList){
+				String attributeNameInList = attributeRow.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+				if(attributeNameInList.equals(attributeName)){
+					WebElement valueField = attributeRow.findElement(By.cssSelector("td:nth-child(2) input"));
+					clickTheElement(valueField);
+					valueField.clear();
+					valueField.sendKeys(attributeValue);
+					waitForSeconds(5);
+					clickOnSaveButton();
+				}
+			}
+		}
+
+	}
 }

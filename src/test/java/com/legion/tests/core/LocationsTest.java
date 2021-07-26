@@ -1438,7 +1438,7 @@ public class LocationsTest extends TestBase {
                         List<String> valuesInGlobal = templateLevelAttributesInfoInLocation.get(key1);
                         List<String> valuesInTemplate = templateLevelAttributesInfoInTemplate.get(key);
 
-                        if(ListUtils.isEqualList(valuesInGlobal,valuesInTemplate)){
+                        if(valuesInGlobal.get(0).equals(valuesInTemplate.get(0))){
                             SimpleUtils.pass("The template level attribute " + key + " in location is correct.");
                             break;
                         }else{
@@ -1461,7 +1461,7 @@ public class LocationsTest extends TestBase {
 
             locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            HashMap<String,List<String>>  locationLevelAttributesInfoInLocation = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            HashMap<String,List<String>>  locationLevelAttributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
             for(String key:templateLevelAttributesInfoInLocation.keySet()){
                 for(String key1:locationLevelAttributesInfoInLocation.keySet()){
                     if(key.equals(key1)){
@@ -1497,7 +1497,7 @@ public class LocationsTest extends TestBase {
             locationsPage.goToConfigurationTabInLocationLevel();
             locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            HashMap<String,List<String>>  locationLevelAttributesInfoInLocation1 = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            HashMap<String,List<String>>  locationLevelAttributesInfoInLocation1 = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
 
             for(String key:templateLevelAttributesInfoInTemplate1.keySet()){
                 for(String key1:locationLevelAttributesInfoInLocation1.keySet()){
@@ -1505,7 +1505,7 @@ public class LocationsTest extends TestBase {
                         List<String> valuesInGlobal = templateLevelAttributesInfoInTemplate1.get(key1);
                         List<String> valuesInTemplate = locationLevelAttributesInfoInLocation1.get(key);
 
-                        if(ListUtils.isEqualList(valuesInGlobal,valuesInTemplate)){
+                        if(valuesInGlobal.get(0).equals(valuesInTemplate.get(0))){
                             SimpleUtils.pass("The location level attribute " + key + " in location is updated according to template correctly.");
                             break;
                         }else{
@@ -1514,7 +1514,89 @@ public class LocationsTest extends TestBase {
                     }
                 }
             }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "User can update location level external attributes")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpdateExternalAttributesInLocationLevel(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String locationName = "AutoUsingByFiona1";
+            String templateName = "AutoUsingByFiona";
+            String label = "External Attributes";
+            String attributeName ="AutoUsingAttribute";
+            Random random=new Random();
+            int number=random.nextInt(90)+10;
+            String attributeValue = String.valueOf(number);
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+
+            //override location level external attributes
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
+                SimpleUtils.pass("Labor model template is not overridden at location level");
+                locationsPage.editLocationBtnIsClickableInLocationDetails();
+            } else{
+                SimpleUtils.pass("Labor model template is already overridden at location level");
+                locationsPage.editLocationBtnIsClickableInLocationDetails();
+                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
+            }
+
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Edit");
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            locationsPage.updateLocationLevelExternalAttributes(attributeName,attributeValue);
+
+            List<HashMap<String,String>>  templateInfo1 = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (templateInfo1.get(7).get("Overridden").equalsIgnoreCase("Yes")) {
+                SimpleUtils.pass("User can override location level external attributes successfully");
+            } else{
+                SimpleUtils.pass("User can NOT override location level external attributes successfully");
+            }
+
+//          Check the value is updated correct or not?
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            HashMap<String,List<String>>  locationLevelAttributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
+            for(String key:locationLevelAttributesInfoInLocation.keySet()){
+                if(key.equals(attributeName)){
+                    List<String> valuesInLocation = locationLevelAttributesInfoInLocation.get(key);
+                    if(valuesInLocation.get(0).equals(attributeValue)){
+                        SimpleUtils.pass("User can update location level external attributes successfully");
+                    }else {
+                        SimpleUtils.fail("User can update location level external attributes successfully",false);
+                    }
+                }
+                break;
+            }
+
+            //After update location level attributes, check template level will NOT updated
+            locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            HashMap<String,List<String>>  templateLevelAttributesInfoInLocation = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            for(String key:templateLevelAttributesInfoInLocation.keySet()){
+                if(key.equals(attributeName)){
+                    List<String> templateValuesInLocation = templateLevelAttributesInfoInLocation.get(key);
+                    if(!templateValuesInLocation.get(0).equals(attributeValue)){
+                        SimpleUtils.pass("Template level external attributes is not updated after updating location level attributes");
+                    }else {
+                        SimpleUtils.fail("Template level external attributes is updated after updating location level attributes",false);
+                    }
+                }
+                break;
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -241,4 +241,10 @@ public interface LocationsPage {
     public void clickSaveBtnInWorkingHoursPopUpWin();
 
 //    public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
+
+    public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtLocationLevel() throws Exception;
+
+    public void clickOnSaveButton() throws Exception;
+
+    public void updateLocationLevelExternalAttributes(String attributeName,String attributeValue) throws Exception;
 }
