@@ -4645,15 +4645,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     //added by Haya
     @FindBy (css = "button.dropdown-toggle")
     private WebElement dropdownToggle;
-    @FindBy (css = "options.ng-scope div[ng-repeat]")
-    private List<WebElement> dropdownMenuFormDropdownToggle;
+    @FindBy (css = "div[ng-repeat*=\"action in supportedAdminActions.actions\"]")
+    private WebElement dropdownMenuFormDropdownToggle;
     @Override
     public void goToToggleSummaryView() throws Exception {
         waitForSeconds(2);
         if (isElementLoaded(dropdownToggle,10)){
             click(dropdownToggle);
-            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)){
-                click(dropdownMenuFormDropdownToggle.get(dropdownMenuFormDropdownToggle.size()-1));
+            if (isElementLoaded(dropdownMenuFormDropdownToggle,10)){
+                waitForSeconds(3);
+                click(dropdownMenuFormDropdownToggle);
                 SimpleUtils.pass("Toggle Summary View has been clicked!");
             } else {
                 SimpleUtils.fail("After clicking dropdown toggle button, no menu drop down", false);
@@ -4665,8 +4666,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void clickToggleSummaryViewButton() throws Exception {
-        if (areListElementVisible(dropdownMenuFormDropdownToggle,10)){
-            click(dropdownMenuFormDropdownToggle.get(dropdownMenuFormDropdownToggle.size()-1));
+        if (isElementLoaded(dropdownMenuFormDropdownToggle,10)){
+            click(dropdownMenuFormDropdownToggle);
             SimpleUtils.pass("Toggle Summary View has been clicked!");
         } else {
             if (isElementLoaded(dropdownToggle,10)){
@@ -8792,7 +8793,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> filters;
     @FindBy(className = "sch-claim-shift-confirm")
     private WebElement claimShiftWindow;
-    @FindBy(className = "agree")
+    @FindBy(css = ".redesigned-button-ok")
     private WebElement agreeClaimBtn;
     @FindBy(className = "cancel")
     private WebElement cancelClaimBtn;

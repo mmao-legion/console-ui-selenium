@@ -1212,7 +1212,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the content after changing Operating Hours for non dg flow ")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyContentAfterChangingOperatingHrsAsInternalAdmin(String browser, String username, String password, String location) {
+	public void verifyContentAfterChangingOperatingHrsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
 		try {
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePage.clickOnScheduleConsoleMenuItem();
