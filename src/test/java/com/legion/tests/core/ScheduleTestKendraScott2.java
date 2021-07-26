@@ -25,8 +25,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.getWorkerRole;
+import static com.legion.utils.MyThreadLocal.*;
 
 
 public class ScheduleTestKendraScott2 extends TestBase {
@@ -37,6 +36,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
 	private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
 	private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
+	private static String opWorkRole = scheduleWorkRoles.get("RETAIL_ASSOCIATE");
+	private static String controlWorkRole = scheduleWorkRoles.get("RETAIL_RENTAL_MGMT");
 
 	@Override
 	@BeforeMethod()
@@ -3238,7 +3239,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Validate search bar on schedule page in day view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifySearchBarOnSchedulePageInDayViewAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
-		try{
+		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -3251,7 +3252,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
 			boolean isWeekGenerated = schedulePage.isWeekGenerated();
-			if (isWeekGenerated){
+			if (isWeekGenerated) {
 				schedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
@@ -3300,9 +3301,87 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnOpenSearchBoxButton();
 			//Click X button to close search box
 			schedulePage.clickOnCloseSearchBoxButton();
-		} catch (Exception e){
+		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
+	}
 
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the first name and last name are all display on Search TM , Recommended TMs and View profile page")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTMFullNameDisplayOnSearchTMRecommendedAndViewProfilePageAsInternalAdmin(String username, String password, String browser, String location) {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			schedulePage.navigateToNextWeek();
+
+			boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				schedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			schedulePage.createScheduleForNonDGFlowNewUI();
+			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+			//Select new TM from Search Team Member tab
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.selectWorkRole(controlWorkRole);
+			schedulePage.moveSliderAtCertainPoint("2pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			String nameOfSelectedTM = schedulePage.selectTeamMembers();
+			schedulePage.clickOnOfferOrAssignBtn();
+
+			//Select new TM from Recommended TMs tab
+			String nameOfSelectedTM2 = "";
+			schedulePage.clickOnDayViewAddNewShiftButton();
+			schedulePage.customizeNewShiftPage();
+			schedulePage.selectWorkRole(controlWorkRole);
+			schedulePage.moveSliderAtCertainPoint("2pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+			schedulePage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			schedulePage.clickOnCreateOrNextBtn();
+			schedulePage.switchSearchTMAndRecommendedTMsTab();
+			nameOfSelectedTM2 = schedulePage.selectTeamMembers();
+			schedulePage.clickOnOfferOrAssignBtn();
+
+			//Get TM full name from view profile page
+			List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+			String nameOfSelectedTM3 = shiftInfo.get(0) +" " + shiftInfo.get(5);
+
+			schedulePage.saveSchedule();
+			Thread.sleep(3000);
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(nameOfSelectedTM);
+			String nameOnProfilePage = profileNewUIPage.getUserProfileName().get("fullName");
+			SimpleUtils.assertOnFail("Name on profile page display incorrectly! The expected is: "+ nameOfSelectedTM +
+					", The actual is: " + nameOnProfilePage, nameOfSelectedTM.equalsIgnoreCase(nameOnProfilePage), false);
+
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(nameOfSelectedTM2);
+			nameOnProfilePage = profileNewUIPage.getUserProfileName().get("fullName");
+			SimpleUtils.assertOnFail("Name on profile page display incorrectly! The expected is: "+ nameOfSelectedTM2 +
+					", The actual is: " + nameOnProfilePage, nameOfSelectedTM2.equalsIgnoreCase(nameOnProfilePage), false);
+
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(nameOfSelectedTM3);
+			nameOnProfilePage = profileNewUIPage.getUserProfileName().get("fullName");
+			SimpleUtils.assertOnFail("Name on profile page display incorrectly! The expected is: "+ nameOfSelectedTM3 +
+					", The actual is: " + nameOnProfilePage, nameOfSelectedTM3.equalsIgnoreCase(nameOnProfilePage), false);
+		} catch (Exception e) {
+		SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 }

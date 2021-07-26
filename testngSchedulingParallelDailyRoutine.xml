@@ -164,6 +164,7 @@
                     <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
+                    <include name="verifyTMFullNameDisplayOnSearchTMRecommendedAndViewProfilePageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
