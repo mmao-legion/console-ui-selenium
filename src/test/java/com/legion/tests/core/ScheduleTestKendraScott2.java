@@ -8,6 +8,7 @@ import java.util.*;
 import com.gargoylesoftware.htmlunit.html.HtmlListing;
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
+import com.legion.pages.core.OpsPortalConfigurationPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import cucumber.api.java.ro.Si;
@@ -3316,6 +3317,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			controlsNewUIPage.clickOnControlsConsoleMenu();
+			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+			controlsNewUIPage.clickOnGlobalLocationButton();
+			OpsPortalConfigurationPage opsPortalConfigurationPage = (OpsPortalConfigurationPage) pageFactory.createOpsPortalConfigurationPage();
+			opsPortalConfigurationPage.setWFS("No");
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
@@ -3380,6 +3388,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			nameOnProfilePage = profileNewUIPage.getUserProfileName().get("fullName");
 			SimpleUtils.assertOnFail("Name on profile page display incorrectly! The expected is: "+ nameOfSelectedTM3 +
 					", The actual is: " + nameOnProfilePage, nameOfSelectedTM3.equalsIgnoreCase(nameOnProfilePage), false);
+
+			controlsNewUIPage.clickOnControlsConsoleMenu();
+			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+			controlsNewUIPage.clickOnGlobalLocationButton();
+			opsPortalConfigurationPage.setWFS("Yes");
 		} catch (Exception e) {
 		SimpleUtils.fail(e.getMessage(), false);
 		}

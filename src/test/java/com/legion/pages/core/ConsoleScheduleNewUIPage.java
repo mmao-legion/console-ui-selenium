@@ -2803,7 +2803,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
                 } else {
                     click(firstTableRow.findElement(By.cssSelector("td.table-field.action-field")));
-                    newSelectedTM = firstnameOfTM.getText().split(" ")[0];
+                    newSelectedTM = firstnameOfTM.getText();
                 }
             } else {
                 click(btnSearchteamMember.get(0));
@@ -2903,7 +2903,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 waitForSeconds(5);
                 WebElement selectedTM = selectAndGetTheSelectedTM();
                 if (selectedTM != null) {
-                    selectedTMName = selectedTM.findElement(By.className("worker-edit-search-worker-display-name")).getText().split(" ")[0];
+                    selectedTMName = selectedTM.findElement(By.className("worker-edit-search-worker-display-name")).getText();
                     break;
                 } else {
                     textSearch.clear();
