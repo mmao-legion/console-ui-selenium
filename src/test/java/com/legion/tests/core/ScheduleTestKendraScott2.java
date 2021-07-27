@@ -1347,7 +1347,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
 			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			schedulePage.selectWorkRole("");
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.saveSchedule();
@@ -1397,7 +1397,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
 			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			schedulePage.selectWorkRole("");
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.saveSchedule();
@@ -1408,7 +1408,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
 			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-			schedulePage.selectWorkRole(scheduleWorkRoles.get("MOD"));
+			schedulePage.selectWorkRole("");
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.saveSchedule();
@@ -1993,7 +1993,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Verify offers generated for open shift")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyOffersGeneratedForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) {
