@@ -15450,7 +15450,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (WebElement shiftWeekView : shiftsWeekView) {
                 scrollToElement(shiftWeekView);
                 if(isScheduleDayViewActive()){
-                    iIcon = shiftWeekView.findElement(By.cssSelector("img[ng-if=\"hasViolateCompliance(shift)\"]"));
+                    iIcon = shiftWeekView.findElement(By.cssSelector("div.day-view-shift-hover-info-icon img"));
                     waitForSeconds(2);
                 } else
                     iIcon = shiftWeekView.findElement(By.cssSelector("img.week-schedule-shit-open-popover"));
