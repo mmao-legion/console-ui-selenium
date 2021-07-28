@@ -66,6 +66,7 @@ public class SchedulingMinorTest extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            workRole = schedulePage.getRandomWorkRole();
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
             String lastNameOfTM = "RC";
@@ -215,6 +216,7 @@ public class SchedulingMinorTest extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            workRole = schedulePage.getRandomWorkRole();
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
             String lastNameOfTM = "RC";
@@ -353,6 +355,7 @@ public class SchedulingMinorTest extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            workRole = schedulePage.getRandomWorkRole();
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
             String lastNameOfTM = "RC";
@@ -480,6 +483,7 @@ public class SchedulingMinorTest extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            workRole = schedulePage.getRandomWorkRole();
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
             String lastNameOfTM = "RC";
@@ -606,6 +610,7 @@ public class SchedulingMinorTest extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "09:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            workRole = schedulePage.getRandomWorkRole();
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
             String lastNameOfTM = "RC";
@@ -768,6 +773,7 @@ public class SchedulingMinorTest extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            workRole = schedulePage.getRandomWorkRole();
             String firstNameOfTM1 = "Minor16";
             String firstNameOfTM2 = "Minor14";
             String lastNameOfTM = "RC";
@@ -930,6 +936,7 @@ public class SchedulingMinorTest extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "09:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            workRole = schedulePage.getRandomWorkRole();
             String firstNameOfTM1 = "Minor13";
             String lastNameOfTM = "RC";
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
