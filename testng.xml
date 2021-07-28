@@ -501,4 +501,17 @@
         </classes>
     </test>
 
+    <test name="Approve Activities By Home Or Non Home Manager Test" >
+        <classes>
+            <class name="com.legion.tests.core.ApproveActivitiesByHomeOrNonHomeManagerTest">
+                <methods>
+                    <include name="verifyManagerNeedToApproveShiftWhenEnableShiftInHomeLocationSettingOnOPAsTeamMember" />
+                    <include name="verifyManagerDoesNotNeedToApproveShiftWhenDisableShiftInHomeLocationSettingOnOPAsTeamMember" />
+                    <include name="verifyNonHomeManagerNeedToApproveShiftWhenEnableShiftInNonHomeLocationSettingOnOPAsTeamMember" />
+                    <include name="verifyActivityOfClaimOpenShiftNoNeedApprovalForHomeManagerWhenSetOpenShiftSettingToNonHomeLocationOnlyAsTeamMemberOfApproveActivitiesByHomeOrNonHomeManagerTest" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->
