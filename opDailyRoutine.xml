@@ -180,6 +180,24 @@
             </class>
         </classes>
     </test>
+    <test name="Work Role Test">
+        <classes>
+            <class name="com.legion.tests.core.opusermanagement.WorkRoleTest">
+                <methods>
+                    <include name="verifyAddEditSearchAndDisableWorkRoleAsInternalAdminForUserManagement"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Labor Model Repository Test">
+        <classes>
+            <class name="com.legion.tests.core.oplabormodel.LaborModelRepositoryTest">
+                <methods>
+                    <include name="verifyAddEditSearchAndDisableTasksAsInternalAdminForLaborModel"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 </suite> <!-- Suite -->
 
