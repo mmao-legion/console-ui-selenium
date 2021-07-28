@@ -283,10 +283,10 @@
                     <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
-                    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
+                <!--SCH-4832    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
                     <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
                     <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
-                    <include name="verifyTMCanBeOfferedAsTeamMember" />
+                    <include name="verifyTMCanBeOfferedAsTeamMember" /> -->
                     <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
