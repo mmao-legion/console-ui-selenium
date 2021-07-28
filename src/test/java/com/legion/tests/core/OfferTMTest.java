@@ -194,6 +194,11 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("unassigned");
             schedulePage.deleteTMShiftInWeekView("open");
             String workRoleOfTM = schedulePage.getRandomWorkRole();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText(workRoleOfTM);
+            schedulePage.deleteAllShiftsInWeekView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
 
             //create auto open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -267,6 +272,11 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.deleteTMShiftInWeekView("Open");
             String workRoleOfTM = schedulePage.getRandomWorkRole();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText(workRoleOfTM);
+            schedulePage.deleteAllShiftsInWeekView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
 
             //create auto open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -341,6 +351,11 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("unassigned");
             schedulePage.deleteTMShiftInWeekView("open");
             String workRoleOfTM = schedulePage.getRandomWorkRole();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText(workRoleOfTM);
+            schedulePage.deleteAllShiftsInWeekView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
 
 
             //create manual open shifts.
@@ -417,6 +432,11 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.deleteTMShiftInWeekView("Open");
             String workRoleOfTM = schedulePage.getRandomWorkRole();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText(workRoleOfTM);
+            schedulePage.deleteAllShiftsInWeekView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
 
             //create manual open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -509,9 +529,6 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
             schedulePage.clickOnOfferTMOption();
-            schedulePage.switchSearchTMAndRecommendedTMsTab();
-            schedulePage.verifyRecommendedTableHasTM();
-            schedulePage.switchSearchTMAndRecommendedTMsTab();
             schedulePage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
             schedulePage.clickOnOfferOrAssignBtn();
             schedulePage.clickOnProfileIconOfOpenShift();
@@ -570,6 +587,11 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
             schedulePage.saveSchedule();
             String workRoleOfTM = schedulePage.getRandomWorkRole();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText(workRoleOfTM);
+            schedulePage.deleteAllShiftsInWeekView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
 
             //convert a shift to open shift
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -672,9 +694,6 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
             schedulePage.clickOnOfferTMOption();
-            schedulePage.switchSearchTMAndRecommendedTMsTab();
-            schedulePage.verifyRecommendedTableHasTM();
-            schedulePage.switchSearchTMAndRecommendedTMsTab();
             schedulePage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
             schedulePage.clickOnOfferOrAssignBtn();
             schedulePage.clickOnProfileIconOfOpenShift();
@@ -788,9 +807,6 @@ public class OfferTMTest extends TestBase {
             schedulePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
             schedulePage.clickOnOfferTMOption();
-            schedulePage.switchSearchTMAndRecommendedTMsTab();
-            schedulePage.verifyRecommendedTableHasTM();
-            schedulePage.switchSearchTMAndRecommendedTMsTab();
             schedulePage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
             schedulePage.clickOnOfferOrAssignBtn();
             schedulePage.clickOnProfileIconOfOpenShift();
