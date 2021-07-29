@@ -1626,4 +1626,124 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.fail("Get new added shift failed", false);
     }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "validate school calendar default month")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySchoolCalendarDefaultMonthAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            int randomDigits = (new Random()).nextInt(100);
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+            // Go to School Calendars sub tab
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+            // Click on Create New Calendar button, verify the Cancel and Save button display correctly
+            teamPage.clickOnCreateNewCalendarButton();
+
+            // Verify the Session Start and Session End fields are mandatory fields
+            teamPage.verifyCreateCalendarLoaded();
+            teamPage.verifySessionStartNEndIsMandatory();
+
+            // Click on School Session Start
+            teamPage.clickOnSchoolSessionStart();
+
+            //Check the defaul start and end month in calendar
+            List<String> calendarCurrentStartAndEndTime = teamPage.getCalendarCurrentStartAndEndTime();
+            String startMonth = calendarCurrentStartAndEndTime.get(0).split(" ")[0];
+            String endMonth = calendarCurrentStartAndEndTime.get(1).split(" ")[0];
+            SimpleUtils.assertOnFail("The calendar default start month display incorrectly! The expected month is: August, the actual month is: "
+                    + startMonth, startMonth.equalsIgnoreCase("August"), false);
+            SimpleUtils.assertOnFail("The calendar default end month display incorrectly! The expected month is: May, the actual month is: "
+                    + endMonth, endMonth.equalsIgnoreCase("May"), false);
+
+            teamPage.clickOnCancelSchoolSessionCalendarBtn();
+            teamPage.clickOnSchoolSessionEnd();
+            calendarCurrentStartAndEndTime = teamPage.getCalendarCurrentStartAndEndTime();
+            startMonth = calendarCurrentStartAndEndTime.get(0).split(" ")[0];
+            endMonth = calendarCurrentStartAndEndTime.get(1).split(" ")[0];
+            SimpleUtils.assertOnFail("The calendar default start month display incorrectly! The expected month is: August, the actual month is: "
+                    + startMonth, startMonth.equalsIgnoreCase("August"), false);
+            SimpleUtils.assertOnFail("The calendar default end month display incorrectly! The expected month is: August, the actual month is: "
+                    + endMonth, endMonth.equalsIgnoreCase("May"), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "validate the main calendar info on the page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheMainCalendarInfoOnThePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+            // Go to School Calendars sub tab
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+            // Click on Create New Calendar button, verify the Cancel and Save button display correctly
+            teamPage.clickOnCreateNewCalendarButton();
+
+            // Verify the Session Start and Session End fields are mandatory fields
+            teamPage.verifyCreateCalendarLoaded();
+            teamPage.verifySessionStartNEndIsMandatory();
+
+            // Click on School Session Start
+            teamPage.clickOnSchoolSessionStart();
+
+            //Select start: Jan, end Fed
+            List<String> calendarCurrentStartAndEndTime = teamPage.getCalendarCurrentStartAndEndTime();
+            String startYear = calendarCurrentStartAndEndTime.get(0).split(" ")[1];
+            String endYear = calendarCurrentStartAndEndTime.get(1).split(" ")[1];
+            String startDate = startYear + " Jan 1";
+            String endDate = endYear + " Feb 1";
+            teamPage.selectSchoolSessionStartAndEndDate(startDate, endDate);
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
+
+            //Check the main calendar page, the first month is Jan, the last month is Dec
+            List<String> calendarMonthNames = teamPage.getAllCalendarMonthNames();
+            SimpleUtils.assertOnFail("The first month display incorrectly, the expected first month is: January, the actual first month is: " +
+                    calendarMonthNames.get(0).split(" ")[0], calendarMonthNames.get(0).split(" ")[0].equalsIgnoreCase("January"), false);
+            SimpleUtils.assertOnFail("The last month display incorrectly, the expected last month is: December, the actual last month is: " +
+                            calendarMonthNames.get(calendarMonthNames.size()-1).split(" ")[0],
+                    calendarMonthNames.get(calendarMonthNames.size()-1).split(" ")[0].equalsIgnoreCase("December"), false);
+
+            //Select start: Aug, end Oct
+            teamPage.clickOnSchoolSessionStart();
+            startDate = startYear + " Aug 1";
+            endDate = endYear + " Oct 1";
+            teamPage.selectSchoolSessionStartAndEndDate(startDate, endDate);
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
+
+            //Check the main calendar page, the first month is Jan, the last month is Dec
+            calendarMonthNames = teamPage.getAllCalendarMonthNames();
+            SimpleUtils.assertOnFail("The first month display incorrectly, the expected first month is: August , the actual first month is: " +
+                    calendarMonthNames.get(0).split(" ")[0], calendarMonthNames.get(0).split(" ")[0].equalsIgnoreCase("August"), false);
+            SimpleUtils.assertOnFail("The last month display incorrectly, the expected last month is: July, the actual last month is: " +
+                            calendarMonthNames.get(calendarMonthNames.size()-1).split(" ")[0],
+                    calendarMonthNames.get(calendarMonthNames.size()-1).split(" ")[0].equalsIgnoreCase("July"), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
 }

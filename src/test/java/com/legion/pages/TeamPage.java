@@ -177,4 +177,7 @@ public interface TeamPage {
 	public void activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(String firstName) throws Exception;
 	public boolean checkIsInviteButtonExists();
 	public int getLocationName();
+	public List<String> getCalendarCurrentStartAndEndTime();
+	public void clickOnCancelSchoolSessionCalendarBtn() throws Exception;
+	public List<String> getAllCalendarMonthNames();
 }

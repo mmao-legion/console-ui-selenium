@@ -242,7 +242,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(classValue!=null && classValue.contains("hasChildren")){
 				clickTheElement(templateToggleButton);
 				waitForSeconds(3);
-				clickTheElement(templatesList.get(0).findElement(By.cssSelector("button")));
+				clickTheElement(templatesList.get(0).findElements(By.cssSelector("button")).get(1));
 				waitForSeconds(20);
 				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 				&&isElementEnabled(templateDetailsPageForm)){
@@ -1509,6 +1509,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public void publishNowTheTemplate() throws Exception {
 		if (isElementLoaded(dropdownArrowButton,5)) {
+			scrollToElement(dropdownArrowButton);
 			click(dropdownArrowButton);
 			click(publishNowButton);
 			click(publishTemplateButton);

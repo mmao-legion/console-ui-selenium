@@ -649,8 +649,12 @@ public class DragAndDropTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
             List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
             String firstNameOfTM1 = shiftInfo.get(0);
+            while (firstNameOfTM1.equalsIgnoreCase("open")) {
+                shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
+                firstNameOfTM1  = shiftInfo.get(0);
+            }
             String workRoleOfTM1 = shiftInfo.get(4);
-            while (shiftInfo.get(0).equalsIgnoreCase(firstNameOfTM1)) {
+            while (shiftInfo.get(0).equalsIgnoreCase(firstNameOfTM1) || shiftInfo.get(0).equalsIgnoreCase("open")) {
                 shiftInfo = schedulePage.getTheShiftInfoByIndex(schedulePage.getRandomIndexOfShift());
             }
             String firstNameOfTM2 = shiftInfo.get(0);

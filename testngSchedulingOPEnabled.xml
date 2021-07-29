@@ -107,6 +107,8 @@
                     <!-- blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" />-->
                     <!--                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>-->
                     <!-- blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" />-->
+                    <include name="verifySchoolCalendarDefaultMonthAsInternalAdmin" />
+                    <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

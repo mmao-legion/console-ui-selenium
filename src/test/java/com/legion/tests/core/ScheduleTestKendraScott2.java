@@ -494,7 +494,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		selectedShift = schedulePage.clickOnProfileIcon();
 		String selectedShiftId= selectedShift.getAttribute("id").toString();
 		schedulePage.clickonAssignTM();
-		String firstNameOfSelectedTM = schedulePage.selectTeamMembers();
+		String firstNameOfSelectedTM = schedulePage.selectTeamMembers().split(" ")[0];
 		schedulePage.clickOnOfferOrAssignBtn();
 		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" , firstNameOfSelectedTM.equals(schedulePage.getShiftById(selectedShiftId).findElement(By.className("week-schedule-worker-name")).getText().trim()), false);
 		//Select new TM from Recommended TMs tab
@@ -506,7 +506,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			selectedShiftId2  = selectedShift.getAttribute("id").toString();
 			schedulePage.clickonAssignTM();
 			schedulePage.switchSearchTMAndRecommendedTMsTab();
-			firstNameOfSelectedTM2 = schedulePage.selectTeamMembers();
+			firstNameOfSelectedTM2 = schedulePage.selectTeamMembers().split(" ")[0];
 			i++;
 		}
 		if (firstNameOfSelectedTM2.equals("")) {
