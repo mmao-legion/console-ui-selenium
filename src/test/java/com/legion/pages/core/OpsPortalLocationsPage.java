@@ -3368,4 +3368,42 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 
 	}
+
+	@Override
+	public void clickOnImportBtn() {
+		if (isElementEnabled(importBtn, 5)) {
+			click(importBtn);
+			if (verifyImportLocationsPageShow()) {
+				SimpleUtils.pass("Import button is clickable and Import location pop up window show well");
+			} else
+				SimpleUtils.fail("Import button is not clickable", false);
+		}else
+			SimpleUtils.fail("Import button load failed",false);
+	}
+
+	@Override
+	public void cancelBtnOnImportExportPopUpWinsIsClickable() {
+		if (isElementEnabled(cancelBtn,5)) {
+			click(cancelBtn);
+			if (isElementEnabled(importBtn,5)) {
+				SimpleUtils.pass("Cancel button is clickable");
+			}else
+				SimpleUtils.fail("Cancel import or export location failed",false);
+		}else
+			SimpleUtils.fail("Cancel button load failed in export or import location page",false);
+
+	}
+
+	@Override
+	public void clickOnExportBtn() {
+		if (isElementEnabled(exportBtn, 5)) {
+			click(exportBtn);
+			if (verifyExportLocationsPageShow()) {
+				SimpleUtils.pass("Export button is clickable and Export location page show well");
+			} else
+				SimpleUtils.fail("Export button is not clickable", true);
+		}else
+			SimpleUtils.fail("Export button load failed",false);
+	}
 }
+
