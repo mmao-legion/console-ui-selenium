@@ -1047,7 +1047,7 @@ public class ActivityTest extends TestBase {
             schedulePage.clickLinkOnSmartCardByName(linkName);
             SimpleUtils.assertOnFail("Open shifts not loaded Successfully!", schedulePage.areShiftsPresent(), false);
             // Validate the availability of Claim Shift Request popup
-            String requestName = "Claim Shift";
+            String requestName = "View Offer";
             schedulePage.clickTheShiftRequestToClaimShift(requestName, requestUserName);
             // Validate the clickability of I Agree button
             schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
@@ -1142,7 +1142,7 @@ public class ActivityTest extends TestBase {
             schedulePage.clickLinkOnSmartCardByName(linkName);
             SimpleUtils.assertOnFail("Open shifts not loaded Successfully!", schedulePage.areShiftsPresent(), false);
             // Validate the availability of Claim Shift Request popup
-            String requestName = "Claim Shift";
+            String requestName = "View Offer";
             schedulePage.clickTheShiftRequestToClaimShift(requestName, requestUserName);
             // Validate the clickability of I Agree button
             schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
