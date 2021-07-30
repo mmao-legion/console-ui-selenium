@@ -5,6 +5,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class OpsPortalWorkRolesPage extends BasePage {
@@ -20,6 +23,8 @@ public class OpsPortalWorkRolesPage extends BasePage {
     private WebElement searchBox;
     @FindBy(css = "div.lg-search-icon")
     private WebElement searchButton;
+    @FindBy(css = "table.lg-table.ng-scope>tbody>tr>td:first-child>lg-button")
+    private List<WebElement> workRoleList;
     @FindBy(css = "table.lg-table.ng-scope>tbody>tr:first-child>td:first-child>lg-button")
     private WebElement theFirstWorkRoleInTheList;
     @FindBy(css = "div.lg-work-roles__placeholder-content.ng-binding")
@@ -141,4 +146,11 @@ public class OpsPortalWorkRolesPage extends BasePage {
         okToDisableAction.click();
     }
 
+    public List<String> getWorkRoleList() {
+        ArrayList<String> wr = new ArrayList<String>();
+        for(WebElement workRole:workRoleList){
+            wr.add(workRole.getAttribute("label"));
+        }
+        return wr;
+    }
 }
