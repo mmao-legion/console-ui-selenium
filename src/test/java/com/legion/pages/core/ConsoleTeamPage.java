@@ -3943,6 +3943,8 @@ private List<WebElement> locationColumn;
 	private List<WebElement> rightArrows;
 	@FindBy(css = ".modal-instance-button.confirm")
 	private WebElement saveSchoolSessionBtn;
+	@FindBy(css = "div.modal-instance-button.ng-binding")
+	private WebElement cancelSchoolSessionBtn;
 	@FindBy(css = "[label=\"Delete\"]")
 	private WebElement deleteCalendarBtn;
 	@FindBy(css = "[label=\"Edit\"]")
@@ -4271,6 +4273,16 @@ private List<WebElement> locationColumn;
 			waitUntilElementIsInVisible(saveSchoolSessionBtn);
 		} else {
 			SimpleUtils.fail("School Calendar Page: Save School Session button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void clickOnCancelSchoolSessionCalendarBtn() throws Exception {
+		if (isElementLoaded(cancelSchoolSessionBtn, 5)) {
+			clickTheElement(cancelSchoolSessionBtn);
+			waitUntilElementIsInVisible(cancelSchoolSessionBtn);
+		} else {
+			SimpleUtils.fail("School Calendar Page: Cancel School Session button not loaded Successfully!", false);
 		}
 	}
 
@@ -4724,5 +4736,31 @@ private List<WebElement> locationColumn;
 		}else
 
 			return 0;
+	}
+
+	@Override
+	public List<String> getCalendarCurrentStartAndEndTime() {
+		List<String> calendarCurrentStartAndEndTime = new ArrayList<>();
+		if (areListElementVisible(rangedCalendars,8)) {
+			for (int i = 0; i < rangedCalendars.size(); i++) {
+				calendarCurrentStartAndEndTime.add(rangedCalendars.get(i).getText());
+				SimpleUtils.pass("Get calendar current start and end time successfully! ");
+			}
+		}else
+			SimpleUtils.fail("Calendar current start and end time fail to load! ", false);
+		return  calendarCurrentStartAndEndTime;
+	}
+
+	@Override
+	public List<String> getAllCalendarMonthNames() {
+		List<String> calendarMonthNames = new ArrayList<>();
+		if (areListElementVisible(calendarMonths,8)) {
+			for (int i = 0; i < calendarMonths.size(); i++) {
+				calendarMonthNames.add(calendarMonths.get(i).getText());
+				SimpleUtils.pass("Get calendar month names successfully! ");
+			}
+		}else
+			SimpleUtils.fail("Calendar month names fail to load! ", false);
+		return  calendarMonthNames;
 	}
 }

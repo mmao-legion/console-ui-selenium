@@ -375,7 +375,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate TM and SM can see the dotted lines to check the availability changes for This Week Only")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        public void verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
             //Login as TM
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -536,7 +536,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Vailqacn_Enterprise")
-    @TestName(description = "Validate TM and SM can see the dotted lines to check the availability changes for Repeat Forward and dotted will disappear after SM approve request")
+    @TestName(description = "Validate TM and SM can see the dotted lines to check the availability changes for Repeat Forward and dotted will disappear after SM reject request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
