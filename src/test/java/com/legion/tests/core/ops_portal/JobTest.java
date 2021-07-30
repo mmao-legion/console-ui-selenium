@@ -1,4 +1,4 @@
-package com.legion.tests.core;
+package com.legion.tests.core.ops_portal;
 
 import com.legion.pages.*;
 import com.legion.tests.TestBase;

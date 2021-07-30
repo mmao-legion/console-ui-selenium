@@ -12,7 +12,7 @@
 
     <test name="Location Test">
         <classes>
-            <class name="com.legion.tests.core.LocationsTest">
+            <class name="com.legion.tests.core.ops_portal.LocationsTest">
                 <methods>
                     <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
 <!--                    <include name="verifyCreateMockLocationAndNavigate" />-->

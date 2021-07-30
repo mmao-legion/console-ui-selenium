@@ -14,7 +14,7 @@
 
     <test name="District Test">
         <classes>
-            <class name="com.legion.tests.core.LocationsTest">
+            <class name="com.legion.tests.core.ops_portal.LocationsTest">
                 <methods>
 
                     <!--                    Upperfield test cases-->

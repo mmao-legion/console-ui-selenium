@@ -1,6 +1,10 @@
-package com.legion.tests.core;
+package com.legion.tests.core.ops_portal;
 
 import com.legion.pages.*;
+import com.legion.pages.core.opusermanagement.OpsPortalNavigationPage;
+import com.legion.pages.core.opusermanagement.OpsPortalUserManagementPanelPage;
+import com.legion.pages.core.opusermanagement.OpsPortalWorkRolesPage;
+import com.legion.pages.core.opusermanagement.WorkRoleDetailsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -9,6 +13,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -49,46 +54,7 @@ public class UserManagementTest extends TestBase {
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify add and update work role")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddUpdateWorkRoleAsInternalAdminForUserManagement(String browser, String username, String password, String location) throws Exception {
-        try{
-//            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-//            String currentTime =  dfs.format(new Date());
-            String workRoleName = "ForAutomation";;
-            String colour = "";
-            String workRole = "Deployed";
-            String hourlyRate = "0";
-            String selectATeamMemberTitle = "Manager";
-            String defineTheTimeWhenThisRuleApplies = "At all Hours";
-            String specifyTheConditionAndNumber = "At least";
-            String shiftNumber = "1";
-            String defineTheTypeAndFrequencyOfTimeRequiredAndPriority = "Shifts";
-            String priority = "0";
 
-            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
-            userManagementPage.clickOnUserManagementTab();
-            userManagementPage.verifyWorkRolesTileDisplay();
-            userManagementPage.goToWorkRolesTile();
-            userManagementPage.verifyEditBtnIsClickable();
-            userManagementPage.verifyBackBtnIsClickable();
-            userManagementPage.goToWorkRolesTile();
-            userManagementPage.cancelAddNewWorkRoleWithoutAssignmentRole(workRoleName,colour,workRole,hourlyRate);
-            List<HashMap<String, String>> workRolesDetails =userManagementPage.getWorkRoleInfo(workRoleName);
-            if (workRolesDetails!=null) {
-                userManagementPage.updateWorkRole(workRoleName,colour,workRole,hourlyRate,selectATeamMemberTitle,defineTheTimeWhenThisRuleApplies,specifyTheConditionAndNumber,shiftNumber,defineTheTypeAndFrequencyOfTimeRequiredAndPriority,priority);
-                userManagementPage.verifySearchWorkRole(workRoleName);
-            }else {
-                userManagementPage.addNewWorkRole(workRoleName, colour, workRole, hourlyRate, selectATeamMemberTitle, defineTheTimeWhenThisRuleApplies, specifyTheConditionAndNumber, shiftNumber, defineTheTypeAndFrequencyOfTimeRequiredAndPriority, priority);
-                userManagementPage.verifySearchWorkRole(workRoleName);
-            }
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
@@ -155,6 +121,7 @@ public class UserManagementTest extends TestBase {
 
     }
 
+    //blocked by one bug
 //    @Automated(automated = "Automated")
 //    @Owner(owner = "Estelle")
 //    @Enterprise(name = "Op_Enterprise")
@@ -196,6 +163,87 @@ public class UserManagementTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify add and update work role")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddEditSearchAndDisableWorkRoleAsInternalAdminForUserManagement(String browser, String username, String password, String location) throws Exception {
+        try {
+            OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+            navigationPage.navigateToUserManagement();
+            OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
+            panelPage.goToWorkRolesPage();
+            OpsPortalWorkRolesPage workRolesPage = new OpsPortalWorkRolesPage();
+
+            //add a new work role and save it
+            workRolesPage.addNewWorkRole();
+            WorkRoleDetailsPage workRoleDetailsPage = new WorkRoleDetailsPage();
+            workRoleDetailsPage.editWorkRoleDetails("autoWorkRole001", 3, "Deployed", "3");
+            workRoleDetailsPage.addAssignmentRule("3","2","2098");
+            workRoleDetailsPage.saveAssignRule();
+            workRoleDetailsPage.submit();
+            workRolesPage.save();
+            workRolesPage.searchByWorkRole("autoWorkRole001");
+            Assert.assertEquals(workRolesPage.getTheFirstWorkRoleInTheList(), "autoWorkRole001", "Failed to add new work role!");
+
+            //search by work role
+            //testcase1: exact matching
+            workRolesPage.searchByWorkRole("Ambassador");
+            Assert.assertTrue(workRolesPage.getTheFirstWorkRoleInTheList().equalsIgnoreCase("Ambassador"));
+
+            //testcase2: partial matching
+            workRolesPage.searchByWorkRole("test");
+            Assert.assertFalse(workRolesPage.getTheFirstWorkRoleInTheList().equalsIgnoreCase("test"));
+            Assert.assertTrue(workRolesPage.getTheFirstWorkRoleInTheList().contains("test"));
+
+            //testcase3: no matching item
+            workRolesPage.searchByWorkRole("m*");
+            Assert.assertTrue(workRolesPage.getNoResultNotice().contains("A Work Role defines a category of work that needs to be scheduled."));
+
+            //cancel the creating of new work role
+            workRolesPage.addNewWorkRole();
+            workRoleDetailsPage.editWorkRoleDetails("testCancelCreating", 6, "Deployed", "2");
+            workRoleDetailsPage.submit();
+            workRolesPage.cancel();
+            Assert.assertEquals(workRolesPage.getCancelDialogTitle(), "Cancel Editing?", "Failed to popup the cancel dialog. ");
+            workRolesPage.cancelEditing();
+            workRolesPage.searchByWorkRole("testCancelCreating");
+            Assert.assertTrue(workRolesPage.getNoResultNotice().contains("A Work Role defines a category of work that needs to be scheduled."));
+
+            //edit an existing work role and save the editing
+            workRolesPage.editAnExistingWorkRole("autoWorkRole001");
+            workRoleDetailsPage.editWorkRoleDetails("autoWorkRole001-edit", 2, "Deployed", "1.5");
+            workRoleDetailsPage.submit();
+            workRolesPage.save();
+            workRolesPage.searchByWorkRole("autoWorkRole001-edit");
+            Assert.assertEquals(workRolesPage.getTheFirstWorkRoleInTheList(), "autoWorkRole001-edit", "Failed to Edit new work role!");
+
+            //edit an existing work role and cancel the editing
+            workRolesPage.editAnExistingWorkRole("autoWorkRole001-edit");
+            workRoleDetailsPage.editWorkRoleDetails("autoWorkRole-cancelEdit", 9, "Deployed", "2");
+            workRoleDetailsPage.submit();
+            workRolesPage.cancel();
+            Assert.assertEquals(workRolesPage.getCancelDialogTitle(), "Cancel Editing?", "Cancel Dialog is not displayed");
+            workRolesPage.cancelEditing();
+            workRolesPage.searchByWorkRole("autoWorkRole-cancelEdit");
+            Assert.assertTrue(workRolesPage.getNoResultNotice().contains("A Work Role defines a category of work that needs to be scheduled."));
+            workRolesPage.searchByWorkRole("autoWorkRole001-edit");
+            Assert.assertEquals(workRolesPage.getTheFirstWorkRoleInTheList(), "autoWorkRole001-edit", "Failed to cancel the editing!");
+
+            //disable the work role added and it can't be searched out
+            workRolesPage.disableAWorkRole("autoWorkRole001-edit");
+            Assert.assertEquals(workRolesPage.getDisableDialogTitle(), "Disable Work Role", "The disable work role dialog is not displayed.");
+            workRolesPage.okToDisableAction();
+            workRolesPage.save();
+            workRolesPage.searchByWorkRole("autoWorkRole001-edit");
+            Assert.assertTrue(workRolesPage.getNoResultNotice().contains("A Work Role defines a category of work that needs to be scheduled."));
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 }

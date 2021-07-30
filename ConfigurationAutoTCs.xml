@@ -13,7 +13,7 @@
 
     <test name="Configuration Test">
         <classes>
-            <class name="com.legion.tests.core.ConfigurationTest">
+            <class name="com.legion.tests.core.ops_portal.ConfigurationTest">
                 <methods>
                     <include name="verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration"/>
                     <include name="verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration"/>

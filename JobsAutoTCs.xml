@@ -14,7 +14,7 @@
 
     <test name="Job Test">
         <classes>
-            <class name="com.legion.tests.core.JobTest">
+            <class name="com.legion.tests.core.ops_portal.JobTest">
                 <methods>
                     <include name="verifyJobLandingPageAsInternalAdminForJob" />
                     <include name="verifyJobSearchFunctionAsInternalAdminForJob" />
