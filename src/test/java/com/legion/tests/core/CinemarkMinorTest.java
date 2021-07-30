@@ -161,8 +161,8 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year")) - 1) +" Jan 1",
-                    dayInfo.get("year") +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
+            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) +" Jan 1",
+                    (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.inputCalendarName(calendarName);
             teamPage.clickOnSaveSchoolCalendarBtn();
@@ -1171,6 +1171,7 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.navigateToNextWeek();
         if (isSummerWeek){
             schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
         }
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -1501,6 +1502,10 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.navigateToNextWeek();
         } else if (isNonSchoolWeek){
             schedulePage.navigateToNextWeek();
+        } else {
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
         }
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -1508,6 +1513,7 @@ public class CinemarkMinorTest extends TestBase {
         }
 //        List<String> toCloseDays = new ArrayList<>();
         //schedulePage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
+        Thread.sleep(3000);
         schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
