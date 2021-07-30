@@ -678,4 +678,5 @@ public interface SchedulePage {
 	public void verifyShiftTimeInReadMode(String index,String shiftTime) throws Exception;
 	public List<String> getIndexOfDaysHaveShifts() throws Exception;
 	public HashMap<String, String> getMealAndRestBreaksTime() throws Exception;
+	public void verifyGroupCanbeCollapsedNExpanded() throws Exception;
 }

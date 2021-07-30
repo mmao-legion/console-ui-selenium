@@ -363,6 +363,10 @@
                     <include name="verifyCanSeeEmployeeHomeLocationAsInternalAdmin" />
                     <include name="verifyCanSeeEmployeeHomeLocationAsStoreManager" />
                     <include name="verifyCanSeeEmployeeHomeLocationAsDistrictManager" />
+                    <include name="verifyGroupByDayPartsCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

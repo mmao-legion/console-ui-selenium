@@ -136,6 +136,10 @@
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
                     <include name="verifyComplianceWarningInPublishConfirmModalAsInternalAdmin" />
                     <include name="verifyHrsOverBudgetInPublishConfirmModalForNonDGAsInternalAdmin" />
+                    <include name="verifyGroupByDayPartsCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

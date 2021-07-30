@@ -15997,5 +15997,40 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.report("Breaks edit page don't display");
         return mealAndRestBreaksTime;
     }
+
+    @FindBy(css = ".week-schedule-ribbon-group-toggle")
+    private List<WebElement> groupTitleList;
+    @Override
+    public void verifyGroupCanbeCollapsedNExpanded() throws Exception {
+        if (areListElementVisible(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")),10)){
+            for (int i=0; i< getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).size(); i++){
+                clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                    clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("open")){
+                        SimpleUtils.pass("Group can be expanded!!");
+                    } else {
+                        SimpleUtils.fail("Group is not expanded!", false);
+                    }
+                    clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                        SimpleUtils.pass("Group can be collapsed!");
+                    } else {
+                        SimpleUtils.fail("Group is not collapsed!", false);
+                    }
+                }
+                if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("open")){
+                    clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                        SimpleUtils.pass("Group can be collapsed!");
+                    } else {
+                        SimpleUtils.fail("Group is not collapsed!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+    }
 }
 

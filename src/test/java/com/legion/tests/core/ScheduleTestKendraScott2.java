@@ -1214,7 +1214,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	}
 
 	@Automated(automated = "Automated")
-	@Owner(owner = "haya")
+	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the content after changing Operating Hours for non dg flow ")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -1249,7 +1249,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	}
 
 	@Automated(automated = "Automated")
-	@Owner(owner = "haya")
+	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the content after changing Operating Hours for non dg flow - next day")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -1332,7 +1332,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 
 	@Automated(automated = "Automated")
-	@Owner(owner = "haya")
+	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify smart card for schedule not publish(include past weeks)")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -1383,7 +1383,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	}
 
 	@Automated(automated = "Automated")
-	@Owner(owner = "haya")
+	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify smart card for schedule not publish(include past weeks) - republish")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -2495,7 +2495,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	}
 
 	@Automated(automated = "Automated")
-	@Owner(owner = "haya")
+	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the functionality for Schedule Copy Restrictions")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -2517,7 +2517,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	}
 
 	@Automated(automated = "Automated")
-	@Owner(owner = "haya")
+	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the functionality of Violation limit and Budget overage limit")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -2742,7 +2742,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	}
 
 	@Automated(automated = "Automated")
-	@Owner(owner = "haya")
+	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify turn off the Schedule Copy Restriction")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -2832,7 +2832,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	}
 
 	@Automated(automated = "Automated")
-	@Owner(owner = "haya")
+	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify turn off the Schedule Copy Restriction")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -3056,6 +3056,112 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Badge info is not consistent!", workerInfo.get("badgeSum").contains(String.valueOf(badges.size())), false);
 			SimpleUtils.assertOnFail("Job title is not consistent!", result.get("JOB TITLE").contains(workerInfo.get("job title").substring(0,1)), false);
 
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify Group by Day Parts can be collapsed/expanded")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyGroupByDayPartsCanBeCollapsedNExpandedAsStoreManager(String browser, String username, String password, String location) {
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyDayParts.getValue());
+			schedulePage.verifyGroupCanbeCollapsedNExpanded();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify Group by Work Role can be collapsed/expanded")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager(String browser, String username, String password, String location) throws Exception{
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+			schedulePage.verifyGroupCanbeCollapsedNExpanded();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify Group by Job Title can be collapsed/expanded")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager(String browser, String username, String password, String location) throws Exception{
+		try {
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
+			schedulePage.verifyGroupCanbeCollapsedNExpanded();
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify Group by Location can be collapsed/expanded")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		try {
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(getCrendentialInfo("LGInfo"));
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				schedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			schedulePage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+			schedulePage.verifyGroupCanbeCollapsedNExpanded();
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
