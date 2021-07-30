@@ -411,6 +411,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(5000);
             schedulePage.clickCreateScheduleBtn();
             if (option.equalsIgnoreCase("Yes, except opening/closing shifts")) {
                 schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "09:00PM");
@@ -831,7 +832,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-
+            Thread.sleep(5000);
             schedulePage.clickCreateScheduleBtn();
             schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "08:00AM", "04:00PM");
             schedulePage.editOperatingHoursWithGivingPrameters("Monday", "08:00AM", "04:00PM");
@@ -1801,6 +1802,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(5000);
             schedulePage.clickCreateScheduleBtn();
             schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "08:00PM");
             schedulePage.editOperatingHoursWithGivingPrameters("Monday", "08:00AM", "04:00PM");
