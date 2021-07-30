@@ -38,22 +38,26 @@ public class DynamicGroupsTest extends TestBase {
             OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
             navigationPage.navigateToUserManagement();
             OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
+
             //get work role list
             panelPage.goToWorkRolesPage();
             OpsPortalWorkRolesPage workRolesPage = new OpsPortalWorkRolesPage();
             List<String> wrList1 = workRolesPage.getWorkRoleList();
             workRolesPage.goBack();
+
             //get badge list
             panelPage.goToUsersAndRoles();
             UsersAndRolesPage usersAndRolesPage = new UsersAndRolesPage();
             usersAndRolesPage.goToBadges();
             List<String> badgeList = usersAndRolesPage.getBadgeList();
             usersAndRolesPage.back();
+
             //verified dynamic groups
             panelPage.goToDynamicGroups();
             DynamicEmployeePage dynamicEmployeePage = new DynamicEmployeePage();
             dynamicEmployeePage.addGroup();
             Assert.assertEquals(dynamicEmployeePage.getModalTitle(), "Manage Dynamic Group", "Failed to open manage dynamic group modal");
+
             //work role
             List<String> wrList2 = dynamicEmployeePage.getCriteriaValues("Work Role");
             Assert.assertTrue(wrList1.size() == wrList2.size() && wrList1.containsAll(wrList2), "Failed to assert that work role options in dynamic group are in accord with Work role list in work roles");
@@ -82,11 +86,50 @@ public class DynamicGroupsTest extends TestBase {
 
             //Minor No/Yes
             List<String> minor = dynamicEmployeePage.getCriteriaValues("Minor");
-            Assert.assertTrue(minor.size() == status.size() && minor.containsAll(status), "The Exempt value validate failed!");
+            Assert.assertTrue(minor.size() == status.size() && minor.containsAll(status), "The Minor value validate failed!");
 
             //Badge list
             List<String> badge = dynamicEmployeePage.getCriteriaValues("Badge");
-            Assert.assertTrue(badgeList.containsAll(badge), "The Exempt value validate failed!");
+            Assert.assertTrue(badgeList.containsAll(badge), "The Badge value validate failed!");
+            dynamicEmployeePage.cancelCreating();
+
+            //create a new employee group
+            dynamicEmployeePage.addGroup();
+            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), "Manage Dynamic Group", "Failed to open manage dynamic group modal!");
+            dynamicEmployeePage.editEmployeeGroup("AutoTestCreating", "create a new group", "autoTest", "Work Role");
+            dynamicEmployeePage.saveCreating();
+
+            //cancel creating
+            dynamicEmployeePage.addGroup();
+            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), "Manage Dynamic Group", "Failed to open manage dynamic group modal!");
+            dynamicEmployeePage.editEmployeeGroup("AutoTestCancel", "give up creating a new group", "cancel", "Employment Type");
+            dynamicEmployeePage.cancelCreating();
+
+            //search a group
+            dynamicEmployeePage.searchGroup("AutoTestCreating");
+
+            //edit an existing group
+            dynamicEmployeePage.edit();
+            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), "Manage Dynamic Group", "Failed to open manage dynamic group modal!");
+            dynamicEmployeePage.editEmployeeGroup("TestEdit", "edit an existing group", "edit", "Employment Status");
+            dynamicEmployeePage.saveCreating();
+
+            //cancel editing
+            dynamicEmployeePage.searchGroup("TestEdit");
+            dynamicEmployeePage.edit();
+            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), "Manage Dynamic Group", "Failed to open manage dynamic group modal!");
+            dynamicEmployeePage.editEmployeeGroup("TestCancelEdit", "cancel edit", "cancel edit", "Minor");
+            dynamicEmployeePage.cancelCreating();
+
+            //cancel remove
+            dynamicEmployeePage.remove();
+            Assert.assertEquals(dynamicEmployeePage.getContentOfRemoveModal(), "Are you sure you want to remove this dynamic group?", "Failed to open the remove modal!");
+            dynamicEmployeePage.cancelRemove();
+
+            //remove an existing group
+            dynamicEmployeePage.remove();
+            Assert.assertEquals(dynamicEmployeePage.getContentOfRemoveModal(), "Are you sure you want to remove this dynamic group?", "Failed to open the remove modal!");
+            dynamicEmployeePage.removeTheGroup();
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

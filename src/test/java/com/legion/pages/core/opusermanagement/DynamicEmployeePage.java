@@ -24,14 +24,15 @@ public class DynamicEmployeePage extends BasePage {
     //add
     @FindBy(css = "div.col-sm-2.templateAssociation_action.gray>lg-button>button")
     private WebElement addGroupButton;
-    @FindBy(css = "div.lg-modal__title-icon.ng-binding")//Manage Dynamic Group
+
+    //Manage Dynamic Group Modal
+    @FindBy(css = "div.lg-modal__title-icon.ng-binding")
     private WebElement dynamicGroupModalTitle;
     @FindBy(css = "input-field[label='Group Name'] input")
     private WebElement groupName;
     @FindBy(css = "div.fl-left.groupDescription input")
     private WebElement groupDesc;
-
-    @FindBy(css = "input-field[label='Labels']>ng-form>input")
+    @FindBy(css = "input-field[label='Labels']>ng-form")
     private WebElement labels;
     @FindBy(css = "lg-search[placeholder='Search Label'] input")
     private WebElement labelSearchBox;
@@ -39,7 +40,6 @@ public class DynamicEmployeePage extends BasePage {
     private WebElement searchButton;
     @FindBy(css = "div.mt-10.new-label")
     private WebElement newLabel;
-
     //Work Role/Exempt/Minor/Employment Type/Employment Status/Badge/Custom
     @FindBy(css = "input-field[placeholder='Select One'] select")
     private WebElement criteria;
@@ -47,13 +47,12 @@ public class DynamicEmployeePage extends BasePage {
     private WebElement valueButton;
     @FindBy(css = "div.fl-left.GroupValues.ng-scope div.item.ng-scope>input-field")//need to get attribute label
     private List<WebElement> valueList;
-
+    @FindBy(css = "div.fl-left.GroupValues.ng-scope div.item.ng-scope:nth-child(1)>input-field>ng-form>input")
+    private WebElement theFirstCriteriaOption;
     @FindBy(css = "div.ml-10.fl-left.addGroupBtn>lg-button>button")
     private WebElement addMoreButton;
-
     @FindBy(id = "omjob")
     private WebElement textarea;
-
     @FindBy(css = "lg-button[label='Test']>button")
     private WebElement test;
     @FindBy(css = "lg-button[label='Cancel']>button")
@@ -89,7 +88,6 @@ public class DynamicEmployeePage extends BasePage {
         return dynamicGroupModalTitle.getText();
     }
 
-
     public List<String> getCriteriaValues(String criteriaName) {
         Select cri = new Select(criteria);
         cri.selectByVisibleText(criteriaName);
@@ -102,6 +100,59 @@ public class DynamicEmployeePage extends BasePage {
         return value;
     }
 
+    public void editEmployeeGroup(String name, String desc, String lab, String criName) {
+        groupName.clear();
+        groupName.sendKeys(name);
+        groupDesc.clear();
+        groupDesc.sendKeys(desc);
+        setLabel(lab);
+        setCriteria(criName);
+        test.click();
+    }
+
+    public void setLabel(String lab) {
+        labels.click();
+        labelSearchBox.clear();
+        labelSearchBox.sendKeys(lab);
+        newLabel.click();
+        labels.click();
+    }
+
+    public void setCriteria(String criteriaName) {
+        Select cri = new Select(criteria);
+        cri.selectByVisibleText(criteriaName);
+        valueButton.click();
+        theFirstCriteriaOption.click();
+        valueButton.click();
+    }
+
+    public void searchGroup(String nameLabelOrDesc) {
+        searchBox.clear();
+        searchBox.sendKeys(nameLabelOrDesc);
+    }
+
+    public void edit() {
+        editButton.click();
+    }
+
+    //remove
+    public void remove() {
+        removeButton.click();
+    }
+
+    public String getContentOfRemoveModal() {
+        return removeModalContent.getText();
+    }
+
+    public void removeTheGroup() {
+        removeInRemoveModal.click();
+    }
+
+    public void cancelRemove() {
+        cancelInRemoveModal.click();
+    }
+
+    //create
     public void cancelCreating() {
         cancelButtonInModal.click();
     }
