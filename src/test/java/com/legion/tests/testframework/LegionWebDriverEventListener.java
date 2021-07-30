@@ -3,6 +3,7 @@ package com.legion.tests.testframework;
 import io.appium.java_client.events.api.general.AppiumWebDriverEventListener;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.events.WebDriverEventListener;
@@ -96,6 +97,7 @@ public class LegionWebDriverEventListener implements WebDriverEventListener, App
 	@Override
 	public void beforeClickOn(WebElement element, WebDriver driver) {
 		// TODO Auto-generated method stub
+		((JavascriptExecutor) getDriver()).executeScript("arguments[0].style.border=\'6px solid red\'", element);
         ScreenshotManager.takeScreenShot();
 		
 	}
@@ -110,6 +112,7 @@ public class LegionWebDriverEventListener implements WebDriverEventListener, App
 			e.printStackTrace();
 		}finally{
 			setScreenshotConsoleName(BasePage.activeConsoleName);
+			((JavascriptExecutor) getDriver()).executeScript("arguments[0].style.border=\'6px solid red\'", element);
 			ScreenshotManager.takeScreenShot();
 		}
 
