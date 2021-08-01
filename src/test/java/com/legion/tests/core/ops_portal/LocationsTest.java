@@ -1529,7 +1529,6 @@ public class LocationsTest extends TestBase {
 
         try{
             String locationName = "AutoUsingByFiona1";
-            String templateName = "AutoUsingByFiona";
             String label = "External Attributes";
             String attributeName ="AutoUsingAttribute";
             Random random=new Random();
@@ -1584,6 +1583,7 @@ public class LocationsTest extends TestBase {
             }
 
             //After update location level attributes, check template level will NOT updated
+            locationsPage.backToConfigurationTabInLocationLevel();
             locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
             HashMap<String,List<String>>  templateLevelAttributesInfoInLocation = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();

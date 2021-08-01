@@ -2979,15 +2979,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return null;
 	}
 
+	@FindBy(css=".workRoleContainer.row.ng-scope")
+	private List<WebElement> workRoleList;
+
 	@Override
 	public void canGoToLaborModelViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
-		if (areListElementVisible(templateNameLinks, 5)) {
+		if (areListElementVisible(templateNameLinks, 10)) {
 			click(templateNameLinks.get(7));
-			if (isElementEnabled(schedulingCollaborationContainer, 5)) {
-				SimpleUtils.pass("Go to Compliance in locations level successfully");
+			if (areListElementVisible(workRoleList, 5)){
+				SimpleUtils.pass("Go to Labor model in locations level successfully");
 			} else
-				SimpleUtils.fail("Failed go to Compliance in locations page ", false);
+				SimpleUtils.fail("Failed go to Labor model in locations page ", false);
 		} else
 			SimpleUtils.fail("Configuration tab in locations level page load failed ", false);
 	}
@@ -3363,6 +3366,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					valueField.sendKeys(attributeValue);
 					waitForSeconds(5);
 					clickOnSaveButton();
+					break;
 				}
 			}
 		}
