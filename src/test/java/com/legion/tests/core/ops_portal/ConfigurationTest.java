@@ -1,4 +1,4 @@
-package com.legion.tests.core;
+package com.legion.tests.core.ops_portal;
 
 import com.legion.pages.*;
 import com.legion.tests.TestBase;
@@ -6,6 +6,7 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;

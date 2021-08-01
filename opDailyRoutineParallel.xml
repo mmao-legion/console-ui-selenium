@@ -6,13 +6,13 @@
     <parameter name="testRailRunName" value="Automation - Daily Routine"/>
     <test name="Legion Test">
         <classes>
-            <class name = "com.legion.tests.core.LocationsTest"/>
-            <class name = "com.legion.tests.core.LocationsGroupTestInOP"/>
-            <class name = "com.legion.tests.core.JobTest"/>
-            <class name = "com.legion.tests.core.NewNavigationFlowTest"/>
-            <class name = "com.legion.tests.core.ConfigurationTest"/>
-            <class name = "com.legion.tests.core.UserManagementTest"/>
-            <class name = "com.legion.tests.core.LaborModelTest"/>
+            <class name = "com.legion.tests.core.ops_portal.LocationsTest"/>
+            <class name = "com.legion.tests.core.ops_portal.LocationsGroupTestInOP"/>
+            <class name = "com.legion.tests.core.ops_portal.JobTest"/>
+            <class name = "com.legion.tests.core.ops_portal.NewNavigationFlowTest"/>
+            <class name = "com.legion.tests.core.ops_portal.ConfigurationTest"/>
+            <class name = "com.legion.tests.core.ops_portal.UserManagementTest"/>
+            <class name = "com.legion.tests.core.ops_portal.LaborModelTest"/>
         </classes>
     </test>
 </suite>

@@ -1,9 +1,7 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
-import java.net.SocketImpl;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,12 +11,8 @@ import com.legion.pages.*;
 
 import java.util.Map;
 
-import com.legion.pages.core.ConsoleGmailPage;
-import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.OpsPortalLocationsPage;
-import org.apache.poi.ss.formula.ptg.ControlPtg;
-import org.apache.xpath.operations.Bool;
-import org.openqa.selenium.WebElement;
+import com.legion.tests.core.ops_portal.LocationsTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

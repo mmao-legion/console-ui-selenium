@@ -7,9 +7,9 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.ops_portal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
-import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -17,11 +17,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.teamMemberName;
 
 public class ScheduleCopyImprovementTest extends TestBase {
 

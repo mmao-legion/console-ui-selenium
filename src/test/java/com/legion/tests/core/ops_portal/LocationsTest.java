@@ -1,4 +1,4 @@
-package com.legion.tests.core;
+package com.legion.tests.core.ops_portal;
 
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
@@ -7,6 +7,7 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -245,35 +246,35 @@ public class LocationsTest extends TestBase {
     }
 
 
-//    @Automated(automated = "Automated")
-//    @Owner(owner = "Estelle")
-//    @Enterprise(name = "Op_Enterprise")
-//    @TestName(description = "Import locations common function")
-//    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-//    public void verifyImportLocationDistrict(String browser, String username, String password, String location) throws Exception {
-//        try{
-//            String searchInputText="Child_LocationGroup_Example";
-//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-//            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-//
-//            //go to locations tab
-//            locationsPage.clickOnLocationsTab();
-//            //check locations item
-//            locationsPage.validateItemsInLocations();
-//            //go to sub-locations tab
-//            locationsPage.goToSubLocationsInLocationsPage();
-//            locationsPage.verifyImportLocationDistrict();
-//            if (locationsPage.searchNewLocation(searchInputText)) {
-//                SimpleUtils.pass("Create new mock location successfully");
-//            }else
-//                SimpleUtils.fail("Create new location failed or can't search created location",true);
-//        } catch (Exception e){
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
-//    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Cancel to export or import locations")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCancelToExportOrImportLocations(String browser, String username, String password, String location) throws Exception {
+        try{
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-locations tab
+            locationsPage.goToSubLocationsInLocationsPage();
+
+            locationsPage.clickOnImportBtn();
+            locationsPage.cancelBtnOnImportExportPopUpWinsIsClickable();
+            locationsPage.clickOnExportBtn();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")

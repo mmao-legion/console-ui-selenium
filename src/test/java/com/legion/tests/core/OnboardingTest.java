@@ -1,12 +1,12 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
-import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.ops_portal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;

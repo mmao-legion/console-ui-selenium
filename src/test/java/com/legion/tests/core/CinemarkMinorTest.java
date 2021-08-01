@@ -8,6 +8,7 @@ import com.legion.pages.TeamPage;
 import com.legion.pages.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
+import com.legion.tests.core.ops_portal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -16,11 +17,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static com.legion.utils.MyThreadLocal.location;
-import static com.legion.utils.MyThreadLocal.setTestSuiteID;
 
 public class CinemarkMinorTest extends TestBase {
 
