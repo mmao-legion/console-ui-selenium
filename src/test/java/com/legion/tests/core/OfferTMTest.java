@@ -587,11 +587,6 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
             schedulePage.saveSchedule();
             String workRoleOfTM = schedulePage.getRandomWorkRole();
-            schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText(workRoleOfTM);
-            schedulePage.deleteAllShiftsInWeekView();
-            schedulePage.clickOnFilterBtn();
-            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
 
             //convert a shift to open shift
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -606,7 +601,7 @@ public class OfferTMTest extends TestBase {
             String selectedShiftId= selectedShift.getAttribute("id");
             int index = schedulePage.getShiftIndexById(selectedShiftId);
 
-            //verify manual open shift in edit mode.
+            //verify assign TM in edit mode.
             List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(index);
             schedulePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
@@ -634,108 +629,101 @@ public class OfferTMTest extends TestBase {
     @TestName(description = "Verify the open shift is assigned successfully")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
+        loginPage.logOut();
+
+        loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+
+
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+        schedulePage.navigateToNextWeek();
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+
+        //delete unassigned shifts and open shifts.
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView("Unassigned");
+        schedulePage.deleteTMShiftInWeekView("Open");
+        schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
+        String workRoleOfTM = schedulePage.getRandomWorkRole();
+
+        //create manual open shifts.
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtSomePoint("8", 20, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.selectWorkRole(workRoleOfTM);
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.saveSchedule();
+        WebElement selectedShift = schedulePage.clickOnProfileIconOfOpenShift();
+        String selectedShiftId= selectedShift.getAttribute("id");
+        int index = schedulePage.getShiftIndexById(selectedShiftId);
+
+
+        List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(index);
+        schedulePage.clickOnProfileIconOfOpenShift();
+        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+        schedulePage.clickOnOfferTMOption();
+        schedulePage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.clickOnProfileIconOfOpenShift();
+        schedulePage.clickViewStatusBtn();
+        schedulePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
+        schedulePage.closeViewStatusContainer();
+        loginPage.logOut();
+
+        //login with TM.
+        loginToLegionAndVerifyIsLoginDone(username, password, location);
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        schedulePage.navigateToNextWeek();
+        schedulePage.clickLinkOnSmartCardByName("View Shifts");
+        SimpleUtils.assertOnFail("Didn't get open shift offer!", schedulePage.getShiftsCount()==1, false);
+        List<String> shiftInfoFromTMView = schedulePage.getTheShiftInfoInDayViewByIndex(0);
+        SimpleUtils.assertOnFail("shift info is not consistent", shiftInfo.get(2).contains(shiftInfoFromTMView.get(2)) && shiftInfo.get(4).contains(shiftInfoFromTMView.get(4)), false);
+
+        List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
+        schedulePage.selectOneShiftIsClaimShift(claimShift);
+        schedulePage.clickTheShiftRequestByName(claimShift.get(0));
+        schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+        loginPage.logOut();
+
+        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+        activityPage.verifyActivityBellIconLoaded();
+        activityPage.verifyClickOnActivityIcon();
+        activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
+        activityPage.verifyActivityOfShiftOffer(firstNameOfTM, location);
+        activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM, ActivityTest.approveRejectAction.Approve.getValue());
+        activityPage.closeActivityWindow();
+
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+        schedulePage.navigateToNextWeek();
+        shiftInfo = schedulePage.getTheShiftInfoByIndex(index);
+        SimpleUtils.assertOnFail("Open shift is not assigned successfully!", shiftInfo.get(0).equalsIgnoreCase(firstNameOfTM), false);
         try {
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
-            loginPage.logOut();
-
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-
-            // 1.Checking configuration in controls
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            controlsNewUIPage.clickOnControlsConsoleMenu();
-            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-            boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
-            SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
-            String option = "Always";
-            controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-
-            schedulePage.navigateToNextWeek();
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
-            if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-            }
-            schedulePage.createScheduleForNonDGFlowNewUI();
-
-            //delete unassigned shifts and open shifts.
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.deleteTMShiftInWeekView("Open");
-            schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
-            String workRoleOfTM = schedulePage.getRandomWorkRole();
-
-            //create manual open shifts.
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.moveSliderAtSomePoint("8", 20, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.selectWorkRole(workRoleOfTM);
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.saveSchedule();
-            WebElement selectedShift = schedulePage.clickOnProfileIconOfOpenShift();
-            String selectedShiftId= selectedShift.getAttribute("id");
-            int index = schedulePage.getShiftIndexById(selectedShiftId);
-
-
-            List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(index);
-            schedulePage.clickOnProfileIconOfOpenShift();
-            SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
-            schedulePage.clickOnOfferTMOption();
-            schedulePage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
-            schedulePage.clickOnOfferOrAssignBtn();
-            schedulePage.clickOnProfileIconOfOpenShift();
-            schedulePage.clickViewStatusBtn();
-            schedulePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
-            schedulePage.closeViewStatusContainer();
-            loginPage.logOut();
-
-            //login with TM.
-            loginToLegionAndVerifyIsLoginDone(username, password, location);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.navigateToNextWeek();
-            schedulePage.clickLinkOnSmartCardByName("View Shifts");
-            SimpleUtils.assertOnFail("Didn't get open shift offer!", schedulePage.getShiftsCount()==1, false);
-            List<String> shiftInfoFromTMView = schedulePage.getTheShiftInfoInDayViewByIndex(0);
-            SimpleUtils.assertOnFail("shift info is not consistent", shiftInfo.get(2).contains(shiftInfoFromTMView.get(2)) && shiftInfo.get(4).contains(shiftInfoFromTMView.get(4)), false);
-
-            List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
-            schedulePage.selectOneShiftIsClaimShift(claimShift);
-            schedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
-            loginPage.logOut();
-
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-            activityPage.verifyActivityBellIconLoaded();
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
-            activityPage.verifyActivityOfShiftOffer(firstNameOfTM, location);
-            activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM, ActivityTest.approveRejectAction.Approve.getValue());
-            activityPage.closeActivityWindow();
-
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-            schedulePage.navigateToNextWeek();
-            shiftInfo = schedulePage.getTheShiftInfoByIndex(index);
-            SimpleUtils.assertOnFail("Open shift is not assigned successfully!", shiftInfo.get(0).equalsIgnoreCase(firstNameOfTM), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

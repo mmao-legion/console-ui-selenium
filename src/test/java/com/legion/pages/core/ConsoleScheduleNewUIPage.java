@@ -14843,19 +14843,23 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public WebElement clickOnProfileIconOfOpenShift() throws Exception {
         WebElement selectedShift = null;
         if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
-            int randomIndex = (new Random()).nextInt(profileIcons.size());
-            while (!profileIcons.get(randomIndex).getAttribute("src").contains("openShiftImage")){
-                randomIndex = (new Random()).nextInt(profileIcons.size());
+            int i;
+            for (i=0; i<profileIcons.size(); i++){
+                if (profileIcons.get(i).getAttribute("src").contains("openShiftImage")){
+                    break;
+                }
             }
-            clickTheElement(profileIcons.get(randomIndex));
-            selectedShift = shifts.get(randomIndex);
+            clickTheElement(profileIcons.get(i));
+            selectedShift = shifts.get(i);
         } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
-            int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
-            while (!dayViewAvailableShifts.get(randomIndex).findElement(By.className("sch-day-view-shift-worker-name")).getText().contains("Open")){
-                randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+            int i;
+            for (i=0; i<dayViewAvailableShifts.size(); i++){
+                if (dayViewAvailableShifts.get(i).findElement(By.className("sch-day-view-shift-worker-name")).getText().contains("Open")){
+                    break;
+                }
             }
-            clickTheElement(scheduleTableWeekViewWorkerDetail.get(randomIndex));
-            selectedShift = dayViewAvailableShifts.get(randomIndex);
+            clickTheElement(scheduleTableWeekViewWorkerDetail.get(i));
+            selectedShift = dayViewAvailableShifts.get(i);
         } else {
             SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
         }
