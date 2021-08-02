@@ -3815,7 +3815,7 @@ private List<WebElement> locationColumn;
 			if (isElementLoaded(popMessage,10) && popMessage.getText().contains("Success"))
 				SimpleUtils.pass("School Calendars Page: School Calendar is saved successfully");
 			else
-				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",false);
+				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",true);
 		} else
 			SimpleUtils.fail("School Calendars Page: School Session End input field failed to load",false);
 	}

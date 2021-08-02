@@ -515,16 +515,16 @@ public class CinemarkMinorTest extends TestBase {
             // Verify the new created calendar will list in the calendar list
             teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
             SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), true);
             if (teamPage.isCalendarDisplayedByName("Calendar" + randomDigits))
                 SimpleUtils.pass("School Calendar: Calendar just created is in the list");
             else
-                SimpleUtils.fail("School Calendar: ACalendar just created is not in the list",false);
+                SimpleUtils.fail("School Calendar: A Calendar just created is not in the list",true);
 
             // Verify the calendar can be deleted
             teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
             SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), true);
             teamPage.deleteCalendarByName(calendarName);
 
             // Verify the the change for calendar will not been saved after click Cancel button
@@ -595,7 +595,8 @@ public class CinemarkMinorTest extends TestBase {
                     && teamPage.isCalendarDisplayedByName("Calendar" + random3) && teamPage.isCalendarDisplayedByName("Calendar" + random4))
                 SimpleUtils.pass("School Calendar: All the calendars have been created display in the list");
             else
-                SimpleUtils.fail("School Calendar: All the calendars have been created don't display in the list",false);
+                SimpleUtils.fail("School Calendar: All the calendars have been created don't display in the list",true);
+            loginPage.logOut();
 
             // Clean up data
             teamPage.deleteCalendarByName("Calendar" + random1);
