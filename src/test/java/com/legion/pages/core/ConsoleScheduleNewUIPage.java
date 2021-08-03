@@ -4152,10 +4152,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
-                if (MyThreadLocal.getIsNeedEditingOperatingHours()) {
-                    editTheOperatingHours(new ArrayList<>());
-                    waitForSeconds(3);
-                }
+                editTheOperatingHours(new ArrayList<>());
+                waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
                 checkEnterBudgetWindowLoadedForNonDG();
                 selectWhichWeekToCopyFrom("SUGGESTED");
@@ -6927,11 +6925,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
                             if (workerName != null && optionCircle != null) {
                                 if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.trim().toLowerCase())) {
-                                    click(optionCircle);
+                                    clickTheElement(optionCircle);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
                                     waitForSeconds(2);
-                                    if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().equalsIgnoreCase("ASSIGN ANYWAY")) {
-                                        click(btnAssignAnyway);
+                                    if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().toLowerCase().equalsIgnoreCase("assign anyway")) {
+                                        clickTheElement(btnAssignAnyway);
                                         SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
                                     }
                                     break;
@@ -11204,7 +11202,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 clickTheElement(deleteShift);
                                 waitForSeconds(1);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
-                                    click(deleteBtnInDeleteWindows);
+                                    clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
                                 } else
                                     SimpleUtils.fail("delete confirm button load failed", false);

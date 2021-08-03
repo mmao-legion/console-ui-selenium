@@ -130,8 +130,8 @@ public class PrepareSettingsTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            MyThreadLocal.setIsNeedEditingOperatingHours(true);
-            createScheduleForThreeWeeks(schedulePage);
+//            MyThreadLocal.setIsNeedEditingOperatingHours(true);
+//            createScheduleForThreeWeeks(schedulePage);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
