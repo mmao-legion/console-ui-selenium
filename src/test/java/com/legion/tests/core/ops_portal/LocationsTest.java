@@ -1602,4 +1602,64 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "External Attribute E2E")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExternalAttributeE2E(String username, String password, String browser, String location) throws Exception {
+
+        String locationName = "AutoUsingByFiona1";
+        String label = "External Attributes";
+        String attributeName ="AutoUsingAttribute";
+        Random random=new Random();
+        int number=random.nextInt(90)+10;
+        String attributeValue = String.valueOf(number);
+        HashMap<String, Float> hoursAndWedgetInSummary = new HashMap<>();
+
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+
+        //override location level external attributes
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.goToLocationDetailsPage(locationName);
+        locationsPage.goToConfigurationTabInLocationLevel();
+        List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+        if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
+            SimpleUtils.pass("Labor model template is not overridden at location level");
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+        } else{
+            SimpleUtils.pass("Labor model template is already overridden at location level");
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
+        }
+
+        locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Edit");
+        laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+        locationsPage.updateLocationLevelExternalAttributes(attributeName,attributeValue);
+
+        List<HashMap<String,String>>  templateInfo1 = locationsPage.getLocationTemplateInfoInLocationLevel();
+        if (templateInfo1.get(7).get("Overridden").equalsIgnoreCase("Yes")) {
+            SimpleUtils.pass("User can override location level external attributes successfully");
+        } else{
+            SimpleUtils.pass("User can NOT override location level external attributes successfully");
+        }
+
+        locationsPage.clickModelSwitchIconInDashboardPage(ConfigurationTest.modelSwitchOperation.Console.getValue());
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+        scheduleOverviewPage.loadScheduleOverview();
+        ForecastPage ForecastPage  = pageFactory.createForecastPage();
+        ForecastPage.clickForecast();
+        ForecastPage.clickOnLabor();
+        ForecastPage.verifyLaborForecastCanLoad();
+        //After click on refresh, page should get refresh and back to previous page only
+        ForecastPage.verifyRefreshBtnInLaborWeekView();
+        hoursAndWedgetInSummary = ForecastPage.getSummaryLaborHoursAndWages();
+    }
 }
