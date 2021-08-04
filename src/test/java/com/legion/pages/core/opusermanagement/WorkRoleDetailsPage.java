@@ -117,6 +117,7 @@ public class WorkRoleDetailsPage extends BasePage {
     }
 
     public void saveAssignRule() {
+        scrollToBottom();
         saveAssignRuleIcon.click();
     }
 
