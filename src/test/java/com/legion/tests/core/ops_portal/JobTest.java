@@ -49,39 +49,41 @@ public class JobTest extends TestBase {
         SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate to enable centralized schedule release function")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOpenCentralizedScheduleReleaseToYesAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
 
-        try{
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-
-            // Validate Controls Scheduling Policies Section
-            controlsNewUIPage.clickOnControlsConsoleMenu();
-            controlsNewUIPage.clickOnGlobalLocationButton();
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            boolean isSchedulingPolicies = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
-            SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies, true);
-            controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
-            //check the centralized schedule release button is yes or no
-            List<WebElement> CentralizedScheduleReleaseSelector = controlsNewUIPage.getAvailableSelector();
-            WebElement yesItem = CentralizedScheduleReleaseSelector.get(0);
-            WebElement noItem = CentralizedScheduleReleaseSelector.get(1);
-
-            if (controlsNewUIPage.isCentralizedScheduleReleaseValueYes()) {
-                SimpleUtils.pass("Scheduling Policies: Centralized Schedule Release button is Yes");
-            }else
-                controlsNewUIPage.updateCentralizedScheduleRelease(yesItem);
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
+    //commented
+//    @Automated(automated = "Automated")
+//    @Owner(owner = "Estelle")
+//    @Enterprise(name = "Op_Enterprise")
+//    @TestName(description = "Validate to enable centralized schedule release function")
+//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+//    public void verifyOpenCentralizedScheduleReleaseToYesAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+//
+//        try{
+//            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+//            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+//
+//            // Validate Controls Scheduling Policies Section
+//            controlsNewUIPage.clickOnControlsConsoleMenu();
+//            controlsNewUIPage.clickOnGlobalLocationButton();
+//            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+//            boolean isSchedulingPolicies = controlsNewUIPage.isControlsSchedulingPoliciesLoaded();
+//            SimpleUtils.assertOnFail("Controls Page: Scheduling Policies Section not Loaded.", isSchedulingPolicies, true);
+//            controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+//            //check the centralized schedule release button is yes or no
+//            List<WebElement> CentralizedScheduleReleaseSelector = controlsNewUIPage.getAvailableSelector();
+//            WebElement yesItem = CentralizedScheduleReleaseSelector.get(0);
+//            WebElement noItem = CentralizedScheduleReleaseSelector.get(1);
+//
+//            if (controlsNewUIPage.isCentralizedScheduleReleaseValueYes()) {
+//                SimpleUtils.pass("Scheduling Policies: Centralized Schedule Release button is Yes");
+//            }else
+//                controlsNewUIPage.updateCentralizedScheduleRelease(yesItem);
+//
+//        } catch (Exception e){
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
+//    }
 
 
 

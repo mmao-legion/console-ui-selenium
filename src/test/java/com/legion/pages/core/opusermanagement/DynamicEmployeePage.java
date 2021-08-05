@@ -1,6 +1,7 @@
 package com.legion.pages.core.opusermanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;

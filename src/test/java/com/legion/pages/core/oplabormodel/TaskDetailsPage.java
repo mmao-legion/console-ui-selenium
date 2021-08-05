@@ -102,11 +102,13 @@ public class TaskDetailsPage extends BasePage {
 
     //used when adding a new task
     public void saveAdding() {
+        scrollToBottom();
         addTaskButton.click();
     }
 
     //used when editing an existing task
     public void saveEditing() {
+        scrollToBottom();
         saveButton.click();
     }
 

@@ -121,9 +121,10 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 						}
 					}
 					break;
-				}else if(i==templateNameList.size()-1){
-					SimpleUtils.fail("Can't find the specify template",false);
 				}
+//				else if(i==templateNameList.size()-1){
+//					SimpleUtils.fail("Can't find the specify template",false);
+//				}
 			}
 		}else{
 			SimpleUtils.fail("There is No template now",false);
