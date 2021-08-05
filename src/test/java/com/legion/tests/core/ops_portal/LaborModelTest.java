@@ -329,4 +329,114 @@ public class LaborModelTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Description of External Attributes")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDescriptionOfExternalAttributesAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+        try{
+            SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime=dfs.format(new Date()).trim();
+            String attributeName="AutoCreate"+currentTime;
+            Random random=new Random();
+            int number=random.nextInt(90)+10;
+            String attributeValue = String.valueOf(number);
+            String attributeDescription = attributeName + "Des";
+            String attributeValueUpdate = String.valueOf(number+1);
+            String attributeDescriptionUpdate = "Update123@";
+            String label = "External Attributes";
+            HashMap<String, List<String>> attributesInfoInGlobal = new HashMap<>();
+            String templateName = "AutoUsingByFiona";
+            String mode = "View";
+            HashMap<String, List<String>> attributesInfoInTemplate = new HashMap<>();
+            String locationName = "FionaUsingLocation";
+            HashMap<String, List<String>> attributesInfoInLocation = new HashMap<>();
+
+            //go to LaborStandardRepository - External Attributes
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborStandardRepositoryTile();
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+
+            //Create attributes
+            laborModelPage.clickOnEditButton();
+            laborModelPage.clickOnAddAttributeButton();
+            laborModelPage.createNewAttribute(attributeName,attributeValue,attributeDescription);
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+            attributesInfoInGlobal = laborModelPage.getValueAndDescriptionForEachAttributeAtGlobalLevel();
+            for(String key:attributesInfoInGlobal.keySet()) {
+                if (key.equals(attributeName)) {
+                    List<String> valuesInGlobal = attributesInfoInGlobal.get(key);
+                    if (valuesInGlobal.get(0).equals(attributeValue) && valuesInGlobal.get(1).equals(attributeDescription)) {
+                        SimpleUtils.pass("The attribute " + key + " added successfully!");
+                        break;
+                    } else {
+                        SimpleUtils.fail("The attribute " + key + " is not correct or added failed", false);
+                    }
+                }
+            }
+
+            //Update existing attribute description
+            laborModelPage.clickOnEditButton();
+            List<String> updatedVal = laborModelPage.clickOnPencilButtonAndUpdateAttribute(attributeName,attributeValueUpdate,attributeDescriptionUpdate);
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+            if(updatedVal.get(0).equals(attributeValueUpdate) && updatedVal.get(1).equals(attributeDescriptionUpdate)){
+                SimpleUtils.pass("User can update attribute value and description successfully!");
+            }else {
+                SimpleUtils.fail("User failed to update attribute value and description!",false);
+            }
+
+            //Go to template level check the update attribute show well or not?
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            attributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            for(String key:attributesInfoInTemplate.keySet()) {
+                if (key.equals(attributeName)) {
+                    List<String> valuesInTemplate = attributesInfoInTemplate.get(key);
+                    if (valuesInTemplate.get(0).equals(attributeValueUpdate) && valuesInTemplate.get(1).equals(attributeDescriptionUpdate)) {
+                        SimpleUtils.pass("The attribute " + key + " in template level is aligned with global level.");
+                        break;
+                    } else {
+                        SimpleUtils.fail("The attribute " + key + " in template level is not aligned with global level.", false);
+                    }
+                }
+            }
+
+            //Go to location level check the update attribute show well or not?
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
+                SimpleUtils.pass("Labor model template is not overridden at location level");
+                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+            } else{
+                SimpleUtils.pass("Labor model template is already overridden at location level");
+                locationsPage.editLocationBtnIsClickableInLocationDetails();
+                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
+                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+            }
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+            attributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
+            for(String key:attributesInfoInLocation.keySet()) {
+                if (key.equals(attributeName)) {
+                    List<String> valuesInLocation = attributesInfoInLocation.get(key);
+                    if (valuesInLocation.get(0).equals(attributeValueUpdate) && valuesInLocation.get(1).equals(attributeDescriptionUpdate)) {
+                        SimpleUtils.pass("The attribute " + key + " in location level is aligned with global level.");
+                        break;
+                    } else {
+                        SimpleUtils.fail("The attribute " + key + " in location level is not aligned with global level.", false);
+                    }
+                }
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

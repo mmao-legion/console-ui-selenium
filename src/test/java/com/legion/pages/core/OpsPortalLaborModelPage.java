@@ -164,7 +164,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 			SimpleUtils.fail("Failed go to labor model in template level ",false);
 			return null;
 	}
-
+// added by fiona
 	@FindBy(css="[title='Labor Model'] h1")
 	private WebElement laborModelCard;
 
