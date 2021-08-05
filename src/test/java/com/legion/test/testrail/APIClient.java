@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonArray;
+import org.apache.poi.util.SystemOutLogger;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
@@ -35,6 +36,8 @@ public class APIClient
 	private String m_user;
 	private String m_password;
 	private String m_url;
+	private static final int DEFAULT_RETRY_TIME = 3;
+	private int retryTime = DEFAULT_RETRY_TIME;
 
 	public APIClient(String base_url)
 	{
@@ -96,7 +99,12 @@ public class APIClient
 	public Object sendGet(String uri)
 		throws MalformedURLException, IOException, APIException
 	{
-		return this.sendRequest("GET", uri, null);
+		try {
+			return this.retrySendRequest("GET", uri, null);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -120,7 +128,24 @@ public class APIClient
 	public Object sendPost(String uri, Object data)
 		throws MalformedURLException, IOException, APIException
 	{
-		return this.sendRequest("POST", uri, data);
+		try {
+			return retrySendRequest("POST",  uri,  data);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private Object retrySendRequest(String method, String uri, Object data) throws InterruptedException {
+		for (int i = 0; i < retryTime; i++) {
+			try {
+				return sendRequest(method,  uri,  data);
+			} catch (Exception e) {
+				System.err.println("Retry "+i+" time fail! more info: "+e.getMessage()+"\n"+ e.getStackTrace());
+				Thread.sleep(10);
+			}
+		}
+		return null;
 	}
 	
 	private Object sendRequest(String method, String uri, Object data)
