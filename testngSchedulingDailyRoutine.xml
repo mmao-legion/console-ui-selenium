@@ -237,8 +237,8 @@
                     <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
                     <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
                     <include name="verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager" />
-                    <!--Manage Schedule permission conflicts    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />-->
-                    <!--Manage Schedule permission conflicts    <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" />-->
+                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />
+                    <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
