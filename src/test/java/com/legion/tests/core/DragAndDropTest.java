@@ -345,9 +345,15 @@ public class DragAndDropTest extends TestBase {
             schedulePage.dragOneShiftToAnotherDay(indexes.get(0), firstName, endIndex);
 
             // Verify the Warning model pops up with the message
-            schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
+            String expectedMsg = firstName + " is approved for Time Off";
+            schedulePage.verifyMessageOnCopyMoveConfirmPage(expectedMsg, expectedMsg);
+            String copyOption = "Copy";
+            String moveOption = "Move";
+            schedulePage.verifyConfirmBtnIsDisabledForSpecificOption(copyOption);
+            schedulePage.verifyConfirmBtnIsDisabledForSpecificOption(moveOption);
+            schedulePage.clickOnCancelEditShiftTimeButton();
 
-            // Verify nothing happens after clicking OK button
+            // Verify nothing happens after clicking CANCEL button
             if (schedulePage.verifyDayHasShiftByName(indexes.get(0), firstName) == 1 && schedulePage.verifyDayHasShiftByName(endIndex, firstName) == 0)
                 SimpleUtils.pass("Nothing happens as expected after clicking OK button");
             else

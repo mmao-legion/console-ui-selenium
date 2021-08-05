@@ -1506,9 +1506,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public String getActiveWeekText() throws Exception {
-        WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
-        if (isElementLoaded(activeWeek,5))
-            return activeWeek.getText().replace("\n", " ");
+        if (isElementLoaded(MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")),15))
+            return MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")).getText().replace("\n", " ");
         return "";
     }
 
@@ -13257,9 +13256,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void goToSpecificWeekByDate(String date) throws Exception {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
         Date switchDate = dateFormat.parse(date);
-        if (areListElementVisible(currentWeeks, 10) && isElementLoaded(calendarNavigationNextWeekArrow, 10)) {
+        if (areListElementVisible(currentWeeks, 10)) {
             for (int i = 0; i < currentWeeks.size(); i++) {
-                click(currentWeeks.get(i));
+                clickTheElement(currentWeeks.get(i));
                 List<String> years = getYearsFromCalendarMonthYearText();
                 String activeWeek = getActiveWeekText();
                 String[] items = activeWeek.split(" ");
@@ -13271,10 +13270,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (isBetween) {
                     SimpleUtils.report("Schedule Page: Navigate to week: " + activeWeek + ", it contains the day: " + date);
                     break;
-                }
-                if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
-                    click(calendarNavigationNextWeekArrow);
-                    goToSpecificWeekByDate(date);
+                } else {
+                    if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                        click(calendarNavigationNextWeekArrow);
+                        goToSpecificWeekByDate(date);
+                    }
                 }
             }
         }
@@ -13478,6 +13478,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     //========
     @FindBy(css = "div[ng-repeat=\"error in assignError\"]")
     private WebElement errorMessageInAssign;
+    @FindBy(css = ".swap-modal-error")
+    private List<WebElement> copyMoveErrorMesgs;
 
     @Override
     public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception {
@@ -13498,6 +13500,62 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         } else {
             SimpleUtils.fail("No warning message for overtime when drag and drop",false);
+        }
+    }
+
+    @Override
+    public void verifyMessageOnCopyMoveConfirmPage(String expectedMsgInCopy, String expectedMsgInMove) throws Exception {
+        String errorMessageForCopy = null;
+        String errorMessageForMove = null;
+        if (areListElementVisible(copyMoveErrorMesgs,15) && copyMoveErrorMesgs.size() == 2){
+            errorMessageForCopy = copyMoveErrorMesgs.get(0).getText();
+            errorMessageForMove = copyMoveErrorMesgs.get(1).getText();
+            if (errorMessageForCopy.contains(expectedMsgInCopy) && errorMessageForMove.contains(expectedMsgInMove)){
+                SimpleUtils.pass("errorMessageInCopy: " + errorMessageForCopy + "\nerrorMessageInMove: " + errorMessageForMove);
+            }else{
+                SimpleUtils.fail("warning message " + errorMessageForCopy + " is not expected!",false);
+            }
+        } else {
+            SimpleUtils.fail("No warning message when drag and drop",false);
+        }
+    }
+
+    @Override
+    public void verifyConfirmBtnIsDisabledForSpecificOption(String optionName) throws Exception {
+        try {
+            if (areListElementVisible(swapAndAssignOptions,15)&&swapAndAssignOptions.size()==2){
+                if (optionName.equalsIgnoreCase("Copy")){
+                    click(swapAndAssignOptions.get(0));
+                    waitForSeconds(1);
+                    if (!swapAndAssignOptions.get(0).findElement(By.cssSelector(".tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")){
+                        SimpleUtils.pass("Copy option selected successfully!");
+                        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage, 5) && confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")) {
+                            SimpleUtils.pass("CONFIRM button is disabled!");
+                        } else {
+                            SimpleUtils.fail("CONFIRM button is mot loaded or is not disabled!", false);
+                        }
+                    } else {
+                        SimpleUtils.fail("Copy option is not selected", false);
+                    }
+                }
+                if (optionName.equalsIgnoreCase("Move")){
+                    click(swapAndAssignOptions.get(1));
+                    if (!swapAndAssignOptions.get(1).findElement(By.cssSelector(".tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")){
+                        SimpleUtils.pass("Move option selected successfully!");
+                        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage, 5) && confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")) {
+                            SimpleUtils.pass("CONFIRM button is disabled!");
+                        } else {
+                            SimpleUtils.fail("CONFIRM button is mot loaded or is not disabled!", false);
+                        }
+                    } else {
+                        SimpleUtils.fail("Move option is not selected", false);
+                    }
+                }
+            } else {
+                SimpleUtils.fail("swap and assign options fail to load!",false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
