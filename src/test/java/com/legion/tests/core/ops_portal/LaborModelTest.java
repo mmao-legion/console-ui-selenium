@@ -227,7 +227,7 @@ public class LaborModelTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify Labor Standard Repository")
+    @TestName(description = "Add update disable tasks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddEditSearchAndDisableTasksAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
         try {
