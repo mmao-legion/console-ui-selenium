@@ -1342,7 +1342,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.deleteTMShiftInWeekView("unassigned");
+			schedulePage.clickOnFilterBtn();
+			schedulePage.selectShiftTypeFilterByText("unassigned");
+			schedulePage.deleteTMShiftInWeekView("");
+			schedulePage.clickOnFilterBtn();
+			schedulePage.clickOnClearFilterOnFilterDropdownPopup();
 			//make edits
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
@@ -1392,7 +1396,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.deleteTMShiftInWeekView("Unassigned");
+			schedulePage.clickOnFilterBtn();
+			schedulePage.selectShiftTypeFilterByText("unassigned");
+			schedulePage.deleteTMShiftInWeekView("");
+			schedulePage.clickOnFilterBtn();
+			schedulePage.clickOnClearFilterOnFilterDropdownPopup();
 			//make edits and publish
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
@@ -1404,7 +1412,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.publishActiveSchedule();
 			//make edits and save
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.deleteTMShiftInWeekView("Unassigned");
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
 			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
