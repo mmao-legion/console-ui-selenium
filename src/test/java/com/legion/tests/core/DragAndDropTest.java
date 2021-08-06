@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class DragAndDropTest extends TestBase {
 
@@ -188,7 +189,12 @@ public class DragAndDropTest extends TestBase {
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            String anotherLocation = "AUSTIN DOWNTOWN";
+            String anotherLocation = "";
+            if (getEnterprise().equalsIgnoreCase("KendraScott2")) {
+                 anotherLocation = "AUSTIN DOWNTOWN";
+            } else {
+                anotherLocation = "7500216 - Can-Ski Village";
+            }
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeLocation(anotherLocation);
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
