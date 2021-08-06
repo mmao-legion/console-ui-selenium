@@ -13505,15 +13505,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyMessageOnCopyMoveConfirmPage(String expectedMsgInCopy, String expectedMsgInMove) throws Exception {
-        String errorMessageForCopy = null;
-        String errorMessageForMove = null;
-        if (areListElementVisible(copyMoveErrorMesgs,15) && copyMoveErrorMesgs.size() == 2){
-            errorMessageForCopy = copyMoveErrorMesgs.get(0).getText();
-            errorMessageForMove = copyMoveErrorMesgs.get(1).getText();
-            if (errorMessageForCopy.contains(expectedMsgInCopy) && errorMessageForMove.contains(expectedMsgInMove)){
-                SimpleUtils.pass("errorMessageInCopy: " + errorMessageForCopy + "\nerrorMessageInMove: " + errorMessageForMove);
-            }else{
-                SimpleUtils.fail("warning message " + errorMessageForCopy + " is not expected!",false);
+        int count = 0;
+        if (areListElementVisible(copyMoveErrorMesgs,15) && copyMoveErrorMesgs.size() > 0){
+            for (WebElement message : copyMoveErrorMesgs) {
+                if (message.getText().equalsIgnoreCase(expectedMsgInCopy) || message.getText().equalsIgnoreCase(expectedMsgInMove)) {
+                    count = count + 1;
+                }
+            }
+            if (count == 2) {
+                SimpleUtils.pass(expectedMsgInCopy + " shows correctly!");
+            } else {
+                SimpleUtils.fail("\"" + expectedMsgInCopy + "\"" + " is not show!", false);
             }
         } else {
             SimpleUtils.fail("No warning message when drag and drop",false);
@@ -13523,17 +13525,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyConfirmBtnIsDisabledForSpecificOption(String optionName) throws Exception {
         try {
+             selectCopyOrMoveByOptionName(optionName);
+             if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage, 5) && confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")) {
+                 SimpleUtils.pass("CONFIRM button is disabled!");
+             } else {
+                 SimpleUtils.fail("CONFIRM button is mot loaded or is not disabled!", false);
+             }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public void selectCopyOrMoveByOptionName(String optionName) throws Exception {
+        try {
             if (areListElementVisible(swapAndAssignOptions,15)&&swapAndAssignOptions.size()==2){
                 if (optionName.equalsIgnoreCase("Copy")){
                     click(swapAndAssignOptions.get(0));
                     waitForSeconds(1);
                     if (!swapAndAssignOptions.get(0).findElement(By.cssSelector(".tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")){
                         SimpleUtils.pass("Copy option selected successfully!");
-                        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage, 5) && confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")) {
-                            SimpleUtils.pass("CONFIRM button is disabled!");
-                        } else {
-                            SimpleUtils.fail("CONFIRM button is mot loaded or is not disabled!", false);
-                        }
                     } else {
                         SimpleUtils.fail("Copy option is not selected", false);
                     }
@@ -13542,17 +13553,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     click(swapAndAssignOptions.get(1));
                     if (!swapAndAssignOptions.get(1).findElement(By.cssSelector(".tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")){
                         SimpleUtils.pass("Move option selected successfully!");
-                        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage, 5) && confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")) {
-                            SimpleUtils.pass("CONFIRM button is disabled!");
-                        } else {
-                            SimpleUtils.fail("CONFIRM button is mot loaded or is not disabled!", false);
-                        }
                     } else {
                         SimpleUtils.fail("Move option is not selected", false);
                     }
                 }
             } else {
-                SimpleUtils.fail("swap and assign options fail to load!",false);
+                SimpleUtils.fail("Copy and move options fail to load!",false);
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

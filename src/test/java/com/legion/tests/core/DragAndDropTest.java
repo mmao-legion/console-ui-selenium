@@ -68,7 +68,8 @@ public class DragAndDropTest extends TestBase {
             // Create schedule if it is not created
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
                 schedulePage.createScheduleForNonDGFlowNewUI();
             }
 
@@ -142,15 +143,12 @@ public class DragAndDropTest extends TestBase {
             schedulePage.dragOneShiftToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
 
             // Verify the warning model pops up
-            String actualWarning = schedulePage.getWarningMessageInDragShiftWarningMode();
-            expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
-                    + ".\nPlease confirm that you want to make this change. " + firstName + "'s current shift will be converted to an open shift.";
+            expectedMessage = firstName + " is scheduled " + shiftInfo.get(6) + " on " + fullWeekDay
+                    + ". This shift will be converted to an open shift";
 
-            if (actualWarning.contains(expectedMessage)) {
-                SimpleUtils.pass("Changing Shift: the message is correct:\n" + expectedMessage);
-            } else {
-                SimpleUtils.warn("The message is incorrect since there is the bug!");
-            }
+            schedulePage.verifyMessageOnCopyMoveConfirmPage(expectedMessage,expectedMessage);
+            schedulePage.selectCopyOrMoveByOptionName("Move");
+            schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
 
             // Verify if Confirm Store opening closing hour window pops up
             schedulePage.verifyConfirmStoreOpenCloseHours();
@@ -160,7 +158,7 @@ public class DragAndDropTest extends TestBase {
             } else {
                 SimpleUtils.fail("MOVE ANYWAY dialog failed to load!", false);
             }
-
+            schedulePage.saveSchedule();
             schedulePage.verifyShiftIsMovedToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
