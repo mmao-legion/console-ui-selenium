@@ -377,7 +377,7 @@ public class LaborModelTest extends TestBase {
                 }
             }
 
-            //Update existing attribute description
+            //Update existing attribute description in global level
             laborModelPage.clickOnEditButton();
             List<String> updatedVal = laborModelPage.clickOnPencilButtonAndUpdateAttribute(attributeName,attributeValueUpdate,attributeDescriptionUpdate);
             laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);

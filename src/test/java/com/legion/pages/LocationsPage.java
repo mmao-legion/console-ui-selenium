@@ -246,7 +246,7 @@ public interface LocationsPage {
 
     public void clickOnSaveButton() throws Exception;
 
-    public void updateLocationLevelExternalAttributes(String attributeName,String attributeValue) throws Exception;
+    public void updateLocationLevelExternalAttributes(String attributeName,String attributeValue,String attributeDescription) throws Exception;
 
     public void clickOnImportBtn();
 

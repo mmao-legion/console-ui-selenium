@@ -3355,22 +3355,25 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-    public void updateLocationLevelExternalAttributes(String attributeName,String attributeValue) throws Exception{
+    public void updateLocationLevelExternalAttributes(String attributeName,String attributeValue,String attributeDescription) throws Exception{
 		if(areListElementVisible(attributesList,5)){
 			for(WebElement attributeRow:attributesList){
 				String attributeNameInList = attributeRow.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
 				if(attributeNameInList.equals(attributeName)){
 					WebElement valueField = attributeRow.findElement(By.cssSelector("td:nth-child(2) input"));
+					WebElement desField = attributeRow.findElement(By.cssSelector("td:nth-child(3) input"));
 					clickTheElement(valueField);
 					valueField.clear();
 					valueField.sendKeys(attributeValue);
+					clickTheElement(desField);
+					desField.clear();
+					desField.sendKeys(attributeDescription);
 					waitForSeconds(5);
 					clickOnSaveButton();
 					break;
 				}
 			}
 		}
-
 	}
 
 	@Override
