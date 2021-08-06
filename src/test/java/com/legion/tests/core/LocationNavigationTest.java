@@ -34,6 +34,7 @@ public class LocationNavigationTest extends TestBase {
 
     public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpperfieldsForDifferentEnterprises.json");
 
+    private static String Location = "Location";
     private static String District = "District";
     private static String Region = "Region";
     private static String BusinessUnit = "Business Unit";
@@ -157,14 +158,14 @@ public class LocationNavigationTest extends TestBase {
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
         if (upperFields.length > 1) {
             SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get("Location").equalsIgnoreCase(locationName)
-                            && selectedUpperFields.get("District").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
-                            && selectedUpperFields.get("Region").equalsIgnoreCase(upperFields[upperFields.length-2].trim()), false);
+                    selectedUpperFields.get(Location).equalsIgnoreCase(locationName)
+                            && selectedUpperFields.get(District).equalsIgnoreCase(upperFields[upperFields.length-1].trim())
+                            && selectedUpperFields.get(Region).equalsIgnoreCase(upperFields[upperFields.length-2].trim()), false);
         } else {
             SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get("Location").equalsIgnoreCase(locationName)
-                            && selectedUpperFields.get("District").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
-                            && selectedUpperFields.get("HQ").equalsIgnoreCase(hQ), false);
+                    selectedUpperFields.get(Location).equalsIgnoreCase(locationName)
+                            && selectedUpperFields.get(District).equalsIgnoreCase(upperFields[upperFields.length-1].trim())
+                            && selectedUpperFields.get(hQ).equalsIgnoreCase(hQ), false);
         }
     }
 
@@ -330,12 +331,12 @@ public class LocationNavigationTest extends TestBase {
         //Verify district is selected in the navigation bar
         if (upperFields.length > 1) {
             SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get("District").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
-                            && selectedUpperFields.get("Region").equalsIgnoreCase(upperFields[upperFields.length-2].trim()), false);
+                    selectedUpperFields.get(District).equalsIgnoreCase(upperFields[upperFields.length-1].trim())
+                            && selectedUpperFields.get(Region).equalsIgnoreCase(upperFields[upperFields.length-2].trim()), false);
         } else {
             SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get("Region").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
-                            && selectedUpperFields.get("HQ").equalsIgnoreCase(hQ), false);
+                    selectedUpperFields.get(Region).equalsIgnoreCase(upperFields[upperFields.length-1].trim())
+                            && selectedUpperFields.get(hQ).equalsIgnoreCase(hQ), false);
         }
         //Verify the DM page loaded
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -464,8 +465,8 @@ public class LocationNavigationTest extends TestBase {
         //Verify the upperfield should be correct
         //Verify district is selected in the navigation bar
         SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                selectedUpperFields.get("Region").equalsIgnoreCase(regionName)
-                        && selectedUpperFields.get("BU").equalsIgnoreCase(bUName), false);
+                selectedUpperFields.get(Region).equalsIgnoreCase(regionName)
+                        && selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(bUName), false);
 
         //Verify the Region page loaded
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -606,7 +607,7 @@ public class LocationNavigationTest extends TestBase {
         String districtName = upperFields[upperFields.length-1].trim();
         //Verify the upperfield should be correct
         SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                selectedUpperFields.get("BU").equalsIgnoreCase(bUName), false);
+                selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(bUName), false);
 
         //Verify the BU page loaded
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();

@@ -91,11 +91,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
-    
+
     public ConsoleLocationSelectorPage(){
         PageFactory.initElements(getDriver(), this);
     }
-    
+
     @Override
     public Boolean isChangeLocationButtonLoaded() throws Exception
     {
@@ -193,22 +193,22 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             activeConsoleName = activeConsoleMenuItem.getText();
             setScreenshotConsoleName(activeConsoleName);
             if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
-                        if (isElementLoaded(locationSelectorButton, 10)){
-                            click(locationSelectorButton);
-                        }
-                        List<WebElement> locationItems = new ArrayList<>();
-                        if (areListElementVisible(districtAndLocationDropDownList, 5) && districtAndLocationDropDownList.size() == 2){
-                            locationItems = districtAndLocationDropDownList.get(1).findElements(By.cssSelector("div.lg-search-options__option"));
-                        }
-                        if (areListElementVisible(locationItems, 10) || isElementLoaded(locationDropDownButton)) {
-                            if (locationItems.size() > 0) {
-                                        click(locationItems.get(index));
-                                        SimpleUtils.pass("Location changed successfully to '" + locationButton.getText()+ "'");
-                                } else
-                                SimpleUtils.report("There is no location for this district");
-                        }
-                 }
-            } catch (Exception e) {
+                if (isElementLoaded(locationSelectorButton, 10)){
+                    click(locationSelectorButton);
+                }
+                List<WebElement> locationItems = new ArrayList<>();
+                if (areListElementVisible(districtAndLocationDropDownList, 5) && districtAndLocationDropDownList.size() == 2){
+                    locationItems = districtAndLocationDropDownList.get(1).findElements(By.cssSelector("div.lg-search-options__option"));
+                }
+                if (areListElementVisible(locationItems, 10) || isElementLoaded(locationDropDownButton)) {
+                    if (locationItems.size() > 0) {
+                        click(locationItems.get(index));
+                        SimpleUtils.pass("Location changed successfully to '" + locationButton.getText()+ "'");
+                    } else
+                        SimpleUtils.report("There is no location for this district");
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -229,36 +229,36 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             waitForSeconds(30);
             upperFieldSearchInput.sendKeys(Keys.ENTER);
         }else
-           SimpleUtils.fail("Location search input filed load failed",true);
+            SimpleUtils.fail("Location search input filed load failed",true);
     }
 
     @Override
     public Boolean isLocationSelected(String locationName)
     {
-    	try {
-    		if(isChangeLocationButtonLoaded()) {
+        try {
+            if(isChangeLocationButtonLoaded()) {
                 if(locationSelectorButton.getText().contains(locationName)) {
                     return true;
                 }
             }
-    	}
-    	catch(Exception e) {
-    		SimpleUtils.fail("Change Location Button not loaded!", true);
-    	}
+        }
+        catch(Exception e) {
+            SimpleUtils.fail("Change Location Button not loaded!", true);
+        }
 
         return false;
     }
 
     public String getCurrentUserLocation() throws Exception
     {
-    	String selectedLocation = "";
-    	if(isElementLoaded(dashboardSelectedLocationText)) {
-    		selectedLocation = dashboardSelectedLocationText.getText();
-    	}
-    	else {
-        	SimpleUtils.fail("Active Location not appear on Dashboard!", false);
-    	}
-    	return selectedLocation;
+        String selectedLocation = "";
+        if(isElementLoaded(dashboardSelectedLocationText)) {
+            selectedLocation = dashboardSelectedLocationText.getText();
+        }
+        else {
+            SimpleUtils.fail("Active Location not appear on Dashboard!", false);
+        }
+        return selectedLocation;
     }
 
     //added by Gunjan
@@ -976,20 +976,20 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         try {
             if (activeConsoleMenuItem.getText().contains(dashboardConsoleMenuText)) {
                 if (isChangeDistrictButtonLoaded()) {
-                        if(isElementLoaded(districtSelectorButton, 10)){
-                            click(districtSelectorButton);
-                        }
-                        if (isElementLoaded(districtDropDownButton, 5)) {
-                            if (availableDistrictCardsName.size() != 0) {
-                                for (WebElement districtCardName : availableDistrictCardsName) {
-                                    if (!districtCardName.getText().contains(districtName)) {
-                                        clickTheElement(districtCardName);
-                                        SimpleUtils.pass("District changed successfully to '" + districtCardName.getText() + "'");
-                                        break;
-                                    }
+                    if(isElementLoaded(districtSelectorButton, 10)){
+                        click(districtSelectorButton);
+                    }
+                    if (isElementLoaded(districtDropDownButton, 5)) {
+                        if (availableDistrictCardsName.size() != 0) {
+                            for (WebElement districtCardName : availableDistrictCardsName) {
+                                if (!districtCardName.getText().contains(districtName)) {
+                                    clickTheElement(districtCardName);
+                                    SimpleUtils.pass("District changed successfully to '" + districtCardName.getText() + "'");
+                                    break;
                                 }
                             }
                         }
+                    }
                 }
             } else {
                 WebElement dashboardConsoleMenu = SimpleUtils.getSubTabElement(consoleMenuItems, dashboardConsoleMenuText);
@@ -1158,7 +1158,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             return true;
         }else
             SimpleUtils.fail("Magnifying glass icon load failed",false);
-            return false;
+        return false;
     }
 
     @Override
@@ -1168,7 +1168,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             click(magnifyGlassIcon);
             if (areListElementVisible(upperFieldsInResentView,5) && upperFieldsInResentView.size()>0 ) {
                 for (WebElement each:upperFieldsInResentView
-                     ) {
+                ) {
                     resentViewList.add(each.getText());
                 }
                 return resentViewList;
@@ -1297,7 +1297,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             return true;
         }else
             SimpleUtils.fail("HQ view load failed in navigation bar",false);
-            return false;
+        return false;
     }
     @FindBy(css = "div.console-navigation>div")
     private List<WebElement> tabsName;
@@ -1312,7 +1312,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             return tabsText;
         }else
             SimpleUtils.fail("Login failed",false);
-            return null;
+        return null;
     }
 
     @FindBy(className = "nodata-content")
@@ -1377,14 +1377,14 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             SimpleUtils.fail("Unable to change location! Get Exception: " + e.toString(), false);
         }
     }
-    
+
     public boolean isCurrentPageEmptyInHQView() throws Exception {
         if (isElementLoaded(noData,5)) {
             SimpleUtils.pass("Empty page show well");
             return true;
         }else
             SimpleUtils.fail("It's not empty page",false);
-            return false;
+        return false;
     }
 
     @Override
@@ -1412,7 +1412,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             return navigatorText;
         }else
             SimpleUtils.fail("Location navigator load failed",false);
-            return null;
+        return null;
     }
 
     @FindBy(css = "lg-select[search-hint='Search Region'] div>input-field div.input-faked")
@@ -1436,7 +1436,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                 selectedUpperFields.put("Region", regionSelectorButton.getText());
             }
             if (isElementLoaded(buSelectorButton, 5)) {
-                selectedUpperFields.put("BU",buSelectorButton.getText());
+                selectedUpperFields.put("Business Unit",buSelectorButton.getText());
             }
             if (isElementLoaded(hqSelectorButton, 5)){
                 selectedUpperFields.put("HQ", hqSelectorButton.getText());
@@ -1534,4 +1534,24 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
 
     }
+
+    public List<String> getAllUpperFieldNamesInUpperFieldDropdownList(String upperFieldType) throws Exception {
+        List<String> upperFieldNames = new ArrayList<>();
+        WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));;
+        click(upperFieldSelectorButton);
+        WebElement upperFieldDropDownButton = getDriver().findElement(By.cssSelector("[search-hint=\"Search " +
+                upperFieldType + "\"] div.lg-search-options"));
+        if (isElementLoaded(upperFieldDropDownButton, 5)) {
+            availableLocationCardsName = getDriver().findElements(By.cssSelector("[class=\"lg-picker-input__wrapper lg-ng-animate\"] div.lg-search-options__option"));
+            if (availableLocationCardsName.size() != 0) {
+                for (WebElement upperFieldCardName : availableLocationCardsName) {
+                    upperFieldNames.add(upperFieldCardName.getText());
+                    SimpleUtils.pass("Get upper filed name successfully! ");
+                }
+            } else
+                SimpleUtils.fail("The upper field name fail to load! ", false);
+        }
+        return upperFieldNames;
+    }
+
 }

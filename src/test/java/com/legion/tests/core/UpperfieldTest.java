@@ -10,6 +10,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import com.sun.xml.internal.ws.policy.EffectiveAlternativeSelector;
 import org.openqa.selenium.By;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -25,6 +26,9 @@ public class UpperfieldTest extends TestBase {
     private static String District = "District";
     private static String Region = "Region";
     private static String BusinessUnit = "Business Unit";
+
+    String[] upperFields2 = districtsMap.get("Coffee_Enterprise2").split(">");
+    String[] upperFields3 = districtsMap.get("Coffee_Enterprise3").split(">");
 
     @Override
     @BeforeMethod()
@@ -50,13 +54,13 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             // Validate the title
             dashboardPage.verifyHeaderOnDashboard();
-            locationSelectorPage.verifyTheDisplayBUWithSelectedBUConsistent(selectedUpperFields.get("BU"));
+            locationSelectorPage.verifyTheDisplayBUWithSelectedBUConsistent(selectedUpperFields.get(BusinessUnit));
             locationSelectorPage.isBUView();
 
             // Validate the presence of BU
@@ -73,7 +77,7 @@ public class UpperfieldTest extends TestBase {
             // Validate changing BUs on Dashboard
             locationSelectorPage.changeAnotherBUInBUView();
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            String buName = selectedUpperFields.get("BU");
+            String buName = selectedUpperFields.get(BusinessUnit);
             String buOnDashboard = dashboardPage.getUpperfieldNameOnDashboard();
             if (buName.equals(buOnDashboard))
                 SimpleUtils.pass("Dashboard Page: When the user selects a different BU from the BU view, the data updates to reflect the selected BU");
@@ -144,7 +148,7 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             // Validate the presence of Refresh button
             dashboardPage.validateThePresenceOfRefreshButtonUpperfield();
@@ -214,7 +218,7 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully", dashboardPage.isProjectedComplianceWidgetDisplay(), false);
 
@@ -223,7 +227,7 @@ public class UpperfieldTest extends TestBase {
 
             // Validate the data in Projected Compliance widget without TA
             String totalViolationHrsFromProjectedComplianceWidget =
-            dashboardPage.getTheTotalViolationHrsFromProjectedComplianceWidget();
+                    dashboardPage.getTheTotalViolationHrsFromProjectedComplianceWidget();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             dashboardPage.clickOnViewComplianceLink();
             String totalViolationHrsFromCompliancePage =
@@ -284,7 +288,7 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             SimpleUtils.assertOnFail("Timesheet Approval Rate widget not loaded successfully", dashboardPage.isTimesheetApprovalRateWidgetDisplay(), false);
 
@@ -358,7 +362,7 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             SimpleUtils.assertOnFail("Schedule Publish Status widget not loaded successfully", dashboardPage.isSchedulePublishStatusWidgetDisplay(), false);
 
@@ -412,7 +416,6 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule status on Schedule Publish Status widget and Schedule region view page are different! ",
                     scheduleStatusFromSchedulePublishStatusWidget.equals(scheduleStatusFromScheduleDMViewPage), false);
 
-
             // Validate status value in Schedule Publish Status widget without TA
             dashboardPage.navigateToDashboard();
             dashboardPage.validateTooltipsOfSchedulePublishStatusWidget();
@@ -436,7 +439,7 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             // Set 'Apply labor budget to schedules?' to No
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -666,6 +669,141 @@ public class UpperfieldTest extends TestBase {
             } else {
                 SimpleUtils.fail("Data is incorrect!",false);
             }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Region View Navigation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRegionViewNavigationAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.isRegionView();
+
+            //Validate user has see multiple regions in upperfield dropdown list
+            List<String> upperFieldNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList(Region);
+            SimpleUtils.assertOnFail("The selected region should display in the search region dropdown list!", upperFieldNames.contains(selectedUpperFields.get(Region)), false);
+
+            //Validate drilling into a district
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            locationSelectorPage.isDMView();
+
+            //Validate navigating back to region view
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.isRegionView();
+
+            //Validate navigating back to region view
+            SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
+
+            //Validate changing regions
+            String regionName2 = upperFields2[upperFields2.length-2].trim();
+            String districtName2 = upperFields2[upperFields2.length-1].trim();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName2);
+            SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName2);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            SimpleUtils.assertOnFail("The selected region display incorrectly! The expected region is: " + regionName2 +
+                            " . The actual region name is " + selectedUpperFields.get(Region),
+                    selectedUpperFields.get(Region).equalsIgnoreCase(regionName2), false);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            //Validate changing dates and district
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            locationSelectorPage.isDMView();
+            schedulePage.navigateToNextWeek();
+            String selectedWeekInfo = schedulePage.getSelectedWeek();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            SimpleUtils.assertOnFail("The selected week should not been changed after change to region view from DM view! ",
+                    schedulePage.getSelectedWeek().equalsIgnoreCase(selectedWeekInfo), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "BU View Navigation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyBUViewNavigationAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            //Validate user has access to multiple BUs in upperfield dropdown list
+            List<String> upperFieldNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList(BusinessUnit);
+            SimpleUtils.assertOnFail("The selected region should display in the search region dropdown list!",
+                    upperFieldNames.contains(buName), false);
+
+            //Validate drilling into a region
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.isRegionView();
+
+            //Validate navigating back to BU view
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            locationSelectorPage.isBUView();
+
+            SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
+
+            //Validate changing BUs
+            String buName2 = upperFields3[upperFields3.length-3].trim();
+            String regionName2 = upperFields3[upperFields3.length-2].trim();
+            String districtName2 = upperFields3[upperFields3.length-1].trim();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName2);
+            SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName2);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            SimpleUtils.assertOnFail("The selected BU display incorrectly! The expected BU is: " + buName2 +
+                            " . The actual BU name is " + selectedUpperFields.get(BusinessUnit),
+                    selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(buName2), false);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            //Validate changing dates and district
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            schedulePage.navigateToNextWeek();
+            String selectedWeekInfo = schedulePage.getSelectedWeek();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            SimpleUtils.assertOnFail("The selected week should not been changed after change to BU view from region view! ",
+                    schedulePage.getSelectedWeek().equalsIgnoreCase(selectedWeekInfo), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
