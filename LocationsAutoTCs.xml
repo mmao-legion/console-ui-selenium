@@ -32,6 +32,7 @@
                     <include name="verifyDefaultValueOfExternalAttributesInLocationLevel"/>
                     <include name="verifyUpdateExternalAttributesInLocationLevel"/>
                     <include name="verifyExternalAttributeE2E"/>
+                    <include name="verifyLocationLevelExternalAttributesDescription"/>
                 </methods>
             </class>
         </classes>

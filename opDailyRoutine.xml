@@ -46,6 +46,7 @@
                     <include name="verifyOverriddenAssignmentRulesInLocationLevel" />
                     <include name="verifyOverriddenOperatingHoursInLocationLevel" />
                     <include name="verifyDefaultValueOfExternalAttributesInLocationLevel"/>
+                    <include name="verifyLocationLevelExternalAttributesDescription"/>
 
 
                 </methods>
