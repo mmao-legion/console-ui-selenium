@@ -175,6 +175,15 @@ public class PrepareSettingsTest extends TestBase {
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
             configurationPage.publishNowTheTemplate();
 
+            String wfsName = "Rest";
+            cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.setWFS("Yes");
+            configurationPage.selectWFSGroup(wfsName);
+            configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
+            configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+            configurationPage.publishNowTheTemplate();
+
             //Set buffer hours on OP: before--2, after--3
             configurationPage.goToConfigurationPage();
             controlsNewUIPage.clickOnControlsOperatingHoursSection();

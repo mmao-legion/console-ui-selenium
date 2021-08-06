@@ -15590,7 +15590,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(filterPopup,5)) {
             String shiftTypeFilterKey = "shifttype";
             ArrayList<WebElement> shiftTypeFilters = getAvailableFilters().get(shiftTypeFilterKey);
-            if (shiftTypeFilters.size() >= 8) {
+            if (shiftTypeFilters.size() >= 7) {
                 if (shiftTypeFilters.get(0).getText().contains("Action Required")
                         && shiftTypeFilters.get(1).getText().contains("Assigned")
                         && shiftTypeFilters.get(2).getText().contains("Compliance Review")
@@ -15598,9 +15598,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         && shiftTypeFilters.get(4).getText().contains("Unavailable")
                         && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
                         && shiftTypeFilters.get(6).getText().contains("Unpublished changes")
-                        && shiftTypeFilters.get(7).getText().contains("New or Borrowed TM")
-                        && (shiftTypeFilters.size()> 8? (shiftTypeFilters.get(8).getText().contains("Minor (14-15)") ||
-                        shiftTypeFilters.get(8).getText().contains("Minor (16-17)")): true)){
+//                        && shiftTypeFilters.get(7).getText().contains("New or Borrowed TM")
+                        && (shiftTypeFilters.size()> 7? (shiftTypeFilters.get(7).getText().contains("Minor (14-15)") ||
+                        shiftTypeFilters.get(7).getText().contains("Minor (16-17)")): true)){
                     SimpleUtils.pass("The shift types display correctly in Filter dropdown list! ");
                 } else
                     SimpleUtils.fail("The shift types display incorrectly in Filter dropdown list! ", false);

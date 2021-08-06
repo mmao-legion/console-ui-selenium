@@ -414,6 +414,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(5000);
             schedulePage.clickCreateScheduleBtn();
             if (option.equalsIgnoreCase("Yes, except opening/closing shifts")) {
                 schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "10:00AM", "09:00PM");
@@ -1341,7 +1342,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option);
-
             HashMap<String, Object[][]> teamMembers = null;
             if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
                 teamMembers = kendraScott2TeamMembers;
