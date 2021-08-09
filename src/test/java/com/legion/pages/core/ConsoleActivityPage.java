@@ -3,6 +3,7 @@ package com.legion.pages.core;
 import com.legion.pages.ActivityPage;
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
+import com.legion.tests.core.ActivityTest;
 import com.legion.utils.SimpleUtils;
 import org.junit.rules.ExpectedException;
 import org.openqa.selenium.By;
@@ -477,6 +478,9 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                 }
                 // Wait for the card to change the status message, such as approved or rejected
                 waitForSeconds(3);
+                //refresh the filter and can see the approved or reject info.
+				clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ProfileUpdate.getValue(), ActivityTest.indexOfActivityType.ProfileUpdate.name());
+				clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ProfileUpdate.getValue(), ActivityTest.indexOfActivityType.ProfileUpdate.name());
                 if (areListElementVisible(activityCards, 15)) {
                     approveOrRejectMessage = activityCards.get(0).findElement(By.className("notification-approved")).getText();
                     if (approveOrRejectMessage != null && approveOrRejectMessage.toLowerCase().contains(action.toLowerCase())) {

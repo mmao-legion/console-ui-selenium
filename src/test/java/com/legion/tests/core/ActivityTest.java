@@ -1811,17 +1811,22 @@ public class ActivityTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM requests availability from a week onwards")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin(String browser, String username, String password, String location) {
+    public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsTeamMember(String browser, String username, String password, String location) throws Exception{
         try {
-            // Login with Store Manager Credentials
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String requestUserName = profileNewUIPage.getNickNameFromProfile();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
             // Set availability policy
+
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            String respondUserName = profileNewUIPage.getNickNameFromProfile();
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             controlsPage.gotoControlsPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
 
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             controlsPage.gotoControlsPage();
@@ -1833,19 +1838,6 @@ public class ActivityTest extends TestBase {
             controlsNewUIPage.clickOnGlobalLocationButton();
             String isApprovalRequired = "Required for all changes";
             controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            loginPage.logOut();
-
-            //Login as Team Member to change availability
-            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String requestUserName = profileNewUIPage.getNickNameFromProfile();
-            loginPage.logOut();
-
-            // Login as Internal Admin again
-            loginToLegionAndVerifyIsLoginDone(username, password, location);
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
             // Go to Team Roster, search the team member
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -1858,6 +1850,7 @@ public class ActivityTest extends TestBase {
             loginPage.logOut();
 
             // Login as Team Member again
+            //Login as Team Member to change availability
             loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             profileNewUIPage.getNickNameFromProfile();
@@ -1879,7 +1872,6 @@ public class ActivityTest extends TestBase {
 
             // Login as Store Manager again to check message
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-            String respondUserName = profileNewUIPage.getNickNameFromProfile();
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
