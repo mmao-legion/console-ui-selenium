@@ -1056,8 +1056,14 @@ public class DragAndDropTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUI();
             //edit schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.deleteTMShiftInWeekView("Open");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Action Required");
+            schedulePage.deleteTMShiftInWeekView("");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Open");
+            schedulePage.deleteTMShiftInWeekView("");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> shiftInfo = new ArrayList<>();
