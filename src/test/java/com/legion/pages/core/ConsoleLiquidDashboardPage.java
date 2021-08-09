@@ -844,14 +844,16 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         }
     }
 
-    @FindBy (css = ".dms-number-x-large")
+    @FindBy (css = ".sc-gpEJdM.jdQeRJ")
     private List<WebElement> dataOnComplianceWidget;
     @Override
     public List<String> getDataOnComplianceViolationWidget() throws Exception {
         List<String> resultList= new ArrayList<String>();
         if (areListElementVisible(dataOnComplianceWidget,10)){
+
             for (int i=0;i<dataOnComplianceWidget.size();i++){
-                resultList.add(dataOnComplianceWidget.get(i).getText());
+                String numberOnComplianceWidget = dataOnComplianceWidget.get(i).findElement(By.cssSelector("div")).getText();
+                resultList.add(numberOnComplianceWidget);
             }
         } else {
             SimpleUtils.fail("data on Compliance violation widget fail to load!",true);

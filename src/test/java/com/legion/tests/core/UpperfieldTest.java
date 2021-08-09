@@ -947,4 +947,227 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify analytics table on Compliance in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance page not loaded successfully", compliancePage.isCompliancePageLoaded(), false);
+
+            // Validate the field names in analytics table
+            compliancePage.verifyFieldNamesInAnalyticsTable(Region);
+
+            // Validate the field columns can be ordered
+            compliancePage.verifySortByColForLocationsInDMView(1);
+            compliancePage.verifySortByColForLocationsInDMView(2);
+            compliancePage.verifySortByColForLocationsInDMView(3);
+            compliancePage.verifySortByColForLocationsInDMView(4);
+            compliancePage.verifySortByColForLocationsInDMView(5);
+            compliancePage.verifySortByColForLocationsInDMView(6);
+            compliancePage.verifySortByColForLocationsInDMView(7);
+            compliancePage.verifySortByColForLocationsInDMView(8);
+
+            // Validate the data of analytics table for past week.
+            compliancePage.navigateToPreviousWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for past week successfully",compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInBUViewForPast = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(regionName);
+            String totalExtraHoursInBUView = dataInBUViewForPast.get(0);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            String totalHrsInRegionViewForPast = compliancePage.getTheTotalViolationHrsFromSmartCard().split(" ")[0];
+            SimpleUtils.report("Total Extra Hours In BU View for past week is "+totalExtraHoursInBUView);
+            SimpleUtils.report("Total Extra Hours In Region View for past week is "+totalHrsInRegionViewForPast);
+            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the past week's data",
+                    totalHrsInRegionViewForPast.equals(String.valueOf(Math.round(Float.parseFloat(totalExtraHoursInBUView)))), false);
+
+            // Validate the data of analytics table for current week.
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            compliancePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for current week successfully",
+                    compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInDMForCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(regionName);
+            String totalExtraHoursInBUViewForCurrent = dataInDMForCurrent.get(0);
+
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            List<String> dataInRegionForCurrent  = liquidDashboardPage.getDataOnComplianceViolationWidget();
+            String totalHrsInRegionForCurrent = dataInRegionForCurrent.get(0);
+
+            SimpleUtils.report("Total Extra Hours In BU View for current week is " + totalExtraHoursInBUViewForCurrent);
+            SimpleUtils.report("Total Extra Hours In Region View for current week is " + totalHrsInRegionForCurrent);
+            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the current week's data",
+                    totalHrsInRegionForCurrent.equals(String.valueOf(Math.round(Float.parseFloat((totalExtraHoursInBUViewForCurrent))))), false);
+
+            // Validate the data of analytics table for future week
+            compliancePage.clickOnComplianceConsoleMenu();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            compliancePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for future week successfully",compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInBUForFuture = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(regionName);
+            String totalExtraHoursInBUViewForFuture = dataInBUForFuture.get(0);
+            SimpleUtils.report("Total Extra Hours In DM View for future week is " + totalExtraHoursInBUViewForFuture);
+            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the future week's data",
+                    totalExtraHoursInBUViewForFuture.equals("0"), false);
+
+
+            // Validate Late Schedule is Yes or No
+            compliancePage.navigateToPreviousWeek();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            Thread.sleep(2000);
+            controlsNewUIPage.updateDaysInAdvancePublishSchedulesInSchedulingPolicies("7");
+
+            compliancePage.clickOnComplianceConsoleMenu();
+            List<String>  dataCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(regionName);
+            String lateScheduleYes = dataCurrent.get(dataCurrent.size()-1);
+
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            List<String> upperFieldNames = compliancePage.getAllUpperFieldNamesOnAnalyticsTable();
+            List<String> schedulePublishedOnTime = new ArrayList<>();
+            for (String upperFieldName: upperFieldNames){
+                dataCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(upperFieldName);
+                schedulePublishedOnTime.add(dataCurrent.get(dataCurrent.size()-1));
+            }
+
+            if (lateScheduleYes.equals("Yes"))
+                SimpleUtils.assertOnFail("Compliance Page: Late Schedule is not Yes", !schedulePublishedOnTime.contains("No"), false);
+            else
+                SimpleUtils.assertOnFail("Compliance Page: Late Schedule is not contain No", schedulePublishedOnTime.contains("No"),false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify analytics table on Compliance in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String regionName = upperFields2[upperFields2.length-2].trim();
+            String districtName = upperFields2[upperFields2.length-1].trim();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance page not loaded successfully",
+                    compliancePage.isCompliancePageLoaded(), false);
+
+            // Validate the field names in analytics table
+            compliancePage.verifyFieldNamesInAnalyticsTable(District);
+
+            // Validate the field columns can be ordered
+            compliancePage.verifySortByColForLocationsInDMView(1);
+            compliancePage.verifySortByColForLocationsInDMView(2);
+            compliancePage.verifySortByColForLocationsInDMView(3);
+            compliancePage.verifySortByColForLocationsInDMView(4);
+            compliancePage.verifySortByColForLocationsInDMView(5);
+            compliancePage.verifySortByColForLocationsInDMView(6);
+            compliancePage.verifySortByColForLocationsInDMView(7);
+            compliancePage.verifySortByColForLocationsInDMView(8);
+
+            // Validate the data of analytics table for past week.
+            compliancePage.navigateToPreviousWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for past week successfully",compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInRegionViewForPast = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(districtName);
+            String totalExtraHoursInRegionView = dataInRegionViewForPast.get(0);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            String totalHrsInDistrictViewForPast = compliancePage.getTheTotalViolationHrsFromSmartCard().split(" ")[0];
+            SimpleUtils.report("Total Extra Hours In Region View for past week is "+totalExtraHoursInRegionView);
+            SimpleUtils.report("Total Extra Hours In District View for past week is "+totalHrsInDistrictViewForPast);
+//            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the past week's data",                           //Blocked by https://legiontech.atlassian.net/browse/SCH-4937
+//                    totalHrsInDistrictViewForPast.equals
+//                            (String.valueOf(Math.round(Float.parseFloat(totalExtraHoursInRegionView.replace(",",""))))), false);
+
+            // Validate the data of analytics table for current week.
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            compliancePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for current week successfully",
+                    compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInRegionForCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(districtName);
+            String totalExtraHoursInRegionViewForCurrent = dataInRegionForCurrent.get(0);
+
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            List<String> dataInDistrictForCurrent  = liquidDashboardPage.getDataOnComplianceViolationWidget();
+            String totalHrsInDistrictForCurrent = dataInDistrictForCurrent.get(0);
+
+            SimpleUtils.report("Total Extra Hours In BU View for current week is " + totalExtraHoursInRegionViewForCurrent);
+            SimpleUtils.report("Total Extra Hours In Region View for current week is " + totalHrsInDistrictForCurrent);
+            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the current week's data",
+                    totalHrsInDistrictForCurrent.equals(String.valueOf(Math.round(Float.parseFloat((totalExtraHoursInRegionViewForCurrent))))), false);
+
+            // Validate the data of analytics table for future week
+            compliancePage.clickOnComplianceConsoleMenu();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            compliancePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for future week successfully",
+                    compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInRegionForFuture = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(districtName);
+            String totalExtraHoursInRegionViewForFuture = dataInRegionForFuture.get(0);
+            SimpleUtils.report("Total Extra Hours In Region View for future week is " + totalExtraHoursInRegionViewForFuture);
+            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the future week's data",
+                    totalExtraHoursInRegionViewForFuture.equals("0"), false);
+
+
+            // Validate Late Schedule is Yes or No
+            compliancePage.navigateToPreviousWeek();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            Thread.sleep(2000);
+            controlsNewUIPage.updateDaysInAdvancePublishSchedulesInSchedulingPolicies("7");
+
+            compliancePage.clickOnComplianceConsoleMenu();
+            List<String>  dataCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(districtName);
+            String lateScheduleYes = dataCurrent.get(dataCurrent.size()-1);
+
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            List<String> upperFieldNames = compliancePage.getAllUpperFieldNamesOnAnalyticsTable();
+            List<String> schedulePublishedOnTime = new ArrayList<>();
+            for (String upperFieldName: upperFieldNames){
+                dataCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(upperFieldName);
+                schedulePublishedOnTime.add(dataCurrent.get(dataCurrent.size()-1));
+            }
+
+            if (lateScheduleYes.equals("Yes"))
+                SimpleUtils.assertOnFail("Compliance Page: Late Schedule is not Yes", !schedulePublishedOnTime.contains("No"), false);
+            else
+                SimpleUtils.assertOnFail("Compliance Page: Late Schedule is not contain No", schedulePublishedOnTime.contains("No"),false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

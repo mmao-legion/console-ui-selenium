@@ -500,9 +500,9 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     private WebElement analyticsTableHeader;
 
     @Override
-    public void verifyFieldNamesInAnalyticsTable() throws Exception {
+    public void verifyFieldNamesInAnalyticsTable(String upperFieldType) throws Exception {
         /*It should include:
-        - Location
+        - UpperField
         - Total Extra Hours
         - Overtime (Hrs)
         - Clopening (Hrs)
@@ -511,7 +511,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         - Doubletime (Hrs)
         - Late Schedule?*/
         boolean isMatched = false;
-        List<String> fieldNamesExpected = Arrays.asList(new String[]{"Location", "Total Extra Hours", "Overtime (Hrs)", "Clopening (Hrs)", "Missed Meal", "Schedule Changed", "Doubletime (Hrs)", "Late Schedule?"});
+        List<String> fieldNamesExpected = Arrays.asList(new String[]{upperFieldType, "Extra Hours", "Overtime", "Clopening", "Missed Meal", "Schedule Changed Premium", "Double Time", "Schedule Published On Time"});
         if (isElementLoaded(analyticsTableHeader,10)) {
             List<WebElement> fields = analyticsTableHeader.findElements(By.xpath("./div"));
             for (WebElement field: fields) {
@@ -601,10 +601,13 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         return result;
     }
 
+    @FindBy (css = ".analytics-new-table-header div")
+    private List<WebElement> analyticsTableHeaders;
+
     private int getNumOfColInDMViewTable() throws Exception {
         int num = 0;
-        if (isElementLoaded(analyticsTableHeader, 10)){
-            num = analyticsTableHeader.getText().split("\n").length;
+        if (areListElementVisible(analyticsTableHeaders, 20)){
+            num = analyticsTableHeaders.size();
         } else {
             SimpleUtils.fail("Table header fail to load!", false);
         }
@@ -646,11 +649,29 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     private WebElement analyticsTableInComplianceDMViewPage;
 
     @Override
-    public boolean isComplianceDMView() throws Exception {
+    public boolean isComplianceUpperFieldView() throws Exception {
         boolean result = false;
         if (isElementLoaded(analyticsTableInComplianceDMViewPage, 10)) {
             result = true;
         }
         return result;
     }
+
+    @FindBy(css = ".analytics-new-table-group-row-open [jj-switch-when=\"cells.CELL_UNTOUCHED\"] span")
+    private List<WebElement> upperFieldNamesOnAnalyticsTable;
+
+    @Override
+    public List<String> getAllUpperFieldNamesOnAnalyticsTable() throws Exception {
+        List<String> upperFieldNames = new ArrayList<>();
+        if (areListElementVisible(upperFieldNamesOnAnalyticsTable, 10)) {
+            for (WebElement upperFieldName: upperFieldNamesOnAnalyticsTable){
+                upperFieldNames.add(upperFieldName.getText());
+                SimpleUtils.pass("Add upper field name: "+ upperFieldName.getText() +" successfully! ");
+            }
+        } else
+            SimpleUtils.fail("Upper field names fail to load on analytics table", false);
+        return upperFieldNames;
+    }
+
+
 }

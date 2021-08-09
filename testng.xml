@@ -539,7 +539,8 @@
                         <include name="verifyBUViewNavigationAsInternalAdmin" />
                         <include name="verifyControlsInBUViewAsInternalAdmin" />
                         <include name="verifyControlsInRegionViewAsInternalAdmin" />
-
+                        <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>
