@@ -537,6 +537,8 @@
                         <!-- Added by Mary -->
 <!--                        <include name="verifyRegionViewNavigationAsInternalAdmin" /> Blocked by SCH-4910 -->
                         <include name="verifyBUViewNavigationAsInternalAdmin" />
+                        <include name="verifyControlsInBUViewAsInternalAdmin" />
+                        <include name="verifyControlsInRegionViewAsInternalAdmin" />
 
                     </methods>
                 </class>

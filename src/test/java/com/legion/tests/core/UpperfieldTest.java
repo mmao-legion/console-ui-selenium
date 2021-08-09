@@ -22,6 +22,7 @@ import java.util.Map;
 
 public class UpperfieldTest extends TestBase {
 
+    private static String Location = "Location";
     private static String District = "District";
     private static String Region = "Region";
     private static String BusinessUnit = "Business Unit";
@@ -803,6 +804,145 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             SimpleUtils.assertOnFail("The selected week should not been changed after change to BU view from region view! ",
                     schedulePage.getSelectedWeek().equalsIgnoreCase(selectedWeekInfo), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Controls in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyControlsInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            //Validate Controls existing from BU view
+            SimpleUtils.assertOnFail("Controls menu tab should be available on BU view",
+                    !dashboardPage.isConsoleNavigationBarIsGray("Controls"), false);
+
+            //Validate navigate to Controls from BU view
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page fail to load! ",
+                    controlsNewUIPage.isControlsPageLoaded(), false);
+            //Title: Controls Global > All Locations
+            controlsNewUIPage.getCurrentLocationInControls().equalsIgnoreCase("All Locations");
+
+            //Validate week navigation in BU View getting updated based on schedule planning window settings
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateSchedulePlanningWindow("5 weeks", false, true);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            String weekInfo = "";
+            String selectedWeekInfo = schedulePage.getSelectedWeek();
+            int i = 0;
+            while (!weekInfo.equalsIgnoreCase(selectedWeekInfo) && schedulePage.hasNextWeek()){
+                weekInfo = schedulePage.getSelectedWeek();
+                schedulePage.navigateToNextWeek();
+                selectedWeekInfo = schedulePage.getSelectedWeek();
+                i++;
+            }
+            SimpleUtils.assertOnFail("The week navigation in BU View should get updated to " +
+                    "5 weeks based on schedule planning window settings for Schedule, but the actual weeks are: " + i,
+                    i==5, false);
+
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+
+            weekInfo = "";
+            selectedWeekInfo = schedulePage.getSelectedWeek();
+            i = 0;
+            while (!weekInfo.equalsIgnoreCase(selectedWeekInfo)&& schedulePage.hasNextWeek()){
+                weekInfo = schedulePage.getSelectedWeek();
+                schedulePage.navigateToNextWeek();
+                selectedWeekInfo = schedulePage.getSelectedWeek();
+                i++;
+            }
+            SimpleUtils.assertOnFail("The week navigation in BU View should get updated to be " +
+                            "5 weeks based on schedule planning window settings for Compliance, but the actual weeks are: " + i,
+                    i==5, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Controls in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyControlsInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            //Validate Controls existing from Region view
+            SimpleUtils.assertOnFail("Controls menu tab should be available on Region view",
+                    !dashboardPage.isConsoleNavigationBarIsGray("Controls"), false);
+
+            //Validate navigate to Controls from Region view
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page fail to load! ",
+                    controlsNewUIPage.isControlsPageLoaded(), false);
+            //Title: Controls Global > All Locations
+            controlsNewUIPage.getCurrentLocationInControls().equalsIgnoreCase("All Locations");
+
+            //Validate week navigation in Region View getting updated based on schedule planning window settings
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateSchedulePlanningWindow("5 weeks", false, true);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            String weekInfo = "";
+            String selectedWeekInfo = schedulePage.getSelectedWeek();
+            int i = 0;
+            while (!weekInfo.equalsIgnoreCase(selectedWeekInfo) && schedulePage.hasNextWeek()){
+                weekInfo = schedulePage.getSelectedWeek();
+                schedulePage.navigateToNextWeek();
+                selectedWeekInfo = schedulePage.getSelectedWeek();
+                i++;
+            }
+            SimpleUtils.assertOnFail("The week navigation in Region View should get updated to " +
+                            "5 weeks based on schedule planning window settings for Schedule, but the actual weeks are: " + i,
+                    i==5, false);
+
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+
+            weekInfo = "";
+            selectedWeekInfo = schedulePage.getSelectedWeek();
+            i = 0;
+            while (!weekInfo.equalsIgnoreCase(selectedWeekInfo)&& schedulePage.hasNextWeek()){
+                weekInfo = schedulePage.getSelectedWeek();
+                schedulePage.navigateToNextWeek();
+                selectedWeekInfo = schedulePage.getSelectedWeek();
+                i++;
+            }
+            SimpleUtils.assertOnFail("The week navigation in Region View should get updated to be " +
+                            "5 weeks based on schedule planning window settings for Compliance, but the actual weeks are: " + i,
+                    i==5, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
