@@ -3862,9 +3862,9 @@ private List<WebElement> locationColumn;
 			}
 		} else {
 			if (priorYearArrow.getAttribute("class").contains("invisible")) {
-				SimpleUtils.pass("School Calendars Page: Prior year arrow is invisible in edit mode as expected");
+				SimpleUtils.fail("School Calendars Page: Prior year arrow is invisible in edit mode unexpectedly", false);
 			} else
-				SimpleUtils.fail("School Calendars Page: Prior year arrow is displayed unexpectedly", false);
+				SimpleUtils.pass("School Calendars Page: Prior year arrow is displayed expectedly");
 		}
 	}
 

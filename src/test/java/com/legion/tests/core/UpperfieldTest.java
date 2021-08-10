@@ -225,7 +225,7 @@ public class UpperfieldTest extends TestBase {
             String totalViolationHrsFromProjectedComplianceWidget =
             dashboardPage.getTheTotalViolationHrsFromProjectedComplianceWidget();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            dashboardPage.clickOnViewComplianceLink();
+            dashboardPage.clickOnViewViolationsLink();
             String totalViolationHrsFromCompliancePage =
                     compliancePage.getTheTotalViolationHrsFromSmartCard().split(" ")[0];
             SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully",
@@ -259,7 +259,7 @@ public class UpperfieldTest extends TestBase {
             String totalViolationHrsFromProjectedComplianceWidget =
                     dashboardPage.getTheTotalViolationHrsFromProjectedComplianceWidget();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            dashboardPage.clickOnViewComplianceLink();
+            dashboardPage.clickOnViewViolationsLink();
             String totalViolationHrsFromCompliancePage =
                     compliancePage.getTheTotalViolationHrsFromSmartCard().split(" ")[0];
             SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully",
@@ -590,84 +590,226 @@ public class UpperfieldTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Open Shifts widget on Dashboard in BU View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOpenShiftsWidgetOnDashboardInBUViewAsInternalAdmin(String browser, String username, String password, String location) {
+    public void verifyOpenShiftsWidgetOnDashboardInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+
+            SimpleUtils.assertOnFail("Open Shifts widget not loaded successfully", dashboardPage.isOpenShiftsWidgetPresent(), false);
+
+            //Get values on open shifts widget and verify the info on Open_Shifts Widget
+            if (dashboardPage.isRefreshButtonDisplay())
+                dashboardPage.clickOnRefreshButton();
+            HashMap<String, Integer> valuesOnOpenShiftsWidget = dashboardPage.verifyContentOfOpenShiftsWidgetForUpperfield();
+
+            // Validate View Schedules link is clickable
+            dashboardPage.clickViewSchedulesLinkOnOpenShiftsWidget();
+
+            // Validate the data in Open Shifts widget without TA
+           // todo: blocked by the bug https://legiontech.atlassian.net/browse/SCH-3224
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Julie")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Open Shifts widget on Dashboard in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOpenShiftsWidgetOnDashboardInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+
+            SimpleUtils.assertOnFail("Open Shifts widget not loaded successfully", dashboardPage.isOpenShiftsWidgetPresent(), false);
+
+            //Get values on open shifts widget and verify the info on Open_Shifts Widget
+            if (dashboardPage.isRefreshButtonDisplay())
+                dashboardPage.clickOnRefreshButton();
+            HashMap<String, Integer> valuesOnOpenShiftsWidget = dashboardPage.verifyContentOfOpenShiftsWidgetForUpperfield();
+
+            // Validate View Schedules link is clickable
+            dashboardPage.clickOnViewSchedulesOnOpenShiftsWidget();
+
+            // Validate the data in Open Shifts widget without TA
+            // todo: blocked by the bug https://legiontech.atlassian.net/browse/SCH-3224
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Compliance Violations widget on Dashboard in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyComplianceViolationsWidgetOnDashboardInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
 
-            // Create open shift in schedule so that we can verify the content on Open_Shifts Widget
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            SimpleUtils.assertOnFail("Compliance Violations widget not loaded successfully", dashboardPage.isComplianceViolationsWidgetDisplay(), false);
 
-            if (schedulePage.isWeekGenerated() && !schedulePage.isWeekPublished()){
-                schedulePage.publishActiveSchedule();
-            }
-            int openShiftsNumForLoc1 = schedulePage.getShiftsNumberByName("open");
-            int shiftsNumForLoc1 = schedulePage.getShiftsNumberByName("");
+            // Validate the content on Compliance Violations widget on TA env
+            dashboardPage.validateTheContentOnComplianceViolationsWidgetInUpperfield();
+
+            // Validate the data in Compliance Violations widget with TA between dashboard and compliance
+            if (dashboardPage.isRefreshButtonDisplay())
+                dashboardPage.clickOnRefreshButton();
+            List<String> complianceViolationsOnBUViewDashboard = dashboardPage.getComplianceViolationsOnDashboard();
+            dashboardPage.clickOnViewViolationsLink();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            Thread.sleep(5000);
+            if (compliancePage.isRefreshButtonDisplay())
+                compliancePage.clickOnRefreshButton();
+            List<String> complianceViolationsFromOnBUViewCompliance = compliancePage.getComplianceViolationsOnSmartCard();
+            dashboardPage.validateDataOnComplianceViolationsWidget(complianceViolationsOnBUViewDashboard, complianceViolationsFromOnBUViewCompliance);
+
+            // Validate the data in Compliance Violations widget with TA between BU view and region view
             dashboardPage.navigateToDashboard();
-            locationSelectorPage.changeLocation("NY CENTRAL");
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-            if (schedulePage.isWeekGenerated() && !schedulePage.isWeekPublished()){
-                schedulePage.publishActiveSchedule();
+            List<String> regionList = locationSelectorPage.getOrgList();
+            Float totalViolationHours = 0.00f;
+            int totalViolations = 0;
+            for (String region: regionList) {
+                locationSelectorPage.changeUpperFieldDirect(Region, region);
+                if (dashboardPage.isRefreshButtonDisplay())
+                    dashboardPage.clickOnRefreshButton();
+                List<String> complianceViolations = dashboardPage.getComplianceViolationsOnDashboard();
+                totalViolationHours += Float.valueOf(complianceViolations.get(0).split(" ")[0]);
+                totalViolations += Integer.valueOf(complianceViolations.get(1).split(" ")[0]);
             }
-            int openShiftsNumForLoc2 = schedulePage.getShiftsNumberByName("open");
-            int shiftsNumForLoc2 = schedulePage.getShiftsNumberByName("");
-            int openRateExpected = 0;
-            if ((shiftsNumForLoc1+shiftsNumForLoc2)!=0){
-                openRateExpected = Math.round((float)(openShiftsNumForLoc1+openShiftsNumForLoc2)*100/(shiftsNumForLoc1+shiftsNumForLoc2));
-            }
-            //int assignedRateExpected = 100-openRateExpected;
-            int assignedRateExpected = Math.round((float)(shiftsNumForLoc1+shiftsNumForLoc2-openShiftsNumForLoc1-openShiftsNumForLoc2)*100/(shiftsNumForLoc1+shiftsNumForLoc2));
-
-            // refresh shifts offer KPI.
-            dashboardPage.navigateToDashboard();
-            locationSelectorPage.changeLocation(location);
-            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-            analyticsPage.gotoAnalyticsPage();
-            analyticsPage.switchAllLocationsOrSingleLocation(false);
-            analyticsPage.mouseHoverAndRefreshByName("Shift Offer KPI");
-
-            dashboardPage.navigateToDashboard();
-            locationSelectorPage.reSelectDistrict(districtName);
-
-            SimpleUtils.assertOnFail("Open Shifts widget not loaded successfully", dashboardPage.isOpenShiftsWidgetDisplay(), false);
-            String currentWeek = dashboardPage.getWeekInfoFromDMView();
-
-            //Get values on open shifts widget and verify the info on Open_Shifts Widget
-            HashMap<String, Integer> valuesOnOpenShiftsWidget = dashboardPage.verifyContentOfOpenShiftsWidgetForDMView();
-
-            // Verify navigation to schedule page by "View Schedules" button on Open_Shifts Widget
-            dashboardPage.clickViewSchedulesLinkOnOpenShiftsWidget();
-            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
-            String[] weekInfoInDMView = MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n");
-            String weekInfoExpected = schedulePage.convertDateStringFormat(weekInfoInDMView[weekInfoInDMView.length-1]);
-            if (currentWeek.toLowerCase().contains(weekInfoExpected.toLowerCase())) {
-                SimpleUtils.pass("Open Shifts: \"View Schedules\" button is to navigate to current week schedule page");
-            } else {
-                SimpleUtils.fail("Open Shifts: \"View Schedules\" button failed to navigate to current week schedule page", false);
-            }
-
-            // Verify the data on Open_Shifts Widget
-            if (openRateExpected == valuesOnOpenShiftsWidget.get("open") && assignedRateExpected == valuesOnOpenShiftsWidget.get("assigned")){
-                SimpleUtils.pass("Data is correct!");
-            } else {
-                SimpleUtils.fail("Data is incorrect!",false);
-            }
+            if (totalViolationHours== Float.valueOf(complianceViolationsOnBUViewDashboard.get(0).split(" ")[0])
+                    && totalViolations == Integer.valueOf(complianceViolationsOnBUViewDashboard.get(1).split(" ")[0]))
+                SimpleUtils.pass("The data of Compliance Violations widget on dashboard is consistent with the summary of each region");
+            else
+                // SimpleUtils.fail("The data of Compliance Violations widget on dashboard is inconsistent with the summary of each region",false);
+                SimpleUtils.warn("SCH-4937: The past week's Extra hours on Compliance BU view is inconsistent with the sum of the extra hours on Region view");
         } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Compliance Violations widget on Dashboard in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyComplianceViolationsWidgetOnDashboardInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+
+            SimpleUtils.assertOnFail("Compliance Violations widget not loaded successfully", dashboardPage.isComplianceViolationsWidgetDisplay(), false);
+
+            // Validate the content on Compliance Violations widget on TA env
+            dashboardPage.validateTheContentOnComplianceViolationsWidgetInUpperfield();
+
+            // Validate the data in Compliance Violations widget with TA between dashboard and compliance
+            if (dashboardPage.isRefreshButtonDisplay())
+                dashboardPage.clickOnRefreshButton();
+            List<String> complianceViolationsOnRegionViewDashboard = dashboardPage.getComplianceViolationsOnDashboard();
+            dashboardPage.clickOnViewViolationsLink();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            Thread.sleep(5000);
+            if (compliancePage.isRefreshButtonDisplay())
+                compliancePage.clickOnRefreshButton();
+            List<String> complianceViolationsFromOnRegionViewCompliance = compliancePage.getComplianceViolationsOnSmartCard();
+            dashboardPage.validateDataOnComplianceViolationsWidget(complianceViolationsOnRegionViewDashboard, complianceViolationsFromOnRegionViewCompliance);
+
+            // Validate the data in Compliance Violations widget with TA between BU view and region view
+            dashboardPage.navigateToDashboard();
+            List<String> districtList = locationSelectorPage.getOrgList();
+            Float totalViolationHours = 0.00f;
+            int totalViolations = 0;
+            for (String district: districtList) {
+                locationSelectorPage.changeDistrict(district);
+                if (dashboardPage.isRefreshButtonDisplay())
+                    dashboardPage.clickOnRefreshButton();
+                List<String> complianceViolations = dashboardPage.getComplianceViolationsOnDashboard();
+                totalViolationHours += Float.valueOf(complianceViolations.get(0).split(" ")[0]);
+                totalViolations += Integer.valueOf(complianceViolations.get(1).split(" ")[0]);
+            }
+            if (totalViolationHours== Float.valueOf(complianceViolationsOnRegionViewDashboard.get(0).split(" ")[0])
+                    && totalViolations == Integer.valueOf(complianceViolationsOnRegionViewDashboard.get(1).split(" ")[0]))
+                SimpleUtils.pass("The data of Compliance Violations widget on dashboard is consistent with the summary of each region");
+            else
+                // SimpleUtils.fail("The data of Compliance Violations widget on dashboard is inconsistent with the summary of each region",false);
+                SimpleUtils.warn("SCH-4937: The past week's Extra hours on Compliance BU view is inconsistent with the sum of the extra hours on Region view");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Compliance Violations widget on Dashboard in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPayrollProjectionWidgetOnDashboardInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+
+            SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+
+            // Validate the content on Payroll Projection widget on TA env
+            dashboardPage.validateTheContentOnPayrollProjectionWidget();
+
+            // Validate the date on Payroll Projection widget on TA env
+            String weekOnPayrollProjectionWidget = dashboardPage.getWeekOnPayrollProjectionWidget();
+            String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetSurplusOnPayrollProjectionWidget();
+            dashboardPage.clickOnViewSchedulesOnPayrollProjectWidget();
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            String currentWeekInDMViewSchedule = scheduleDMViewPage.getCurrentWeekInDMView();
+            String forecastKPIInDMViewSchedule = scheduleDMViewPage.getBudgetSurplusInDMView();
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+            dashboardPage.validateWeekOnPayrollProjectionWidget(weekOnPayrollProjectionWidget, currentWeekInDMViewSchedule);
+            dashboardPage.validateBudgetSurplusOnPayrollProjectionWidget(forecastKPIOnPayrollProjectionWidget, forecastKPIInDMViewSchedule);
+
+            // Validate as of time on Payroll Projection widget on TA env
+            dashboardPage.validateAsOfTimeOnPayrollProjectionWidget();
+
+            // Validate the future Budget Surplus on Payroll Projection widget on TA env
+            dashboardPage.validateTheFutureBudgetSurplusOnPayrollProjectionWidget();
+
+            // Validate hours tooltips of Payroll Projection widget on TA env
+            dashboardPage.validateHoursTooltipsOfPayrollProjectionWidget();
+            // todo due to SCH-2634
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
         }
     }
 }

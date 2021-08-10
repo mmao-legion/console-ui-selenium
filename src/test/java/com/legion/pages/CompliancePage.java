@@ -7,7 +7,7 @@ public interface CompliancePage {
     public String getTheTotalViolationHrsFromSmartCard() throws Exception;
     public String getTheTotalLocationsFromSmartCard() throws Exception;
     public String getTheTotalLocationsWithViolationsFromSmartCard() throws Exception;
-    public List<String> getComplianceViolationsOnDMViewSmartCard() throws Exception;
+    public List<String> getComplianceViolationsOnSmartCard() throws Exception;
     public boolean isCompliancePageLoaded() throws Exception;
     public HashMap<String, Float> getValuesAndVerifyInfoForTotalViolationSmartCardInDMView() throws Exception;
     public void verifyDiffFlag(String upOrDown) throws Exception;
@@ -32,4 +32,5 @@ public interface CompliancePage {
     public List<String> getListByColInTimesheetDMView(int index) throws Exception;
     public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception;
     public boolean isComplianceDMView() throws Exception;
+    public boolean isRefreshButtonDisplay() throws Exception;
 }

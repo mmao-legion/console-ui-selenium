@@ -78,23 +78,28 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     }
 
     @Override
-    public List<String> getComplianceViolationsOnDMViewSmartCard() throws Exception {
+    public List<String> getComplianceViolationsOnSmartCard() throws Exception {
         List<String> complianceViolationsOnDMViewSmartCard = new ArrayList<>();
         String totalHrs = getTheTotalViolationHrsFromSmartCard();
         totalHrs = totalHrs.contains(" ")? totalHrs.split(" ")[0]:totalHrs;
-        totalHrs = totalHrs + " Total Hrs";
         complianceViolationsOnDMViewSmartCard.add(totalHrs);
-        SimpleUtils.report("Compliance Page: Get the total Hrs: \"" + totalHrs + "\" on DM View smart card successfully");
+        SimpleUtils.report("Compliance Page: Get the total Hrs: \"" + totalHrs + "\" on smart card successfully");
         String violations = getTheTotalLocationsWithViolationsFromSmartCard();
-        violations = violations + " Violations";
         complianceViolationsOnDMViewSmartCard.add(violations);
-        SimpleUtils.report("Compliance Page: Get the total violations: \"" + violations + "\" on DM View smart card successfully");
+        SimpleUtils.report("Compliance Page: Get the total violations: \"" + violations + "\" on smart card successfully");
         String totalLocations = getTheTotalLocationsFromSmartCard();
         totalLocations = totalLocations.contains(" ")? totalLocations.split(" ")[0]:totalLocations;
-        totalLocations = totalLocations + " Locations";
         complianceViolationsOnDMViewSmartCard.add(totalLocations);
-        SimpleUtils.report("Compliance Page: Get the total locations: \"" + totalLocations + "\" on DM View smart card successfully");
+        SimpleUtils.report("Compliance Page: Get the total locations/districts/regions: \"" + totalLocations + "\" on smart card successfully");
         return complianceViolationsOnDMViewSmartCard;
+    }
+
+    @Override
+    public boolean isRefreshButtonDisplay() throws Exception {
+        if (isElementLoaded(refreshButton,60))
+            return true;
+        else
+            return false;
     }
 
     @FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")

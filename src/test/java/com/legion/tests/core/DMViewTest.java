@@ -146,7 +146,7 @@ public class DMViewTest extends TestBase {
             String totalViolationHrsFromProjectedComplianceWidget =
                     dashboardPage.getTheTotalViolationHrsFromProjectedComplianceWidget();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            dashboardPage.clickOnViewComplianceLink();
+            dashboardPage.clickOnViewViolationsLink();
             String totalViolationHrsFromCompliancePage =
                     compliancePage.getTheTotalViolationHrsFromSmartCard().split(" ")[0];
             SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully",
@@ -209,13 +209,13 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Compliance Violations widget not loaded successfully", dashboardPage.isComplianceViolationsWidgetDisplay(), false);
 
             // Validate the content on Compliance Violations widget on TA env
-            dashboardPage.validateTheContentOnComplianceViolationsWidgetInDMView();
+            dashboardPage.validateTheContentOnComplianceViolationsWidgetInUpperfield();
 
-            // Validate the data on Compliance Violations widget on TA env
-            List<String> complianceViolationsOnDMViewDashboard = dashboardPage.getComplianceViolationsOnDMViewWidget();
-            dashboardPage.clickOnViewViolations();
+            // Validate the data in Compliance Violations widget with TA between dashboard and compliance
+            List<String> complianceViolationsOnDMViewDashboard = dashboardPage.getComplianceViolationsOnDashboard();
+            dashboardPage.clickOnViewViolationsLink();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            List<String> complianceViolationsFromOnDMViewCompliance = compliancePage.getComplianceViolationsOnDMViewSmartCard();
+            List<String> complianceViolationsFromOnDMViewCompliance = compliancePage.getComplianceViolationsOnSmartCard();
             dashboardPage.validateDataOnComplianceViolationsWidget(complianceViolationsOnDMViewDashboard, complianceViolationsFromOnDMViewCompliance);
             //todo SCH-1906： [Dashboard] Compliance violation widget -> the numbers of violation is incorrect
 

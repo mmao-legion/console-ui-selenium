@@ -62,4 +62,6 @@ public interface LocationSelectorPage {
 	public Boolean isRegionSelected(String regionName);
 	public void verifyTheDisplayRegionWithSelectedRegionConsistent(String regionName) throws Exception;
 	public void changeAnotherRegionInRegionView() throws Exception;
+	public List<String> getOrgList() throws Exception;
+	public void verifyClickChangeRegionButton() throws Exception;
 }

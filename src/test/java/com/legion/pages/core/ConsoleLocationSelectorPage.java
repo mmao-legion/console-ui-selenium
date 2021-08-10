@@ -1146,6 +1146,50 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         }
     }
 
+    @Override
+    public List<String> getOrgList() throws Exception {
+        List<String> orgList= new ArrayList<String>();
+        if(isChangeDistrictButtonLoaded()) {
+            verifyClickChangeDistrictButton();
+            for (WebElement detailDistrict : districDetailsInDropdownList) {
+                String districtName = detailDistrict.getText();
+                orgList.add(districtName);
+            }
+            return orgList;
+        }
+        if(isChangeRegionButtonLoaded()) {
+            verifyClickChangeRegionButton();
+            for (WebElement detailRegion : regionDetailsInDropdownList) {
+                String regionName = detailRegion.getText();
+                orgList.add(regionName);
+            }
+            return orgList;
+        }
+        return null;
+    }
+
+    @FindBy(css = "lg-search-options[search-hint='Search Region'] div.lg-search-options__scroller div[ng-repeat]")
+    private List<WebElement> regionDetailsInDropdownList;
+
+    @Override
+    public void verifyClickChangeRegionButton() throws Exception {
+        if (isElementLoaded(regionSelectorButton, 10)){
+            click(regionSelectorButton);
+            if (isElementLoaded(regionDropDownButton, 10)){
+                SimpleUtils.pass("The region list layout shows!");
+                if (isElementLoaded(searchDistrictInput, 5) && areListElementVisible(regionDetailsInDropdownList, 5)){
+                    SimpleUtils.pass("List of regions and search textbox show.");
+                }
+                else{
+                    SimpleUtils.fail("List of regions and search textbox don't show.", true);
+                }
+            }
+            else{
+                SimpleUtils.fail("The region list layout doesn't show!", true);
+            }
+        }
+    }
+
     //added by Estelle for upperfield view
     @FindBy(id = "id_upperfield-search")
     private  WebElement magnifyGlassIcon;

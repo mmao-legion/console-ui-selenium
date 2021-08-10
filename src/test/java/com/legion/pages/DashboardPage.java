@@ -98,11 +98,10 @@ public interface DashboardPage {
     public boolean isProjectedComplianceWidgetDisplay() throws Exception;
     public void verifyTheContentInProjectedComplianceWidget() throws Exception;
     public String getTheTotalViolationHrsFromProjectedComplianceWidget() throws Exception;
-    public void clickOnViewComplianceLink() throws Exception;
-    public void validateTheContentOnComplianceViolationsWidgetInDMView() throws Exception;
-    public void clickOnViewViolations() throws Exception;
-    public void validateDataOnComplianceViolationsWidget(List<String> complianceViolationsOnDMViewDashboard, List<String> complianceViolationsFromSmartCardOnDMViewCompliance) throws Exception;
-    public List<String> getComplianceViolationsOnDMViewWidget() throws Exception;
+    public void clickOnViewViolationsLink() throws Exception;
+    public void validateTheContentOnComplianceViolationsWidgetInUpperfield() throws Exception;
+    public void validateDataOnComplianceViolationsWidget(List<String> complianceViolationsOnDashboard, List<String> complianceViolationsFromSmartCardOnCompliance) throws Exception;
+    public List<String> getComplianceViolationsOnDashboard() throws Exception;
     public void validateTheContentOnPayrollProjectionWidget() throws Exception;
     public String getWeekOnPayrollProjectionWidget() throws Exception;
     public void validateWeekOnPayrollProjectionWidget(String weekOnPayrollProjectionWidget, String currentWeekInScheduleTab) throws Exception;
@@ -149,4 +148,8 @@ public interface DashboardPage {
     public void validateValueInScheduleVsGuidanceByDayWidget() throws Exception;
     public HashMap<String, Integer> getTheSumOfValuesOnScheduleVsGuidanceByDayWidget() throws Exception;
     public void verifyTheContentOnScheduleVsBudgetByDayWidget() throws Exception;
+    public HashMap<String, Integer> verifyContentOfOpenShiftsWidgetForUpperfield() throws Exception;
+    public boolean isOpenShiftsWidgetPresent() throws Exception;
+    public void clickOnViewSchedulesOnOpenShiftsWidget() throws Exception;
+    public boolean isRefreshButtonDisplay() throws Exception;
 }
