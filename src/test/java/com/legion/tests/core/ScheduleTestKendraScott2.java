@@ -1942,7 +1942,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnDayViewAddNewShiftButton();
 			schedulePage.customizeNewShiftPage();
-			schedulePage.selectWorkRole(firstShiftInfo.get(4));
+			schedulePage.selectWorkRole(shiftInfo.get(4));
 			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount2.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
 			schedulePage.selectWorkingDaysOnNewShiftPageByIndex(Integer.parseInt(shiftInfo.get(1)));
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
