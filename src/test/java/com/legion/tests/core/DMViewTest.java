@@ -681,7 +681,7 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Compliance page not loaded successfully", compliancePage.isCompliancePageLoaded(), false);
 
             // Validate the field names in analytics table
-            compliancePage.verifyFieldNamesInAnalyticsTable();
+            compliancePage.verifyFieldNamesInAnalyticsTable("Location");
 
             // Validate the field columns can be ordered
             compliancePage.verifySortByColForLocationsInDMView(1);
@@ -695,7 +695,7 @@ public class DMViewTest extends TestBase {
 
             // Validate the data of analytics table for past week.
             compliancePage.navigateToPreviousWeek();
-            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for past week successfully",compliancePage.isComplianceDMView(), false);
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for past week successfully",compliancePage.isComplianceUpperFieldView(), false);
             List<String> dataInDMForPast = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
             String totalExtraHoursInDMView = dataInDMForPast.get(0);
 
@@ -717,7 +717,7 @@ public class DMViewTest extends TestBase {
             String totalHrsInSMForCurrent = dataInSMForCurrent.get(6);
             locationSelectorPage.reSelectDistrict(districtName);
             compliancePage.clickOnComplianceConsoleMenu();
-            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for current week successfully",compliancePage.isComplianceDMView(), false);
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for current week successfully",compliancePage.isComplianceUpperFieldView(), false);
             List<String> dataInDMForCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
             String totalExtraHoursInDMViewForCurrent = dataInDMForCurrent.get(0);
             SimpleUtils.report("Total Extra Hours In DM View for current week is " + totalExtraHoursInDMViewForCurrent);
@@ -729,7 +729,7 @@ public class DMViewTest extends TestBase {
 
             // Validate the data of analytics table for future week
             compliancePage.navigateToNextWeek();
-            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for future week successfully",compliancePage.isComplianceDMView(), false);
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for future week successfully",compliancePage.isComplianceUpperFieldView(), false);
             List<String> dataInDMForFuture = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
             String totalExtraHoursInDMViewForFuture = dataInDMForFuture.get(0);
             SimpleUtils.report("Total Extra Hours In DM View for future week is " + totalExtraHoursInDMViewForFuture);

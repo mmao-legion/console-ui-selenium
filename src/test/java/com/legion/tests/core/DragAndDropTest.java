@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class DragAndDropTest extends TestBase {
 
@@ -68,7 +69,8 @@ public class DragAndDropTest extends TestBase {
             // Create schedule if it is not created
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
+            if (isWeekGenerated) {
+                schedulePage.unGenerateActiveScheduleScheduleWeek();
                 schedulePage.createScheduleForNonDGFlowNewUI();
             }
 
@@ -142,15 +144,12 @@ public class DragAndDropTest extends TestBase {
             schedulePage.dragOneShiftToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
 
             // Verify the warning model pops up
-            String actualWarning = schedulePage.getWarningMessageInDragShiftWarningMode();
-            expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
-                    + ".\nPlease confirm that you want to make this change. " + firstName + "'s current shift will be converted to an open shift.";
+            expectedMessage = firstName + " is scheduled " + shiftInfo.get(6) + " on " + fullWeekDay
+                    + ". This shift will be converted to an open shift";
 
-            if (actualWarning.contains(expectedMessage)) {
-                SimpleUtils.pass("Changing Shift: the message is correct:\n" + expectedMessage);
-            } else {
-                SimpleUtils.warn("The message is incorrect since there is the bug!");
-            }
+            schedulePage.verifyMessageOnCopyMoveConfirmPage(expectedMessage,expectedMessage);
+            schedulePage.selectCopyOrMoveByOptionName("Move");
+            schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
 
             // Verify if Confirm Store opening closing hour window pops up
             schedulePage.verifyConfirmStoreOpenCloseHours();
@@ -160,7 +159,7 @@ public class DragAndDropTest extends TestBase {
             } else {
                 SimpleUtils.fail("MOVE ANYWAY dialog failed to load!", false);
             }
-
+            schedulePage.saveSchedule();
             schedulePage.verifyShiftIsMovedToAnotherDay(dayIndexes.get(0), firstName, dayIndexes.get(1));
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -190,7 +189,12 @@ public class DragAndDropTest extends TestBase {
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            String anotherLocation = "AUSTIN DOWNTOWN";
+            String anotherLocation = "";
+            if (getEnterprise().equalsIgnoreCase("KendraScott2")) {
+                 anotherLocation = "AUSTIN DOWNTOWN";
+            } else {
+                anotherLocation = "7500216 - Can-Ski Village";
+            }
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeLocation(anotherLocation);
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -345,9 +349,15 @@ public class DragAndDropTest extends TestBase {
             schedulePage.dragOneShiftToAnotherDay(indexes.get(0), firstName, endIndex);
 
             // Verify the Warning model pops up with the message
-            schedulePage.verifyWarningModelForAssignTMOnTimeOff(firstName);
+            String expectedMsg = firstName + " is approved for Time Off";
+            schedulePage.verifyMessageOnCopyMoveConfirmPage(expectedMsg, expectedMsg);
+            String copyOption = "Copy";
+            String moveOption = "Move";
+            schedulePage.verifyConfirmBtnIsDisabledForSpecificOption(copyOption);
+            schedulePage.verifyConfirmBtnIsDisabledForSpecificOption(moveOption);
+            schedulePage.clickOnCancelEditShiftTimeButton();
 
-            // Verify nothing happens after clicking OK button
+            // Verify nothing happens after clicking CANCEL button
             if (schedulePage.verifyDayHasShiftByName(indexes.get(0), firstName) == 1 && schedulePage.verifyDayHasShiftByName(endIndex, firstName) == 0)
                 SimpleUtils.pass("Nothing happens as expected after clicking OK button");
             else
@@ -1091,8 +1101,14 @@ public class DragAndDropTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUI();
             //edit schedule
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.deleteTMShiftInWeekView("Open");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Action Required");
+            schedulePage.deleteTMShiftInWeekView("");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Open");
+            schedulePage.deleteTMShiftInWeekView("");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> shiftInfo = new ArrayList<>();

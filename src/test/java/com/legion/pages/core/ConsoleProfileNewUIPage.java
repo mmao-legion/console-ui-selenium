@@ -1695,6 +1695,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					click(myAvailabilityConfirmSubmitBtn);
 				}
 			}
+			waitForSeconds(3);
 			if(!isElementLoaded(myAvailabilityEditModeHeader, 5))
 				SimpleUtils.pass("Profile Page: 'My Availability section' edit mode Saved successfully.");
 			else
@@ -1739,7 +1740,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void selectMyAvaliabilityEditHoursTabByLabel(String tabLabel) throws Exception
 	{
 		boolean isTabFound = false;
-		if(isElementLoaded(myAvailabilityEditModeHeader)) {
+		if(isElementLoaded(myAvailabilityEditModeHeader, 10)) {
 			List<WebElement> myAvailabilityHoursTabs = myAvailabilityEditModeHeader.findElements(
 					By.cssSelector("div[ng-click=\"selectTab($event, t)\"]"));
 			if(myAvailabilityHoursTabs.size() > 0) {
@@ -3828,9 +3829,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 
 	public void deleteAllAvailabilitiesForCurrentWeek() throws Exception {
-
+		String preferredHoursTabText = "Preferred";
 		String busyHoursTabText = "Busy";
-
+		selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
 		//Delete all preferred availabilities in the day
 		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
 			for (WebElement myAvailabilityDayOfWeekRow: myAvailabilityDayOfWeekRows){

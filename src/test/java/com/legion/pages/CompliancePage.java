@@ -26,11 +26,13 @@ public interface CompliancePage {
     public void navigateToNextWeek() throws Exception;
     public List<String> getDataFromComplianceTableForGivenLocationInDMView(String location) throws Exception;
     public boolean isLocationInCompliancePageClickable() throws Exception;
-    public void verifyFieldNamesInAnalyticsTable() throws Exception;
+    public void verifyFieldNamesInAnalyticsTable(String upperFieldType) throws Exception;
     public void verifySortByColForLocationsInDMView(int index) throws Exception;
     public List<Float> transferStringToFloat(List<String> listString) throws Exception;
     public List<String> getListByColInTimesheetDMView(int index) throws Exception;
     public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception;
+    public boolean isComplianceUpperFieldView() throws Exception;
+    public List<String> getAllUpperFieldNamesOnAnalyticsTable() throws Exception;
     public boolean isComplianceDMView() throws Exception;
     public boolean isRefreshButtonDisplay() throws Exception;
 }

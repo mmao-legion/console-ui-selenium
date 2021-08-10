@@ -1253,6 +1253,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
                         unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
                         if(unassignedShiftTimes.contains("8am - 1pm")) {
                             isTheShiftWithBothViolationsExist = true;
+                            //To close the i icon popup
+                            schedulePage.clickOnOpenSearchBoxButton();
                             complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                             SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                     complianceMessage.contains("Unassigned Shift") && complianceMessage.contains("Outside Operating hours"), false);
@@ -1333,7 +1335,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option);
-
             HashMap<String, Object[][]> teamMembers = null;
             if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
                 teamMembers = controlTeamMembers;

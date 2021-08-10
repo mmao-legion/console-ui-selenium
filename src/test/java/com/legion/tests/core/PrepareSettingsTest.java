@@ -130,8 +130,8 @@ public class PrepareSettingsTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            MyThreadLocal.setIsNeedEditingOperatingHours(true);
-            createScheduleForThreeWeeks(schedulePage);
+//            MyThreadLocal.setIsNeedEditingOperatingHours(true);
+//            createScheduleForThreeWeeks(schedulePage);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -171,6 +171,15 @@ public class PrepareSettingsTest extends TestBase {
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
             cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
+            configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+            configurationPage.publishNowTheTemplate();
+
+            String wfsName = "Atlantic Central Region";
+            cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.setWFS("Yes");
+            configurationPage.selectWFSGroup(wfsName);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
             configurationPage.publishNowTheTemplate();

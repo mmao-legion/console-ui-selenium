@@ -520,6 +520,9 @@ public interface SchedulePage {
 	public int getTheIndexOfTheDayInWeekView(String date) throws Exception;
 	public HashMap<String,Integer> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception;
 	public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception;
+	public void verifyMessageOnCopyMoveConfirmPage(String expectedMsgInCopy, String expectedMsgInMove) throws Exception;
+	public void verifyConfirmBtnIsDisabledForSpecificOption(String optionName) throws Exception;
+	public void selectCopyOrMoveByOptionName(String optionName) throws Exception;
 	public void selectSwapOrAssignOption(String action) throws Exception;
 	public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception;
 	public WebElement getShiftById(String id) throws Exception;

@@ -4250,7 +4250,7 @@ private List<WebElement> locationColumn;
 		try {
 			Calendar calder = Calendar.getInstance();
 			calder.setTime(new Date());
-			int month = calder.get(Calendar.MONTH);
+			int month = calder.get(Calendar.MONTH)+1;
 			// If month is before August, need to switch to the previous year
 			if (month < 7) {
 				if (isElementLoaded(yearSwitchLeft, 5)) {

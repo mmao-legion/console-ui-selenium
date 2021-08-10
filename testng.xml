@@ -533,6 +533,14 @@
                         <include name="verifySchedulePublishStatusWidgetOnDashboardInRegionViewAsInternalAdmin" />
                         <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInBUViewAsInternalAdmin" />
                         <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInRegionViewAsInternalAdmin" />
+
+                        <!-- Added by Mary -->
+<!--                        <include name="verifyRegionViewNavigationAsInternalAdmin" /> Blocked by SCH-4910 -->
+                        <include name="verifyBUViewNavigationAsInternalAdmin" />
+                        <include name="verifyControlsInBUViewAsInternalAdmin" />
+                        <include name="verifyControlsInRegionViewAsInternalAdmin" />
+                        <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>

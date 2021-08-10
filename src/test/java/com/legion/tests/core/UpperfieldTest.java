@@ -22,9 +22,13 @@ import java.util.Map;
 
 public class UpperfieldTest extends TestBase {
 
+    private static String Location = "Location";
     private static String District = "District";
     private static String Region = "Region";
     private static String BusinessUnit = "Business Unit";
+
+    String[] upperFields2 = districtsMap.get("Coffee_Enterprise2").split(">");
+    String[] upperFields3 = districtsMap.get("Coffee_Enterprise3").split(">");
 
     @Override
     @BeforeMethod()
@@ -50,13 +54,13 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             // Validate the title
             dashboardPage.verifyHeaderOnDashboard();
-            locationSelectorPage.verifyTheDisplayBUWithSelectedBUConsistent(selectedUpperFields.get("BU"));
+            locationSelectorPage.verifyTheDisplayBUWithSelectedBUConsistent(selectedUpperFields.get(BusinessUnit));
             locationSelectorPage.isBUView();
 
             // Validate the presence of BU
@@ -73,7 +77,7 @@ public class UpperfieldTest extends TestBase {
             // Validate changing BUs on Dashboard
             locationSelectorPage.changeAnotherBUInBUView();
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            String buName = selectedUpperFields.get("BU");
+            String buName = selectedUpperFields.get(BusinessUnit);
             String buOnDashboard = dashboardPage.getUpperfieldNameOnDashboard();
             if (buName.equals(buOnDashboard))
                 SimpleUtils.pass("Dashboard Page: When the user selects a different BU from the BU view, the data updates to reflect the selected BU");
@@ -144,7 +148,7 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             // Validate the presence of Refresh button
             dashboardPage.validateThePresenceOfRefreshButtonUpperfield();
@@ -214,7 +218,7 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully", dashboardPage.isProjectedComplianceWidgetDisplay(), false);
 
@@ -223,7 +227,7 @@ public class UpperfieldTest extends TestBase {
 
             // Validate the data in Projected Compliance widget without TA
             String totalViolationHrsFromProjectedComplianceWidget =
-            dashboardPage.getTheTotalViolationHrsFromProjectedComplianceWidget();
+                    dashboardPage.getTheTotalViolationHrsFromProjectedComplianceWidget();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             dashboardPage.clickOnViewViolationsLink();
             String totalViolationHrsFromCompliancePage =
@@ -284,7 +288,7 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             SimpleUtils.assertOnFail("Timesheet Approval Rate widget not loaded successfully", dashboardPage.isTimesheetApprovalRateWidgetDisplay(), false);
 
@@ -358,7 +362,7 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             SimpleUtils.assertOnFail("Schedule Publish Status widget not loaded successfully", dashboardPage.isSchedulePublishStatusWidgetDisplay(), false);
 
@@ -412,7 +416,6 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule status on Schedule Publish Status widget and Schedule region view page are different! ",
                     scheduleStatusFromSchedulePublishStatusWidget.equals(scheduleStatusFromScheduleDMViewPage), false);
 
-
             // Validate status value in Schedule Publish Status widget without TA
             dashboardPage.navigateToDashboard();
             dashboardPage.validateTooltipsOfSchedulePublishStatusWidget();
@@ -436,7 +439,7 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             // Set 'Apply labor budget to schedules?' to No
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -810,6 +813,503 @@ public class UpperfieldTest extends TestBase {
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Region View Navigation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRegionViewNavigationAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.isRegionView();
+
+            //Validate user has see multiple regions in upperfield dropdown list
+            List<String> upperFieldNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList(Region);
+            SimpleUtils.assertOnFail("The selected region should display in the search region dropdown list!", upperFieldNames.contains(selectedUpperFields.get(Region)), false);
+
+            //Validate drilling into a district
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            locationSelectorPage.isDMView();
+
+            //Validate navigating back to region view
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.isRegionView();
+
+            //Validate navigating back to region view
+            SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
+
+            //Validate changing regions
+            String regionName2 = upperFields2[upperFields2.length-2].trim();
+            String districtName2 = upperFields2[upperFields2.length-1].trim();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName2);
+            SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName2);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            SimpleUtils.assertOnFail("The selected region display incorrectly! The expected region is: " + regionName2 +
+                            " . The actual region name is " + selectedUpperFields.get(Region),
+                    selectedUpperFields.get(Region).equalsIgnoreCase(regionName2), false);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            //Validate changing dates and district
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            locationSelectorPage.isDMView();
+            schedulePage.navigateToNextWeek();
+            String selectedWeekInfo = schedulePage.getSelectedWeek();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            SimpleUtils.assertOnFail("The selected week should not been changed after change to region view from DM view! ",
+                    schedulePage.getSelectedWeek().equalsIgnoreCase(selectedWeekInfo), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "BU View Navigation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyBUViewNavigationAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            //Validate user has access to multiple BUs in upperfield dropdown list
+            List<String> upperFieldNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList(BusinessUnit);
+            SimpleUtils.assertOnFail("The selected region should display in the search region dropdown list!",
+                    upperFieldNames.contains(buName), false);
+
+            //Validate drilling into a region
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.isRegionView();
+
+            //Validate navigating back to BU view
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            locationSelectorPage.isBUView();
+
+            SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
+
+            //Validate changing BUs
+            String buName2 = upperFields3[upperFields3.length-3].trim();
+            String regionName2 = upperFields3[upperFields3.length-2].trim();
+            String districtName2 = upperFields3[upperFields3.length-1].trim();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName2);
+            SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!",
+                    schedulePage.isScheduleDMView(), false);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName2);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            SimpleUtils.assertOnFail("The selected BU display incorrectly! The expected BU is: " + buName2 +
+                            " . The actual BU name is " + selectedUpperFields.get(BusinessUnit),
+                    selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(buName2), false);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            //Validate changing dates and district
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            schedulePage.navigateToNextWeek();
+            String selectedWeekInfo = schedulePage.getSelectedWeek();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            SimpleUtils.assertOnFail("The selected week should not been changed after change to BU view from region view! ",
+                    schedulePage.getSelectedWeek().equalsIgnoreCase(selectedWeekInfo), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Controls in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyControlsInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            //Validate Controls existing from BU view
+            SimpleUtils.assertOnFail("Controls menu tab should be available on BU view",
+                    !dashboardPage.isConsoleNavigationBarIsGray("Controls"), false);
+
+            //Validate navigate to Controls from BU view
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page fail to load! ",
+                    controlsNewUIPage.isControlsPageLoaded(), false);
+            //Title: Controls Global > All Locations
+            controlsNewUIPage.getCurrentLocationInControls().equalsIgnoreCase("All Locations");
+
+            //Validate week navigation in BU View getting updated based on schedule planning window settings
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateSchedulePlanningWindow("5 weeks", false, true);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            String weekInfo = "";
+            String selectedWeekInfo = schedulePage.getSelectedWeek();
+            int i = 0;
+            while (!weekInfo.equalsIgnoreCase(selectedWeekInfo) && schedulePage.hasNextWeek()){
+                weekInfo = schedulePage.getSelectedWeek();
+                schedulePage.navigateToNextWeek();
+                selectedWeekInfo = schedulePage.getSelectedWeek();
+                i++;
+            }
+            SimpleUtils.assertOnFail("The week navigation in BU View should get updated to " +
+                    "5 weeks based on schedule planning window settings for Schedule, but the actual weeks are: " + i,
+                    i==5, false);
+
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+
+            weekInfo = "";
+            selectedWeekInfo = schedulePage.getSelectedWeek();
+            i = 0;
+            while (!weekInfo.equalsIgnoreCase(selectedWeekInfo)&& schedulePage.hasNextWeek()){
+                weekInfo = schedulePage.getSelectedWeek();
+                schedulePage.navigateToNextWeek();
+                selectedWeekInfo = schedulePage.getSelectedWeek();
+                i++;
+            }
+            SimpleUtils.assertOnFail("The week navigation in BU View should get updated to be " +
+                            "5 weeks based on schedule planning window settings for Compliance, but the actual weeks are: " + i,
+                    i==5, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Controls in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyControlsInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            //Validate Controls existing from Region view
+            SimpleUtils.assertOnFail("Controls menu tab should be available on Region view",
+                    !dashboardPage.isConsoleNavigationBarIsGray("Controls"), false);
+
+            //Validate navigate to Controls from Region view
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page fail to load! ",
+                    controlsNewUIPage.isControlsPageLoaded(), false);
+            //Title: Controls Global > All Locations
+            controlsNewUIPage.getCurrentLocationInControls().equalsIgnoreCase("All Locations");
+
+            //Validate week navigation in Region View getting updated based on schedule planning window settings
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateSchedulePlanningWindow("5 weeks", false, true);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            String weekInfo = "";
+            String selectedWeekInfo = schedulePage.getSelectedWeek();
+            int i = 0;
+            while (!weekInfo.equalsIgnoreCase(selectedWeekInfo) && schedulePage.hasNextWeek()){
+                weekInfo = schedulePage.getSelectedWeek();
+                schedulePage.navigateToNextWeek();
+                selectedWeekInfo = schedulePage.getSelectedWeek();
+                i++;
+            }
+            SimpleUtils.assertOnFail("The week navigation in Region View should get updated to " +
+                            "5 weeks based on schedule planning window settings for Schedule, but the actual weeks are: " + i,
+                    i==5, false);
+
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+
+            weekInfo = "";
+            selectedWeekInfo = schedulePage.getSelectedWeek();
+            i = 0;
+            while (!weekInfo.equalsIgnoreCase(selectedWeekInfo)&& schedulePage.hasNextWeek()){
+                weekInfo = schedulePage.getSelectedWeek();
+                schedulePage.navigateToNextWeek();
+                selectedWeekInfo = schedulePage.getSelectedWeek();
+                i++;
+            }
+            SimpleUtils.assertOnFail("The week navigation in Region View should get updated to be " +
+                            "5 weeks based on schedule planning window settings for Compliance, but the actual weeks are: " + i,
+                    i==5, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify analytics table on Compliance in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance page not loaded successfully", compliancePage.isCompliancePageLoaded(), false);
+
+            // Validate the field names in analytics table
+            compliancePage.verifyFieldNamesInAnalyticsTable(Region);
+
+            // Validate the field columns can be ordered
+            compliancePage.verifySortByColForLocationsInDMView(1);
+            compliancePage.verifySortByColForLocationsInDMView(2);
+            compliancePage.verifySortByColForLocationsInDMView(3);
+            compliancePage.verifySortByColForLocationsInDMView(4);
+            compliancePage.verifySortByColForLocationsInDMView(5);
+            compliancePage.verifySortByColForLocationsInDMView(6);
+            compliancePage.verifySortByColForLocationsInDMView(7);
+            compliancePage.verifySortByColForLocationsInDMView(8);
+
+            // Validate the data of analytics table for past week.
+            compliancePage.navigateToPreviousWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for past week successfully",compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInBUViewForPast = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(regionName);
+            String totalExtraHoursInBUView = dataInBUViewForPast.get(0);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            String totalHrsInRegionViewForPast = compliancePage.getTheTotalViolationHrsFromSmartCard().split(" ")[0];
+            SimpleUtils.report("Total Extra Hours In BU View for past week is "+totalExtraHoursInBUView);
+            SimpleUtils.report("Total Extra Hours In Region View for past week is "+totalHrsInRegionViewForPast);
+            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the past week's data",
+                    totalHrsInRegionViewForPast.equals(String.valueOf(Math.round(Float.parseFloat(totalExtraHoursInBUView)))), false);
+
+            // Validate the data of analytics table for current week.
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            compliancePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for current week successfully",
+                    compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInDMForCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(regionName);
+            String totalExtraHoursInBUViewForCurrent = dataInDMForCurrent.get(0);
+
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            List<String> dataInRegionForCurrent  = liquidDashboardPage.getDataOnComplianceViolationWidget();
+            String totalHrsInRegionForCurrent = dataInRegionForCurrent.get(0);
+
+            SimpleUtils.report("Total Extra Hours In BU View for current week is " + totalExtraHoursInBUViewForCurrent);
+            SimpleUtils.report("Total Extra Hours In Region View for current week is " + totalHrsInRegionForCurrent);
+            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the current week's data",
+                    totalHrsInRegionForCurrent.equals(String.valueOf(Math.round(Float.parseFloat((totalExtraHoursInBUViewForCurrent))))), false);
+
+            // Validate the data of analytics table for future week
+            compliancePage.clickOnComplianceConsoleMenu();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            compliancePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for future week successfully",compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInBUForFuture = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(regionName);
+            String totalExtraHoursInBUViewForFuture = dataInBUForFuture.get(0);
+            SimpleUtils.report("Total Extra Hours In DM View for future week is " + totalExtraHoursInBUViewForFuture);
+            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the future week's data",
+                    totalExtraHoursInBUViewForFuture.equals("0"), false);
+
+
+            // Validate Late Schedule is Yes or No
+            compliancePage.navigateToPreviousWeek();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            Thread.sleep(2000);
+            controlsNewUIPage.updateDaysInAdvancePublishSchedulesInSchedulingPolicies("7");
+
+            compliancePage.clickOnComplianceConsoleMenu();
+            List<String>  dataCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(regionName);
+            String lateScheduleYes = dataCurrent.get(dataCurrent.size()-1);
+
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            List<String> upperFieldNames = compliancePage.getAllUpperFieldNamesOnAnalyticsTable();
+            List<String> schedulePublishedOnTime = new ArrayList<>();
+            for (String upperFieldName: upperFieldNames){
+                dataCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(upperFieldName);
+                schedulePublishedOnTime.add(dataCurrent.get(dataCurrent.size()-1));
+            }
+
+            if (lateScheduleYes.equals("Yes"))
+                SimpleUtils.assertOnFail("Compliance Page: Late Schedule is not Yes", !schedulePublishedOnTime.contains("No"), false);
+            else
+                SimpleUtils.assertOnFail("Compliance Page: Late Schedule is not contain No", schedulePublishedOnTime.contains("No"),false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify analytics table on Compliance in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String regionName = upperFields2[upperFields2.length-2].trim();
+            String districtName = upperFields2[upperFields2.length-1].trim();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            compliancePage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance page not loaded successfully",
+                    compliancePage.isCompliancePageLoaded(), false);
+
+            // Validate the field names in analytics table
+            compliancePage.verifyFieldNamesInAnalyticsTable(District);
+
+            // Validate the field columns can be ordered
+            compliancePage.verifySortByColForLocationsInDMView(1);
+            compliancePage.verifySortByColForLocationsInDMView(2);
+            compliancePage.verifySortByColForLocationsInDMView(3);
+            compliancePage.verifySortByColForLocationsInDMView(4);
+            compliancePage.verifySortByColForLocationsInDMView(5);
+            compliancePage.verifySortByColForLocationsInDMView(6);
+            compliancePage.verifySortByColForLocationsInDMView(7);
+            compliancePage.verifySortByColForLocationsInDMView(8);
+
+            // Validate the data of analytics table for past week.
+            compliancePage.navigateToPreviousWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for past week successfully",compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInRegionViewForPast = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(districtName);
+            String totalExtraHoursInRegionView = dataInRegionViewForPast.get(0);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            String totalHrsInDistrictViewForPast = compliancePage.getTheTotalViolationHrsFromSmartCard().split(" ")[0];
+            SimpleUtils.report("Total Extra Hours In Region View for past week is "+totalExtraHoursInRegionView);
+            SimpleUtils.report("Total Extra Hours In District View for past week is "+totalHrsInDistrictViewForPast);
+//            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the past week's data",                           //Blocked by https://legiontech.atlassian.net/browse/SCH-4937
+//                    totalHrsInDistrictViewForPast.equals
+//                            (String.valueOf(Math.round(Float.parseFloat(totalExtraHoursInRegionView.replace(",",""))))), false);
+
+            // Validate the data of analytics table for current week.
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            compliancePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for current week successfully",
+                    compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInRegionForCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(districtName);
+            String totalExtraHoursInRegionViewForCurrent = dataInRegionForCurrent.get(0);
+
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            List<String> dataInDistrictForCurrent  = liquidDashboardPage.getDataOnComplianceViolationWidget();
+            String totalHrsInDistrictForCurrent = dataInDistrictForCurrent.get(0);
+
+            SimpleUtils.report("Total Extra Hours In BU View for current week is " + totalExtraHoursInRegionViewForCurrent);
+            SimpleUtils.report("Total Extra Hours In Region View for current week is " + totalHrsInDistrictForCurrent);
+            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the current week's data",
+                    totalHrsInDistrictForCurrent.equals(String.valueOf(Math.round(Float.parseFloat((totalExtraHoursInRegionViewForCurrent))))), false);
+
+            // Validate the data of analytics table for future week
+            compliancePage.clickOnComplianceConsoleMenu();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            compliancePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for future week successfully",
+                    compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInRegionForFuture = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(districtName);
+            String totalExtraHoursInRegionViewForFuture = dataInRegionForFuture.get(0);
+            SimpleUtils.report("Total Extra Hours In Region View for future week is " + totalExtraHoursInRegionViewForFuture);
+            SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the future week's data",
+                    totalExtraHoursInRegionViewForFuture.equals("0"), false);
+
+
+            // Validate Late Schedule is Yes or No
+            compliancePage.navigateToPreviousWeek();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            Thread.sleep(2000);
+            controlsNewUIPage.updateDaysInAdvancePublishSchedulesInSchedulingPolicies("7");
+
+            compliancePage.clickOnComplianceConsoleMenu();
+            List<String>  dataCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(districtName);
+            String lateScheduleYes = dataCurrent.get(dataCurrent.size()-1);
+
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            List<String> upperFieldNames = compliancePage.getAllUpperFieldNamesOnAnalyticsTable();
+            List<String> schedulePublishedOnTime = new ArrayList<>();
+            for (String upperFieldName: upperFieldNames){
+                dataCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(upperFieldName);
+                schedulePublishedOnTime.add(dataCurrent.get(dataCurrent.size()-1));
+            }
+
+            if (lateScheduleYes.equals("Yes"))
+                SimpleUtils.assertOnFail("Compliance Page: Late Schedule is not Yes", !schedulePublishedOnTime.contains("No"), false);
+            else
+                SimpleUtils.assertOnFail("Compliance Page: Late Schedule is not contain No", schedulePublishedOnTime.contains("No"),false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 }

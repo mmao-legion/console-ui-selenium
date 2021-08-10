@@ -589,7 +589,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         schedulePage.clickLinkOnSmartCardByName(linkName);
         SimpleUtils.assertOnFail("Open shifts not load Successfully!", schedulePage.areShiftsPresent(), false);
         Thread.sleep(10000);
-        List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+        List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
         schedulePage.selectOneShiftIsClaimShift(claimShift);
         schedulePage.clickTheShiftRequestByName(claimShift.get(0));
         schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();

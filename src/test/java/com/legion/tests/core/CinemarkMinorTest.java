@@ -155,14 +155,14 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
             SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                     teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-            String calendarName = "Start Next Saturday2";
+            String calendarName = "Automation" + new Random().nextInt(100) + new Random().nextInt(100) + new Random().nextInt(100);
 
             teamPage.deleteCalendarByName(calendarName);
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year")) - 1) +" Jan 1",
-                    dayInfo.get("year") +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
+            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) +" Jan 1",
+                    (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.inputCalendarName(calendarName);
             teamPage.clickOnSaveSchoolCalendarBtn();
@@ -1158,6 +1158,7 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.navigateToNextWeek();
         if (isSummerWeek){
             schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
         }
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -1200,11 +1201,12 @@ public class CinemarkMinorTest extends TestBase {
         if(schedulePage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1+" should be scheduled from "+ scheduleFromToTime;
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
-                SimpleUtils.pass("The message in warning mode display correctly! ");
+            String messageInWarningMode = schedulePage.getWarningMessageInDragShiftWarningMode();
+            if (messageInWarningMode.contains(warningMessage1)&& messageInWarningMode.contains(warningMessage2)){
+                SimpleUtils.pass("The message in warning mode display correctly!");
             } else
-                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+                SimpleUtils.fail("The message in warning mode display incorrectly!  The expected message is :"+
+                        warningMessage1 + warningMessage2+" The actual message is : " + messageInWarningMode, false);
             schedulePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
@@ -1229,7 +1231,9 @@ public class CinemarkMinorTest extends TestBase {
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 
-        schedulePage.verifyClearFilterFunction();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        schedulePage.clickOnFilterBtn();
         //Create new shift with shift hours is more than minor setting for TM1
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
@@ -1282,7 +1286,9 @@ public class CinemarkMinorTest extends TestBase {
         } else
             SimpleUtils.fail("Get new added shift failed", false);
 
-        schedulePage.verifyClearFilterFunction();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        schedulePage.clickOnFilterBtn();
         //Create new shift that not avoid the minor settings for TM1
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
@@ -1488,6 +1494,10 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.navigateToNextWeek();
         } else if (isNonSchoolWeek){
             schedulePage.navigateToNextWeek();
+        } else {
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
         }
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -1495,6 +1505,7 @@ public class CinemarkMinorTest extends TestBase {
         }
 //        List<String> toCloseDays = new ArrayList<>();
         //schedulePage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
+        Thread.sleep(3000);
         schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
