@@ -188,8 +188,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "KendraScott2_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when generating schedule setting set as Yes, except opening/closing shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -681,6 +681,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             Thread.sleep(5000);
             schedulePage.convertAllUnAssignedShiftToOpenShift();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
+            schedulePage.saveSchedule();
             if (ifVerifyOOOHShifts){
                 HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
                 oOOHShiftsCount = schedulePage.getAllOOOHShifts().size();
@@ -693,10 +696,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteAllOOOHShiftInWeekView();
             schedulePage.saveSchedule();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            schedulePage.deleteAllOOOHShiftInWeekView();
+            schedulePage.saveSchedule();
 
             //Check there is no Unassigned shifts display
             unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
-            SimpleUtils.assertOnFail("Unassigned shifts should display! ",
+            SimpleUtils.assertOnFail("Unassigned shifts should not display! but there are "+unassignedShiftsCount+" unassigned shifts display!",
                     unassignedShiftsCount == 0, false);
             if (ifVerifyOOOHShifts) {
                 oOOHShiftsCount = schedulePage.getAllOOOHShifts().size();
