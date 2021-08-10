@@ -1335,7 +1335,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option);
-
             HashMap<String, Object[][]> teamMembers = null;
             if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
                 teamMembers = controlTeamMembers;

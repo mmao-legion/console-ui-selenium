@@ -179,9 +179,7 @@ public class DeleteScheduleTest extends TestBase {
             }
             boolean isSchedulePublished = schedulePage.isCurrentScheduleWeekPublished();
             if (!isSchedulePublished) {
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.deleteTMShiftInWeekView("Unassigned");
-                schedulePage.saveSchedule();
+                schedulePage.convertAllUnAssignedShiftToOpenShift();
                 schedulePage.publishActiveSchedule();
             }
 

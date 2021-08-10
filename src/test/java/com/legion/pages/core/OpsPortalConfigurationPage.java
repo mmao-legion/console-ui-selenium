@@ -351,7 +351,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void clickOnEditButtonOnTemplateDetailsPage() throws Exception {
-		if(isElementEnabled(editButton)){
+		if(isElementEnabled(editButton, 10)){
 			clickTheElement(editButton);
 			waitForSeconds(3);
 			if(isElementEnabled(editTemplatePopupPage)){

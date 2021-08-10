@@ -5019,6 +5019,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'No' button already enabled");
 				} else {
 					clickTheElement(btnOverrideAssignmentRuleNo);
+					waitForSeconds(1);
 					Actions actions = new Actions(getDriver());
 					actions.moveByOffset(0, 0).click().build().perform();
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");

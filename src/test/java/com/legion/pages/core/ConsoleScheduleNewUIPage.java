@@ -4151,10 +4151,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
-                if (MyThreadLocal.getIsNeedEditingOperatingHours()) {
-                    editTheOperatingHours(new ArrayList<>());
-                    waitForSeconds(3);
-                }
+                editTheOperatingHours(new ArrayList<>());
+                waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
                 checkEnterBudgetWindowLoadedForNonDG();
                 selectWhichWeekToCopyFrom("SUGGESTED");
@@ -6905,7 +6903,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 for (WebElement searchResult : searchResults) {
                     WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
                     WebElement status = searchResult.findElement(By.className("worker-edit-availability-status"));
-                    if (workerName != null && optionCircle != null && workerName.getText().toLowerCase().trim().equals(userName.trim().toLowerCase())) {
+                    if (workerName != null && optionCircle != null && workerName.getText().toLowerCase().trim().contains(userName.trim().toLowerCase())) {
                         if (status.getText().contains(scheduled) && status.getText().contains(shiftTime)) {
                             SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
                             isWarningShown = true;
@@ -6935,11 +6933,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
                             if (workerName != null && optionCircle != null) {
                                 if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.trim().toLowerCase())) {
-                                    click(optionCircle);
+                                    clickTheElement(optionCircle);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
                                     waitForSeconds(2);
-                                    if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().equalsIgnoreCase("ASSIGN ANYWAY")) {
-                                        click(btnAssignAnyway);
+                                    if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().toLowerCase().equalsIgnoreCase("assign anyway")) {
+                                        clickTheElement(btnAssignAnyway);
                                         SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
                                     }
                                     break;
@@ -11212,7 +11210,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                                 clickTheElement(deleteShift);
                                 waitForSeconds(1);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
-                                    click(deleteBtnInDeleteWindows);
+                                    clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
                                 } else
                                     SimpleUtils.fail("delete confirm button load failed", false);
@@ -15550,7 +15548,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (WebElement shiftWeekView : shiftsWeekView) {
                 scrollToElement(shiftWeekView);
                 if(isScheduleDayViewActive()){
-                    iIcon = shiftWeekView.findElement(By.cssSelector("img[ng-if=\"hasViolateCompliance(shift)\"]"));
+                    iIcon = shiftWeekView.findElement(By.cssSelector("div.day-view-shift-hover-info-icon img"));
                     waitForSeconds(2);
                 } else
                     iIcon = shiftWeekView.findElement(By.cssSelector("img.week-schedule-shit-open-popover"));
@@ -15692,7 +15690,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(filterPopup,5)) {
             String shiftTypeFilterKey = "shifttype";
             ArrayList<WebElement> shiftTypeFilters = getAvailableFilters().get(shiftTypeFilterKey);
-            if (shiftTypeFilters.size() >= 8) {
+            if (shiftTypeFilters.size() >= 7) {
                 if (shiftTypeFilters.get(0).getText().contains("Action Required")
                         && shiftTypeFilters.get(1).getText().contains("Assigned")
                         && shiftTypeFilters.get(2).getText().contains("Compliance Review")
@@ -15700,9 +15698,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         && shiftTypeFilters.get(4).getText().contains("Unavailable")
                         && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
                         && shiftTypeFilters.get(6).getText().contains("Unpublished changes")
-                        && shiftTypeFilters.get(7).getText().contains("New or Borrowed TM")
-                        && (shiftTypeFilters.size()> 8? (shiftTypeFilters.get(8).getText().contains("Minor (14-15)") ||
-                        shiftTypeFilters.get(8).getText().contains("Minor (16-17)")): true)){
+//                        && shiftTypeFilters.get(7).getText().contains("New or Borrowed TM")
+                        && (shiftTypeFilters.size()> 7? (shiftTypeFilters.get(7).getText().contains("Minor (14-15)") ||
+                        shiftTypeFilters.get(7).getText().contains("Minor (16-17)")): true)){
                     SimpleUtils.pass("The shift types display correctly in Filter dropdown list! ");
                 } else
                     SimpleUtils.fail("The shift types display incorrectly in Filter dropdown list! ", false);
