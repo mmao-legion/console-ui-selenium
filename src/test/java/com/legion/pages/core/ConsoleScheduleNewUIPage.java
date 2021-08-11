@@ -4536,7 +4536,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         }
                     }
                     clickTheElement(operatingHoursSaveBtn);
-                    if (isElementEnabled(operatingHoursEditBtn, 5)) {
+                    if (isElementEnabled(operatingHoursEditBtn, 10)) {
                         SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                     }else {
                         SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
@@ -6562,7 +6562,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
 
         clickOnViewProfile();
-        if (isElementEnabled(tmpProfileContainer, 5)) {
+        if (isElementEnabled(tmpProfileContainer, 15)) {
             if (isElementEnabled(personalDetailsName, 5)) {
                 tmDetailName = personalDetailsName.getText();
             } else
@@ -15599,8 +15599,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                         && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
                         && shiftTypeFilters.get(6).getText().contains("Unpublished changes")
 //                        && shiftTypeFilters.get(7).getText().contains("New or Borrowed TM")
-                        && (shiftTypeFilters.size()> 7? (shiftTypeFilters.get(7).getText().contains("Minor (14-15)") ||
-                        shiftTypeFilters.get(7).getText().contains("Minor (16-17)")): true)){
+//                        && (shiftTypeFilters.size()> 7? (shiftTypeFilters.get(7).getText().contains("Minor (14-15)") ||
+//                        shiftTypeFilters.get(7).getText().contains("Minor (16-17)")): true)
+                ){
                     SimpleUtils.pass("The shift types display correctly in Filter dropdown list! ");
                 } else
                     SimpleUtils.fail("The shift types display incorrectly in Filter dropdown list! ", false);
