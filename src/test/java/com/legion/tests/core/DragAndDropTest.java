@@ -1079,6 +1079,8 @@ public class DragAndDropTest extends TestBase {
             String firstNameOfTM2 = shiftInfo2.get(0);
             String workRoleOfTM2 = shiftInfo2.get(4);
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            schedulePage.saveSchedule();
+            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.selectWorkRole(workRoleOfTM2);
             schedulePage.clearAllSelectedDays();
