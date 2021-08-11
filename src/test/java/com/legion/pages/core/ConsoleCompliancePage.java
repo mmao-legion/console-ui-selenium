@@ -678,5 +678,8 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         return upperFieldNames;
     }
 
-
+    @Override
+    public boolean isComplianceDMView() throws Exception {
+        return false;
+    }
 }
