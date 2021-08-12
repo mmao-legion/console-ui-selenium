@@ -1,6 +1,6 @@
 package com.legion.pages.pagefactories;
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleCompliancePage;
+import com.legion.pages.OpsPortaPageFactories.*;
 
 /**
  * Yanming

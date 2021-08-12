@@ -26,6 +26,8 @@ public class LaborModelPanelPage extends BasePage {
     public void goToLaborModel() {
         laborModel.click();
         waitForSeconds(5);
+
     }
 
 }
+

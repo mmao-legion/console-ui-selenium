@@ -11,7 +11,7 @@
 
 <!--    <test name="Location Test">-->
 <!--        <classes>-->
-<!--            <class name="com.legion.tests.core.ops_portal.LocationsTest">-->
+<!--            <class name="com.legion.tests.core.OpsPortal.LocationsTest">-->
 <!--                <methods>-->
 <!--                    <include name="verifyCreateRegularLocationWithMandatoryFields" />-->
 <!--                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />-->
@@ -58,7 +58,7 @@
 
 <!--    <test name="Navigation Test">-->
 <!--        <classes>-->
-<!--            <class name="com.legion.tests.core.ops_portal.NewNavigationFlowTest">-->
+<!--            <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest">-->
 <!--                <methods>-->
 <!--                    <include name="verifyLocationProfilePageInControls" />-->
 <!--                    <include name="verifyManagerLocationForOneUserInControlsInControls" />-->

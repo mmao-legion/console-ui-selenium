@@ -1,7 +1,9 @@
 package com.legion.pages.pagefactories;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.*;
 import com.legion.pages.core.*;
+import com.legion.pages.core.OpsPortal.*;
 import org.testng.Reporter;
 
 /**

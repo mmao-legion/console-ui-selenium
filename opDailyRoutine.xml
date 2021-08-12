@@ -12,7 +12,7 @@
 
     <test name="Location Test">
         <classes>
-            <class name="com.legion.tests.core.ops_portal.LocationsTest">
+            <class name="com.legion.tests.core.OpsPortal.LocationsTest">
                 <methods>
                     <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
                     <include name="verifyCreateMockLocationAndNavigate" />
@@ -57,7 +57,7 @@
     <test name="Navigation Test">
 
         <classes>
-            <class name="com.legion.tests.core.ops_portal.NewNavigationFlowTest">
+            <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest">
                 <methods>
 <!--                    <include name="verifyLocationProfilePageInControls" />-->
                     <include name="verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow" />
@@ -79,7 +79,7 @@
     </test>
     <test name="Job Test">
         <classes>
-            <class name="com.legion.tests.core.ops_portal.JobTest">
+            <class name="com.legion.tests.core.OpsPortal.JobTest">
                 <methods>
                     <include name="verifyJobLandingPageAsInternalAdminForJob" />
                     <include name="verifyJobSearchFunctionAsInternalAdminForJob" />
@@ -105,7 +105,7 @@
 
     <test name="Configuration Test">
         <classes>
-            <class name="com.legion.tests.core.ops_portal.ConfigurationTest">
+            <class name="com.legion.tests.core.OpsPortal.ConfigurationTest">
                 <methods>
                     <include name="verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration"/>
                     <include name="verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration"/>
@@ -136,7 +136,7 @@
 
     <test name="User Management Test">
         <classes>
-            <class name="com.legion.tests.core.ops_portal.UserManagementTest">
+            <class name="com.legion.tests.core.OpsPortal.UserManagementTest">
                 <methods>
                     <include name="verifyAddUpdateWorkRoleAsInternalAdminForUserManagement"/>
                     <include name="verifyDynamicGroupFunctionInUserManagementTabAsInternalAdminForUserManagement"/>
@@ -152,7 +152,7 @@
 
     <test name="Labor Model Test">
         <classes>
-            <class name="com.legion.tests.core.ops_portal.LaborModelTest">
+            <class name="com.legion.tests.core.OpsPortal.LaborModelTest">
                 <methods>
                     <include name="verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdminForLaborModel"/>
                     <include name="verifyCreateUpdateAndDeleteNewAttributeFunctionAsInternalAdminForLaborModel"/>
@@ -164,7 +164,7 @@
     </test>
     <test name="Location Group Test">
         <classes>
-            <class name="com.legion.tests.core.ops_portal.LocationsGroupTestInOP">
+            <class name="com.legion.tests.core.OpsPortal.LocationsGroupTestInOP">
                 <methods>
                     <include name="verifyMSLocationGroupFunctionForRegularAsInternalAdminForLocationGroup"/>
                     <include name="verifyChangeMSToP2PAsInternalAdminForLocationGroup"/>
