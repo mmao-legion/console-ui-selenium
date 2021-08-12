@@ -740,6 +740,81 @@ public class TeamTestKendraScott2 extends TestBase{
 	}
 
 	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate create change availability request")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateCreateChangeAvailabilityRequestAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		String weekInfo = profileNewUIPage.getAvailabilityWeek();
+		int sliderIndex = 1;
+		double hours = 0.5;//move 1 metric 0.5h right----increase
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours*2, repeatChanges);
+
+		//cancel all availability change requests again.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		hours = -0.5;//move 1 metric 0.5h left----decrease
+		leftOrRightDuration = "Left";
+		hoursType = "Preferred";
+		repeatChanges = "repeat forward";
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours*2, repeatChanges);
+		profileNewUIPage.verifyPendingRequestCountNum("1");
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate cancel Change Availability Request")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateCancelAvailabilityRequestAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		String weekInfo = profileNewUIPage.getAvailabilityWeek();
+		int sliderIndex = 1;
+		double hours = 0.5;//move 1 metric 0.5h right----increase
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
+		profileNewUIPage.verifyPendingRequestCountNum("1");
+		//cancel availability change requests.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		profileNewUIPage.verifyPendingRequestCountNum("0");
+	}
+
+	@Automated(automated ="Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "KendraScott2_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")

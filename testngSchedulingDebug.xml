@@ -33,6 +33,8 @@
             <class name="com.legion.tests.core.TeamTestKendraScott2">
                 <methods>
                     <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
+                    <include name="validateCreateChangeAvailabilityRequestAsTeamMember" />
+                    <include name="validateCancelAvailabilityRequestAsTeamMember" />
                 </methods>
             </class>
         </classes>

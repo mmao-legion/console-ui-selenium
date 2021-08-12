@@ -677,9 +677,4 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
             SimpleUtils.fail("Upper field names fail to load on analytics table", false);
         return upperFieldNames;
     }
-
-    @Override
-    public boolean isComplianceDMView() throws Exception {
-        return false;
-    }
 }

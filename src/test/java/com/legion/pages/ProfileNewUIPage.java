@@ -168,6 +168,8 @@ public interface ProfileNewUIPage {
 
 	public void approveAllPendingAvailabilityRequest() throws Exception;
 
+	public void verifyTheLatestAvailabilityRequestInfo(String weekInfo, double hours, String repeatChanges ) throws Exception;
+
 	public void clickOnEditUserProfilePencilIcon() throws Exception;
 
 	public void clickOnSaveUserProfileBtn() throws Exception;
@@ -271,4 +273,8 @@ public interface ProfileNewUIPage {
 	public void clickPreviousWeek() throws Exception;
 
 	public void cancelSpecificPendingAvailabilityRequest(String availabilityWeek) throws Exception;
+
+	public void cancelAllPendingAvailabilityRequest() throws Exception;
+
+	public void verifyPendingRequestCountNum(String count) throws Exception;
 }

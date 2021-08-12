@@ -1576,7 +1576,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 										String leftOrRightSliderArrow, double durationhours, String repeatChanges) throws Exception
 	{
 		if (isElementLoaded(editBtn,30)){
-			click(editBtn);
+			clickTheElement(editBtn);
 			updatePreferredOrBusyHoursDurationNew(sliderIndex,durationhours,leftOrRightSliderArrow, hoursType);
 			saveMyAvailabilityEditMode(repeatChanges);
 		}else{
@@ -1618,7 +1618,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			}
 		}
 	}
-	
+
 	@Override
 	public ArrayList<HashMap<String, ArrayList<String>>> getMyAvailabilityPreferredAndBusyHours() {
 		ArrayList<HashMap<String, ArrayList<String>>> result = new ArrayList<HashMap<String, ArrayList<String>>>();
@@ -2079,10 +2079,14 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> pendingTimeOffRequests;
 	@FindBy(css = ".user-profile-section .request-status-Pending")
 	private List<WebElement> pendingAvailabilityRequests;
+	@FindBy(css = ".user-profile-section .timeoff-requests-request")
+	private  List<WebElement> allAvailabilityRequests;
 	@FindBy(css = ".request-buttons-approve")
 	private WebElement approveAvailabilityButton;
 	@FindBy(css = ".request-buttons-reject")
 	private WebElement rejectAvailabilityButton;
+	@FindBy(css = ".user-profile-section div.count-block.count-block-pending span.count-block-counter")
+	private WebElement pendingCouter;
 
 	@Override
 	public void approveAllPendingAvailabilityRequest() throws Exception {
@@ -2096,6 +2100,53 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					break;
 				}
 			}
+		}
+	}
+
+	@Override
+	public void verifyTheLatestAvailabilityRequestInfo(String weekInfo, double hours, String repeatChanges ) throws Exception {
+		String increaseOrDecrease = "";
+		String hourStr = "";
+		String resultInfo = "";
+		String newHours = "";
+		if (hours>0){
+			increaseOrDecrease = "Increased";
+			hourStr = String.valueOf(hours);
+		} else {
+			increaseOrDecrease = "Decreased";
+			hourStr = String.valueOf(hours).replace("-", "");
+		}
+		if (areListElementVisible(allAvailabilityRequests, 10) && pendingAvailabilityRequests.size()>0 ) {
+			for (WebElement element: allAvailabilityRequests){
+				if (element.findElement(By.cssSelector(".request-stat")).getText().toLowerCase().contains("pending")){
+					resultInfo = element.findElement(By.cssSelector(".request-date")).getText().replace("\n", "");
+					SimpleUtils.assertOnFail("Week info is not correct!", resultInfo.equalsIgnoreCase(weekInfo), true);
+					resultInfo = element.findElement(By.cssSelector(".request-body")).getText();
+					SimpleUtils.assertOnFail("Decreased or Increased hours info is not correct!", resultInfo.contains("Availability "+increaseOrDecrease+" "+hourStr+" Hrs"), true);
+					if (resultInfo.split("\n").length == 3){
+						String newHoursTemp = String.valueOf(resultInfo.split("\n")[1].split(" \\| ")[0].replace("Current: ","").replace("Hrs","").trim());
+						if (SimpleUtils.isNumeric(newHoursTemp)){
+							newHours = String.valueOf(Double.valueOf(newHoursTemp)+hours);
+							SimpleUtils.assertOnFail("Current and New hours are not correct!", resultInfo.contains(newHours+" Hrs"), true);
+						} else {
+							SimpleUtils.fail("Availability request info is not in expected format!", false);
+						}
+					} else {
+						SimpleUtils.fail("Availability request info is not complete!", false);
+					}
+					SimpleUtils.assertOnFail("Submitted date info is not correct!", resultInfo.split("\n")[2].contains("Submitted "+SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT-5", new SimpleDateFormat("MMM d,yyyy"))), true);
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.report("No pending availability request in the list!");
+		}
+	}
+
+	@Override
+	public void verifyPendingRequestCountNum(String count) throws Exception {
+		if (isElementLoaded(pendingCouter, 10)){
+			SimpleUtils.assertOnFail("pending requests count is not correct!", pendingCouter.getText().equalsIgnoreCase(count), false);
 		}
 	}
 
@@ -3880,6 +3931,19 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					break;
 				}
 
+			}
+		}
+	}
+
+	@Override
+	public void cancelAllPendingAvailabilityRequest() throws Exception {
+		if (areListElementVisible(pendingAvailabilityRequests, 10)) {
+			for (WebElement availabilityChangeRequest : pendingAvailabilityRequests) {
+				clickTheElement(availabilityChangeRequest);
+				if (isElementLoaded(cancelButtonOfPendingRequest, 10)) {
+					clickTheElement(cancelButtonOfPendingRequest);
+					SimpleUtils.pass("Cancel the pending availability request successfully!");
+				}
 			}
 		}
 	}

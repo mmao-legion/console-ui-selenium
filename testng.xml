@@ -88,6 +88,8 @@
                    <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
                    <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
+                   <include name="validateCreateChangeAvailabilityRequestAsTeamMember" />
+                   <include name="validateCancelAvailabilityRequestAsTeamMember" />
                </methods>
            </class>
        </classes>
