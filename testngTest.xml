@@ -9,12 +9,11 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="Consolidating Filters Test">
+    <test name="LiquidDashboard Test">
         <classes>
-            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
+            <class name="com.legion.tests.core.LiquidDashboardTest">
                 <methods>
-                    <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
-                    <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
+                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                 </methods>
             </class>
         </classes>
