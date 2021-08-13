@@ -543,6 +543,8 @@
                         <include name="verifyControlsInRegionViewAsInternalAdmin" />
                         <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" />
                         <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
+                        <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>

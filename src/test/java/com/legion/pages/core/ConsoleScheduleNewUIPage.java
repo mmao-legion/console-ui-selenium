@@ -2809,7 +2809,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
                 SimpleUtils.report("Recommended option not available on page");
             }
-        } else if (isElementLoaded(textSearch, 5)) {
+        } else if (isElementLoaded(textSearch, 10)) {
             newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
         } else {
             SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);

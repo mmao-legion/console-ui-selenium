@@ -1312,4 +1312,120 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Compliance functionality on Compliance in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String districtName = selectedUpperFields.get(District);
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            //Validate the title and info of Compliance page.
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
+
+            //Verify BU selected and displayed with "All Regions".
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            SimpleUtils.assertOnFail("The selected BU display incorrectly! ",
+                    selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(buName), false);
+            SimpleUtils.assertOnFail("The 'All Regions' display incorrectly! ",
+                    selectedUpperFields.get(Region).equalsIgnoreCase("All Regions"), false);
+
+            //Validate search function.
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+
+            //Validate the clickability of backward button.
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            String weekInfo = schedulePage.getActiveWeekText();
+            schedulePage.navigateToPreviousWeek();
+
+            //Validate the clickability of forward button.
+            schedulePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+
+            //Validate changing BUs on Compliance
+            String buName2 = upperFields3[upperFields3.length-3].trim();
+            String regionName2 = upperFields3[upperFields3.length-2].trim();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName2);
+
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName2);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Coffee_Enterprise")
+    @TestName(description = "Verify Compliance functionality on Compliance in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String districtName = selectedUpperFields.get(District);
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            //Validate the title and info of Compliance page.
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
+
+            //Verify BU selected and displayed with "All Regions".
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            SimpleUtils.assertOnFail("The selected Region display incorrectly! ",
+                    selectedUpperFields.get(Region).equalsIgnoreCase(regionName), false);
+            SimpleUtils.assertOnFail("The 'All District' display incorrectly! ",
+                    selectedUpperFields.get(District).equalsIgnoreCase("All Districts"), false);
+
+            //Validate search function.
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(location);
+
+            //Validate the clickability of backward button.
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            String weekInfo = schedulePage.getActiveWeekText();
+            schedulePage.navigateToPreviousWeek();
+
+            //Validate the clickability of forward button.
+            schedulePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+
+            //Validate changing Regions on Compliance
+            String regionName2 = upperFields2[upperFields2.length-2].trim();
+            String districtName2 = upperFields2[upperFields2.length-1].trim();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName2);
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName2);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
