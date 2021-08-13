@@ -8,5 +8,7 @@
   "DGStage_Enterprise" : "District 12",
   "CinemarkWkdy_Enterprise" : "Region1 > Atlantic Central Region",
   "CinemarkWkdy_Enterprise2" : "Region1 > Cinemark",
-  "Vailqacn_Enterprise" : "HQ > WB Retail Rental"
+  "Vailqacn_Enterprise" : "HQ > Business Unit 1 > Region1 > WB Retail Rental",
+  "Vailqacn_Enterprise2" : "HQ > Business Unit 1 > Region2 > PARK - Skier Services",
+  "Vailqacn_Enterprise3" : "HQ > Business Unit 2 > Region3 > PARK - Retail Rental"
 }
