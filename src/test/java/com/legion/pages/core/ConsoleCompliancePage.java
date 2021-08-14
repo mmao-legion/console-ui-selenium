@@ -126,7 +126,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     @FindBy (css = ".analytics-new.ng-scope")
     private WebElement complianceSection;
 
-    @FindBy(className = "analytics-new-table-group-row-open")
+    @FindBy(css = "div.analytics-new-table-group-row-open")
     private List<WebElement> rowsInAnalyticsTable;
 
     @FindBy (css = ".console-navigation-item-label.Timesheet")
@@ -622,17 +622,19 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     @Override
     public List<String> getListByColInTimesheetDMView(int index) throws Exception{
         List<String> list = new ArrayList<String>();
-        for (WebElement element: rowsInAnalyticsTable){
-            if (index > 0 && index <= getNumOfColInDMViewTable() && element.findElements(By.cssSelector(".ng-scope.col-fx-1")).size()>=getNumOfColInDMViewTable()-1){
-                if (index == 1){
-                    list = getLocationsInScheduleDMViewLocationsTable();
-                } else {
-                    if (areListElementVisible(rowsInAnalyticsTable,10)){
-                        list.add(element.findElements(By.cssSelector(".ng-scope.col-fx-1")).get(index-2).getText().replace("%",""));
+        if (areListElementVisible(rowsInAnalyticsTable, 10)) {
+            for (WebElement element: rowsInAnalyticsTable){
+                if (index > 0 && index <= getNumOfColInDMViewTable() && element.findElements(By.cssSelector(".ng-scope.col-fx-1")).size()>=getNumOfColInDMViewTable()-1){
+                    if (index == 1){
+                        list = getLocationsInScheduleDMViewLocationsTable();
+                    } else {
+                        if (areListElementVisible(rowsInAnalyticsTable,10)){
+                            list.add(element.findElements(By.cssSelector(".ng-scope.col-fx-1")).get(index-2).getText().replace("%",""));
+                        }
                     }
+                } else {
+                    SimpleUtils.fail("Index beyond range.", false);
                 }
-            } else {
-                SimpleUtils.fail("Index beyond range.", false);
             }
         }
         return list;

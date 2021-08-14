@@ -844,13 +844,12 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         }
     }
 
-    @FindBy (css = ".sc-gpEJdM.jdQeRJ")
+    @FindBy (css = ".MuiBox-root.jss10 div div div div div div")
     private List<WebElement> dataOnComplianceWidget;
     @Override
     public List<String> getDataOnComplianceViolationWidget() throws Exception {
         List<String> resultList= new ArrayList<String>();
         if (areListElementVisible(dataOnComplianceWidget,10)){
-
             for (int i=0;i<dataOnComplianceWidget.size();i++){
                 String numberOnComplianceWidget = dataOnComplianceWidget.get(i).findElement(By.cssSelector("div")).getText();
                 resultList.add(numberOnComplianceWidget);
