@@ -29,7 +29,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
 
     public String getTheTotalViolationHrsFromSmartCard() throws Exception {
         String hrsOfTotalViolation = "";
-        if (isElementLoaded(totalViolationHrs, 5)){
+        if (isElementLoaded(totalViolationHrs, 15)){
             hrsOfTotalViolation = totalViolationHrs.getText();
             SimpleUtils.pass("Get the total violation hrs successfully");
         } else {
