@@ -330,8 +330,8 @@ public abstract class TestBase {
         if(testRailReportingFlag!=null){
             List<Integer> testRunList = new ArrayList<Integer>();
             testRunList.add(testRailRunId);
-            if (testRailRunId!=null && SimpleUtils.isTestRunEmpty(testRailRunId)){
-                SimpleUtils.deleteTestRail(testRunList);
+            if (testRailRunId!=null && TestRailOperation.isTestRunEmpty(testRailRunId)){
+                TestRailOperation.deleteTestRail(testRunList);
             }
         }
     }
