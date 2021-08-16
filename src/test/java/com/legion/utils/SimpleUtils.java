@@ -3,6 +3,7 @@ package com.legion.utils;
 import com.aventstack.extentreports.Status;
 import com.legion.test.testrail.APIClient;
 import com.legion.test.testrail.APIException;
+import com.legion.test.testrail.TestRailOperation;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.ExtentTestManager;
@@ -82,7 +83,7 @@ public class SimpleUtils {
 //		SimpleUtils.addTestResultIntoTestRail(5, message);
 		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
 			MyThreadLocal.setTestResultFlag(false);
-			SimpleUtils.addTestResultIntoTestRailN(5, message);
+			TestRailOperation.addTestResultIntoTestRailN(5, message);
 		}
 		if (continueExecution) {
 			try {
@@ -180,6 +181,7 @@ public class SimpleUtils {
 				addVerificationFailure(e);
 				ExtentTestManager.getTest().log(Status.ERROR, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
 						+ "</div>");
+				TestRailOperation.addTestResultIntoTestRailN(5, message);
 				MyThreadLocal.setTestResultFlag(false);
 			}
 		} else {
@@ -188,6 +190,7 @@ public class SimpleUtils {
 				MyThreadLocal.setTestResultFlag(true);
 			} catch (Throwable e) {
 				ExtentTestManager.getTest().log(Status.FAIL, message);
+				TestRailOperation.addTestResultIntoTestRailN(5, message);
 				MyThreadLocal.setTestResultFlag(false);
 				throw new AssertionError(message);
 			}
