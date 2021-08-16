@@ -1252,12 +1252,12 @@ public class ScheduleTest extends TestBase{
 			schedulePage.clickLinkOnSmartCardByName(linkName);
 			SimpleUtils.assertOnFail("Open shifts not loaed Successfully!", schedulePage.areShiftsPresent(), false);
 			List<String> shiftHours = schedulePage.getShiftHoursFromInfoLayout();
-			List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+			List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
 			int index = schedulePage.selectOneShiftIsClaimShift(claimShift);
 			String weekDay = schedulePage.getSpecificShiftWeekDay(index);
 			// Validate the availability of Claim Shift Request popup
 			schedulePage.clickTheShiftRequestByName(claimShift.get(0));
-			// Validate the availability of Cancel and I Agree buttons in popup
+			// Validate the availability of Decline and Accept buttons in popup
 			schedulePage.verifyClaimShiftOfferNBtnsLoaded();
 			// Validate the date and time of Claim Shift Request popup
 			schedulePage.verifyTheShiftHourOnPopupWithScheduleTable(shiftHours.get(index), weekDay);
