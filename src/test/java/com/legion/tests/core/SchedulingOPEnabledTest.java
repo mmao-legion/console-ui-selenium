@@ -77,6 +77,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
         if(isActiveWeekGenerated2){
            schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
+        Thread.sleep(3000);
         schedulePage.createScheduleForNonDGFlowNewUI();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView("Unassigned");
