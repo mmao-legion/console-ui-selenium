@@ -985,8 +985,13 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         String budgetedHours = "";
                         if (areListElementVisible(budgetHours, 5)){
                             budgetedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText().replace(",","");
-                        } else
-                            budgetedHours = schedulesInDMView.get(i).findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(2).getText().replace(",","");
+                        } else {
+                            if (isElementLoaded(scheduleScoreSmartCard, 5)) {
+                                budgetedHours = schedulesInDMView.get(i).findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(3).getText().replace(",","");
+                            } else
+                                budgetedHours = schedulesInDMView.get(i).findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(2).getText().replace(",","");
+                        }
+
                         //add Budgeted Hours
                         allScheduleInfo.put("budgetedHours", budgetedHours);
                         //add Scheduled Hours

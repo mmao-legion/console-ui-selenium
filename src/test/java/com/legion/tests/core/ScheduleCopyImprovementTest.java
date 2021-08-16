@@ -823,6 +823,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(3000);
             schedulePage.createScheduleForNonDGFlowNewUI();
             schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.publishActiveSchedule();
