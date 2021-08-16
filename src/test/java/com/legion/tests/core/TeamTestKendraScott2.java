@@ -744,7 +744,31 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate create change availability request")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void validateCreateChangeAvailabilityRequestAsTeamMember(String browser, String username, String password, String location) throws Exception {
+	public void validateCreateChangeAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		dashboardPage.navigateToDashboard();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 		profileNewUIPage.getNickNameFromProfile();
 		String myWorkPreferencesLabel = "My Work Preferences";
@@ -780,7 +804,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 				hours, repeatChanges);
 		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours*2, repeatChanges);
-		profileNewUIPage.verifyPendingRequestCountNum("1");
+		SimpleUtils.assertOnFail("Pending count should be 1.", "1".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
 	}
 
 	@Automated(automated ="Automated")
@@ -788,7 +812,31 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate cancel Change Availability Request")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void validateCancelAvailabilityRequestAsTeamMember(String browser, String username, String password, String location) throws Exception {
+	public void validateCancelAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		dashboardPage.navigateToDashboard();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 		profileNewUIPage.getNickNameFromProfile();
 		String myWorkPreferencesLabel = "My Work Preferences";
@@ -808,10 +856,152 @@ public class TeamTestKendraScott2 extends TestBase{
 		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 				hours, repeatChanges);
 		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
-		profileNewUIPage.verifyPendingRequestCountNum("1");
+		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
 		//cancel availability change requests.
 		profileNewUIPage.cancelAllPendingAvailabilityRequest();
-		profileNewUIPage.verifyPendingRequestCountNum("0");
+		SimpleUtils.assertOnFail("Pending count should be 1.", "1".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate SM approve change availability request")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateApproveAvailabilityRequestAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		dashboardPage.navigateToDashboard();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		String weekInfo = profileNewUIPage.getAvailabilityWeek();
+		String oldAvailableHrs = profileNewUIPage.getAvailableHoursForSpecificWeek();
+		int sliderIndex = 1;
+		double hours = -0.5;//move 1 metric 0.5h left----decrease
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		loginPage.logOut();
+
+		//Login as store manager to change approve the request.
+		loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(requestUserName);
+		String workPreferencesLabel = "Work Preferences";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+		String approvedCount = profileNewUIPage.getCountForStatus("approved");
+		profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(weekInfo, "Approve");
+		if (SimpleUtils.isNumeric(approvedCount)){
+			int approvedNum = Integer.valueOf(approvedCount);
+			SimpleUtils.assertOnFail("Approved count should be 1 more than before.", String.valueOf((approvedNum+1)).equalsIgnoreCase(profileNewUIPage.getCountForStatus("approved").trim()), false);
+		} else {
+			SimpleUtils.fail("Count is not numeric", false);
+		}
+		while (!weekInfo.equalsIgnoreCase(profileNewUIPage.getAvailabilityWeek())){
+			profileNewUIPage.clickNextWeek();
+		}
+		SimpleUtils.assertOnFail("Available hours didn't change to the new version!", newAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
+		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
+
+		//Go to reject a approved request.
+		profileNewUIPage.rejectSpecificApprovedAvailabilityRequest(weekInfo);
+		SimpleUtils.assertOnFail("Available hours should change back to the old version!", oldAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
+		SimpleUtils.assertOnFail("Approved count should be the same as before.", approvedCount.equalsIgnoreCase(profileNewUIPage.getCountForStatus("approved").trim()), false);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate cancelled and dated request has no option when clicking the request")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateCancelledAvailabilityHasNoOptionRequestAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		dashboardPage.navigateToDashboard();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		String weekInfo = profileNewUIPage.getAvailabilityWeek();
+		String oldAvailableHrs = profileNewUIPage.getAvailableHoursForSpecificWeek();
+		int sliderIndex = 1;
+		double hours = -0.5;//move 1 metric 0.5h left----decrease
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		loginPage.logOut();
+
+		//Login as store manager to check cancelled request.
+		loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(requestUserName);
+		String workPreferencesLabel = "Work Preferences";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+		profileNewUIPage.verifyClickCancelledAvalabilityRequest();
+
 	}
 
 	@Automated(automated ="Automated")
