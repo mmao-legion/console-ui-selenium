@@ -248,4 +248,54 @@ public class TestRailOperation {
             System.err.println(aPIException.getMessage());
         }
     }
+
+    //Add by Haya
+    public static boolean isTestRunEmpty(long testRailRunId){
+        boolean result = false;
+        String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+        String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+        String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+        try {
+            // Make a connection with Testrail Server
+            APIClient client = new APIClient(testRailURL);
+            client.setUser(testRailUser);
+            client.setPassword(testRailPassword);
+            JSONObject jSONObject= (JSONObject) client.sendGet("get_run/"+testRailRunId);
+            long testRunPassedCount = (long) jSONObject.get("passed_count");
+            long testRunFailedCount = (long) jSONObject.get("failed_count");
+            long testRunBlockedCount = (long) jSONObject.get("blocked_count");
+            long testRunRetestCount = (long) jSONObject.get("retest_count");
+            long testRunUntestedCount = (long) jSONObject.get("untested_count");
+            if ((testRunPassedCount+testRunFailedCount+testRunBlockedCount+testRunRetestCount+testRunUntestedCount)==0){
+                result = true;
+            }
+        }catch(IOException ioException){
+            System.err.println(ioException.getMessage());
+        } catch(APIException aPIException){
+            System.err.println(aPIException.getMessage());
+        }
+        return result;
+    }
+
+    public static void deleteTestRail(List<Integer> testRailIdList)
+    {
+        String testRailURL = getTestRailURL();
+        String testRailUser = getTestRailUser();
+        String testRailPassword = getTestRailPassword();
+
+        // Make a connection with Testrail Server
+        for(int i=0; i<testRailIdList.size();i++) {
+            String addResult = "delete_run/" + testRailIdList.get(i);
+            try {
+                // Make a connection with TestRail Server
+                APIClient client = new APIClient(testRailURL);
+                client.setUser(testRailUser);
+                client.setPassword(testRailPassword);
+                Map<String, Object> data = new HashMap<String, Object>();
+                client.sendPost(addResult, data);
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
 }
