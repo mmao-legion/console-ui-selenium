@@ -96,7 +96,7 @@ public interface ProfileNewUIPage {
 	public void updateLockedAvailabilityPreferredOrBusyHoursSlider(String hoursType, int sliderIndex,
 			String leftOrRightSliderArrow, int durationMinutes, String repeatChanges) throws Exception;
 
-	public void updateMyAvailability(String hoursType, int sliderIndex,
+	public String updateMyAvailability(String hoursType, int sliderIndex,
 												   String leftOrRightSliderArrow, double durationHours, String repeatChanges) throws Exception;
 
 	public HashMap<String, Integer> getTimeOffRequestsStatusCount() throws Exception;
@@ -167,6 +167,8 @@ public interface ProfileNewUIPage {
 	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception;
 
 	public void approveAllPendingAvailabilityRequest() throws Exception;
+
+	public void verifyTheLatestAvailabilityRequestInfo(String weekInfo, double hours, String repeatChanges ) throws Exception;
 
 	public void clickOnEditUserProfilePencilIcon() throws Exception;
 
@@ -271,4 +273,14 @@ public interface ProfileNewUIPage {
 	public void clickPreviousWeek() throws Exception;
 
 	public void cancelSpecificPendingAvailabilityRequest(String availabilityWeek) throws Exception;
+
+	public void cancelAllPendingAvailabilityRequest() throws Exception;
+
+	public String getCountForStatus(String status) throws Exception;
+
+	public String getAvailableHoursForSpecificWeek() throws Exception;
+
+	public void rejectSpecificApprovedAvailabilityRequest(String availabilityWeek) throws Exception;
+
+	public void verifyClickCancelledAvalabilityRequest() throws Exception;
 }

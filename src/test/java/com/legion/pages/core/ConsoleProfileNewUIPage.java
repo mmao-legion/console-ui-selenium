@@ -1571,17 +1571,21 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	//added by Haya
+	//return new available hours.
 	@Override
-	public void updateMyAvailability(String hoursType, int sliderIndex,
-										String leftOrRightSliderArrow, double durationhours, String repeatChanges) throws Exception
+	public String updateMyAvailability(String hoursType, int sliderIndex,
+									   String leftOrRightSliderArrow, double durationhours, String repeatChanges) throws Exception
 	{
+		String result = "";
 		if (isElementLoaded(editBtn,30)){
-			click(editBtn);
+			clickTheElement(editBtn);
 			updatePreferredOrBusyHoursDurationNew(sliderIndex,durationhours,leftOrRightSliderArrow, hoursType);
+			result = getAvailableHoursForSpecificWeek();
 			saveMyAvailabilityEditMode(repeatChanges);
 		}else{
 			SimpleUtils.fail("Edit button is not loaded!", false);
 		}
+		return result;
 	}
 
 	@FindBy(css = ".availability-box.availability-box-ghost")
@@ -1618,7 +1622,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			}
 		}
 	}
-	
+
 	@Override
 	public ArrayList<HashMap<String, ArrayList<String>>> getMyAvailabilityPreferredAndBusyHours() {
 		ArrayList<HashMap<String, ArrayList<String>>> result = new ArrayList<HashMap<String, ArrayList<String>>>();
@@ -2079,10 +2083,20 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> pendingTimeOffRequests;
 	@FindBy(css = ".user-profile-section .request-status-Pending")
 	private List<WebElement> pendingAvailabilityRequests;
+	@FindBy(css = ".user-profile-section .request-status-Cancelled")
+	private List<WebElement> cancelledAvailabilityRequests;
+	@FindBy(css = ".user-profile-section .timeoff-requests-request")
+	private  List<WebElement> allAvailabilityRequests;
 	@FindBy(css = ".request-buttons-approve")
 	private WebElement approveAvailabilityButton;
 	@FindBy(css = ".request-buttons-reject")
 	private WebElement rejectAvailabilityButton;
+	@FindBy(css = ".user-profile-section div.count-block.count-block-pending span.count-block-counter")
+	private WebElement pendingCouter;
+	@FindBy(css = ".user-profile-section div.count-block.count-block-approved span.count-block-counter")
+	private WebElement approvedCouter;
+	@FindBy(css = ".user-profile-section div.count-block.count-block-rejected span.count-block-counter")
+	private WebElement rejectedCouter;
 
 	@Override
 	public void approveAllPendingAvailabilityRequest() throws Exception {
@@ -2097,6 +2111,77 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				}
 			}
 		}
+	}
+
+	@Override
+	public void verifyTheLatestAvailabilityRequestInfo(String weekInfo, double hours, String repeatChanges ) throws Exception {
+		String increaseOrDecrease = "";
+		String hourStr = "";
+		String resultInfo = "";
+		String newHours = "";
+		if (hours>0){
+			increaseOrDecrease = "Increased";
+			hourStr = String.valueOf(hours);
+		} else {
+			increaseOrDecrease = "Decreased";
+			hourStr = String.valueOf(hours).replace("-", "");
+		}
+		if (areListElementVisible(allAvailabilityRequests, 10) && pendingAvailabilityRequests.size()>0 ) {
+			for (WebElement element: allAvailabilityRequests){
+				if (element.findElement(By.cssSelector(".request-stat")).getText().toLowerCase().contains("pending")){
+					resultInfo = element.findElement(By.cssSelector(".request-date")).getText().replace("\n", "");
+					SimpleUtils.assertOnFail("Week info is not correct!", resultInfo.equalsIgnoreCase(weekInfo), true);
+					resultInfo = element.findElement(By.cssSelector(".request-body")).getText();
+					SimpleUtils.assertOnFail("Decreased or Increased hours info is not correct!", resultInfo.contains("Availability "+increaseOrDecrease+" "+hourStr+" Hrs"), true);
+					if (resultInfo.split("\n").length == 3){
+						String newHoursTemp = String.valueOf(resultInfo.split("\n")[1].split(" \\| ")[0].replace("Current: ","").replace("Hrs","").trim());
+						if (SimpleUtils.isNumeric(newHoursTemp)){
+							newHours = String.valueOf(Double.valueOf(newHoursTemp)+hours);
+							SimpleUtils.assertOnFail("Current and New hours are not correct!", resultInfo.contains(newHours+" Hrs"), true);
+						} else {
+							SimpleUtils.fail("Availability request info is not in expected format!", false);
+						}
+					} else {
+						SimpleUtils.fail("Availability request info is not complete!", false);
+					}
+					SimpleUtils.assertOnFail("Submitted date info is not correct!", resultInfo.split("\n")[2].contains("Submitted "+SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT-5", new SimpleDateFormat("MMM d,yyyy"))), true);
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.report("No pending availability request in the list!");
+		}
+	}
+
+	@Override
+	public String getCountForStatus(String status) throws Exception {
+		if (status.equalsIgnoreCase("pending")){
+			if (isElementLoaded(pendingCouter, 10)){
+				return pendingCouter.getText();
+			}
+		} else if (status.equalsIgnoreCase("approved")){
+			if (isElementLoaded(approvedCouter, 10)){
+				return approvedCouter.getText();
+			}
+		} else if (status.equalsIgnoreCase("rejected")){
+			if (isElementLoaded(rejectedCouter, 10)){
+				return rejectedCouter.getText();
+			}
+		} else {
+			SimpleUtils.fail("Please input the right status!", false);
+		}
+		return null;
+	}
+
+	//Available hours for a week in work preference table.
+	@FindBy(css = ".tm-total-hours-label-green")
+	private WebElement availableHrs;
+	@Override
+	public String getAvailableHoursForSpecificWeek() throws Exception {
+		if (isElementLoaded(availableHrs, 10)){
+			return availableHrs.getText();
+		}
+		return null;
 	}
 
 	@Override
@@ -3880,6 +3965,56 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					break;
 				}
 
+			}
+		}
+	}
+
+	@Override
+	public void cancelAllPendingAvailabilityRequest() throws Exception {
+		if (areListElementVisible(pendingAvailabilityRequests, 10)) {
+			for (WebElement availabilityChangeRequest : pendingAvailabilityRequests) {
+				clickTheElement(availabilityChangeRequest);
+				if (isElementLoaded(cancelButtonOfPendingRequest, 10)) {
+					clickTheElement(cancelButtonOfPendingRequest);
+					SimpleUtils.pass("Cancel the pending availability request successfully!");
+				}
+			}
+		}
+	}
+
+	@Override
+	public void rejectSpecificApprovedAvailabilityRequest(String availabilityWeek) throws Exception {
+		if (areListElementVisible(allAvailabilityChangeRequests, 10)) {
+			for (WebElement availabilityChangeRequest : allAvailabilityChangeRequests) {
+				if (isElementLoaded(availabilityChangeRequest, 5)
+						&& availabilityChangeRequest.findElement(By.cssSelector("div.request-date")).
+						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)
+						&& availabilityChangeRequest.findElement(By.cssSelector("span.request-status")).
+						getText().equalsIgnoreCase("approved")) {
+					clickTheElement(availabilityChangeRequest);
+					if (isElementLoaded(rejectAvailabilityButton, 10)) {
+						clickTheElement(rejectAvailabilityButton);
+						SimpleUtils.pass("Reject the pending availability request successfully!");
+					} else {
+						SimpleUtils.fail("Reject button fail to load!", false);
+					}
+					break;
+				}
+
+			}
+		}
+	}
+
+	@Override
+	public void verifyClickCancelledAvalabilityRequest() throws Exception {
+		if (areListElementVisible(cancelledAvailabilityRequests, 10) && cancelledAvailabilityRequests.size()>0) {
+			clickTheElement(cancelledAvailabilityRequests.get(0));
+			if (!isElementLoaded(cancelButtonOfPendingRequest, 10)
+					&& !isElementLoaded(approveAvailabilityButton,10)
+					&& !isElementLoaded(rejectAvailabilityButton,10)) {
+				SimpleUtils.pass("Cancel the pending availability request successfully!");
+			} else {
+				SimpleUtils.fail("There shouldn't be any buttons pop up for cancelled request!", false);
 			}
 		}
 	}

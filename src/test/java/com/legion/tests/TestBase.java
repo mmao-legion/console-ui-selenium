@@ -10,6 +10,7 @@ import com.legion.pages.pagefactories.PageFactory;
 import com.legion.pages.pagefactories.mobile.MobilePageFactory;
 import com.legion.pages.pagefactories.mobile.MobileWebPageFactory;
 import com.legion.test.testrail.APIException;
+import com.legion.test.testrail.TestRailOperation;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.*;
 import com.legion.utils.JsonUtil;
@@ -54,8 +55,8 @@ import static com.jayway.restassured.RestAssured.baseURI;
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.SimpleUtils.addResultForTest;
-import static com.legion.utils.SimpleUtils.addTestRun;
+import static com.legion.test.testrail.TestRailOperation.addResultForTest;
+import static com.legion.test.testrail.TestRailOperation.addTestRun;
 
 //import org.apache.log4j.Logger;
 
@@ -153,7 +154,7 @@ public abstract class TestBase {
 
         if(System.getProperty("testRail") != null && System.getProperty("testRail").equalsIgnoreCase("Yes")){
             testRailReportingFlag = "Y";
-            addTestRun();
+            TestRailOperation.addTestRun();
         }
     }
 
@@ -188,34 +189,25 @@ public abstract class TestBase {
         String automatedName = ExtentTestManager.getAutomatedName(method);
         enterpriseName =  SimpleUtils.getEnterprise(method);
         String platformName =  ExtentTestManager.getMobilePlatformName(method);
-//        int sectionId = ExtentTestManager.getTestRailSectionId(method);
-        String testRunPhaseName = ExtentTestManager.getTestRunPhase(method);
         List<String> categories =  new ArrayList<String>();
         categories.add(getClass().getSimpleName());
-//        categories.add(enterpriseName);
         List<String> enterprises =  new ArrayList<String>();
         enterprises.add(enterpriseName);
         ExtentTestManager.createTest(getClass().getSimpleName() + " - "
                 + " " + method.getName() + " : " + testName + ""
                 + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
-        //setTestRailRunId(0);
         if (testRailRunId==null){
             testRailRunId = 0;
         }
-        List<Integer> testRailId =  new ArrayList<Integer>();
-        //setTestRailRun(testRailId);
         if(testRailReportingFlag!=null){
-            SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
+            TestRailOperation.addNUpdateTestCaseIntoTestRail(testName,context);
             MyThreadLocal.setTestResultFlag(false);
         }
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());
         setSessionTimestamp(date.toString().replace(":", "_").replace(" ", "_"));
-        String strDate = formatter.format(date);
-        String strDateFinal = strDate.replaceAll(" ", "_");
-        setVerificationMap(new HashMap<>());
     }
 
     protected void createDriver (String browser, String version, String os) throws Exception {
@@ -314,8 +306,8 @@ public abstract class TestBase {
 
     @AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
-        addResultForTest();
         ExtentTestManager.getTest().info("tearDown started");
+        TestRailOperation.addResultForTest();
         if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
                 getDriver().manage().deleteAllCookies();
@@ -338,8 +330,8 @@ public abstract class TestBase {
         if(testRailReportingFlag!=null){
             List<Integer> testRunList = new ArrayList<Integer>();
             testRunList.add(testRailRunId);
-            if (testRailRunId!=null && SimpleUtils.isTestRunEmpty(testRailRunId)){
-                SimpleUtils.deleteTestRail(testRunList);
+            if (testRailRunId!=null && TestRailOperation.isTestRunEmpty(testRailRunId)){
+                TestRailOperation.deleteTestRail(testRunList);
             }
         }
     }

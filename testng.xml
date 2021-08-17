@@ -88,6 +88,10 @@
                    <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
                    <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
+                   <include name="validateCreateChangeAvailabilityRequestAsTeamMember" />
+                   <include name="validateCancelAvailabilityRequestAsTeamMember" />
+                   <include name="validateApproveAvailabilityRequestAsTeamMember" />
+                   <include name="validateCancelledAvailabilityHasNoOptionRequestAsTeamMember" />
                </methods>
            </class>
        </classes>
@@ -546,6 +550,8 @@
                         <include name="verifyControlsInRegionViewAsInternalAdmin" />
                         <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" />
                         <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
+                        <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>
