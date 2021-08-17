@@ -8801,7 +8801,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement shiftDuration;
     @FindBy(css = ".shift-hover-subheading.ng-binding")
     private WebElement shiftJobTitleAsWorkRole;
-    @FindBy(className = "shift-info")
+    @FindBy(className = "accept-shift-shift-info")
     private WebElement shiftDetail;
     @FindBy(className = "lg-toast")
     private WebElement msgOnTop;
@@ -9002,7 +9002,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyTheShiftHourOnPopupWithScheduleTable(String scheduleShiftTime, String weekDay) throws Exception {
         if (isElementLoaded(shiftDetail, 5)) {
             String details = shiftDetail.getText();
-            if (details.toLowerCase().contains(scheduleShiftTime.toLowerCase()) && details.toLowerCase().contains(weekDay.toLowerCase())) {
+            if (details.toLowerCase().replaceAll("\\s*", "").contains(scheduleShiftTime.toLowerCase().replaceAll("\\s*", "")) &&
+                    details.toLowerCase().replaceAll("\\s*", "").contains(weekDay.toLowerCase().replaceAll("\\s*", ""))) {
                 SimpleUtils.pass("Date and time in the Popup is match with the date and time in Schedule table: " + scheduleShiftTime);
             }else {
                 SimpleUtils.fail("Date and time in the Popup is incorrect: " + details + ", expected week day is: "

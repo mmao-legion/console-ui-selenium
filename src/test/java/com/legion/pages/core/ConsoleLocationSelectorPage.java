@@ -1018,32 +1018,39 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     private List<WebElement> upperFieldsInResentView;
     @Override
     public void searchSpecificUpperFieldAndNavigateTo(String upperFieldName) throws Exception {
-        Boolean isUpperFieldMatched = false;
         if (isElementLoaded(upperFieldSearchIcon, 10)){
             clickTheElement(upperFieldSearchIcon);
+            waitForSeconds(5);
         }
-        searchLocationAndSelect(upperFieldName);
+        boolean isUpperFieldMatched = selectTheUpperFiledIfTheNameIsMatched(upperFieldName);
+        if (!isUpperFieldMatched) {
+            searchLocationAndSelect(upperFieldName);
+            waitForSeconds(5);
+            isUpperFieldMatched = selectTheUpperFiledIfTheNameIsMatched(upperFieldName);
+        }
+        if (!isUpperFieldMatched) {
+            SimpleUtils.fail("Upper Field does not match with '" + upperFieldName + "'", false);
+        }
+    }
+
+    private boolean selectTheUpperFiledIfTheNameIsMatched(String upperFieldName) {
         List<WebElement> upperFieldItems = new ArrayList<>();
-        waitForSeconds(5);
-        if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0){
+        boolean isUpperFieldMatched = false;
+        if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0) {
             upperFieldItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
         }
         if (upperFieldItems.size() > 0) {
             for (WebElement upperFieldItem : upperFieldItems) {
                 if (upperFieldItem.getText().contains(upperFieldName)) {
                     isUpperFieldMatched = true;
-                    click(upperFieldItem);
+                    clickTheElement(upperFieldItem);
                     SimpleUtils.pass("Upper Field changed successfully to '" + upperFieldName + "'");
                     break;
                 }
             }
         }
-
-        if (!isUpperFieldMatched) {
-            SimpleUtils.fail("Upper Field does not match with '" + upperFieldName + "'", false);
-        }
+        return isUpperFieldMatched;
     }
-
 
     @FindBy(css = "img.search-icon")
     private WebElement upperFieldSearchIcon;
