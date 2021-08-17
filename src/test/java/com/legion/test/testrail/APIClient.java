@@ -36,7 +36,7 @@ public class APIClient
 	private String m_user;
 	private String m_password;
 	private String m_url;
-	private static final int DEFAULT_RETRY_TIME = 3;
+	private static final int DEFAULT_RETRY_TIME = 2;
 	private int retryTime = DEFAULT_RETRY_TIME;
 
 	public APIClient(String base_url)
@@ -141,7 +141,7 @@ public class APIClient
 			try {
 				return sendRequest(method,  uri,  data);
 			} catch (Exception e) {
-				System.err.println("Retry "+i+" time fail! more info: "+e.getMessage()+"\n"+ e.getStackTrace());
+				System.err.println("Retry "+(i+1)+" time fail! more info: "+e.getMessage()+"\n"+ e.getStackTrace());
 				Thread.sleep(10);
 			}
 		}
