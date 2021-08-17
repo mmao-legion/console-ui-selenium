@@ -230,7 +230,6 @@ public class TestRailOperation {
             client.setUser(testRailUser);
             client.setPassword(testRailPassword);
             List cases = new ArrayList();
-            //=========================================   need enhancement!！===================
             testIds = MyThreadLocal.getCurrentTestCaseIDList();
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("results", cases);
