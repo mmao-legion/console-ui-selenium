@@ -1262,10 +1262,10 @@ public class ScheduleTest extends TestBase{
 			// Validate the date and time of Claim Shift Request popup
 			schedulePage.verifyTheShiftHourOnPopupWithScheduleTable(shiftHours.get(index), weekDay);
 			// Validate the clickability of Cancel button
-			schedulePage.verifyClickCancelBtnOnClaimShiftOffer();
+			// schedulePage.verifyClickCancelBtnOnClaimShiftOffer();
 			// Validate the clickability of I Agree button
-			schedulePage.clickOnShiftByIndex(index);
-			schedulePage.clickTheShiftRequestByName(claimShift.get(0));
+			// schedulePage.clickOnShiftByIndex(index);
+			// schedulePage.clickTheShiftRequestByName(claimShift.get(0));
 			schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
 			// Validate the status of Claim request
 			schedulePage.clickOnShiftByIndex(index);

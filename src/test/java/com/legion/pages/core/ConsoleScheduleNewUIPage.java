@@ -8795,6 +8795,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement agreeClaimBtn;
     @FindBy(css = ".redesigned-button-cancel-outline")
     private WebElement declineBtn;
+    @FindBy(css = ".redesigned-modal")
+    private WebElement popUpModal;
     @FindBy(css = "img[src*='shift-info']")
     private List<WebElement> infoIcons;
     @FindBy(css = ".sch-shift-hover div:nth-child(3)>div.ng-binding")
@@ -8920,9 +8922,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyClickCancelBtnOnClaimShiftOffer() throws Exception {
         if (isElementLoaded(declineBtn, 5)) {
-            click(declineBtn);
-            if (!isElementLoaded(claimShiftWindow, 5)) {
-                SimpleUtils.pass("Click on Cancel Claim Button Successfully!");
+            clickTheElement(declineBtn);
+            if (isElementLoaded(popUpModal, 10) && popUpModal.getText().contains("Open Shift Declined")) {
+                SimpleUtils.pass("Click on Decline Claim Button Successfully!");
+                if (isElementLoaded(agreeClaimBtn, 5) && agreeClaimBtn.getText().equalsIgnoreCase("OK")) {
+                    clickTheElement(agreeClaimBtn);
+                    SimpleUtils.report("Click on OK button successfully on \"Open Shift Declined\" pop up!");
+                } else {
+                    SimpleUtils.fail("OK button failed to load on \"Open Shift Declined\" pop up", false);
+                }
             }else {
                 SimpleUtils.fail("Click on Cancel Claim Button failed!", false);
             }
