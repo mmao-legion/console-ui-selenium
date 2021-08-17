@@ -22,7 +22,7 @@
         <classes>
             <class name="com.legion.tests.core.DashboardTestKendraScott2">
                 <methods>
-                    <include name="verifyDashboardFunctionalityAsTeamMember" />
+<!--                    <include name="verifyDashboardFunctionalityAsTeamMember" Need fix/>-->
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
@@ -62,7 +62,7 @@
             <class name="com.legion.tests.core.ScheduleTest">
                 <methods>
                     <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" />
+<!--                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" Need fix/>-->
                 </methods>
             </class>
         </classes>
@@ -144,7 +144,7 @@
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>
-                    <include name="verificationOfMySchedulePageAsTeamMember" />
+<!--                    <include name="verificationOfMySchedulePageAsTeamMember" Need fix/>-->
                     <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
@@ -185,7 +185,7 @@
         <classes>
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
-                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
+<!--                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" Need fix/>-->
                     <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
