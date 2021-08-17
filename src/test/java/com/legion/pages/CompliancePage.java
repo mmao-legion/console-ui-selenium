@@ -33,6 +33,5 @@ public interface CompliancePage {
     public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception;
     public boolean isComplianceUpperFieldView() throws Exception;
     public List<String> getAllUpperFieldNamesOnAnalyticsTable() throws Exception;
-    public boolean isComplianceDMView() throws Exception;
     public boolean isRefreshButtonDisplay() throws Exception;
 }

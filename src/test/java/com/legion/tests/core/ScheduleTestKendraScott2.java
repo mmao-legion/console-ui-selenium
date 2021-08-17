@@ -943,8 +943,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.searchTeamMemberByName(nickName);
-			if(schedulePage.displayAlertPopUp())
-				schedulePage.displayAlertPopUpForRoleViolation();
+//			if(schedulePage.displayAlertPopUp())
+//				schedulePage.displayAlertPopUpForRoleViolation();
 			schedulePage.clickOnOfferOrAssignBtn();
 			schedulePage.saveSchedule();
 			schedulePage.publishActiveSchedule();

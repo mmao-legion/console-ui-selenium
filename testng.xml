@@ -533,6 +533,11 @@
                         <include name="verifySchedulePublishStatusWidgetOnDashboardInRegionViewAsInternalAdmin" />
                         <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInBUViewAsInternalAdmin" />
                         <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyOpenShiftsWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyOpenShiftsWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyComplianceViolationsWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyComplianceViolationsWidgetOnDashboardInRegionViewAsInternalAdmin" />
+<!--                        <include name="verifyPayrollProjectionWidgetOnDashboardInBUViewAsInternalAdmin" />-->
 
                         <!-- Added by Mary -->
 <!--                        <include name="verifyRegionViewNavigationAsInternalAdmin" /> Blocked by SCH-4910 -->
