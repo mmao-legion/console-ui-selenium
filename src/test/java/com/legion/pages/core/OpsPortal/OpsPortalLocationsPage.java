@@ -1294,7 +1294,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			for (int i = 0; i < searchLocationCha.length; i++) {
 				upperfieldsSearchInputBox.clear();
 				upperfieldsSearchInputBox.sendKeys(searchInputText);
-				upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
+//				upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
 				waitForSeconds(5);
 				if (upperfieldRows.size() > 0) {
 					SimpleUtils.pass("Can search out upperfield by using " + searchInputText);
@@ -2239,6 +2239,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.report("Upperfield creation done");
 				waitForSeconds(20);
 				searchUpperFields(levelInfo.get(i) + upperfieldsName);
+				disableEnableUpperfield(levelInfo.get(i) + upperfieldsName,"Disable");
 			} else
 				SimpleUtils.fail("Upperfield landing page load failed", true);
 		}
