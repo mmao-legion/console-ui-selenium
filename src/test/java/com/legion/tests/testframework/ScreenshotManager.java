@@ -39,6 +39,7 @@ public class ScreenshotManager {
                 File.separator + getCurrentTestMethodName() +
                 File.separator + threadIdStr + File.separator + getScreenshotConsoleName();
         targetFile = new File(screenshotFinalLocation, screenShotName);
+        MyThreadLocal.setScreenshotLocation(screenshotFinalLocation + File.separator + screenShotName);
        
 //        File screenshotFile = ((TakesScreenshot) getAndroidDriver()).getScreenshotAs(OutputType.FILE);
         try {
