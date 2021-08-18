@@ -1439,10 +1439,10 @@ public class LocationsTest extends TestBase {
             for(String key:templateLevelAttributesInfoInLocation.keySet()){
                 for(String key1:templateLevelAttributesInfoInTemplate.keySet()){
                     if(key.equals(key1)){
-                        List<String> valuesInGlobal = templateLevelAttributesInfoInLocation.get(key1);
+                        List<String> templateValuesInLocation = templateLevelAttributesInfoInLocation.get(key1);
                         List<String> valuesInTemplate = templateLevelAttributesInfoInTemplate.get(key);
 
-                        if(valuesInGlobal.get(0).equals(valuesInTemplate.get(0))){
+                        if(templateValuesInLocation.get(0).equals(valuesInTemplate.get(0))){
                             SimpleUtils.pass("The template level attribute " + key + " in location is correct.");
                             break;
                         }else{
@@ -1469,10 +1469,10 @@ public class LocationsTest extends TestBase {
             for(String key:templateLevelAttributesInfoInLocation.keySet()){
                 for(String key1:locationLevelAttributesInfoInLocation.keySet()){
                     if(key.equals(key1)){
-                        List<String> valuesInGlobal = templateLevelAttributesInfoInLocation.get(key1);
-                        List<String> valuesInTemplate = locationLevelAttributesInfoInLocation.get(key);
+                        List<String> valuesInTemplate = templateLevelAttributesInfoInLocation.get(key1);
+                        List<String> valuesInLocation = locationLevelAttributesInfoInLocation.get(key);
 
-                        if(ListUtils.isEqualList(valuesInGlobal,valuesInTemplate)){
+                        if(valuesInTemplate.get(0).equals(valuesInLocation.get(0))){
                             SimpleUtils.pass("The location level attribute " + key + " in location is correct.");
                             break;
                         }else{
