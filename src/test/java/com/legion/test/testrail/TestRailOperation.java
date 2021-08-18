@@ -1,29 +1,25 @@
 package com.legion.test.testrail;
 
 import com.legion.tests.TestBase;
-import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.testng.ITestContext;
-
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.legion.utils.MyThreadLocal.*;
-
 public class TestRailOperation {
     static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
     static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
 
     public static String getTestRailURL(){
-        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+       if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
             return testRailConfig.get("TEST_RAIL_URL");
         }else {
             return testRailCfgOp.get("TEST_RAIL_URL");
@@ -240,7 +236,36 @@ public class TestRailOperation {
                 singleCase.put("comment", comment);
                 cases.add(singleCase);
             }
-            client.sendPost(addResultString, data);
+            JSONArray jSONArray =(JSONArray)  client.sendPost(addResultString, data);
+            JSONObject jsonObject = (JSONObject) jSONArray.get(0);
+            long result_id = (long)jsonObject.get("id") ;
+            if (statusID == 5){
+                addAttachmentToResult(result_id);
+            }
+        } catch (IOException ioException) {
+            System.err.println(ioException.getMessage());
+        } catch (APIException aPIException) {
+            System.err.println(aPIException.getMessage());
+        }
+    }
+
+    /*
+    * Author: Haya
+    * Add attachment to result.
+    *
+    */
+    public static void addAttachmentToResult(long result_id){
+        String testRailURL = getTestRailURL();
+        String testRailUser = getTestRailUser();
+        String testRailPassword = getTestRailPassword();
+        String addResultString = "add_attachment_to_result/" + result_id;
+        try {
+            // Make a connection with TestRail Server
+            APIClient client = new APIClient(testRailURL);
+            client.setUser(testRailUser);
+            client.setPassword(testRailPassword);
+            ScreenshotManager.takeScreenShot();
+            client.sendPost(addResultString,MyThreadLocal.getScreenshotLocation());
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
         } catch (APIException aPIException) {
