@@ -1666,15 +1666,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 
-	public ArrayList<HashMap<String, String>> getUpperfieldsInfo(String districtName) {
-		waitForSeconds(15);
+	public ArrayList<HashMap<String, String>> getUpperfieldsInfo(String searchChara) {
 		ArrayList<HashMap<String, String>> upperfieldInfo = new ArrayList<>();
 
 		if (isElementEnabled(upperfieldsSearchInputBox, 10)) {
 			upperfieldsSearchInputBox.clear();
-			upperfieldsSearchInputBox.sendKeys(districtName);
+			upperfieldsSearchInputBox.sendKeys(searchChara);
 			upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
-			waitForSeconds(15);
+			waitForSeconds(5);
 			if (upperfieldRows.size() > 0) {
 				for (WebElement upperfield : upperfieldRows) {
 					HashMap<String, String> upperfieldInfoInEachRow = new HashMap<>();
