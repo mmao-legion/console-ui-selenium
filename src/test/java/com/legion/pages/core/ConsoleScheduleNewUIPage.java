@@ -11601,20 +11601,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (verifyActivatedSubTab("Schedule"))
                 SimpleUtils.pass("Schedule Page: 'Schedule' tab loaded Successfully!");
             else
-                SimpleUtils.fail("Schedule Page: 'Schedule' tab not loaded Successfully!", true);
+                SimpleUtils.fail("Schedule Page: 'Schedule' tab not loaded", false);
         }
     }
 
     @Override
     public void validateTheAvailabilityOfScheduleMenu() throws Exception {
         if (areListElementVisible(subMenusOnSchedulePage, 10)) {
-            if (subMenusOnSchedulePage.size() == 2) {
-                SimpleUtils.pass("Schedule Page: It has two sub menus successfully");
+            if (subMenusOnSchedulePage.size() > 2) {
+                SimpleUtils.pass("Schedule Page: It has at least two sub menus successfully");
             } else {
-                SimpleUtils.fail("Schedule Page: It doesn't have two sub menus", true);
+                SimpleUtils.fail("Schedule Page: It doesn't have two sub menus", false);
             }
             for (WebElement subMenu : subMenusOnSchedulePage) {
-                if (subMenu.getText().trim().equals("My Schedule") || subMenu.getText().trim().equals("Team Schedule")) {
+                if (subMenu.getText().trim().equals("My Schedule") || subMenu.getText().trim().equals("Team Schedule") || subMenu.getText().trim().equals("My Clocks") ) {
                     SimpleUtils.pass("Schedule Page: It includes " + subMenu.getText());
                 } else {
                     SimpleUtils.fail("Schedule Page: " + subMenu.getText() + " isn't expected in sub menu list", true);

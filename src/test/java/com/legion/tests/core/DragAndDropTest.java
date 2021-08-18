@@ -525,7 +525,7 @@ public class DragAndDropTest extends TestBase {
     @TestName(description = "Validate the box interaction color and message when SM tries to assign TM to an open shift that overlaps a time TM is already assigned to")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager(String browser, String username, String password, String location) throws Exception {
-        try {
+//        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -614,9 +614,9 @@ public class DragAndDropTest extends TestBase {
                 SimpleUtils.pass("Assign a TM to an open shift that overlaps a time TM is already assigned to successfully!");
             else
                 SimpleUtils.fail("Failed to assign a TM to an open shift that overlaps a time TM is already assigned to",false);
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(),false);
-        }
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(),false);
+//        }
     }
 
     @Automated(automated = "Automated")

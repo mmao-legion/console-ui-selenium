@@ -103,7 +103,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = ".sc-lgWdIC.cRRXke")
 	private List<WebElement> districtTimeOnDashboard;
 
-    @FindBy(css = "div.fx-center.welcome-text h1")
+	@FindBy(css = ".sc-eYKchh.iHrcjg")
+	private List<WebElement> dateTimeOnTMDashboard;
+
+    @FindBy(css = ".sc-jNjAJB.fKEYND")
     private WebElement detailWelcomeText;
 
 	@FindBy(css = ".sc-jogDgT.hBPNLh")
@@ -403,8 +406,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public String getCurrentDateFromDashboard() throws Exception {
-		if (isElementLoaded(currentDate, 5)){
-			return currentDate.getText();
+		if (isElementLoaded(dateTimeOnTMDashboard.get(0), 5)){
+			return dateTimeOnTMDashboard.get(0).getText();
 		}else{
 			return null;
 		}
@@ -565,7 +568,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[search-hint=\"Search Location\"]")
 	private WebElement currentLocation;
 
-	@FindBy(css = ".lg-search-options__option")
+	@FindBy(css = "[search-hint=\"Search Location\"] .lg-search-options__option")
 	private List<WebElement> allLocations;
 
 	@FindBy(css = ".upcoming-shift")
@@ -666,7 +669,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 								click(allLocations.get(i));
 							}
 						} catch (Exception e) {
-							SimpleUtils.fail("Dashboard Page: Exception occurs when clicking location", true);
+							System.out.println(e.toString());
+							SimpleUtils.fail("Dashboard Page: Exception occurs when clicking location", false);
 						}
 						if (i != allLocations.size() - 1)
 							click(currentLocation);
@@ -702,14 +706,14 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void validateDateAndTimeAfterSelectingDifferentLocation() throws Exception {
 		String dateFormat = "";
-		String dateFromDashboard = getCurrentDateFromDashboard() + " " + districtTimeOnDashboard.get(1).getText().toUpperCase();
+		String dateFromDashboard = getCurrentDateFromDashboard() + " " + dateTimeOnTMDashboard.get(1).getText().toUpperCase();
 		if (dateFromDashboard.toLowerCase().contains("am") || dateFromDashboard.toLowerCase().contains("pm")) {
 			dateFormat = "EEEE, MMMM d h:mm a";
 		} else {
 			dateFormat = "EEEE, MMMM d H:mm";
 		}
 		String dateFromLocation = getDateFromTimeZoneOfLocation(dateFormat);
-		if (dateFromDashboard.equals(dateFromLocation)) {
+		if (dateFromDashboard.substring(0, dateFromDashboard.length()-4).equals(dateFromLocation.substring(0, dateFromLocation.length()-4))) {
 			SimpleUtils.pass("Dashboard Page: The date and time on Dashboard is consistent with the timezone of current location");
 		} else {
 			SimpleUtils.fail("Dashboard Page: The date and time on Dashboard is different from the timezone of the current location, date from dashboard is: "
@@ -722,17 +726,17 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				if (currentLocation.getText().equals(allLocations.get(i).getText())) {
 					continue;
 				} else {
-					click(allLocations.get(i));
+					clickTheElement(allLocations.get(i));
 					SimpleUtils.pass("Dashboard Page: Another location is selected successfully");
 					break;
 				}
 			}
 			String dateFromAnotherLocation = getDateFromTimeZoneOfLocation("EEEE, MMMM d h:mm a");
-			String dateFromAnotherDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
+			String dateFromAnotherDashboard = getCurrentDateFromDashboard() + " " + dateTimeOnTMDashboard.get(1).getText().toUpperCase();
 			if (dateFromAnotherDashboard.equals(dateFromAnotherLocation)) {
 				SimpleUtils.pass("Dashboard Page: The date and time on Dashboard is consistent with the timezone of another location");
 			} else {
-				SimpleUtils.fail("Dashboard Page: The date and time on Dashboard is different from the timezone of another location", true);
+				SimpleUtils.fail("Dashboard Page: The date and time on Dashboard is different from the timezone of another location", false);
 			}
 		} else {
 			SimpleUtils.report("Dashboard Page: No more locations can be selected");
@@ -741,27 +745,27 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateTheVisibilityOfUsername(String userName) throws Exception {
-		if (isElementLoaded(dashboardWelcomeSection, 5)) {
-			if (dashboardWelcomeSection.getText().contains(userName)) {
-				if (dashboardWelcomeSection.getAttribute("class").contains("center")) {
+		if (isElementLoaded(detailWelcomeText, 5)) {
+			if (detailWelcomeText.getText().contains(userName)) {
+				if (detailWelcomeText.getCssValue("align-items").contains("center")) {
 					SimpleUtils.pass("Dashboard Page: Username shows in center of the page successfully");
 				} else {
-					SimpleUtils.fail("Dashboard Page: Username doesn't show in center of the page", true);
+					SimpleUtils.fail("Dashboard Page: Username doesn't show in center of the page", false);
 				}
 			} else {
-				SimpleUtils.fail("Dashboard Page: Username doesn't show in the dashboard page", true);
+				SimpleUtils.fail("Dashboard Page: Username doesn't show in the dashboard page", false);
 			}
 		} else {
-			SimpleUtils.fail("Dashboard Page: Welcome Text Section doesn't Load successfully!", true);
+			SimpleUtils.fail("Dashboard Page: Welcome Text Section doesn't Load successfully!", false);
 		}
 	}
 
 	@Override
 	public void validateDateAndTime() throws Exception {
 		String dateFormat = "";
-		if (isElementLoaded(currentDate, 10) && isElementLoaded(currentTime, 10)) {
+		if (areListElementVisible(dateTimeOnTMDashboard, 10)) {
 			SimpleUtils.pass("Current date and time are loaded successfully");
-			String dateFromDashboard = getCurrentDateFromDashboard() + " " + currentTime.getText().toUpperCase();
+			String dateFromDashboard = getCurrentDateFromDashboard() + " " + dateTimeOnTMDashboard.get(1).getText().toUpperCase();
 			if (dateFromDashboard.toLowerCase().contains("am") || dateFromDashboard.toLowerCase().contains("pm")) {
 				dateFormat = "EEEE, MMMM d h:mm a";
 			} else {
@@ -775,7 +779,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 						+ dateFromDashboard + ", date from location is: " + dateFromLocation, false);
 			}
 		} else {
-			SimpleUtils.fail("Current date and time failed to load", true);
+			SimpleUtils.fail("Current date and time failed to load", false);
 		}
 	}
 
@@ -1350,19 +1354,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = "[search-hint='Search District'] div.lg-select")
 	private WebElement showDistrict;
 
-	@FindBy (css = ".dashboard-time .text-left")
-	private WebElement districtOnDashboardDM;
-
-	@FindBy (css = ".sc-lgWdIC.cRRXke")
+	@FindBy (css = ".sc-eYKchh.iHrcjg")
 	private List<WebElement> districtWeekOnDashboardDM;
 
 	@FindBy (css = ".sc-iQQLPo.eVFQLq")
 	private List<WebElement> upperfiledNameNWeekOnDashboard;
 
-	@FindBy (css = ".dashboard-time .text-right")
-	private WebElement weekOnDashboardDM;
-
-	@FindBy (css = ".sc-kLwonV.erBgkb")
+	@FindBy (css = ".sc-bwcZwS.lgoedk")
 	private WebElement dmsTimeStamp;
 
 	@Override
@@ -1384,9 +1382,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateThePresenceOfDistrict() throws Exception {
-		if (isElementEnabled(districtOnDashboardDM, 10)) {
-			if (districtOnDashboardDM.isDisplayed() && !districtOnDashboardDM.getText().isEmpty() && districtOnDashboardDM.getText() != null) {
-				if (getDriver().findElement(By.xpath("//body//div[contains(@class,'welcome-text')]/following-sibling::div[1]/div[contains(@class,'text-left')]")).equals(districtOnDashboardDM)) {
+		if (isElementEnabled(districtWeekOnDashboardDM.get(0), 10)) {
+			if (districtWeekOnDashboardDM.get(0).isDisplayed() && !districtWeekOnDashboardDM.get(0).getText().isEmpty() && districtWeekOnDashboardDM.get(0).getText() != null) {
+				if (getDriver().findElement(By.xpath("//body//div[contains(text(),'Welcome to Legion')]/..//following-sibling::div[1]/div[1]")).equals(districtWeekOnDashboardDM.get(0))) {
 					SimpleUtils.pass("Dashboard Page: District shows at left corner below welcome section successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: District is not at left corner below welcome section", true);
@@ -1395,7 +1393,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				SimpleUtils.fail("Dashboard Page: District isn't present", true);
 			}
 		} else {
-			SimpleUtils.fail("Dashboard Page: District failed to load", true);
+			SimpleUtils.fail("Dashboard Page: District failed to load", false);
 		}
 	}
 
@@ -1421,18 +1419,18 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateTheVisibilityOfWeek() throws Exception {
-		if (isElementEnabled(weekOnDashboardDM, 10)) {
-			if (weekOnDashboardDM.isDisplayed() && !weekOnDashboardDM.getText().isEmpty() && weekOnDashboardDM.getText() != null) {
-				if (getDriver().findElement(By.xpath("//body//div[contains(@class,'welcome-text')]/following-sibling::div[1]/div[contains(@class,'text-right')]")).equals(weekOnDashboardDM)) {
+		if (isElementEnabled(districtWeekOnDashboardDM.get(1), 10)) {
+			if (districtWeekOnDashboardDM.get(1).isDisplayed() && !districtWeekOnDashboardDM.get(1).getText().isEmpty() && districtWeekOnDashboardDM.get(1).getText() != null) {
+				if (getDriver().findElement(By.xpath("//body//div[contains(text(),'Welcome to Legion')]/../following-sibling::div[1]/div[2]")).equals(districtWeekOnDashboardDM.get(1))) {
 					SimpleUtils.pass("Dashboard Page: Week shows at right corner below welcome section successfully");
 				} else {
-					SimpleUtils.fail("Dashboard Page: Week is not at right corner below welcome section", true);
+					SimpleUtils.fail("Dashboard Page: Week is not at right corner below welcome section", false);
 				}
 			} else {
-				SimpleUtils.fail("Dashboard Page: Week isn't present", true);
+				SimpleUtils.fail("Dashboard Page: Week isn't present", false);
 			}
 		} else {
-			SimpleUtils.fail("Dashboard Page: Week failed to load", true);
+			SimpleUtils.fail("Dashboard Page: Week failed to load", false);
 		}
 	}
 
@@ -1442,7 +1440,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		if (areListElementVisible(upperfiledNameNWeekOnDashboard, 10)) {
 			week = upperfiledNameNWeekOnDashboard.get(1).getText();
 		} else {
-			SimpleUtils.fail("Dashboard Page: Week failed to load", true);
+			SimpleUtils.fail("Dashboard Page: Week failed to load", false);
 		}
 		return week;
 	}
@@ -1450,10 +1448,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public String getWeekInfoFromDMView() throws Exception {
 		String result = "";
-		if (isElementEnabled(weekOnDashboardDM, 10)) {
-			result = weekOnDashboardDM.getText();
+		if (isElementEnabled(districtWeekOnDashboardDM.get(1), 10)) {
+			result = districtWeekOnDashboardDM.get(1).getText();
 		} else {
-			SimpleUtils.fail("Dashboard Page: Week failed to load", true);
+			SimpleUtils.fail("Dashboard Page: Week failed to load", false);
 		}
 		return result;
 	}
@@ -1461,11 +1459,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public String getDistrictNameOnDashboard() throws Exception {
 		String districtName = "";
+		waitForSeconds(5);
 		if (isElementEnabled(districtWeekOnDashboardDM.get(0), 10)) {
 			districtName = districtWeekOnDashboardDM.get(0).getText();
 			SimpleUtils.pass("Dashboard Page: District name is '" + districtName + "'");
 		} else {
-			SimpleUtils.fail("Dashboard Page: District failed to load", true);
+			SimpleUtils.fail("Dashboard Page: District failed to load", false);
 		}
 		return districtName;
 	}
@@ -2064,7 +2063,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		} else {
 			SimpleUtils.fail("Dashboard Page: 21 rects with 7 days not loaded on \"Payroll Projection\" widget",false);
 		}
-		if (isElementLoaded(weekOnPayrollProjectionWidget, 5) && weekOnDashboardDM.getText().contains(weekOnPayrollProjectionWidget.getText())) {
+		if (isElementLoaded(weekOnPayrollProjectionWidget, 5) && districtWeekOnDashboardDM.get(1).getText().contains(weekOnPayrollProjectionWidget.getText())) {
 			SimpleUtils.pass("Dashboard Page: Current week \""+ weekOnPayrollProjectionWidget.getText() + "\" loaded successfully on \"Payroll Projection\" widget");
 		} else {
 			SimpleUtils.fail("Dashboard Page: Current week not loaded on \"Payroll Projection\" widget", false);
@@ -2304,7 +2303,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
     @Override
     public void verifyTheWelcomeMessageOfDM(String userName) throws Exception {
-        String time = dmsTimeStamp.getText().contains(",") ? dmsTimeStamp.getText().split(",")[1] : dmsTimeStamp.getText();
+        String time = dmsTimeStamp.getText().contains(",") ? dmsTimeStamp.getText().split(",")[1].trim() : dmsTimeStamp.getText();
         String greetingTime = getTimePeriod(time.toLowerCase());
         String expectedText = "Good " + greetingTime + ", " + userName + "." + "\n" + "Welcome to Legion" + "\n" + "Your Complete Workforce Engagement Solution";
         String actualText = "";
@@ -2316,7 +2315,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
                 SimpleUtils.fail("Dashboard Page: Verify Welcome Text failed! Expected is: " + expectedText + "\n" + "Actual is: " + actualText, true);
             }
         } else {
-            SimpleUtils.fail("Dashboard Page: Welcome Text Section doesn't Load successfully!", true);
+            SimpleUtils.fail("Dashboard Page: Welcome Text Section doesn't Load successfully!", false);
         }
     }
 
