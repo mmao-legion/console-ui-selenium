@@ -1486,7 +1486,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateThePresenceOfRefreshButton() throws Exception {
 		if (isElementLoaded(refreshButton,10)) {
 			if (refreshButton.isDisplayed() && !refreshButton.getText().isEmpty() && refreshButton.getText() != null) {
-				if (getDriver().findElement(By.xpath("//body//div[contains(@class,'welcome-text')]/preceding-sibling::last-updated-countdown/div/lg-button")).equals(refreshButton)) {
+				if (getDriver().findElement(By.xpath("//*[@id=\"legion-app\"]/div/div[3]/div/div/div/div[2]/div/div/div/last-updated-countdown/div/lg-button")).equals(refreshButton)) {
 					SimpleUtils.pass("Dashboard Page: Refresh button shows above welcome section successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Refresh button is not above welcome section", false);
@@ -2321,7 +2321,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     }
 
     @Override
-    public void validateRefreshWhenNavigationBack() throws Exception {
+    public void validateRefreshWhenNavigationBack(String consoleName) throws Exception {
         String timestamp1 = "";
         String timestamp2 = "";
         if (isElementLoaded(lastUpdated, 5)) {
@@ -2331,7 +2331,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         } else
             SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
         click(scheduleConsoleNameInTM);
-        navigateToDashboard();
+		click(getDriver().findElement(By.cssSelector("div.console-navigation-item-label."+consoleName)));
         if (isElementLoaded(lastUpdated, 5)) {
             timestamp2 = lastUpdated.getText();
         } else if (isElementLoaded(justUpdated, 5)) {
