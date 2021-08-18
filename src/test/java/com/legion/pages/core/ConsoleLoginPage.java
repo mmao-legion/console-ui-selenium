@@ -60,7 +60,17 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     public void loginToLegionWithCredential(String userName, String Password) throws InterruptedException
     {
-    	checkElementVisibility(userNameField);
+		int retryTime = 0;
+		boolean isLoaded = isUserNameInputLoaded();
+		while (!isLoaded) {
+			getDriver().navigate().refresh();
+			isLoaded = isUserNameInputLoaded();
+			retryTime = retryTime + 1;
+			if (retryTime == 6) {
+				SimpleUtils.fail("Login page failed to load after waiting for several minutes!", false);
+				break;
+			}
+		}
     	getActiveConsoleName(loginButton);
     	userNameField.clear();
     	passwordField.clear();
@@ -68,6 +78,18 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		passwordField.sendKeys(Password);
 		clickTheElement(loginButton);
     }
+
+	private boolean isUserNameInputLoaded() {
+		boolean isLoaded = false;
+		try {
+			if (isElementLoaded(userNameField, 90)) {
+				isLoaded = true;
+			}
+		} catch (Exception e) {
+			isLoaded = false;
+		}
+		return isLoaded;
+	}
     
     public boolean isLoginDone() throws Exception
     {

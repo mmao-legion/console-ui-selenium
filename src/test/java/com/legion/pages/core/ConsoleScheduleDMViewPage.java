@@ -988,9 +988,42 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                             allScheduleInfo.put("scheduleStatus", schedulesInDMView.get(i).findElement(By.className("analytics-new-table-published-status")).getText());
                             //add Score
 //                        allScheduleInfo.add(schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_SCORE\"]")).getText());   //Need Turn off Score function on Schedule DM view
-                            String budgetedHours = "";
-                            if (areListElementVisible(budgetHours, 5)){
-                                budgetedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText().replace(",","");
+                        String budgetedHours = "";
+                        if (areListElementVisible(budgetHours, 5)){
+                            budgetedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText().replace(",","");
+                        } else {
+                            if (isElementLoaded(scheduleScoreSmartCard, 5)) {
+                                budgetedHours = schedulesInDMView.get(i).findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(3).getText().replace(",","");
+                            } else
+                                budgetedHours = schedulesInDMView.get(i).findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(2).getText().replace(",","");
+                        }
+
+                        //add Budgeted Hours
+                        allScheduleInfo.put("budgetedHours", budgetedHours);
+                        //add Scheduled Hours
+                        allScheduleInfo.put("scheduledHours", schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")).getText());
+                        String projectedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",","");
+                        //add Projected Hours
+                        allScheduleInfo.put("projectedHours", projectedHours);
+                        //add Projected Under/Over Budget Hours
+                        if(Float.parseFloat(budgetedHours) > Float.parseFloat(projectedHours)){
+                            allScheduleInfo.put("projectedUnderBudgetHours", schedulesInDMView.get(i).findElement(By.cssSelector("[text-anchor=\"end\"]")).getText());
+                            allScheduleInfo.put("projectedOverBudgetHours", "");
+                        } else{
+                            allScheduleInfo.put("projectedOverBudgetHours", schedulesInDMView.get(i).findElement(By.cssSelector("[text-anchor=\"start\"]")).getText());
+                            allScheduleInfo.put("projectedUnderBudgetHours", "");
+                        }
+
+                        //add projectedUnderOrOverBudgetByJobTitleHours on TA-DG env
+                        if(areListElementVisible(projectedUnderOrOverBudgetByJobTitleHours, 5)){
+                            List<WebElement> projectedUnderOrOverBudgetByJobTitleHours = schedulesInDMView.get(i).findElements(By.cssSelector("[jj-switch-when=\"extraCells\"]"));
+                            if(areListElementVisible(projectedUnderOrOverBudgetByJobTitleHours, 5)
+                                    && projectedUnderOrOverBudgetByJobTitleHours.size()==4){
+                                allScheduleInfo.put("asmHours", projectedUnderOrOverBudgetByJobTitleHours.get(0).getText());
+                                allScheduleInfo.put("lsaHours", projectedUnderOrOverBudgetByJobTitleHours.get(1).getText());
+                                allScheduleInfo.put("saHours", projectedUnderOrOverBudgetByJobTitleHours.get(2).getText());
+                                allScheduleInfo.put("openHours", projectedUnderOrOverBudgetByJobTitleHours.get(3).getText());
+                                SimpleUtils.pass("Get Projected Under Or Over Budget By Job Title Hours successfully! ");
                             } else
                                 budgetedHours = schedulesInDMView.get(i).findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(2).getText().replace(",","");
                             //add Budgeted Hours

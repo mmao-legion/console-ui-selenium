@@ -8797,19 +8797,21 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement noSchedule;
     @FindBy(css = "[ng-repeat=\"opt in opts\"]")
     private List<WebElement> filters;
-    @FindBy(className = "sch-claim-shift-confirm")
+    @FindBy(css = ".accept-shift")
     private WebElement claimShiftWindow;
     @FindBy(css = ".redesigned-button-ok")
     private WebElement agreeClaimBtn;
-    @FindBy(className = "cancel")
-    private WebElement cancelClaimBtn;
+    @FindBy(css = ".redesigned-button-cancel-outline")
+    private WebElement declineBtn;
+    @FindBy(css = ".redesigned-modal")
+    private WebElement popUpModal;
     @FindBy(css = "img[src*='shift-info']")
     private List<WebElement> infoIcons;
     @FindBy(css = ".sch-shift-hover div:nth-child(3)>div.ng-binding")
     private WebElement shiftDuration;
     @FindBy(css = ".shift-hover-subheading.ng-binding")
     private WebElement shiftJobTitleAsWorkRole;
-    @FindBy(className = "shift-info")
+    @FindBy(className = "accept-shift-shift-info")
     private WebElement shiftDetail;
     @FindBy(className = "lg-toast")
     private WebElement msgOnTop;
@@ -8927,10 +8929,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void verifyClickCancelBtnOnClaimShiftOffer() throws Exception {
-        if (isElementLoaded(cancelClaimBtn, 5)) {
-            click(cancelClaimBtn);
-            if (!isElementLoaded(claimShiftWindow, 5)) {
-                SimpleUtils.pass("Click on Cancel Claim Button Successfully!");
+        if (isElementLoaded(declineBtn, 5)) {
+            clickTheElement(declineBtn);
+            if (isElementLoaded(popUpModal, 10) && popUpModal.getText().contains("Open Shift Declined")) {
+                SimpleUtils.pass("Click on Decline Claim Button Successfully!");
+                if (isElementLoaded(agreeClaimBtn, 5) && agreeClaimBtn.getText().equalsIgnoreCase("OK")) {
+                    clickTheElement(agreeClaimBtn);
+                    SimpleUtils.report("Click on OK button successfully on \"Open Shift Declined\" pop up!");
+                } else {
+                    SimpleUtils.fail("OK button failed to load on \"Open Shift Declined\" pop up", false);
+                }
             }else {
                 SimpleUtils.fail("Click on Cancel Claim Button failed!", false);
             }
@@ -9010,7 +9018,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void verifyTheShiftHourOnPopupWithScheduleTable(String scheduleShiftTime, String weekDay) throws Exception {
         if (isElementLoaded(shiftDetail, 5)) {
             String details = shiftDetail.getText();
-            if (details.toLowerCase().contains(scheduleShiftTime.toLowerCase()) && details.toLowerCase().contains(weekDay.toLowerCase())) {
+            if (details.toLowerCase().replaceAll("\\s*", "").contains(scheduleShiftTime.toLowerCase().replaceAll("\\s*", "")) &&
+                    details.toLowerCase().replaceAll("\\s*", "").contains(weekDay.toLowerCase().replaceAll("\\s*", ""))) {
                 SimpleUtils.pass("Date and time in the Popup is match with the date and time in Schedule table: " + scheduleShiftTime);
             }else {
                 SimpleUtils.fail("Date and time in the Popup is incorrect: " + details + ", expected week day is: "
@@ -9050,13 +9059,13 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyClaimShiftOfferNBtnsLoaded() throws Exception {
         if (isElementLoaded(claimShiftWindow, 5)) {
-            if (isElementLoaded(agreeClaimBtn, 5) && isElementLoaded(cancelClaimBtn, 5)) {
-                SimpleUtils.pass("I Agree and Cancel Buttons loaded Successfully!");
+            if (isElementLoaded(agreeClaimBtn, 5) && isElementLoaded(declineBtn, 5)) {
+                SimpleUtils.pass("Accept and Decline Buttons loaded Successfully!");
             }else {
-                SimpleUtils.fail("I Agree and Cancel Buttons not loaded Successfully!", false);
+                SimpleUtils.fail("Accept and Decline Buttons not loaded Successfully!", false);
             }
         }else {
-            SimpleUtils.fail("Pop up Window: Claim Shift Offer not loaded Successfully!", false);
+            SimpleUtils.fail("Pop up Window: Open Shift not loaded Successfully!", false);
         }
     }
 

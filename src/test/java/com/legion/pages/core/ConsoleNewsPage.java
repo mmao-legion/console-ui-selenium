@@ -31,13 +31,13 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 	}
 
 	// Added by Nora
-	@FindBy (css = "button.sc-jlZJtj.sc-cbeScs.ertmdS.fNvcGj")
+	@FindBy (css = "div.MuiPaper-root.jss10 button")
 	private WebElement createPostButton;
 
-	@FindBy (css = "input.sc-JsfZP.dkRUVY")
+	@FindBy (css = "input[placeholder=\"Subject\"]")
 	private WebElement postTitle;
 
-	@FindBy (css = ".sc-hYRTwp.kOhRLL .notranslate")
+	@FindBy (css = ".modal-dialog .notranslate")
 	private WebElement postMessage;
 
 	@FindBy(css = "div.console-navigation-item-label.News")
