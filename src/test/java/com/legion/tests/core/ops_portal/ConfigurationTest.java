@@ -695,7 +695,7 @@ public class ConfigurationTest extends TestBase {
     public void timeOfDayInADVRuleE2EAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
-            String shiftTime = "12:30am - 11pm";
+            String shiftTime = "8:30am - 5pm";
             List<String> indexes = new ArrayList<String>();
 
             //Back to console to select one location
@@ -734,8 +734,8 @@ public class ConfigurationTest extends TestBase {
     public void mealAndRestBreakInADVRuleE2EAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
-            String mealBreakTime = "5:30am - 6:15am";
-            String restBreakTime = "6:30am - 7:15am";
+            String mealBreakTime = "1:30pm - 2:15pm";
+            String restBreakTime = "2:30pm - 3:15pm";
             HashMap<String,String> mealRestBreaks= new HashMap<String,String>();
 
             //Back to console to select one location
