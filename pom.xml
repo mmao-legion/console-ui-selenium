@@ -20,7 +20,7 @@
         <enterprise>opauto</enterprise>
         <env>https://rc-enterprise.dev.legion.work/</env>
         <testRail>No</testRail>
-        <seleniumGridPort>4455</seleniumGridPort>
+        <seleniumGridPort>4444</seleniumGridPort>
         <domainName>localhost</domainName>
     </properties>
 
