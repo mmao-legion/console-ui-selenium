@@ -2,13 +2,14 @@ package com.legion.tests.core;
 
 
 import com.legion.pages.DashboardPage;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
-import com.legion.tests.core.ops_portal.LocationsTest;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;

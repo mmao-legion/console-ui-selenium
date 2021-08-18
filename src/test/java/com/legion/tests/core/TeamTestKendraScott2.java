@@ -11,8 +11,9 @@ import com.legion.pages.*;
 
 import java.util.Map;
 
-import com.legion.pages.core.OpsPortalLocationsPage;
-import com.legion.tests.core.ops_portal.LocationsTest;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
