@@ -1197,8 +1197,7 @@ public class ActivityTest extends TestBase {
                     SimpleUtils.pass("Get Cover User name: " + entry.getKey());
                 }
             }
-            Object[][] credential = null;
-            credential = userCredentials.get(swapNames.get(0));
+            Object[][] credential = userCredentials.get(swapNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1215,7 +1214,7 @@ public class ActivityTest extends TestBase {
 
             // For Cover Feature
             List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
-            int index = schedulePage.verifyClickOnAnyShift();
+            schedulePage.verifyClickOnAnyShift();
             String request = "Request to Cover Shift";
             schedulePage.clickTheShiftRequestByName(request);
             // Validate the Submit button feature
@@ -1245,7 +1244,7 @@ public class ActivityTest extends TestBase {
             schedulePage.clickLinkOnSmartCardByName(linkName);
             SimpleUtils.assertOnFail("Open shifts not loaded Successfully!", schedulePage.areShiftsPresent(), false);
             // Validate the availability of Claim Shift Request popup
-            String requestName = "Claim Shift";
+            String requestName = "View Offer";
             schedulePage.clickTheShiftRequestToClaimShift(requestName, requestUserName);
             // Validate the clickability of I Agree button
             schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();

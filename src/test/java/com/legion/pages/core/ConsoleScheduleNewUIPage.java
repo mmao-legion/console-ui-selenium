@@ -8701,7 +8701,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<String> expectedRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
         int index = 100;
         if (areListElementVisible(tmIcons, 15) && tmIcons.size() > 1) {
-            for (int i = 1; i < tmIcons.size(); i++) {
+            for (int i = 0; i < tmIcons.size(); i++) {
                 scrollToElement(tmIcons.get(i));
                 waitForSeconds(1);
                 clickTheElement(tmIcons.get(i));
@@ -11209,10 +11209,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 5)) {
                                 clickTheElement(deleteShift);
-                                waitForSeconds(1);
+                                waitForSeconds(2);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
+                                    waitForSeconds(1);
                                 } else
                                     SimpleUtils.fail("delete confirm button load failed", false);
                             } else
