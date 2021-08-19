@@ -1686,6 +1686,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				SimpleUtils.fail("User can't click new template button successfully!",false);
 			}
 		}
+		searchTemplate(templateName);
 		String newTemplateName = templateNameList.get(0).getText().trim();
 		if(newTemplateName.contains(templateName)){
 			SimpleUtils.pass("User can add new template successfully!");
@@ -2393,6 +2394,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				SimpleUtils.fail("User can't click new template button successfully!",false);
 			}
 		}
+		searchTemplate(templateName);
 		String newTemplateName = templateNameList.get(0).getText().trim();
 		if(newTemplateName.contains(templateName)){
 			SimpleUtils.pass("User can add new template successfully!");
