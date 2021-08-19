@@ -149,7 +149,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void goToConfigurationPage() throws Exception {
-		if (isElementEnabled(configurationTab,3)) {
+		if (isElementEnabled(configurationTab,15)) {
 			click(configurationTab);
 			waitForSeconds(20);
 			if(categoryOfTemplateList.size()!=0){

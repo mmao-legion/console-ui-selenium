@@ -186,9 +186,9 @@
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
 <!--                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" Need fix/>-->
-                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
+<!--                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012 -->
+<!--                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012 -->
+<!--                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012 -->
                     <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
                     <!--  SCH-3942                   <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />  -->
@@ -309,9 +309,9 @@
                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin" />
                     <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin" />
                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" />
-                    <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" />
+<!--                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012 -->
+<!--                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012   -->
+<!--                     <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012  -->
                 </methods>
             </class>
         </classes>

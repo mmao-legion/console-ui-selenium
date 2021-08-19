@@ -4416,9 +4416,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (isReGenerateButtonLoadedForManagerView()) {
                         click(reGenerateScheduleButton);
                         generateScheduleFromCreateNewScheduleWindow(activeWeekText);
-                    } else if (isElementLoaded(publishSheduleButton, 5)) {
+                    } else if (isElementLoaded(publishSheduleButton, 10)) {
                         SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
-                    } else if (areListElementVisible(weekShifts, 5)) {
+                    } else if (areListElementVisible(weekShifts, 10)) {
                         SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
                     } else {
                         SimpleUtils.fail("Generate button or Publish not found on page", false);
