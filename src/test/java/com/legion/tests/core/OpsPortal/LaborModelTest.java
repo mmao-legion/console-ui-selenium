@@ -164,7 +164,9 @@ public class LaborModelTest extends TestBase {
             HashMap<String,List<String>> attributesInfoInTemplate = new HashMap<>();
             HashMap<String,List<String>> attributesUpdatedInfoInTemplate = new HashMap<>();
             String attributeName ="AutoUsingAttribute";
-            String attributeValueUpdate = "23";
+            Random random=new Random();
+            int number=random.nextInt(90)+10;
+            String attributeValueUpdate=String.valueOf(number);
             String templateName = "AutoCreated" + currentTime;
             String mode = "edit";
 
