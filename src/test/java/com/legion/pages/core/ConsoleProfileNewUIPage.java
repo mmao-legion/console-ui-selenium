@@ -4006,6 +4006,29 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	@Override
+	public void approveSpecificRejectedAvailabilityRequest(String availabilityWeek) throws Exception {
+		if (areListElementVisible(allAvailabilityChangeRequests, 10)) {
+			for (WebElement availabilityChangeRequest : allAvailabilityChangeRequests) {
+				if (isElementLoaded(availabilityChangeRequest, 5)
+						&& availabilityChangeRequest.findElement(By.cssSelector("div.request-date")).
+						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)
+						&& availabilityChangeRequest.findElement(By.cssSelector("span.request-status")).
+						getText().equalsIgnoreCase("rejected")) {
+					clickTheElement(availabilityChangeRequest);
+					if (isElementLoaded(approveAvailabilityButton, 10)) {
+						clickTheElement(approveAvailabilityButton);
+						SimpleUtils.pass("Approve the pending availability request successfully!");
+					} else {
+						SimpleUtils.fail("Approve button fail to load!", false);
+					}
+					break;
+				}
+
+			}
+		}
+	}
+
+	@Override
 	public void verifyClickCancelledAvalabilityRequest() throws Exception {
 		if (areListElementVisible(cancelledAvailabilityRequests, 10) && cancelledAvailabilityRequests.size()>0) {
 			clickTheElement(cancelledAvailabilityRequests.get(0));

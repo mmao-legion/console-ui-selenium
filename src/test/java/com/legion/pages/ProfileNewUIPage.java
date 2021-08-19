@@ -282,5 +282,7 @@ public interface ProfileNewUIPage {
 
 	public void rejectSpecificApprovedAvailabilityRequest(String availabilityWeek) throws Exception;
 
+	public void approveSpecificRejectedAvailabilityRequest(String availabilityWeek) throws Exception;
+
 	public void verifyClickCancelledAvalabilityRequest() throws Exception;
 }

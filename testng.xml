@@ -92,6 +92,7 @@
                    <include name="validateCancelAvailabilityRequestAsTeamMember" />
                    <include name="validateApproveAvailabilityRequestAsTeamMember" />
                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsTeamMember" />
+                   <include name="validateRejectAvailabilityRequestAsStoreManager" />
                </methods>
            </class>
        </classes>

@@ -181,7 +181,7 @@
             <class name="com.legion.tests.core.LiquidDashboardTest">
                 <methods>
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
-                    <!--                    <include name="verifySchedulesWidgetsAsStoreManager" Blocked by SCH-4155/>-->
+                    <include name="verifySchedulesWidgetsAsStoreManager"/>
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                 </methods>
