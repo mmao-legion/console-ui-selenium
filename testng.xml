@@ -544,7 +544,7 @@
 <!--                        <include name="verifyPayrollProjectionWidgetOnDashboardInBUViewAsInternalAdmin" />-->
 
                         <!-- Added by Mary -->
-<!--                        <include name="verifyRegionViewNavigationAsInternalAdmin" /> Blocked by SCH-4910 -->
+                        <include name="verifyRegionViewNavigationAsInternalAdmin" />
                         <include name="verifyBUViewNavigationAsInternalAdmin" />
                         <include name="verifyControlsInBUViewAsInternalAdmin" />
                         <include name="verifyControlsInRegionViewAsInternalAdmin" />
@@ -552,6 +552,8 @@
                         <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
                         <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
                         <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnComplianceInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>

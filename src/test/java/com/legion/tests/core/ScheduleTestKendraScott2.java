@@ -2037,14 +2037,16 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			schedulePage.createScheduleForNonDGFlowNewUI();
 
-			//verify shifts are auto assigned.
-			//schedulePage.verifyAllShiftsAssigned();
-			//schedulePage.clickOnEditButton();
+			//delete unassigned shifts and open shifts.
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.deleteTMShiftInWeekView("unassigned");
-			schedulePage.deleteTMShiftInWeekView("open");
-			schedulePage.saveSchedule();
-			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			schedulePage.clickOnFilterBtn();
+			schedulePage.selectShiftTypeFilterByText("Action Required");
+			//schedulePage.deleteTMShiftInWeekView("Unassigned");
+			//Delete all shifts are action required.
+			schedulePage.deleteTMShiftInWeekView("");
+			schedulePage.clickOnFilterBtn();
+			schedulePage.selectShiftTypeFilterByText("Open");
+			schedulePage.deleteTMShiftInWeekView("");
 			schedulePage.clickOnFilterBtn();
 			schedulePage.selectShiftTypeFilterByText("Compliance Review");
 			schedulePage.deleteAllShiftsInWeekView();
@@ -2055,15 +2057,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnProfileIcon();
 			schedulePage.clickOnConvertToOpenShift();
 			schedulePage.convertToOpenShiftDirectly();
-			int index = schedulePage.getTheIndexOfEditedShift();
 			schedulePage.saveSchedule();
 			schedulePage.publishActiveSchedule();
-			//debug log---start
-			for (String s: schedulePage.getTheShiftInfoByIndex(index)){
-				SimpleUtils.report(s);
-			}
-			//debug log---end
-			schedulePage.clickProfileIconOfShiftByIndex(index);
+			schedulePage.clickOnProfileIconOfOpenShift();
 			schedulePage.clickViewStatusBtn();
 			schedulePage.verifyListOfOfferNotNull();
 

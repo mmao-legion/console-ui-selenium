@@ -88,7 +88,7 @@ public interface DashboardPage {
     public void validateThePresenceOfRefreshButton() throws Exception;
     public void validateRefreshFunction() throws Exception;
     public void validateRefreshPerformance() throws Exception;
-    public void validateRefreshWhenNavigationBack() throws Exception;
+    public void validateRefreshWhenNavigationBack(String consoleName) throws Exception;
     public void validateRefreshTimestamp() throws Exception;
     public void validateTheContentOnTimesheetApprovalRateWidgetInUpperfieldView() throws Exception;
     public void validateStatusValueOfTimesheetApprovalRateWidget() throws Exception;

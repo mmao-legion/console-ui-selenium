@@ -73,7 +73,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the unassigned shifts convert to open shifts setting in OP")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheUnassignedShiftsConvertToOpenShiftsSettingInOPAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -818,6 +818,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(3000);
             schedulePage.createScheduleForNonDGFlowNewUI();
             schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.publishActiveSchedule();

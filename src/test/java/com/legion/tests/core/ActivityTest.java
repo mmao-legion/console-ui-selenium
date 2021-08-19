@@ -1953,7 +1953,7 @@ public class ActivityTest extends TestBase {
             String linkName = "View Shifts";
             schedulePage.clickLinkOnSmartCardByName(linkName);
             SimpleUtils.assertOnFail("Open shifts not loaed Successfully!", schedulePage.areShiftsPresent(), false);
-            List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+            List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             schedulePage.selectOneShiftIsClaimShift(claimShift);
             schedulePage.clickTheShiftRequestByName(claimShift.get(0));
             schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();

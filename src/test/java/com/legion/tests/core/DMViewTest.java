@@ -111,7 +111,7 @@ public class DMViewTest extends TestBase {
             dashboardPage.validateRefreshTimestamp();
 
             // Validate Refresh when navigation back
-            dashboardPage.validateRefreshWhenNavigationBack();
+            dashboardPage.validateRefreshWhenNavigationBack("Dashboard");
 
             // Validate Refresh function
             dashboardPage.validateRefreshFunction();
