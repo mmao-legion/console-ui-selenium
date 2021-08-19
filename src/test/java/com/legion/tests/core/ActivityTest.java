@@ -116,7 +116,6 @@ public class ActivityTest extends TestBase {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
             schedulePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.saveSchedule();
             schedulePage.convertAllUnAssignedShiftToOpenShift();
             // Add the new shifts for swap team members
@@ -1139,7 +1138,7 @@ public class ActivityTest extends TestBase {
             String smartCard = "WANT MORE HOURS?";
             SimpleUtils.assertOnFail("Smart Card: " + smartCard + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(smartCard), false);
             // Validate the availability of all cover request shifts in schedule table
-            String linkName = "View Shifts";;
+            String linkName = "View Shifts";
             schedulePage.clickLinkOnSmartCardByName(linkName);
             SimpleUtils.assertOnFail("Open shifts not loaded Successfully!", schedulePage.areShiftsPresent(), false);
             // Validate the availability of Claim Shift Request popup
