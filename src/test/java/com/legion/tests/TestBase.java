@@ -390,6 +390,7 @@ public abstract class TestBase {
 //        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
         SimpleUtils.assertOnFail("Not able to Login to Legion Application Successfully!", isLoginDone, false);
+        setConsoleWindowHandle(getDriver().getWindowHandle());
         //loginPage.verifyLoginDone(isLoginDone, location);
     }
 
