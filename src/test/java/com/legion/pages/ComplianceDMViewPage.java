@@ -6,4 +6,5 @@ import java.util.Map;
 
 public interface ComplianceDMViewPage {
     public Map<String, String> getAllUpperFieldInfoFromComplianceDMViewByUpperField(String upperFieldName) throws Exception;
+    public List<String> getAllUpperFieldNames();
 }

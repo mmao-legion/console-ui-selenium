@@ -26,6 +26,29 @@ public class ConsoleComplianceDMViewPage extends BasePage implements ComplianceD
     @FindBy (css = "lg-search.analytics-new-table-filter input")
     private WebElement searchLocationInCompliancePage;
 
+    @FindBy (css = ".analytics-new-table-group-row-open [jj-switch-when=\"cells.CELL_UNTOUCHED\"] span")
+    private List<WebElement> upperFieldNames;
+
+
+    /**
+     * Description: To get all the upper field names (first column) in the table
+     * @param
+     * @return : Return the string list of the upper field names (first column) in the table
+     *
+     */
+
+    @Override
+    public List<String> getAllUpperFieldNames() {
+        List<String> names = new ArrayList<>();
+        if (areListElementVisible(upperFieldNames,10)) {
+            for (WebElement upperFieldName : upperFieldNames) {
+                names.add(upperFieldName.getText());
+            }
+        } else
+            SimpleUtils.fail("The upper field names fail to load! ", false);
+        return names;
+    }
+
     public Map<String, String> getAllUpperFieldInfoFromComplianceDMViewByUpperField(String upperFieldName) throws Exception {
         Map<String, String> allUpperFieldInfo = new HashMap<>();
         boolean isUpperFieldMatched = false;
