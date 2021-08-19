@@ -405,7 +405,9 @@ public abstract class TestBase {
 //        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
 //        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
-        loginPage.verifyLoginDone(isLoginDone, location);
+        SimpleUtils.assertOnFail("Not able to Login to Legion Application Successfully!", isLoginDone, false);
+        setConsoleWindowHandle(getDriver().getWindowHandle());
+        //loginPage.verifyLoginDone(isLoginDone, location);
     }
 
     public synchronized void loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String username, String Password, String location) throws Exception
