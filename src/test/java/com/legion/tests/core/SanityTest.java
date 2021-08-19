@@ -330,7 +330,7 @@ public class SanityTest extends TestBase{
 			System.out.println("totalDaysProjectedSalesHours: "+totalDaysProjectedSalesHours);
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePage.clickOnScheduleConsoleMenuItem();
-			SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.isSchedule(),false);
+			SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()),false);
 			StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
 			staffingGuidancePage.navigateToStaffingGuidanceTab();
 			SimpleUtils.assertOnFail( "Staffing Guidance tab not loaded successfully!", staffingGuidancePage.isStaffingGuidanceTabActive(),false);

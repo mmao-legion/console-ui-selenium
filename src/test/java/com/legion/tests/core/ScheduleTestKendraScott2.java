@@ -1090,7 +1090,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 
 			schedulePage.navigateToNextWeek();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			isWeekGenerated = schedulePage.isWeekGenerated();
 			if (isWeekGenerated) {
 				schedulePage.unGenerateActiveScheduleScheduleWeek();

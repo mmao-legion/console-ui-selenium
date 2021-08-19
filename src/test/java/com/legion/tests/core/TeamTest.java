@@ -157,7 +157,7 @@ public class TeamTest extends TestBase{
 			schedulePage.goToSchedulePage();
 			schedulePage.isSchedulePage();
 			schedulePage.goToSchedule();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			if (!schedulePage.isWeekGenerated()) {
 				schedulePage.generateOrUpdateAndGenerateSchedule();
 			}
@@ -226,7 +226,7 @@ public class TeamTest extends TestBase{
 			schedulePage.goToSchedulePage();
 			schedulePage.isSchedulePage();
 			schedulePage.goToSchedule();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			if (!schedulePage.isWeekGenerated()) {
 				schedulePage.generateOrUpdateAndGenerateSchedule();
 			}
@@ -275,7 +275,7 @@ public class TeamTest extends TestBase{
 			schedulePage.goToSchedulePage();
 			schedulePage.isSchedulePage();
 			schedulePage.goToSchedule();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			schedulePage.verifyShiftsChangeToOpenAfterTerminating(indexes, firstName, currentTime);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);

@@ -196,7 +196,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 			SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
 			schedulePageTM.clickOnScheduleConsoleMenuItem();
 			schedulePageTM.navigateToNextWeek();
-			SimpleUtils.assertOnFail("My Schedule page failed to load!", schedulePageTM.isSchedule(), false);
+			SimpleUtils.assertOnFail("My Schedule page failed to load!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
 			List<String> scheduleListTM = new ArrayList<>();
 			if (schedulePageTM.getShiftHoursFromInfoLayout().size() > 0) {
@@ -317,7 +317,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		dashboardPage.verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(startingSoonLoaded, hours.get("Scheduled"));
 		// Verify starting soon section
 		schedulePage = dashboardPage.goToTodayForNewUI();
-		schedulePage.isSchedule();
+		schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		if (!schedulePage.isPublishButtonLoaded()) {
 			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
@@ -329,7 +329,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		if (startingSoonLoaded) {
 			upComingShifts = dashboardPage.getUpComingShifts();
 			schedulePage = dashboardPage.goToTodayForNewUI();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			fourShifts = schedulePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
 			schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
 		} else {

@@ -962,16 +962,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    @Override
-    public boolean isSchedule() throws Exception {
-        if (isElementLoaded(goToScheduleTab)) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
 
     @Override
     public void clickOnWeekView() throws Exception {
