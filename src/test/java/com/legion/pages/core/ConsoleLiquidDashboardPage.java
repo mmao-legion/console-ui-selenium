@@ -486,14 +486,15 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String linkName) throws Exception {
         try {
             if (areListElementVisible(widgets, 10)) {
-                for (WebElement widget : widgets) {
+                for (int i =0; i<widgets.size(); i++) {
                     // wait for all the widget content loaded Successfully
-                    waitForSeconds(5);
-                    WebElement widgetTitle = widget.findElement(By.className("dms-box-title"));
+                    waitForSeconds(2);
+                    WebElement widgetTitle = getDriver().findElements(By.xpath("//*[contains(@class, \"gridster-item\")]//*[contains(@class, \"dms-box-title\")]")).get(i);
+                    System.out.println(widgetTitle.getText());
                     if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)) ||
                             widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)))) {
                         try {
-                            WebElement link = widget.findElement(By.className("dms-action-link"));
+                            WebElement link = getDriver().findElements(By.xpath("//*[contains(@class, \"gridster-item\")]")).get(i).findElement(By.xpath("//*[contains(@class,\"dms-action-link\")]"));
                             if (link != null && linkName.toLowerCase().equals(link.getText().toLowerCase().trim())) {
                                 clickTheElement(link);
                                 SimpleUtils.pass("Click on: \"" + linkName + "\" on Widget: \"" + widgetName + "\" Successfully!");
