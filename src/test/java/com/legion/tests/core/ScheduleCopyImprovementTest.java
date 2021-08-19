@@ -313,6 +313,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
         schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated) {
             schedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -406,6 +407,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
