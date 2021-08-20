@@ -80,16 +80,6 @@
         </classes>
     </test>
 
-    <test name="LiquidDashboard Test">
-        <classes>
-            <class name="com.legion.tests.core.LiquidDashboardTest">
-                <methods>
-                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
     <test name="Inbox Test">
         <classes>
             <class name="com.legion.tests.core.InboxTest">
