@@ -8799,7 +8799,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private List<WebElement> infoIcons;
     @FindBy(css = ".sch-shift-hover div:nth-child(3)>div.ng-binding")
     private WebElement shiftDuration;
-    @FindBy(css = ".shift-hover-subheading.ng-binding")
+    @FindBy(css = ".shift-hover-subheading.ng-binding:not([ng-if])")
     private WebElement shiftJobTitleAsWorkRole;
     @FindBy(className = "accept-shift-shift-info")
     private WebElement shiftDetail;
