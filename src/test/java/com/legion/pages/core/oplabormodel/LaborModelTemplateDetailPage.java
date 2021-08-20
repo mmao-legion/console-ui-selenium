@@ -124,6 +124,7 @@ public class LaborModelTemplateDetailPage extends BasePage {
         searchBoxInModal.clear();
         searchBoxInModal.sendKeys(taskName);
         searchIconInModal.click();
+        waitForSeconds(5);
     }
 
     public void checkTheTask() {
