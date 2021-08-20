@@ -3935,7 +3935,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         boolean selectOtherWeek = false;
         if (areListElementVisible(createModalWeeks, 10)) {
             SimpleUtils.pass("Copy Schedule page loaded Successfully!");
-            waitForSeconds(2);
+            waitForSeconds(5);
             for (WebElement createModalWeek : createModalWeeks) {
                 WebElement weekName = createModalWeek.findElement(By.className("generate-modal-week-name"));
                 if (!selectOtherWeek) {
