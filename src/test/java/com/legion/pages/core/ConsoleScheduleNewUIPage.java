@@ -879,7 +879,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
         if (isElementLoaded(activatedSubTabElement,15)) {
-            if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText)) {
+            if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText.toUpperCase())) {
                 return true;
             }
         } else {
