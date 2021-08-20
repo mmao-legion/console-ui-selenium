@@ -686,16 +686,12 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             String tmName = profileNewUIPage.getNickNameFromProfile();
             String myProfileLabel = "My Work Preferences";
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-
             while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
                 profileNewUIPage.clickNextWeek();
             }
-            //Delete all availabilities of the first editable week
-            Thread.sleep(3000);
-            profileNewUIPage.clickAvailabilityEditButton();
-            profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
-            profileNewUIPage.saveMyAvailabilityEditMode("Repeat Forward");
+            //Get the editable week info
             String availabilityWeek = profileNewUIPage.getAvailabilityWeek();
+            profileNewUIPage.cancelAllPendingAvailabilityRequest();
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
@@ -705,10 +701,14 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             teamPage.goToTeam();
             teamPage.searchAndSelectTeamMemberByName(tmName);
             profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
-            Thread.sleep(5000);
-            String onwardWeekInfo = availabilityWeek.split("-")[0]+ "-" + "ONWARD";
-            profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(onwardWeekInfo, "Approve");
             profileNewUIPage.approveAllPendingAvailabilityRequest();
+            while (!profileNewUIPage.getAvailabilityWeek().equalsIgnoreCase(availabilityWeek)){
+                profileNewUIPage.clickNextWeek();
+            }
+            Thread.sleep(5000);
+            profileNewUIPage.clickAvailabilityEditButton();
+            profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
+            profileNewUIPage.saveMyAvailabilityEditMode("Repeat Forward");
             loginPage.logOut();
 
             //Login back to TM and add availabilities
@@ -755,7 +755,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
                 profileNewUIPage.clickNextWeek();
             }
-            onwardWeekInfo = availabilityWeek1.split("-")[0]+ "-" + "ONWARD";
+            String onwardWeekInfo = availabilityWeek1.split("-")[0]+ "-" + "ONWARD";
             profileNewUIPage.cancelSpecificPendingAvailabilityRequest(onwardWeekInfo);
             changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
             changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
