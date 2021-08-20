@@ -76,7 +76,7 @@ public class LocationsGroupTestInOP extends TestBase {
 
         try{
             String currentTime =  TestBase.getCurrentTime().substring(4);
-            String locationName = "MS" +currentTime;
+            String locationName ="MS" +currentTime;
             setLGMSLocationName(locationName);
 
             int index =0;
@@ -103,7 +103,7 @@ public class LocationsGroupTestInOP extends TestBase {
             //add child location by child number
             try {
                 for (int i = 0; i <childLocationNum ; i++) {
-                    String childLocationName = "childLocationForMS" + i +currentTime;
+                    String childLocationName = "chiMS" + i +currentTime;
                     setLGMSLocationName(childLocationName);
                     String  childRelationship = "Part of a location group";
                     locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);

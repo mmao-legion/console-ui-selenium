@@ -1091,8 +1091,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(locationDetailsLinks.get(0));
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
-			waitForSeconds(3);
-			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/div/lg-button[1]/button")).getText().equals(action)) {
+			waitForSeconds(8);
+			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
 				SimpleUtils.pass(action + " " + locationName + " successfully");
 			} else
 				SimpleUtils.fail(action + " " + locationName + " successfully", true);
