@@ -141,6 +141,7 @@ public class ScheduleNewUITest extends TestBase {
 		ProjectedSales("PROJECTED SALES"),
 		StaffingGuidance("STAFFING GUIDANCE"),
 		Schedule("SCHEDULE"),
+		MySchedule("MY SCHEDULE"),
 		ProjectedTraffic("PROJECTED TRAFFIC");
 		private final String value;
 

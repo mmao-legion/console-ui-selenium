@@ -878,8 +878,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
-        if (isElementLoaded(activatedSubTabElement)) {
-            if (activatedSubTabElement.getText().equalsIgnoreCase(SubTabText)) {
+        if (isElementLoaded(activatedSubTabElement,15)) {
+            if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText.toUpperCase())) {
                 return true;
             }
         } else {
@@ -960,16 +960,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Analyze not Displayed on Staffing Guidance page", true);
         }
-    }
-
-    @Override
-    public boolean isSchedule() throws Exception {
-        if (isElementLoaded(goToScheduleTab)) {
-            return true;
-        } else {
-            return false;
-        }
-
     }
 
 
@@ -3935,7 +3925,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         boolean selectOtherWeek = false;
         if (areListElementVisible(createModalWeeks, 10)) {
             SimpleUtils.pass("Copy Schedule page loaded Successfully!");
-            waitForSeconds(2);
+            waitForSeconds(5);
             for (WebElement createModalWeek : createModalWeeks) {
                 WebElement weekName = createModalWeek.findElement(By.className("generate-modal-week-name"));
                 if (!selectOtherWeek) {
@@ -4415,9 +4405,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (isReGenerateButtonLoadedForManagerView()) {
                         click(reGenerateScheduleButton);
                         generateScheduleFromCreateNewScheduleWindow(activeWeekText);
-                    } else if (isElementLoaded(publishSheduleButton, 5)) {
+                    } else if (isElementLoaded(publishSheduleButton, 10)) {
                         SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
-                    } else if (areListElementVisible(weekShifts, 5)) {
+                    } else if (areListElementVisible(weekShifts, 10)) {
                         SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
                     } else {
                         SimpleUtils.fail("Generate button or Publish not found on page", false);
@@ -8709,7 +8699,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         List<String> expectedRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
         int index = 100;
         if (areListElementVisible(tmIcons, 15) && tmIcons.size() > 1) {
-            for (int i = 1; i < tmIcons.size(); i++) {
+            for (int i = 0; i < tmIcons.size(); i++) {
                 scrollToElement(tmIcons.get(i));
                 waitForSeconds(1);
                 clickTheElement(tmIcons.get(i));
@@ -11210,17 +11200,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 try {
                     WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
                     if (workerName != null) {
-                        if (workerName.getText().toLowerCase().contains(teamMemberName.toLowerCase())) {
+                        if (workerName.getText().toLowerCase().trim().contains(teamMemberName.toLowerCase().trim())) {
                             WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
                             //WebElement image = shiftWeekView.findElement(By.cssSelector(".sch-day-view-shift-worker-detail"));
                             clickTheElement(image);
                             waitForSeconds(3);
-                            if (isElementLoaded(deleteShift, 5)) {
+                            if (isElementLoaded(deleteShift, 10)) {
                                 clickTheElement(deleteShift);
-                                waitForSeconds(1);
+                                waitForSeconds(2);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
+                                    waitForSeconds(1);
                                 } else
                                     SimpleUtils.fail("delete confirm button load failed", false);
                             } else

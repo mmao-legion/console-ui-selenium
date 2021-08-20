@@ -1458,7 +1458,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //        dashboardPage.goToTodayForNewUI();
 //        schedulePage.navigateToNextWeek();
-//        schedulePage.isSchedule();
+//        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //        String cardName = "WANT MORE HOURS?";
 //        SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
 //        String linkName = "View Shifts";
@@ -1532,7 +1532,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //                dashboardPage.clickOnSwitchToEmployeeView();
 //            }
 //            SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-//            schedulePage.isSchedule();
+//            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //            schedulePage.navigateToNextWeek();
 //            schedulePage.navigateToNextWeek();
 //
@@ -1556,7 +1556,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            if (dashboardPage.isSwitchToEmployeeViewPresent())
 //                dashboardPage.clickOnSwitchToEmployeeView();
 //            dashboardPage.goToTodayForNewUI();
-//            schedulePage.isSchedule();
+//            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //            schedulePage.navigateToNextWeek();
 //            schedulePage.navigateToNextWeek();
 //
@@ -1637,7 +1637,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            dashboardPage.clickOnSwitchToEmployeeView();
 //        }
 //        SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-//        schedulePage.isSchedule();
+//        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //        schedulePage.navigateToNextWeek();
 //        schedulePage.navigateToNextWeek();
 //
@@ -1673,7 +1673,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            dashboardPage.clickOnSwitchToEmployeeView();
 //        }
 //        dashboardPage.goToTodayForNewUI();
-//        schedulePage.isSchedule();
+//        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //        schedulePage.navigateToNextWeek();
 //        schedulePage.navigateToNextWeek();
 //
@@ -1770,7 +1770,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //                dashboardPage.clickOnSwitchToEmployeeView();
 //            }
 //            SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-//            schedulePage.isSchedule();
+//            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //            schedulePage.navigateToNextWeek();
 //            schedulePage.navigateToNextWeek();
 //
@@ -1807,7 +1807,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //                dashboardPage.clickOnSwitchToEmployeeView();
 //            }
 //            dashboardPage.goToTodayForNewUI();
-//            schedulePage.isSchedule();
+//            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //            schedulePage.navigateToNextWeek();
 //            schedulePage.navigateToNextWeek();
 //
@@ -1848,7 +1848,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            // Go to Schedule page to check whether the shifts are swapped
 //            schedulePage.clickOnScheduleConsoleMenuItem();
 //            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-//            schedulePage.isSchedule();
+//            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //            schedulePage.navigateToNextWeek();
 //            schedulePage.navigateToNextWeek();
 //            schedulePage.verifyShiftsAreSwapped(swapData);
@@ -2621,7 +2621,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            loginToLegionAndVerifyIsLoginDone(username, password, location);
 //            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //            schedulePage = dashboardPage.goToTodayForNewUI();
-//            schedulePage.isSchedule();
+//            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //            schedulePage.navigateToNextWeek();
 //            schedulePage.navigateToNextWeek();
 //            // Validate the clickability of claim open text in popup

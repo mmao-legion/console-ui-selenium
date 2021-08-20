@@ -828,8 +828,8 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Region View Navigation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyRegionViewNavigationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -904,8 +904,8 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "BU View Navigation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyBUViewNavigationAsInternalAdmin(String browser, String username, String password, String location) {
@@ -982,8 +982,8 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify Controls in BU View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyControlsInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1054,8 +1054,8 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify Controls in Region View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyControlsInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1123,8 +1123,8 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify analytics table on Compliance in BU View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1233,12 +1233,12 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify analytics table on Compliance in Region View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -1341,16 +1341,16 @@ public class UpperfieldTest extends TestBase {
             else
                 SimpleUtils.assertOnFail("Compliance Page: Late Schedule is not contain No", schedulePublishedOnTime.contains("No"),false);
 
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify Compliance functionality on Compliance in BU View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1416,8 +1416,8 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify Compliance functionality on Compliance in Region View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1475,4 +1475,275 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Refresh feature on Compliance in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnComplianceConsoleMenu();
+
+            // Validate the presence of Refresh button
+            dashboardPage.validateThePresenceOfRefreshButton();
+
+            // Validate Refresh timestamp
+            dashboardPage.validateRefreshTimestamp();
+
+            // Validate Refresh when navigation back
+            dashboardPage.validateRefreshWhenNavigationBack("Compliance");
+
+            // Validate Refresh function
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.validateRefreshPerformance();
+
+            // Validate Refresh performance
+            scheduleDMViewPage.validateRefreshPerformance();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Refresh feature on Compliance in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRefreshFeatureOnComplianceInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnComplianceConsoleMenu();
+
+            // Validate the presence of Refresh button
+            dashboardPage.validateThePresenceOfRefreshButton();
+
+            // Validate Refresh timestamp
+            dashboardPage.validateRefreshTimestamp();
+
+            // Validate Refresh when navigation back
+            dashboardPage.validateRefreshWhenNavigationBack("Compliance");
+
+            // Validate Refresh function
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.validateRefreshPerformance();
+
+            // Validate Refresh performance
+            scheduleDMViewPage.validateRefreshPerformance();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the availability of region list and sub region on Compliance in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnComplianceConsoleMenu();
+
+            //Validate the region list
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            SimpleUtils.assertOnFail("The Regions on Compliance page in BU View display incorrectly! ", compliancePage.getAllUpperFieldNamesOnAnalyticsTable().size()>1, false);
+
+            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the availability of district list and sub district on Compliance in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String districtName = selectedUpperFields.get(District);
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnComplianceConsoleMenu();
+
+            //Validate the region list
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            SimpleUtils.assertOnFail("The Regions on Compliance page in BU View display incorrectly! ", compliancePage.getAllUpperFieldNamesOnAnalyticsTable().size()>1, false);
+
+            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
+            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify TOTAL VIOLATION HRS on Compliance in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnComplianceConsoleMenu();
+
+            //Validate the content of Toatal Violation smart card for current week.
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            HashMap<String, Float> valuesFromToatalViolationCard =  compliancePage.getValuesAndVerifyInfoForTotalViolationSmartCardInDMView();
+
+            //Validate the data Toatal Violation smart card for current week.
+            //Verify total violation hours for current week.
+            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
+            List<String> allUpperFields = complianceDMViewPage.getAllUpperFieldNames();
+            float totalViolationHrsFromTable = 0;
+            for (String upperField: allUpperFields){
+                totalViolationHrsFromTable = totalViolationHrsFromTable +
+                        Float.parseFloat(complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(upperField).get("totalExtraHours"));
+            }
+            SimpleUtils.assertOnFail("Total violation hours are inconsistent with analytic table!", (Math.abs(valuesFromToatalViolationCard.get("vioHrsCurrentWeek")) - totalViolationHrsFromTable) == 0, false);
+
+            //Verify diff hours flag.
+            if ((valuesFromToatalViolationCard.get("vioHrsCurrentWeek") - valuesFromToatalViolationCard.get("vioHrsPastWeek"))>0){
+                compliancePage.verifyDiffFlag("down");
+            } else {
+                compliancePage.verifyDiffFlag("up");
+            }
+
+            //Verify total violation hours for last week.
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.navigateToPreviousWeek();
+            HashMap<String, Float> valuesFromToatalViolationCardForLastWeek =  compliancePage.getValuesAndVerifyInfoForTotalViolationSmartCardInDMView();
+            SimpleUtils.assertOnFail("Violation hours for last week are inconsistent!",
+                    (Math.abs(valuesFromToatalViolationCard.get("vioHrsPastWeek")) - valuesFromToatalViolationCardForLastWeek.get("vioHrsCurrentWeek")) == 0,
+                    false);
+
+            //Verify diff hours.
+            SimpleUtils.assertOnFail("Diff hours with last week is incorrect!",
+                    (Math.abs(Math.abs(valuesFromToatalViolationCard.get("vioHrsCurrentWeek"))
+                            - valuesFromToatalViolationCard.get("vioHrsPastWeek"))-valuesFromToatalViolationCard.get("diffHrs")) == 0,
+                    false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify TOTAL VIOLATION HRS on Compliance in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnComplianceConsoleMenu();
+
+            //Validate the content of Toatal Violation smart card for current week.
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            HashMap<String, Float> valuesFromToatalViolationCard =  compliancePage.getValuesAndVerifyInfoForTotalViolationSmartCardInDMView();
+
+            //Validate the data Toatal Violation smart card for current week.
+            //Verify total violation hours for current week.
+            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
+            List<String> allUpperFields = complianceDMViewPage.getAllUpperFieldNames();
+            float totalViolationHrsFromTable = 0;
+            for (String upperField: allUpperFields){
+                totalViolationHrsFromTable = totalViolationHrsFromTable +
+                        Float.parseFloat(complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(upperField).get("totalExtraHours"));
+            }
+            SimpleUtils.assertOnFail("Total violation hours are inconsistent with analytic table!", (Math.abs(valuesFromToatalViolationCard.get("vioHrsCurrentWeek")) - totalViolationHrsFromTable) == 0, false);
+
+            //Verify diff hours flag.
+            if ((valuesFromToatalViolationCard.get("vioHrsCurrentWeek") - valuesFromToatalViolationCard.get("vioHrsPastWeek"))>0){
+                compliancePage.verifyDiffFlag("down");
+            } else {
+                compliancePage.verifyDiffFlag("up");
+            }
+
+            //Verify total violation hours for last week.
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.navigateToPreviousWeek();
+            HashMap<String, Float> valuesFromToatalViolationCardForLastWeek =  compliancePage.getValuesAndVerifyInfoForTotalViolationSmartCardInDMView();
+            SimpleUtils.assertOnFail("Violation hours for last week are inconsistent!",
+                    (Math.abs(valuesFromToatalViolationCard.get("vioHrsPastWeek")) - valuesFromToatalViolationCardForLastWeek.get("vioHrsCurrentWeek")) == 0,
+                    false);
+
+            //Verify diff hours.
+            SimpleUtils.assertOnFail("Diff hours with last week is incorrect!",
+                    (Math.abs(Math.abs(valuesFromToatalViolationCard.get("vioHrsCurrentWeek"))
+                            - valuesFromToatalViolationCard.get("vioHrsPastWeek"))-valuesFromToatalViolationCard.get("diffHrs")) == 0,
+                    false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

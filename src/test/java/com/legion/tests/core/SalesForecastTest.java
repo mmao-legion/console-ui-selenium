@@ -58,7 +58,7 @@ public class SalesForecastTest extends TestBase{
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.isSchedule(),false);
+        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()),false);
         SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();  
         salesForecastPage.navigateToSalesForecastTab();
         SimpleUtils.assertOnFail( "Projected Sales Tab not Active!",salesForecastPage.isSalesForecastTabActive() ,false);

@@ -732,7 +732,7 @@ public class ScheduleTest extends TestBase{
 			dashboardPage.isViewMySchedulePresentAndClickable();
 			// Verify After click on the View My Schedule, page should navigate to My Schedule page
 			SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			schedulePage.navigateToNextWeek();
 			// Verify On My Schedule page, Schedule shifts should be present on Schedule table
 			SimpleUtils.assertOnFail("Schedule Shifts are not present!", schedulePage.areShiftsPresent(), true);
@@ -786,7 +786,7 @@ public class ScheduleTest extends TestBase{
 			dashboardPage.isViewMySchedulePresentAndClickable();
 			// Verify After click on the View My Schedule, page should navigate to My Schedule page
 			SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			schedulePage.navigateToNextWeek();
 			// Verify On My Schedule page, Schedule shifts should be present on Schedule table
 			SimpleUtils.assertOnFail("Schedule Shifts are not present!", schedulePage.areShiftsPresent(), true);
@@ -934,7 +934,7 @@ public class ScheduleTest extends TestBase{
 				dashboardPage.clickOnSwitchToEmployeeView();
 			}
 			SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			schedulePage.navigateToNextWeek();
 			// Validate the availibility of Swap and Cover request options
 			int index = schedulePage.verifyClickOnAnyShift();
@@ -1029,7 +1029,7 @@ public class ScheduleTest extends TestBase{
 				dashboardPage.clickOnSwitchToEmployeeView();
 			}
 			dashboardPage.goToTodayForNewUI();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			schedulePage.navigateToNextWeek();
 			// Validate that swap request smartcard is available to recipient team member
 			String smartCard = "SWAP REQUESTS";
@@ -1051,7 +1051,7 @@ public class ScheduleTest extends TestBase{
 				dashboardPage.clickOnSwitchToEmployeeView();
 			}
 			dashboardPage.goToTodayForNewUI();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			schedulePage.navigateToNextWeek();
 
 			schedulePage.clickOnShiftByIndex(index);
@@ -1201,7 +1201,7 @@ public class ScheduleTest extends TestBase{
 			loginToLegionAndVerifyIsLoginDone(username, password, location);
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			schedulePage = dashboardPage.goToTodayForNewUI();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			schedulePage.navigateToNextWeek();
 
 			// Validate the clickability of claim open text in popup

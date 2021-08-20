@@ -437,15 +437,15 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	public boolean loadScheduleOverview() throws Exception {
 		// TODO Auto-generated method stub
 		boolean flag=false;
-		if(isElementLoaded(consoleSchedulePageTabElement, 10)){
+		if(isElementLoaded(consoleSchedulePageTabElement, 15)){
 			consoleSchedulePageTabElement.click();
-			if(isElementLoaded(calendar, 10)){
+			if(isElementLoaded(calendar, 15)){
 				flag = true;
 				SimpleUtils.pass("Calendar on Schedule Overview Loaded Successfully!");
 			}else{
 				SimpleUtils.fail("Calendar on Schedule Overview Not Loaded Successfully!", false);
 			}
-			if(isElementLoaded(scheduleTable, 10)){
+			if(isElementLoaded(scheduleTable, 15)){
 				flag = true;
 				SimpleUtils.pass("Schedule Table on Schedule Overview Loaded Successfully!");
 			}else{

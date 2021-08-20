@@ -114,7 +114,7 @@ public class DashboardTest extends TestBase{
 			dashboardPage.verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(startingSoonLoaded, hours.get("Scheduled"));
 			// Verify starting soon section
 			schedulePage = dashboardPage.goToTodayForNewUI();
-			schedulePage.isSchedule();
+			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			if (!schedulePage.isPublishButtonLoaded()) {
 				schedulePage.generateOrUpdateAndGenerateSchedule();
 			}
@@ -126,7 +126,7 @@ public class DashboardTest extends TestBase{
 			if (startingSoonLoaded) {
 				upComingShifts = dashboardPage.getUpComingShifts();
 				schedulePage = dashboardPage.goToTodayForNewUI();
-				schedulePage.isSchedule();
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 				fourShifts = schedulePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
 				schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
 			} else {

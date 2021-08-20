@@ -116,7 +116,6 @@ public class ActivityTest extends TestBase {
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
             schedulePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.saveSchedule();
             schedulePage.convertAllUnAssignedShiftToOpenShift();
             // Add the new shifts for swap team members
@@ -161,7 +160,7 @@ public class ActivityTest extends TestBase {
             dashboardPage.clickOnSwitchToEmployeeView();
         }
         SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-        schedulePage.isSchedule();
+        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
@@ -197,7 +196,7 @@ public class ActivityTest extends TestBase {
             dashboardPage.clickOnSwitchToEmployeeView();
         }
         dashboardPage.goToTodayForNewUI();
-        schedulePage.isSchedule();
+        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
@@ -261,7 +260,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -298,7 +297,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -364,7 +363,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -401,7 +400,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -437,7 +436,7 @@ public class ActivityTest extends TestBase {
             // Go to Schedule page to check whether the shifts are swapped
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.verifyShiftsAreSwapped(swapData);
@@ -478,7 +477,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -515,7 +514,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -583,7 +582,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -1011,7 +1010,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -1036,7 +1035,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -1107,13 +1106,13 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
             // For Cover Feature
             List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
-            int index = schedulePage.verifyClickOnAnyShift();
+            schedulePage.verifyClickOnAnyShift();
             String request = "Request to Cover Shift";
             schedulePage.clickTheShiftRequestByName(request);
             // Validate the Submit button feature
@@ -1131,7 +1130,7 @@ public class ActivityTest extends TestBase {
             if (dashboardPage.isSwitchToEmployeeViewPresent())
                 dashboardPage.clickOnSwitchToEmployeeView();
             dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -1139,7 +1138,7 @@ public class ActivityTest extends TestBase {
             String smartCard = "WANT MORE HOURS?";
             SimpleUtils.assertOnFail("Smart Card: " + smartCard + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(smartCard), false);
             // Validate the availability of all cover request shifts in schedule table
-            String linkName = "View Shifts";;
+            String linkName = "View Shifts";
             schedulePage.clickLinkOnSmartCardByName(linkName);
             SimpleUtils.assertOnFail("Open shifts not loaded Successfully!", schedulePage.areShiftsPresent(), false);
             // Validate the availability of Claim Shift Request popup
@@ -1202,7 +1201,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -1226,7 +1225,7 @@ public class ActivityTest extends TestBase {
             if (dashboardPage.isSwitchToEmployeeViewPresent())
                 dashboardPage.clickOnSwitchToEmployeeView();
             dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -1297,7 +1296,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -1320,7 +1319,7 @@ public class ActivityTest extends TestBase {
             if (dashboardPage.isSwitchToEmployeeViewPresent())
                 dashboardPage.clickOnSwitchToEmployeeView();
             dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -1947,7 +1946,7 @@ public class ActivityTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             dashboardPage.goToTodayForNewUI();
             schedulePage.navigateToNextWeek();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             String cardName = "WANT MORE HOURS?";
             SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
             String linkName = "View Shifts";
@@ -2038,7 +2037,7 @@ public class ActivityTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             dashboardPage.goToTodayForNewUI();
             schedulePage.navigateToNextWeek();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             String cardName = "WANT MORE HOURS?";
             SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
             String linkName = "View Shifts";

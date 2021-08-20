@@ -251,7 +251,7 @@ public class LiquidDashboardTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
 
             // For Swap Feature
@@ -286,7 +286,7 @@ public class LiquidDashboardTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
 
             // Validate that swap request smartcard is available to recipient team member
@@ -497,7 +497,7 @@ public class LiquidDashboardTest extends TestBase {
                 upComingShifts = dashboardPage.getUpComingShifts();
                 // Verify click on "View Schedule" link
                 liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Starting_Soon.getValue(), linkNames.View_Schedule.getValue());
-                schedulePage.isSchedule();
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
                 String timeFromDashboard = dashboardPage.getDateFromTimeZoneOfLocation("hh:mm aa");
                 HashMap<String, String> shiftsFromDayView = schedulePage.getFourUpComingShifts(false, timeFromDashboard);
                 schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, shiftsFromDayView);
@@ -969,7 +969,7 @@ public class LiquidDashboardTest extends TestBase {
 
             // Verify navigation to schedule page by "View Schedules" button on Open_Shifts Widget
             liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Open_Shifts.getValue(), linkNames.View_Schedules.getValue());
-            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isSchedule(), true);
+            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
             if (MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toUpperCase().contains(currentWeek)) {
                 SimpleUtils.pass("Open Shifts: \"View Schedules\" button is to navigate to current week schedule page");
             } else {
@@ -997,7 +997,7 @@ public class LiquidDashboardTest extends TestBase {
 
             // Ungenerate the schedule to make sure there are no open shifts on Open_Shifts Widget
             liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Open_Shifts.getValue(), linkNames.View_Schedules.getValue());
-            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isSchedule(), true);
+            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
             if (schedulePage.isWeekGenerated())
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             dashboardPage.navigateToDashboard();
@@ -1219,7 +1219,7 @@ public class LiquidDashboardTest extends TestBase {
             loginToLegionAndVerifyIsLoginDone(username, password, location);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded() , false);
             schedulePage = dashboardPage.goToTodayForNewUI();
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             String cardName = "WANT MORE HOURS?";
             SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
             String linkName = "View Shifts";

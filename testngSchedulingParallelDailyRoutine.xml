@@ -181,7 +181,7 @@
             <class name="com.legion.tests.core.LiquidDashboardTest">
                 <methods>
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
-                    <!--                    <include name="verifySchedulesWidgetsAsStoreManager" Blocked by SCH-4155/>-->
+                    <include name="verifySchedulesWidgetsAsStoreManager"/>
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
                     <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                 </methods>
@@ -275,10 +275,10 @@
                     <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
-                <!--SCH-4832    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
+                    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
                     <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
                     <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
-                    <include name="verifyTMCanBeOfferedAsTeamMember" /> -->
+                    <include name="verifyTMCanBeOfferedAsTeamMember" />
                     <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>

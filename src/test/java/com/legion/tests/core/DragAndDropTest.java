@@ -196,7 +196,7 @@ public class DragAndDropTest extends TestBase {
                 anotherLocation = "7500216 - Can-Ski Village";
             }
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeLocation(anotherLocation);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(anotherLocation);
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Select one team member to view profile

@@ -92,6 +92,7 @@
                    <include name="validateCancelAvailabilityRequestAsTeamMember" />
                    <include name="validateApproveAvailabilityRequestAsTeamMember" />
                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsTeamMember" />
+                   <include name="validateRejectAvailabilityRequestAsStoreManager" />
                </methods>
            </class>
        </classes>
@@ -554,6 +555,10 @@
                         <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
                         <include name="verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin" />
                         <include name="verifyRefreshFeatureOnComplianceInRegionViewAsInternalAdmin" />
+                        <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>

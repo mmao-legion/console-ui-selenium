@@ -1725,7 +1725,7 @@ public class LocationGroupTest extends TestBase {
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
-        schedulePage.isSchedule();
+        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         String cardName = "WANT MORE HOURS?";
         SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
         String linkName = "View Shifts";
@@ -1836,7 +1836,7 @@ public class LocationGroupTest extends TestBase {
 //        dashboardPage.goToTodayForNewUI();
         schedulePage.clickOnScheduleConsoleMenuItem();
         schedulePage.navigateToNextWeek();
-        schedulePage.isSchedule();
+        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         String cardName = "WANT MORE HOURS?";
         SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", schedulePage.isSpecificSmartCardLoaded(cardName), false);
         String linkName = "View Shifts";
@@ -2444,7 +2444,7 @@ public class LocationGroupTest extends TestBase {
         }
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
-        schedulePage.isSchedule();
+        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
@@ -2480,7 +2480,7 @@ public class LocationGroupTest extends TestBase {
             dashboardPage.clickOnSwitchToEmployeeView();
         }
         dashboardPage.goToTodayForNewUI();
-        schedulePage.isSchedule();
+        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
 
@@ -2586,7 +2586,7 @@ public class LocationGroupTest extends TestBase {
             schedulePage.navigateToNextWeek();
 
             //Full copy
-            schedulePage.isSchedule();
+            schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             isWeekGenerated = schedulePage.isWeekGenerated();
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
