@@ -5552,6 +5552,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy (css = "[aria-label=\"State\"]")
 	private WebElement state;
 
+	@FindBy (css = "[aria-label=\"Province\"]")
+	private WebElement province;
+
 	@FindBy (css = ".lg-form-section-action")
 	private WebElement editLocationButton;
 
@@ -5594,13 +5597,18 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		String cityStr = "";
 		String locationAddressStr = "";
 
-		if (isElementLoaded(locationAddress, 10) && isElementLoaded(zipCode, 10) &&
-				isElementLoaded(state, 10)) {
-			stateStr = state.getAttribute("value").contains(" ")? state.getAttribute("value").split(" ")[0].substring(0,1) + state.getAttribute("value").split(" ")[1].substring(0,1): state.getAttribute("value").substring(0,1);
+		if (isElementLoaded(locationAddress, 10) && isElementLoaded(city, 10)
+				&& (isElementLoaded(state, 10) || isElementLoaded(province,10)) ) {
 			cityStr = city.getAttribute("value");
 			locationAddressStr = locationAddress.getAttribute("value");
 		} else {
 			SimpleUtils.fail("Locations page: Elements in location page not Loaded", false);
+		}
+		if (isElementLoaded(state, 10)) {
+			stateStr = state.getAttribute("value").contains(" ")? state.getAttribute("value").split(" ")[0].substring(0,1) + state.getAttribute("value").split(" ")[1].substring(0,1): state.getAttribute("value").substring(0,1);
+		}
+		if (isElementLoaded(province,10)) {
+			stateStr = province.getAttribute("value").contains(" ")? province.getAttribute("value").split(" ")[0].substring(0,1) + province.getAttribute("value").split(" ")[1].substring(0,1): province.getAttribute("value").substring(0,1);
 		}
 		locationDetailInfo = locationAddressStr + ", " + cityStr + " " + stateStr ;
 		return locationDetailInfo;

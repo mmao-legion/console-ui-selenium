@@ -1972,7 +1972,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Dashboard Page: Compliance Violations get incorrectly",false);
 	}
 
-	@FindBy(xpath = "//div[contains(text(),'Payroll Projection')]")
+	@FindBy(css = ".sc-fJxALz.EueDh .sc-fGgQJw.LQMqY")
 	private WebElement payrollProjectionWidgetTitle;
 
 	@FindBy(css= "[ng-if*=\"forecastKPI.futureBudgetSurplus\"]")
@@ -1999,14 +1999,14 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = ".payroll-projection-chart__svg line[style]")
 	private WebElement asOfLineOnPayrollProjectionWidget;
 
-	@FindBy (className = "payroll-projection-chart__svg")
+	@FindBy (css = ".sc-fJxALz.EueDh")
 	private WebElement payrollProjectionWidget;
 
 
 	@Override
 	public boolean isPayrollProjectionWidgetDisplay() throws Exception {
 		boolean isPayrollProjectionWidgetDisplay = false;
-		if(isElementLoaded(payrollProjectionWidget, 30) && isElementLoaded(refreshButton, 30)) {
+		if(isElementLoaded(payrollProjectionWidget, 30)) {
 			isPayrollProjectionWidgetDisplay = true;
 			SimpleUtils.report("Payroll Projection Widget is loaded Successfully!");
 		} else
@@ -2040,12 +2040,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		if (isElementLoaded(payrollProjectionWidgetTitle, 5) && payrollProjectionWidgetTitle.getText().contains("Payroll Projection")) {
 			SimpleUtils.pass("Dashboard Page: The title on \"Payroll Projection\" widget is loaded in DM View");
 		} else {
-			SimpleUtils.fail("Dashboard Page: The title on \"Payroll Projection\" widget failed to load in DM View",false);
+			SimpleUtils.fail("Dashboard Page: The title on \"Payroll Projection\" widget failed to load",false);
 		}
 		if (areListElementVisible(budgetSurplusOnPayrollProjectionWidget,10) && budgetSurplusOnPayrollProjectionWidget.size() == 2) {
-			SimpleUtils.pass("Dashboard Page: Budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget is loaded in DM View");
+			SimpleUtils.pass("Dashboard Page: Budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget is loaded in");
 		} else {
-			SimpleUtils.fail("Dashboard Page: The Budget surplus on \"Payroll Projection\" widget failed to load in DM View",false);
+			SimpleUtils.fail("Dashboard Page: The Budget surplus on \"Payroll Projection\" widget failed to load",false);
 		}
 		if (isElementLoaded(noteOnPayrollProjectionWidget, 5) && noteOnPayrollProjectionWidget.getText().contains("Projected for remainder of this week")) {
 			SimpleUtils.pass("Dashboard Page: \"Projected for remainder of this week\" loaded successfully on \"Payroll Projection\" widget");

@@ -12112,10 +12112,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
             if (index == 0) {
-                SimpleUtils.fail("Failed to select one shift to claim", true);
+                SimpleUtils.fail("Failed to select one shift to claim", false);
             }
         } else {
-            SimpleUtils.fail("Team Members' Icons not loaded", true);
+            SimpleUtils.fail("Team Members' Icons not loaded", false);
         }
     }
 

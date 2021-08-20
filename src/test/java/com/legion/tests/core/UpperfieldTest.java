@@ -107,11 +107,11 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
 
             // Validate the title
             dashboardPage.verifyHeaderOnDashboard();
-            locationSelectorPage.verifyTheDisplayRegionWithSelectedRegionConsistent(selectedUpperFields.get("Region"));
+            locationSelectorPage.verifyTheDisplayRegionWithSelectedRegionConsistent(selectedUpperFields.get(Region));
             locationSelectorPage.isRegionView();
 
             // Validate the presence of region
@@ -128,7 +128,7 @@ public class UpperfieldTest extends TestBase {
             // Validate changing regions on Dashboard
             locationSelectorPage.changeAnotherRegionInRegionView();
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            String regionName = selectedUpperFields.get("Region");
+            String regionName = selectedUpperFields.get(Region);
             String regionOnDashboard = dashboardPage.getUpperfieldNameOnDashboard();
             if (regionName.equals(regionOnDashboard))
                 SimpleUtils.pass("Dashboard Page: When the user selects a different region from the region view, the data updates to reflect the selected region");
@@ -152,7 +152,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
@@ -188,7 +188,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
 
             // Validate the presence of Refresh button
             dashboardPage.validateThePresenceOfRefreshButtonUpperfield();
@@ -222,7 +222,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
@@ -258,7 +258,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
 
             SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully", dashboardPage.isProjectedComplianceWidgetDisplay(), false);
 
@@ -292,7 +292,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
@@ -330,7 +330,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
 
             SimpleUtils.assertOnFail("Timesheet Approval Rate widget not loaded successfully", dashboardPage.isTimesheetApprovalRateWidgetDisplay(), false);
 
@@ -366,7 +366,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
@@ -406,7 +406,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
 
             SimpleUtils.assertOnFail("Schedule Publish Status widget not loaded successfully", dashboardPage.isSchedulePublishStatusWidgetDisplay(), false);
 
@@ -443,7 +443,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
@@ -526,7 +526,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
 
             // Set 'Apply labor budget to schedules?' to No
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -607,9 +607,9 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             SimpleUtils.assertOnFail("Open Shifts widget not loaded successfully", dashboardPage.isOpenShiftsWidgetPresent(), false);
 
@@ -641,9 +641,9 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             SimpleUtils.assertOnFail("Open Shifts widget not loaded successfully", dashboardPage.isOpenShiftsWidgetPresent(), false);
 
@@ -675,9 +675,9 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get("BU"));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             SimpleUtils.assertOnFail("Compliance Violations widget not loaded successfully", dashboardPage.isComplianceViolationsWidgetDisplay(), false);
 
@@ -732,7 +732,7 @@ public class UpperfieldTest extends TestBase {
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
 
             SimpleUtils.assertOnFail("Compliance Violations widget not loaded successfully", dashboardPage.isComplianceViolationsWidgetDisplay(), false);
 
@@ -777,17 +777,20 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
+//    @Enterprise(name = "Vailqacn_Enterprise")
     @Enterprise(name = "Coffee_Enterprise")
-    @TestName(description = "Verify Compliance Violations widget on Dashboard in BU View")
+    @TestName(description = "Verify Payroll Projection widget on Dashboard in BU View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyPayrollProjectionWidgetOnDashboardInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try {
+//        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get("Region"));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
             SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
 
@@ -817,9 +820,9 @@ public class UpperfieldTest extends TestBase {
             dashboardPage.validateHoursTooltipsOfPayrollProjectionWidget();
             // todo due to SCH-2634
 
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(),false);
-        }
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(),false);
+//        }
     }
 
 

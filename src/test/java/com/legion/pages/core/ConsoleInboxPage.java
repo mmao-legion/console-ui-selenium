@@ -5,6 +5,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.InboxPage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -484,11 +485,11 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     private List<WebElement> tmOptions;
     @Override
     public void sendToTM(String nickName) throws Exception {
-        if (isElementLoaded(sendToInput,5)){
+        if (isElementLoaded(sendToInput,10)){
             clickTheElement(sendToInput);
             sendToInput.sendKeys(nickName);
-            waitForSeconds(1);
-            if (areListElementVisible(tmOptions, 5)) {
+            waitForSeconds(5);
+            if (areListElementVisible(tmOptions, 10)) {
                 for (WebElement tmOption : tmOptions) {
                     if (tmOption.getText().contains(nickName)) {
                         click(tmOption);
@@ -497,7 +498,9 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                     }
                 }
             } else {
-                SimpleUtils.report("GFE Announcement: Cannot find " + nickName + "!");
+                SimpleUtils.report("GFE Announcement: Cannot find " + nickName + "!, try again");
+                sendToInput.clear();
+                sendToInput.sendKeys(nickName, Keys.ENTER);
             }
         } else {
             SimpleUtils.fail("GFE Announcement: Send to element failed to load!", false);
