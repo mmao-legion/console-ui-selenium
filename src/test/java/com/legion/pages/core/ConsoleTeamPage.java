@@ -2714,7 +2714,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if (shiftPrefs.size() == (changedShiftPrefs.size() + status.size())) {
 				if (shiftPrefs.containsAll(changedShiftPrefs)) {
 					if (shiftPrefs.size() == 4) {
-						if (shiftPrefs.get(3).equalsIgnoreCase(status.get(0))) {
+						if (shiftPrefs.get(3).contains(status.get(0))) {
 							isConsistent = true;
 						}
 					} else if (shiftPrefs.size() == 5) {

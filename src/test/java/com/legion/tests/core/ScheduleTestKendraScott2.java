@@ -1304,9 +1304,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String guidanceHours = schedulePage.getBudgetNScheduledHoursFromSmartCard().get("Guidance");
 			float budgetHoursInSchedule = 0;
 			if (budgetHours != null) {
-				budgetHoursInSchedule = Float.parseFloat(budgetHours);
+				budgetHoursInSchedule = Float.parseFloat(budgetHours.replace(",",""));
 			} else if (guidanceHours != null) {
-				budgetHoursInSchedule = Float.parseFloat(guidanceHours);
+				budgetHoursInSchedule = Float.parseFloat(guidanceHours.replace(",",""));
 			} else
 				SimpleUtils.fail("The budget and guidance hour fail to load! ", false);
 
@@ -1318,6 +1318,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 			BigDecimal round = new BigDecimal(scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location));
 			float budgetedHoursInDMViewSchedule = round.setScale(1,   BigDecimal.ROUND_HALF_UP).floatValue();
+			budgetHoursInSchedule  = (new BigDecimal(budgetHoursInSchedule)).setScale(1 ,BigDecimal.ROUND_HALF_UP).floatValue();
+
 			if (budgetHoursInSchedule != 0 && budgetHoursInSchedule == budgetedHoursInDMViewSchedule) {
 				SimpleUtils.pass("Verified the budget hour in DM view schedule page is consistent with the value saved in create schedule page!");
 			} else {

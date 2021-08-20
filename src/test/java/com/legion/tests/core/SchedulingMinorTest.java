@@ -64,6 +64,7 @@ public class SchedulingMinorTest extends TestBase {
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(3000);
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "9:00PM");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             workRole = schedulePage.getRandomWorkRole();
@@ -102,12 +103,15 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.saveSchedule();
 
             //check the violation in i icon popup of new create shift
+            schedulePage.clickOnOpenSearchBoxButton();
+            schedulePage.searchShiftOnSchedulePage(firstNameOfTM1);
             WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
                         !schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed! ", false);
+            schedulePage.clickOnCloseSearchBoxButton();
 
             //Create new shift for TM2
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -143,6 +147,8 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.saveSchedule();
 
             //check the violation in i icon popup of new create shift
+            schedulePage.clickOnOpenSearchBoxButton();
+            schedulePage.searchShiftOnSchedulePage(firstNameOfTM2);
             newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM2).get(0));
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
@@ -975,6 +981,8 @@ public class SchedulingMinorTest extends TestBase {
             schedulePage.saveSchedule();
 
             //check the violation in i icon popup of new create shift
+            schedulePage.clickOnOpenSearchBoxButton();
+            schedulePage.searchShiftOnSchedulePage(firstNameOfTM1);
             WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",

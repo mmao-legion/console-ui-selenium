@@ -1112,7 +1112,7 @@ public class ActivityTest extends TestBase {
 
             // For Cover Feature
             List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
-            int index = schedulePage.verifyClickOnAnyShift();
+            schedulePage.verifyClickOnAnyShift();
             String request = "Request to Cover Shift";
             schedulePage.clickTheShiftRequestByName(request);
             // Validate the Submit button feature

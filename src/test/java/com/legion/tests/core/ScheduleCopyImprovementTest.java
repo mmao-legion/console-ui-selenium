@@ -758,11 +758,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
             opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
-            configurationPage.goToTemplateDetailsPage("Schedule Collaboration");
+            configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
             configurationPage.publishNowTheTemplate();
+            Thread.sleep(3000);
             switchToConsoleWindow();
         }
     }
