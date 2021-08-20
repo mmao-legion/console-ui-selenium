@@ -354,8 +354,8 @@ public class LocationsTest extends TestBase {
     public void verifyAddUpperFieldsWithDiffLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
         try{
-                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-                String currentTime =  dfs.format(new Date()).trim();
+
+                String currentTime =  TestBase.getCurrentTime().substring(4);
                 String upperfieldsName = currentTime;
                 String upperfieldsId = currentTime;
                 String searchChara = "test";

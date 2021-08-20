@@ -527,63 +527,10 @@ public abstract class TestBase {
         }
     }
 
-    public static void disableSwitch(String switchName,String enterpriseName) {
-
-        Response response = given().params("enterpriseName","op","sourceSystem","legion","passwordPlainText","AutoTesting.AD1","userName","AutoTesting.AD1")
-                .when().get("https://staging-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
-        String sessionId = response.header("sessionid");
-        //get ABSwitch to confirm the switch is on or off
-        Response response2= given().log().all().header("sessionId",sessionId).param("switchName", switchName).when().get("https://staging-enterprise.dev.legion.work/legion/business/queryABSwitch").then().log().all().extract().response();
-        String enabled = response2.jsonPath().get("records.enabled[0]").toString();
-
-        if (enabled.equals("true")) {
-
-            //disable location group switch
-            HashMap<String, Object> recordContext = new HashMap<>();
-            recordContext.put( "name", switchName);
-            recordContext.put("resource", "Business");
-            recordContext.put("value", enterpriseName);
-            recordContext.put("controlValue", "");
-            recordContext.put("enabled", false);
-            recordContext.put("adminOnly", false);
-            HashMap<String, Object>  jsonAsMap = new HashMap<>();
-            jsonAsMap.put("level", "Enterprise");
-            jsonAsMap.put("valid", true);
-            jsonAsMap.put("record",recordContext);
-            Response responseAfterDisable= given().log().all().headers("sessionId",sessionId,"Content-Type","application/json").body(jsonAsMap)
-                    .when().post("https://staging-enterprise.dev.legion.work/legion/business/updateABSwitch").then().log().all().extract().response();
-            responseAfterDisable.then().statusCode(200);
-
-        }
-    }
-
-    public static void enableSwitch(String switchName,String enterpriseName) {
-        Response response = given().params("enterpriseName","dgstage","sourceSystem","legion","passwordPlainText","admin2.a","userName","admin2.a")
-                .when().get("https://rc-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
-        String sessionId = response.header("sessionid");
-        //get ABSwitch to confirm the switch is on or off
-        Response response2= given().log().all().header("sessionId",sessionId).param("switchName", switchName).when().get("https://rc-enterprise.dev.legion.work/legion/business/queryABSwitch").then().log().all().extract().response();
-        String enabled = response2.jsonPath().get("records.enabled[0]").toString();
-
-        if (enabled.equals("false")) {
-
-            //disable location group switch
-            HashMap<String, Object> recordContext = new HashMap<>();
-            recordContext.put( "name", switchName);
-            recordContext.put("resource", "Business");
-            recordContext.put("value", enterpriseName);
-            recordContext.put("controlValue", "");
-            recordContext.put("enabled", true);
-            recordContext.put("adminOnly", false);
-            HashMap<String, Object>  jsonAsMap = new HashMap<>();
-            jsonAsMap.put("level", "Enterprise");
-            jsonAsMap.put("valid", true);
-            jsonAsMap.put("record",recordContext);
-            Response responseAfterDisable= given().log().all().headers("sessionId",sessionId,"Content-Type","application/json").body(jsonAsMap)
-                    .when().post("https://rc-enterprise.dev.legion.work/legion/business/updateABSwitch").then().log().all().extract().response();
-            responseAfterDisable.then().statusCode(200);
-
-        }
+    protected static String getCurrentTime() {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime =  dfs.format(new Date());
+        return currentTime;
     }
 
 

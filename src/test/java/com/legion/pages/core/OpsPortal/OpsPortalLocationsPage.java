@@ -1294,7 +1294,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			for (int i = 0; i < searchLocationCha.length; i++) {
 				upperfieldsSearchInputBox.clear();
 				upperfieldsSearchInputBox.sendKeys(searchInputText);
-//				upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
+				upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
 				waitForSeconds(5);
 				if (upperfieldRows.size() > 0) {
 					SimpleUtils.pass("Can search out upperfield by using " + searchInputText);
@@ -1302,7 +1302,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				} else {
 					SimpleUtils.report("There are no upperfields that match your criteria by using " + searchInputText);
 					waitForSeconds(5);
-					upperfieldsSearchInputBox.clear();
+//					upperfieldsSearchInputBox.clear();
 				}
 			}
 

@@ -75,9 +75,8 @@ public class LocationsGroupTestInOP extends TestBase {
     public void verifyMSLocationGroupFunctionForRegularAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date());
-            String locationName = "LGMSAuto" +currentTime;
+            String currentTime =  TestBase.getCurrentTime().substring(4);
+            String locationName = "MS" +currentTime;
             setLGMSLocationName(locationName);
 
             int index =0;
@@ -189,9 +188,8 @@ public class LocationsGroupTestInOP extends TestBase {
     public void verifyChangeMSToP2PAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
             try{
 
-                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-                String currentTime =  dfs.format(new Date());
-                String locationName ="LGMSAuto" +currentTime;
+                String currentTime =  TestBase.getCurrentTime().substring(4);
+                String locationName ="LGMS" +currentTime;
                 setLGMSLocationName(locationName);
                 int index =0;
                 int childLocationNum = 1;
@@ -253,9 +251,9 @@ public class LocationsGroupTestInOP extends TestBase {
     public void verifyP2PLocationGroupFunctionForRegularAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
-                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-                String currentTime =  dfs.format(new Date());
-                String locationName = "LGPTPAuto" +currentTime;
+
+                String currentTime =  TestBase.getCurrentTime().substring(4);
+                String locationName = "PTP" +currentTime;
                 setLGPTPLocationName(locationName);
                 int index =0;
                 int childLocationNum = 1;
@@ -278,7 +276,7 @@ public class LocationsGroupTestInOP extends TestBase {
                 locationsPage.addParentLocation(locationType, locationName,searchCharactor, index,parentRelationship, locationGroupSwitchOperation.PTP.getValue());
                 try {
                     for (int i = 0; i <childLocationNum ; i++) {
-                        String childLocationName = "childLocationForPTP" + i +currentTime;
+                        String childLocationName = "chiPTP" + i +currentTime;
                         String  childRelationship = "Part of a location group";
                         locationsPage.addChildLocation(locationType, childLocationName,locationName,searchCharactor,index,childRelationship);
                     }
@@ -485,9 +483,9 @@ public class LocationsGroupTestInOP extends TestBase {
     public void verifyChangeNoneLocationToMSParentAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date());
-            String locationName = "NoneToMSParent" +currentTime;
+
+            String currentTime =  TestBase.getCurrentTime().substring(4);
+            String locationName = "Non2MSPar" +currentTime;
             int index =0;
             String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -527,9 +525,9 @@ public class LocationsGroupTestInOP extends TestBase {
     public void verifyChangeNoneLocationToP2PParentAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date());
-            String locationName = "NoneToPTPParent" +currentTime;
+
+            String currentTime =  TestBase.getCurrentTime().substring(4);
+            String locationName = "Non2P2Par" +currentTime;
             int index =0;
             String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -569,9 +567,9 @@ public class LocationsGroupTestInOP extends TestBase {
     public void verifyChangeNoneLocationToChildAsInternalAdminForLocationGroup(String browser, String username, String password, String location) throws Exception {
 
         try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date());
-            String locationName = "NoneToPTPChild" +currentTime;
+
+            String currentTime =  TestBase.getCurrentTime().substring(4);
+            String locationName = "Non2PPChi" +currentTime;
             int index =0;
             String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -595,7 +593,7 @@ public class LocationsGroupTestInOP extends TestBase {
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
 //            //change None to child
             String  locationRelationship = "Part of a location group";
-            String parentLocation = "LGPTP";
+            String parentLocation = "PTP";
             locationsPage.changeOneLocationToChild(locationName,locationRelationship,parentLocation);
 
         } catch (Exception e){
