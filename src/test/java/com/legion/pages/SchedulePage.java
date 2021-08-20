@@ -16,7 +16,6 @@ public interface SchedulePage {
 	public void goToSchedule() throws Exception;
 	public void goToProjectedSales() throws Exception;
 	public void goToStaffingGuidance() throws Exception;
-	public boolean isSchedule() throws Exception;
 	public void clickOnWeekView() throws Exception;
 	public void clickOnDayView() throws Exception;
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception;

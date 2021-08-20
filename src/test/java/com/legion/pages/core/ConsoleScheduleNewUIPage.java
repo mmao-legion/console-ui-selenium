@@ -878,8 +878,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
-        if (isElementLoaded(activatedSubTabElement)) {
-            if (activatedSubTabElement.getText().equalsIgnoreCase(SubTabText)) {
+        if (isElementLoaded(activatedSubTabElement,15)) {
+            if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText)) {
                 return true;
             }
         } else {
@@ -960,16 +960,6 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Analyze not Displayed on Staffing Guidance page", true);
         }
-    }
-
-    @Override
-    public boolean isSchedule() throws Exception {
-        if (isElementLoaded(goToScheduleTab)) {
-            return true;
-        } else {
-            return false;
-        }
-
     }
 
 
