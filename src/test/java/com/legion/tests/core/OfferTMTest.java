@@ -724,8 +724,13 @@ public class OfferTMTest extends TestBase {
         schedulePage.deleteTMShiftInWeekView("");
         schedulePage.clickOnFilterBtn();
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
+        schedulePage.clickOnFilterBtn();
+        //click search button, to pick a work role won't get role violation.
+        schedulePage.clickOnOpenSearchBoxButton();
+        schedulePage.searchShiftOnSchedulePage(firstNameOfTM);
         String workRoleOfTM = schedulePage.getRandomWorkRole();
+        schedulePage.deleteTMShiftInWeekView("");
+        schedulePage.clickOnCloseSearchBoxButton();
 
         //create manual open shifts.
         schedulePage.clickOnDayViewAddNewShiftButton();
@@ -842,8 +847,13 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("");
             schedulePage.clickOnFilterBtn();
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-            schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
+            schedulePage.clickOnFilterBtn();
+            //click search button, to pick a work role won't get role violation.
+            schedulePage.clickOnOpenSearchBoxButton();
+            schedulePage.searchShiftOnSchedulePage(firstNameOfTM);
             String workRoleOfTM = schedulePage.getRandomWorkRole();
+            schedulePage.deleteTMShiftInWeekView("");
+            schedulePage.clickOnCloseSearchBoxButton();
 
             //create auto open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -1091,9 +1101,14 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("");
             schedulePage.clickOnFilterBtn();
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-            schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            schedulePage.clickOnFilterBtn();
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            //click search button, to pick a work role won't get role violation.
+            schedulePage.clickOnOpenSearchBoxButton();
+            schedulePage.searchShiftOnSchedulePage(firstNameOfTM1);
             String workRoleOfTM = schedulePage.getRandomWorkRole();
+            schedulePage.deleteTMShiftInWeekView("");
+            schedulePage.clickOnCloseSearchBoxButton();;
 
             //create manual open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -1203,8 +1218,13 @@ public class OfferTMTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView("");
             schedulePage.clickOnFilterBtn();
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-            schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            schedulePage.clickOnFilterBtn();
+            //click search button, to pick a work role won't get role violation.
+            schedulePage.clickOnOpenSearchBoxButton();
+            schedulePage.searchShiftOnSchedulePage(firstNameOfTM1);
             String workRoleOfTM = schedulePage.getRandomWorkRole();
+            schedulePage.deleteTMShiftInWeekView("");
+            schedulePage.clickOnCloseSearchBoxButton();
 
             //create manual open shifts.
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -1242,7 +1262,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             //log in as SM to check the shift
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
