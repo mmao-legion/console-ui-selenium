@@ -229,6 +229,10 @@
                     <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceBUViewAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceBUViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceRegionViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
