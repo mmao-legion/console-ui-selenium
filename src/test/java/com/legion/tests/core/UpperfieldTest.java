@@ -1361,7 +1361,6 @@ public class UpperfieldTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String districtName = selectedUpperFields.get(District);
@@ -1384,7 +1383,7 @@ public class UpperfieldTest extends TestBase {
 
             //Validate search function.
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
 
             //Validate the clickability of backward button.
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
@@ -1406,7 +1405,7 @@ public class UpperfieldTest extends TestBase {
             String regionName2 = upperFields3[upperFields3.length-2].trim();
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName2);
 
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName2);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName2);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1428,7 +1427,6 @@ public class UpperfieldTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String districtName = selectedUpperFields.get(District);
@@ -1448,7 +1446,7 @@ public class UpperfieldTest extends TestBase {
 
             //Validate search function.
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(location);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(location);
 
             //Validate the click ability of backward button.
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
@@ -1469,7 +1467,7 @@ public class UpperfieldTest extends TestBase {
             String regionName2 = upperFields2[upperFields2.length-2].trim();
             String districtName2 = upperFields2[upperFields2.length-1].trim();
             locationSelectorPage.changeUpperFieldDirect(Region, regionName2);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName2);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName2);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1585,8 +1583,7 @@ public class UpperfieldTest extends TestBase {
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             SimpleUtils.assertOnFail("The Regions on Compliance page in BU View display incorrectly! ", compliancePage.getAllUpperFieldNamesOnAnalyticsTable().size()>1, false);
 
-            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1616,8 +1613,7 @@ public class UpperfieldTest extends TestBase {
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             SimpleUtils.assertOnFail("The Regions on Compliance page in BU View display incorrectly! ", compliancePage.getAllUpperFieldNamesOnAnalyticsTable().size()>1, false);
 
-            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1652,12 +1648,11 @@ public class UpperfieldTest extends TestBase {
 
             //Validate the data Toatal Violation smart card for current week.
             //Verify total violation hours for current week.
-            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
-            List<String> allUpperFields = complianceDMViewPage.getAllUpperFieldNames();
+            List<String> allUpperFields = compliancePage.getAllUpperFieldNames();
             float totalViolationHrsFromTable = 0;
             for (String upperField: allUpperFields){
                 totalViolationHrsFromTable = totalViolationHrsFromTable +
-                        Float.parseFloat(complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(upperField).get("totalExtraHours"));
+                        Float.parseFloat(compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(upperField).get("totalExtraHours"));
             }
             SimpleUtils.assertOnFail("Total violation hours are inconsistent with analytic table!", (Math.abs(valuesFromToatalViolationCard.get("vioHrsCurrentWeek")) - totalViolationHrsFromTable) == 0, false);
 
@@ -1712,12 +1707,11 @@ public class UpperfieldTest extends TestBase {
 
             //Validate the data Toatal Violation smart card for current week.
             //Verify total violation hours for current week.
-            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
-            List<String> allUpperFields = complianceDMViewPage.getAllUpperFieldNames();
+            List<String> allUpperFields = compliancePage.getAllUpperFieldNames();
             float totalViolationHrsFromTable = 0;
             for (String upperField: allUpperFields){
                 totalViolationHrsFromTable = totalViolationHrsFromTable +
-                        Float.parseFloat(complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(upperField).get("totalExtraHours"));
+                        Float.parseFloat(compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(upperField).get("totalExtraHours"));
             }
             SimpleUtils.assertOnFail("Total violation hours are inconsistent with analytic table!", (Math.abs(valuesFromToatalViolationCard.get("vioHrsCurrentWeek")) - totalViolationHrsFromTable) == 0, false);
 
@@ -1746,4 +1740,210 @@ public class UpperfieldTest extends TestBase {
         }
     }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Regions with Violations on Compliance in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTotalLocationsWithViolationCardInComplianceBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnComplianceConsoleMenu();
+
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            //Validate the content on Locations with violation card.
+            HashMap<String, Integer> valuesFromLocationsWithViolationCard = compliancePage.getValueOnLocationsWithViolationCardAndVerifyInfo(Region);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            int index = schedulePage.getIndexOfColInDMViewTable("Extra Hours");
+            List<Float> extraHours = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            index = schedulePage.getIndexOfColInDMViewTable("Schedule Published On Time");
+            List<String> publishStatus = schedulePage.getListByColInTimesheetDMView(index);
+            SimpleUtils.assertOnFail("The extra hour count should consistent with publish status count! ",
+                    extraHours.size() == publishStatus.size(), false);
+            int totalLocationWithViolation = 0;
+
+            for (int i = 0; i < extraHours.size(); i++){
+                if (extraHours.get(i) >0 || publishStatus.get(i).equals("No")){
+                    totalLocationWithViolation ++;
+                }
+            }
+
+            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!",
+                    valuesFromLocationsWithViolationCard.get("UpperFieldsWithViolations") == totalLocationWithViolation, false);
+            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!",
+                    valuesFromLocationsWithViolationCard.get("TotalUpperFields") == extraHours.size(), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Districts with Violations on Compliance in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            //Validate the content on Locations with violation card.
+
+            HashMap<String, Integer> valuesFromLocationsWithViolationCard = compliancePage.getValueOnLocationsWithViolationCardAndVerifyInfo(District);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            int index = schedulePage.getIndexOfColInDMViewTable("Extra Hours");
+            List<Float> extraHours = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            index = schedulePage.getIndexOfColInDMViewTable("Schedule Published On Time");
+            List<String> publishStatus = schedulePage.getListByColInTimesheetDMView(index);
+            SimpleUtils.assertOnFail("The extra hour count should consistent with publish status count! ",
+                    extraHours.size() == publishStatus.size(), false);
+            int totalLocationWithViolation = 0;
+
+            for (int i = 0; i < extraHours.size(); i++){
+                if (extraHours.get(i) >0 || publishStatus.get(i).equals("No")){
+                    totalLocationWithViolation ++;
+                }
+            }
+
+            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!",
+                    valuesFromLocationsWithViolationCard.get("UpperFieldsWithViolations") == totalLocationWithViolation, false);
+            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!",
+                    valuesFromLocationsWithViolationCard.get("TotalUpperFields") == extraHours.size(), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify TOP x VIOLATIONS (HRS) on Compliance in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTopViolationsCardInComplianceBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnComplianceConsoleMenu();
+
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            //Validate the content on Locations with violation card.
+            float topViolationInOvertimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Overtime"))));
+            float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
+            float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
+            float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
+            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+
+            if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
+                HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
+
+                if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
+                    SimpleUtils.assertOnFail("Overtime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Overtime (Hrs)")-topViolationInOvertimeCol)==0, false);
+                }
+                if (valuesFromLocationsWithViolationCard.containsKey("Clopening (Hrs)")){
+                    SimpleUtils.assertOnFail("Clopening (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Clopening (Hrs)")-topViolationInClopeningCol)==0, false);
+                }
+                if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
+                    SimpleUtils.assertOnFail("Missed Meal on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Missed Meal")-topViolationInMissedMealCol)==0, false);
+                }
+                if (valuesFromLocationsWithViolationCard.containsKey("Schedule Changed")){
+                    SimpleUtils.assertOnFail("Schedule Changed on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Schedule Changed")-topViolationInScheduleChangedCol)==0, false);
+                }
+                if (valuesFromLocationsWithViolationCard.containsKey("Doubletime (Hrs)")){
+                    SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime (Hrs)")-topViolationInDoubletimeCol)==0, false);
+                }
+            }
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify TOP x VIOLATIONS (HRS) on Compliance in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTopViolationsCardInComplianceRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            //Validate the content on Locations with violation card.
+            float topViolationInOvertimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Overtime"))));
+            float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
+            float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
+            float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
+            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+
+            if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
+                HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
+
+                if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
+                    SimpleUtils.assertOnFail("Overtime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Overtime (Hrs)")-topViolationInOvertimeCol)==0, false);
+                }
+                if (valuesFromLocationsWithViolationCard.containsKey("Clopening (Hrs)")){
+                    SimpleUtils.assertOnFail("Clopening (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Clopening (Hrs)")-topViolationInClopeningCol)==0, false);
+                }
+                if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
+                    SimpleUtils.assertOnFail("Missed Meal on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Missed Meal")-topViolationInMissedMealCol)==0, false);
+                }
+                if (valuesFromLocationsWithViolationCard.containsKey("Schedule Changed")){
+                    SimpleUtils.assertOnFail("Schedule Changed on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Schedule Changed")-topViolationInScheduleChangedCol)==0, false);
+                }
+                if (valuesFromLocationsWithViolationCard.containsKey("Doubletime (Hrs)")){
+                    SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime (Hrs)")-topViolationInDoubletimeCol)==0, false);
+                }
+            }
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

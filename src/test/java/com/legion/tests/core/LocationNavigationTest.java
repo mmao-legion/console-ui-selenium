@@ -818,14 +818,13 @@ public class LocationNavigationTest extends TestBase {
             String districtName = upperFields[upperFields.length-1].trim();
 
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
-            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
 
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
 
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(locationName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(locationName);
             locationSelectorPage.changeLocationDirect(locationName);
             //Verify the No data page loaded
             SimpleUtils.assertOnFail("The No data to show page fail to load! ",
@@ -858,16 +857,15 @@ public class LocationNavigationTest extends TestBase {
             String buName = upperFields[upperFields.length-3].trim();
             String regionName = upperFields[upperFields.length-2].trim();
             String districtName = upperFields[upperFields.length-1].trim();
-            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
 
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(locationName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(locationName);
 
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
 
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
 
             locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
             //Verify the No data page loaded

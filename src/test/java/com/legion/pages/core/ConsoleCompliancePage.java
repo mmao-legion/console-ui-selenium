@@ -11,10 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -450,14 +447,22 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         }
     }
 
+
+
+    @FindBy(css = "div.card-carousel-card-analytics-card-color-red")
+    private WebElement upperFieldWithViolationsSmartCard;
     @Override
-    public HashMap<String, Integer> getValueOnLocationsWithViolationCardAndVerifyInfo() throws Exception {
+    public HashMap<String, Integer> getValueOnLocationsWithViolationCardAndVerifyInfo(String upperFieldType) throws Exception {
         HashMap<String, Integer> result = new HashMap<String, Integer>();
-        if (isElementLoaded(cardContainerInDMView,10) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div.card-carousel-card-analytics-card-color-yellow")),10)){
-            List<String> strList = Arrays.asList(cardContainerInDMView.findElement(By.cssSelector("div.card-carousel-card-analytics-card-color-yellow")).getText().split("\n"));
-            if (strList.size()==4 && strList.get(1).toLowerCase().contains("locations") && strList.get(2).toLowerCase().contains("with violations") && SimpleUtils.isNumeric(strList.get(0)) && SimpleUtils.isNumeric(strList.get(3).replace(" total locations", ""))){
-                result.put("LocationsWithViolation", Integer.parseInt(strList.get(0)));
-                result.put("total locations", Integer.parseInt(strList.get(3).replace(" total locations", "")));
+        if (isElementLoaded(cardContainerInDMView,10) && isElementLoaded(upperFieldWithViolationsSmartCard,60)){
+            List<String> strList = Arrays.asList(upperFieldWithViolationsSmartCard.getText().split("\n"));
+            if (strList.size()==4
+                    && strList.get(1).contains(upperFieldType)
+                    && strList.get(2).contains("with Violations")
+                    && SimpleUtils.isNumeric(strList.get(0))
+                    && SimpleUtils.isNumeric(strList.get(3).split(" ")[0])){
+                result.put("UpperFieldsWithViolations" , Integer.parseInt(strList.get(0)));
+                result.put("TotalUpperFields", Integer.parseInt(strList.get(3).split(" ")[0]));
                 SimpleUtils.pass("All info on Locations With Violation Card is expected!");
             } else {
                 SimpleUtils.fail("Info on Locations With Violation Card is not expected!", false);
@@ -684,4 +689,110 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
             SimpleUtils.fail("Upper field names fail to load on analytics table", false);
         return upperFieldNames;
     }
+
+    @FindBy(css = ".analytics-new-table-group-row-open")
+    private List<WebElement>  upperFieldsInDMView;
+
+    @FindBy (css = "lg-search.analytics-new-table-filter input")
+    private WebElement searchLocationInCompliancePage;
+
+    @FindBy (css = ".analytics-new-table-group-row-open [jj-switch-when=\"cells.CELL_UNTOUCHED\"] span")
+    private List<WebElement> upperFieldNames;
+
+
+    /**
+     * Description: To get all the upper field names (first column) in the table
+     * @param
+     * @return : Return the string list of the upper field names (first column) in the table
+     *
+     */
+
+    @Override
+    public List<String> getAllUpperFieldNames() {
+        List<String> names = new ArrayList<>();
+        if (areListElementVisible(upperFieldNames,10)) {
+            for (WebElement upperFieldName : upperFieldNames) {
+                names.add(upperFieldName.getText());
+            }
+        } else
+            SimpleUtils.fail("The upper field names fail to load! ", false);
+        return names;
+    }
+
+    public Map<String, String> getAllUpperFieldInfoFromComplianceDMViewByUpperField(String upperFieldName) throws Exception {
+        Map<String, String> allUpperFieldInfo = new HashMap<>();
+        boolean isUpperFieldMatched = false;
+        if (isElementLoaded(searchLocationInCompliancePage,5)) {
+            searchLocationInCompliancePage.sendKeys(upperFieldName);
+            waitForSeconds(3);
+            if (areListElementVisible(upperFieldsInDMView, 10) && upperFieldsInDMView.size() != 0) {
+                for (int i = 0; i < upperFieldsInDMView.size(); i++) {
+                    WebElement upperFieldInDMView = upperFieldsInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_UNTOUCHED\"] span"));
+                    if (upperFieldInDMView != null) {
+                        String uppeFieldNameInDMView = upperFieldInDMView.getText();
+                        if (uppeFieldNameInDMView != null && uppeFieldNameInDMView.equals(upperFieldName)) {
+                            isUpperFieldMatched = true;
+                            //add schedule upperfield Name
+                            allUpperFieldInfo.put("upperFieldName", uppeFieldNameInDMView);
+                            //add Total Extra Hours
+                            allUpperFieldInfo.put("totalExtraHours", upperFieldsInDMView.get(i).findElement(By.className("analytics-new-cell-as-input")).getText());
+                            List<WebElement> upperFieldHeaders = upperFieldsInDMView.get(i).findElements(By.cssSelector("[class=\"ng-scope col-fx-1\"]"));
+                            //add Total Overtime
+                            allUpperFieldInfo.put("overtime", upperFieldHeaders.get(0).getText());
+                            //add Clopening
+                            allUpperFieldInfo.put("clopening", upperFieldHeaders.get(1).getText());
+                            //add Missed Meal
+                            allUpperFieldInfo.put("missedMeal", upperFieldHeaders.get(2).getText());
+                            //add Schedule Changed
+                            allUpperFieldInfo.put("scheduleChanged", upperFieldHeaders.get(3).getText());
+                            //add Doubletime
+                            allUpperFieldInfo.put("doubletime", upperFieldHeaders.get(4).getText());
+                            //add Late Schedule
+                            allUpperFieldInfo.put("lateSchedule", upperFieldHeaders.get(5).getText());
+                        } else {
+                            SimpleUtils.report("Get upperField info in DM View failed, there is no upperFields display in this upperFields");
+                        }
+                    }
+                }
+                if (!isUpperFieldMatched) {
+                    SimpleUtils.fail("Get upperField info in DM View failed, there is no matched upperField display in DM view", false);
+                } else {
+                    SimpleUtils.pass("Get upperField info in DM View successful! ");
+                }
+            } else
+                SimpleUtils.fail("Get upperField info in DM View failed, there is no upperField display in DM view", false);
+            searchLocationInCompliancePage.clear();
+        } else {
+            SimpleUtils.fail("getDataInCompliancePage: search input fail to load!", true);
+        }
+        return allUpperFieldInfo;
+    }
+
+    public boolean isUpperFieldsWithViolationSmartCardDisplay () throws Exception {
+        boolean isUpperFieldsWithViolationSmartCardDisplay = false;
+        if (isElementLoaded(upperFieldWithViolationsSmartCard, 60)) {
+            isUpperFieldsWithViolationSmartCardDisplay = true;
+            SimpleUtils.report("The upperField with Violations smart card is display! ");
+        } else {
+            isUpperFieldsWithViolationSmartCardDisplay = false;
+            SimpleUtils.report("The upperField with Violations smart card is display! ");
+        }
+        return isUpperFieldsWithViolationSmartCardDisplay;
+    }
+
+    @FindBy (css = "div.card-carousel-card-card-carousel-card-yellow-top")
+    private WebElement top1ViolationsSmartCard;
+
+    public boolean isTop1ViolationSmartCardDisplay () throws Exception {
+        boolean isTop1ViolationSmartCardDisplay = false;
+        if (isElementLoaded(top1ViolationsSmartCard, 60)) {
+            isTop1ViolationSmartCardDisplay = true;
+            SimpleUtils.report("The top 1 violation smart card is display! ");
+        } else {
+            isTop1ViolationSmartCardDisplay = false;
+            SimpleUtils.report("The top 1 violation smart card is display! ");
+        }
+        return isTop1ViolationSmartCardDisplay;
+    }
+
 }
