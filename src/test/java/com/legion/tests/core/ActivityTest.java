@@ -1197,7 +1197,7 @@ public class ActivityTest extends TestBase {
                     SimpleUtils.pass("Get Cover User name: " + entry.getKey());
                 }
             }
-            Object[][] credential = userCredentials.get(swapNames.get(0));
+            Object[][] credential = userCredentials.get(swapNames.get(1));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1224,7 +1224,7 @@ public class ActivityTest extends TestBase {
 
             loginPage.logOut();
 
-            credential = userCredentials.get(swapNames.get(1));
+            credential = userCredentials.get(swapNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
