@@ -64,7 +64,6 @@ public interface DashboardPage {
     public void verifyHeaderOnDashboard() throws Exception;
     public void validateThePresenceOfDistrict() throws Exception;
     public void validateTheVisibilityOfWeek() throws Exception;
-    public String getDistrictNameOnDashboard() throws Exception;
     public void verifyTheWelcomeMessageOfDM(String userName) throws Exception;
     public String getCurrentLocationInDMView() throws Exception;
     public boolean isLegionLogoDisplay() throws Exception;
@@ -102,23 +101,23 @@ public interface DashboardPage {
     public void validateTheContentOnComplianceViolationsWidgetInUpperfield() throws Exception;
     public void validateDataOnComplianceViolationsWidget(List<String> complianceViolationsOnDashboard, List<String> complianceViolationsFromSmartCardOnCompliance) throws Exception;
     public List<String> getComplianceViolationsOnDashboard() throws Exception;
-    public void validateTheContentOnPayrollProjectionWidget() throws Exception;
+    public void validateTheContentOnPayrollProjectionWidget(boolean isLaborBudgetToApply) throws Exception;
     public String getWeekOnPayrollProjectionWidget() throws Exception;
     public void validateWeekOnPayrollProjectionWidget(String weekOnPayrollProjectionWidget, String currentWeekInScheduleTab) throws Exception;
-    public void validateAsOfTimeOnPayrollProjectionWidget() throws Exception;
+    public void validateTodayAtTimeOnPayrollProjectionWidget() throws Exception;
     public void clickOnViewSchedulesOnPayrollProjectWidget() throws Exception;
     public boolean isComplianceViolationsWidgetDisplay() throws Exception;
     public boolean isTimesheetApprovalRateWidgetDisplay() throws Exception;
     public boolean isPayrollProjectionWidgetDisplay() throws Exception;
-    public void validateTheFutureBudgetSurplusOnPayrollProjectionWidget() throws Exception;
+    public void validateTheFutureBudgetComparisonOnPayrollProjectionWidget() throws Exception;
     public void validateHoursTooltipsOfPayrollProjectionWidget() throws Exception;
-    public String getBudgetSurplusOnPayrollProjectionWidget() throws Exception;
-    public void validateBudgetSurplusOnPayrollProjectionWidget(String forecastKPIOnPayrollProjectionWidget, String forecastKPIInScheduleTab) throws Exception;
+    public String getBudgetComparisonOnPayrollProjectionWidget() throws Exception;
+    public void validateBudgetComparisonOnPayrollProjectionWidget(String forecastKPIOnPayrollProjectionWidget, String forecastKPIInScheduleTab) throws Exception;
     public void clickOnViewSchedulesLinkInSchedulePublishStatusWidget() throws Exception;
     public boolean isSchedulePublishStatusWidgetDisplay() throws Exception;
     public void verifyTheContentInSchedulePublishStatusWidget() throws Exception;
     public Map<String,Integer> getAllScheduleStatusFromSchedulePublishStatusWidget() throws Exception;
-    public String getWeekInfoFromDMView() throws Exception;
+    public String getWeekInfoFromUpperfieldView() throws Exception;
     public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception;
     public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception;
     public void verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget() throws Exception;
@@ -142,7 +141,6 @@ public interface DashboardPage {
     public void validateRefreshPerformanceUpperfield() throws Exception;
     public void validateTooltipsOfSchedulePublishStatusWidget() throws Exception;
     public String getWeekOnScheduleVsGuidanceByDayWidget() throws Exception;
-    public String getWeekInfoFromUpperfieldView() throws Exception;
     public void clickOnViewSchedulesOnScheduleVsGuidanceByDayWidget() throws Exception;
     public void validateWeekOnScheduleVsGuidanceByDayWidget(String weekOnScheduleVsGuidanceByDayWidget, String currentWeekInScheduleTab) throws Exception;
     public void validateValueInScheduleVsGuidanceByDayWidget() throws Exception;
@@ -152,4 +150,5 @@ public interface DashboardPage {
     public boolean isOpenShiftsWidgetPresent() throws Exception;
     public void clickOnViewSchedulesOnOpenShiftsWidget() throws Exception;
     public boolean isRefreshButtonDisplay() throws Exception;
+    public HashMap<String, Integer> getTheSumOfValuesOnPayrollProjectionWidget() throws Exception;
 }

@@ -79,7 +79,7 @@ public class DMViewTest extends TestBase {
             locationSelectorPage.changeAnotherDistrictInDMView();
             districtName = dashboardPage.getCurrentDistrict();
             districtName = districtName.contains("\n")? districtName.split("\n")[0]:districtName;
-            String districtOnDashboard = dashboardPage.getDistrictNameOnDashboard();
+            String districtOnDashboard = dashboardPage.getUpperfieldNameOnDashboard();
             if (districtName.equals(districtOnDashboard))
                 SimpleUtils.pass("Dashboard Page: When the user selects a different district from the DM view, the data updates to reflect the selected district");
             else
@@ -238,33 +238,67 @@ public class DMViewTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+            //  Set 'Apply labor budget to schedules?' to Yes
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            dashboardPage.clickOnDashboardConsoleMenu();
+            SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
 
             // Validate the content on Payroll Projection widget on TA env
-            dashboardPage.validateTheContentOnPayrollProjectionWidget();
+            dashboardPage.validateTheContentOnPayrollProjectionWidget(true);
 
             // Validate the date on Payroll Projection widget on TA env
             String weekOnPayrollProjectionWidget = dashboardPage.getWeekOnPayrollProjectionWidget();
-            String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetSurplusOnPayrollProjectionWidget();
+            String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetComparisonOnPayrollProjectionWidget();
             dashboardPage.clickOnViewSchedulesOnPayrollProjectWidget();
             SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             String currentWeekInDMViewSchedule = scheduleDMViewPage.getCurrentWeekInDMView();
-            String forecastKPIInDMViewSchedule = scheduleDMViewPage.getBudgetSurplusInDMView();
+            String forecastKPIInDMViewSchedule = scheduleDMViewPage.getBudgetComparisonInDMView();
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
             dashboardPage.validateWeekOnPayrollProjectionWidget(weekOnPayrollProjectionWidget, currentWeekInDMViewSchedule);
-            dashboardPage.validateBudgetSurplusOnPayrollProjectionWidget(forecastKPIOnPayrollProjectionWidget, forecastKPIInDMViewSchedule);
+            dashboardPage.validateBudgetComparisonOnPayrollProjectionWidget(forecastKPIOnPayrollProjectionWidget, forecastKPIInDMViewSchedule);
 
-            // Validate as of time on Payroll Projection widget on TA env
-            dashboardPage.validateAsOfTimeOnPayrollProjectionWidget();
+            // Validate today's time line on Payroll Projection widget on TA env
+            dashboardPage.validateTodayAtTimeOnPayrollProjectionWidget();
 
-            // Validate the future Budget Surplus on Payroll Projection widget on TA env
-            dashboardPage.validateTheFutureBudgetSurplusOnPayrollProjectionWidget();
+            // Validate the future Budget Comparison on Payroll Projection widget on TA env
+            dashboardPage.validateTheFutureBudgetComparisonOnPayrollProjectionWidget();
 
             // Validate hours tooltips of Payroll Projection widget on TA env
             dashboardPage.validateHoursTooltipsOfPayrollProjectionWidget();
-           // todo due to SCH-2634
+
+            // Validate the data in Payroll Projection widget with TA
+            HashMap<String, Integer> theSumOfValues = dashboardPage.getTheSumOfValuesOnPayrollProjectionWidget();
+            List<String> dataOnLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            if ((Integer.valueOf(dataOnLocationSummaryWidget.get(0)) - theSumOfValues.get("Budgeted") < 14)
+                    && theSumOfValues.get("Scheduled").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(1)))
+                    && theSumOfValues.get("Projected").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(2))))
+                SimpleUtils.pass("Dashboard Page: The sum of days matches the numbers in Location Summary widget for Budgeted, Scheduled and Projected");
+            else
+                SimpleUtils.fail("Dashboard Page: The sum of days doesn't match the numbers in Location Summary widget for Budgeted, Scheduled and Projected",false);
+
+            // Set 'Apply labor budget to schedules?' to No
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            dashboardPage.clickOnDashboardConsoleMenu();
+            SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+
+            // Validate the content in Payroll Projection widget with TA
+            dashboardPage.validateTheContentOnPayrollProjectionWidget(false);
+
+            // Validate the data in Payroll Projection widget with TA
+            theSumOfValues = dashboardPage.getTheSumOfValuesOnPayrollProjectionWidget();
+            if (Integer.valueOf(dataOnLocationSummaryWidget.get(0)) - theSumOfValues.get("Budgeted") < 14
+                    && theSumOfValues.get("Scheduled").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(1)))
+                    && theSumOfValues.get("Projected").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(2))))
+                SimpleUtils.pass("Dashboard Page: The sum of days matches the numbers in Location Summary widget for Guidance, Scheduled and Projected");
+            else
+                SimpleUtils.fail("Dashboard Page: The sum of days doesn't match the numbers in Location Summary widget for Guidance, Scheduled and Projected",false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
@@ -915,7 +949,7 @@ public class DMViewTest extends TestBase {
             locationSelectorPage.reSelectDistrict(districtName);
 
             SimpleUtils.assertOnFail("Open Shifts widget not loaded successfully", dashboardPage.isOpenShiftsWidgetDisplay(), false);
-            String currentWeek = dashboardPage.getWeekInfoFromDMView();
+            String currentWeek = dashboardPage.getWeekInfoFromUpperfieldView();
 
             //Get values on open shifts widget and verify the info on Open_Shifts Widget
             HashMap<String, Integer> valuesOnOpenShiftsWidget = dashboardPage.verifyContentOfOpenShiftsWidgetForDMView();
@@ -1464,7 +1498,7 @@ public class DMViewTest extends TestBase {
             //Validate user has access to 1 district.
             locationSelectorPage.reSelectDistrict(districtName);
             locationSelectorPage.isDMView();
-            String currentWeek = dashboardPage.getWeekInfoFromDMView();
+            String currentWeek = dashboardPage.getWeekInfoFromUpperfieldView();
 
             //Validate drilling into a store location.
             locationSelectorPage.changeLocation(location);

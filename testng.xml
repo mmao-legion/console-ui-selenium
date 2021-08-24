@@ -522,6 +522,7 @@
             </class>
         </classes>
     </test>
+
         <test name="Upperfield Test">
             <classes>
                 <class name="com.legion.tests.core.UpperfieldTest">
@@ -542,7 +543,8 @@
                         <include name="verifyOpenShiftsWidgetOnDashboardInRegionViewAsInternalAdmin" />
                         <include name="verifyComplianceViolationsWidgetOnDashboardInBUViewAsInternalAdmin" />
                         <include name="verifyComplianceViolationsWidgetOnDashboardInRegionViewAsInternalAdmin" />
-<!--                        <include name="verifyPayrollProjectionWidgetOnDashboardInBUViewAsInternalAdmin" />-->
+                        <include name="verifyPayrollProjectionWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyPayrollProjectionWidgetOnDashboardInRegionViewAsInternalAdmin" />
 
                         <!-- Added by Mary -->
                         <include name="verifyRegionViewNavigationAsInternalAdmin" />

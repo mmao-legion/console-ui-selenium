@@ -72,7 +72,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     private WebElement currentWeek;
 
     @FindBy(css = "text[text-anchor=\"middle\"][style]")
-    private List<WebElement> budgetSurplus;
+    private List<WebElement> budgetComparison;
 
     @FindBy(css = "[style=\"font-size: 14px;\"]")
     private WebElement hours;
@@ -90,11 +90,11 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     }
 
     @Override
-    public String getBudgetSurplusInDMView() throws Exception {
+    public String getBudgetComparisonInDMView() throws Exception {
         String kpi = "";
-        if (areListElementVisible(budgetSurplus,30) && budgetSurplus.size() == 2) {
+        if (areListElementVisible(budgetComparison,30) && budgetComparison.size() == 2) {
             waitForSeconds(5);
-            kpi = budgetSurplus.get(0).getText() + " " + budgetSurplus.get(1).getText();
+            kpi = budgetComparison.get(0).getText() + " " + budgetComparison.get(1).getText();
         } else
             SimpleUtils.fail("Schedule Page: Failed to load ",false);
         return kpi;

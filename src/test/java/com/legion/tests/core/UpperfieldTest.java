@@ -777,12 +777,11 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify Payroll Projection widget on Dashboard in BU View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyPayrollProjectionWidgetOnDashboardInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -792,39 +791,157 @@ public class UpperfieldTest extends TestBase {
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
 
-            SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+            //  Set 'Apply labor budget to schedules?' to Yes
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
 
-            // Validate the content on Payroll Projection widget on TA env
-            dashboardPage.validateTheContentOnPayrollProjectionWidget();
+            // Validate the content on Payroll Projection widget with TA
+            dashboardPage.validateTheContentOnPayrollProjectionWidget(true);
 
-            // Validate the date on Payroll Projection widget on TA env
+            // Validate the week information in Payroll Projection widget with TA
             String weekOnPayrollProjectionWidget = dashboardPage.getWeekOnPayrollProjectionWidget();
-            String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetSurplusOnPayrollProjectionWidget();
+            String weekOnWelcomeSection = dashboardPage.getWeekInfoFromUpperfieldView();
             dashboardPage.clickOnViewSchedulesOnPayrollProjectWidget();
             SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            String currentWeekInDMViewSchedule = scheduleDMViewPage.getCurrentWeekInDMView();
-            String forecastKPIInDMViewSchedule = scheduleDMViewPage.getBudgetSurplusInDMView();
+            ScheduleDMViewPage scheduleBUViewPage = pageFactory.createScheduleDMViewPage();
+            String currentWeekInBUViewSchedule = scheduleBUViewPage.getCurrentWeekInDMView();
+            String forecastKPIInBUViewSchedule = scheduleBUViewPage.getBudgetComparisonInDMView();
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
-            dashboardPage.validateWeekOnPayrollProjectionWidget(weekOnPayrollProjectionWidget, currentWeekInDMViewSchedule);
-            dashboardPage.validateBudgetSurplusOnPayrollProjectionWidget(forecastKPIOnPayrollProjectionWidget, forecastKPIInDMViewSchedule);
+            SimpleUtils.assertOnFail("The week in Payroll Projection widget is inconsistent with the week of welcome section of Dashboard page", weekOnWelcomeSection.contains(weekOnPayrollProjectionWidget), false);
+            dashboardPage.validateWeekOnPayrollProjectionWidget(weekOnPayrollProjectionWidget, currentWeekInBUViewSchedule);
 
-            // Validate as of time on Payroll Projection widget on TA env
-            dashboardPage.validateAsOfTimeOnPayrollProjectionWidget();
+            // Validate today's time line in Payroll Projection widget with TA
+            dashboardPage.validateTodayAtTimeOnPayrollProjectionWidget();
 
-            // Validate the future Budget Surplus on Payroll Projection widget on TA env
-            dashboardPage.validateTheFutureBudgetSurplusOnPayrollProjectionWidget();
+            // Validate the budget comparison in Payroll Projection widget with TA
+            dashboardPage.validateTheFutureBudgetComparisonOnPayrollProjectionWidget();
+            String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetComparisonOnPayrollProjectionWidget();
+            dashboardPage.validateBudgetComparisonOnPayrollProjectionWidget(forecastKPIOnPayrollProjectionWidget, forecastKPIInBUViewSchedule);
 
-            // Validate hours tooltips of Payroll Projection widget on TA env
+            // Validate hours tooltips of Payroll Projection widget with TA
             dashboardPage.validateHoursTooltipsOfPayrollProjectionWidget();
-            // todo due to SCH-2634
 
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(),false);
-//        }
+            // Validate the data in Payroll Projection widget with TA
+            HashMap<String, Integer> theSumOfValues = dashboardPage.getTheSumOfValuesOnPayrollProjectionWidget();
+            List<String> dataOnLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            if ((Integer.valueOf(dataOnLocationSummaryWidget.get(0)) - theSumOfValues.get("Budgeted") < 14)
+                  && theSumOfValues.get("Scheduled").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(1)))
+                  && theSumOfValues.get("Projected").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(2))))
+                SimpleUtils.pass("Dashboard Page: The sum of days matches the numbers in Region Summary widget for Budgeted, Scheduled and Projected");
+            else
+                SimpleUtils.fail("Dashboard Page: The sum of days doesn't match the numbers in Region Summary widget for Budgeted, Scheduled and Projected",false);
+
+            // Set 'Apply labor budget to schedules?' to No
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            dashboardPage.clickOnDashboardConsoleMenu();
+            SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+
+            // Validate the content in Payroll Projection widget with TA
+            dashboardPage.validateTheContentOnPayrollProjectionWidget(false);
+
+            // Validate the data in Payroll Projection widget with TA
+            theSumOfValues = dashboardPage.getTheSumOfValuesOnPayrollProjectionWidget();
+            if (Integer.valueOf(dataOnLocationSummaryWidget.get(0)) - theSumOfValues.get("Budgeted") < 14
+                  && theSumOfValues.get("Scheduled").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(1)))
+                  && theSumOfValues.get("Projected").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(2))))
+                SimpleUtils.pass("Dashboard Page: The sum of days matches the numbers in Region Summary widget for Guidance, Scheduled and Projected");
+           else
+                SimpleUtils.fail("Dashboard Page: The sum of days doesn't match the numbers in Region Summary widget for Guidance, Scheduled and Projected",false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify Payroll Projection widget on Dashboard in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPayrollProjectionWidgetOnDashboardInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
+
+            //  Set 'Apply labor budget to schedules?' to Yes
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+
+            // Validate the content on Payroll Projection widget with TA
+            dashboardPage.validateTheContentOnPayrollProjectionWidget(true);
+
+            // Validate the week information in Payroll Projection widget with TA
+            String weekOnPayrollProjectionWidget = dashboardPage.getWeekOnPayrollProjectionWidget();
+            String weekOnWelcomeSection = dashboardPage.getWeekInfoFromUpperfieldView();
+            dashboardPage.clickOnViewSchedulesOnPayrollProjectWidget();
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
+            ScheduleDMViewPage scheduleBUViewPage = pageFactory.createScheduleDMViewPage();
+            String currentWeekInBUViewSchedule = scheduleBUViewPage.getCurrentWeekInDMView();
+            String forecastKPIInBUViewSchedule = scheduleBUViewPage.getBudgetComparisonInDMView();
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+            SimpleUtils.assertOnFail("The week in Payroll Projection widget is inconsistent with the week of welcome section of Dashboard page", weekOnWelcomeSection.contains(weekOnPayrollProjectionWidget), false);
+            dashboardPage.validateWeekOnPayrollProjectionWidget(weekOnPayrollProjectionWidget, currentWeekInBUViewSchedule);
+
+            // Validate today's time line in Payroll Projection widget with TA
+            dashboardPage.validateTodayAtTimeOnPayrollProjectionWidget();
+
+            // Validate the budget comparison in Payroll Projection widget with TA
+            dashboardPage.validateTheFutureBudgetComparisonOnPayrollProjectionWidget();
+            String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetComparisonOnPayrollProjectionWidget();
+            dashboardPage.validateBudgetComparisonOnPayrollProjectionWidget(forecastKPIOnPayrollProjectionWidget, forecastKPIInBUViewSchedule);
+
+            // Validate hours tooltips of Payroll Projection widget with TA
+            dashboardPage.validateHoursTooltipsOfPayrollProjectionWidget();
+
+            // Validate the data in Payroll Projection widget with TA
+            HashMap<String, Integer> theSumOfValues = dashboardPage.getTheSumOfValuesOnPayrollProjectionWidget();
+            List<String> dataOnLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            if ((Integer.valueOf(dataOnLocationSummaryWidget.get(0)) - theSumOfValues.get("Budgeted") < 14)
+                    && theSumOfValues.get("Scheduled").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(1)))
+                    && theSumOfValues.get("Projected").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(2))))
+                SimpleUtils.pass("Dashboard Page: The sum of days matches the numbers in District Summary widget for Budgeted, Scheduled and Projected");
+            else
+                SimpleUtils.fail("Dashboard Page: The sum of days doesn't match the numbers in District Summary widget for Budgeted, Scheduled and Projected",false);
+
+            // Set 'Apply labor budget to schedules?' to No
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            dashboardPage.clickOnDashboardConsoleMenu();
+            SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+
+            // Validate the content in Payroll Projection widget with TA
+            dashboardPage.validateTheContentOnPayrollProjectionWidget(false);
+
+            // Validate the data in Payroll Projection widget with TA
+            theSumOfValues = dashboardPage.getTheSumOfValuesOnPayrollProjectionWidget();
+            if (Integer.valueOf(dataOnLocationSummaryWidget.get(0)) - theSumOfValues.get("Budgeted") < 14
+                    && theSumOfValues.get("Scheduled").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(1)))
+                    && theSumOfValues.get("Projected").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(2))))
+                SimpleUtils.pass("Dashboard Page: The sum of days matches the numbers in District Summary widget for Guidance, Scheduled and Projected");
+            else
+                SimpleUtils.fail("Dashboard Page: The sum of days doesn't match the numbers in District Summary widget for Guidance, Scheduled and Projected",false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")

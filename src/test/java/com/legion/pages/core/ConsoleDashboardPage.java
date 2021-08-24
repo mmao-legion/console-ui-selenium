@@ -949,10 +949,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return dashboardScheduleWeeks;
 	}
 
-	@FindBy(css = "[ng-click=\"$ctrl.onReload(true)\"]")
+	@FindBy(xpath = "//button[contains(text(),\"Refresh\")]")
 	private WebElement refreshButton;
 
-	@FindBy(css = "[ng-if=\"$ctrl.minutes >= 0 && $ctrl.date && !$ctrl.loading\"]")
+	@FindBy(xpath = "//button[contains(text(),\"Refresh\")]/../div[1]/div")
 	private WebElement lastUpdatedIcon;
 
 
@@ -1354,11 +1354,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (css = "[search-hint='Search District'] div.lg-select")
 	private WebElement showDistrict;
 
-	@FindBy (css = ".sc-eYKchh.iHrcjg")
-	private List<WebElement> districtWeekOnDashboardDM;
-
-	@FindBy (css = ".sc-iQQLPo.eVFQLq")
-	private List<WebElement> upperfiledNameNWeekOnDashboard;
+	@FindBy (css = "//dm-dashboard/div/div/div/div[3]/div")
+	private List<WebElement> upperfieldNameWeekOnDashboard;
 
 	@FindBy (css = ".sc-bwcZwS.lgoedk")
 	private WebElement dmsTimeStamp;
@@ -1382,9 +1379,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateThePresenceOfDistrict() throws Exception {
-		if (isElementEnabled(districtWeekOnDashboardDM.get(0), 10)) {
-			if (districtWeekOnDashboardDM.get(0).isDisplayed() && !districtWeekOnDashboardDM.get(0).getText().isEmpty() && districtWeekOnDashboardDM.get(0).getText() != null) {
-				if (getDriver().findElement(By.xpath("//body//div[contains(text(),'Welcome to Legion')]/..//following-sibling::div[1]/div[1]")).equals(districtWeekOnDashboardDM.get(0))) {
+		if (isElementEnabled(upperfieldNameWeekOnDashboard.get(0), 10)) {
+			if (upperfieldNameWeekOnDashboard.get(0).isDisplayed() && !upperfieldNameWeekOnDashboard.get(0).getText().isEmpty() && upperfieldNameWeekOnDashboard.get(0).getText() != null) {
+				if (getDriver().findElement(By.xpath("//body//div[contains(text(),'Welcome to Legion')]/..//following-sibling::div[1]/div[1]")).equals(upperfieldNameWeekOnDashboard.get(0))) {
 					SimpleUtils.pass("Dashboard Page: District shows at left corner below welcome section successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: District is not at left corner below welcome section", true);
@@ -1397,8 +1394,11 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
-	@FindBy (css = "div.react-dm-dashboard div.sc-cTsKDU.iKqGfS > div:nth-child(1)")
+	@FindBy (xpath = "//dm-dashboard/div/div/div/div[3]/div[1]")
 	private WebElement upperfieldNameOnDashboard;
+
+	@FindBy (xpath = "//dm-dashboard/div/div/div/div[3]/div[2]")
+	private WebElement upperfieldWeekOnDashboard;
 
 	@Override
 	public void validateThePresenceOfUpperfield() throws Exception {
@@ -1419,9 +1419,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void validateTheVisibilityOfWeek() throws Exception {
-		if (isElementEnabled(districtWeekOnDashboardDM.get(1), 10)) {
-			if (districtWeekOnDashboardDM.get(1).isDisplayed() && !districtWeekOnDashboardDM.get(1).getText().isEmpty() && districtWeekOnDashboardDM.get(1).getText() != null) {
-				if (getDriver().findElement(By.xpath("//body//div[contains(text(),'Welcome to Legion')]/../following-sibling::div[1]/div[2]")).equals(districtWeekOnDashboardDM.get(1))) {
+		if (isElementEnabled(upperfieldWeekOnDashboard, 10)) {
+			if (upperfieldWeekOnDashboard.isDisplayed() && !upperfieldWeekOnDashboard.getText().isEmpty() && upperfieldWeekOnDashboard.getText() != null) {
+				if (getDriver().findElement(By.xpath("//body//div[contains(text(),'Welcome to Legion')]/../following-sibling::div[1]/div[2]")).equals(upperfieldWeekOnDashboard)) {
 					SimpleUtils.pass("Dashboard Page: Week shows at right corner below welcome section successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Week is not at right corner below welcome section", false);
@@ -1436,20 +1436,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public String getWeekInfoFromUpperfieldView() throws Exception {
-		String week = "";
-		if (areListElementVisible(upperfiledNameNWeekOnDashboard, 10)) {
-			week = upperfiledNameNWeekOnDashboard.get(1).getText();
-		} else {
-			SimpleUtils.fail("Dashboard Page: Week failed to load", false);
-		}
-		return week;
-	}
-
-	@Override
-	public String getWeekInfoFromDMView() throws Exception {
 		String result = "";
-		if (isElementEnabled(districtWeekOnDashboardDM.get(1), 10)) {
-			result = districtWeekOnDashboardDM.get(1).getText();
+		if (isElementEnabled(upperfieldWeekOnDashboard, 10)) {
+			result = upperfieldWeekOnDashboard.getText();
 		} else {
 			SimpleUtils.fail("Dashboard Page: Week failed to load", false);
 		}
@@ -1457,23 +1446,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public String getDistrictNameOnDashboard() throws Exception {
-		String districtName = "";
-		waitForSeconds(5);
-		if (isElementEnabled(districtWeekOnDashboardDM.get(0), 10)) {
-			districtName = districtWeekOnDashboardDM.get(0).getText();
-			SimpleUtils.pass("Dashboard Page: District name is '" + districtName + "'");
-		} else {
-			SimpleUtils.fail("Dashboard Page: District failed to load", false);
-		}
-		return districtName;
-	}
-
-	@Override
 	public String getUpperfieldNameOnDashboard() throws Exception {
 		String upperfiledName = "";
-		if (areListElementVisible(upperfiledNameNWeekOnDashboard, 10)) {
-			upperfiledName = upperfiledNameNWeekOnDashboard.get(0).getText();
+		if (isElementLoaded(upperfieldNameOnDashboard, 10)) {
+			upperfiledName = upperfieldNameOnDashboard.getText();
 			SimpleUtils.pass("Dashboard Page: Current organization name is '" + upperfiledName + "'");
 		} else {
 			SimpleUtils.fail("Dashboard Page: Organization failed to load", true);
@@ -1972,36 +1948,35 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Dashboard Page: Compliance Violations get incorrectly",false);
 	}
 
-	@FindBy(css = ".sc-fJxALz.EueDh .sc-fGgQJw.LQMqY")
+	@FindBy(xpath = "//h3[text()='Payroll Projection']")
 	private WebElement payrollProjectionWidgetTitle;
 
-	@FindBy(css= "[ng-if*=\"forecastKPI.futureBudgetSurplus\"]")
-	private List<WebElement> budgetSurplusOnPayrollProjectionWidget;
+	@FindBy(xpath= "//h3[text()='Payroll Projection']/following-sibling::div/div[1]/div[1]")
+	private WebElement budgetComparisonOnPayrollProjectionWidget;
 
-	@FindBy (xpath = "//div[contains(text(),'Payroll Projection')]/../../div[contains(@class,\"dms-action-link\")]")
-	private WebElement viewSchedulesLinkOnPayrollProjectionWidget;
-
-	@FindBy (xpath = "//div[contains(text(),'Payroll Projection')]/../..//div[contains(@class, \"dms-box-item-title-color-light\")]")
+	@FindBy (xpath = "//h3[text()='Payroll Projection']/following-sibling::div/div[1]/div[2]")
 	private WebElement noteOnPayrollProjectionWidget;
 
-	@FindBy(xpath = "//div[contains(text(),'Payroll Projection')]/../../div[2]/div")
+	@FindBy(xpath = "//h3[text()='Payroll Projection']/following-sibling::div/div[2]")
 	private WebElement legendOnPayrollProjectionWidget;
 
-	@FindBy(css = ".payroll-projection-chart__svg [width=\"20\"]")
+	@FindBy(css = "g[transform]>rect")
 	private List<WebElement> rectsOnPayrollProjectionWidget;
 
-	@FindBy(css = ".dms-payroll-time-legend")
+	@FindBy(className = "grouped-bar-chart-bottom-label")
 	private WebElement weekOnPayrollProjectionWidget;
 
-	@FindBy(css = ".payroll-projection-chart__svg text[text-anchor][style]")
-	private WebElement asOfDateTimeOnPayrollProjectionWidget;
+	@FindBy(xpath = "//*[@class='grouped-bar-chart']/*[contains(@style, 'stroke')]/following-sibling::*[1]")
+	private WebElement todayAtTimeOnPayrollProjectionWidget;
 
-	@FindBy(css = ".payroll-projection-chart__svg line[style]")
-	private WebElement asOfLineOnPayrollProjectionWidget;
+	@FindBy(xpath = "//*[@class='grouped-bar-chart']/*[contains(@style, 'stroke')]")
+	private WebElement todayAtLineOnPayrollProjectionWidget;
 
-	@FindBy (css = ".sc-fJxALz.EueDh")
+	@FindBy (xpath = "//h3[text()='Payroll Projection']/../..")
 	private WebElement payrollProjectionWidget;
 
+	@FindBy(css = ".legion-ui__grouped-bar-chart-tooltip")
+	private WebElement tooltipOnBarsOnPayrollProjectionWidget;
 
 	@Override
 	public boolean isPayrollProjectionWidgetDisplay() throws Exception {
@@ -2016,6 +1991,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void clickOnViewSchedulesOnPayrollProjectWidget() throws Exception {
+		WebElement viewSchedulesLinkOnPayrollProjectionWidget = payrollProjectionWidget.findElement(By.xpath("./div/div[2]"));
 		if (isElementLoaded(viewSchedulesLinkOnPayrollProjectionWidget, 5)) {
 			clickTheElement(viewSchedulesLinkOnPayrollProjectionWidget);
 			if (scheduleConsoleMenu.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
@@ -2028,7 +2004,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public void validateTheContentOnPayrollProjectionWidget() throws Exception {
+	public void validateTheContentOnPayrollProjectionWidget(boolean isLaborBudgetToApply) throws Exception {
 		 /*Payroll Projection widget should show:
          a. Title: Payroll Projection
          b. x Hrs Over/Under Budget in red/green
@@ -2042,32 +2018,42 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		} else {
 			SimpleUtils.fail("Dashboard Page: The title on \"Payroll Projection\" widget failed to load",false);
 		}
-		if (areListElementVisible(budgetSurplusOnPayrollProjectionWidget,10) && budgetSurplusOnPayrollProjectionWidget.size() == 2) {
-			SimpleUtils.pass("Dashboard Page: Budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget is loaded in");
+		if (isElementLoaded(budgetComparisonOnPayrollProjectionWidget,10)) {
+			SimpleUtils.pass("Dashboard Page: Budget comparison \"" + budgetComparisonOnPayrollProjectionWidget.getText() + "\" on \"Payroll Projection\" widget is loaded in");
 		} else {
-			SimpleUtils.fail("Dashboard Page: The Budget surplus on \"Payroll Projection\" widget failed to load",false);
+			SimpleUtils.fail("Dashboard Page: The Budget comparison on \"Payroll Projection\" widget failed to load",false);
 		}
 		if (isElementLoaded(noteOnPayrollProjectionWidget, 5) && noteOnPayrollProjectionWidget.getText().contains("Projected for remainder of this week")) {
 			SimpleUtils.pass("Dashboard Page: \"Projected for remainder of this week\" loaded successfully on \"Payroll Projection\" widget");
 		} else {
 			SimpleUtils.fail("Dashboard Page: \"Projected for remainder of this week\" not loaded on \"Payroll Projection\" widget", false);
 		}
-		if (isElementLoaded(legendOnPayrollProjectionWidget, 5) && legendOnPayrollProjectionWidget.getText().contains("Budgeted")
-				&& legendOnPayrollProjectionWidget.getText().contains("Scheduled") && legendOnPayrollProjectionWidget.getText().contains("Projected")) {
-			SimpleUtils.pass("Dashboard Page: Budgeted/Scheduled/Projected legends loaded successfully on \"Payroll Projection\" widget");
+		if (isLaborBudgetToApply) {
+			if (isElementLoaded(legendOnPayrollProjectionWidget, 5) && legendOnPayrollProjectionWidget.getText().contains("Budgeted")
+					&& legendOnPayrollProjectionWidget.getText().contains("Scheduled") && legendOnPayrollProjectionWidget.getText().contains("Projected")) {
+				SimpleUtils.pass("Dashboard Page: Budgeted/Scheduled/Projected legends loaded successfully on \"Payroll Projection\" widget");
+			} else {
+				SimpleUtils.fail("Dashboard Page: Budgeted/Scheduled/Projected legends not loaded on \"Payroll Projection\" widget", false);
+			}
 		} else {
-			SimpleUtils.fail("Dashboard Page: Budgeted/Scheduled/Projected legends not loaded on \"Payroll Projection\" widget", false);
+			if (isElementLoaded(legendOnPayrollProjectionWidget, 5) && legendOnPayrollProjectionWidget.getText().contains("Guidance")
+					&& legendOnPayrollProjectionWidget.getText().contains("Scheduled") && legendOnPayrollProjectionWidget.getText().contains("Projected")) {
+				SimpleUtils.pass("Dashboard Page: Guidance/Scheduled/Projected legends loaded successfully on \"Payroll Projection\" widget");
+			} else {
+				SimpleUtils.fail("Dashboard Page: Guidance/Scheduled/Projected legends not loaded on \"Payroll Projection\" widget", false);
+			}
 		}
 		if (areListElementVisible(rectsOnPayrollProjectionWidget,5) && rectsOnPayrollProjectionWidget.size() == 21) {
 			SimpleUtils.pass("Dashboard Page: 21 rects with 7 days loaded successfully on \"Payroll Projection\" widget");
 		} else {
 			SimpleUtils.fail("Dashboard Page: 21 rects with 7 days not loaded on \"Payroll Projection\" widget",false);
 		}
-		if (isElementLoaded(weekOnPayrollProjectionWidget, 5) && districtWeekOnDashboardDM.get(1).getText().contains(weekOnPayrollProjectionWidget.getText())) {
+		if (isElementLoaded(weekOnPayrollProjectionWidget, 5)) {
 			SimpleUtils.pass("Dashboard Page: Current week \""+ weekOnPayrollProjectionWidget.getText() + "\" loaded successfully on \"Payroll Projection\" widget");
 		} else {
 			SimpleUtils.fail("Dashboard Page: Current week not loaded on \"Payroll Projection\" widget", false);
 		}
+		WebElement viewSchedulesLinkOnPayrollProjectionWidget = payrollProjectionWidget.findElement(By.xpath("./div/div[2]"));
 		if (isElementLoaded(viewSchedulesLinkOnPayrollProjectionWidget, 5)) {
 			SimpleUtils.pass("Dashboard Page: \"View Schedules\" link loaded successfully on \"Payroll Projection\" widget");
 		} else {
@@ -2108,87 +2094,76 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public String getBudgetSurplusOnPayrollProjectionWidget() throws Exception {
-		String budgetSurplus = "";
-		if (areListElementVisible(budgetSurplusOnPayrollProjectionWidget, 10) && budgetSurplusOnPayrollProjectionWidget.size() == 2) {
-			budgetSurplus = budgetSurplusOnPayrollProjectionWidget.get(1).getText();
-			SimpleUtils.pass("Dashboard Page: Get budget surplus \""+ budgetSurplus + "\" on \"Payroll Projection\" widget");
+	public String getBudgetComparisonOnPayrollProjectionWidget() throws Exception {
+		String budgetComparison = "";
+		if (isElementLoaded(budgetComparisonOnPayrollProjectionWidget, 10)) {
+			budgetComparison = budgetComparisonOnPayrollProjectionWidget.getText();
+			SimpleUtils.pass("Dashboard Page: Get budget comparison \""+ budgetComparison + "\" on \"Payroll Projection\" widget");
 		} else {
-			SimpleUtils.fail("Dashboard Page: Current budget surplus not loaded on \"Payroll Projection\" widget", false);
+			SimpleUtils.fail("Dashboard Page: Current budget comparison not loaded on \"Payroll Projection\" widget", false);
 		}
-		return budgetSurplus;
+		return budgetComparison;
 	}
 
 	@Override
-	public void validateBudgetSurplusOnPayrollProjectionWidget(String budgetSurplusOnPayrollProjectionWidget, String budgetSurplusInScheduleTab) throws Exception {
-		if (budgetSurplusOnPayrollProjectionWidget.contains("Under") && budgetSurplusInScheduleTab.contains("▼")) {
-			budgetSurplusOnPayrollProjectionWidget = budgetSurplusOnPayrollProjectionWidget.contains(" ")? budgetSurplusOnPayrollProjectionWidget.split(" ")[0]:budgetSurplusOnPayrollProjectionWidget;
-			budgetSurplusInScheduleTab = budgetSurplusInScheduleTab.contains(" ")? budgetSurplusInScheduleTab.split(" ")[0]:budgetSurplusInScheduleTab;
-			SimpleUtils.report("Dashboard Page: The hours on Payroll Projection widget is \"" + budgetSurplusOnPayrollProjectionWidget + "\"");
-			SimpleUtils.report("Schedule Page: The hours is \"" + budgetSurplusInScheduleTab + "\" in Schedule tab");
-			if (budgetSurplusOnPayrollProjectionWidget.equals(budgetSurplusInScheduleTab))
-				SimpleUtils.pass("Dashboard Page: The budget surplus on Payroll Projection widget is consistent with the hours in Schedule tab");
+	public void validateBudgetComparisonOnPayrollProjectionWidget(String budgetComparisonOnPayrollProjectionWidget, String budgetComparisonInScheduleTab) throws Exception {
+		if (budgetComparisonOnPayrollProjectionWidget.contains("Under") && budgetComparisonInScheduleTab.contains("▼")) {
+			budgetComparisonOnPayrollProjectionWidget = budgetComparisonOnPayrollProjectionWidget.contains(" ")? budgetComparisonOnPayrollProjectionWidget.split(" ")[0]:budgetComparisonOnPayrollProjectionWidget;
+			budgetComparisonInScheduleTab = budgetComparisonInScheduleTab.contains(" ")? budgetComparisonInScheduleTab.split(" ")[0]:budgetComparisonInScheduleTab;
+			SimpleUtils.report("Dashboard Page: The hours on Payroll Projection widget is \"" + budgetComparisonOnPayrollProjectionWidget + "\"");
+			SimpleUtils.report("Schedule Page: The hours is \"" + budgetComparisonInScheduleTab + "\" in Schedule tab");
+			if (budgetComparisonOnPayrollProjectionWidget.equals(budgetComparisonInScheduleTab))
+				SimpleUtils.pass("Dashboard Page: The budget comparison on Payroll Projection widget is consistent with the hours in Schedule tab");
 			else
-				//SimpleUtils.fail("Dashboard Page: The budget surplus on Payroll Projection widget is inconsistent with the hours in Schedule tab",false);
-			SimpleUtils.warn("SCH-2767: [DM View] Data accuracy is inconsistent on Dashboard");
-		} else if (budgetSurplusOnPayrollProjectionWidget.contains("Over") && budgetSurplusInScheduleTab.contains("▲")) {
-			budgetSurplusOnPayrollProjectionWidget = budgetSurplusOnPayrollProjectionWidget.contains(" ")? budgetSurplusOnPayrollProjectionWidget.split(" ")[0]:budgetSurplusOnPayrollProjectionWidget;
-			budgetSurplusInScheduleTab = budgetSurplusInScheduleTab.contains(" ")? budgetSurplusInScheduleTab.split(" ")[0]:budgetSurplusInScheduleTab;
-			SimpleUtils.report("Dashboard Page: The hours on Payroll Projection widget is \"" + budgetSurplusOnPayrollProjectionWidget + "\"");
-			SimpleUtils.report("Schedule Page: The hours is \"" + budgetSurplusInScheduleTab + "\" in Schedule tab");
-			if (budgetSurplusOnPayrollProjectionWidget.equals(budgetSurplusInScheduleTab))
-				SimpleUtils.pass("Dashboard Page: The budget surplus on Payroll Projection widget is consistent with the hours in Schedule tab");
+				SimpleUtils.fail("Dashboard Page: The budget comparison on Payroll Projection widget is inconsistent with the hours in Schedule tab",false);
+		} else if (budgetComparisonOnPayrollProjectionWidget.contains("Over") && budgetComparisonInScheduleTab.contains("▲")) {
+			budgetComparisonOnPayrollProjectionWidget = budgetComparisonOnPayrollProjectionWidget.contains(" ")? budgetComparisonOnPayrollProjectionWidget.split(" ")[0]:budgetComparisonOnPayrollProjectionWidget;
+			budgetComparisonInScheduleTab = budgetComparisonInScheduleTab.contains(" ")? budgetComparisonInScheduleTab.split(" ")[0]:budgetComparisonInScheduleTab;
+			SimpleUtils.report("Dashboard Page: The hours on Payroll Projection widget is \"" + budgetComparisonOnPayrollProjectionWidget + "\"");
+			SimpleUtils.report("Schedule Page: The hours is \"" + budgetComparisonInScheduleTab + "\" in Schedule tab");
+			if (budgetComparisonOnPayrollProjectionWidget.equals(budgetComparisonInScheduleTab))
+				SimpleUtils.pass("Dashboard Page: The budget comparison on Payroll Projection widget is consistent with the hours in Schedule tab");
 			else
-				//SimpleUtils.fail("Dashboard Page: The budget surplus on Payroll Projection widget is inconsistent with the hours in Schedule tab",false);
-				SimpleUtils.warn("SCH-2767: [DM View] Data accuracy is inconsistent on Dashboard");
+				SimpleUtils.fail("Dashboard Page: The budget comparison on Payroll Projection widget is inconsistent with the hours in Schedule tab",false);
 		} else
-			SimpleUtils.fail("Dashboard Page: The budget surplus on dashboard is inconsistent with the one on schedule, whatever the hours or caret",false);
+			SimpleUtils.fail("Dashboard Page: The budget comparison on dashboard is inconsistent with the one on schedule, whatever the hours or caret",false);
 	}
 
 	@Override
-	public void validateAsOfTimeOnPayrollProjectionWidget() throws Exception {
-		if (isElementLoaded(asOfDateTimeOnPayrollProjectionWidget,5)) {
-			Date asOfDate = null;
-			String asOfDateTime = asOfDateTimeOnPayrollProjectionWidget.getText();
-			//  Dec 10, 01:54 AM
-			try {
-				Calendar cal = Calendar.getInstance();
-				int year = cal.get(Calendar.YEAR);
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd, hh:mm a");
-				asOfDate = sdf.parse(year + " " + asOfDateTime.replace("As of ",""));
-				SimpleUtils.pass("Dashboard Page: Dashboard Page: As of date time is \"" + asOfDateTime + "\" on Payroll Projection widget");
-			} catch (Exception e) {
-				SimpleUtils.fail("Dashboard Page: Dashboard Page: As of date time format is \"" + asOfDateTime + "\" unexpectedly on Payroll Projection widget",false);
-			}
-			SimpleDateFormat sdfNew = new SimpleDateFormat("EEE");
-			String asOfWeek = sdfNew.format(asOfDate);
-			if (asOfLineOnPayrollProjectionWidget.findElement(By.xpath("./following-sibling::*[name()='text'][2]")).getText().equals(asOfWeek)) {
-				SimpleUtils.pass("Dashboard Page: As of date time line displays in correct position between bars on Payroll Projection widget");
-			} else {
-				SimpleUtils.fail("Dashboard Page: As of date time line doesn't display in correct position between bars on Payroll Projection widget",false);
-			}
+	public void validateTodayAtTimeOnPayrollProjectionWidget() throws Exception {
+		if (isElementLoaded(todayAtTimeOnPayrollProjectionWidget,5)) {
+			String todayAtTime = todayAtTimeOnPayrollProjectionWidget.getText();
+			// Today at 2:15 AM
+			if (todayAtTime.contains("Today at") && (todayAtTime.contains("AM") || todayAtTime.contains("PM")))
+				SimpleUtils.pass("Dashboard Page: Dashboard Page: Today at time is \"" + todayAtTime + "\" on Payroll Projection widget");
+			else
+				SimpleUtils.fail("Dashboard Page: Dashboard Page: Today at time format is \"" + todayAtTime + "\" unexpectedly on Payroll Projection widget",false);
 		} else {
-			SimpleUtils.fail("Dashboard Page: As of date time failed to load on Payroll Projection widget",false);
+			SimpleUtils.fail("Dashboard Page: Today at time failed to load on Payroll Projection widget",false);
 		}
+		if (isElementLoaded(todayAtLineOnPayrollProjectionWidget,10))
+			SimpleUtils.pass("Dashboard Page: Today at time line displays on Payroll Projection widget");
+		else
+			SimpleUtils.fail("Dashboard Page: Today at time line doesn't display on Payroll Projection widget",true);
 	}
 
 	@Override
-	public void validateTheFutureBudgetSurplusOnPayrollProjectionWidget() throws Exception {
-		if (areListElementVisible(budgetSurplusOnPayrollProjectionWidget,10) && budgetSurplusOnPayrollProjectionWidget.size() ==2) {
-			if (budgetSurplusOnPayrollProjectionWidget.get(0).getAttribute("class").contains("sch-clr-primary-red")) {
-				if (budgetSurplusOnPayrollProjectionWidget.get(1).getText().contains("Hrs Over Budget"))
-					SimpleUtils.pass("Dashboard Page: budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget is loaded in DM View");
+	public void validateTheFutureBudgetComparisonOnPayrollProjectionWidget() throws Exception {
+		if (isElementLoaded(budgetComparisonOnPayrollProjectionWidget,10)) {
+			if (budgetComparisonOnPayrollProjectionWidget.getCssValue("color").contains("rgb(204, 47, 51)")) {
+				if (budgetComparisonOnPayrollProjectionWidget.getText().contains("Hrs Over Budget"))
+					SimpleUtils.pass("Dashboard Page: budget comparison \"" + budgetComparisonOnPayrollProjectionWidget.getText() + "\" on \"Payroll Projection\" widget is loaded");
 				else
-					SimpleUtils.fail("Dashboard Page: budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget failed to load or loaded incorrectly in DM View",false);
+					SimpleUtils.fail("Dashboard Page: budget comparison \"" + budgetComparisonOnPayrollProjectionWidget.getText() + "\" on \"Payroll Projection\" widget failed to load or loaded incorrectly",false);
 			}
-			if (budgetSurplusOnPayrollProjectionWidget.get(0).getAttribute("class").contains("sch-clr-primary-green")) {
-				if (budgetSurplusOnPayrollProjectionWidget.get(1).getText().contains("Hrs Under Budget"))
-					SimpleUtils.pass("Dashboard Page: budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget is loaded in DM View");
+			if (budgetComparisonOnPayrollProjectionWidget.getCssValue("color").contains("rgb(80, 184, 60)")) {
+				if (budgetComparisonOnPayrollProjectionWidget.getText().contains("Hrs Under Budget"))
+					SimpleUtils.pass("Dashboard Page: budget comparison \"" + budgetComparisonOnPayrollProjectionWidget.getText() + "\" on \"Payroll Projection\" widget is loaded in DM View");
 				else
-					SimpleUtils.fail("Dashboard Page: budget surplus \"" + budgetSurplusOnPayrollProjectionWidget.get(1).getText() + "\" on \"Payroll Projection\" widget failed to load or loaded incorrectly in DM View",false);
+					SimpleUtils.fail("Dashboard Page: budget comparison \"" + budgetComparisonOnPayrollProjectionWidget.getText() + "\" on \"Payroll Projection\" widget failed to load or loaded incorrectly",false);
 			}
 		} else {
-			SimpleUtils.fail("Dashboard Page: The budget surplus on \"Payroll Projection\" widget failed to load in DM View",false);
+			SimpleUtils.fail("Dashboard Page: The budget comparison on \"Payroll Projection\" widget failed to load",false);
 		}
 	}
 
@@ -2196,12 +2171,57 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateHoursTooltipsOfPayrollProjectionWidget() throws Exception {
 		if (areListElementVisible(rectsOnPayrollProjectionWidget,5) && rectsOnPayrollProjectionWidget.size() == 21) {
 			for (WebElement rect: rectsOnPayrollProjectionWidget) {
-				// mouseHover(rect);
-				// todo: Locate the tooltip web element and if it loads, it will pass, or else it will fail.
+				scrollToElement(rect);
+				mouseToElement(rect);
+				/*
+				 *wait for tooltip data to load
+				 * */
+				waitForSeconds(2);
+				if (isElementLoaded(tooltipOnBarsOnPayrollProjectionWidget,10) && tooltipOnBarsOnPayrollProjectionWidget.getText().contains("Hrs")) {
+					SimpleUtils.pass("Dashboard Page: Tooltip loaded successfully on \"Payroll Projection\"");
+					break;
+				} else
+					SimpleUtils.fail("Dashboard Page: Tooltip failed to load on \"Payroll Projection\"", false);
 			}
-			SimpleUtils.warn("SCH-2634: [DM Dashboard] The value tooltips should display when hover the mouse on the chart in Payroll Projection widget");
 		} else
-			SimpleUtils.fail("Dashboard Page: Hours on Timesheet Approval Rate widget failed to load",false);
+			SimpleUtils.fail("Dashboard Page: Bars on Payroll Projection widget failed to load",false);
+	}
+
+	@Override
+	public HashMap<String, Integer> getTheSumOfValuesOnPayrollProjectionWidget() throws Exception {
+		HashMap<String, Integer> theSumOfValues = new HashMap<>();
+		String tooltip = "";
+		int sum1 = 0;
+		int sum2 = 0;
+		int sum3 = 0;
+		if (areListElementVisible(rectsOnPayrollProjectionWidget,10)) {
+			for (int i = 0; i < rectsOnPayrollProjectionWidget.size(); i++) {
+				scrollToElement(rectsOnPayrollProjectionWidget.get(i));
+				mouseToElement(rectsOnPayrollProjectionWidget.get(i));
+				/*
+				 *wait for tooltip data to load
+				 * */
+				waitForSeconds(2);
+				if (isElementLoaded(tooltipOnBarsOnPayrollProjectionWidget, 10) && !tooltipOnBarsOnPayrollProjectionWidget.getText().isEmpty()) {
+					// tooltip = "Budgeted 1,082.9 Hrs" or "Scheduled 288 Hrs";
+					tooltip = tooltipOnBarsOnPayrollProjectionWidget.getText().replace(",", "");
+					if (tooltip.contains(" ")) {
+						tooltip = tooltip.split(" ")[1];
+					}
+					if ((i + 1) % 3 == 0)
+						sum3 += Float.valueOf(tooltip);
+					else if ((i + 1) % 3 == 2)
+						sum2 += Float.valueOf(tooltip);
+					else
+						sum1 += Float.valueOf(tooltip);
+				}
+				theSumOfValues.put("Budgeted", sum1);
+				theSumOfValues.put("Scheduled", sum2);
+				theSumOfValues.put("Projected", sum3);
+			}
+		} else
+			SimpleUtils.fail("Dashboard Page: Bars in bar chart not loaded on \"Payroll Projection\"", false);
+		return theSumOfValues;
 	}
 
 	@Override
@@ -2595,7 +2615,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private List<WebElement> barsOnScheduleVsGuidanceByDayWidget;
 
 	@FindBy(css = ".legion-ui__grouped-bar-chart-tooltip")
-	private WebElement tooltiponBardOnScheduleVsGuidanceByDayWidget;
+	private WebElement tooltipOnBarsOnScheduleVsGuidanceByDayWidget;
 
 	@Override
 	public void validateValueInScheduleVsGuidanceByDayWidget() throws Exception {
@@ -2607,7 +2627,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				 *wait for tooltip data to load
 				 * */
 				waitForSeconds(2);
-				if (isElementLoaded(tooltiponBardOnScheduleVsGuidanceByDayWidget,10))
+				if (isElementLoaded(tooltipOnBarsOnScheduleVsGuidanceByDayWidget,10))
 					SimpleUtils.pass("Dashboard Page: The values are present on \"Schedules vs Guidance By Day\"");
 				else
 					SimpleUtils.fail("Dashboard Page: Tooltip failed to load on \"Schedules vs Guidance By Day\"", false);
@@ -2619,7 +2639,6 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public HashMap<String, Integer> getTheSumOfValuesOnScheduleVsGuidanceByDayWidget() throws Exception {
 		HashMap<String, Integer> theSumOfValues = new HashMap<>();
 		String tooltip = "";
-		String key = "";
 		int sum1 = 0;
 		int sum2 = 0;
 		if (areListElementVisible(barsOnScheduleVsGuidanceByDayWidget,10)) {
@@ -2630,9 +2649,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				 *wait for tooltip data to load
 				 * */
 				waitForSeconds(2);
-				if (isElementLoaded(tooltiponBardOnScheduleVsGuidanceByDayWidget,10)){
+				if (isElementLoaded(tooltipOnBarsOnScheduleVsGuidanceByDayWidget,10)){
 					// tooltip = "Guidance 93.8 Hrs" or "Scheduled 61 Hrs";
-					tooltip = tooltiponBardOnScheduleVsGuidanceByDayWidget.getText();
+					tooltip = tooltipOnBarsOnScheduleVsGuidanceByDayWidget.getText().replace(",","");
 					if (tooltip.contains(" ")) {
 						tooltip = tooltip.split(" ")[1];
 					}
@@ -2663,7 +2682,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				&& isElementLoaded(scheduledLegend, 5)
 				&& isElementLoaded(scheduleVsGuidanceChart, 5)
 				&& isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)
-				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromDMView().substring(8))
+				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromUpperfieldView().substring(8))
 //				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
 				&& isElementLoaded(budgetHoursCaret, 5) && budgetHoursCaret.getText().contains("Budget")
 				&& isElementLoaded(viewSchedulesLink, 5)){
@@ -2682,7 +2701,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				&& isElementLoaded(scheduledLegend, 5)
 				&& isElementLoaded(scheduleVsGuidanceChart, 5)
 				&& isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)
-				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromDMView().substring(8))
+				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromUpperfieldView().substring(8))
 //				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
 				&& isElementLoaded(budgetHoursCaret, 5) && budgetHoursCaret.getText().contains("Guidance")
 				&& isElementLoaded(viewSchedulesLink, 5)){
@@ -2773,7 +2792,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "div.dms-box-item-title.dms-box-item-title-color-light")
 	private List<WebElement> scheduledHoursTitles;
 
-	@FindBy(css = "span.dms-box-item-number-small")
+	@FindBy(css = ".sc-knSFqH.iwmrPd")
 	private List<WebElement> scheduledHours;
 
 	@FindBy(css = "span.dms-time-stamp")
@@ -2785,7 +2804,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[ng-if=\"!b.withinBudget\"]")
 	private WebElement projectedOverBudgetCaret;
 
-	@FindBy(css = "span.dms-box-item-title-color-dark")
+	@FindBy(css = ".sc-hLyimJ.jVmufi")
 	private List<WebElement> projectedWithInOrOverBudgetLocations;
 
 	@FindBy(css = "div.dms-box-item-title-2.pt-15")
@@ -2794,7 +2813,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "i.dms-caret-small")
 	private WebElement budgetHoursCaretOnLocationSummaryWidget;
 
-	@FindBy(css = "div.sc-bKoJNE.bflUSK")
+	@FindBy(css = "div.sc-cfARRi.hcpDlY")
 	private WebElement budgetHoursMessageOnLocationSummaryWidget;
 
 	public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception {

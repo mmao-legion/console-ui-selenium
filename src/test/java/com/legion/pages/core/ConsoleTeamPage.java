@@ -3769,7 +3769,7 @@ private List<WebElement> locationColumn;
 		if (isElementLoaded(calendarNameInput,5)) {
 			calendarNameInput.sendKeys(calendarName);
 			if (calendarNameInput.getAttribute("value").equals(calendarName))
-				SimpleUtils.pass("School Calendars Page: Input customized calendar name" + calendarName + " successfully");
+				SimpleUtils.pass("School Calendars Page: Input customized calendar name " + calendarName + " successfully");
 			else
 				SimpleUtils.fail("School Calendars Page: Failed to input customized calendar name",false);
 		} else
