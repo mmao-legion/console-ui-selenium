@@ -135,10 +135,6 @@ public class ConsoleWebPageFactory implements PageFactory {
 	@Override
 	public OnboardingPage createOnboardingPage() { return new ConsoleOnboardingPage(); }
 
-
-	@Override
-	public ComplianceDMViewPage createComplianceDMViewPage() { return new ConsoleComplianceDMViewPage(); }
-
 	@Override
 	public NewsPage createNewsPage (){ return new ConsoleNewsPage() ;}
 	@Override

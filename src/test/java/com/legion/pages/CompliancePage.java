@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface CompliancePage {
     public String getTheTotalViolationHrsFromSmartCard() throws Exception;
@@ -11,7 +12,7 @@ public interface CompliancePage {
     public boolean isCompliancePageLoaded() throws Exception;
     public HashMap<String, Float> getValuesAndVerifyInfoForTotalViolationSmartCardInDMView() throws Exception;
     public void verifyDiffFlag(String upOrDown) throws Exception;
-    public HashMap<String, Integer> getValueOnLocationsWithViolationCardAndVerifyInfo() throws Exception;
+    public HashMap<String, Integer> getValueOnLocationsWithViolationCardAndVerifyInfo(String upperFieldType) throws Exception;
     public HashMap<String, Float> getViolationHrsFromTop1ViolationCardAndVerifyInfo() throws Exception;
     public float getTopOneViolationHrsOrNumOfACol(List<Float> list) throws Exception;
     public void validateThePresenceOfRefreshButton() throws Exception;
@@ -34,4 +35,8 @@ public interface CompliancePage {
     public boolean isComplianceUpperFieldView() throws Exception;
     public List<String> getAllUpperFieldNamesOnAnalyticsTable() throws Exception;
     public boolean isRefreshButtonDisplay() throws Exception;
+    public Map<String, String> getAllUpperFieldInfoFromComplianceDMViewByUpperField(String upperFieldName) throws Exception;
+    public List<String> getAllUpperFieldNames();
+    public boolean isUpperFieldsWithViolationSmartCardDisplay () throws Exception;
+    public boolean isTop1ViolationSmartCardDisplay () throws Exception;
 }

@@ -52,7 +52,7 @@
                 <methods>
                     <include name="verifyComplianceSmartCardFunctionality" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
-                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
+                    <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>  Blocked by SCH-5036-->
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>
@@ -83,15 +83,19 @@
             <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
                 <methods>
                     <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                     <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
-                    <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
+                    <!--<include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />  SCH-5036-->
                     <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" />
                     <include name="validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin" />
+                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
                     <include name="validateTheOOOHShiftsAsInternalAdmin" />
+                    <include name="validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin" />
+                    <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -166,11 +170,11 @@
                 <methods>
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
-<!--                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" /> SCH-4524-->
-                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
+                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
+<!--                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />  SCH-5054-->
 <!--                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsTeamMember" />  Blocked by SCH-4753-->
 <!--                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsTeamMember" />  Blocked by SCH-4753-->
-                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
+<!--                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" /> Blocked by SCH-5054 -->
                 </methods>
             </class>
         </classes>
@@ -275,11 +279,11 @@
                     <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
-                    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
-                    <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
-                    <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
-                    <include name="verifyTMCanBeOfferedAsTeamMember" />
-                    <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
+               <!--SCH-4171, SCH-3620     <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
+                    SCH-4171, SCH-3620  <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
+                    SCH-4171, SCH-3620  <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />   -->
+                     <include name="verifyTMCanBeOfferedAsTeamMember" />
+                      <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

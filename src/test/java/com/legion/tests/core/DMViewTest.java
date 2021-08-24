@@ -1394,32 +1394,22 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
 
             //Validate the content on Locations with violation card.
-            HashMap<String, Integer> valuesFromLocationsWithViolationCard = compliancePage.getValueOnLocationsWithViolationCardAndVerifyInfo();
-            int index = schedulePage.getIndexOfColInDMViewTable("Total Extra Hours");
-            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
-            index = schedulePage.getIndexOfColInDMViewTable("Late Schedule?");
-            List<String> dataFromLateScheduleCol = schedulePage.getListByColInTimesheetDMView(index);
-            List flag = new ArrayList();
+            HashMap<String, Integer> valuesFromLocationsWithViolationCard = compliancePage.getValueOnLocationsWithViolationCardAndVerifyInfo("Location");
+            int index = schedulePage.getIndexOfColInDMViewTable("Extra Hours");
+            List<Float> extraHours = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            index = schedulePage.getIndexOfColInDMViewTable("Schedule Published On Time");
+            List<String> publishStatus = schedulePage.getListByColInTimesheetDMView(index);
+            SimpleUtils.assertOnFail("The extra hour count should consistent with publish status count! ", extraHours.size() == publishStatus.size(), false);
             int totalLocationWithViolation = 0;
-            int locationWithViolationCountFromTotalExtraHrs = 0;
-            int locationWithViolationCountFromLateSchedule = 0;
-            for (int i = 0; i < data.size(); i++){
-                if (!(data.get(i) >0)){
-                    flag.add(i);
-                    locationWithViolationCountFromTotalExtraHrs++;
+
+            for (int i = 0; i < extraHours.size(); i++){
+                if (extraHours.get(i) >0 || publishStatus.get(i).equals("No")){
+                    totalLocationWithViolation ++;
                 }
             }
-            locationWithViolationCountFromTotalExtraHrs = data.size() - locationWithViolationCountFromTotalExtraHrs;
-            if (flag.size()>0){
-                for (int i = 0; i < flag.size(); i++){
-                    if (dataFromLateScheduleCol.get(i).equals("yes")){
-                        locationWithViolationCountFromLateSchedule++;
-                    }
-                }
-            }
-            totalLocationWithViolation = locationWithViolationCountFromTotalExtraHrs + locationWithViolationCountFromLateSchedule;
-            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!", valuesFromLocationsWithViolationCard.get("LocationsWithViolation") == totalLocationWithViolation, false);
-            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!", valuesFromLocationsWithViolationCard.get("total locations") == totalLocationWithViolation, false);
+
+            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!", valuesFromLocationsWithViolationCard.get("UpperFieldsWithViolations") == totalLocationWithViolation, false);
+            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!", valuesFromLocationsWithViolationCard.get("TotalUpperFields") == extraHours.size(), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1454,8 +1444,6 @@ public class DMViewTest extends TestBase {
 
         if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
             HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
-
-
 
             if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
                 SimpleUtils.assertOnFail("Overtime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Overtime (Hrs)")-topViolationInOvertimeCol)==0, false);

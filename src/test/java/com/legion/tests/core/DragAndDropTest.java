@@ -186,6 +186,13 @@ public class DragAndDropTest extends TestBase {
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
 
+            // Set "Can a manager add another locations' employee in schedule before the employee's home location has published the schedule?" to "Yes, anytime"
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+            controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
+
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
