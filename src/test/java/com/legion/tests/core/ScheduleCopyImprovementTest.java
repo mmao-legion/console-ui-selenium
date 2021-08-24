@@ -30,7 +30,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
     private static Map<String, String> newTMDetails2 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember2.json");
     private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
     private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
-    private String templateName = "Cinemark Base Template";
 
     @Override
     @BeforeMethod()
@@ -105,7 +104,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "Yes, all unassigned shifts";
-            changeConvertToOpenShiftsSettings(option);
+            changeConvertToOpenShiftsSettings(option, location);
             if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
                 Thread.sleep(180000);
             }
@@ -129,7 +128,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "Yes, all unassigned shifts";
-            changeConvertToOpenShiftsSettings(option);
+            changeConvertToOpenShiftsSettings(option, location);
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option, false);
 
         } catch (Exception e) {
@@ -149,10 +148,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            disableCopyRestriction();
+            disableCopyRestriction(location);
 
             String option = "No, keep as unassigned";
-            changeConvertToOpenShiftsSettings(option);
+            changeConvertToOpenShiftsSettings(option, location);
             if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
                 Thread.sleep(180000);
             }
@@ -177,7 +176,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "No, keep as unassigned";
-            changeConvertToOpenShiftsSettings(option);
+            changeConvertToOpenShiftsSettings(option, location);
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option, false);
 
         } catch (Exception e) {
@@ -198,7 +197,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "Yes, except opening/closing shifts";
-            changeConvertToOpenShiftsSettings(option);
+            changeConvertToOpenShiftsSettings(option, location);
             if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
                 Thread.sleep(180000);
             }
@@ -221,7 +220,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "Yes, except opening/closing shifts";
-            changeConvertToOpenShiftsSettings(option);
+            changeConvertToOpenShiftsSettings(option, location);
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option, false);
 
         } catch (Exception e) {
@@ -243,7 +242,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "No, keep as unassigned";
-            changeConvertToOpenShiftsSettings(option);
+            changeConvertToOpenShiftsSettings(option, location);
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option, true);
 
         } catch (Exception e) {
@@ -340,6 +339,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
 
             // Delete all the shifts that are assigned to the team member
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
             schedulePage.deleteTMShiftInWeekView("open");
@@ -541,13 +541,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Convert unassigned shifts to open
             schedulePage.convertAllUnAssignedShiftToOpenShift();
+            Thread.sleep(10000);
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteAllOOOHShiftInWeekView();
             schedulePage.saveSchedule();
 
             //Check all unassigned shifts convert to open
-//            SimpleUtils.assertOnFail("The open shifts should not display in this schedule! ",
-//                    schedulePage.getAllShiftsOfOneTM("open").size()==unassignedShiftsCount, false);
+            SimpleUtils.assertOnFail("The open shifts should not display in this schedule! ",
+                    schedulePage.getAllShiftsOfOneTM("open").size()==unassignedShiftsCount, false);
             //Check there is no Unassigned shifts display
             unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
             SimpleUtils.assertOnFail("Unassigned shifts should display! ",
@@ -681,8 +682,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             schedulePage.clickOnFilterBtn();
-            Thread.sleep(5000);
             schedulePage.convertAllUnAssignedShiftToOpenShift();
+            Thread.sleep(10000);
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.saveSchedule();
@@ -749,7 +750,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
     }
 
 
-    private void changeConvertToOpenShiftsSettings(String option) throws Exception {
+    private void changeConvertToOpenShiftsSettings(String option, String location) throws Exception {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -763,12 +764,20 @@ public class ScheduleCopyImprovementTest extends TestBase {
             controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption(option);
 
         } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-            OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
-            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
@@ -778,7 +787,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
         }
     }
 
-    private void disableCopyRestriction() throws Exception {
+    private void disableCopyRestriction(String location) throws Exception {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             controlsPage.gotoControlsPage();
@@ -789,11 +798,21 @@ public class ScheduleCopyImprovementTest extends TestBase {
             controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
 
         } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-            OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
-            configurationPage.goToTemplateDetailsPage("Scheduling Policies");
+            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.setScheduleCopyRestrictions("no");
             configurationPage.publishNowTheTemplate();
@@ -957,7 +976,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "No, keep as unassigned";
-            changeConvertToOpenShiftsSettings(option);
+            changeConvertToOpenShiftsSettings(option, location);
 
             //Go to schedule page and create new schedule
             Thread.sleep(2000);
@@ -1076,7 +1095,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "No, keep as unassigned";
-            changeConvertToOpenShiftsSettings(option);
+            changeConvertToOpenShiftsSettings(option, location);
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -1352,7 +1371,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "No, keep as unassigned";
-            changeConvertToOpenShiftsSettings(option);
+            changeConvertToOpenShiftsSettings(option, location);
             HashMap<String, Object[][]> teamMembers = null;
             if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
                 teamMembers = kendraScott2TeamMembers;

@@ -15541,6 +15541,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (isElementEnabled(editShiftTimePopUp, 5)) {
                         moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
                         moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
+                        waitForSeconds(2);
                         click(confirmBtnOnDragAndDropConfirmPage);
                     } else {
                         SimpleUtils.fail("Edit Shift Time PopUp window load failed", false);
