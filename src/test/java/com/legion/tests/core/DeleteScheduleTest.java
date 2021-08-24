@@ -59,8 +59,6 @@ public class DeleteScheduleTest extends TestBase {
 
             String deleteForWeekText = schedulePage.getDeleteScheduleForWhichWeekText();
             String unPublishedMessage = "This action can’t be undone.";
-            // Verify ungenerate button is removed
-            schedulePage.verifyUngenerateButtonIsRemoved();
             // Verify the visibility of Delete button
             SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", schedulePage.isDeleteScheduleButtonLoaded(), false);
             // Verify the functionality of Delete button
