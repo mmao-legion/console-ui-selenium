@@ -372,9 +372,23 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate TM and SM can see the dotted lines to check the availability changes for This Week Only")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-        public void verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        public void verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            // Set availability policy
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            controlsNewUIPage.clickOnGlobalLocationButton();
+            String isApprovalRequired = "Required for all changes";
+            controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
             //Login as TM
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -396,7 +410,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
             profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
             loginPage.logOut();
 
             //Login as SM and approve all the pending request of the TM
