@@ -468,8 +468,8 @@ public class DashboardTestKendraScott2 extends TestBase {
 		if (userRole.contains("TeamLead") || userRole.contains("TeamMember")) {
 			schedulePage.verifyTMSchedulePanelDisplay();
 		} else {
-			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-			SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", scheduleOverviewPage.loadScheduleOverview(), false);
+			SimpleUtils.assertOnFail("Schedule page not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
 		}
 		dashboardPage.verifyHeaderNavigationMessage("Schedule");
 

@@ -3552,7 +3552,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		setTimeOffStartTime(timeOffStartDate);
 		setTimeOffEndTime(timeOffEndDate);
 		clickOnSaveTimeOffRequestBtn();
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		if(timeOffRequestRows.size() > timeOffRequestCount)
 			SimpleUtils.pass("Profile Page: New Time Off Save Successfully.");
 		else
