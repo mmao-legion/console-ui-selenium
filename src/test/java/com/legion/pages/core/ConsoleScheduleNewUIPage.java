@@ -569,10 +569,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "img[ng-if=\"hasViolateCompliance(line, scheduleWeekDay)\"]")
     private List<WebElement> complianceReviewDangerImgs;
 
-    @FindBy(css = ".schedule-action-buttons lg-dropdown-base")
+    @FindBy(css = "lg-dropdown-menu[actions=\"moreActions\"]")
     private WebElement scheduleAdminDropDownBtn;
 
-    @FindBy(css = "div[ng-repeat=\"action in supportedAdminActions.actions\"]")
+    @FindBy(css = "div[ng-repeat=\"action in actions\"]")
     private List<WebElement> scheduleAdminDropDownOptions;
 
     @FindBy(css = "button[ng-click=\"yesClicked()\"]")
@@ -11821,8 +11821,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     shiftStartTime = shiftStartTime.replace(":", ".");
                 if (shiftEndTime.contains(":"))
                     shiftEndTime = shiftEndTime.replace(":", ".");
-                shiftStartTime = shiftStartTime.replaceAll("[a-zA-Z]", "");
-                shiftEndTime = shiftEndTime.replaceAll("[a-zA-Z]", "");
+                if (shiftStartTime.contains("am") && shiftStartTime.startsWith("12"))
+                    shiftStartTime = shiftStartTime.replace("12", "0").replaceAll("[a-zA-Z]", "");
+                if (shiftStartTime.contains("am") && !shiftStartTime.startsWith("12"))
+                    shiftStartTime = shiftStartTime.replaceAll("[a-zA-Z]", "");
+                if (shiftStartTime.contains("pm") && shiftStartTime.startsWith("12"))
+                    shiftStartTime = shiftStartTime.replaceAll("[a-zA-Z]", "");
+                if (shiftStartTime.contains("pm") && !shiftStartTime.startsWith("12"))
+                    shiftStartTime = String.valueOf(Double.valueOf(shiftEndTime.replaceAll("[a-zA-Z]", "")) + 12);
+                if (shiftEndTime.contains("am"))
+                    shiftEndTime = shiftEndTime.replaceAll("[a-zA-Z]", "");
+                if (shiftEndTime.contains("pm") && !shiftEndTime.startsWith("12"))
+                    shiftEndTime = String.valueOf(Double.valueOf(shiftEndTime.replaceAll("[a-zA-Z]", "")) + 12);
                 if (shiftStartTimeDouble > Double.valueOf(shiftStartTime))
                     shiftStartTimeDouble = Double.valueOf(shiftStartTime);
                 if (shiftEndTimeDouble < Double.valueOf(shiftEndTime))
@@ -11841,14 +11851,26 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String operationEndTimeInScheduleTable = null;
         if (areListElementVisible(scheduleShiftTimeOnHeader, 30)) {
             if (scheduleShiftTimeOnHeader.size() >= 2) {
-                if (scheduleShiftTimeOnHeader.get(0).getText().contains("AM"))
+                if (scheduleShiftTimeOnHeader.get(0).getText().contains("AM")) {
                     operationStartTimeInScheduleTable = scheduleShiftTimeOnHeader.get(0).getText().replaceAll("[^0-9]", "");
-                else
+                    if (operationStartTimeInScheduleTable.equals("12"))
+                        operationStartTimeInScheduleTable = "0";
+                } else if (scheduleShiftTimeOnHeader.get(0).getText().contains("PM")) {
+                    operationStartTimeInScheduleTable = scheduleShiftTimeOnHeader.get(0).getText().replaceAll("[^0-9]", "");
+                    if (operationStartTimeInScheduleTable.equals("24"))
+                        operationStartTimeInScheduleTable = "12";
+                } else
                     operationStartTimeInScheduleTable = scheduleShiftTimeOnHeader.get(1).getText().replaceAll("[^0-9]", "");
-                if (scheduleShiftTimeOnHeader.get(scheduleShiftTimeOnHeader.size() - 1).getText().contains("PM"))
+                if (scheduleShiftTimeOnHeader.get(scheduleShiftTimeOnHeader.size() - 1).getText().contains("AM")) {
                     operationEndTimeInScheduleTable = scheduleShiftTimeOnHeader.get(scheduleShiftTimeOnHeader.size() - 1).getText().replaceAll("[^0-9]", "");
-                else
-                    operationEndTimeInScheduleTable = scheduleShiftTimeOnHeader.get(scheduleShiftTimeOnHeader.size() - 2).getText().replaceAll("[^0-9]", "");
+                    if (operationEndTimeInScheduleTable.equals("12"))
+                        operationEndTimeInScheduleTable = "0";
+                } else if (scheduleShiftTimeOnHeader.get(scheduleShiftTimeOnHeader.size() - 1).getText().contains("PM")) {
+                    operationEndTimeInScheduleTable = String.valueOf(Integer.valueOf(scheduleShiftTimeOnHeader.get(scheduleShiftTimeOnHeader.size() - 1).getText().replaceAll("[^0-9]", "")) + 12);
+                    if (operationEndTimeInScheduleTable.equals("24"))
+                        operationEndTimeInScheduleTable = "12";
+                } else
+                    operationEndTimeInScheduleTable = String.valueOf(Integer.valueOf(scheduleShiftTimeOnHeader.get(scheduleShiftTimeOnHeader.size() - 2).getText().replaceAll("[^0-9]", "")) + 12);
             } else SimpleUtils.fail("My Schedule Page: The operation hours shows wrong", true);
         } else if (isElementLoaded(myScheduleNoSchedule, 20))
             SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
