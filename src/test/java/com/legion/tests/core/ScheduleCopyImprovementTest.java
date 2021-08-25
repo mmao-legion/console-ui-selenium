@@ -546,9 +546,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.deleteAllOOOHShiftInWeekView();
             schedulePage.saveSchedule();
 
-            //Check all unassigned shifts convert to open
-            SimpleUtils.assertOnFail("The open shifts should not display in this schedule! ",
-                    schedulePage.getAllShiftsOfOneTM("open").size()==unassignedShiftsCount, false);
             //Check there is no Unassigned shifts display
             unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
             SimpleUtils.assertOnFail("Unassigned shifts should display! ",
