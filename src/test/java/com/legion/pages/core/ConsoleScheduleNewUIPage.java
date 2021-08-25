@@ -4632,16 +4632,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     //added by Haya
     @FindBy (css = "button.dropdown-toggle")
     private WebElement dropdownToggle;
-    @FindBy (css = "div[ng-repeat*=\"action in supportedAdminActions.actions\"]")
-    private WebElement dropdownMenuFormDropdownToggle;
+    @FindBy (css = ".lg-dropdown-menu__option")
+    private List<WebElement> dropdownMenuFormDropdownToggle;
     @Override
     public void goToToggleSummaryView() throws Exception {
         waitForSeconds(2);
         if (isElementLoaded(dropdownToggle,10)){
             click(dropdownToggle);
-            if (isElementLoaded(dropdownMenuFormDropdownToggle,10)){
+            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==3 ){
                 waitForSeconds(3);
-                click(dropdownMenuFormDropdownToggle);
+                click(dropdownMenuFormDropdownToggle.get(2));
                 SimpleUtils.pass("Toggle Summary View has been clicked!");
             } else {
                 SimpleUtils.fail("After clicking dropdown toggle button, no menu drop down", false);
@@ -4653,8 +4653,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void clickToggleSummaryViewButton() throws Exception {
-        if (isElementLoaded(dropdownMenuFormDropdownToggle,10)){
-            click(dropdownMenuFormDropdownToggle);
+        if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==3 ){
+            click(dropdownMenuFormDropdownToggle.get(2));
             SimpleUtils.pass("Toggle Summary View has been clicked!");
         } else {
             if (isElementLoaded(dropdownToggle,10)){
@@ -6567,7 +6567,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("TM detail name fail to load!", false);
         } else
             SimpleUtils.fail("Profile page fail to load!", false);
-        click(closeViewProfileContainer);
+        clickTheElement(closeViewProfileContainer);
         return tmDetailName;
     }
 

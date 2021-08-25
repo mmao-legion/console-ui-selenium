@@ -281,8 +281,8 @@
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
                <!--SCH-4171, SCH-3620     <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
                     SCH-4171, SCH-3620  <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
-                    SCH-4171, SCH-3620  <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />   -->
-                     <include name="verifyTMCanBeOfferedAsTeamMember" />
+                    SCH-4171, SCH-3620  <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
+                SCH-4171, SCH-3620     <include name="verifyTMCanBeOfferedAsTeamMember" />   -->
                       <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
