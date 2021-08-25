@@ -253,7 +253,7 @@ public class DeleteScheduleTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            // Verify Store Manager cannot see the Delete button when schedule is not pulished
+            // Verify Store Manager cannot see the Delete button when schedule is not published
             SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is published!", !schedulePage.isDeleteScheduleButtonLoaded(), false);
             loginPage.logOut();
 

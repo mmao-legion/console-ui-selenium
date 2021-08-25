@@ -230,20 +230,6 @@
         </classes>
     </test>
 
-    <test name="Delete Schedule Test">
-        <classes>
-            <class name="com.legion.tests.core.DeleteScheduleTest">
-                <methods>
-                    <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
-                    <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
-                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager" />
-                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />
-                    <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
     <test name="Schedule Copy Improvement Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
@@ -312,6 +298,20 @@
 <!--                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012 -->
 <!--                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012   -->
 <!--                     <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012  -->
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Delete Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.DeleteScheduleTest">
+                <methods>
+                    <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
+                    <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
+                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager" />
+                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />
+                    <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
