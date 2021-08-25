@@ -412,6 +412,40 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         }
     }
 
+
+	@FindBy(xpath = "//span[contains(text(),'Work Preferences')]")
+	WebElement workPreferTab;
+
+	@Override
+	public void verifyGoToProfileBTNOnActivity(String userName) throws Exception{
+		String expectedMessage = userName+" requested an availability change.";
+		if (areListElementVisible(activityCards, 15)) {
+		String actualMessage = activityCards.get(0).findElement(By.className("notification-content-message")).getText();
+		    if (actualMessage != null && actualMessage.equals(expectedMessage)) {
+				SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
+				waitForSeconds(3);
+//				    if(areListElementVisible(goToProfileBtn,15)){
+				WebElement gotpProfileLink=activityCards.get(0).findElement(By.className("pushout-button"));
+				if(isElementLoaded(gotpProfileLink)){
+						SimpleUtils.pass("Go to profile link displayed successfully!");
+						clickTheElement(gotpProfileLink);
+						waitForSeconds(4);
+						if(isElementLoaded(workPreferTab,5))
+							SimpleUtils.pass("Go to profile landing page loaded successfully!");
+						else
+							SimpleUtils.fail("The go to profile landing page not loaded", false);
+				}
+				else
+					SimpleUtils.fail("The go to profile link in Activity failed to Load!", false);
+
+				}
+		    else
+			SimpleUtils.fail("Profile Update message failed to Load!", false);
+			}
+		else
+			SimpleUtils.fail("Profile Update Activity failed to Load!", false);
+		}
+
     /*
      * Added by Haya
      * Verify the notification message and detail for time off request

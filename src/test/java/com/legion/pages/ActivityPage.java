@@ -27,6 +27,7 @@ public interface ActivityPage{
     public boolean isActivityContainerPoppedUp() throws Exception;
     public boolean isApproveRejectBtnsLoaded(int index) throws Exception;
     public void verifyNewWorkPreferencesCardShowsOnActivity(String userName) throws Exception;
+    public void verifyGoToProfileBTNOnActivity(String userName) throws Exception;
     public void verifyNewBusinessProfileCardShowsOnActivity(String userName, boolean isNewLabelShows) throws Exception;
     public void verifyTheNotificationForReqestTimeOff(String requestUserName, String startTime, String endTime,String timeOffAction) throws Exception;
     public void approveOrRejectTTimeOffRequestOnActivity (String requestUserName, String respondUserName, String action) throws Exception;
