@@ -512,6 +512,9 @@ public class InboxTest extends TestBase {
             inboxPage.clickOnInboxConsoleMenuItem();
             inboxPage.createGFEAnnouncement();
             inboxPage.sendToTM(nickName1);
+            inboxPage.clickOnInboxConsoleMenuItem();
+            inboxPage.createGFEAnnouncement();
+            inboxPage.sendToTM(nickName1);
             HashMap<String, String> contentOfWeekSummary_TM1 = inboxPage.getTheContentOfWeekSummaryInGFE();
             inboxPage.clickOnInboxConsoleMenuItem();
             inboxPage.createGFEAnnouncement();
