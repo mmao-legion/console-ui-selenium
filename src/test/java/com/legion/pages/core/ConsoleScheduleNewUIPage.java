@@ -14733,6 +14733,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (location.equalsIgnoreCase(element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText())){
                     click(element);
                     SimpleUtils.pass(location + " is clicked!");
+                    break;
                 }
             }
         } else {

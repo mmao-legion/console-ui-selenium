@@ -14,6 +14,7 @@ import org.openqa.selenium.By;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -2058,6 +2059,141 @@ public class UpperfieldTest extends TestBase {
                     SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime (Hrs)")-topViolationInDoubletimeCol)==0, false);
                 }
             }
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify analytics table on Timesheet in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticTableInTimesheetBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+
+            //Validate fields name in analytic table.
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            String field1 = "Region";
+            String field2 = "Unplanned Clocks";
+            String field3 = "Total Timesheets";
+            String field4 = "Timesheet Approval";
+            String field5 = "Within 24 Hrs";
+            String field6 = "Within 48 Hrs";
+            String field7 = "Beyond 48 Hrs";
+            String field8 = "Avg. Approval Time";
+            SimpleUtils.assertOnFail(field1 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field1) > 0, false);
+            SimpleUtils.assertOnFail(field2 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field2) > 0, false);
+            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field3) > 0, false);
+            SimpleUtils.assertOnFail(field4 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field4) > 0, false);
+            SimpleUtils.assertOnFail(field5 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field5) > 0, false);
+            SimpleUtils.assertOnFail(field6 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field6) > 0, false);
+            SimpleUtils.assertOnFail(field7 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field7) > 0, false);
+            SimpleUtils.assertOnFail(field8 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field8) > 0, false);
+
+            //Validate the field columns can be ordered.
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(2);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+            schedulePage.verifySortByColForLocationsInDMView(5);
+            schedulePage.verifySortByColForLocationsInDMView(6);
+            schedulePage.verifySortByColForLocationsInDMView(7);
+            schedulePage.verifySortByColForLocationsInDMView(8);
+
+            //Validate the data of analytics table for past week.
+            schedulePage.navigateToPreviousWeek();
+            schedulePage.clickSpecificLocationInDMViewAnalyticTable(regionName);
+            SimpleUtils.assertOnFail("This is not the Timesheet Region view page for past week!",timeSheetPage.isTimeSheetPageLoaded(), false);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            //Validate the data of analytics table for current week.
+            schedulePage.navigateToNextWeek();
+            schedulePage.clickSpecificLocationInDMViewAnalyticTable(regionName);
+            SimpleUtils.assertOnFail("This is not the Timesheet Region view page for current!",timeSheetPage.isTimeSheetPageLoaded(), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify analytics table on Timesheet in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticTableInTimesheetRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+
+            //Validate fields name in analytic table.
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            String field1 = "District";
+            String field2 = "Unplanned Clocks";
+            String field3 = "Total Timesheets";
+            String field4 = "Timesheet Approval";
+            String field5 = "Within 24 Hrs";
+            String field6 = "Within 48 Hrs";
+            String field7 = "Beyond 48 Hrs";
+            String field8 = "Avg. Approval Time";
+            SimpleUtils.assertOnFail(field1 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field1) > 0, false);
+            SimpleUtils.assertOnFail(field2 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field2) > 0, false);
+            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field3) > 0, false);
+            SimpleUtils.assertOnFail(field4 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field4) > 0, false);
+            SimpleUtils.assertOnFail(field5 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field5) > 0, false);
+            SimpleUtils.assertOnFail(field6 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field6) > 0, false);
+            SimpleUtils.assertOnFail(field7 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field7) > 0, false);
+            SimpleUtils.assertOnFail(field8 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field8) > 0, false);
+
+            //Validate the field columns can be ordered.
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(2);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+            schedulePage.verifySortByColForLocationsInDMView(5);
+            schedulePage.verifySortByColForLocationsInDMView(6);
+            schedulePage.verifySortByColForLocationsInDMView(7);
+            schedulePage.verifySortByColForLocationsInDMView(8);
+
+            //Validate the data of analytics table for past week.
+            schedulePage.navigateToPreviousWeek();
+            schedulePage.clickSpecificLocationInDMViewAnalyticTable(districtName);
+            SimpleUtils.assertOnFail("This is not the Timesheet District view page for past week!",timeSheetPage.isTimeSheetPageLoaded(), false);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            //Validate the data of analytics table for current week.
+            schedulePage.navigateToNextWeek();
+            schedulePage.clickSpecificLocationInDMViewAnalyticTable(districtName);
+            SimpleUtils.assertOnFail("This is not the Timesheet District view page for current!",timeSheetPage.isTimeSheetPageLoaded(), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
