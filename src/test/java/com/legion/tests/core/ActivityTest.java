@@ -821,57 +821,6 @@ public class ActivityTest extends TestBase {
 
 
     @Automated(automated ="Automated")
-    @Owner(owner = "Lizzy")
-    @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the go to profile link when TM updates business profile")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyTheGoToProfileLinkWhenTMUpdatesBusinessProfileAsTeamMember(String browser, String username, String password, String location) throws Exception {
-        try {
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String tmName = profileNewUIPage.getNickNameFromProfile();
-            // Team Member go to profile page
-            String myWorkPreferencesLabel = "My Profile";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-            SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
-            // Team Member go to work Preference page and updateAvailability
-            String workPreferencesLabel = "My Work Preferences";
-            profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            //Update Preferred And Busy Hours
-            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-                profileNewUIPage.clickNextWeek();
-            }
-            String weekInfo = profileNewUIPage.getAvailabilityWeek();
-            int sliderIndex = 1;
-            double hours = -0.5;//move 1 metric 0.5h left
-            String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
-            String repeatChanges = "repeat forward";
-            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                    hours, repeatChanges);
-            // Team Member logout
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            loginPage.logOut();
-            // Login as Store Manager to check the activity
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-            dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            // Verify Activity Icon is loaded
-            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-            activityPage.verifyActivityBellIconLoaded();
-            activityPage.verifyClickOnActivityIcon();
-            activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(), indexOfActivityType.ProfileUpdate.name());
-            //verify the go to profile landing pae
-            activityPage.verifyGoToProfileBTNOnActivity(tmName);
-        } catch (Exception e){
-            SimpleUtils.fail(e.toString(), false);
-        }
-    }
-
-
-    @Automated(automated ="Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Validate the activity of publish or update schedule")
@@ -1774,7 +1723,7 @@ public class ActivityTest extends TestBase {
     }
 
     @Automated(automated ="Automated")
-    @Owner(owner = "Haya")
+    @Owner(owner = "Haya&Lizzy")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM requests availability for a specific week")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
@@ -1848,6 +1797,12 @@ public class ActivityTest extends TestBase {
             String respondUserName = profileNewUIPage.getNickNameFromProfile();
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
             activityPage.verifyClickOnActivityIcon();
+            //check and click the go to profile link
+            activityPage.goToProfileLinkOnActivity();
+            //check the week data
+            profileNewUIPage.verifyAvailabilityWeek(weekInfo);
+            //click the activity bell to view the profile update again
+            activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
             String requestAwailabilityChangeLabel = "requested";
             activityPage.verifyNotificationForUpdateAvailability(requestUserName,isApprovalRequired,requestAwailabilityChangeLabel,weekInfo,repeatChanges);
@@ -1858,7 +1813,7 @@ public class ActivityTest extends TestBase {
     }
 
     @Automated(automated ="Automated")
-    @Owner(owner = "Haya")
+    @Owner(owner = "Haya&Lizzy")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM requests availability from a week onwards")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
@@ -1920,10 +1875,15 @@ public class ActivityTest extends TestBase {
             profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                     hours, repeatChanges);
             loginPage.logOut();
-
             // Login as Store Manager again to check message
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+            activityPage.verifyClickOnActivityIcon();
+            //check and click the go to profile link
+            activityPage.goToProfileLinkOnActivity();
+            //check the week data
+            profileNewUIPage.verifyAvailabilityWeek(weekInfo);
+            //click the activity bell to view the profile update again
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
             String requestAwailabilityChangeLabel = "requested";

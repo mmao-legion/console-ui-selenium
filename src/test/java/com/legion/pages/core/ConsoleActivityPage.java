@@ -120,6 +120,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	public void verifyClickOnActivityIcon() throws Exception {
 		if (isElementLoaded(activityBell, 10)) {
 			clickTheElement(activityBell);
+			waitForSeconds(2);
 			if (areListElementVisible(activityFilters, 10)) {
 				SimpleUtils.pass("Click on Activity Bell icon Successfully!");
 			}else {
@@ -412,40 +413,6 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         }
     }
 
-
-	@FindBy(xpath = "//span[contains(text(),'Work Preferences')]")
-	WebElement workPreferTab;
-
-	@Override
-	public void verifyGoToProfileBTNOnActivity(String userName) throws Exception{
-		String expectedMessage = userName+" requested an availability change.";
-		if (areListElementVisible(activityCards, 15)) {
-		String actualMessage = activityCards.get(0).findElement(By.className("notification-content-message")).getText();
-		    if (actualMessage != null && actualMessage.equals(expectedMessage)) {
-				SimpleUtils.pass("Find Card: " + actualMessage + " Successfully!");
-				waitForSeconds(3);
-//				    if(areListElementVisible(goToProfileBtn,15)){
-				WebElement gotpProfileLink=activityCards.get(0).findElement(By.className("pushout-button"));
-				if(isElementLoaded(gotpProfileLink)){
-						SimpleUtils.pass("Go to profile link displayed successfully!");
-						clickTheElement(gotpProfileLink);
-						waitForSeconds(4);
-						if(isElementLoaded(workPreferTab,5))
-							SimpleUtils.pass("Go to profile landing page loaded successfully!");
-						else
-							SimpleUtils.fail("The go to profile landing page not loaded", false);
-				}
-				else
-					SimpleUtils.fail("The go to profile link in Activity failed to Load!", false);
-
-				}
-		    else
-			SimpleUtils.fail("Profile Update message failed to Load!", false);
-			}
-		else
-			SimpleUtils.fail("Profile Update Activity failed to Load!", false);
-		}
-
     /*
      * Added by Haya
      * Verify the notification message and detail for time off request
@@ -496,6 +463,30 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 			SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + actualMessage, false);
 		}
     }
+
+	@FindBy(xpath = "//span[contains(text(),'Work Preferences')]")
+	WebElement workPreferTab;
+    @Override
+	public void goToProfileLinkOnActivity() throws Exception {
+		WebElement timeOffCard = activityCards.get(0);
+		String approveOrRejectMessage = "";
+		if (timeOffCard != null) {
+			//check the go to profile link
+			if (isElementLoaded(timeOffCard.findElement(By.cssSelector(".pushout-button")))) {
+				SimpleUtils.pass("The go to pofil link loaded Successfully!");
+				clickTheElement(timeOffCard.findElement(By.cssSelector(".pushout-button")));
+				if(isElementLoaded(workPreferTab))
+					SimpleUtils.pass("The TM's prifile page loaded Successfully!");
+				else
+					SimpleUtils.pass("The TM's prifile page failed to load!");
+			} else {
+				SimpleUtils.fail("The go to profile link failed to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Failed to find a new activity!", false);
+		}
+	}
+
 
     @Override
     public void approveOrRejectTTimeOffRequestOnActivity(String requestUserName, String respondUserName, String action) throws Exception {

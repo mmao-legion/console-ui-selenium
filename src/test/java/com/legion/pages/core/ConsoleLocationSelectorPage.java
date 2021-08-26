@@ -1253,14 +1253,15 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         boolean isUpperFieldMatched = false;
         if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0) {
             upperFieldItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
-        }
-        if (upperFieldItems.size() > 0) {
-            for (WebElement upperFieldItem : upperFieldItems) {
-                if (upperFieldItem.getText().contains(upperFieldName)) {
-                    isUpperFieldMatched = true;
-                    clickTheElement(upperFieldItem);
-                    SimpleUtils.pass("Upper Field changed successfully to '" + upperFieldName + "'");
-                    break;
+            if (upperFieldItems.size() > 0) {
+                for (WebElement upperFieldItem : upperFieldItems) {
+                    if (upperFieldItem.getText().contains(upperFieldName)) {
+                        isUpperFieldMatched = true;
+                        clickTheElement(upperFieldItem);
+                        waitForSeconds(1);
+                        SimpleUtils.pass("Upper Field changed successfully to '" + upperFieldName + "'");
+                        break;
+                    }
                 }
             }
         }

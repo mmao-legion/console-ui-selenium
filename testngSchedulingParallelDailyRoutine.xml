@@ -29,7 +29,6 @@
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
-                    <include name="verifyTheGoToProfileLinkWhenTMUpdatesBusinessProfileAsTeamMember" />
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                     <!--                   <include name="verifyActivityOfClaimOpenShiftAsTeamLead" Blocked by SCH-4171/>-->

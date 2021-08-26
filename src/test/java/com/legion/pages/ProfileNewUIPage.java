@@ -11,6 +11,7 @@ public interface ProfileNewUIPage {
 	public boolean isProfilePageLoaded() throws Exception;
 
 	public void selectProfilePageSubSectionByLabel(String profilePageSubSectionLabel) throws Exception;
+	public void verifyAvailabilityWeek(String weekinfo) throws Exception;
 
 	public void clickOnCreateTimeOffBtn() throws Exception;
 
