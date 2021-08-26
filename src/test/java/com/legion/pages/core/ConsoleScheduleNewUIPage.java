@@ -15324,6 +15324,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnClearFilterOnFilterDropdownPopup() throws Exception {
         if(isElementLoaded(clearFilterOnFilterDropdownPopup, 5)){
             if(clearFilterOnFilterDropdownPopup.getAttribute("class").contains("active")){
+                scrollToElement(clearFilterOnFilterDropdownPopup);
                 click(clearFilterOnFilterDropdownPopup);
                 SimpleUtils.pass("Click Clear Filter button on Filter dropdown popup successfully! ");
             } else
