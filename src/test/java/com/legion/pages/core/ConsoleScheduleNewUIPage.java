@@ -829,7 +829,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public void clickOnScheduleConsoleMenuItem() {
-        if (consoleNavigationMenuItems.size() != 0) {
+        if (areListElementVisible(consoleNavigationMenuItems, 10) && consoleNavigationMenuItems.size() != 0) {
             WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
             clickTheElement(consoleScheduleMenuElement);
             SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
@@ -14195,7 +14195,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
-    @FindBy(css = "div[ng-repeat=\"schedule in previousWeeksSchedules\"]")
+    @FindBy(css = "div[ng-repeat=\"schedule in previousWeeksSchedules\"] div")
     private List<WebElement> previousWeeks;
     @FindBy(css = ".schedule-disabled-tooltip")
     private WebElement scheduleDisabledTooltip;
@@ -14206,11 +14206,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (WebElement element: previousWeeks){
                 String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
                 if (weekInfo.equalsIgnoreCase(weekDayInfo)){
-                    if (shouldBeSelected == !element.findElement(By.cssSelector(".generate-modal-week")).getAttribute("class").contains("disabled")){
-                        SimpleUtils.pass("Should the week:"+weekInfo+" be selected is correct!");
-                    } else {
-                        SimpleUtils.fail("Should the week:"+weekInfo+" be selected is not the expected!", false);
-                    }
+                    if (!element.getAttribute("class").contains("disabled")) {
+                        if (shouldBeSelected == !element.findElement(By.cssSelector(".generate-modal-week")).getAttribute("class").contains("disabled")){
+                            SimpleUtils.pass("Should the week:"+weekInfo+" be selected is correct!");
+                        } else {
+                            SimpleUtils.fail("Should the week:"+weekInfo+" be selected is not the expected!", false);
+                        }
+                    } else
+                        SimpleUtils.fail("This week is disbled and cannot be selected! ", false);
                 }
             }
         } else {

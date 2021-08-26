@@ -3158,7 +3158,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	public void verifyContentsInActionsSection() throws Exception {
 		if (isElementLoaded(inviteToLegionButton, 5)){
-			if (isElementLoaded(inviteMessageInActionsSection, 5)
+			if (isElementLoaded(inviteMessageInActionsSection, 10)
 					&& (inviteMessageInActionsSection.getText().contains("Not invited yet")|| inviteMessageInActionsSection.getText().contains("Invited to onboard"))){
 				SimpleUtils.pass("User Profile page: The invite message in Actions section display correctly! ");
 			} else{
@@ -3685,7 +3685,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		setTimeOffStartTime(timeOffStartDate);
 		setTimeOffEndTime(timeOffEndDate);
 		clickOnSaveTimeOffRequestBtn();
-		Thread.sleep(1000);
+		Thread.sleep(3000);
 		if(timeOffRequestRows.size() > timeOffRequestCount)
 			SimpleUtils.pass("Profile Page: New Time Off Save Successfully.");
 		else

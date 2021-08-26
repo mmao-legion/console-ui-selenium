@@ -254,7 +254,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     private void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(boolean isCopySchedule, String option, boolean ifVerifyOOOHShifts) throws Exception {
 
-        //
+
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();

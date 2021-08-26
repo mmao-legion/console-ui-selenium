@@ -2364,7 +2364,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public boolean isManualOnBoardButtonLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(manualOnBoardButton)) {
+		if (isElementLoaded(manualOnBoardButton, 10)) {
 			isLoaded = true;
 			SimpleUtils.pass("Manual Onboard Button Loaded Successfully!");
 		}else{
@@ -4539,7 +4539,7 @@ private List<WebElement> locationColumn;
 
 	public boolean checkIfTMExists(String tmName) throws Exception {
 		boolean isTMExists = false;
-		if(isElementLoaded(teamMemberSearchBox, 10)) {
+		if(isElementLoaded(teamMemberSearchBox, 10) && areListElementVisible(teamMembers, 20)) {
 			teamMemberSearchBox.clear();
 			teamMemberSearchBox.sendKeys(tmName);
 			waitForSeconds(4);
@@ -4576,7 +4576,8 @@ private List<WebElement> locationColumn;
 					}
 				}
 			}
-		}
+		} else
+			SimpleUtils.fail("The search TM box or team members fail to load! ", false);
 		return isTMExists;
 	}
 

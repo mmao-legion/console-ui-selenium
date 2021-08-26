@@ -758,7 +758,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public boolean isControlsScheduleCollaborationLoaded() throws Exception {
-		if (isElementLoaded(breadcrumbsScheduleCollaboration)) {
+		if (isElementLoaded(breadcrumbsScheduleCollaboration, 10)) {
 			SimpleUtils.pass("Controls Page: Schedule Collaboration Section Loaded Successfully.");
 			return true;
 		}
