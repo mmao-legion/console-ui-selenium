@@ -218,7 +218,7 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Change the location to the original location
-            locationSelectorPage.changeLocation(location);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Schedule page, Schedule tab

@@ -4966,7 +4966,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         if(isElementLoaded(deleteScheduleButton, 60)){
             click(deleteScheduleButton);
-            if(isElementLoaded(deleteSchedulePopup, 5)
+            if(isElementLoaded(deleteSchedulePopup, 15)
                     && isElementLoaded(deleteScheduleCheckBox, 5)
                     && isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5)){
                 click(deleteScheduleCheckBox);
