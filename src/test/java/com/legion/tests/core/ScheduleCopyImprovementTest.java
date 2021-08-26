@@ -474,7 +474,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     schedulePage.isRequiredActionSmartCardLoaded(), false);
             //Check the Unassigned shifts will display
             int unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
-            SimpleUtils.assertOnFail("Unassigned shifts should display! ",unassignedShiftsCount >= 4, false);
+            SimpleUtils.assertOnFail("Thers are 4 unassigned shifts should display! but actually there are "+unassignedShiftsCount+" display",
+                    unassignedShiftsCount >= 4, false);
             //Check the message on the Action required smart card
             HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
             SimpleUtils.assertOnFail("Unassigned shifts message display incorrectly! ",
