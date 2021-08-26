@@ -1,5 +1,6 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.oplabormodel.LaborModelPanelPage;
@@ -71,9 +72,8 @@ public class LaborModelTest extends TestBase {
             laborModelPage.addNewLaborModelTemplate(templateName);
             laborModelPage.deleteDraftLaborModelTemplate(templateName);
             laborModelPage.publishNewLaborModelTemplate(templateName,dynamicGroupName,dynamicGroupCriteria,dynamicGroupFormula);
-//            laborModelPage.clickOnLaborModelTab();
-//            laborModelPage.goToLaborModelTile();
-//            laborModelPage.archivePublishedOrDeleteDraftTemplate(templateName,action);
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.archivePublishedOrDeleteDraftTemplate(templateName,action);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
