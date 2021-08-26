@@ -565,6 +565,8 @@
                         <include name="verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin" />
                         <include name="verifyTopViolationsCardInComplianceBUViewAsInternalAdmin" />
                         <include name="verifyTopViolationsCardInComplianceRegionViewAsInternalAdmin" />
+                        <include name="verifyAnalyticTableInTimesheetBUViewAsInternalAdmin" />
+                        <include name="verifyAnalyticTableInTimesheetRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>
