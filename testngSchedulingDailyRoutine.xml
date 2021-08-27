@@ -94,7 +94,7 @@
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
+<!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" As issue for SCH-5097 existed, this case is not stable,open after it was fixed/>-->
 <!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" Blocked by SCH-4720/>-->
                     <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
                     <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
