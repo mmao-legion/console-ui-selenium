@@ -40,7 +40,7 @@ public class LaborModelRepositoryPage extends BasePage {
     private WebElement disableModalTitle;
     @FindBy(css = "modal lg-button[label='Cancel']>button")
     private WebElement cancelButtonOfDisable;
-    @FindBy(css = "modal lg-button[label='Ok']>button")
+    @FindBy(css = "modal lg-button[label='OK']>button")
     private WebElement okButtonOfDisable;
 
     //add task

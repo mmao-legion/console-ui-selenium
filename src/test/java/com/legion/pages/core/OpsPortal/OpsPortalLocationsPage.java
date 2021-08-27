@@ -535,7 +535,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = " page-heading > div > h1")
+	@FindBy(css = "page-heading > div > div.title-breadcrumbs.limit")
 	private WebElement locationNameText;
 
 	@Override
@@ -3088,7 +3088,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3108,7 +3108,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3128,7 +3128,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3148,7 +3148,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3168,7 +3168,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3188,7 +3188,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3208,7 +3208,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3228,7 +3228,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
