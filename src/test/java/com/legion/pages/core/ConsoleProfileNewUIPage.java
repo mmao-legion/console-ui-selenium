@@ -267,6 +267,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Profile Page: Sub Section not loaded.", false);
 	}
 
+	public void verifyAvailabilityWeek(String desiredweek) throws Exception {
+		//scroll to the bottom of page to view the Availability table
+		scrollToBottom();
+		waitForSeconds(1);
+		//get the week in Availability
+        String currentWeek=String.valueOf(getMyAvailabilityData().get("activeWeekText"));
+        if(desiredweek.equalsIgnoreCase(currentWeek))
+			SimpleUtils.pass("The current week is the TM requested availability change week or the start of the week!");
+        else
+			SimpleUtils.fail("The go to profile for availability change week is not the set or the start of the week ", false);
+	}
+
 	@Override
 	public void clickOnCreateTimeOffBtn() throws Exception {
 		if(isElementLoaded(newTimeOffBtn, 10)) {

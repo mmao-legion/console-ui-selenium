@@ -120,6 +120,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	public void verifyClickOnActivityIcon() throws Exception {
 		if (isElementLoaded(activityBell, 10)) {
 			clickTheElement(activityBell);
+			waitForSeconds(2);
 			if (areListElementVisible(activityFilters, 10)) {
 				SimpleUtils.pass("Click on Activity Bell icon Successfully!");
 			}else {
@@ -462,6 +463,30 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 			SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + actualMessage, false);
 		}
     }
+
+	@FindBy(xpath = "//span[contains(text(),'Work Preferences')]")
+	WebElement workPreferTab;
+    @Override
+	public void goToProfileLinkOnActivity() throws Exception {
+		WebElement timeOffCard = activityCards.get(0);
+		String approveOrRejectMessage = "";
+		if (timeOffCard != null) {
+			//check the go to profile link
+			if (isElementLoaded(timeOffCard.findElement(By.cssSelector(".pushout-button")))) {
+				SimpleUtils.pass("The go to pofil link loaded Successfully!");
+				clickTheElement(timeOffCard.findElement(By.cssSelector(".pushout-button")));
+				if(isElementLoaded(workPreferTab))
+					SimpleUtils.pass("The TM's prifile page loaded Successfully!");
+				else
+					SimpleUtils.pass("The TM's prifile page failed to load!");
+			} else {
+				SimpleUtils.fail("The go to profile link failed to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Failed to find a new activity!", false);
+		}
+	}
+
 
     @Override
     public void approveOrRejectTTimeOffRequestOnActivity(String requestUserName, String respondUserName, String action) throws Exception {
