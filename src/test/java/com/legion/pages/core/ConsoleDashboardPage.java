@@ -949,10 +949,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return dashboardScheduleWeeks;
 	}
 
-	@FindBy(xpath = "//button[contains(text(),\"Refresh\")]")
+	@FindBy(css = "lg-button[label=\"Refresh\"]")
 	private WebElement refreshButton;
 
-	@FindBy(xpath = "//button[contains(text(),\"Refresh\")]/../div[1]/div")
+	@FindBy(css = "div.last-updated-countdown span")
 	private WebElement lastUpdatedIcon;
 
 

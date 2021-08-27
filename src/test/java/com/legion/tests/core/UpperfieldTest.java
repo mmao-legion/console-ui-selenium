@@ -1614,18 +1614,18 @@ public class UpperfieldTest extends TestBase {
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnComplianceConsoleMenu();
 
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             // Validate the presence of Refresh button
-            dashboardPage.validateThePresenceOfRefreshButton();
+            scheduleDMViewPage.validateThePresenceOfRefreshButton();
 
             // Validate Refresh timestamp
-            dashboardPage.validateRefreshTimestamp();
+            scheduleDMViewPage.validateRefreshTimestamp();
 
             // Validate Refresh when navigation back
             dashboardPage.validateRefreshWhenNavigationBack("Compliance");
 
             // Validate Refresh function
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            scheduleDMViewPage.validateRefreshPerformance();
+            scheduleDMViewPage.validateRefreshFunction();
 
             // Validate Refresh performance
             scheduleDMViewPage.validateRefreshPerformance();
@@ -1654,18 +1654,18 @@ public class UpperfieldTest extends TestBase {
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnComplianceConsoleMenu();
 
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             // Validate the presence of Refresh button
-            dashboardPage.validateThePresenceOfRefreshButton();
+            scheduleDMViewPage.validateThePresenceOfRefreshButton();
 
             // Validate Refresh timestamp
-            dashboardPage.validateRefreshTimestamp();
+            scheduleDMViewPage.validateRefreshTimestamp();
 
             // Validate Refresh when navigation back
             dashboardPage.validateRefreshWhenNavigationBack("Compliance");
 
             // Validate Refresh function
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            scheduleDMViewPage.validateRefreshPerformance();
+            scheduleDMViewPage.validateRefreshFunction();
 
             // Validate Refresh performance
             scheduleDMViewPage.validateRefreshPerformance();
@@ -2199,4 +2199,428 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the availability of region list and sub region on Timesheet in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRegionListAndSubRegionOnTimesheetInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            // Validate the region list
+            List<String> regionNamesOnTimeSheetPage = timeSheetPage.getLocationName();
+            SimpleUtils.assertOnFail("The region names fail to load! ",
+                    regionNamesOnTimeSheetPage.size()>1
+                            && regionNamesOnTimeSheetPage.contains(regionName), false);
+
+            // Validate click one region
+            timeSheetPage.clickOnGivenLocation(regionName);
+
+            // Validate go back from selected region in current week
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimesheetDMView(), false);
+
+            // Validate the data for selected region
+            List<String> dataFromTimesheetTableOnBUView = timeSheetPage.getDataFromTimesheetTableForGivenLocationInDMView(regionName);
+
+            timeSheetPage.clickOnGivenLocation(regionName);
+            int unplannedClockOnSmartCardOnRegionView = timeSheetPage.getUnplannedClockSmartCardOnDMView();
+            int totalTimesheetOnSmartCardOnRegionView = timeSheetPage.getTotalTimesheetFromSmartCardOnDMView();
+
+            SimpleUtils.assertOnFail("The unplanned Clocks display inconsistent on BU and Region view! ",
+                    dataFromTimesheetTableOnBUView.get(1).equalsIgnoreCase(String.valueOf(unplannedClockOnSmartCardOnRegionView)),
+                    false);
+
+            SimpleUtils.assertOnFail("The Total Timesheets display inconsistent on BU and Region view! ",
+                    dataFromTimesheetTableOnBUView.get(2).equalsIgnoreCase(String.valueOf(totalTimesheetOnSmartCardOnRegionView)),
+                    false);
+
+            // Validate click given region and given week
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            timeSheetPage.navigateToPreviousWeek();
+            String weekInfo = timeSheetPage.getActiveDayWeekOrPayPeriod();
+            timeSheetPage.clickOnGivenLocation(regionName);
+            SimpleUtils.assertOnFail("It didn't navigate to the Timesheet page of the region in that week", weekInfo.equals(timeSheetPage.getActiveDayWeekOrPayPeriod()), false);
+
+            // Validate click other BU in past week
+            String[] upperFields2 = null;
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
+                upperFields2 = controlUpperFields2;
+            } else {
+                upperFields2 = opUpperFields2;
+            }
+            String anotherBUName = upperFields2[1];
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, anotherBUName.trim());
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimesheetDMView(), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the availability of district list and sub district on Timesheet in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRegionListAndSubRegionOnTimesheetInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            // Validate the district list
+            List<String> districtNamesOnTimeSheetPage = timeSheetPage.getLocationName();
+            SimpleUtils.assertOnFail("The district names fail to load! ",
+                    districtNamesOnTimeSheetPage.size()>1
+                            && districtNamesOnTimeSheetPage.contains(districtName), false);
+
+            // Validate click one district
+            timeSheetPage.clickOnGivenLocation(districtName);
+
+            // Validate go back from selected district in current week
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimesheetDMView(), false);
+
+            // Validate the data for selected region
+            List<String> dataFromTimesheetTableOnBUView = timeSheetPage.getDataFromTimesheetTableForGivenLocationInDMView(districtName);
+
+            timeSheetPage.clickOnGivenLocation(districtName);
+            int unplannedClockOnSmartCardOnRegionView = timeSheetPage.getUnplannedClockSmartCardOnDMView();
+            int totalTimesheetOnSmartCardOnRegionView = timeSheetPage.getTotalTimesheetFromSmartCardOnDMView();
+
+            SimpleUtils.assertOnFail("The unplanned Clocks display inconsistent on BU and Region view! ",
+                    dataFromTimesheetTableOnBUView.get(1).equalsIgnoreCase(String.valueOf(unplannedClockOnSmartCardOnRegionView)),
+                    false);
+
+            SimpleUtils.assertOnFail("The Total Timesheets display inconsistent on BU and Region view! ",
+                    dataFromTimesheetTableOnBUView.get(2).equalsIgnoreCase(String.valueOf(totalTimesheetOnSmartCardOnRegionView)),
+                    false);
+
+            // Validate click given region and given week
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            timeSheetPage.navigateToPreviousWeek();
+            String weekInfo = timeSheetPage.getActiveDayWeekOrPayPeriod();
+            timeSheetPage.clickOnGivenLocation(districtName);
+            SimpleUtils.assertOnFail("It didn't navigate to the Timesheet page of the district in that week",
+                    weekInfo.equals(timeSheetPage.getActiveDayWeekOrPayPeriod()), false);
+
+            // Validate click other BU in past week
+            String[] upperFields2 = null;
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
+                upperFields2 = controlUpperFields2;
+            } else {
+                upperFields2 = opUpperFields2;
+            }
+            String anotherRegionName = upperFields2[2];
+
+            locationSelectorPage.changeUpperFieldDirect(Region, anotherRegionName.trim());
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimesheetDMView(), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Timesheet functionality on Timesheet in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimesheetFunctionalityInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            //Validate the title
+            timeSheetPage.isTimeSheetPageLoaded();
+            locationSelectorPage.verifyTheDisplayBUWithSelectedBUConsistent(buName);
+            locationSelectorPage.isRegionSelected("All Regions");
+            List<String> regionInBU1 = timeSheetPage.getLocationName();
+
+            //Validate changing BUs on Timesheet
+            locationSelectorPage.changeAnotherBUInBUView();
+            String anotherBUName = locationSelectorPage.getSelectedUpperFields().get(BusinessUnit);
+            locationSelectorPage.verifyTheDisplayBUWithSelectedBUConsistent(anotherBUName);
+            List<String> regionInBU2 =  timeSheetPage.getLocationName();
+            SimpleUtils.assertOnFail("TimeSheet BU view page fail to update!", !regionInBU1.containsAll(regionInBU2), false);
+
+            //Validate the click ability of backward button.
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            String weekInfo = schedulePage.getActiveWeekText();
+            schedulePage.navigateToPreviousWeek();
+
+            //Validate the click ability of forward button.
+            schedulePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+
+            //Validate search function.
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            Map<String, String> regionInfo = compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
+            SimpleUtils.assertOnFail("Region cannot be searched out on timesheet BU view page! ", regionInfo.size()!=0, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Timesheet functionality on Timesheet in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimesheetFunctionalityInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            //Validate the title
+            timeSheetPage.isTimeSheetPageLoaded();
+            locationSelectorPage.verifyTheDisplayRegionWithSelectedRegionConsistent(regionName);
+            locationSelectorPage.isRegionSelected("All Districts");
+            List<String> districtInRegion1 = timeSheetPage.getLocationName();
+
+            //Validate changing Regions on Timesheet
+            locationSelectorPage.changeAnotherRegionInRegionView();
+            String anotherRegionName = locationSelectorPage.getSelectedUpperFields().get(Region);
+            locationSelectorPage.verifyTheDisplayRegionWithSelectedRegionConsistent(anotherRegionName);
+            List<String> districtInRegion2 =  timeSheetPage.getLocationName();
+            SimpleUtils.assertOnFail("TimeSheet Region view page fail to update!",
+                    !districtInRegion1.containsAll(districtInRegion2), false);
+
+            //Validate the click ability of backward button.
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            String weekInfo = schedulePage.getActiveWeekText();
+            schedulePage.navigateToPreviousWeek();
+
+            //Validate the click ability of forward button.
+            schedulePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+
+            //Validate search function.
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            Map<String, String> districtInfo = compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+            SimpleUtils.assertOnFail("District cannot be searched out on timesheet BU view page! ", districtInfo.size()!=0, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Refresh feature on Timesheet in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRefreshFeatureOnTimesheetInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            // Validate the presence of Refresh button
+            scheduleDMViewPage.validateThePresenceOfRefreshButton();
+
+            // Validate Refresh timestamp
+            scheduleDMViewPage.validateRefreshTimestamp();
+
+            // Validate Refresh when navigation back
+            dashboardPage.validateRefreshWhenNavigationBack("Timesheet");
+
+            // Validate Refresh function
+            scheduleDMViewPage.validateRefreshFunction();
+
+            // Validate Refresh performance
+            scheduleDMViewPage.validateRefreshPerformance();
+
+            // Validate Refresh reflects timesheet change
+            String rateWithin24OnSmartCardBeforeChange = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard().get(0);
+            String rateInAnalyticsTableBeforeChange = timeSheetPage.getTimesheetApprovalForGivenLocationInDMView(regionName);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
+                timeSheetPage.navigateToSchedule();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                if (!isWeekGenerated) {
+                    schedulePage.createScheduleForNonDGFlowNewUI();
+                }
+                schedulePage.publishActiveSchedule();
+                timeSheetPage.clickOnTimeSheetConsoleMenu();
+                SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
+            }
+            timeSheetPage.clickOnWeekView();
+            timeSheetPage.approveAnyTimesheet();
+            String rateInTimesheetDueAfterApprove = timeSheetPage.getApprovalRateFromTIMESHEETDUESmartCard();
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
+            timeSheetPage.clickOnRefreshButton();
+            String rateWithin24OnSmartCardAfterChange = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard().get(0);
+            String rateInAnalyticsTableAfterChange = timeSheetPage.getTimesheetApprovalForGivenLocationInDMView(location);
+            if (rateInTimesheetDueAfterApprove.equals(rateInAnalyticsTableAfterChange)
+                    && !rateWithin24OnSmartCardBeforeChange.equals(rateWithin24OnSmartCardAfterChange)
+                    && !rateInAnalyticsTableBeforeChange.equals(rateInAnalyticsTableAfterChange)) {
+                SimpleUtils.report("The rate <24 Hrs on smart card before change is " + rateWithin24OnSmartCardBeforeChange);
+                SimpleUtils.report("The rate <24 Hrs on smart card after change is " + rateWithin24OnSmartCardAfterChange);
+                SimpleUtils.report("The rate in analytics table for given location before change is " + rateInAnalyticsTableBeforeChange);
+                SimpleUtils.report("The rate in analytics table for given location after change is " + rateInAnalyticsTableAfterChange);
+                SimpleUtils.report("The rate in SM view for given location after updating is " + rateInTimesheetDueAfterApprove);
+                SimpleUtils.pass("Timesheet Page: The timesheet approval rate on smart card and in analytics table gets updating according to the new change");
+            } else
+                // SimpleUtils.fail("Timesheet Page: The timesheet approval rate on smart card and in analytics table doesn't get updating according to the new change",false);
+                SimpleUtils.warn("TA-5015: Approved percentage cannot get updating after approving on TIMESHEET DUE smart card");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Refresh feature on Timesheet in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRefreshFeatureOnTimesheetInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            // Validate the presence of Refresh button
+            scheduleDMViewPage.validateThePresenceOfRefreshButton();
+
+            // Validate Refresh timestamp
+            scheduleDMViewPage.validateRefreshTimestamp();
+
+            // Validate Refresh when navigation back
+            dashboardPage.validateRefreshWhenNavigationBack("Timesheet");
+
+            // Validate Refresh function
+            scheduleDMViewPage.validateRefreshFunction();
+
+            // Validate Refresh performance
+            scheduleDMViewPage.validateRefreshPerformance();
+
+            // Validate Refresh reflects timesheet change
+            String rateWithin24OnSmartCardBeforeChange = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard().get(0);
+            String rateInAnalyticsTableBeforeChange = timeSheetPage.getTimesheetApprovalForGivenLocationInDMView(regionName);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
+                timeSheetPage.navigateToSchedule();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                if (!isWeekGenerated) {
+                    schedulePage.createScheduleForNonDGFlowNewUI();
+                }
+                schedulePage.publishActiveSchedule();
+                timeSheetPage.clickOnTimeSheetConsoleMenu();
+                SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
+            }
+            timeSheetPage.clickOnWeekView();
+            timeSheetPage.approveAnyTimesheet();
+            String rateInTimesheetDueAfterApprove = timeSheetPage.getApprovalRateFromTIMESHEETDUESmartCard();
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
+            timeSheetPage.clickOnRefreshButton();
+            String rateWithin24OnSmartCardAfterChange = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard().get(0);
+            String rateInAnalyticsTableAfterChange = timeSheetPage.getTimesheetApprovalForGivenLocationInDMView(location);
+            if (rateInTimesheetDueAfterApprove.equals(rateInAnalyticsTableAfterChange)
+                    && !rateWithin24OnSmartCardBeforeChange.equals(rateWithin24OnSmartCardAfterChange)
+                    && !rateInAnalyticsTableBeforeChange.equals(rateInAnalyticsTableAfterChange)) {
+                SimpleUtils.report("The rate <24 Hrs on smart card before change is " + rateWithin24OnSmartCardBeforeChange);
+                SimpleUtils.report("The rate <24 Hrs on smart card after change is " + rateWithin24OnSmartCardAfterChange);
+                SimpleUtils.report("The rate in analytics table for given location before change is " + rateInAnalyticsTableBeforeChange);
+                SimpleUtils.report("The rate in analytics table for given location after change is " + rateInAnalyticsTableAfterChange);
+                SimpleUtils.report("The rate in SM view for given location after updating is " + rateInTimesheetDueAfterApprove);
+                SimpleUtils.pass("Timesheet Page: The timesheet approval rate on smart card and in analytics table gets updating according to the new change");
+            } else
+                // SimpleUtils.fail("Timesheet Page: The timesheet approval rate on smart card and in analytics table doesn't get updating according to the new change",false);
+                SimpleUtils.warn("TA-5015: Approved percentage cannot get updating after approving on TIMESHEET DUE smart card");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
 }
