@@ -949,23 +949,23 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return dashboardScheduleWeeks;
 	}
 
-	@FindBy(xpath = "//button[contains(text(),\"Refresh\")]")
+	@FindBy(css = "[label=\"Refresh\"] button")
 	private WebElement refreshButton;
 
 	@FindBy(xpath = "//button[contains(text(),\"Refresh\")]/../div[1]/div")
 	private WebElement lastUpdatedIcon;
 
-
 	@Override
 	public void clickOnRefreshButton() throws Exception {
-		if (isElementLoaded(refreshButton, 10)) {
+		waitForSeconds(3);
+		if (isElementLoaded(refreshButton, 20)) {
 			clickTheElement(refreshButton);
 			if(isElementLoaded(lastUpdatedIcon, 60)){
 				SimpleUtils.pass("Click on Refresh button Successfully!");
 			} else
 				SimpleUtils.fail("Refresh timeout! ", false);
 		} else {
-			SimpleUtils.fail("Refresh button not Loaded!", true);
+			SimpleUtils.fail("Refresh button not Loaded!", false);
 		}
 	}
 	//added by Estelle
