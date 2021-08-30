@@ -351,7 +351,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement leaveThisPageBtn;
 
 	@Override
-	public void addNewMockLocationWithAllFields(String locationName, String searchCharactor, int index) throws Exception {
+	public void addNewMockLocationWithAllFields( String searchCharactor, int index) throws Exception {
 		if (isElementEnabled(addLocationBtn, 15)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector, newLocationParas.get("Location_Type_Mock"));
@@ -362,7 +362,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			scrollToBottom();
 			waitForSeconds(2);
 			click(createLocationBtn);
-			waitForSeconds(5);
+			waitForSeconds(300);
 			SimpleUtils.report("Mock location create done");
 
 		} else
