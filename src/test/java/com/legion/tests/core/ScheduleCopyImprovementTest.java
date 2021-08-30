@@ -177,7 +177,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            disableCopyRestriction();
+            disableCopyRestriction(location);
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option, location);
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option, false);
@@ -790,7 +790,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
         }
     }
 
-    private void disableCopyRestriction() throws Exception {
+    private void disableCopyRestriction(String location) throws Exception {
         if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             controlsPage.gotoControlsPage();
@@ -801,8 +801,16 @@ public class ScheduleCopyImprovementTest extends TestBase {
             controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
 
         } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
-            OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad("Scheduling Policies");

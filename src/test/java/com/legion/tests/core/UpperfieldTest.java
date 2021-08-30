@@ -2623,4 +2623,144 @@ public class UpperfieldTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify TIMESHEET APPROVAL RATE on Timesheet in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTIMESHEETAPPROVALRATEOnTimesheetInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            //Get time sheet rate from smart card
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            List<String> timesheetApprovalRateFromSmartCard = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard();
+
+            //Get total approve rate
+            float totalApprovalRateFromSmartCard = 0;
+            for (int i = 0; i< timesheetApprovalRateFromSmartCard.size(); i++){
+                totalApprovalRateFromSmartCard += Float.parseFloat(timesheetApprovalRateFromSmartCard.get(i).replace("%", ""));
+            }
+            SimpleUtils.assertOnFail("The total approval rate on TIMESHEET APPROVAL RATE smart card should be 100% ! ",
+                    totalApprovalRateFromSmartCard == 100, false);
+
+            float onlyApprovalRate = 0;
+            for (int i = 0; i< timesheetApprovalRateFromSmartCard.size()-1; i++){
+                onlyApprovalRate += Float.parseFloat(timesheetApprovalRateFromSmartCard.get(i).replace("%", ""));
+            }
+            //Get time sheet rate from table
+            List<String> timesheetApprovalRate = schedulePage.
+                    getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Timesheet Approval"));
+            float approvalRateOnTable = 0;
+            for (int i = 0; i< timesheetApprovalRate.size()-1; i++){
+                approvalRateOnTable += Float.parseFloat(timesheetApprovalRate.get(i).replace("%", ""));
+            }
+            //Check the approval rate on TIMESHEET APPROVAL RATE smart card and Timesheet analytics table
+            SimpleUtils.assertOnFail("The approval rates are inconsistent on TIMESHEET APPROVAL RATE smart card and Timesheet analytics table! ",
+                    onlyApprovalRate == approvalRateOnTable, false);
+
+            //Get one region approval rate on Timesheet analytics table
+            float timeSheetApprovalOfOneRegion = Float.parseFloat(timeSheetPage.
+                    getDataFromTimesheetTableForGivenLocationInDMView(regionName).get(2).replace("%",""));
+            timeSheetPage.clickOnGivenLocation(regionName);
+
+            //Get time sheet rate from table
+            List<String> timesheetApprovalRateOnRegionView = schedulePage.
+                    getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Timesheet Approval"));
+            float approvalRateOnTableOnRegionView = 0;
+            for (int i = 0; i< timesheetApprovalRate.size()-1; i++){
+                approvalRateOnTableOnRegionView += Float.parseFloat(timesheetApprovalRateOnRegionView.get(i).replace("%", ""));
+            }
+
+            //Check the region approval rates are consistent on BU view and Region view
+            SimpleUtils.assertOnFail("The region approval rates are inconsistent on BU view and Region view, the rate on BU view is "+ timeSheetApprovalOfOneRegion +
+                            ", the rate on review is "+ approvalRateOnTableOnRegionView,
+                    timeSheetApprovalOfOneRegion == approvalRateOnTableOnRegionView, false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify TIMESHEET APPROVAL RATE on Timesheet in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTIMESHEETAPPROVALRATEOnTimesheetInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            //Get time sheet rate from smart card
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            List<String> timesheetApprovalRateFromSmartCard = timeSheetPage.getTimesheetApprovalRateOnDMViewSmartCard();
+
+            //Get total approve rate
+            float totalApprovalRateFromSmartCard = 0;
+            for (int i = 0; i< timesheetApprovalRateFromSmartCard.size(); i++){
+                totalApprovalRateFromSmartCard += Float.parseFloat(timesheetApprovalRateFromSmartCard.get(i).replace("%", ""));
+            }
+            SimpleUtils.assertOnFail("The total approval rate on TIMESHEET APPROVAL RATE smart card should be 100% ! ",
+                    totalApprovalRateFromSmartCard == 100, false);
+
+            float onlyApprovalRate = 0;
+            for (int i = 0; i< timesheetApprovalRateFromSmartCard.size()-1; i++){
+                onlyApprovalRate += Float.parseFloat(timesheetApprovalRateFromSmartCard.get(i).replace("%", ""));
+            }
+            //Get time sheet rate from table
+            List<String> timesheetApprovalRate = schedulePage.
+                    getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Timesheet Approval"));
+            float approvalRateOnTable = 0;
+            for (int i = 0; i< timesheetApprovalRate.size()-1; i++){
+                approvalRateOnTable += Float.parseFloat(timesheetApprovalRate.get(i).replace("%", ""));
+            }
+            //Check the approval rate on TIMESHEET APPROVAL RATE smart card and Timesheet analytics table
+            SimpleUtils.assertOnFail("The approval rates are inconsistent on TIMESHEET APPROVAL RATE smart card and Timesheet analytics table! ",
+                    onlyApprovalRate == approvalRateOnTable, false);
+
+            //Get one region approval rate on Timesheet analytics table
+            float timeSheetApprovalOfOneRegion = Float.parseFloat(timeSheetPage.
+                    getDataFromTimesheetTableForGivenLocationInDMView(districtName).get(2).replace("%",""));
+            timeSheetPage.clickOnGivenLocation(districtName);
+
+            //Get time sheet rate from table
+            List<String> timesheetApprovalRateOnRegionView = schedulePage.
+                    getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Timesheet Approval"));
+            float approvalRateOnTableOnRegionView = 0;
+            for (int i = 0; i< timesheetApprovalRate.size()-1; i++){
+                approvalRateOnTableOnRegionView += Float.parseFloat(timesheetApprovalRateOnRegionView.get(i).replace("%", ""));
+            }
+
+            //Check the region approval rates are consistent on BU view and Region view
+            SimpleUtils.assertOnFail("The region approval rates are inconsistent on BU view and Region view, the rate on BU view is "+ timeSheetApprovalOfOneRegion +
+                            ", the rate on review is "+ approvalRateOnTableOnRegionView,
+                    timeSheetApprovalOfOneRegion == approvalRateOnTableOnRegionView, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
 }
