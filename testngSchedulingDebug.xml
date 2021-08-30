@@ -170,9 +170,6 @@
                     <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin" />
-                           <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
-                    <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
-                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
                        </methods>
                    </class>
                </classes>
