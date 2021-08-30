@@ -16125,5 +16125,31 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("No group title show up!", false);
         }
     }
+
+    // Added by Nora
+    @FindBy (css = ".sch-worker-action")
+    private List<WebElement> shiftOptions;
+
+    /***
+     * Verify specific option is enabled on shift menu when clicking the avatar of the shift
+     * @param optionName - The name of the option
+     * @throws Exception
+     */
+    @Override
+    public void verifySpecificOptionEnabledOnShiftMenu(String optionName) throws Exception {
+        try {
+            boolean isEnabled = false;
+            if (areListElementVisible(shiftOptions, 15) && shiftOptions.size() > 0) {
+                for (WebElement option : shiftOptions) {
+                    if (option.getText().equalsIgnoreCase(optionName) && !option.getAttribute("class").contains("graded-out")) {
+                        isEnabled = true;
+                    }
+                }
+            }
+            SimpleUtils.assertOnFail("Shift option: " + optionName + " isn't enabled!", isEnabled,false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
 

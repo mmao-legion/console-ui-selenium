@@ -681,4 +681,5 @@ public interface SchedulePage {
 	public List<String> getIndexOfDaysHaveShifts() throws Exception;
 	public HashMap<String, String> getMealAndRestBreaksTime() throws Exception;
 	public void verifyGroupCanbeCollapsedNExpanded() throws Exception;
+	public void verifySpecificOptionEnabledOnShiftMenu(String optionName) throws Exception;
 }
