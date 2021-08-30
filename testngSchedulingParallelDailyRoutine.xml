@@ -218,20 +218,17 @@
         <classes>
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
-                                        <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
-                                        <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
-                                         <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
-                                         <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
-                        <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
-                        <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
-                        <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
-                        <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
-                        <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />
+                    <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
+                    <!--      <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocked by SCH-5012 -->
+                    <!--             <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocked by SCH-5012 -->
+                    <!--             <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocked by SCH-5012 -->
                 </methods>
             </class>
         </classes>
