@@ -952,7 +952,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[label=\"Refresh\"] button")
 	private WebElement refreshButton;
 
-	@FindBy(xpath = "//button[contains(text(),\"Refresh\")]/../div[1]/div")
+	@FindBy(css = "div.last-updated-countdown span")
 	private WebElement lastUpdatedIcon;
 
 	@Override

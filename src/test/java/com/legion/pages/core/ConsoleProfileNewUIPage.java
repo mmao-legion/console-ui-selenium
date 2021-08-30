@@ -250,6 +250,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void selectProfilePageSubSectionByLabel(String profilePageSubSectionLabel) throws Exception {
 		boolean isSubSectionSelected = false;
+		scrollToTop();
 		if(areListElementVisible(profilePageSubSections,60)) {
 			for(WebElement profilePageSubSection : profilePageSubSections) {
 				if(profilePageSubSection.getText().toLowerCase().contains(profilePageSubSectionLabel.toLowerCase())) {
@@ -265,6 +266,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		else
 			SimpleUtils.fail("Profile Page: Sub Section not loaded.", false);
+	}
+
+	public void verifyAvailabilityWeek(String desiredweek) throws Exception {
+		//scroll to the bottom of page to view the Availability table
+		scrollToBottom();
+		waitForSeconds(1);
+		//get the week in Availability
+        String currentWeek=String.valueOf(getMyAvailabilityData().get("activeWeekText"));
+        if(desiredweek.equalsIgnoreCase(currentWeek))
+			SimpleUtils.pass("The current week is the TM requested availability change week or the start of the week!");
+        else
+			SimpleUtils.fail("The go to profile for availability change week is not the set or the start of the week ", false);
 	}
 
 	@Override
@@ -3158,12 +3171,24 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	public void verifyContentsInActionsSection() throws Exception {
 		if (isElementLoaded(inviteToLegionButton, 5)){
-			if (isElementLoaded(inviteMessageInActionsSection, 10)
-					&& (inviteMessageInActionsSection.getText().contains("Not invited yet")|| inviteMessageInActionsSection.getText().contains("Invited to onboard"))){
-				SimpleUtils.pass("User Profile page: The invite message in Actions section display correctly! ");
-			} else{
-				SimpleUtils.fail("User Profile page: The invite message in Action section failed to display! ", false);
+			String inviteButtonMessage = inviteToLegionButton.getText();
+			if (inviteButtonMessage.contains("ReInvite")){
+				if (isElementLoaded(showOrHideInvitationCodeButtonHeader, 5)) {
+					if (inviteMessageInActionsSection.getText().contains("Invited to onboard")){
+						SimpleUtils.pass("User Profile page: The invite message in Actions section display correctly! ");
+					} else{
+						SimpleUtils.fail("User Profile page: The invite message in Action section failed to display! ", false);
+					}
+				}
+			} else {
+				if (isElementLoaded(inviteMessageInActionsSection, 10)
+						&& inviteMessageInActionsSection.getText().contains("Not invited yet")){
+					SimpleUtils.pass("User Profile page: The invite message in Actions section display correctly! ");
+				} else{
+					SimpleUtils.fail("User Profile page: The invite message in Action section failed to display! ", false);
+				}
 			}
+
 		} else{
 			if (isElementLoaded(sendUsernameInActionsSection, 5) && isElementLoaded(resetPasswordInActionsSection, 5)){
 				SimpleUtils.pass("User Profile page: The Send Username and Reset Password buttons in Actions section display correctly! ");
@@ -3171,7 +3196,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("User Profile page: The Send Username and Reset Password buttons in Actions section failed to display !", false);
 			}
 		}
-
 	}
 
 	public void verifyContentsInActionsSectionInTMView() throws Exception {

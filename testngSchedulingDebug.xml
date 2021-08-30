@@ -132,8 +132,6 @@
                     <include name="verifyScheduleFunctionalityDayViewAsInternalAdmin"/>
                     <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
-                    <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
-                    <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                     <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
                     <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
@@ -141,9 +139,6 @@
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
                     <include name="verifyComplianceWarningInPublishConfirmModalAsInternalAdmin" />
                     <include name="verifyHrsOverBudgetInPublishConfirmModalForNonDGAsInternalAdmin" />
-                    <include name="verifyGroupByDayPartsCanBeCollapsedNExpandedAsStoreManager" />
-                    <include name="verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager" />
-                    <include name="verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin" />
                 </methods>
             </class>
@@ -167,16 +162,11 @@
                     <include name="verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin" />
-                    <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyDMViewNavigationAsInternalAdmin" />
                     <include name="verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin" />
-                    <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyAnalyticTableInTimesheetDMViewAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
                     <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin" />
