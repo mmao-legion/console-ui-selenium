@@ -128,7 +128,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+//            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+//                disableCopyRestriction();
+//            }
             String option = "Yes, all unassigned shifts";
             changeConvertToOpenShiftsSettings(option, location);
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option, false);
@@ -149,12 +151,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-            disableCopyRestriction();
-
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option, location);
-            if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
+            if(getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))){
                 Thread.sleep(180000);
             }
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(false, option, false);
@@ -176,7 +175,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            disableCopyRestriction();
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option, location);
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option, false);
@@ -220,7 +219,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+//            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+//                disableCopyRestriction();
+//            }
             String option = "Yes, except opening/closing shifts";
             changeConvertToOpenShiftsSettings(option, location);
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option, false);
@@ -242,7 +243,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+//            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+//                disableCopyRestriction();
+//            }
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option, location);
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option, true);
@@ -311,6 +314,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
         schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+        schedulePage.navigateToNextWeek();
+        schedulePage.navigateToNextWeek();
         schedulePage.navigateToNextWeek();
         boolean isWeekGenerated = schedulePage.isWeekGenerated();
         if (isWeekGenerated) {
@@ -405,6 +410,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+
             isWeekGenerated = schedulePage.isWeekGenerated();
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -785,9 +793,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             controlsPage.gotoControlsPage();
             controlsPage.clickGlobalSettings();
-
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            Thread.sleep(20000);
             controlsNewUIPage.enableOrDisableScheduleCopyRestriction("no");
 
         } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
@@ -814,7 +822,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+//            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+//                disableCopyRestriction();
+//            }
             //Go to schedule page and create new schedule
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
@@ -824,7 +834,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
             schedulePage.navigateToNextWeek();
-
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
             if (isWeekGenerated) {
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -1074,7 +1085,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+//            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+//                disableCopyRestriction();
+//            }
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option, location);
 
@@ -1350,7 +1363,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+//            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+//                disableCopyRestriction();
+//            }
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option, location);
             HashMap<String, Object[][]> teamMembers = null;
@@ -1359,7 +1374,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
             } else {
                 teamMembers = opTeamMembers;
             }
-
 
             String tm1 = teamMembers.get("TeamMember1")[0][0].toString();
             String tm2 = teamMembers.get("TeamMember2")[0][0].toString();
@@ -1376,6 +1390,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             //Get the date info of the week for create time off, leave and terminate
@@ -1407,6 +1423,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -1561,7 +1579,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+//            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+//                disableCopyRestriction();
+//            }
             HashMap<String, Object[][]> teamMembers = null;
             if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
                 teamMembers = controlTeamMembers;
@@ -1628,6 +1648,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             profileNewUIPage.clickNextWeek();
             profileNewUIPage.clickNextWeek();
             profileNewUIPage.clickNextWeek();
+            profileNewUIPage.clickNextWeek();
             profileNewUIPage.clickAvailabilityEditButton();
             profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Busy");
             profileNewUIPage.saveMyAvailabilityEditMode("This week only");
@@ -1639,6 +1660,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+            schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
@@ -1781,7 +1803,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+//            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+//                disableCopyRestriction();
+//            }
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

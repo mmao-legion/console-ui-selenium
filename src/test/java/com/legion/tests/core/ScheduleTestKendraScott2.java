@@ -2305,7 +2305,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			dashboardPage.navigateToDashboard();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 			String nyLocation = getCrendentialInfo("NearByLocationInfo");
-			locationSelectorPage.changeLocation(nyLocation);
+			locationSelectorPage.changeUpperFieldDirect("Location", nyLocation);
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			// Select one team member to view profile
@@ -2336,7 +2336,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Select AUSTIN DOWNTOWN location
 			dashboardPage.navigateToDashboard();
-			locationSelectorPage.changeLocation(location);
+			locationSelectorPage.changeUpperFieldDirect("Location", location);
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
