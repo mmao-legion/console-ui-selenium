@@ -10319,9 +10319,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if(isElementEnabled(schWorkerInfoPrompt,5)){
             SimpleUtils.pass("Various Work Role Prompt is displayed ");
             if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >0) {
-                for (WebElement shiftRole : shiftRoleList) {
-                    click(shiftRole);
-                    SimpleUtils.pass("Role '"+ shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText() +"' is selected!");
+                if (shiftRoleList.size() < 10){
+                    for (WebElement shiftRole : shiftRoleList) {
+                        click(shiftRole);
+                        SimpleUtils.pass("Role '"+ shiftRole.findElement(By.
+                                cssSelector("span.sch-worker-change-role-name")).getText() +"' is selected!");
+                    }
+                } else {
+                    for (int i =0; i< 9;i++) {
+                        click(shiftRoleList.get(i));
+                        SimpleUtils.pass("Role '"+ shiftRoleList.get(i).findElement(By.
+                                cssSelector("span.sch-worker-change-role-name")).getText() +"' is selected!");
+                    }
                 }
             } else {
                 SimpleUtils.fail("Work roles are doesn't show well ", true);
@@ -15658,6 +15667,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (isElementEnabled(editShiftTimePopUp, 5)) {
                         moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
                         moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
+                        waitForSeconds(2);
                         click(confirmBtnOnDragAndDropConfirmPage);
                     } else {
                         SimpleUtils.fail("Edit Shift Time PopUp window load failed", false);

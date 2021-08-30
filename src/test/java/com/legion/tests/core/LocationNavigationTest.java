@@ -377,7 +377,7 @@ public class LocationNavigationTest extends TestBase {
 
 
             //Go to Schedule tab -> Schedule page
-            locationSelectorPage.changeUpperFieldsByName("District", districtName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
@@ -395,7 +395,7 @@ public class LocationNavigationTest extends TestBase {
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
             //Go to Schedule tab -> Forecast page
-            locationSelectorPage.changeUpperFieldsByName("District", districtName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
@@ -515,8 +515,8 @@ public class LocationNavigationTest extends TestBase {
 
 
             //Go to Schedule tab -> Schedule page
-            locationSelectorPage.changeUpperFieldsByName(Region, regionName);
-            locationSelectorPage.changeUpperFieldsByName(District, districtName);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
@@ -526,7 +526,7 @@ public class LocationNavigationTest extends TestBase {
             locationName = rockVilleLocation;
             regionName = upperFields[upperFields.length-2].trim();
             districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
 
             //Verify the page loaded
@@ -536,8 +536,8 @@ public class LocationNavigationTest extends TestBase {
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
 
             //Go to Schedule tab -> Forecast page
-            locationSelectorPage.changeUpperFieldsByName(Region, regionName);
-            locationSelectorPage.changeUpperFieldsByName(District, districtName);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
             schedulePage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
@@ -545,7 +545,7 @@ public class LocationNavigationTest extends TestBase {
             upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
             buName = upperFields[upperFields.length-3].trim();
             regionName = upperFields[upperFields.length-2].trim();
-            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
 
             //Verify the page loaded
@@ -650,9 +650,9 @@ public class LocationNavigationTest extends TestBase {
                     locationSelectorPage.isNoDataToShowPageLoaded(), false);
 
             //Go to Schedule tab
-            locationSelectorPage.changeUpperFieldsByName(BusinessUnit, buName);
-            locationSelectorPage.changeUpperFieldsByName(Region, regionName);
-            locationSelectorPage.changeUpperFieldsByName(District, districtName);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
             schedulePage.clickOnScheduleConsoleMenuItem();
 
@@ -662,8 +662,8 @@ public class LocationNavigationTest extends TestBase {
             locationName = rockVilleLocation;
             regionName = upperFields[upperFields.length-2].trim();
             districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
-            locationSelectorPage.selectCurrentUpperFieldAgain(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
 
             //Verify the No data page loaded
@@ -671,15 +671,17 @@ public class LocationNavigationTest extends TestBase {
                     locationSelectorPage.isNoDataToShowPageLoaded(), false);
 
             //Go to Schedule tab
-            locationSelectorPage.changeUpperFieldsByName(BusinessUnit, buName);
-            locationSelectorPage.changeUpperFieldsByName(Region, regionName);
-            locationSelectorPage.changeUpperFieldsByName(District, districtName);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
             schedulePage.clickOnScheduleConsoleMenuItem();
             //Click on change Bu button to change the BU
             upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
-            locationSelectorPage.selectCurrentUpperFieldAgain(BusinessUnit);
+            buName = upperFields[upperFields.length-3].trim();
+            regionName = upperFields[upperFields.length-2].trim();
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
 
             //Verify the No data page loaded
@@ -726,6 +728,7 @@ public class LocationNavigationTest extends TestBase {
     private void searchHQAndCheckTheUpperFields (String[] upperFields, String locationName) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+        Thread.sleep(3000);
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
         String bUName = upperFields[upperFields.length-3].trim();
         String regionName = upperFields[upperFields.length-2].trim();

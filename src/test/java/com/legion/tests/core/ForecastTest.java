@@ -241,8 +241,10 @@ public class ForecastTest extends TestBase{
 		@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleLaborForeCastFunctionalityAsInternalAdmin(String username, String password, String browser, String location)
 				throws Exception {
-			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-			scheduleOverviewPage.loadScheduleOverview();
+			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+			schedulePage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) ,false);
 			ForecastPage ForecastPage  = pageFactory.createForecastPage();
 			ForecastPage.clickForecast();
 			ForecastPage.clickOnLabor();

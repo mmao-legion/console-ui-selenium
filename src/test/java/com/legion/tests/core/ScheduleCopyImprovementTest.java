@@ -32,6 +32,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
     private static HashMap<String, Object[][]> opTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
     private static String controlEnterprice = "Vailqacn_Enterprise";
     private static String opEnterprice = "CinemarkWkdy_Enterprise";
+    private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
+    private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
 
     @Override
     @BeforeMethod()
@@ -341,6 +343,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
         // For copy schedule, select one TM -> create time off for TM -> create schedule by copy last week schedule
         if (isCopySchedule){
             // Delete all the shifts that are assigned to the team member
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
             schedulePage.deleteTMShiftInWeekView("open");
@@ -475,7 +478,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     schedulePage.isRequiredActionSmartCardLoaded(), false);
             //Check the Unassigned shifts will display
             int unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
-            SimpleUtils.assertOnFail("Unassigned shifts should display! ",unassignedShiftsCount >= 4, false);
+            SimpleUtils.assertOnFail("Thers are 4 unassigned shifts should display! but actually there are "+unassignedShiftsCount+" display",
+                    unassignedShiftsCount >= 4, false);
             //Check the message on the Action required smart card
             HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
             SimpleUtils.assertOnFail("Unassigned shifts message display incorrectly! ",
@@ -542,13 +546,11 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Convert unassigned shifts to open
             schedulePage.convertAllUnAssignedShiftToOpenShift();
+            Thread.sleep(10000);
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteAllOOOHShiftInWeekView();
             schedulePage.saveSchedule();
 
-            //Check all unassigned shifts convert to open
-//            SimpleUtils.assertOnFail("The open shifts should not display in this schedule! ",
-//                    schedulePage.getAllShiftsOfOneTM("open").size()==unassignedShiftsCount, false);
             //Check there is no Unassigned shifts display
             unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
             SimpleUtils.assertOnFail("Unassigned shifts should display! ",
@@ -682,8 +684,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             schedulePage.clickOnFilterBtn();
-            Thread.sleep(5000);
             schedulePage.convertAllUnAssignedShiftToOpenShift();
+            Thread.sleep(10000);
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.saveSchedule();
@@ -803,7 +805,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
-            configurationPage.goToTemplateDetailsPage("Scheduling Policies");
+            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.setScheduleCopyRestrictions("no");
             configurationPage.publishNowTheTemplate();

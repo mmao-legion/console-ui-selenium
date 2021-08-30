@@ -697,8 +697,6 @@ public class OfferTMTest extends TestBase {
         loginPage.logOut();
 
         loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-
-
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

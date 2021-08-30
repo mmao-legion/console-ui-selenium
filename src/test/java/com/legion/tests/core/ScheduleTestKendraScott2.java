@@ -1352,7 +1352,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.createScheduleForNonDGFlowNewUI();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnFilterBtn();
-			schedulePage.selectShiftTypeFilterByText("unassigned");
+			schedulePage.selectShiftTypeFilterByText("Action Required");
 			schedulePage.deleteTMShiftInWeekView("");
 			schedulePage.clickOnFilterBtn();
 			schedulePage.clickOnClearFilterOnFilterDropdownPopup();
@@ -1406,7 +1406,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.createScheduleForNonDGFlowNewUI();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnFilterBtn();
-			schedulePage.selectShiftTypeFilterByText("unassigned");
+			schedulePage.selectShiftTypeFilterByText("Action Required");
 			schedulePage.deleteTMShiftInWeekView("");
 			schedulePage.clickOnFilterBtn();
 			schedulePage.clickOnClearFilterOnFilterDropdownPopup();

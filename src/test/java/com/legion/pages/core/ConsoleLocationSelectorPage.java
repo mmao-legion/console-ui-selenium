@@ -1520,36 +1520,33 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                             break;
                         }
                     }
-                    if (!isUpperFieldMatched) {
-                        WebElement upperFieldSearchInput = getDriver().findElement(By.cssSelector("input[placeholder=\"Search " + upperFieldType + "\"]"));
-                        if (isElementLoaded(upperFieldSearchInput,5)) {
-                            upperFieldSearchInput.sendKeys(upperFieldName);
-                            upperFieldSearchInput.sendKeys(Keys.ENTER);
-                        }else {
-                            SimpleUtils.fail("Search " + upperFieldType + "input failed to load!", false);
-                        }
-                        waitForSeconds(6);
-                        availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
-                        if (availableLocationCardsName.size() > 0) {
-                            for (WebElement upperFieldCardName : availableLocationCardsName) {
-                                if (upperFieldCardName.getText().trim().equalsIgnoreCase(upperFieldName)) {
-                                    isUpperFieldMatched = true;
-                                    clickTheElement(upperFieldCardName);
-                                    SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
-                                    break;
-                                }
+                }
+                if (!isUpperFieldMatched) {
+                    WebElement upperFieldSearchInput = getDriver().findElement(By.cssSelector("input[placeholder=\"Search " + upperFieldType + "\"]"));
+                    if (isElementLoaded(upperFieldSearchInput,5)) {
+                        upperFieldSearchInput.sendKeys(upperFieldName);
+                        upperFieldSearchInput.sendKeys(Keys.ENTER);
+                    }else {
+                        SimpleUtils.fail("Search " + upperFieldType + "input failed to load!", false);
+                    }
+                    waitForSeconds(6);
+                    availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                    if (availableLocationCardsName.size() > 0) {
+                        for (WebElement upperFieldCardName : availableLocationCardsName) {
+                            if (upperFieldCardName.getText().trim().equalsIgnoreCase(upperFieldName)) {
+                                isUpperFieldMatched = true;
+                                clickTheElement(upperFieldCardName);
+                                SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
+                                break;
                             }
                         }
                     }
-                    if (!isUpperFieldMatched) {
-                        SimpleUtils.fail(upperFieldType + " does matched with '" + upperFieldName + "'", false);
-                    }
+                }
+                if (!isUpperFieldMatched) {
+                    SimpleUtils.fail(upperFieldType + " does matched with '" + upperFieldName + "'", false);
                 }
             }
-        } catch(Exception e) {
-            SimpleUtils.fail("Unable to change Upper Field Direct! Get Exception: " + e.toString(), false);
         }
-
     }
 
     @FindBy(css = "div.nodata-content")
