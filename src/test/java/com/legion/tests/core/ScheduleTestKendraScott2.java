@@ -1927,7 +1927,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			// Navigate to the near by location to create the shift for this TM from AUSTIN DOWNTOWN
 			dashboardPage.navigateToDashboard();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-			locationSelectorPage.changeLocation(nearByLocation);
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(nearByLocation);
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			schedulePage.clickOnScheduleConsoleMenuItem();
