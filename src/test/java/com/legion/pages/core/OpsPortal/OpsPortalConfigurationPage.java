@@ -163,55 +163,24 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void checkAllTemplateCards() throws Exception {
-		if(configurationCardsList.size()==6){
-			for(WebElement configurationCard:configurationCardsList) {
-				if(configurationCard.getText().equals(configurationLandingPageTemplateCards.OperatingHours.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.OperatingHours.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingPolicies.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingPolicies.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.ScheduleCollaboration.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.ScheduleCollaboration.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.TimeAttendance.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.TimeAttendance.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Compliance.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.Compliance.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingRules.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingRules.getValue() + " card is showing.");
-					continue;
-				}else{
-					SimpleUtils.fail("Configuration template cards are loaded incorrect",false);
-				}
-			}
-		}else if(configurationCardsList.size()==7){
-			for(WebElement configurationCard:configurationCardsList) {
-				if(configurationCard.getText().equals(configurationLandingPageTemplateCards.OperatingHours.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.OperatingHours.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingPolicies.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingPolicies.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.ScheduleCollaboration.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.ScheduleCollaboration.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.TimeAttendance.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.TimeAttendance.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Compliance.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.Compliance.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingRules.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingRules.getValue() + " card is showing.");
-					continue;
-				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
-					SimpleUtils.pass(configurationLandingPageTemplateCards.Communications.getValue() + " card is showing.");
-					continue;
-				}else{
-					SimpleUtils.fail("Configuration template cards are loaded incorrect",false);
+		List<String> opTemplateTypes = new ArrayList<String>(){{
+			add("Operating Hours");
+			add("Scheduling Policies");
+			add("Schedule Collaboration");
+			add("Time & Attendance");
+			add("Compliance");
+			add("Scheduling Rules");
+		}};
+		if(configurationCardsList.size() >0){
+				for(String opTemplateType:opTemplateTypes){
+					for(WebElement configurationCard:configurationCardsList) {
+						String configurationCardName = configurationCard.getText().trim();
+						if(opTemplateType.equals(configurationCardName)){
+							SimpleUtils.pass(opTemplateType + " is shown.");
+							break;
+						}else {
+							continue;
+						}
 				}
 			}
 		}
