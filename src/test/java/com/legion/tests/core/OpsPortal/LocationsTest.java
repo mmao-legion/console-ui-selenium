@@ -134,11 +134,11 @@ public class LocationsTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateMockLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
        try{
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-            String currentTime =  dfs.format(new Date());
+
+            String currentTime =  TestBase.getCurrentTime().substring(4);
             String locationName = "AutoCreate" +currentTime;
             int index =0;
-            String searchCharactor = "No touch";
+            String searchCharactor = "Checkpoint 1";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -152,11 +152,12 @@ public class LocationsTest extends TestBase {
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
             //add one mock location，first create one new location and then to mock that -to avoid duplication
-            locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
-            locationsPage.addNewMockLocationWithAllFields(locationName,locationName,index);
+//            locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
+            locationsPage.addNewMockLocationWithAllFields(searchCharactor,index);
             //search created location
-            if (locationsPage.searchNewLocation(locationName+"-MOCK")) {
+            if (locationsPage.searchNewLocation(searchCharactor+"-MOCK")) {
                 SimpleUtils.pass("Create new mock location successfully");
+                locationsPage.disableLocation(searchCharactor+"-MOCK");
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
 //            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
@@ -176,7 +177,7 @@ public class LocationsTest extends TestBase {
         }
     }
 
-    // NSO location is blocked by https://legiontech.atlassian.net/browse/OPS-2757
+//     NSO location is blocked by https://legiontech.atlassian.net/browse/OPS-2757
 //    @Automated(automated = "Automated")
 //    @Owner(owner = "Estelle")
 //    @Enterprise(name = "Op_Enterprise")
@@ -354,8 +355,8 @@ public class LocationsTest extends TestBase {
     public void verifyAddUpperFieldsWithDiffLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
 
         try{
-                SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-                String currentTime =  dfs.format(new Date()).trim();
+
+                String currentTime =  TestBase.getCurrentTime().substring(4);
                 String upperfieldsName = currentTime;
                 String upperfieldsId = currentTime;
                 String searchChara = "test";

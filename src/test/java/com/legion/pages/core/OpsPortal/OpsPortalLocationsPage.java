@@ -351,7 +351,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement leaveThisPageBtn;
 
 	@Override
-	public void addNewMockLocationWithAllFields(String locationName, String searchCharactor, int index) throws Exception {
+	public void addNewMockLocationWithAllFields( String searchCharactor, int index) throws Exception {
 		if (isElementEnabled(addLocationBtn, 15)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector, newLocationParas.get("Location_Type_Mock"));
@@ -362,7 +362,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			scrollToBottom();
 			waitForSeconds(2);
 			click(createLocationBtn);
-			waitForSeconds(5);
+			waitForSeconds(300);
 			SimpleUtils.report("Mock location create done");
 
 		} else
@@ -535,7 +535,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = " page-heading > div > h1")
+	@FindBy(css = "page-heading > div > div.title-breadcrumbs.limit")
 	private WebElement locationNameText;
 
 	@Override
@@ -1091,8 +1091,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(locationDetailsLinks.get(0));
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
-			waitForSeconds(3);
-			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/div/lg-button[1]/button")).getText().equals(action)) {
+			waitForSeconds(8);
+			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
 				SimpleUtils.pass(action + " " + locationName + " successfully");
 			} else
 				SimpleUtils.fail(action + " " + locationName + " successfully", true);
@@ -1294,7 +1294,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			for (int i = 0; i < searchLocationCha.length; i++) {
 				upperfieldsSearchInputBox.clear();
 				upperfieldsSearchInputBox.sendKeys(searchInputText);
-//				upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
+				upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
 				waitForSeconds(5);
 				if (upperfieldRows.size() > 0) {
 					SimpleUtils.pass("Can search out upperfield by using " + searchInputText);
@@ -1302,7 +1302,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				} else {
 					SimpleUtils.report("There are no upperfields that match your criteria by using " + searchInputText);
 					waitForSeconds(5);
-					upperfieldsSearchInputBox.clear();
+//					upperfieldsSearchInputBox.clear();
 				}
 			}
 
@@ -3088,7 +3088,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3108,7 +3108,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3128,7 +3128,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3148,7 +3148,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3168,7 +3168,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3188,7 +3188,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3208,7 +3208,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3228,7 +3228,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}else if(s.getText().contains(action)&& action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
-							click(okBtnInLocationGroupConfirmPage);
+							click(okBtnInSelectLocation);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}

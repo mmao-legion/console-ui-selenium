@@ -22,7 +22,7 @@ public interface LocationsPage {
 
     public void addNewRegularLocationWithAllFields(String locationName, String searchCharactor, int index) throws Exception;
 
-    public void addNewMockLocationWithAllFields(String locationName, String searchCharactor, int index) throws Exception;
+    public void addNewMockLocationWithAllFields(String searchCharactor, int index) throws Exception;
 
     public void verifyImportLocationDistrict();
 

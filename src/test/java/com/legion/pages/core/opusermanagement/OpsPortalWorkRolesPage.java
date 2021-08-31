@@ -54,7 +54,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
     private WebElement disableDialog;
     @FindBy(css = "div.modal-content lg-button[label='Cancel']")
     private WebElement cancelDisableAction;
-    @FindBy(css = "div.modal-content lg-button[label='Ok']")
+    @FindBy(css = "div.modal-content lg-button[label='OK']")
     private WebElement okToDisableAction;
 
 

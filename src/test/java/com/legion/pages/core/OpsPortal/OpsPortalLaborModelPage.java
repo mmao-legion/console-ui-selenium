@@ -585,7 +585,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		return updateValues;
 	}
 
-	@FindBy(css="div.lg-modal lg-button[label=\"Ok\"] button")
+	@FindBy(css="div.lg-modal lg-button[label=\"OK\"] button")
 	private WebElement okButtonOnDeleteAttributeDialog;
 
 	@FindBy(css="div.lg-modal lg-button[label=\"Cancel\"] button")

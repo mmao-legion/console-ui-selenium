@@ -10,6 +10,7 @@ import com.legion.pages.pagefactories.PageFactory;
 import com.legion.pages.pagefactories.mobile.MobilePageFactory;
 import com.legion.pages.pagefactories.mobile.MobileWebPageFactory;
 import com.legion.test.testrail.APIException;
+import com.legion.test.testrail.TestRailOperation;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.*;
 import com.legion.utils.JsonUtil;
@@ -54,8 +55,8 @@ import static com.jayway.restassured.RestAssured.baseURI;
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.SimpleUtils.addResultForTest;
-import static com.legion.utils.SimpleUtils.addTestRun;
+import static com.legion.test.testrail.TestRailOperation.addResultForTest;
+import static com.legion.test.testrail.TestRailOperation.addTestRun;
 
 //import org.apache.log4j.Logger;
 
@@ -134,7 +135,7 @@ public abstract class TestBase {
 
         if(System.getProperty("testRail") != null && System.getProperty("testRail").equalsIgnoreCase("Yes")){
             testRailReportingFlag = "Y";
-            addTestRun();
+            TestRailOperation.addTestRun();
         }
     }
 
@@ -169,34 +170,25 @@ public abstract class TestBase {
         String automatedName = ExtentTestManager.getAutomatedName(method);
         enterpriseName =  SimpleUtils.getEnterprise(method);
         String platformName =  ExtentTestManager.getMobilePlatformName(method);
-//        int sectionId = ExtentTestManager.getTestRailSectionId(method);
-        String testRunPhaseName = ExtentTestManager.getTestRunPhase(method);
         List<String> categories =  new ArrayList<String>();
         categories.add(getClass().getSimpleName());
-//        categories.add(enterpriseName);
         List<String> enterprises =  new ArrayList<String>();
         enterprises.add(enterpriseName);
         ExtentTestManager.createTest(getClass().getSimpleName() + " - "
                 + " " + method.getName() + " : " + testName + ""
                 + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
         extent.setSystemInfo(method.getName(), enterpriseName.toString());
-        //setTestRailRunId(0);
         if (testRailRunId==null){
             testRailRunId = 0;
         }
-        List<Integer> testRailId =  new ArrayList<Integer>();
-        //setTestRailRun(testRailId);
         if(testRailReportingFlag!=null){
-            SimpleUtils.addNUpdateTestCaseIntoTestRail(testName,context);
+            TestRailOperation.addNUpdateTestCaseIntoTestRail(testName,context);
             MyThreadLocal.setTestResultFlag(false);
         }
         setCurrentMethod(method);
         setBrowserNeeded(true);
         setCurrentTestMethodName(method.getName());
         setSessionTimestamp(date.toString().replace(":", "_").replace(" ", "_"));
-        String strDate = formatter.format(date);
-        String strDateFinal = strDate.replaceAll(" ", "_");
-        setVerificationMap(new HashMap<>());
     }
 
     protected void createDriver (String browser, String version, String os) throws Exception {
@@ -295,8 +287,8 @@ public abstract class TestBase {
 
     @AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
-        addResultForTest();
         ExtentTestManager.getTest().info("tearDown started");
+        TestRailOperation.addResultForTest();
         if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
                 getDriver().manage().deleteAllCookies();
@@ -319,8 +311,8 @@ public abstract class TestBase {
         if(testRailReportingFlag!=null){
             List<Integer> testRunList = new ArrayList<Integer>();
             testRunList.add(testRailRunId);
-            if (testRailRunId!=null && SimpleUtils.isTestRunEmpty(testRailRunId)){
-                SimpleUtils.deleteTestRail(testRunList);
+            if (testRailRunId!=null && TestRailOperation.isTestRunEmpty(testRailRunId)){
+                TestRailOperation.deleteTestRail(testRunList);
             }
         }
     }
@@ -527,63 +519,10 @@ public abstract class TestBase {
         }
     }
 
-    public static void disableSwitch(String switchName,String enterpriseName) {
-
-        Response response = given().params("enterpriseName","op","sourceSystem","legion","passwordPlainText","AutoTesting.AD1","userName","AutoTesting.AD1")
-                .when().get("https://staging-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
-        String sessionId = response.header("sessionid");
-        //get ABSwitch to confirm the switch is on or off
-        Response response2= given().log().all().header("sessionId",sessionId).param("switchName", switchName).when().get("https://staging-enterprise.dev.legion.work/legion/business/queryABSwitch").then().log().all().extract().response();
-        String enabled = response2.jsonPath().get("records.enabled[0]").toString();
-
-        if (enabled.equals("true")) {
-
-            //disable location group switch
-            HashMap<String, Object> recordContext = new HashMap<>();
-            recordContext.put( "name", switchName);
-            recordContext.put("resource", "Business");
-            recordContext.put("value", enterpriseName);
-            recordContext.put("controlValue", "");
-            recordContext.put("enabled", false);
-            recordContext.put("adminOnly", false);
-            HashMap<String, Object>  jsonAsMap = new HashMap<>();
-            jsonAsMap.put("level", "Enterprise");
-            jsonAsMap.put("valid", true);
-            jsonAsMap.put("record",recordContext);
-            Response responseAfterDisable= given().log().all().headers("sessionId",sessionId,"Content-Type","application/json").body(jsonAsMap)
-                    .when().post("https://staging-enterprise.dev.legion.work/legion/business/updateABSwitch").then().log().all().extract().response();
-            responseAfterDisable.then().statusCode(200);
-
-        }
-    }
-
-    public static void enableSwitch(String switchName,String enterpriseName) {
-        Response response = given().params("enterpriseName","dgstage","sourceSystem","legion","passwordPlainText","admin2.a","userName","admin2.a")
-                .when().get("https://rc-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
-        String sessionId = response.header("sessionid");
-        //get ABSwitch to confirm the switch is on or off
-        Response response2= given().log().all().header("sessionId",sessionId).param("switchName", switchName).when().get("https://rc-enterprise.dev.legion.work/legion/business/queryABSwitch").then().log().all().extract().response();
-        String enabled = response2.jsonPath().get("records.enabled[0]").toString();
-
-        if (enabled.equals("false")) {
-
-            //disable location group switch
-            HashMap<String, Object> recordContext = new HashMap<>();
-            recordContext.put( "name", switchName);
-            recordContext.put("resource", "Business");
-            recordContext.put("value", enterpriseName);
-            recordContext.put("controlValue", "");
-            recordContext.put("enabled", true);
-            recordContext.put("adminOnly", false);
-            HashMap<String, Object>  jsonAsMap = new HashMap<>();
-            jsonAsMap.put("level", "Enterprise");
-            jsonAsMap.put("valid", true);
-            jsonAsMap.put("record",recordContext);
-            Response responseAfterDisable= given().log().all().headers("sessionId",sessionId,"Content-Type","application/json").body(jsonAsMap)
-                    .when().post("https://rc-enterprise.dev.legion.work/legion/business/updateABSwitch").then().log().all().extract().response();
-            responseAfterDisable.then().statusCode(200);
-
-        }
+    protected static String getCurrentTime() {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+        String currentTime =  dfs.format(new Date());
+        return currentTime;
     }
 
 

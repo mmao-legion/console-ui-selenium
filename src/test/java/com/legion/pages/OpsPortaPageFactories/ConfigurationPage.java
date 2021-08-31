@@ -1,8 +1,5 @@
 package com.legion.pages.OpsPortaPageFactories;
 
-import cucumber.api.java.an.E;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -87,6 +84,10 @@ public interface ConfigurationPage {
     public void selectOneDynamicGroup(String dynamicGroupName) throws Exception;
     public void publishNewTemplate(String templateName,String name,String criteria,String formula) throws Exception;
     public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
-    public void archivePublishedOrDeleteDraftTemplate(String templateName, String action);
+    public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) throws Exception;
     public void createDynamicGroup(String name,String criteria,String formula) throws Exception;
+
+    public void archiveIsClickable() throws Exception;
+    public void verifyArchivePopUpShowWellOrNot() throws Exception;
+    public void cancelArchiveDeleteWorkWell(String templateName) throws Exception;
 }

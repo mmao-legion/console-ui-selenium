@@ -61,6 +61,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="lg-button[label=\"Cancel\"]")
 	private WebElement cancelButton;
 
+	@FindBy(css="a[ng-click=\"$ctrl.back()\"]")
+	private WebElement backButton;
+
 	@FindBy(css="div.lg-page-heading h1")
 	private WebElement templateTitleOnDetailsPage;
 
@@ -2446,28 +2449,86 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) {
+	public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) throws Exception {
 
-		clickTheElement(templateNameList.get(0));
-		waitForSeconds(5);
-		List<WebElement> deleteArchiveBtn = getDriver().findElements(By.cssSelector("button[type=\"button\"]"));
-		for (WebElement e: deleteArchiveBtn) {
-			if (e.getText().equalsIgnoreCase(action)) {
-				click(e);
-				break;
-			}
-		}
-		if(isElementEnabled(archiveTemplateDialog,3)){
-			clickTheElement(okButtonOnDeleteTemplateDialog);
-			waitForSeconds(5);
-			String firstTemplateName = templateNameList.get(0).getText().trim();
-			if(!firstTemplateName.equals(templateName)){
-				SimpleUtils.pass("User has " + action + "  template successfully!");
-			}else {
-				SimpleUtils.fail("User has " + action + "  template failed!",false);
-			}
-		} else
-			SimpleUtils.fail(action+" template dialog pop up window load failed.",false);
+			if (templatesList.size()>0) {
+				SimpleUtils.report("There are :" +templatesList.size()+" found");
 
+				//expand published template with draft version
+				if (isItMultipVersion()) {
+					expandTemplate();
+				}
+				clickTheElement(templateNameList.get(0));
+				waitForSeconds(5);
+				List<WebElement> deleteArchiveBtn = getDriver().findElements(By.cssSelector("button[type=\"button\"]"));
+				for (WebElement e: deleteArchiveBtn) {
+					if (e.getText().equalsIgnoreCase(action)) {
+						click(e);
+						break;
+					}
+				}
+
+				//verify deleting / archive pop up
+				if(isElementEnabled(archiveTemplateDialog,3)||isElementLoaded(deleteTemplateDialog,3)){
+					clickTheElement(okButton);
+					waitForSeconds(5);
+
+					searchTemplate(templateName);
+					if (templateNameList.size()==0) {
+						SimpleUtils.pass("User has " + action + "  template successfully!");
+					}else {
+						SimpleUtils.fail("User has " + action + "  template failed!",false);
+					}
+				} else
+					SimpleUtils.fail(action+" template dialog pop up window load failed.",false);
+			}else
+				SimpleUtils.fail("There are no template that match your criteria",false);
 	}
+
+	private boolean isItMultipVersion() {
+		String classValue = templatesList.get(0).findElement(By.cssSelector("tr")).getAttribute("class");
+		if (classValue != null && classValue.contains("hasChildren")) {
+			return true;
+		} else
+			return false;
+	}
+
+	private void expandTemplate() {
+		clickTheElement(templatesList.get(0).findElement(By.className("toggle")));
+		waitForSeconds(3);
+	}
+
+	//added by Estelle for archive template part
+
+	@FindBy(css = "lg-button[label=\"Archive\"]")
+	private WebElement archiveBtn;
+	@Override
+	public void archiveIsClickable() throws Exception {
+		if (isElementLoaded(archiveBtn,3)) {
+			SimpleUtils.pass("Archive button show well in publish template");
+		}else
+			SimpleUtils.fail("Archive button load failed ",false);
+	}
+
+	@Override
+	public void verifyArchivePopUpShowWellOrNot() throws Exception {
+		click(archiveBtn);
+		waitForSeconds(3);
+		if (isElementLoaded(archiveTemplateDialog,3) && isElementLoaded(okButton,3) && isElementLoaded(cancelButton,3)) {
+			SimpleUtils.pass("Archive Template dialog load well");
+		}else
+			SimpleUtils.fail("Archive Template dialog load failed",false);
+	}
+
+	@Override
+	public void cancelArchiveDeleteWorkWell(String templateName) throws Exception {
+		click(cancelButton);
+		click(backButton);
+		searchTemplate(templateName);
+		if ( templateNameList.size()>0) {
+			SimpleUtils.pass("Cancel archive template successfully");
+		}else
+			SimpleUtils.fail("Published template was archived",false);
+	}
+
 }

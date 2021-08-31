@@ -3,6 +3,7 @@ package com.legion.utils;
 import com.aventstack.extentreports.Status;
 import com.legion.test.testrail.APIClient;
 import com.legion.test.testrail.APIException;
+import com.legion.test.testrail.TestRailOperation;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.ExtentTestManager;
@@ -82,7 +83,7 @@ public class SimpleUtils {
 //		SimpleUtils.addTestResultIntoTestRail(5, message);
 		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
 			MyThreadLocal.setTestResultFlag(false);
-			SimpleUtils.addTestResultIntoTestRailN(5, message);
+			TestRailOperation.addTestResultIntoTestRailN(5, message);
 		}
 		if (continueExecution) {
 			try {
@@ -94,16 +95,6 @@ public class SimpleUtils {
 		} else {
 			ExtentTestManager.getTest().log(Status.FAIL, message);
 			throw new AssertionError(message);
-		}
-	}
-
-	public static void addResultForTest() {
-		if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
-			if (MyThreadLocal.getTestResultFlag()){
-				SimpleUtils.addTestResultIntoTestRailN(1, "");
-			} else {
-				SimpleUtils.addTestResultIntoTestRailN(5, "");
-			}
 		}
 	}
 
@@ -180,7 +171,10 @@ public class SimpleUtils {
 				addVerificationFailure(e);
 				ExtentTestManager.getTest().log(Status.ERROR, "<div class=\"row\" style=\"background-color:#FDB45C; color:white; padding: 7px 5px;\">" + message
 						+ "</div>");
-				MyThreadLocal.setTestResultFlag(false);
+				if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
+					MyThreadLocal.setTestResultFlag(false);
+					TestRailOperation.addTestResultIntoTestRailN(5, message);
+				}
 			}
 		} else {
 			try {
@@ -188,7 +182,10 @@ public class SimpleUtils {
 				MyThreadLocal.setTestResultFlag(true);
 			} catch (Throwable e) {
 				ExtentTestManager.getTest().log(Status.FAIL, message);
-				MyThreadLocal.setTestResultFlag(false);
+				if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
+					MyThreadLocal.setTestResultFlag(false);
+					TestRailOperation.addTestResultIntoTestRailN(5, message);
+				}
 				throw new AssertionError(message);
 			}
 		}
@@ -499,73 +496,75 @@ public class SimpleUtils {
 
 	// method for mobile test cases incase of failure
 
-	public static void fail(String message, boolean continueExecution, String platform) {
-		SimpleUtils.addTestResultIntoTestRail(5,message);
-		if (continueExecution) {
-			try {
-				assertTrue(false);
-			} catch (Throwable e) {
-				addVerificationFailure(e);
-				ExtentTestManager.getTest().log(Status.ERROR, message + " " + platform);
-			}
-		} else {
-			ExtentTestManager.getTest().log(Status.FAIL, message);
-			throw new AssertionError(message);
-		}
-	}
+//	public static void fail(String message, boolean continueExecution, String platform) {
+//		SimpleUtils.addTestResultIntoTestRail(5,message);
+//		if (continueExecution) {
+//			try {
+//				assertTrue(false);
+//			} catch (Throwable e) {
+//				addVerificationFailure(e);
+//				TestRailOperation.addAttachmentToResult(getTestRailTestResultId());
+//				ExtentTestManager.getTest().log(Status.ERROR, message + " " + platform);
+//			}
+//		} else {
+//			TestRailOperation.addAttachmentToResult(getTestRailTestResultId());
+//			ExtentTestManager.getTest().log(Status.FAIL, message);
+//			throw new AssertionError(message);
+//		}
+//	}
 
 	// added code for TestRail connection
 
-	public static void addTestResult(int statusID, String comment)
-	{
-		/*
-		 * TestRail Status ID : Description
-		 * 1 : Passed
-		 * 2 : Blocked
-		 * 4 : Retest
-		 * 5 : Failed
-		 */
-
-		MyThreadLocal myThreadLocal = new MyThreadLocal();
-		String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
-		String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
-		String addResultString = "add_result_for_case/1/"+testCaseId+"";
-		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
-		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
-		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-
-		if(testCaseId != null && Integer.valueOf(testCaseId) > 0)
-		{
-			try {
-				// Make a connection with Testrail Server
-				APIClient client = new APIClient(testRailURL);
-				client.setUser(testRailUser);
-				client.setPassword(testRailPassword);
-
-				JSONObject c = (JSONObject) client.sendGet("get_case/"+testCaseId);
-				String TestRailTitle = (String) c.get("title");
-				if(! TestRailTitle.equals(testName))
-				{
-					Map<String, Object> updateTestTitle = new HashMap<String, Object>();
-					updateTestTitle.put("title", testName);
-					client.sendPost("update_case/"+testCaseId, updateTestTitle);
-				}
-
-				Map<String, Object> data = new HashMap<String, Object>();
-				data.put("status_id", statusID);
-				data.put("comment", comment);
-				client.sendPost(addResultString,data );
-
-			} catch(IOException ioException) {
-				System.err.println(ioException.getMessage());
-			}
-			catch(APIException aPIException)
-			{
-				System.err.println(aPIException.getMessage());
-			}
-		}
-
-	}
+//	public static void addTestResult(int statusID, String comment)
+//	{
+//		/*
+//		 * TestRail Status ID : Description
+//		 * 1 : Passed
+//		 * 2 : Blocked
+//		 * 4 : Retest
+//		 * 5 : Failed
+//		 */
+//
+//		MyThreadLocal myThreadLocal = new MyThreadLocal();
+//		String testCaseId = Integer.toString(ExtentTestManager.getTestRailId(myThreadLocal.getCurrentMethod()));
+//		String testName = ExtentTestManager.getTestName(myThreadLocal.getCurrentMethod());
+//		String addResultString = "add_result_for_case/1/"+testCaseId+"";
+//		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+//		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+//		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+//
+//		if(testCaseId != null && Integer.valueOf(testCaseId) > 0)
+//		{
+//			try {
+//				// Make a connection with Testrail Server
+//				APIClient client = new APIClient(testRailURL);
+//				client.setUser(testRailUser);
+//				client.setPassword(testRailPassword);
+//
+//				JSONObject c = (JSONObject) client.sendGet("get_case/"+testCaseId);
+//				String TestRailTitle = (String) c.get("title");
+//				if(! TestRailTitle.equals(testName))
+//				{
+//					Map<String, Object> updateTestTitle = new HashMap<String, Object>();
+//					updateTestTitle.put("title", testName);
+//					client.sendPost("update_case/"+testCaseId, updateTestTitle);
+//				}
+//
+//				Map<String, Object> data = new HashMap<String, Object>();
+//				data.put("status_id", statusID);
+//				data.put("comment", comment);
+//				client.sendPost(addResultString,data );
+//
+//			} catch(IOException ioException) {
+//				System.err.println(ioException.getMessage());
+//			}
+//			catch(APIException aPIException)
+//			{
+//				System.err.println(aPIException.getMessage());
+//			}
+//		}
+//
+//	}
 
 
 	public static void addTestCase(String scenario, String summary, String testSteps, String expectedResult, String actualResult,
@@ -762,19 +761,19 @@ public class SimpleUtils {
 
 	//added by Nishant
 
-	public static JSONArray getTestCasesIDFromTitle(String title, int projectID, APIClient client, int sectionID)
-	{
-		JSONArray testCasesList  = new JSONArray();
-		JSONObject jsonTestCase;
-		int suiteId = Integer.valueOf(TestBase.testSuiteID);
-		int testCaseID = 0;
-		try {
-			testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&suite_id="+suiteId+"&section_id="+sectionID);
-		} catch (IOException | APIException | NullPointerException e) {
-			fail(e.getMessage(), true);
-		}
-		return testCasesList;
-	}
+//	public static JSONArray getTestCasesIDFromTitle(String title, int projectID, APIClient client, int sectionID)
+//	{
+//		JSONArray testCasesList  = new JSONArray();
+//		JSONObject jsonTestCase;
+//		int suiteId = Integer.valueOf(TestBase.testSuiteID);
+//		int testCaseID = 0;
+//		try {
+//			testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&suite_id="+suiteId+"&section_id="+sectionID);
+//		} catch (IOException | APIException | NullPointerException e) {
+//			fail(e.getMessage(), true);
+//		}
+//		return testCasesList;
+//	}
 
 
 	public static void deleteTestCaseByID(int testCaseID)
@@ -852,526 +851,476 @@ public class SimpleUtils {
 
 	//added by Nishant
 
-	public static int addNUpdateTestCaseIntoTestRail(String testName, int sectionID,ITestContext context)
-	{
-		int testCaseID = 0;
-
-		if(sectionID > 0){
-
-//	    String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-			String addResultString = "add_case/"+sectionID;
-			String testRailURL = testRailConfig.get("TEST_RAIL_URL");
-			String testRailUser = testRailConfig.get("TEST_RAIL_USER");
-			String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-			String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-			//String testRailSuiteID = TestBase.testSuiteID;
-			try {
-				// Make a connection with TestRail Server
-				APIClient client = new APIClient(testRailURL);
-				client.setUser(testRailUser);
-				client.setPassword(testRailPassword);
-				testCaseID = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client, sectionID);
-//				JSONArray testCasesList = getTestCasesIDFromTitle(testName, Integer.parseInt(testRailProjectID), client, sectionID);
-//				if(!testCasesList.isEmpty()){
-//					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCasesList);
-//				}
-				if(testCaseID > 0){
+//	public static int addNUpdateTestCaseIntoTestRail(String testName, int sectionID,ITestContext context)
+//	{
+//		int testCaseID = 0;
+//
+//		if(sectionID > 0){
+//
+////	    String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
+//			String addResultString = "add_case/"+sectionID;
+//			String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+//			String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+//			String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+//			String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+//			//String testRailSuiteID = TestBase.testSuiteID;
+//			try {
+//				// Make a connection with TestRail Server
+//				APIClient client = new APIClient(testRailURL);
+//				client.setUser(testRailUser);
+//				client.setPassword(testRailPassword);
+//				testCaseID = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client, sectionID);
+////				JSONArray testCasesList = getTestCasesIDFromTitle(testName, Integer.parseInt(testRailProjectID), client, sectionID);
+////				if(!testCasesList.isEmpty()){
+////					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCasesList);
+////				}
+//				if(testCaseID > 0){
+////					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
+////					addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
+//					addNUpdateTestCaseIntoTestRun2(testName,sectionID,testCaseID,context);
+//					return testCaseID;
+//				}else{
+//					Map<String, Object> data = new HashMap<String, Object>();
+//					data.put("title", testName);
+//					client.sendPost(addResultString,data );
+//					testCaseID = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client, sectionID);
 //					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
-//					addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
-					addNUpdateTestCaseIntoTestRun2(testName,sectionID,testCaseID,context);
-					return testCaseID;
-				}else{
-					Map<String, Object> data = new HashMap<String, Object>();
-					data.put("title", testName);
-					client.sendPost(addResultString,data );
-					testCaseID = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client, sectionID);
-					addNUpdateTestCaseIntoTestRun(testName,sectionID,testCaseID);
-//					addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
-					return testCaseID;
-				}
-
-
-			}catch(IOException ioException){
-				System.err.println(ioException.getMessage());
-			}
-			catch(APIException aPIException){
-				System.err.println(aPIException.getMessage());
-			}
-
-
-		}
-		return testCaseID;
-	}
+////					addNUpdateTestCaseIntoTestRun1(testName,sectionID,testCaseID,context);
+//					return testCaseID;
+//				}
+//
+//
+//			}catch(IOException ioException){
+//				System.err.println(ioException.getMessage());
+//			}
+//			catch(APIException aPIException){
+//				System.err.println(aPIException.getMessage());
+//			}
+//
+//
+//		}
+//		return testCaseID;
+//	}
 
 
 
-	public static List<Integer> addNUpdateTestCaseIntoTestRail(String testName,ITestContext context)
-	{
-		//int testCaseID = 0;
-		List<Integer> testCaseIDList = new ArrayList<>();
-		List<Integer> testCasesToAdd = new ArrayList<>();
-//	    String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-		//String addResultString = "add_case/"+sectionID;
-		String testRailURL =        "";
-		String testRailUser =       "";
-		String testRailPassword =   "";
-		//String testRailSuiteID =    "";
-		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
-			testRailURL = testRailConfig.get("TEST_RAIL_URL");
-			//setTestRailURL(testRailURL);
-			testRailUser = testRailConfig.get("TEST_RAIL_USER");
-			//setTestRailUser(testRailUser);
-			testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-			//setTestRailPassword(testRailPassword);
-		}else {
-			testRailURL = testRailCfgOp.get("TEST_RAIL_URL");
-			//setTestRailURL(testRailURL);
-			testRailUser = testRailCfgOp.get("TEST_RAIL_USER");
-			//setTestRailUser(testRailUser);
-			testRailPassword = testRailCfgOp.get("TEST_RAIL_PASSWORD");
-			//setTestRailPassword(testRailPassword);
-			//testRailSuiteID = MyThreadLocal.getTestSuiteID();
-			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
-		}
-		try {
-			// Make a connection with TestRail Server
-			APIClient client = new APIClient(testRailURL);
-			client.setUser(testRailUser);
-			client.setPassword(testRailPassword);
-			testCaseIDList = TestBase.AllTestCaseIDList;
-			testCasesToAdd = getTestCaseIDFromTitle(testName, Integer.parseInt(TestBase.testRailProjectID), client);
-			if (testCasesToAdd.isEmpty()){
-				MyThreadLocal.setTestCaseExistsFlag(false);
-				System.out.println("-------------------Cannot find the test cases for: " + testName + "-------------------");
-			} else {
-				MyThreadLocal.setTestCaseExistsFlag(true);
-				testCaseIDList.addAll(testCasesToAdd);
-				TestBase.AllTestCaseIDList = testCaseIDList;
-			}
-			updateTestCaseIntoTestRunSample(testName,context,testCaseIDList);
-		}catch(Exception e){
-			System.err.println(e.getMessage());
-		}
+//	public static List<Integer> addNUpdateTestCaseIntoTestRail(String testName,ITestContext context)
+//	{
+//		//int testCaseID = 0;
+//		List<Integer> testCaseIDList = new ArrayList<>();
+//		List<Integer> testCasesToAdd = new ArrayList<>();
+////	    String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
+//		//String addResultString = "add_case/"+sectionID;
+//		String testRailURL =        "";
+//		String testRailUser =       "";
+//		String testRailPassword =   "";
+//		//String testRailSuiteID =    "";
+//		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+//			testRailURL = testRailConfig.get("TEST_RAIL_URL");
+//			//setTestRailURL(testRailURL);
+//			testRailUser = testRailConfig.get("TEST_RAIL_USER");
+//			//setTestRailUser(testRailUser);
+//			testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+//			//setTestRailPassword(testRailPassword);
+//		}else {
+//			testRailURL = testRailCfgOp.get("TEST_RAIL_URL");
+//			//setTestRailURL(testRailURL);
+//			testRailUser = testRailCfgOp.get("TEST_RAIL_USER");
+//			//setTestRailUser(testRailUser);
+//			testRailPassword = testRailCfgOp.get("TEST_RAIL_PASSWORD");
+//			//setTestRailPassword(testRailPassword);
+//			//testRailSuiteID = MyThreadLocal.getTestSuiteID();
+//			//String testRailSuiteID = testRailConfig.get("TEST_RAIL_SUITE_ID");
+//		}
+//		try {
+//			// Make a connection with TestRail Server
+//			APIClient client = new APIClient(testRailURL);
+//			client.setUser(testRailUser);
+//			client.setPassword(testRailPassword);
+//			testCaseIDList = TestBase.AllTestCaseIDList;
+//			testCasesToAdd = getTestCaseIDFromTitle(testName, Integer.parseInt(TestBase.testRailProjectID), client);
+//			if (testCasesToAdd.isEmpty()){
+//				MyThreadLocal.setTestCaseExistsFlag(false);
+//				System.out.println("-------------------Cannot find the test cases for: " + testName + "-------------------");
+//			} else {
+//				MyThreadLocal.setTestCaseExistsFlag(true);
+//				testCaseIDList.addAll(testCasesToAdd);
+//				TestBase.AllTestCaseIDList = testCaseIDList;
+//			}
+//			updateTestCaseIntoTestRunSample(testName,context,testCaseIDList);
+//		}catch(Exception e){
+//			System.err.println(e.getMessage());
+//		}
+//
+//		return testCaseIDList;
+//	}
 
-		return testCaseIDList;
-	}
-
-	public static List<Integer> getTestCaseIDFromTitle(String title, int projectID, APIClient client)
-	{
-		JSONArray testCasesList;
-		JSONObject jsonSectionName;
-		JSONArray sectionNameList;
-//		JSONObject testCaseId;
-		int suiteId = Integer.valueOf(TestBase.testSuiteID);
-		int testCaseID = 0;
-		List<Integer> testCaseIDList = new ArrayList<>();
-		try {
-			sectionNameList = (JSONArray) client.sendGet("get_sections/"+projectID+"/&suite_id="+suiteId);
-			for(Object sectionName : sectionNameList)
-			{
-
-				jsonSectionName = (JSONObject) sectionName;
-				if(title.trim().toLowerCase().equals(jsonSectionName.get("name").toString().trim().toLowerCase()))
-				{
-					long longSectionID = (Long) jsonSectionName.get("id");
-					int sectionID = (int)longSectionID;
-					testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&suite_id="+suiteId+"&section_id="+sectionID);
-					for(Object testCaseList : testCasesList){
-						JSONObject testCaseId = (JSONObject) testCaseList;
-						long longTestCaseID = (Long) testCaseId.get("id");
-						testCaseID = (int)longTestCaseID;
-						testCaseIDList.add(testCaseID);
-					}
-					break;
-				}
-			}
-		} catch (IOException | APIException | NullPointerException e) {
-			fail(e.getMessage(), true);
-		}
-		return testCaseIDList;
-	}
-
-
-	//added by Nishant
-
-	public static void addTestResultIntoTestRail(int statusID, String comment)
-	{
-		/*
-		 * TestRail Status ID : Description
-		 * 1 : Passed
-		 * 2 : Blocked
-		 * 4 : Retest
-		 * 5 : Failed
-		 */
-		int testCaseId = MyThreadLocal.getTestCaseId();
-		String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
-		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
-		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-		int testRailRunId = TestBase.testRailRunId;
-//		String addResultString = "add_result_for_case/"+testRailRunId+"/"+testCaseId+"";
-		String addResultString = "add_results_for_cases/"+testRailRunId;
-
-		if(testCaseId > 0)
-		{
-			try {
-				// Make a connection with Testrail Server
-				APIClient client = new APIClient(testRailURL);
-				client.setUser(testRailUser);
-				client.setPassword(testRailPassword);
-				JSONObject jSONObject = (JSONObject) client.sendGet("get_case/"+testCaseId);
-				if(statusID == 5) {
-					Map<String, Object> data = new HashMap<String, Object>();
-					takeScreenShotOnFailure();
-					String finalLink = getscreenShotURL();
-					data.put("status_id", statusID);
-					data.put("comment", comment +"\n" + "[Link To ScreenShot]" +"("+finalLink +")");
-					client.sendPost(addResultString, data);
-				}else{
-					Map<String, Object> data = new HashMap<String, Object>();
-					data.put("status_id", statusID);
-					data.put("comment", comment);
-					client.sendPost(addResultString, data);
-				}
-			}catch(IOException ioException){
-				System.err.println(ioException.getMessage());
-			} catch(APIException aPIException){
-				System.err.println(aPIException.getMessage());
-			}
-		}
-
-	}
-
-	public static String getTestRailURL(){
-		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
-			return testRailConfig.get("TEST_RAIL_URL");
-		}else {
-			return testRailCfgOp.get("TEST_RAIL_URL");
-		}
-	}
-	public static String getTestRailUser(){
-		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
-			return testRailConfig.get("TEST_RAIL_USER");
-		}else {
-			return testRailCfgOp.get("TEST_RAIL_USER");
-		}
-	}
-	public static String getTestRailPassword(){
-		if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
-			return testRailConfig.get("TEST_RAIL_PASSWORD");
-		}else {
-			return testRailCfgOp.get("TEST_RAIL_PASSWORD");
-		}
-	}
-
-	//added by Nishant
-
-	public static void addTestResultIntoTestRailN(int statusID, String comment) {
-
-		String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-		String testRailURL = getTestRailURL();
-		String testRailUser = getTestRailUser();
-		String testRailPassword = getTestRailPassword();
-		String testRailProjectID = TestBase.testRailProjectID;
-		int testRailRunId = TestBase.testRailRunId;
-//		String addResultString = "add_result_for_case/"+testRailRunId+"/"+testCaseId+"";
-		String addResultString = "add_results_for_cases/"+testRailRunId;
-		JSONArray response = null;
-		List<Integer> testIds = new ArrayList<>();
-		List<String> commentSection = new ArrayList<>();
-		List<String> failedCommentSection = new ArrayList<>();
-		try {
-			// Make a connection with Testrail Server
-			APIClient client = new APIClient(testRailURL);
-			client.setUser(testRailUser);
-			client.setPassword(testRailPassword);
-			List cases = new ArrayList();
-			testIds = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client);
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("results",cases);
-			for ( int testId : testIds )
-			{
-				Map singleCase = new HashMap();
-				singleCase.put("case_id", "" + testId);
-				singleCase.put("status_id", statusID);
-				singleCase.put("comment", comment);
-				cases.add(singleCase);
-				if(statusID == 5){
-					if(getFailedComment()== null){
-						failedCommentSection.add(comment);
-						setFailedComment(failedCommentSection);
-					}
-//					else{
-//						getFailedComment().add(comment);
-//						setFailedComment(getFailedComment());
+//	public static List<Integer> getTestCaseIDFromTitle(String title, int projectID, APIClient client)
+//	{
+//		JSONArray testCasesList;
+//		JSONObject jsonSectionName;
+//		JSONArray sectionNameList;
+////		JSONObject testCaseId;
+//		int suiteId = Integer.valueOf(TestBase.testSuiteID);
+//		int testCaseID = 0;
+//		List<Integer> testCaseIDList = new ArrayList<>();
+//		try {
+//			sectionNameList = (JSONArray) client.sendGet("get_sections/"+projectID+"/&suite_id="+suiteId);
+//			for(Object sectionName : sectionNameList)
+//			{
+//
+//				jsonSectionName = (JSONObject) sectionName;
+//				if(title.trim().toLowerCase().equals(jsonSectionName.get("name").toString().trim().toLowerCase()))
+//				{
+//					long longSectionID = (Long) jsonSectionName.get("id");
+//					int sectionID = (int)longSectionID;
+//					testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&suite_id="+suiteId+"&section_id="+sectionID);
+//					for(Object testCaseList : testCasesList){
+//						JSONObject testCaseId = (JSONObject) testCaseList;
+//						long longTestCaseID = (Long) testCaseId.get("id");
+//						testCaseID = (int)longTestCaseID;
+//						testCaseIDList.add(testCaseID);
 //					}
-				}
-			}
-			String responseReq = JSONValue.toJSONString(data);
-			response  =  (JSONArray) client.sendPost(addResultString,data);
+//					break;
+//				}
+//			}
+//		} catch (IOException | APIException | NullPointerException e) {
+//			fail(e.getMessage(), true);
+//		}
+//		return testCaseIDList;
+//	}
 
-		}catch(IOException ioException){
-			System.err.println(ioException.getMessage());
-		} catch(APIException aPIException){
-			System.err.println(aPIException.getMessage());
-		}
-		int count =0;
-		if(getComment() == null){
-			setComment(testName);
-			commentSection.add("Start " +testName);
-//			setComment(comment);
-			commentSection.add(comment);
-			setCommentSection(commentSection);
-		}else{
-			for(int i =0; i<getCommentSection().size();i++){
-				commentSection.add(getCommentSection().get(i));
-			}
-			if(!getComment().equalsIgnoreCase(testName)){
-				setComment(testName);
-				commentSection.add("Start " +testName);
-			}
-			commentSection.add(comment);
-			setCommentSection(commentSection);
-		}
 
-	}
+	//added by Nishant
 
-	public static void addTestResultIntoTestRailN(int statusPassID, int statusFailID ,ITestContext context) {
-		String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
-		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
-		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-		int testRailRunId = TestBase.testRailRunId;
+//	public static void addTestResultIntoTestRail(int statusID, String comment)
+//	{
+//		/*
+//		 * TestRail Status ID : Description
+//		 * 1 : Passed
+//		 * 2 : Blocked
+//		 * 4 : Retest
+//		 * 5 : Failed
+//		 */
+//		int testCaseId = MyThreadLocal.getTestCaseId();
+//		String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
+//		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+//		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+//		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+//		int testRailRunId = TestBase.testRailRunId;
+////		String addResultString = "add_result_for_case/"+testRailRunId+"/"+testCaseId+"";
+//		String addResultString = "add_results_for_cases/"+testRailRunId;
+//
+//		if(testCaseId > 0)
+//		{
+//			try {
+//				// Make a connection with Testrail Server
+//				APIClient client = new APIClient(testRailURL);
+//				client.setUser(testRailUser);
+//				client.setPassword(testRailPassword);
+//				JSONObject jSONObject = (JSONObject) client.sendGet("get_case/"+testCaseId);
+//				if(statusID == 5) {
+//					Map<String, Object> data = new HashMap<String, Object>();
+//					takeScreenShotOnFailure();
+//					String finalLink = getscreenShotURL();
+//					data.put("status_id", statusID);
+//					data.put("comment", comment +"\n" + "[Link To ScreenShot]" +"("+finalLink +")");
+//					client.sendPost(addResultString, data);
+//				}else{
+//					Map<String, Object> data = new HashMap<String, Object>();
+//					data.put("status_id", statusID);
+//					data.put("comment", comment);
+//					client.sendPost(addResultString, data);
+//				}
+//			}catch(IOException ioException){
+//				System.err.println(ioException.getMessage());
+//			} catch(APIException aPIException){
+//				System.err.println(aPIException.getMessage());
+//			}
+//		}
+//
+//	}
+
+	//added by Nishant
+
+//	public static void addTestResultIntoTestRailN(int statusID, String comment) {
+//
+//		String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
+//		String testRailURL = getTestRailURL();
+//		String testRailUser = getTestRailUser();
+//		String testRailPassword = getTestRailPassword();
+//		String testRailProjectID = TestBase.testRailProjectID;
+//		int testRailRunId = TestBase.testRailRunId;
+////		String addResultString = "add_result_for_case/"+testRailRunId+"/"+testCaseId+"";
+//		String addResultString = "add_results_for_cases/"+testRailRunId;
+//		JSONArray response = null;
+//		List<Integer> testIds = new ArrayList<>();
+//		List<String> commentSection = new ArrayList<>();
+//		List<String> failedCommentSection = new ArrayList<>();
+//		try {
+//			// Make a connection with Testrail Server
+//			APIClient client = new APIClient(testRailURL);
+//			client.setUser(testRailUser);
+//			client.setPassword(testRailPassword);
+//			List cases = new ArrayList();
+//			testIds = getTestCaseIDFromTitle(testName, Integer.parseInt(testRailProjectID), client);
+//			Map<String, Object> data = new HashMap<String, Object>();
+//			data.put("results",cases);
+//			for ( int testId : testIds )
+//			{
+//				Map singleCase = new HashMap();
+//				singleCase.put("case_id", "" + testId);
+//				singleCase.put("status_id", statusID);
+//				singleCase.put("comment", comment);
+//				cases.add(singleCase);
+//				if(statusID == 5){
+//					if(getFailedComment()== null){
+//						failedCommentSection.add(comment);
+//						setFailedComment(failedCommentSection);
+//					}
+////					else{
+////						getFailedComment().add(comment);
+////						setFailedComment(getFailedComment());
+////					}
+//				}
+//			}
+//			String responseReq = JSONValue.toJSONString(data);
+//			response  =  (JSONArray) client.sendPost(addResultString,data);
+//
+//		}catch(IOException ioException){
+//			System.err.println(ioException.getMessage());
+//		} catch(APIException aPIException){
+//			System.err.println(aPIException.getMessage());
+//		}
+//		int count =0;
+//		if(getComment() == null){
+//			setComment(testName);
+//			commentSection.add("Start " +testName);
+////			setComment(comment);
+//			commentSection.add(comment);
+//			setCommentSection(commentSection);
+//		}else{
+//			for(int i =0; i<getCommentSection().size();i++){
+//				commentSection.add(getCommentSection().get(i));
+//			}
+//			if(!getComment().equalsIgnoreCase(testName)){
+//				setComment(testName);
+//				commentSection.add("Start " +testName);
+//			}
+//			commentSection.add(comment);
+//			setCommentSection(commentSection);
+//		}
+//
+//	}
+
+//	public static void addTestResultIntoTestRailN(int statusPassID, int statusFailID ,ITestContext context) {
+//		String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
+//		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+//		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+//		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+//		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+//		int testRailRunId = TestBase.testRailRunId;
+////		String addResultString = "add_result_for_case/"+testRailRunId+"/"+testCaseId+"";
+//		String addResultString = "add_results_for_cases/"+testRailRunId;
+//		JSONArray response = null;
+//		List<Integer> testIds = new ArrayList<>();
+//		List<String> commentSection = new ArrayList<>();
+//		List<Integer> commentSectionWithTestName = new ArrayList<>();
+//		int statusId = statusPassID;
+////		Object[] arrComment = getCommentSection().toArray();
+////		String[] strComment = Arrays.copyOf(arrComment, arrComment.length,String[].class);
+//		try {
+//			// Make a connection with Testrail Server
+//			APIClient client = new APIClient(testRailURL);
+//			client.setUser(testRailUser);
+//			client.setPassword(testRailPassword);
+//			List<String> testNameList = new ArrayList<String>();
+//			List<Integer> testRailIdList = new ArrayList<>();
+//			testNameList = (List)context.getAttribute("TestName");
+//			testRailIdList = (List) context.getAttribute("TestRailId");
+//			Collections.reverse(testRailIdList);
+//			List commentSectionIndex = new ArrayList<>();
+//			int counter =0;
+//			for(int i=0;i<testNameList.size();i++){
+//				List cases = new ArrayList();
+//				testIds = getTestCaseIDFromTitle(testNameList.get(i), Integer.parseInt(testRailProjectID), client);
+//				//status validation
+//				JSONObject jSONObject= (JSONObject) client.sendGet("get_run/"+testRailIdList.get(i));
+//				long longTestRunPassStatus = (Long) jSONObject.get("passed_count");
+//				int TestRunPassStatus = (int) longTestRunPassStatus;
+//				List<String> listComments = new ArrayList<>();
+//				List<String> listCommentSection = new ArrayList<>();
+//				for(int j=0; j<getCommentSection().size(); j++){
+//					if(getCommentSection().get(j).contains(testNameList.get(i).trim())){
+//						for(int k=j+1; k< getCommentSection().size();k++){
+//							if(getCommentSection().get(k).contains("Start")){
+//								break;
+//							}
+//							listCommentSection.add(getCommentSection().get(k));
+//						}
+//					}
+//				}
+//				if(getFailedComment()!=null){
+//					for(int j =0; j<getFailedComment().size();j++){
+//						for(int k=0; k<listCommentSection.size();k++){
+//							if(listCommentSection.get(k).equalsIgnoreCase(getFailedComment().get(j))){
+//								commentSectionIndex.add(k);
+//							}
+//						}
+//					}
+//				}
+//
+////				if(TestRunPassStatus >0){
+//				if(commentSectionIndex.isEmpty()){
+//					Map<String, Object> data = new HashMap<String, Object>();
+//					data.put("results",cases);
+//					for ( int testId : testIds ) {
+//						for( String commentSections : listCommentSection) {
+//							Map singleCase = new HashMap();
+//							singleCase.put("case_id", "" + testId);
+//							singleCase.put("status_id", statusPassID);
+//							singleCase.put("comment", commentSections);
+//							cases.add(singleCase);
+//						}
+//					}
+//					String responseReq = JSONValue.toJSONString(data);
+//					response  =  (JSONArray) client.sendPost(addResultString,data);
+//				}else{
+//					Map<String, Object> data = new HashMap<String, Object>();
+//					data.put("results",cases);
+//					listCommentSection.add("Failed");
+//					for ( int testId : testIds ) {
+//						for( int j=0; j<listCommentSection.size();j++) {
+//							for(int k=0; k<commentSectionIndex.size();k++){
+//								if(j == Integer.parseInt(commentSectionIndex.get(k).toString())){
+//									statusId = statusFailID;
+//									break;
+//								}else if(j==listCommentSection.size()-1){
+//									statusId = statusFailID;
+//									break;
+//								}else{
+//									statusId = statusPassID;
+//								}
+//							}
+//							Map singleCase = new HashMap();
+//							singleCase.put("case_id", "" + testId);
+//							singleCase.put("status_id", statusId);
+//							singleCase.put("comment", listCommentSection.get(j));
+//							cases.add(singleCase);
+//
+//						}
+//					}
+//					String responseReq = JSONValue.toJSONString(data);
+//					response  =  (JSONArray) client.sendPost(addResultString,data);
+//					commentSectionIndex.clear();
+//				}
+//				listCommentSection.clear();
+//			}
+//
+//			deleteTestRail(testRailIdList);
+//		}catch(IOException ioException){
+//			System.err.println(ioException.getMessage());
+//		} catch(APIException aPIException){
+//			System.err.println(aPIException.getMessage());
+//		}
+//	}
+
+//	public static void addTestResultWithTestCaseLinkIntoTestRail(int statusID, String comment)
+//	{
+//		/*
+//		 * TestRail Status ID : Description
+//		 * 1 : Passed
+//		 * 2 : Blocked
+//		 * 4 : Retest
+//		 * 5 : Failed
+//		 */
+//		int testCaseId = MyThreadLocal.getTestCaseId();
+//		String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
+//		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+//		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+//		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+//		int testRailRunId = TestBase.testRailRunId;
+//		int suiteTestCaseId = Integer.valueOf(testRailConfig.get("TEST_CASE_SUITE_ID"));
+//		int sectionId = ExtentTestManager.getTestCaseSectionId(MyThreadLocal.getCurrentMethod());
 //		String addResultString = "add_result_for_case/"+testRailRunId+"/"+testCaseId+"";
-		String addResultString = "add_results_for_cases/"+testRailRunId;
-		JSONArray response = null;
-		List<Integer> testIds = new ArrayList<>();
-		List<String> commentSection = new ArrayList<>();
-		List<Integer> commentSectionWithTestName = new ArrayList<>();
-		int statusId = statusPassID;
-//		Object[] arrComment = getCommentSection().toArray();
-//		String[] strComment = Arrays.copyOf(arrComment, arrComment.length,String[].class);
-		try {
-			// Make a connection with Testrail Server
-			APIClient client = new APIClient(testRailURL);
-			client.setUser(testRailUser);
-			client.setPassword(testRailPassword);
-			List<String> testNameList = new ArrayList<String>();
-			List<Integer> testRailIdList = new ArrayList<>();
-			testNameList = (List)context.getAttribute("TestName");
-			testRailIdList = (List) context.getAttribute("TestRailId");
-			Collections.reverse(testRailIdList);
-			List commentSectionIndex = new ArrayList<>();
-			int counter =0;
-			for(int i=0;i<testNameList.size();i++){
-				List cases = new ArrayList();
-				testIds = getTestCaseIDFromTitle(testNameList.get(i), Integer.parseInt(testRailProjectID), client);
-				//status validation
-				JSONObject jSONObject= (JSONObject) client.sendGet("get_run/"+testRailIdList.get(i));
-				long longTestRunPassStatus = (Long) jSONObject.get("passed_count");
-				int TestRunPassStatus = (int) longTestRunPassStatus;
-				List<String> listComments = new ArrayList<>();
-				List<String> listCommentSection = new ArrayList<>();
-				for(int j=0; j<getCommentSection().size(); j++){
-					if(getCommentSection().get(j).contains(testNameList.get(i).trim())){
-						for(int k=j+1; k< getCommentSection().size();k++){
-							if(getCommentSection().get(k).contains("Start")){
-								break;
-							}
-							listCommentSection.add(getCommentSection().get(k));
-						}
-					}
-				}
-				if(getFailedComment()!=null){
-					for(int j =0; j<getFailedComment().size();j++){
-						for(int k=0; k<listCommentSection.size();k++){
-							if(listCommentSection.get(k).equalsIgnoreCase(getFailedComment().get(j))){
-								commentSectionIndex.add(k);
-							}
-						}
-					}
-				}
-
-//				if(TestRunPassStatus >0){
-				if(commentSectionIndex.isEmpty()){
-					Map<String, Object> data = new HashMap<String, Object>();
-					data.put("results",cases);
-					for ( int testId : testIds ) {
-						for( String commentSections : listCommentSection) {
-							Map singleCase = new HashMap();
-							singleCase.put("case_id", "" + testId);
-							singleCase.put("status_id", statusPassID);
-							singleCase.put("comment", commentSections);
-							cases.add(singleCase);
-						}
-					}
-					String responseReq = JSONValue.toJSONString(data);
-					response  =  (JSONArray) client.sendPost(addResultString,data);
-				}else{
-					Map<String, Object> data = new HashMap<String, Object>();
-					data.put("results",cases);
-					listCommentSection.add("Failed");
-					for ( int testId : testIds ) {
-						for( int j=0; j<listCommentSection.size();j++) {
-							for(int k=0; k<commentSectionIndex.size();k++){
-								if(j == Integer.parseInt(commentSectionIndex.get(k).toString())){
-									statusId = statusFailID;
-									break;
-								}else if(j==listCommentSection.size()-1){
-									statusId = statusFailID;
-									break;
-								}else{
-									statusId = statusPassID;
-								}
-							}
-							Map singleCase = new HashMap();
-							singleCase.put("case_id", "" + testId);
-							singleCase.put("status_id", statusId);
-							singleCase.put("comment", listCommentSection.get(j));
-							cases.add(singleCase);
-
-						}
-					}
-					String responseReq = JSONValue.toJSONString(data);
-					response  =  (JSONArray) client.sendPost(addResultString,data);
-					commentSectionIndex.clear();
-				}
-				listCommentSection.clear();
-			}
-
-			deleteTestRail(testRailIdList);
-		}catch(IOException ioException){
-			System.err.println(ioException.getMessage());
-		} catch(APIException aPIException){
-			System.err.println(aPIException.getMessage());
-		}
-	}
-
-	//Add by Haya
-	public static boolean isTestRunEmpty(long testRailRunId){
-		boolean result = false;
-		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
-		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
-		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-		try {
-			// Make a connection with Testrail Server
-			APIClient client = new APIClient(testRailURL);
-			client.setUser(testRailUser);
-			client.setPassword(testRailPassword);
-			JSONObject jSONObject= (JSONObject) client.sendGet("get_run/"+testRailRunId);
-			long testRunPassedCount = (long) jSONObject.get("passed_count");
-			long testRunFailedCount = (long) jSONObject.get("failed_count");
-			long testRunBlockedCount = (long) jSONObject.get("blocked_count");
-			long testRunRetestCount = (long) jSONObject.get("retest_count");
-			long testRunUntestedCount = (long) jSONObject.get("untested_count");
-			if ((testRunPassedCount+testRunFailedCount+testRunBlockedCount+testRunRetestCount+testRunUntestedCount)==0){
-				result = true;
-			}
-		}catch(IOException ioException){
-			System.err.println(ioException.getMessage());
-		} catch(APIException aPIException){
-			System.err.println(aPIException.getMessage());
-		}
-		return result;
-	}
-
-	public static void addTestResultWithTestCaseLinkIntoTestRail(int statusID, String comment)
-	{
-		/*
-		 * TestRail Status ID : Description
-		 * 1 : Passed
-		 * 2 : Blocked
-		 * 4 : Retest
-		 * 5 : Failed
-		 */
-		int testCaseId = MyThreadLocal.getTestCaseId();
-		String testName = ExtentTestManager.getTestName(MyThreadLocal.getCurrentMethod());
-		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
-		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
-		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-		int testRailRunId = TestBase.testRailRunId;
-		int suiteTestCaseId = Integer.valueOf(testRailConfig.get("TEST_CASE_SUITE_ID"));
-		int sectionId = ExtentTestManager.getTestCaseSectionId(MyThreadLocal.getCurrentMethod());
-		String addResultString = "add_result_for_case/"+testRailRunId+"/"+testCaseId+"";
-
-		if(testCaseId > 0)
-		{
-			try {
-				// Make a connection with Testrail Server
-				APIClient client = new APIClient(testRailURL);
-				client.setUser(testRailUser);
-				client.setPassword(testRailPassword);
-				JSONObject jSONObject = (JSONObject) client.sendGet("get_case/"+testCaseId);
-				Map<String, Object> data = new HashMap<String, Object>();
-				data.put("status_id", statusID);
-				data.put("comment", comment + " " + "https://legiontech.testrail.io/index.php?/suites/view/" + suiteTestCaseId + "&group_by=cases:section_id&group_order=asc&group_id=" + sectionId);
-				client.sendPost(addResultString, data);
-
-			}catch(IOException ioException){
-				System.err.println(ioException.getMessage());
-			} catch(APIException aPIException){
-				System.err.println(aPIException.getMessage());
-			}
-		}
-
-	}
+//
+//		if(testCaseId > 0)
+//		{
+//			try {
+//				// Make a connection with Testrail Server
+//				APIClient client = new APIClient(testRailURL);
+//				client.setUser(testRailUser);
+//				client.setPassword(testRailPassword);
+//				JSONObject jSONObject = (JSONObject) client.sendGet("get_case/"+testCaseId);
+//				Map<String, Object> data = new HashMap<String, Object>();
+//				data.put("status_id", statusID);
+//				data.put("comment", comment + " " + "https://legiontech.testrail.io/index.php?/suites/view/" + suiteTestCaseId + "&group_by=cases:section_id&group_order=asc&group_id=" + sectionId);
+//				client.sendPost(addResultString, data);
+//
+//			}catch(IOException ioException){
+//				System.err.println(ioException.getMessage());
+//			} catch(APIException aPIException){
+//				System.err.println(aPIException.getMessage());
+//			}
+//		}
+//
+//	}
 
 
 
 
-	public static int addNUpdateTestCaseIntoTestRun(String testName, int sectionID, int testCaseId)
-	{
-		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
-		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
-		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
-		int suiteId = Integer.valueOf(TestBase.testSuiteID);
-//		int suiteId = Integer.valueOf(testRailConfig.get("TEST_CASE_SUITE_ID"));
-
-		int TestRailRunId = 0;
-		int count = 0;
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date =null;
-		String strDate = null;
-
-		String addResultString = "add_run/" + testRailProjectID;
-		try {
-			// Make a connection with TestRail Server
-			APIClient client = new APIClient(testRailURL);
-			client.setUser(testRailUser);
-			client.setPassword(testRailPassword);
-			List cases = new ArrayList();
-			cases.add(new Integer(testCaseId));
-
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("title", testName);
-			try{
-				date = format.parse(timestamp.toString());
-				String[] arrDate = format.format(date).split(" ");
-				strDate = arrDate[1];
-			}catch(ParseException e){
-				System.err.println(e.getMessage());
-			}
-			data.put("suite_id", suiteId);
-			data.put("name", testRailSuiteName +" " +strDate);
-			data.put("include_all", true);
-			data.put("case_ids", cases);
-			JSONObject jSONObject = (JSONObject) client.sendPost(addResultString, data);
-			long longTestRailRunId = (Long) jSONObject.get("id");
-			TestRailRunId = (int) longTestRailRunId;
-			TestBase.testRailRunId = TestRailRunId;
-		} catch (IOException ioException) {
-			System.err.println(ioException.getMessage());
-		} catch (APIException aPIException) {
-			System.err.println(aPIException.getMessage());
-		}
-
-		return TestRailRunId;
-
-	}
+//	public static int addNUpdateTestCaseIntoTestRun(String testName, int sectionID, int testCaseId)
+//	{
+//		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+//		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+//		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+//		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+//		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
+//		int suiteId = Integer.valueOf(TestBase.testSuiteID);
+////		int suiteId = Integer.valueOf(testRailConfig.get("TEST_CASE_SUITE_ID"));
+//
+//		int TestRailRunId = 0;
+//		int count = 0;
+//		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+//		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		Date date =null;
+//		String strDate = null;
+//
+//		String addResultString = "add_run/" + testRailProjectID;
+//		try {
+//			// Make a connection with TestRail Server
+//			APIClient client = new APIClient(testRailURL);
+//			client.setUser(testRailUser);
+//			client.setPassword(testRailPassword);
+//			List cases = new ArrayList();
+//			cases.add(new Integer(testCaseId));
+//
+//			Map<String, Object> data = new HashMap<String, Object>();
+//			data.put("title", testName);
+//			try{
+//				date = format.parse(timestamp.toString());
+//				String[] arrDate = format.format(date).split(" ");
+//				strDate = arrDate[1];
+//			}catch(ParseException e){
+//				System.err.println(e.getMessage());
+//			}
+//			data.put("suite_id", suiteId);
+//			data.put("name", testRailSuiteName +" " +strDate);
+//			data.put("include_all", true);
+//			data.put("case_ids", cases);
+//			JSONObject jSONObject = (JSONObject) client.sendPost(addResultString, data);
+//			long longTestRailRunId = (Long) jSONObject.get("id");
+//			TestRailRunId = (int) longTestRailRunId;
+//			TestBase.testRailRunId = TestRailRunId;
+//		} catch (IOException ioException) {
+//			System.err.println(ioException.getMessage());
+//		} catch (APIException aPIException) {
+//			System.err.println(aPIException.getMessage());
+//		}
+//
+//		return TestRailRunId;
+//
+//	}
 
 
 	//added by Nishant
@@ -1432,12 +1381,14 @@ public class SimpleUtils {
 //	}
 
 
-	public static void takeScreenShotOnFailure(){
-		String targetFile = ScreenshotManager.takeScreenShot();
-		String screenshotLoc = parameterMap.get("Screenshot_Path") + File.separator + targetFile;
-		String screenShotURL = "file:///" + screenshotLoc;
-		setscreenShotURL(screenShotURL);
-	}
+//	public static void takeScreenShotOnFailure(){
+//		String targetFile = ScreenshotManager.takeScreenShot();
+//		//String screenshotLoc = parameterMap.get("Screenshot_Path") + File.separator + targetFile;
+//		String screenshotLoc = parameterMap.get("Screenshot_Path") + File.separator + targetFile;
+//		//String screenShotURL = "file:///" + screenshotLoc;
+//		String screenShotURL = screenshotLoc;
+//		setscreenShotURL(screenShotURL);
+//	}
 
 	public static int getDirectoryFilesCount(String directoryPath) {
 		File directory = new File(directoryPath);
@@ -1462,7 +1413,7 @@ public class SimpleUtils {
 	}
 
 
-
+/*
 	//added by Nishant
 
 	public static int addNUpdateTestCaseIntoTestRun1(String testName, int sectionID, int testCaseId, ITestContext context)
@@ -1602,7 +1553,7 @@ public class SimpleUtils {
 			List<Integer> testRailId =  new ArrayList<Integer>();
 			List<Integer> testRailIdMaster =  new ArrayList<Integer>();
 			testRailId.add(TestRailRunId);
-/*
+
 			if(context.getAttribute("TestRailId")!=null) {
 				testRailIdMaster.add(TestRailRunId);
 				String myList = context.getAttribute("TestRailId").toString()
@@ -1616,7 +1567,7 @@ public class SimpleUtils {
 			}else{
 				setTestRailRun(testRailId);
 			}
-*/
+
 //			context.setAttribute("TestRailId", getTestRailRunId());
 			context.setAttribute("TestRailId", TestBase.testRailRunId);
 		} catch (IOException ioException) {
@@ -1670,7 +1621,7 @@ public class SimpleUtils {
 
 	}
 
-
+*/
 
 
 
@@ -1693,7 +1644,7 @@ public class SimpleUtils {
 	}
 
 
-
+/*
 	public static void addTestCaseIntoTestRun(ITestContext context)
 	{
 		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
@@ -1730,54 +1681,6 @@ public class SimpleUtils {
 			}
 		}
 
-	}
-
-	public static void addTestRun()
-	{
-		String testRailURL = getTestRailURL();
-		String testRailUser = getTestRailUser();
-		String testRailPassword = getTestRailPassword();
-		int suiteId = Integer.valueOf(TestBase.testSuiteID);
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date =null;
-		String strDate = null;
-		String addResultString = "";
-		String name = "";
-		addResultString = "add_run/" + TestBase.testRailProjectID;
-		try {
-			// Make a connection with TestRail Server
-			APIClient client = new APIClient(testRailURL);
-			client.setUser(testRailUser);
-			client.setPassword(testRailPassword);
-
-			Map<String, Object> data = new HashMap<String, Object>();
-			try{
-				date = format.parse(timestamp.toString());
-				//String[] arrDate = format.format(date).split(" ");
-				//strDate = arrDate[1];
-				strDate = format.format(date);
-			}catch(ParseException e){
-				System.err.println(e.getMessage());
-			}
-			data.put("include_all", false);
-			data.put("suite_id", suiteId);
-			if (TestBase.finalTestRailRunName==null||TestBase.finalTestRailRunName.equals("")){
-				name = "Automation - Regression " + strDate;
-			} else {
-				name = TestBase.finalTestRailRunName+ " " + strDate;
-			}
-			data.put("name", name);
-			//data.put("case_ids", testCaseIDList);
-			JSONObject jSONObject = (JSONObject) client.sendPost(addResultString, data);
-			long longTestRailRunId = (Long) jSONObject.get("id");
-			//add test rail run ID=================================
-			TestBase.testRailRunId = (int) longTestRailRunId;
-		} catch (IOException ioException) {
-			System.err.println(ioException.getMessage());
-		} catch (APIException aPIException) {
-			System.err.println(aPIException.getMessage());
-		}
 	}
 
 	public static int updateTestCaseIntoTestRunSample(String testName, ITestContext context, List<Integer> testCaseIDList)
@@ -1872,7 +1775,7 @@ public class SimpleUtils {
 				setTestName(Arrays.asList(testName));
 			}
 			context.setAttribute("TestName", getTestName());
-/*			if(context.getAttribute("TestRailId")!=null) {
+			if(context.getAttribute("TestRailId")!=null) {
 				testRailIdMaster.add(TestRailRunId);
 				String myList = context.getAttribute("TestRailId").toString()
 						.replace("[","").replace("]","").replace(" ","");
@@ -1884,7 +1787,7 @@ public class SimpleUtils {
 			}else{
 				setTestRailRun(testRailId);
 			}
-*/			context.setAttribute("TestRailId", TestBase.testRailRunId);
+			context.setAttribute("TestRailId", TestBase.testRailRunId);
 		} catch (IOException ioException) {
 			System.err.println(ioException.getMessage());
 		} catch (APIException aPIException) {
@@ -1943,15 +1846,15 @@ public class SimpleUtils {
 		return TestRailRunId;
 
 	}
-
+*/
 
 	//added by Nishant
 
 	public static void deleteTestRail(List<Integer> testRailIdList)
 	{
-		String testRailURL = getTestRailURL();
-		String testRailUser = getTestRailUser();
-		String testRailPassword = getTestRailPassword();
+		String testRailURL = TestRailOperation.getTestRailURL();
+		String testRailUser = TestRailOperation.getTestRailUser();
+		String testRailPassword = TestRailOperation.getTestRailPassword();
 
 		// Make a connection with Testrail Server
 		for(int i=0; i<testRailIdList.size();i++) {
@@ -1978,48 +1881,48 @@ public class SimpleUtils {
 		return rand_int;
 	}
 
-	//added by Nishant for getSpecificTestRailId
+		//added by Nishant for getSpecificTestRailId
 
-	public static void getTestRailId() {
-		String testRailURL = testRailConfig.get("TEST_RAIL_URL");
-		String testRailUser = testRailConfig.get("TEST_RAIL_USER");
-		String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-		String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
-		String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
-		int suiteId = Integer.valueOf(TestBase.testSuiteID);
-		String addResultString = "get_runs/" + testRailProjectID;
-        JSONObject jsonTestRailName;
-        List<Integer> testCaseIDList = new ArrayList<>();
-//        JSONArray testRailIdList;
+        public static void getTestRailId() {
+            String testRailURL = testRailConfig.get("TEST_RAIL_URL");
+            String testRailUser = testRailConfig.get("TEST_RAIL_USER");
+            String testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+            String testRailProjectID = testRailConfig.get("TEST_RAIL_PROJECT_ID");
+            String testRailSuiteName = testRailConfig.get("TEST_RUN_SUITE_NAME");
+            int suiteId = Integer.valueOf(TestBase.testSuiteID);
+            String addResultString = "get_runs/" + testRailProjectID;
+            JSONObject jsonTestRailName;
+            List<Integer> testCaseIDList = new ArrayList<>();
+    //        JSONArray testRailIdList;
 
-		try {
-			// Make a connection with TestRail Server
-			APIClient client = new APIClient(testRailURL);
-			client.setUser(testRailUser);
-			client.setPassword(testRailPassword);
-            JSONArray testRailList= (JSONArray) client.sendGet(addResultString);
-            for(Object testRailId : testRailList)
-            {
-
-                jsonTestRailName = (JSONObject) testRailId;
-                if(jsonTestRailName.get("name").toString().contains("CORE"))
+            try {
+                // Make a connection with TestRail Server
+                APIClient client = new APIClient(testRailURL);
+                client.setUser(testRailUser);
+                client.setPassword(testRailPassword);
+                JSONArray testRailList= (JSONArray) client.sendGet(addResultString);
+                for(Object testRailId : testRailList)
                 {
-                    long longTestRailID = (Long) jsonTestRailName.get("id");
-                    int testRailID = (int)longTestRailID;
-                    testCaseIDList.add(testRailID);
+
+                    jsonTestRailName = (JSONObject) testRailId;
+                    if(jsonTestRailName.get("name").toString().contains("CORE"))
+                    {
+                        long longTestRailID = (Long) jsonTestRailName.get("id");
+                        int testRailID = (int)longTestRailID;
+                        testCaseIDList.add(testRailID);
+                        }
+
                     }
 
-                }
+                System.out.println("Print Test Rail Id");
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
 
-			System.out.println("Print Test Rail Id");
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
+            deleteTestRail(testCaseIDList);
+    //		return testCaseIDList;
 
-        deleteTestRail(testCaseIDList);
-//		return testCaseIDList;
-
-	}
+        }
 
 	public static String getThisWeekTimeInterval(Date  date) {
 

@@ -811,4 +811,29 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify archive published template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyArchivePublishedTemplateAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+        try{
+            String action = "Archive";
+            String templateType = "Scheduling Policies";
+            String templateName = "UsedByAuto";
+            String mode = "view";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.archiveIsClickable();
+            configurationPage.verifyArchivePopUpShowWellOrNot();
+            configurationPage.cancelArchiveDeleteWorkWell(templateName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
