@@ -1708,14 +1708,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
     @Override
 	public void addAllTypeOfTemplate(String templateName) throws Exception {
-			for(int i = 0 ;i < configurationCardsList.size(); i++){
-				if(! configurationCardsList.get(i).getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
-					clickTheElement(configurationCardsList.get(i));
-					waitForSeconds(1);
-					createNewTemplate(templateName);
-					deleteNewCreatedTemplate(templateName);
-					goToConfigurationPage();
-				}
+			for(int i = 0 ;i <=5; i++){
+				clickTheElement(configurationCardsList.get(i));
+				waitForSeconds(1);
+				createNewTemplate(templateName);
+				deleteNewCreatedTemplate(templateName);
+				goToConfigurationPage();
 			}
 	}
 
