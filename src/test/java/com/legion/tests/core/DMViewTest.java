@@ -23,6 +23,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -138,7 +139,8 @@ public class DMViewTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully", dashboardPage.isProjectedComplianceWidgetDisplay(), false);
+            SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully",
+                    dashboardPage.isProjectedComplianceWidgetDisplay(), false);
             //Validate the content of Projected Compliance widget
             dashboardPage.verifyTheContentInProjectedComplianceWidget();
 
@@ -165,13 +167,15 @@ public class DMViewTest extends TestBase {
     public void verifyTimesheetApprovalRateWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!",
+                    dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SimpleUtils.assertOnFail("Timesheet Approval Rate widget not loaded successfully", dashboardPage.isTimesheetApprovalRateWidgetDisplay(), false);
+            SimpleUtils.assertOnFail("Timesheet Approval Rate widget not loaded successfully",
+                    dashboardPage.isTimesheetApprovalRateWidgetDisplay(), false);
 
             // Validate the content on Timesheet Approval Rate widget on TA env
             dashboardPage.validateTheContentOnTimesheetApprovalRateWidgetInUpperfieldView();
@@ -1701,7 +1705,7 @@ public class DMViewTest extends TestBase {
         dashboardPage.verifyTheContentOnLocationSummaryWidget();
 
         //Validate the Hrs Over Or Under Budget On Location Summary Widget
-//        dashboardPage.verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget();  //having a bug: https://legiontech.atlassian.net/browse/SCH-2767
+        dashboardPage.verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget();
 
         //Validate the hours on Location Summary widget is consistent with the hours on schedule page
         List<String> dataFromLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
@@ -1711,23 +1715,25 @@ public class DMViewTest extends TestBase {
         List<Float> totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
         List<String> locationNumbersFromLocationSummarySmartCard= scheduleDMViewPage.getLocationNumbersFromLocationSummarySmartCard();
         List<String> textOnTheChartInLocationSummarySmartCard= scheduleDMViewPage.getTextFromTheChartInLocationSummarySmartCard();
-        DecimalFormat df1 = new DecimalFormat("###.#");
-        boolean isBudgetedHrsCorrect = dataFromLocationSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
-        boolean isScheduledHrsCorrect = dataFromLocationSummaryWidget.get(1).equals(df1.format(totalBudgetedScheduledProjectedHour.get(1)));
-        boolean isProjectedHrsCorrect = dataFromLocationSummaryWidget.get(2).equals(df1.format(totalBudgetedScheduledProjectedHour.get(2)));
+
+        BigDecimal b1 = new BigDecimal(totalBudgetedScheduledProjectedHour.get(0));
+        BigDecimal b2 = new BigDecimal(totalBudgetedScheduledProjectedHour.get(1));
+        boolean isBudgetedHrsCorrect = Float.parseFloat(dataFromLocationSummaryWidget.get(0))
+                - b1.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue() == 0;
+        boolean isScheduledHrsCorrect = Float.parseFloat(dataFromLocationSummaryWidget.get(1)) -
+                b2.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue() == 0;
         boolean isProjectedWithinBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(3).equals(locationNumbersFromLocationSummarySmartCard.get(0));
         boolean isProjectedOverBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(4).equals(locationNumbersFromLocationSummarySmartCard.get(1));
         boolean isHrsOfUnderOrCoverBudgetCorrect = false;
-        if(isTAEnv){
-            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
-                    equals(textOnTheChartInLocationSummarySmartCard.get(6).split(" ")[0]);
-        } else
+//        if(isTAEnv){
+//            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
+//                    equals(textOnTheChartInLocationSummarySmartCard.get(6).split(" ")[0]);
+//        } else
             isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
                     equals(textOnTheChartInLocationSummarySmartCard.get(4).split(" ")[0]);
 
         SimpleUtils.assertOnFail("The hours on Location Summary widget is inconsistent with the hours on schedule page! ",
-                isBudgetedHrsCorrect && isScheduledHrsCorrect
-                && isProjectedHrsCorrect && isProjectedWithinBudgetLocationsCorrect
+                isBudgetedHrsCorrect && isScheduledHrsCorrect && isProjectedWithinBudgetLocationsCorrect
                 && isProjectedOverBudgetLocationsCorrect&&isHrsOfUnderOrCoverBudgetCorrect, false);
 
     }

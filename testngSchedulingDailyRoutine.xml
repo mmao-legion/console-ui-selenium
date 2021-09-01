@@ -295,9 +295,9 @@
                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin" />
                     <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin" />
                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
-<!--                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012 -->
-<!--                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012   -->
-<!--                     <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" /> Blocking by https://legiontech.atlassian.net/browse/SCH-5012  -->
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" />
+                    <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

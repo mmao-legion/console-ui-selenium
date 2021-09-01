@@ -1012,29 +1012,34 @@ public class LocationNavigationTest extends TestBase {
     @Owner(owner = "Mary")
     @Enterprise(name = "Coffee_Enterprise")
     @TestName(description = "Verify selecting different level of upperfields and locations on HQ News tab - Newsfeed page")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             NewsPage newsPage = pageFactory.createNewsPage();
             newsPage.clickOnNewsConsoleMenu();
+            newsPage.enableViewing();
             List<String> postInfo = newsPage.createPost();
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            String newsMenuTab = "News";
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
-
             loginAsDifferentRole("InternalAdmin");
+
+            String newsMenuTab = "News";
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            Thread.sleep(3000);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
 
             //Check Report page is display after click Report tab
             newsPage.clickOnNewsConsoleMenu();
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
 
             SimpleUtils.assertOnFail("The news page fail to load! ",
@@ -1101,15 +1106,19 @@ public class LocationNavigationTest extends TestBase {
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
-
-            String newsMenuTab = "News";
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
-
             loginAsDifferentRole("InternalAdmin");
+            String newsMenuTab = "News";
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            Thread.sleep(3000);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+
             newsPage.clickOnNewsConsoleMenu();
             SimpleUtils.assertOnFail("The news page fail to load! ",
                     newsPage.checkIfNewsPageLoaded(), false);
@@ -1117,8 +1126,6 @@ public class LocationNavigationTest extends TestBase {
                     newsPage.checkIfPostExists(postInfo.get(0)), false);
             SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
                     dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
-
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
             SimpleUtils.assertOnFail("The news page fail to load! ",
                     newsPage.checkIfNewsPageLoaded(), false);
@@ -1173,14 +1180,17 @@ public class LocationNavigationTest extends TestBase {
             newsPage.clickOnNewsConsoleMenu();
 
             String newsMenuTab = "News";
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            Thread.sleep(3000);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
 
             newsPage.clickOnNewsConsoleMenu();
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
             SimpleUtils.assertOnFail("The news page fail to load! ",
                     newsPage.checkIfNewsPageLoaded(), false);

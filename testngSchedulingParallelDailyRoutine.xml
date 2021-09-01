@@ -226,10 +226,8 @@
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
-                    <!--      <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocked by SCH-5012 -->
-                    <!--             <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocked by SCH-5012 -->
-                    <!--             <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocked by SCH-5012 -->
-                </methods>
+<!--                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />  Blocked by https://legiontech.atlassian.net/browse/SCH-5058-->
+               </methods>
             </class>
         </classes>
     </test>

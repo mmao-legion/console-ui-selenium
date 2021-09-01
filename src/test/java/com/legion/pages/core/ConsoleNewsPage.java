@@ -31,13 +31,13 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 	}
 
 	// Added by Nora
-	@FindBy (css = "div.MuiPaper-root.jss10 button")
+	@FindBy (css = "[data-testid=\"feed-list-wrapper\"] section div span")
 	private WebElement createPostButton;
 
 	@FindBy (css = "input[placeholder=\"Subject\"]")
 	private WebElement postTitle;
 
-	@FindBy (css = ".modal-dialog .notranslate")
+	@FindBy (css = "div.lg-modal div.notranslate")
 	private WebElement postMessage;
 
 	@FindBy(css = "div.console-navigation-item-label.News")
@@ -46,10 +46,10 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 	@FindBy(css = "h2[data-testid=\"post-title\"]")
 	private List<WebElement> postTitles;
 
-	@FindBy(css = "span.sc-dTSzeu.sc-gzcbmu.cbaJMH.jLZCQD")
+	@FindBy(css = "[data-testid=\"feed-list-wrapper\"] section span svg")
 	private WebElement searchPostButton;
 
-	@FindBy(css = "input.MuiInputBase-input")
+	@FindBy(css = "[data-testid=\"feed-list-wrapper\"] input.MuiInputBase-input")
 	private WebElement searchBox;
 
 	@FindBy(css = "div[id=\"newsfeed-container\"]")
@@ -58,10 +58,10 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 	@FindBy(css = "lg-button[label=\"Save\"]")
 	private WebElement saveButton;
 
-	@FindBy(css = "article.sc-fuISkM.hVHXBy")
+	@FindBy(css = "[data-testid=\"feed-list-wrapper\"] article")
 	private List<WebElement> posts;
 
-	@FindBy(css = "button.sc-fWWYYk.iEfCEb")
+	@FindBy(css = "[data-testid=\"feed-list-wrapper\"] section [type=\"button\"]")
 	private WebElement deleteSearchTextButton;
 
 	@FindBy(css = "div.sub-navigation-view-link")
@@ -104,8 +104,9 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 	private WebElement newsConsoleMenuDiv;
 	@FindBy(className = "sub-navigation-view-link")
 	private List<WebElement> newsSubTab;
-	@FindBy(css = "section.sc-kYrkKh")
-	private WebElement createPostPanel;
+	@FindBy(css = ".MuiButtonBase-root.MuiListItem-root")
+	private List<WebElement> postOperations;
+
 	
 	@Override
 	public void clickOnConsoleNewsMenu() throws Exception {
@@ -172,8 +173,11 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 		waitForSeconds(5);
 		if (areListElementVisible(posts, 10) && posts.size()>0){
 			for (WebElement post: posts) {
-				click(post.findElement(By.cssSelector("svg.MuiSvgIcon-root")));
-				click(post.findElements(By.cssSelector(".MuiButtonBase-root.MuiListItem-root")).get(1));
+				click(post.findElement(By.cssSelector("[type=\"button\"]")));
+				if (postOperations.size() == 1){
+					click(postOperations.get(0));
+				} else
+					click(postOperations.get(1));
 			}
 		} else
 			SimpleUtils.fail("The post: "+ postTitle+" is not exists! ", false);
@@ -207,4 +211,20 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 		return false;
 	}
 
+
+	@FindBy(css = "div.MuiAlert-message button")
+	private WebElement enableViewingButton;
+
+	@FindBy(css = "[role=\"presentation\"] [role=\"button\"]")
+	private List<WebElement> confirmButtonsOnEnablePopupPage;
+
+	public void enableViewing() throws Exception {
+		if (isElementEnabled(enableViewingButton, 5)) {
+			click(enableViewingButton);
+			if (areListElementVisible(confirmButtonsOnEnablePopupPage, 5)
+					&& confirmButtonsOnEnablePopupPage.size() ==2){
+				click(confirmButtonsOnEnablePopupPage.get(1));
+			}
+		}
+	}
 }
