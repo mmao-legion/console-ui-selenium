@@ -171,6 +171,7 @@ public class DeleteScheduleTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
+            schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
                 schedulePage.createScheduleForNonDGFlowNewUI();
