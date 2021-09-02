@@ -13809,6 +13809,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return complianceMessages;
     }
 
+    @FindBy(css = ".sch-shift-hover.visible")
+    private WebElement infoTextFromInfoIcon;
+    @Override
+    public String getIIconTextInfo(WebElement shift) throws Exception{
+        if (isElementLoaded(shift, 5)){
+            waitForSeconds(3);
+            scrollToElement(shift);
+            if(isScheduleDayViewActive()){
+                click(shift.findElement(By.cssSelector(".day-view-shift-hover-info-icon img")));
+                waitForSeconds(2);
+            } else
+                click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
+            if (isElementLoaded(infoTextFromInfoIcon, 5)){
+                return infoTextFromInfoIcon.getText();
+            } else
+                SimpleUtils.fail("Info icon popup fail to load", false);
+        } else
+            SimpleUtils.fail("Shift fail to load", false);
+        return null;
+    }
+
 
     @Override
     public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
@@ -16160,6 +16181,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.assertOnFail("Shift option: " + optionName + " isn't enabled!", isEnabled,false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @FindBy(css = ".week-schedule-shift .shift-container .rows .worker-image-optimized")
+    private List<WebElement> profileIconsRingsInWeekView;
+    @FindBy(css = ".sch-day-view-shift-outer .allow-pointer-events")
+    private List<WebElement> profileIconsRingsInDayView;
+    @Override
+    public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception {
+        if (areListElementVisible(profileIconsRingsInDayView, 15)){
+            for (WebElement element: profileIconsRingsInDayView){
+                SimpleUtils.assertOnFail("No colered ring representing minors", element.getAttribute("class").contains(minorsType), false);
+            }
+        } else if (areListElementVisible(profileIconsRingsInWeekView, 15)){
+            for (WebElement element: profileIconsRingsInWeekView){
+                SimpleUtils.assertOnFail("No colered ring representing minors", element.getAttribute("class").contains(minorsType), false);
+            }
+        } else {
+            SimpleUtils.fail("No profile icons!", false);
         }
     }
 }
