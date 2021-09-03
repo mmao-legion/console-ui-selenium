@@ -33,10 +33,10 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	@FindBy(css = "div.header-navigation-label")
 	private WebElement timeSheetPageHeaderLabel;
 
-	@FindBy(css = "div.lg-timesheet-table-improved__worker-row")
+	@FindBy(css = "div.analytics-new-table-group")
 	private List<WebElement> timeSheetWorkersRows;
 
-	@FindBy(css = "div.lg-timesheet-table-improved")
+	@FindBy(css = "div.analytics-new-table")
 	private WebElement timesheetTable;
 
 	@FindBy(css = "div.lg-timesheet-table-improved__grid-row.lg-timesheet-table-improved__worker-day")

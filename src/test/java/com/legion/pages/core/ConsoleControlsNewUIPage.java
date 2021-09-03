@@ -758,7 +758,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public boolean isControlsScheduleCollaborationLoaded() throws Exception {
-		if (isElementLoaded(breadcrumbsScheduleCollaboration)) {
+		if (isElementLoaded(breadcrumbsScheduleCollaboration, 10)) {
 			SimpleUtils.pass("Controls Page: Schedule Collaboration Section Loaded Successfully.");
 			return true;
 		}
@@ -860,10 +860,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void clickOnSchedulingPoliciesShiftAdvanceBtn() throws Exception {
-		if (isElementLoaded(schedulingPoliciesShiftFormSectionDiv)) {
+		if (isElementLoaded(schedulingPoliciesShiftFormSectionDiv,15)) {
 			WebElement schedulingPoliciesShiftAdvanceBtn = schedulingPoliciesShiftFormSectionDiv.findElement(
 					By.cssSelector("div.lg-advanced-box__toggle"));
-			if (isElementLoaded(schedulingPoliciesShiftAdvanceBtn) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
+			if (isElementLoaded(schedulingPoliciesShiftAdvanceBtn, 15) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
 					.contains("--advanced")) {
 				scrollToElement(schedulingPoliciesShiftAdvanceBtn);
 				moveToElementAndClick(schedulingPoliciesShiftAdvanceBtn);
@@ -4994,12 +4994,15 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	public void enableOverRideAssignmentRuleAsYes() throws Exception {
 		boolean OverrideAssignmentRule = true;
-		if (isElementEnabled(btnOverrideAssignmentRule, 5)) {
+		if (isElementEnabled(btnOverrideAssignmentRule, 20)) {
 			if (isElementEnabled(btnOverrideAssignmentRuleYes, 3)) {
 				if (btnOverrideAssignmentRuleYes.getAttribute("class").contains("selected")) {
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button already enabled");
 				} else {
 					clickTheElement(btnOverrideAssignmentRuleYes);
+					if (isElementLoaded(overridePopup, 10) && isElementLoaded(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")),10)){
+						clickTheElement(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")));
+					}
 					Actions actions = new Actions(getDriver());
 					actions.moveByOffset(0, 0).click().build().perform();
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");
@@ -5013,17 +5016,20 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void enableOverRideAssignmentRuleAsNo() throws Exception {
-		if (isElementEnabled(btnOverrideAssignmentRule, 10)) {
+		if (isElementEnabled(btnOverrideAssignmentRule, 20)) {
 			if (isElementEnabled(btnOverrideAssignmentRuleNo, 10)) {
 				waitForSeconds(5);
 				if (btnOverrideAssignmentRuleNo.getAttribute("class").contains("selected")) {
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'No' button already enabled");
 				} else {
+					scrollToElement(btnOverrideAssignmentRuleNo);
 					clickTheElement(btnOverrideAssignmentRuleNo);
-					waitForSeconds(1);
+					if (isElementLoaded(overridePopup, 10) && isElementLoaded(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")),10)){
+						clickTheElement(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")));
+					}
 					Actions actions = new Actions(getDriver());
-					actions.moveByOffset(0, 0).click().build().perform();
-					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");
+					actions.moveByOffset(0, 300).click().build().perform();
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'No' button selected!");
 					displaySuccessMessage();
 				}
 			} else {

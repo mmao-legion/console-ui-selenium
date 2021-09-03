@@ -1352,7 +1352,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.createScheduleForNonDGFlowNewUI();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnFilterBtn();
-			schedulePage.selectShiftTypeFilterByText("unassigned");
+			schedulePage.selectShiftTypeFilterByText("Action Required");
 			schedulePage.deleteTMShiftInWeekView("");
 			schedulePage.clickOnFilterBtn();
 			schedulePage.clickOnClearFilterOnFilterDropdownPopup();
@@ -1406,7 +1406,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.createScheduleForNonDGFlowNewUI();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.clickOnFilterBtn();
-			schedulePage.selectShiftTypeFilterByText("unassigned");
+			schedulePage.selectShiftTypeFilterByText("Action Required");
 			schedulePage.deleteTMShiftInWeekView("");
 			schedulePage.clickOnFilterBtn();
 			schedulePage.clickOnClearFilterOnFilterDropdownPopup();
@@ -1428,7 +1428,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.saveSchedule();
-			//generate and save, should not display number of changes, we set it as 0.
+
 			int changesNotPublished = 1;
 			//Verify changes not publish smart card.
 			SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",schedulePage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
@@ -1927,7 +1927,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			// Navigate to the near by location to create the shift for this TM from AUSTIN DOWNTOWN
 			dashboardPage.navigateToDashboard();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-			locationSelectorPage.changeLocation(nearByLocation);
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(nearByLocation);
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			schedulePage.clickOnScheduleConsoleMenuItem();
@@ -2020,55 +2020,50 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify offers generated for open shift")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyOffersGeneratedForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) {
-		try {
-			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+	public void verifyOffersGeneratedForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-			schedulePage.clickOnScheduleConsoleMenuItem();
-			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
-					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-			schedulePage.navigateToNextWeek();
-			boolean isWeekGenerated = schedulePage.isWeekGenerated();
-			if (isWeekGenerated){
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
-			}
-			schedulePage.createScheduleForNonDGFlowNewUI();
-
-			//delete unassigned shifts and open shifts.
-			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.clickOnFilterBtn();
-			schedulePage.selectShiftTypeFilterByText("Action Required");
-			//schedulePage.deleteTMShiftInWeekView("Unassigned");
-			//Delete all shifts are action required.
-			schedulePage.deleteTMShiftInWeekView("");
-			schedulePage.clickOnFilterBtn();
-			schedulePage.selectShiftTypeFilterByText("Open");
-			schedulePage.deleteTMShiftInWeekView("");
-			schedulePage.clickOnFilterBtn();
-			schedulePage.selectShiftTypeFilterByText("Compliance Review");
-			schedulePage.deleteAllShiftsInWeekView();
-			schedulePage.clickOnFilterBtn();
-			schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-			schedulePage.saveSchedule();
-			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.clickOnProfileIcon();
-			schedulePage.clickOnConvertToOpenShift();
-			schedulePage.convertToOpenShiftDirectly();
-			schedulePage.saveSchedule();
-			schedulePage.publishActiveSchedule();
-			schedulePage.clickOnProfileIconOfOpenShift();
-			schedulePage.clickViewStatusBtn();
-			schedulePage.verifyListOfOfferNotNull();
-
-		} catch (Exception e){
-			SimpleUtils.fail(e.getMessage(), false);
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (isWeekGenerated){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+
+		//delete unassigned shifts and open shifts.
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnFilterBtn();
+		schedulePage.selectShiftTypeFilterByText("Action Required");
+		//schedulePage.deleteTMShiftInWeekView("Unassigned");
+		//Delete all shifts are action required.
+		schedulePage.deleteTMShiftInWeekView("");
+		schedulePage.clickOnFilterBtn();
+		schedulePage.selectShiftTypeFilterByText("Open");
+		schedulePage.deleteTMShiftInWeekView("");
+		schedulePage.clickOnFilterBtn();
+		schedulePage.selectShiftTypeFilterByText("Compliance Review");
+		schedulePage.deleteAllShiftsInWeekView();
+		schedulePage.clickOnFilterBtn();
+		schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+		schedulePage.saveSchedule();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnProfileIcon();
+		schedulePage.clickOnConvertToOpenShift();
+		schedulePage.convertToOpenShiftDirectly();
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+		schedulePage.clickOnProfileIconOfOpenShift();
+		schedulePage.clickViewStatusBtn();
+		schedulePage.verifyListOfOfferNotNull();
 	}
 
 	@Automated(automated = "Automated")
@@ -2305,7 +2300,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			dashboardPage.navigateToDashboard();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 			String nyLocation = getCrendentialInfo("NearByLocationInfo");
-			locationSelectorPage.changeLocation(nyLocation);
+			locationSelectorPage.changeUpperFieldDirect("Location", nyLocation);
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			// Select one team member to view profile
@@ -2336,7 +2331,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Select AUSTIN DOWNTOWN location
 			dashboardPage.navigateToDashboard();
-			locationSelectorPage.changeLocation(location);
+			locationSelectorPage.changeUpperFieldDirect("Location", location);
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			schedulePage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

@@ -8,6 +8,7 @@ import java.util.*;
 
 import com.legion.utils.JsonUtil;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
@@ -25,108 +26,102 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 	@FindBy(className="activity-props")
 	private List<WebElement> scheduleOverviewActivityInfo;
-	
+
 	@FindBy(css = "div.week.background-current-week-legend-calendar")
 	private List<WebElement> currentWeeksOnCalendar;
-	
+
 	@FindBy(css = "div.weekday")
 	private List<WebElement> overviewPageCalendarWeekdays;
-	
+
 	@FindBy(css = "div.fx-center.left-banner")
 	private List<WebElement> overviewPageScheduleWeekDurations;
-	
-	@FindBy(css = "div.week.ng-scope")
+
+	@FindBy(css="div.week.ng-scope")
 	private List<WebElement> overviewscheduledWeeks;
-	
-	@FindBy(className="schedule-table-row")
+
+	@FindBy(className = "schedule-table-row")
 	private List<WebElement> overviewTableRows;
 
-	@FindBy(css=".col-sm-3.pl-0.calendar-container.ng-scope")
+	@FindBy(css = ".col-sm-3.pl-0.calendar-container.ng-scope")
 	private List<WebElement> overviewCalendar;
-	
-	@FindBy(css="div.row-fx.schedule-table-row")
+
+	@FindBy(css = "div.row-fx.schedule-table-row")
 	private List<WebElement> overviewScheduleWeekList;
 
 	@FindBy(css = "div.lgn-calendar.current-month")
 	private List<WebElement> overviewCalendarMonthsYears;
 
 	@FindBy(css = "div[ng-if*='!loading']")
-    private WebElement scheduleTable;
+	private WebElement scheduleTable;
 
 	@FindBy(className = "left-banner")
 	private List<WebElement> weeklyScheduleDateElements;
 
-    @FindBy(css = "div.calendar-week")
-    private WebElement calendar;
+	@FindBy(css = "div.calendar-week")
+	private WebElement calendar;
 
-    @FindBy (css = "div.console-navigation-item-label.Schedule")
-    private WebElement consoleSchedulePageTabElement;
+	@FindBy(css = "div.console-navigation-item-label.Schedule")
+	private WebElement consoleSchedulePageTabElement;
 
-	@FindBy (xpath = "//span[contains(text(),'Overview')]")
+	@FindBy(xpath = "//span[contains(text(),'Overview')]")
 	private WebElement overviewTab;
 
-	@FindBy (css = ".col-sm-1.pl-0.arrow-left")
+	@FindBy(css = ".col-sm-1.pl-0.arrow-left")
 	private WebElement arrowLeftInCal;
 
-	@FindBy (css = ".fa.fa-angle-right")
+	@FindBy(css = ".fa.fa-angle-right")
 	private WebElement arrowRightInCal;
 
-	@FindBy (css = ".day-number.default-font-style.ng-binding.current-day")
+	@FindBy(css = ".day-number.default-font-style.ng-binding.current-day")
 	private WebElement currentDateInCal;
 
-	public ConsoleScheduleOverviewPage()
-	{
+	public ConsoleScheduleOverviewPage() {
 		PageFactory.initElements(getDriver(), this);
 	}
-	
-	@Override
-	public List<String> getScheduleWeeksStatus()
-	{
-		List<String> overviewScheduleWeeksStatus = new ArrayList<String>();
-		if(scheduleOverviewWeeksStatus.size() != 0)
-		{
-			for(WebElement overviewWeekStatus: scheduleOverviewWeeksStatus)
-			{
-				overviewScheduleWeeksStatus.add(overviewWeekStatus.getText());
 
+	@Override
+	public List<String> getScheduleWeeksStatus() throws Exception{
+		List<String> overviewScheduleWeeksStatus = new ArrayList<String>();
+		if (loadScheduleTableInOverview()) {
+			if (scheduleOverviewWeeksStatus.size() != 0) {
+				for (WebElement overviewWeekStatus : scheduleOverviewWeeksStatus) {
+					overviewScheduleWeeksStatus.add(overviewWeekStatus.getText());
+				}
 			}
 		}
+		else
+			SimpleUtils.fail("The schedule view table failed to load",false);
+
 		return overviewScheduleWeeksStatus;
 	}
 
 	@Override
-	public List<String> getScheduleActivityInfo()
-	{
+	public List<String> getScheduleActivityInfo() {
 		List<String> overviewScheduleActivityInfo = new ArrayList<String>();
-		if(scheduleOverviewActivityInfo.size() != 0)
-		{
-			for(WebElement ActivityInfo: scheduleOverviewActivityInfo)
-			{
+		if (scheduleOverviewActivityInfo.size() != 0) {
+			for (WebElement ActivityInfo : scheduleOverviewActivityInfo) {
 				overviewScheduleActivityInfo.add(ActivityInfo.getText());
 
 			}
 		}
 		return overviewScheduleActivityInfo;
 	}
-	
+
 	@Override
-	public Map<String, String> getWeekStartDayAndCurrentWeekDates() throws Exception
-	{
-		Map<String, String> calendarStartWeekAndCurrentWeekDays =  new HashMap<String, String>();
+	public Map<String, String> getWeekStartDayAndCurrentWeekDates() throws Exception {
+		Map<String, String> calendarStartWeekAndCurrentWeekDays = new HashMap<String, String>();
 		calendarStartWeekAndCurrentWeekDays.put("weekStartDay", getOverviewCalenderWeekDays());
-		if(currentWeeksOnCalendar.size() != 0) {
+		if (currentWeeksOnCalendar.size() != 0) {
 			String currentWeeksDaysLabel = "";
-			for(WebElement weekLabel : currentWeeksOnCalendar)
-			{
-				currentWeeksDaysLabel = currentWeeksDaysLabel +""+weekLabel.getText();
+			for (WebElement weekLabel : currentWeeksOnCalendar) {
+				currentWeeksDaysLabel = currentWeeksDaysLabel + "" + weekLabel.getText();
 			}
 			String[] currentWeekDaysOnCalendar = currentWeeksDaysLabel.split("\n");
 			String currentWeekDaysOnCalendarAsString = "";
-			for(String weekDay : currentWeekDaysOnCalendar)
-			{
-				if(weekDay.length() == 1)
+			for (String weekDay : currentWeekDaysOnCalendar) {
+				if (weekDay.length() == 1)
 					weekDay = "0" + weekDay;
-				if(currentWeekDaysOnCalendarAsString != "")
+				if (currentWeekDaysOnCalendarAsString != "")
 					currentWeekDaysOnCalendarAsString = currentWeekDaysOnCalendarAsString + "," + weekDay;
 				else
 					currentWeekDaysOnCalendarAsString = weekDay;
@@ -135,93 +130,87 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		}
 		return calendarStartWeekAndCurrentWeekDays;
 	}
-	
+
 	/*
 	 *  Check the 1st week is highlighted and DateAndDay are correct
 	 */
-	
+
 	@Override
-	public Boolean isCurrentWeekHighLighted() throws Exception
-	{
+	public Boolean isCurrentWeekHighLighted() throws Exception {
 		int isoYear = SimpleUtils.getCurrentISOYear();
 		int dayOfYearForToday = SimpleUtils.getCurrentDateDayOfYear();
 		String weekTypeDate = "currentWeekDate";
-	    String currentDayMonthDate = SimpleUtils.getDayMonthDateFormatForCurrentPastAndFutureWeek(
-	    		dayOfYearForToday, isoYear).get(weekTypeDate);
+		String currentDayMonthDate = SimpleUtils.getDayMonthDateFormatForCurrentPastAndFutureWeek(
+				dayOfYearForToday, isoYear).get(weekTypeDate);
 		String[] currentWeekDates = getWeekStartDayAndCurrentWeekDates().get("weekDates").split(",");
 		Boolean isCurrentdateMatchedWithOverviewCalendarWeekDates = false;
-		
+
 		// check current date matched with highlighted week dates or not?
-		for(String weekDate : currentWeekDates)
-		{
-			if(currentDayMonthDate.split(" ")[2].contains(weekDate))
-			{
+		for (String weekDate : currentWeekDates) {
+			if (currentDayMonthDate.split(" ")[2].contains(weekDate)) {
 				isCurrentdateMatchedWithOverviewCalendarWeekDates = true;
 			}
 		}
-		if(! isCurrentdateMatchedWithOverviewCalendarWeekDates) {
+		if (!isCurrentdateMatchedWithOverviewCalendarWeekDates) {
 			SimpleUtils.fail("Current Date not matched with highlighted week dates!", false);
 			return false;
-		}
-		else {
+		} else {
 			SimpleUtils.pass("Current Date matched with highlighted week dates!");
 		}
-		
+
 		// Check Overview page Calendar week start & end date matches or not with Overview Week Duration
 		String calendarCurrentWeekStartDate = currentWeekDates[0];
 		String scheduleCurrentWeekStartDate = getOverviewPageWeeksDuration().get(0).get("durationWeekStartDay").split(" ")[1];
 		String calendarCurrentWeekEndDate = currentWeekDates[currentWeekDates.length - 1];
 		String scheduleCurrentWeekEndDate = getOverviewPageWeeksDuration().get(0).get("durationWeekEndDay").split(" ")[1];
-		
-		if(isScheduleDurationStartDayMatchesWithCalendarWeekStartDay(calendarCurrentWeekStartDate, scheduleCurrentWeekStartDate))
-		{
-			SimpleUtils.pass("Current Week start date:'"+ calendarCurrentWeekStartDate +"' on Overview calendar and Overview current schedule duration start date:'" + scheduleCurrentWeekStartDate + "' matched!");
-			if(isScheduleDurationEndDayMatchesWithCalendarWeekEndDay(calendarCurrentWeekEndDate, scheduleCurrentWeekEndDate))
-			{
-				SimpleUtils.pass("Current Week end date:'"+ calendarCurrentWeekEndDate +"' on Overview calendar and Overview current schedule duration end Date:'" + scheduleCurrentWeekEndDate + "' matched!");
+
+		if (isScheduleDurationStartDayMatchesWithCalendarWeekStartDay(calendarCurrentWeekStartDate, scheduleCurrentWeekStartDate)) {
+			SimpleUtils.pass("Current Week start date:'" + calendarCurrentWeekStartDate + "' on Overview calendar and Overview current schedule duration start date:'" + scheduleCurrentWeekStartDate + "' matched!");
+			if (isScheduleDurationEndDayMatchesWithCalendarWeekEndDay(calendarCurrentWeekEndDate, scheduleCurrentWeekEndDate)) {
+				SimpleUtils.pass("Current Week end date:'" + calendarCurrentWeekEndDate + "' on Overview calendar and Overview current schedule duration end Date:'" + scheduleCurrentWeekEndDate + "' matched!");
 				return true;
+			} else {
+				SimpleUtils.fail("Current Week end date:'" + calendarCurrentWeekEndDate + "' on Overview calendar and Overview current schedule week duration end Date:'" + scheduleCurrentWeekEndDate + "' not matched!", true);
 			}
-			else {
-				SimpleUtils.fail("Current Week end date:'"+ calendarCurrentWeekEndDate +"' on Overview calendar and Overview current schedule week duration end Date:'" + scheduleCurrentWeekEndDate + "' not matched!", true);
-			}
+		} else {
+			SimpleUtils.fail("Current Week start date::'" + calendarCurrentWeekStartDate + "' on Overview calendar and Overview current schedule week duration start date:'" + scheduleCurrentWeekStartDate + "' not matched!", true);
 		}
-		else {
-			SimpleUtils.fail("Current Week start date::'"+ calendarCurrentWeekStartDate +"' on Overview calendar and Overview current schedule week duration start date:'" + scheduleCurrentWeekStartDate + "' not matched!", true);	
-		}
-		
+
 		return false;
 	}
 
 	@Override
-	public boolean isCurrentWeekDarkBlueColor()  {
+	public boolean isCurrentWeekDarkBlueColor() throws Exception {
 		String color = "#001160";
 		List<HashMap<String, String>> weekList = getOverviewPageWeeksDuration();
 		if (overviewPageScheduleWeekDurations.get(0).getAttribute("class").contains("current")) {
 			String currentWeekColor = Color.fromString(overviewPageScheduleWeekDurations.get(0).getCssValue("background-color")).asHex();
 			if (color.equals(currentWeekColor)) {
 				SimpleUtils.pass("Current week is in dark blue color");
-				return  true;
+				return true;
 			}
 		}
 		return false;
 	}
 
 	@Override
-	public List<HashMap<String, String>> getOverviewPageWeeksDuration()
-	{
+	public List<HashMap<String, String>> getOverviewPageWeeksDuration() throws Exception {
 		List<HashMap<String, String>> overviewWeeksDuration = new ArrayList<HashMap<String, String>>();
-		if(overviewPageScheduleWeekDurations.size() != 0) {
-			for(WebElement overviewPageScheduleWeekDuration : overviewPageScheduleWeekDurations) {
-				HashMap<String, String> scheduleEachWeekDuration = new HashMap<String, String>();
-				String[] overviewWeekDuration = overviewPageScheduleWeekDuration.getText().replace("\n", "").split("\\—", 2);
-				scheduleEachWeekDuration.put("durationWeekStartDay", overviewWeekDuration[0].trim());
-				scheduleEachWeekDuration.put("durationWeekEndDay", overviewWeekDuration[1].trim());
-				overviewWeeksDuration.add(scheduleEachWeekDuration);
-			}
+		if (loadScheduleTableInOverview()) {
+			if (overviewPageScheduleWeekDurations.size() != 0) {
+				for (WebElement overviewPageScheduleWeekDuration : overviewPageScheduleWeekDurations) {
+					HashMap<String, String> scheduleEachWeekDuration = new HashMap<String, String>();
+					String[] overviewWeekDuration = overviewPageScheduleWeekDuration.getText().replace("\n", "").split("\\—", 2);
+					scheduleEachWeekDuration.put("durationWeekStartDay", overviewWeekDuration[0].trim());
+					scheduleEachWeekDuration.put("durationWeekEndDay", overviewWeekDuration[1].trim());
+					overviewWeeksDuration.add(scheduleEachWeekDuration);
+				}
+			} else
+				SimpleUtils.fail("The duration of weeks are not loaded! ", false);
 		}
-		return overviewWeeksDuration;
-	}
-	
+				return overviewWeeksDuration;
+		}
+
 	//Check each week until weeks are 'Not Available' DateAndDay are correct on overview page
 	@Override
 	public Boolean verifyDateAndDayForEachWeekUntilNotAvailable() throws Exception
@@ -457,6 +446,40 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		return flag;
 	}
 
+
+	public void refreshTheBrowser() {
+		try {
+			getDriver().navigate().refresh();
+		} catch (TimeoutException ignored) {
+		}
+
+	}
+
+	@Override
+	public boolean loadScheduleTableInOverview() throws Exception {
+		// check the schedule table loaded in overview page
+		boolean flag=false;
+		if(isElementLoaded(consoleSchedulePageTabElement, 10)){
+			consoleSchedulePageTabElement.click();
+			waitForSeconds(5);
+			int tryT=3;
+			while (tryT>0){
+				if(isElementLoaded(scheduleTable, 10)){
+					flag = true;
+					SimpleUtils.pass("Schedule Table on Schedule Overview Loaded Successfully!");
+					break;
+				}else{
+					SimpleUtils.fail("Schedule Table on Schedule Overview Not Loaded Successfully!", false);
+					tryT--;
+					loadScheduleTableInOverview();
+				}
+			}
+//
+		}else{
+			SimpleUtils.fail("ScheduleTab left navigation menu not found", true);
+		}
+		return flag;
+	}
 
 	//added by Nishant
 

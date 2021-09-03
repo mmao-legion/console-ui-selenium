@@ -1062,11 +1062,11 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.searchAndSelectTeamMemberByName(requestUserName);
 		String workPreferencesLabel = "Work Preferences";
 		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
-		String rejectedCount = profileNewUIPage.getCountForStatus("approved");
+		String rejectedCount = profileNewUIPage.getCountForStatus("rejected");
 		profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(weekInfo, "Reject");
 		if (SimpleUtils.isNumeric(rejectedCount)){
 			int rejectedNum = Integer.valueOf(rejectedCount);
-			SimpleUtils.assertOnFail("Rejected count should be 1 more than before.", String.valueOf((rejectedNum+1)).equalsIgnoreCase(profileNewUIPage.getCountForStatus("approved").trim()), false);
+			SimpleUtils.assertOnFail("Rejected count should be 1 more than before.", String.valueOf((rejectedNum+1)).equalsIgnoreCase(profileNewUIPage.getCountForStatus("rejected").trim()), false);
 		} else {
 			SimpleUtils.fail("Count is not numeric", false);
 		}
@@ -1075,11 +1075,75 @@ public class TeamTestKendraScott2 extends TestBase{
 		}
 		SimpleUtils.assertOnFail("Available hours didn't change to the old version!", oldAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
 		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
+	}
 
-		//Go to approve a rejected request.
-		profileNewUIPage.rejectSpecificApprovedAvailabilityRequest(weekInfo);
-		SimpleUtils.assertOnFail("Available hours should change back to the new version!", newAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
-		SimpleUtils.assertOnFail("Rejected count should be the same as before.", rejectedCount.equalsIgnoreCase(profileNewUIPage.getCountForStatus("rejected").trim()), false);
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate create change Availability request without approval")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateCreateAvailabilityRequestWithoutApprovalAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		// Login with Internal Admin Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Not required";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		String weekInfo = profileNewUIPage.getAvailabilityWeek();
+		int sliderIndex = 1;
+		double hours = 0.5;//move 1 metric 0.5h left----decrease
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		SimpleUtils.assertOnFail("Available hours should be the new version.", newAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
+		loginPage.logOut();
+
+		//Login as admin to check and set back the setting.
+		loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(requestUserName);
+		String workPreferencesLabel = "Work Preferences";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+		while (!profileNewUIPage.getAvailabilityWeek().equalsIgnoreCase(weekInfo)){
+			profileNewUIPage.clickNextWeek();
+		}
+		SimpleUtils.assertOnFail("Available hours should be the new version.", newAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
+
+
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
 	}
 
 	@Automated(automated ="Automated")

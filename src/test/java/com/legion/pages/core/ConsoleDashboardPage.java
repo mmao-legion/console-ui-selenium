@@ -951,23 +951,24 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return dashboardScheduleWeeks;
 	}
 
-	@FindBy(xpath = "//button[contains(text(),\"Refresh\")]")
+	@FindBy(xpath = "//*[contains(text(),'Refresh')]")
 	private WebElement refreshButton;
 
-	@FindBy(xpath = "//button[contains(text(),\"Refresh\")]/../div[1]/div")
+	@FindBy(css = "div.last-updated-countdown span")
 	private WebElement lastUpdatedIcon;
 
 
 	@Override
 	public void clickOnRefreshButton() throws Exception {
-		if (isElementLoaded(refreshButton, 10)) {
+		waitForSeconds(3);
+		if (isElementLoaded(refreshButton, 20)) {
 			clickTheElement(refreshButton);
 			if(isElementLoaded(lastUpdatedIcon, 120)){
 				SimpleUtils.pass("Click on Refresh button Successfully!");
 			} else
 				SimpleUtils.fail("Refresh timeout! ", false);
 		} else {
-			SimpleUtils.fail("Refresh button not Loaded!", true);
+			SimpleUtils.fail("Refresh button not Loaded!", false);
 		}
 	}
 	//added by Estelle
@@ -1685,22 +1686,19 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
 	}
 
-	@FindBy (css = ".sc-hlXxXZ.fufNMd")
-	private WebElement projectedComplianceWidget;
-
-	@FindBy (css = ".sc-cApVyb.eHJCkP")
+	@FindBy (css = "div[data-testid=\"compliance-total-hrs\"]")
 	private WebElement totalViolationHrs;
 
-	@FindBy (css = ".sc-gpEJdM.hcdwWY")
+	@FindBy (xpath = "//div[contains(text(),'Total Violation Hrs')]")
 	private WebElement totalViolationHrsMessage;
 
-	@FindBy (css = ".sc-cxxZvF .sc-hmvkKb.gsyRVd")
+	@FindBy (xpath = "//div[contains(@class,'jss6')]//div[contains(text(),'View Violations')]")
 	private WebElement viewViolationsLink;
 
 
 	public boolean isProjectedComplianceWidgetDisplay() throws Exception {
 		boolean isProjectedComplianceWidgetDisplay = false;
-		if(isElementLoaded(projectedComplianceWidget, 5)) {
+		if(isElementLoaded(widgetsOnUpperFieldDashboard.get(4), 5)) {
 			isProjectedComplianceWidgetDisplay = true;
 			SimpleUtils.report("Projected Compliance Widget is loaded Successfully!");
 		} else
@@ -1709,15 +1707,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	public void verifyTheContentInProjectedComplianceWidget() throws Exception {
-		if(isElementLoaded(projectedComplianceWidget, 10)) {
-			WebElement projectedComplianceWidgetTitle = projectedComplianceWidget.findElement(By.tagName("h3"));
+		if(isElementLoaded(widgetsOnUpperFieldDashboard.get(4), 10)) {
+			WebElement projectedComplianceWidgetTitle = widgetsOnUpperFieldDashboard.get(4).findElement(By.tagName("h3"));
 			System.out.println(projectedComplianceWidgetTitle.getText());
 	    	System.out.println(viewViolationsLink.getText());
 			if (isElementLoaded(projectedComplianceWidgetTitle, 5)
 					&& projectedComplianceWidgetTitle.getText().equalsIgnoreCase("Projected Compliance")
 					&& isElementLoaded(totalViolationHrs, 5)
 					&& isElementLoaded(totalViolationHrsMessage, 5)
-					&& totalViolationHrsMessage.getText().equalsIgnoreCase("Total Hours")
+					&& totalViolationHrsMessage.getText().equalsIgnoreCase("Total Violation Hrs")
 					&& isElementLoaded(viewViolationsLink, 5)
 					&& viewViolationsLink.getText().equalsIgnoreCase("View Violations")){
 				SimpleUtils.pass("The content in Projected Compliance widget display correctly");
@@ -2391,22 +2389,22 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
-    @FindBy(css = "div.dms-row221")
-    private WebElement schedulePublishStatusWidget;
+    @FindBy(css = "div.react-resizable-hide.react-resizable")
+    private List<WebElement> widgetsOnUpperFieldDashboard;
 
-    @FindBy(css = "div.dms-not-started")
+    @FindBy(xpath = "//div[contains(text(),\"Not Started\")]")
     private WebElement notStartedLegend;
 
-    @FindBy(css = "div.dms-in-progress")
+    @FindBy(xpath = "//div[contains(text(),\"In Progress\")]")
     private WebElement inProgressLegend;
 
-    @FindBy(css = "div.dms-published")
+    @FindBy(xpath = "//div[contains(text(),\"Published\")]")
     private WebElement publishedLegend;
 
-    @FindBy(css = ".sc-ezHeEz.cIKEHp")
+    @FindBy(css = "g.schedule-publish-status-chart")
     private WebElement schedulePublishStatusChart;
 
-    @FindBy(css = ".sc-ezHeEz.cIKEHp rect")
+    @FindBy(css = "g.schedule-publish-status-chart rect")
     private List<WebElement> schedulePublishStatus;
 
     @FindBy(xpath = "//h3[contains(text(),\"Schedule Publish Status\")]")
@@ -2415,7 +2413,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	public Map<String, Integer> getAllScheduleStatusFromSchedulePublishStatusWidget() throws Exception {
 
-        int scheduleNumber = Integer.parseInt(schedulePublishStatusWidget.findElements(By.cssSelector("[class=\"tick\"]")).get(1).getText());
+        int scheduleNumber = Integer.parseInt(widgetsOnUpperFieldDashboard.get(2).findElements(By.cssSelector("[class=\"tick\"]")).get(1).getText());
         int notStartedNumberForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(1).getAttribute("height"))).intValue();
         int inProgressForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(2).getAttribute("height"))).intValue();
         int publishedForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(3).getAttribute("height"))).intValue();
@@ -2455,8 +2453,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     }
 
     public void clickOnViewSchedulesLinkInSchedulePublishStatusWidget() throws Exception {
-        if (isElementLoaded(schedulePublishStatusWidget, 5)) {
-            WebElement viewSchedulesLink = schedulePublishStatusWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
+        if (isElementLoaded(widgetsOnUpperFieldDashboard.get(2), 5)) {
+            WebElement viewSchedulesLink = widgetsOnUpperFieldDashboard.get(2).findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
             if (isElementLoaded(viewSchedulesLink, 5)) {
                 scrollToElement(viewSchedulesLink);
                 click(viewSchedulesLink);
@@ -2469,7 +2467,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
     public boolean isSchedulePublishStatusWidgetDisplay() throws Exception {
         boolean isSchedulePublishStatusWidgetDisplay = false;
-        if (isElementLoaded(schedulePublishStatusWidget, 5)) {
+        if (isElementLoaded(widgetsOnUpperFieldDashboard.get(2), 5)) {
             isSchedulePublishStatusWidgetDisplay = true;
             SimpleUtils.report("Schedule Publish Status Widget is loaded Successfully!");
         } else
@@ -2478,19 +2476,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     }
 
     public void verifyTheContentInSchedulePublishStatusWidget() throws Exception {
-        if (isElementLoaded(schedulePublishStatusWidget, 5)) {
+        if (isElementLoaded(widgetsOnUpperFieldDashboard.get(2), 5)) {
             List<String> weekTextsFromSchedulePage = getThreeWeeksInfoFromSchedulePage();
-            List<WebElement> legendTexts = schedulePublishStatusWidget.findElements(By.cssSelector(".sc-ekA-drt.dUxFWE"));
             List<WebElement> weekTexts = schedulePublishStatusChart.findElements(By.cssSelector("text[text-anchor=\"middle\"]"));
-            String test1 = weekTexts.get(0).getText().replace(" 0", " ");
-            String test2 = weekTextsFromSchedulePage.get(0);
-            WebElement viewSchedulesLink = schedulePublishStatusWidget.findElement(By.cssSelector(".sc-hmvkKb.gsyRVd"));
+            WebElement viewSchedulesLink = widgetsOnUpperFieldDashboard.get(2).findElement(By.xpath("//div[contains(text(),\"View Schedules\")]"));
             if (isElementLoaded(schedulePublishStatusWidgetTitle, 5)
                     && schedulePublishStatusWidgetTitle.getText().equalsIgnoreCase("Schedule Publish Status")
-                    && areListElementVisible(legendTexts,5) && legendTexts.size() == 3
-                    && legendTexts.get(0).getText().equalsIgnoreCase("Not Started")
-                    && legendTexts.get(1).getText().equalsIgnoreCase("In Progress")
-                    && legendTexts.get(2).getText().equalsIgnoreCase("Published")
+                    && notStartedLegend.getText().equalsIgnoreCase("Not Started")
+                    && inProgressLegend.getText().equalsIgnoreCase("In Progress")
+                    && publishedLegend.getText().equalsIgnoreCase("Published")
                     && isElementLoaded(schedulePublishStatusChart, 5)
                     && areListElementVisible(weekTexts, 5) && weekTexts.size() == 3
                     && weekTexts.get(0).getText().replace(" 0", " ").equalsIgnoreCase(weekTextsFromSchedulePage.get(0))
@@ -2530,36 +2524,21 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         return weeksInfo;
     }
 
-	@FindBy(css = "div.sc-iuhXDa.dCgdGX")
-	private WebElement scheduleVsGuidanceByDayWidget;
-
-	@FindBy(css = ".sc-iuhXDa.dCgdGX h3")
-	private WebElement scheduleVsGuidanceByDayWidgetTitle;
-
-	@FindBy(css = "div.sc-ByBTK.CJgYi")
-	private WebElement budgetedLegend;
-
-	@FindBy(css = "div.sc-ByBTK.bwdYaU")
-	private WebElement scheduledLegend;
-
 	@FindBy(css = "[class=\"payroll-projection-chart__svg\"] rect")
 	private List<WebElement> scheduleVsGuidanceChartBars;
 
-	@FindBy(css = "div.sc-hfVBHA.cUtlan")
+	@FindBy(css = "g.grouped-bar-chart")
 	private WebElement scheduleVsGuidanceChart;
 
 	@FindBy(css = "text.grouped-bar-chart-bottom-label")
 	private WebElement weekInfoOnScheduleVsGuidanceByDayWidget;
 
-	@FindBy(css = "span.sc-irqbAE.emlRte")
-	private WebElement budgetHoursCaret;
-
-	@FindBy(css = "div.sc-fJxALz.sc-hoPuav.bCdNiG.liDpdV")
+	@FindBy(css = "div[data-testid=\"future-budget-surplus\"]")
 	private WebElement budgetHoursMessageSpan;
 
 	public boolean isScheduleVsGuidanceByDayWidgetDisplay() throws Exception {
 		boolean isScheduleVsGuidanceByDayWidgetDisplay = false;
-		if (isElementLoaded(scheduleVsGuidanceByDayWidget, 5)) {
+		if (isElementLoaded(widgetsOnUpperFieldDashboard.get(1), 5)) {
 			isScheduleVsGuidanceByDayWidgetDisplay = true;
 			SimpleUtils.report("Schedule Vs Guidance By Day Widget is loaded Successfully!");
 		} else
@@ -2581,7 +2560,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void clickOnViewSchedulesOnScheduleVsGuidanceByDayWidget() throws Exception {
-		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector(".sc-hmvkKb.gsyRVd"));
+		WebElement viewSchedulesLink = widgetsOnUpperFieldDashboard.get(1).findElement(By.cssSelector(".sc-hmvkKb.gsyRVd"));
 		if (isElementLoaded(viewSchedulesLink, 5)) {
 			clickTheElement(viewSchedulesLink);
 			if (scheduleConsoleMenu.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
@@ -2674,19 +2653,19 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void verifyTheContentOnScheduleVsBudgetByDayWidget() throws Exception {
-		List<WebElement> legendTexts = scheduleVsGuidanceByDayWidget.findElements(By.cssSelector(".sc-biHcxt.duZDU"));
-		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector(".sc-dHMioH.jeOpiX"));
+		WebElement viewSchedulesLink = widgetsOnUpperFieldDashboard.get(1).findElement(By.xpath("//div[contains(text(),\"View Schedules\")]"));
+		WebElement budgetedLegend = widgetsOnUpperFieldDashboard.get(1).findElement(By.xpath("//div[contains(text(),\"Budget\")]"));
+		WebElement scheduledLegend = widgetsOnUpperFieldDashboard.get(1).findElement(By.xpath("//div[contains(text(),\"Scheduled\")]"));
+		WebElement scheduleVsGuidanceByDayWidgetTitle = widgetsOnUpperFieldDashboard.get(1).findElement(By.cssSelector("h3"));
 		if(isElementLoaded(scheduleVsGuidanceByDayWidgetTitle, 15)
 				&& scheduleVsGuidanceByDayWidgetTitle.getText().contains("Schedule vs. Budget by Day")
-				&& areListElementVisible(legendTexts, 5) && legendTexts.size() ==2
 				&& isElementLoaded(budgetedLegend, 5) && budgetedLegend.getText().contains("Budgeted")
-				&& isElementLoaded(budgetedLegend, 5)
-				&& isElementLoaded(scheduledLegend, 5)
+				&& isElementLoaded(scheduledLegend, 5) && scheduledLegend.getText().contains("Scheduled")
 				&& isElementLoaded(scheduleVsGuidanceChart, 5)
 				&& isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)
 				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromUpperfieldView().substring(8))
 //				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
-				&& isElementLoaded(budgetHoursCaret, 5) && budgetHoursCaret.getText().contains("Budget")
+//				&& isElementLoaded(budgetHoursCaret, 5) && budgetHoursCaret.getText().contains("Budget")
 				&& isElementLoaded(viewSchedulesLink, 5)){
 			SimpleUtils.pass("The content on Schedule Vs Budget By Day Widget display correctly! ");
 		} else
@@ -2694,18 +2673,20 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception {
-		List<WebElement> legendTexts = scheduleVsGuidanceByDayWidget.findElements(By.cssSelector(".sc-biHcxt.duZDU"));
-		WebElement viewSchedulesLink = scheduleVsGuidanceByDayWidget.findElement(By.cssSelector(".sc-dHMioH.jeOpiX"));
+		WebElement viewSchedulesLink = widgetsOnUpperFieldDashboard.get(1).findElement(By.xpath("//div[contains(text(),\"View Schedules\")]"));
+		WebElement guidanceLegend = widgetsOnUpperFieldDashboard.get(1).findElement(By.xpath("//div[contains(text(),\"Guidance\")]"));
+		WebElement scheduledLegend = widgetsOnUpperFieldDashboard.get(1).findElement(By.xpath("//div[contains(text(),\"Scheduled\")]"));
+		WebElement scheduleVsGuidanceByDayWidgetTitle = widgetsOnUpperFieldDashboard.get(1).findElement(By.cssSelector("h3"));
 		if(isElementLoaded(scheduleVsGuidanceByDayWidgetTitle, 15)
 				&& scheduleVsGuidanceByDayWidgetTitle.getText().contains("Schedule vs. Guidance by Day")
-				&& areListElementVisible(legendTexts, 5) && legendTexts.size() ==2
-				&& isElementLoaded(budgetedLegend, 5) && budgetedLegend.getText().contains("Guidance")
+				&& isElementLoaded(guidanceLegend, 5)
+				&& guidanceLegend.getText().contains("Guidance")
 				&& isElementLoaded(scheduledLegend, 5)
 				&& isElementLoaded(scheduleVsGuidanceChart, 5)
 				&& isElementLoaded(weekInfoOnScheduleVsGuidanceByDayWidget, 5)
 				&& weekInfoOnScheduleVsGuidanceByDayWidget.getText().equalsIgnoreCase(getWeekInfoFromUpperfieldView().substring(8))
 //				&& areListElementVisible(scheduleVsGuidanceChartBars, 5)
-				&& isElementLoaded(budgetHoursCaret, 5) && budgetHoursCaret.getText().contains("Guidance")
+//				&& isElementLoaded(budgetHoursCaret, 5) && budgetHoursCaret.getText().contains("Guidance")
 				&& isElementLoaded(viewSchedulesLink, 5)){
 			SimpleUtils.pass("The content on Schedule Vs Guidance By Day Widget display correctly! ");
 		} else
@@ -2715,23 +2696,26 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget() throws Exception {
 
 		if (isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)) {
-			if (isElementLoaded(budgetHoursMessageSpan, 5) && isElementLoaded(budgetHoursCaret, 5)){
-				if (budgetHoursMessageSpan.getText().contains("Under")) {
-					if(budgetHoursMessageSpan.getAttribute("class").contains("green")
-							&&budgetHoursCaret.getAttribute("class").contains("green")
-							&&budgetHoursCaret.getAttribute("class").contains("down")){
-						SimpleUtils.pass("Budget hrs message display correctly when scheduled hours under budget!");
-					} else {
-						SimpleUtils.fail("Budget hrs message display incorrectly when scheduled hours under budget!", false);
-					}
-				} else {
-					if(budgetHoursCaret.getAttribute("class").contains("red")
-							&&budgetHoursCaret.getAttribute("class").contains("up")){
-						SimpleUtils.pass("Budget hrs caret and message display correctly when scheduled hours cover budget!");
-					} else {
-						SimpleUtils.fail("Budget hrs message display incorrectly when scheduled hours under budget!", false);
-					}
-				}
+			if (isElementLoaded(budgetHoursMessageSpan, 5)
+//					&& isElementLoaded(budgetHoursCaret, 5)
+			){
+//				if (budgetHoursMessageSpan.getText().contains("Under")) {
+//					if(budgetHoursMessageSpan.getAttribute("class").contains("green")
+//							&&budgetHoursCaret.getAttribute("class").contains("green")
+//							&&budgetHoursCaret.getAttribute("class").contains("down")
+//					){
+//						SimpleUtils.pass("Budget hrs message display correctly when scheduled hours under budget!");
+//					} else {
+//						SimpleUtils.fail("Budget hrs message display incorrectly when scheduled hours under budget!", false);
+//					}
+//				} else {
+//					if(budgetHoursCaret.getAttribute("class").contains("red")
+//							&&budgetHoursCaret.getAttribute("class").contains("up")){
+//						SimpleUtils.pass("Budget hrs caret and message display correctly when scheduled hours cover budget!");
+//					} else {
+//						SimpleUtils.fail("Budget hrs message display incorrectly when scheduled hours under budget!", false);
+//					}
+//				}
                 //compare the hours between widgets on dashboard page
 				String budgetHoursFromDashboard = budgetHoursMessageSpan.getText().split(" ")[0];
 				if (budgetHoursMessageOnLocationSummaryWidget.getText().split(" ")[0].equalsIgnoreCase(budgetHoursFromDashboard)) {
@@ -2754,7 +2738,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				navigateToDashboard();
 			}
 		} else {
-			if (isElementLoaded(budgetHoursCaret, 5)&& !isElementLoaded(budgetHoursMessageSpan)){
+			if (
+//					isElementLoaded(budgetHoursCaret, 5)&&
+							!isElementLoaded(budgetHoursMessageSpan)){
 				SimpleUtils.pass("Budget hrs caret display correctly and no message display because the budget hour and schedule hours are consistent! ");
 			} else
 				SimpleUtils.fail("Budget hrs caret and message display incorrectly when the budget hour and schedule hours are inconsistent!!", false);
@@ -2785,6 +2771,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return areBudgetHoursAndScheduleHoursConsistent;
 	}
 
+	@FindBy(xpath = "//*[contains(@data-testid,'projected-hours')]//parent::div//parent::div/div//parent::div/div[3]")
+       private WebElement projectedHoursAsCurrentTime;
+
 	@FindBy(xpath = "//div[4]/div/div[1][starts-with(@class,'MuiBox-root')]")
 	private WebElement locationSummaryWidget;
 
@@ -2795,10 +2784,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private List<WebElement> scheduledHoursTitles;
 
 	@FindBy(css = "[data-testid$=\"-hours\"]")
-	private List<WebElement> scheduledHours;
-
-	@FindBy(css = ".sc-bKNxrx.fPVVpW")
-	private WebElement projectedHoursAsCurrentTime;
+	private List<WebElement> bugetedScheduledProjectedHours;
 
 	@FindBy(css = "[data-testid=\"locations-within-budget\"] span")
 	private WebElement projectedWithinBudgetCaret;
@@ -2808,9 +2794,14 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy(css = "[data-testid^=\"locations\"]")
 	private List<WebElement> projectedWithInOrOverBudgetLocations;
+	@FindBy(xpath = "//*[contains(@data-testid,'locations-within-budget')]//parent::div/div[2]")
+	private WebElement projectedWithInBudgetMessage;
 
 	@FindBy(xpath = "//div[starts-with(@data-testid,'locations')]/following-sibling::div/span")
 	private List<WebElement> projectedWithInOrOverBudgetMessage;
+
+	@FindBy(xpath = "//*[contains(@data-testid,'locations-over-budget')]//parent::div/div[2]")
+	private WebElement projectedOverBudgetMessage;
 
 	@FindBy(css = "[data-testid=\"budget-variance\"] span")
 	private WebElement budgetHoursCaretOnLocationSummaryWidget;
@@ -2818,24 +2809,44 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = "[data-testid=\"budget-variance\"]")
 	private WebElement budgetHoursMessageOnLocationSummaryWidget;
 
+	@FindBy(css = "span[data-testid=\"budgeted-hours\"]")
+	private WebElement guidanceHours;
+
+	@FindBy(css = "span[data-testid=\"scheduled-hours\"]")
+	private WebElement scheduledHours;
+
+	@FindBy(css = "span[data-testid=\"projected-hours\"]")
+	private WebElement projectedHours;
+
+	@FindBy(css = "div[data-testid=\"locations-within-budget\"]")
+	private WebElement projectedWithInBudgetLocations;
+
+	@FindBy(css = "div[data-testid=\"locations-over-budget\"]")
+	private WebElement projectedOverBudgetLocations;
+
+
+
 	public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception {
-		if(isElementLoaded(budgetHoursMessageSpan, 5) && isElementLoaded(budgetHoursCaret, 5)){
-			if(isElementLoaded(budgetHoursCaretOnLocationSummaryWidget, 5)
-					&& isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
+		if(isElementLoaded(budgetHoursMessageSpan, 5)
+//				&& isElementLoaded(budgetHoursCaret, 5)
+		){
+			if(
+//					isElementLoaded(budgetHoursCaretOnLocationSummaryWidget, 5) &&
+							isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
 				//Verify the caret is display correctly
-				if(budgetHoursCaret.getAttribute("class").contains("up")){
-					if (budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("up")
-							&& budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("red")){
-						SimpleUtils.pass("The budget hour caret display correctly! ");
-					} else
-						SimpleUtils.fail("The budget hour caret display incorrectly! ", false);
-				} else {
-					if (budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("down")
-							&& budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("green")){
-						SimpleUtils.pass("The budget hour caret display correctly! ");
-					} else
-						SimpleUtils.fail("The budget hour caret display incorrectly! ", false);
-				}
+//				if(budgetHoursCaret.getAttribute("class").contains("up")){
+//					if (budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("up")
+//							&& budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("red")){
+//						SimpleUtils.pass("The budget hour caret display correctly! ");
+//					} else
+//						SimpleUtils.fail("The budget hour caret display incorrectly! ", false);
+//				} else {
+//					if (budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("down")
+//							&& budgetHoursCaretOnLocationSummaryWidget.getAttribute("class").contains("green")){
+//						SimpleUtils.pass("The budget hour caret display correctly! ");
+//					} else
+//						SimpleUtils.fail("The budget hour caret display incorrectly! ", false);
+//				}
 
 				//Verify the message display correctly
 				if (budgetHoursMessageOnLocationSummaryWidget.getText().split(" ")[0].
@@ -2846,8 +2857,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			} else
 				SimpleUtils.fail("The hours over or under budget panel on Location Summary widget loaded fail! ", false);
 		} else{
-			if(!isElementLoaded(budgetHoursCaretOnLocationSummaryWidget, 5)
-					&& !isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
+			if(
+//					!isElementLoaded(budgetHoursCaretOnLocationSummaryWidget, 5)&&
+							!isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
 				SimpleUtils.pass("The budget hours message panel is not display on Location Summary widget! ");
 			} else
 				SimpleUtils.fail("The budget hours message panel on Location Summary widget should not display! ", false);
@@ -2865,20 +2877,21 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		* */
 		clickOnRefreshButton();
 		List<String> dataOnLocationSummaryWidget = new ArrayList<>();
-		if(areListElementVisible(scheduledHours, 5)
-				&& scheduledHours.size()==3
-				&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
-				&& projectedWithInOrOverBudgetLocations.size()==2){
+		if(isElementLoaded(guidanceHours, 5)
+				&& isElementLoaded(scheduledHours, 5)
+				&& isElementLoaded(projectedHours, 5)
+				&& isElementLoaded(projectedWithInBudgetLocations, 5)
+				&& isElementLoaded(projectedOverBudgetLocations)){
 
-			String budgetedHrs = scheduledHours.get(0).getText().replaceAll(",","");
+			String budgetedHrs = guidanceHours.getText().replaceAll(",","");
 			dataOnLocationSummaryWidget.add(budgetedHrs);
-			String scheduledHrs = scheduledHours.get(1).getText().replaceAll(",","");
+			String scheduledHrs = scheduledHours.getText().replaceAll(",","");
 			dataOnLocationSummaryWidget.add(scheduledHrs);
-			String projectedHrs = scheduledHours.get(2).getText().replaceAll(",","");
+			String projectedHrs = projectedHours.getText().replaceAll(",","");
 			dataOnLocationSummaryWidget.add(projectedHrs);
-			String projectedWithinBudgetLocation = projectedWithInOrOverBudgetLocations.get(0).getText();
+			String projectedWithinBudgetLocation = projectedWithInBudgetLocations.getText();
 			dataOnLocationSummaryWidget.add(projectedWithinBudgetLocation);
-			String projectedOverBudgetLocation = projectedWithInOrOverBudgetLocations.get(1).getText();
+			String projectedOverBudgetLocation = projectedOverBudgetLocations.getText();
 			dataOnLocationSummaryWidget.add(projectedOverBudgetLocation);
 			String theHrsOverOrUnderBudget = "0 Hrs";
 			if (isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
@@ -2902,7 +2915,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	public void verifyTheContentOnOrgSummaryWidget(boolean isLaborBudgetToApply) throws Exception {
-		WebElement viewSchedulesLink = locationSummaryWidget.findElement(By.cssSelector(".sc-eJCack.fjssZO"));
+        WebElement viewSchedulesLink = widgetsOnUpperFieldDashboard.get(0).findElement(By.xpath("//div[contains(text(),\"View Schedules\")]"));
         WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
 		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All", "");
 		if (isLaborBudgetToApply) {
@@ -2913,8 +2926,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Budgeted")
 					&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
 					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
-					&& areListElementVisible(scheduledHours, 5)
-					&& scheduledHours.size() == 3
+					&& areListElementVisible(bugetedScheduledProjectedHours, 5)
+					&& bugetedScheduledProjectedHours.size() == 3
 					&& isElementLoaded(projectedHoursAsCurrentTime, 5)
 					&& isElementLoaded(projectedWithinBudgetCaret, 5)
 					&& isElementLoaded(projectedOverBudgetCaret, 5)
@@ -2936,8 +2949,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Guidance")
 					&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
 					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
-					&& areListElementVisible(scheduledHours, 5)
-					&& scheduledHours.size() == 3
+					&& areListElementVisible(bugetedScheduledProjectedHours, 5)
+					&& bugetedScheduledProjectedHours.size() == 3
 					&& isElementLoaded(projectedHoursAsCurrentTime,5)
 					&& isElementLoaded(projectedWithinBudgetCaret, 5)
 					&& isElementLoaded(projectedOverBudgetCaret, 5)
@@ -2992,7 +3005,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	public boolean isLocationSummaryWidgetDisplay() throws Exception {
 		boolean isLocationSummaryWidgetDisplay = false;
-		if (isElementLoaded(locationSummaryWidget, 5)) {
+		if (areListElementVisible(widgetsOnUpperFieldDashboard, 5)
+				&& widgetsOnUpperFieldDashboard.size()==5) {
 			isLocationSummaryWidgetDisplay = true;
 			SimpleUtils.report("Location Summary Widget is loaded Successfully!");
 		} else

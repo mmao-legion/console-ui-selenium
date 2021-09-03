@@ -38,6 +38,7 @@
                     <include name="validateApproveAvailabilityRequestAsTeamMember" />
                     <include name="validateCancelledAvailabilityHasNoOptionRequestAsTeamMember" />
                     <include name="validateRejectAvailabilityRequestAsStoreManager" />
+                    <include name="validateCreateAvailabilityRequestWithoutApprovalAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -108,6 +109,9 @@
                 <methods>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftIsNotDuringTheSettingTimeAsInternalAdmin" />
                     <include name="verifyWarningMessageForExceedWeekendHrsAsInternalAdmin"/>
+                    <include name="verifyMinorInfoOnProfilePageAsInternalAdmin" />
+                    <include name="verifyMinorFilterAsInternalAdmin" />
+                    <include name="verifyMinorBadgeInfoAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -132,8 +136,6 @@
                     <include name="verifyScheduleFunctionalityDayViewAsInternalAdmin"/>
                     <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
-                    <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
-                    <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
                     <include name="verifyAssignTMMessageWhenScheduleTMFromAnotherLocationWhereScheduleNotBeenGeneratedAsInternalAdmin" />
                     <include name="verifyViolationLimitAndBudgetOverageLimitAsInternalAdmin" />
                     <include name="verifyTurnOffCopyRestrictionAsInternalAdmin" />
@@ -141,9 +143,6 @@
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
                     <include name="verifyComplianceWarningInPublishConfirmModalAsInternalAdmin" />
                     <include name="verifyHrsOverBudgetInPublishConfirmModalForNonDGAsInternalAdmin" />
-                    <include name="verifyGroupByDayPartsCanBeCollapsedNExpandedAsStoreManager" />
-                    <include name="verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager" />
-                    <include name="verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin" />
                 </methods>
             </class>
@@ -167,45 +166,40 @@
                     <include name="verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin" />
-                    <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyDMViewNavigationAsInternalAdmin" />
                     <include name="verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin" />
-                    <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyAnalyticTableInTimesheetDMViewAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
                     <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+                       </methods>
+                   </class>
+               </classes>
+           </test>
 
-    <test name="Location Group Test">
-        <classes>
-            <class name="com.legion.tests.core.LocationGroupTest">
-                <methods>
-                    <include name="validateTheGenerationOfLGScheduleAsInternalAdminPC" />
-                    <include name="validateTheGenerationOfLGScheduleAsInternalAdminP2P" />
-                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdminPC" />
-                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdminP2P" />
-                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleAsInternalAdminPC" />
-                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleAsInternalAdminP2P"/>
-                    <include name="validateTheButtonsOnSchedulePageAsInternalAdminPC" />
-                    <include name="validateTheButtonsOnSchedulePageAsInternalAdminP2P" />
-                    <include name="validateTheGroupByDropdownListAsInternalAdminPC" />
-                    <include name="validateTheGroupByDropdownListAsInternalAdminP2P" />
-                    <include name="verifyActivityOfClaimOpenShiftAsTeamMemberLGPC" />
-                    <include name="verifyActivityOfClaimOpenShiftAsTeamMemberLGP2P" />
-                    <include name="validateTheFunctionOfAutoOpenShiftAsInternalAdminP2P" />
-                    <include name="validateTheFunctionOfAutoOpenShiftAsInternalAdminPC" />
-                    <include name="validateTheFunctionOfAutoOpenShiftInDayViewAsInternalAdminPC" />
-                    <include name="validateTheFunctionOfAutoOpenShiftInDayViewAsInternalAdminP2P" />
-                    <!--           <include name="validateTheFunctionOfManualOpenShiftAsInternalAdminP2P" />   P2P doesn't turn on travel time needed violation -->
+           <test name="Location Group Test">
+               <classes>
+                   <class name="com.legion.tests.core.LocationGroupTest">
+                       <methods>
+                           <include name="validateTheGenerationOfLGScheduleAsInternalAdminPC" />
+                           <include name="validateTheGenerationOfLGScheduleAsInternalAdminP2P" />
+                           <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdminPC" />
+                           <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdminP2P" />
+                           <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleAsInternalAdminPC" />
+                           <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleAsInternalAdminP2P"/>
+                           <include name="validateTheButtonsOnSchedulePageAsInternalAdminPC" />
+                           <include name="validateTheButtonsOnSchedulePageAsInternalAdminP2P" />
+                           <include name="validateTheGroupByDropdownListAsInternalAdminPC" />
+                           <include name="validateTheGroupByDropdownListAsInternalAdminP2P" />
+                           <include name="verifyActivityOfClaimOpenShiftAsTeamMemberLGPC" />
+                           <include name="verifyActivityOfClaimOpenShiftAsTeamMemberLGP2P" />
+                           <include name="validateTheFunctionOfAutoOpenShiftAsInternalAdminP2P" />
+                           <include name="validateTheFunctionOfAutoOpenShiftAsInternalAdminPC" />
+                           <include name="validateTheFunctionOfAutoOpenShiftInDayViewAsInternalAdminPC" />
+                           <include name="validateTheFunctionOfAutoOpenShiftInDayViewAsInternalAdminP2P" />
+                           <!--           <include name="validateTheFunctionOfManualOpenShiftAsInternalAdminP2P" />   P2P doesn't turn on travel time needed violation -->
                     <include name="validateTheFunctionOfManualOpenShiftAsInternalAdminPC" />
                     <include name="validateTheFunctionOfManualOpenShiftInDayViewAsInternalAdminPC" />
                     <include name="validateOperateLGScheduleByDifferentUserAsInternalAdminPC" />

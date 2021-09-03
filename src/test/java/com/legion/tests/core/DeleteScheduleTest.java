@@ -59,8 +59,6 @@ public class DeleteScheduleTest extends TestBase {
 
             String deleteForWeekText = schedulePage.getDeleteScheduleForWhichWeekText();
             String unPublishedMessage = "This action can’t be undone.";
-            // Verify ungenerate button is removed
-            schedulePage.verifyUngenerateButtonIsRemoved();
             // Verify the visibility of Delete button
             SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", schedulePage.isDeleteScheduleButtonLoaded(), false);
             // Verify the functionality of Delete button
@@ -173,6 +171,7 @@ public class DeleteScheduleTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
+            schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = schedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
                 schedulePage.createScheduleForNonDGFlowNewUI();
@@ -250,7 +249,7 @@ public class DeleteScheduleTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            // Verify Store Manager cannot see the Delete button when schedule is not pulished
+            // Verify Store Manager cannot see the Delete button when schedule is not published
             SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is published!", !schedulePage.isDeleteScheduleButtonLoaded(), false);
             loginPage.logOut();
 

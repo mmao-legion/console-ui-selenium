@@ -218,7 +218,7 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Change the location to the original location
-            locationSelectorPage.changeLocation(location);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Schedule page, Schedule tab
@@ -957,7 +957,7 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-            controlsNewUIPage.clickOnGlobalLocationButton();
+            //controlsNewUIPage.clickOnGlobalLocationButton();
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -1084,11 +1084,10 @@ public class DragAndDropTest extends TestBase {
             controlsPage.gotoControlsPage();
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-            controlsNewUIPage.clickOnGlobalLocationButton();
+            //controlsNewUIPage.clickOnGlobalLocationButton();
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
-
             controlsNewUIPage.enableOverRideAssignmentRuleAsNo();
+
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1163,7 +1162,7 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), true);
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), true);
-            controlsNewUIPage.clickOnGlobalLocationButton();
+            //controlsNewUIPage.clickOnGlobalLocationButton();
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
         } catch (Exception e){

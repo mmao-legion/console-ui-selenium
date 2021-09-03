@@ -1253,14 +1253,15 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         boolean isUpperFieldMatched = false;
         if (areListElementVisible(districtAndLocationDropDownList, 15) && districtAndLocationDropDownList.size() > 0) {
             upperFieldItems = districtAndLocationDropDownList.get(0).findElements(By.cssSelector("div.lg-search-options__option"));
-        }
-        if (upperFieldItems.size() > 0) {
-            for (WebElement upperFieldItem : upperFieldItems) {
-                if (upperFieldItem.getText().contains(upperFieldName)) {
-                    isUpperFieldMatched = true;
-                    clickTheElement(upperFieldItem);
-                    SimpleUtils.pass("Upper Field changed successfully to '" + upperFieldName + "'");
-                    break;
+            if (upperFieldItems.size() > 0) {
+                for (WebElement upperFieldItem : upperFieldItems) {
+                    if (upperFieldItem.getText().contains(upperFieldName)) {
+                        isUpperFieldMatched = true;
+                        clickTheElement(upperFieldItem);
+                        waitForSeconds(1);
+                        SimpleUtils.pass("Upper Field changed successfully to '" + upperFieldName + "'");
+                        break;
+                    }
                 }
             }
         }
@@ -1502,53 +1503,48 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
     public void changeUpperFieldDirect(String upperFieldType, String upperFieldName) throws Exception {
         waitForSeconds(4);
-        try {
-            Boolean isUpperFieldMatched = false;
-            WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));;
-            click(upperFieldSelectorButton);
-            WebElement upperFieldDropDownButton = getDriver().findElement(By.cssSelector("[search-hint=\"Search " +
-                    upperFieldType + "\"] div.lg-search-options"));
-            if (isElementLoaded(upperFieldDropDownButton, 5)) {
-                availableLocationCardsName = getDriver().findElements(By.cssSelector("[class=\"lg-picker-input__wrapper lg-ng-animate\"] div.lg-search-options__option"));
-                if (availableLocationCardsName.size() != 0) {
+        Boolean isUpperFieldMatched = false;
+        WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));;
+        click(upperFieldSelectorButton);
+        WebElement upperFieldDropDownButton = getDriver().findElement(By.cssSelector("[search-hint=\"Search " +
+                upperFieldType + "\"] div.lg-search-options"));
+        if (isElementLoaded(upperFieldDropDownButton, 5)) {
+            availableLocationCardsName = getDriver().findElements(By.cssSelector("[class=\"lg-picker-input__wrapper lg-ng-animate\"] div.lg-search-options__option"));
+            if (availableLocationCardsName.size() != 0) {
+                for (WebElement upperFieldCardName : availableLocationCardsName) {
+                    if (upperFieldCardName.getText().trim().split("\n")[0].equalsIgnoreCase(upperFieldName)) {
+                        isUpperFieldMatched = true;
+                        clickTheElement(upperFieldCardName);
+                        SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
+                        break;
+                    }
+                }
+            }
+            if (!isUpperFieldMatched) {
+                WebElement upperFieldSearchInput = getDriver().findElement(By.cssSelector("input[placeholder=\"Search " + upperFieldType + "\"]"));
+                if (isElementLoaded(upperFieldSearchInput,5)) {
+                    upperFieldSearchInput.sendKeys(upperFieldName);
+                    upperFieldSearchInput.sendKeys(Keys.ENTER);
+                }else {
+                    SimpleUtils.fail("Search " + upperFieldType + "input failed to load!", false);
+                }
+                waitForSeconds(6);
+                availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
+                if (availableLocationCardsName.size() > 0) {
                     for (WebElement upperFieldCardName : availableLocationCardsName) {
-                        if (upperFieldCardName.getText().trim().split("\n")[0].equalsIgnoreCase(upperFieldName)) {
+                        if (upperFieldCardName.getText().trim().equalsIgnoreCase(upperFieldName)) {
                             isUpperFieldMatched = true;
                             clickTheElement(upperFieldCardName);
                             SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
                             break;
                         }
                     }
-                    if (!isUpperFieldMatched) {
-                        WebElement upperFieldSearchInput = getDriver().findElement(By.cssSelector("input[placeholder=\"Search " + upperFieldType + "\"]"));
-                        if (isElementLoaded(upperFieldSearchInput,5)) {
-                            upperFieldSearchInput.sendKeys(upperFieldName);
-                            upperFieldSearchInput.sendKeys(Keys.ENTER);
-                        }else {
-                            SimpleUtils.fail("Search " + upperFieldType + "input failed to load!", false);
-                        }
-                        waitForSeconds(6);
-                        availableLocationCardsName = getDriver().findElements(By.cssSelector("div.lg-search-options__option"));
-                        if (availableLocationCardsName.size() > 0) {
-                            for (WebElement upperFieldCardName : availableLocationCardsName) {
-                                if (upperFieldCardName.getText().trim().equalsIgnoreCase(upperFieldName)) {
-                                    isUpperFieldMatched = true;
-                                    clickTheElement(upperFieldCardName);
-                                    SimpleUtils.pass(upperFieldType + " changed successfully to '" + upperFieldName + "'");
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (!isUpperFieldMatched) {
-                        SimpleUtils.fail(upperFieldType + " does matched with '" + upperFieldName + "'", false);
-                    }
                 }
             }
-        } catch(Exception e) {
-            SimpleUtils.fail("Unable to change Upper Field Direct! Get Exception: " + e.toString(), false);
+            if (!isUpperFieldMatched) {
+                SimpleUtils.fail(upperFieldType + " does matched with '" + upperFieldName + "'", false);
+            }
         }
-
     }
 
     @FindBy(css = "div.nodata-content")

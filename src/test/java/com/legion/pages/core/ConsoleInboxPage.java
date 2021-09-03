@@ -744,7 +744,8 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         if (isElementLoaded(commentForm,5)){
             commentForm.findElement(By.cssSelector("input")).clear();
             commentForm.findElement(By.cssSelector("input")).sendKeys(comment);
-            click(commentForm.findElement(By.cssSelector(".invite-icon")));
+            scrollToElement(commentForm.findElement(By.cssSelector(".invite-icon")));
+            clickTheElement(commentForm.findElement(By.cssSelector(".invite-icon")));
             SimpleUtils.pass("Comment is added!");
         } else {
             SimpleUtils.fail("Comment form is not loaded!", false);

@@ -829,7 +829,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
 
     public void clickOnScheduleConsoleMenuItem() {
-        if (consoleNavigationMenuItems.size() != 0) {
+        if (areListElementVisible(consoleNavigationMenuItems, 10) && consoleNavigationMenuItems.size() != 0) {
             WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
             clickTheElement(consoleScheduleMenuElement);
             SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
@@ -4632,16 +4632,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     //added by Haya
     @FindBy (css = "button.dropdown-toggle")
     private WebElement dropdownToggle;
-    @FindBy (css = "div[ng-repeat*=\"action in supportedAdminActions.actions\"]")
-    private WebElement dropdownMenuFormDropdownToggle;
+    @FindBy (css = ".lg-dropdown-menu__option")
+    private List<WebElement> dropdownMenuFormDropdownToggle;
     @Override
     public void goToToggleSummaryView() throws Exception {
         waitForSeconds(2);
         if (isElementLoaded(dropdownToggle,10)){
             click(dropdownToggle);
-            if (isElementLoaded(dropdownMenuFormDropdownToggle,10)){
+            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==3 ){
                 waitForSeconds(3);
-                click(dropdownMenuFormDropdownToggle);
+                click(dropdownMenuFormDropdownToggle.get(2));
                 SimpleUtils.pass("Toggle Summary View has been clicked!");
             } else {
                 SimpleUtils.fail("After clicking dropdown toggle button, no menu drop down", false);
@@ -4653,8 +4653,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void clickToggleSummaryViewButton() throws Exception {
-        if (isElementLoaded(dropdownMenuFormDropdownToggle,10)){
-            click(dropdownMenuFormDropdownToggle);
+        if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==3 ){
+            click(dropdownMenuFormDropdownToggle.get(2));
             SimpleUtils.pass("Toggle Summary View has been clicked!");
         } else {
             if (isElementLoaded(dropdownToggle,10)){
@@ -4966,7 +4966,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
         if(isElementLoaded(deleteScheduleButton, 60)){
             click(deleteScheduleButton);
-            if(isElementLoaded(deleteSchedulePopup, 5)
+            if(isElementLoaded(deleteSchedulePopup, 15)
                     && isElementLoaded(deleteScheduleCheckBox, 5)
                     && isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5)){
                 click(deleteScheduleCheckBox);
@@ -5824,12 +5824,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementEnabled(saveOnSaveConfirmationPopup, 3)) {
             clickTheElement(saveOnSaveConfirmationPopup);
             waitForSeconds(3);
-            if (isElementLoaded(msgOnTop, 60) && msgOnTop.getText().contains("Success")) {
-                SimpleUtils.pass("Save the Schedule Successfully!");
-            } else if (isElementLoaded(editScheduleButton, 10)) {
-                SimpleUtils.pass("Save the Schedule Successfully!");
-            } else {
-                SimpleUtils.fail("Save Schedule Failed!", false);
+            try{
+                if (isElementLoaded(msgOnTop, 20) && msgOnTop.getText().contains("Success")) {
+                    SimpleUtils.pass("Save the Schedule Successfully!");
+                } else if (isElementLoaded(editScheduleButton, 10)) {
+                    SimpleUtils.pass("Save the Schedule Successfully!");
+                } else {
+                    SimpleUtils.fail("Save Schedule Failed!", false);
+                }
+            } catch(StaleElementReferenceException e){
+                SimpleUtils.report("stale element reference: element is not attached to the page document");
             }
             waitForSeconds(3);
         } else {
@@ -6567,7 +6571,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("TM detail name fail to load!", false);
         } else
             SimpleUtils.fail("Profile page fail to load!", false);
-        click(closeViewProfileContainer);
+        clickTheElement(closeViewProfileContainer);
         return tmDetailName;
     }
 
@@ -8803,7 +8807,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement shiftJobTitleAsWorkRole;
     @FindBy(className = "accept-shift-shift-info")
     private WebElement shiftDetail;
-    @FindBy(className = "lg-toast")
+    @FindBy(css = ".lg-toast")
     private WebElement msgOnTop;
     @FindBy(css = "[label=\"Yes\"]")
     private WebElement yesButton;
@@ -10319,9 +10323,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if(isElementEnabled(schWorkerInfoPrompt,5)){
             SimpleUtils.pass("Various Work Role Prompt is displayed ");
             if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >0) {
-                for (WebElement shiftRole : shiftRoleList) {
-                    click(shiftRole);
-                    SimpleUtils.pass("Role '"+ shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText() +"' is selected!");
+                if (shiftRoleList.size() < 10){
+                    for (WebElement shiftRole : shiftRoleList) {
+                        click(shiftRole);
+                        SimpleUtils.pass("Role '"+ shiftRole.findElement(By.
+                                cssSelector("span.sch-worker-change-role-name")).getText() +"' is selected!");
+                    }
+                } else {
+                    for (int i =0; i< 9;i++) {
+                        click(shiftRoleList.get(i));
+                        SimpleUtils.pass("Role '"+ shiftRoleList.get(i).findElement(By.
+                                cssSelector("span.sch-worker-change-role-name")).getText() +"' is selected!");
+                    }
                 }
             } else {
                 SimpleUtils.fail("Work roles are doesn't show well ", true);
@@ -10806,7 +10819,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void convertToOpenShiftDirectly(){
-        click(btnYesOpenSchedule);
+        clickTheElement(btnYesOpenSchedule);
         waitForSeconds(3);
         SimpleUtils.pass("can convert to open shift by yes button directly");
 
@@ -12764,7 +12777,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception {
         boolean flag = false;
-        if (areListElementVisible(smartCards,10)){
+        if (areListElementVisible(smartCards,15)){
             for (WebElement e: smartCards) {
                 //findElement(By.cssSelector(".card-carousel-card-title"))
                 String s = e.getText();
@@ -13800,6 +13813,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return complianceMessages;
     }
 
+    @FindBy(css = ".sch-shift-hover.visible")
+    private WebElement infoTextFromInfoIcon;
+    @Override
+    public String getIIconTextInfo(WebElement shift) throws Exception{
+        if (isElementLoaded(shift, 5)){
+            waitForSeconds(3);
+            scrollToElement(shift);
+            if(isScheduleDayViewActive()){
+                click(shift.findElement(By.cssSelector(".day-view-shift-hover-info-icon img")));
+                waitForSeconds(2);
+            } else
+                click(shift.findElement(By.cssSelector("img.week-schedule-shit-open-popover")));
+            if (isElementLoaded(infoTextFromInfoIcon, 5)){
+                return infoTextFromInfoIcon.getText();
+            } else
+                SimpleUtils.fail("Info icon popup fail to load", false);
+        } else
+            SimpleUtils.fail("Shift fail to load", false);
+        return null;
+    }
+
 
     @Override
     public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
@@ -14195,7 +14229,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
-    @FindBy(css = "div[ng-repeat=\"schedule in previousWeeksSchedules\"]")
+    @FindBy(css = "div[ng-repeat=\"schedule in previousWeeksSchedules\"] div")
     private List<WebElement> previousWeeks;
     @FindBy(css = ".schedule-disabled-tooltip")
     private WebElement scheduleDisabledTooltip;
@@ -14206,11 +14240,14 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             for (WebElement element: previousWeeks){
                 String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
                 if (weekInfo.equalsIgnoreCase(weekDayInfo)){
-                    if (shouldBeSelected == !element.findElement(By.cssSelector(".generate-modal-week")).getAttribute("class").contains("disabled")){
-                        SimpleUtils.pass("Should the week:"+weekInfo+" be selected is correct!");
-                    } else {
-                        SimpleUtils.fail("Should the week:"+weekInfo+" be selected is not the expected!", false);
-                    }
+                    if (!element.getAttribute("class").contains("disabled")) {
+                        if (shouldBeSelected == !element.findElement(By.cssSelector(".generate-modal-week")).getAttribute("class").contains("disabled")){
+                            SimpleUtils.pass("Should the week:"+weekInfo+" be selected is correct!");
+                        } else {
+                            SimpleUtils.fail("Should the week:"+weekInfo+" be selected is not the expected!", false);
+                        }
+                    } else
+                        SimpleUtils.fail("This week is disbled and cannot be selected! ", false);
                 }
             }
         } else {
@@ -14733,6 +14770,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 if (location.equalsIgnoreCase(element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText())){
                     click(element);
                     SimpleUtils.pass(location + " is clicked!");
+                    break;
                 }
             }
         } else {
@@ -15414,6 +15452,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnClearFilterOnFilterDropdownPopup() throws Exception {
         if(isElementLoaded(clearFilterOnFilterDropdownPopup, 5)){
             if(clearFilterOnFilterDropdownPopup.getAttribute("class").contains("active")){
+                scrollToElement(clearFilterOnFilterDropdownPopup);
                 click(clearFilterOnFilterDropdownPopup);
                 SimpleUtils.pass("Click Clear Filter button on Filter dropdown popup successfully! ");
             } else
@@ -15653,6 +15692,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     if (isElementEnabled(editShiftTimePopUp, 5)) {
                         moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
                         moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
+                        waitForSeconds(2);
                         click(confirmBtnOnDragAndDropConfirmPage);
                     } else {
                         SimpleUtils.fail("Edit Shift Time PopUp window load failed", false);
@@ -16119,6 +16159,51 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }
         } else {
             SimpleUtils.fail("No group title show up!", false);
+        }
+    }
+
+    // Added by Nora
+    @FindBy (css = ".sch-worker-action")
+    private List<WebElement> shiftOptions;
+
+    /***
+     * Verify specific option is enabled on shift menu when clicking the avatar of the shift
+     * @param optionName - The name of the option
+     * @throws Exception
+     */
+    @Override
+    public void verifySpecificOptionEnabledOnShiftMenu(String optionName) throws Exception {
+        try {
+            boolean isEnabled = false;
+            if (areListElementVisible(shiftOptions, 15) && shiftOptions.size() > 0) {
+                for (WebElement option : shiftOptions) {
+                    if (option.getText().equalsIgnoreCase(optionName) && !option.getAttribute("class").contains("graded-out")) {
+                        isEnabled = true;
+                    }
+                }
+            }
+            SimpleUtils.assertOnFail("Shift option: " + optionName + " isn't enabled!", isEnabled,false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @FindBy(css = ".week-schedule-shift .shift-container .rows .worker-image-optimized")
+    private List<WebElement> profileIconsRingsInWeekView;
+    @FindBy(css = ".sch-day-view-shift-outer .allow-pointer-events")
+    private List<WebElement> profileIconsRingsInDayView;
+    @Override
+    public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception {
+        if (areListElementVisible(profileIconsRingsInDayView, 15)){
+            for (WebElement element: profileIconsRingsInDayView){
+                SimpleUtils.assertOnFail("No colered ring representing minors", element.getAttribute("class").contains(minorsType), false);
+            }
+        } else if (areListElementVisible(profileIconsRingsInWeekView, 15)){
+            for (WebElement element: profileIconsRingsInWeekView){
+                SimpleUtils.assertOnFail("No colered ring representing minors", element.getAttribute("class").contains(minorsType), false);
+            }
+        } else {
+            SimpleUtils.fail("No profile icons!", false);
         }
     }
 }

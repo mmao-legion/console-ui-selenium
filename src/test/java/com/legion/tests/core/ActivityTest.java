@@ -802,7 +802,6 @@ public class ActivityTest extends TestBase {
             // Team Member logout
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
-
             // Login as Store Manager to check the activity
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -819,6 +818,7 @@ public class ActivityTest extends TestBase {
             SimpleUtils.fail(e.toString(), false);
         }
     }
+
 
     @Automated(automated ="Automated")
     @Owner(owner = "Estelle")
@@ -1723,7 +1723,7 @@ public class ActivityTest extends TestBase {
     }
 
     @Automated(automated ="Automated")
-    @Owner(owner = "Haya")
+    @Owner(owner = "Haya&Lizzy")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM requests availability for a specific week")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
@@ -1797,6 +1797,12 @@ public class ActivityTest extends TestBase {
             String respondUserName = profileNewUIPage.getNickNameFromProfile();
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
             activityPage.verifyClickOnActivityIcon();
+            //check and click the go to profile link
+            activityPage.goToProfileLinkOnActivity();
+            //check the week data
+            profileNewUIPage.verifyAvailabilityWeek(weekInfo);
+            //click the activity bell to view the profile update again
+            activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
             String requestAwailabilityChangeLabel = "requested";
             activityPage.verifyNotificationForUpdateAvailability(requestUserName,isApprovalRequired,requestAwailabilityChangeLabel,weekInfo,repeatChanges);
@@ -1807,7 +1813,7 @@ public class ActivityTest extends TestBase {
     }
 
     @Automated(automated ="Automated")
-    @Owner(owner = "Haya")
+    @Owner(owner = "Haya&Lizzy")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the notification when TM requests availability from a week onwards")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
@@ -1869,10 +1875,15 @@ public class ActivityTest extends TestBase {
             profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                     hours, repeatChanges);
             loginPage.logOut();
-
             // Login as Store Manager again to check message
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+            activityPage.verifyClickOnActivityIcon();
+            //check and click the go to profile link
+            activityPage.goToProfileLinkOnActivity();
+            //check the week data
+            profileNewUIPage.verifyAvailabilityWeek(weekInfo);
+            //click the activity bell to view the profile update again
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ProfileUpdate.getValue(),indexOfActivityType.ProfileUpdate.name());
             String requestAwailabilityChangeLabel = "requested";
