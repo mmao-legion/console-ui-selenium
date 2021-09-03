@@ -43,126 +43,122 @@ public class OfferTMTest extends TestBase {
     @TestName(description = "Verify \"Offer Team Members\" option is available for Open shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
-        try {
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            schedulePage.navigateToNextWeek();
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
-            if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-            }
-            schedulePage.createScheduleForNonDGFlowNewUI();
-
-            //delete unassigned shifts and open shifts.
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText("Action Required");
-            //schedulePage.deleteTMShiftInWeekView("Unassigned");
-            //Delete all shifts are action required.
-            schedulePage.deleteTMShiftInWeekView("");
-            schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText("Open");
-            schedulePage.deleteTMShiftInWeekView("");
-            schedulePage.clickOnFilterBtn();
-            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-            schedulePage.saveSchedule();
-            String workRoleOfTM = schedulePage.getRandomWorkRole();
-
-            //verify assigned shift in non-edit mode for week view and day view
-            schedulePage.clickOnProfileIcon();
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
-            schedulePage.clickOnDayView();
-            schedulePage.clickOnProfileIconOfShiftInDayView("no");
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
-            schedulePage.clickOnWeekView();
-
-            //verify assigned shift in edit mode for week view and day view
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.clickOnProfileIcon();
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
-            schedulePage.clickOnDayView();
-            schedulePage.clickOnProfileIconOfShiftInDayView("no");
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
-            schedulePage.saveSchedule();
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
-            //create auto open shifts.
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.selectWorkRole(workRoleOfTM);
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-
-            //verify auto open shift in edit mode.
-            //--verify in day view
-            schedulePage.clickOnProfileIconOfShiftInDayView("open");
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
-            SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
-            //--verify in week view
-            schedulePage.clickOnWeekView();
-            schedulePage.clickOnProfileIconOfOpenShift();
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
-            SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
-            schedulePage.saveSchedule();
-            //verify auto open shift in non-edit mode.
-            //--verify in day view
-            schedulePage.clickOnDayView();
-            schedulePage.clickOnProfileIconOfShiftInDayView("open");
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
-            SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
-            //--verify in week view
-            schedulePage.clickOnWeekView();
-            schedulePage.clickOnProfileIconOfOpenShift();
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
-            SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
-
-            //create manual open shifts.
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView("open");
-            schedulePage.clickOnDayView();
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.selectWorkRole(workRoleOfTM);
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.verifySelectTeamMembersOption();
-            schedulePage.clickOnOfferOrAssignBtn();
-            //verify manual open shift in edit mode.
-            //--verify in day view
-            schedulePage.clickOnProfileIconOfShiftInDayView("open");
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
-            SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
-            //--verify in week view
-            schedulePage.clickOnWeekView();
-            schedulePage.clickOnProfileIconOfOpenShift();
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
-            SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
-            schedulePage.saveSchedule();
-            //verify manual open shifts in non-edit mode.
-            //--verify in day view
-            schedulePage.clickOnDayView();
-            schedulePage.clickOnProfileIconOfShiftInDayView("open");
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
-            SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
-            //--verify in week view
-            schedulePage.clickOnWeekView();
-            schedulePage.clickOnProfileIconOfOpenShift();
-            SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
-            SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
+        schedulePage.navigateToNextWeek();
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+
+        //delete unassigned shifts and open shifts.
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Action Required");
+        //schedulePage.deleteTMShiftInWeekView("Unassigned");
+        //Delete all shifts are action required.
+        schedulePage.deleteTMShiftInWeekView("");
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Open");
+        schedulePage.deleteTMShiftInWeekView("");
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        schedulePage.saveSchedule();
+        String workRoleOfTM = schedulePage.getRandomWorkRole();
+
+        //verify assigned shift in non-edit mode for week view and day view
+        schedulePage.clickOnProfileIcon();
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnProfileIconOfShiftInDayView("no");
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
+        schedulePage.clickOnWeekView();
+
+        //verify assigned shift in edit mode for week view and day view
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnProfileIcon();
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnProfileIconOfShiftInDayView("no");
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
+        schedulePage.saveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        //create auto open shifts.
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.selectWorkRole(workRoleOfTM);
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+
+        //verify auto open shift in edit mode.
+        //--verify in day view
+        schedulePage.clickOnProfileIconOfShiftInDayView("open");
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+        //--verify in week view
+        schedulePage.clickOnWeekView();
+        schedulePage.clickOnProfileIconOfOpenShift();
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+        schedulePage.saveSchedule();
+        //verify auto open shift in non-edit mode.
+        //--verify in day view
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnProfileIconOfShiftInDayView("open");
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+        //--verify in week view
+        schedulePage.clickOnWeekView();
+        schedulePage.clickOnProfileIconOfOpenShift();
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+
+        //create manual open shifts.
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView("open");
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.selectWorkRole(workRoleOfTM);
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.verifySelectTeamMembersOption();
+        schedulePage.clickOnOfferOrAssignBtn();
+        //verify manual open shift in edit mode.
+        //--verify in day view
+        schedulePage.clickOnProfileIconOfShiftInDayView("open");
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+        //--verify in week view
+        schedulePage.clickOnWeekView();
+        schedulePage.clickOnProfileIconOfOpenShift();
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+        schedulePage.saveSchedule();
+        //verify manual open shifts in non-edit mode.
+        //--verify in day view
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnProfileIconOfShiftInDayView("open");
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
+        //--verify in week view
+        schedulePage.clickOnWeekView();
+        schedulePage.clickOnProfileIconOfOpenShift();
+        SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
     }
 
     @Automated(automated = "Automated")

@@ -5824,12 +5824,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementEnabled(saveOnSaveConfirmationPopup, 3)) {
             clickTheElement(saveOnSaveConfirmationPopup);
             waitForSeconds(3);
-            if (isElementLoaded(msgOnTop, 60) && msgOnTop.getText().contains("Success")) {
-                SimpleUtils.pass("Save the Schedule Successfully!");
-            } else if (isElementLoaded(editScheduleButton, 10)) {
-                SimpleUtils.pass("Save the Schedule Successfully!");
-            } else {
-                SimpleUtils.fail("Save Schedule Failed!", false);
+            try{
+                if (isElementLoaded(msgOnTop, 20) && msgOnTop.getText().contains("Success")) {
+                    SimpleUtils.pass("Save the Schedule Successfully!");
+                } else if (isElementLoaded(editScheduleButton, 10)) {
+                    SimpleUtils.pass("Save the Schedule Successfully!");
+                } else {
+                    SimpleUtils.fail("Save Schedule Failed!", false);
+                }
+            } catch(StaleElementReferenceException e){
+                SimpleUtils.report("stale element reference: element is not attached to the page document");
             }
             waitForSeconds(3);
         } else {
@@ -8803,7 +8807,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement shiftJobTitleAsWorkRole;
     @FindBy(className = "accept-shift-shift-info")
     private WebElement shiftDetail;
-    @FindBy(className = "lg-toast")
+    @FindBy(css = ".lg-toast")
     private WebElement msgOnTop;
     @FindBy(css = "[label=\"Yes\"]")
     private WebElement yesButton;
@@ -10815,7 +10819,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     public void convertToOpenShiftDirectly(){
-        click(btnYesOpenSchedule);
+        clickTheElement(btnYesOpenSchedule);
         waitForSeconds(3);
         SimpleUtils.pass("can convert to open shift by yes button directly");
 
@@ -12773,7 +12777,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception {
         boolean flag = false;
-        if (areListElementVisible(smartCards,10)){
+        if (areListElementVisible(smartCards,15)){
             for (WebElement e: smartCards) {
                 //findElement(By.cssSelector(".card-carousel-card-title"))
                 String s = e.getText();
