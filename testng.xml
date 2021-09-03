@@ -545,6 +545,8 @@
                         <include name="verifyComplianceViolationsWidgetOnDashboardInRegionViewAsInternalAdmin" />
                         <include name="verifyPayrollProjectionWidgetOnDashboardInBUViewAsInternalAdmin" />
                         <include name="verifyPayrollProjectionWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyRegionSummaryWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyDistrictSummaryWidgetOnDashboardInRegionViewAsInternalAdmin" />
 
                         <!-- Added by Mary -->
                         <include name="verifyRegionViewNavigationAsInternalAdmin" />

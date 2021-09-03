@@ -314,4 +314,5 @@ public interface ControlsNewUIPage {
 	public void enableDaypart(String dayPart) throws Exception;
 	public void turnOnOrOffSpecificPermissionForDifferentRole(String rolePermission, String section, String permission, String action) throws Exception;
 	public void setDaypart(String dayPart, String startTime, String endTime) throws Exception;
+	public String getApplyLaborBudgetToSchedulesActiveBtnLabel() throws Exception;
 }

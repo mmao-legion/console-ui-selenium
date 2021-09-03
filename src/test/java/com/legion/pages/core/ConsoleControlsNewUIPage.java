@@ -1391,7 +1391,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					for (WebElement applyLaborBudgetToSchedulesBtn : applyLaborBudgetToSchedulesBtns) {
 						if (applyLaborBudgetToSchedulesBtn.getText().toLowerCase().contains(isLaborBudgetToApply.toLowerCase())) {
 							scrollToElement(applyLaborBudgetToSchedulesBtn);
-							click(applyLaborBudgetToSchedulesBtn);
+							clickTheElement(applyLaborBudgetToSchedulesBtn);
 							preserveTheSetting();
 						}
 					}
@@ -1409,6 +1409,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Scheduling Policies: Apply Labor Budget to Schedules section not loaded.", true);
 	}
 
+	@Override
 	public String getApplyLaborBudgetToSchedulesActiveBtnLabel() throws Exception {
 		String laborBudgetToApplyActiveBtnLabel = "";
 		if (isElementLoaded(applyLaborBudgetToSchedules)) {

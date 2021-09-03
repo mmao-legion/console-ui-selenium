@@ -31,6 +31,8 @@ import org.testng.Reporter;
 
 public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
+	private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+
     @FindBy(css = "[ng-click=\"openSchedule()\"]")
     private WebElement goToTodayScheduleButton;
 
@@ -960,7 +962,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void clickOnRefreshButton() throws Exception {
 		if (isElementLoaded(refreshButton, 10)) {
 			clickTheElement(refreshButton);
-			if(isElementLoaded(lastUpdatedIcon, 60)){
+			if(isElementLoaded(lastUpdatedIcon, 120)){
 				SimpleUtils.pass("Click on Refresh button Successfully!");
 			} else
 				SimpleUtils.fail("Refresh timeout! ", false);
@@ -2783,37 +2785,37 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return areBudgetHoursAndScheduleHoursConsistent;
 	}
 
-	@FindBy(css = "div.dms-row1")
+	@FindBy(xpath = "//div[4]/div/div[1][starts-with(@class,'MuiBox-root')]")
 	private WebElement locationSummaryWidget;
 
-	@FindBy(css = "div[class=\"dms-box-title dms-box-item-title-row ng-binding\"]")
-	private WebElement locationSummaryWidgetTitle;
+	@FindBy(xpath = "//div[4]/div/div[1]/div/div/h3")
+	private WebElement orgSummaryWidgetTitle;
 
-	@FindBy(css = "div.dms-box-item-title.dms-box-item-title-color-light")
+	@FindBy(css = ".sc-hLGenU.doVxdr")
 	private List<WebElement> scheduledHoursTitles;
 
-	@FindBy(css = ".sc-knSFqH.iwmrPd")
+	@FindBy(css = "[data-testid$=\"-hours\"]")
 	private List<WebElement> scheduledHours;
 
-	@FindBy(css = "span.dms-time-stamp")
+	@FindBy(css = ".sc-bKNxrx.fPVVpW")
 	private WebElement projectedHoursAsCurrentTime;
 
-	@FindBy(css = "[ng-if=\"b.withinBudget\"]")
+	@FindBy(css = "[data-testid=\"locations-within-budget\"] span")
 	private WebElement projectedWithinBudgetCaret;
 
-	@FindBy(css = "[ng-if=\"!b.withinBudget\"]")
+	@FindBy(css = "[data-testid=\"locations-over-budget\"] span")
 	private WebElement projectedOverBudgetCaret;
 
-	@FindBy(css = ".sc-hLyimJ.jVmufi")
+	@FindBy(css = "[data-testid^=\"locations\"]")
 	private List<WebElement> projectedWithInOrOverBudgetLocations;
 
-	@FindBy(css = "div.dms-box-item-title-2.pt-15")
+	@FindBy(xpath = "//div[starts-with(@data-testid,'locations')]/following-sibling::div/span")
 	private List<WebElement> projectedWithInOrOverBudgetMessage;
 
-	@FindBy(css = "i.dms-caret-small")
+	@FindBy(css = "[data-testid=\"budget-variance\"] span")
 	private WebElement budgetHoursCaretOnLocationSummaryWidget;
 
-	@FindBy(css = "div.sc-cfARRi.hcpDlY")
+	@FindBy(css = "[data-testid=\"budget-variance\"]")
 	private WebElement budgetHoursMessageOnLocationSummaryWidget;
 
 	public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception {
@@ -2861,6 +2863,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		*  4: projected Over Budget Locations
 		*  5: the Hrs Over Or Under Budget
 		* */
+		clickOnRefreshButton();
 		List<String> dataOnLocationSummaryWidget = new ArrayList<>();
 		if(areListElementVisible(scheduledHours, 5)
 				&& scheduledHours.size()==3
@@ -2888,38 +2891,103 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return dataOnLocationSummaryWidget;
 	}
 
-	public void verifyTheContentOnLocationSummaryWidget() throws Exception {
-		WebElement viewSchedulesLink = locationSummaryWidget.findElement(By.cssSelector("[ng-click=\"viewSchedules()\"]"));
+	@Override
+	public String getTitleOnOrgSummaryWidget() throws Exception {
+		String title = "";
+		if (isElementLoaded(orgSummaryWidgetTitle, 5))
+			title = orgSummaryWidgetTitle.getText();
+		else
+			SimpleUtils.fail("The title failed to load",false);
+		return title;
+	}
+
+	public void verifyTheContentOnOrgSummaryWidget(boolean isLaborBudgetToApply) throws Exception {
+		WebElement viewSchedulesLink = locationSummaryWidget.findElement(By.cssSelector(".sc-eJCack.fjssZO"));
+        WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
+		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All", "");
+		if (isLaborBudgetToApply) {
+			if (isElementLoaded(orgSummaryWidgetTitle, 5)
+					&& orgSummaryWidgetTitle.getText().contains(org + " Summary")
+					&& areListElementVisible(scheduledHoursTitles, 5)
+					&& scheduledHoursTitles.size() == 3
+					&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Budgeted")
+					&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
+					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
+					&& areListElementVisible(scheduledHours, 5)
+					&& scheduledHours.size() == 3
+					&& isElementLoaded(projectedHoursAsCurrentTime, 5)
+					&& isElementLoaded(projectedWithinBudgetCaret, 5)
+					&& isElementLoaded(projectedOverBudgetCaret, 5)
+					&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
+					&& projectedWithInOrOverBudgetLocations.size() == 2
+					&& areListElementVisible(projectedWithInOrOverBudgetMessage, 5)
+					&& projectedWithInOrOverBudgetMessage.size() == 2
+					&& projectedWithInOrOverBudgetMessage.get(0).getText().equalsIgnoreCase("Projected Within Budget")
+					&& projectedWithInOrOverBudgetMessage.get(1).getText().equalsIgnoreCase("Projected Over Budget")
+					&& isElementLoaded(viewSchedulesLink, 5)) {
+				SimpleUtils.pass("The content on " + org + " Summary Widget display correctly! ");
+			} else
+				SimpleUtils.fail("The content on " + org + " Summary Widget display incorrectly! ", false);
+		} else {
+			if (isElementLoaded(orgSummaryWidgetTitle, 5)
+					&& orgSummaryWidgetTitle.getText().contains(org + " Summary")
+					&& areListElementVisible(scheduledHoursTitles, 5)
+					&& scheduledHoursTitles.size() == 3
+					&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Guidance")
+					&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
+					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
+					&& areListElementVisible(scheduledHours, 5)
+					&& scheduledHours.size() == 3
+					&& isElementLoaded(projectedHoursAsCurrentTime,5)
+					&& isElementLoaded(projectedWithinBudgetCaret, 5)
+					&& isElementLoaded(projectedOverBudgetCaret, 5)
+					&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
+					&& projectedWithInOrOverBudgetLocations.size() == 2
+					&& areListElementVisible(projectedWithInOrOverBudgetMessage, 5)
+					&& projectedWithInOrOverBudgetMessage.size() == 2
+					&& projectedWithInOrOverBudgetMessage.get(0).getText().equalsIgnoreCase("Projected Within Guidance")
+					&& projectedWithInOrOverBudgetMessage.get(1).getText().equalsIgnoreCase("Projected Over Guidance")
+					&& isElementLoaded(viewSchedulesLink, 5)) {
+				SimpleUtils.pass("The content on " + org + " Summary Widget display correctly! ");
+			} else
+				SimpleUtils.fail("The content on " + org + " Summary Widget display incorrectly!", false);
+		}
+	}
+
+	@Override
+	public void validateAsOfTimeUnderProjectedOnOrgSummaryWidget() throws Exception {
+		WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
+		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All", "");
 		SimpleDateFormat dateFormat = new SimpleDateFormat();
-		dateFormat.applyPattern("MMM dd, hh:mm a");
-		String currentTimeOnProjectedHrs = "As of "+ SimpleUtils.getCurrentDateMonthYearWithTimeZone("PST", dateFormat);
+		dateFormat.applyPattern("MMM dd, h:mm a");
 		clickOnRefreshButton();
-		String test1 = projectedHoursAsCurrentTime.getText();
-		if(isElementLoaded(locationSummaryWidgetTitle, 5)
-				&& locationSummaryWidgetTitle.getText().contains("Locations Summary")
-				&& areListElementVisible(scheduledHoursTitles, 5)
-				&& scheduledHoursTitles.size() == 3
-				&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Budgeted")
-				&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
-				&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
-				&& areListElementVisible(scheduledHours, 5)
-				&& scheduledHours.size() == 3
-				&& isElementLoaded(projectedHoursAsCurrentTime, 5)
-				&& projectedHoursAsCurrentTime.getText().equalsIgnoreCase(currentTimeOnProjectedHrs)
-				&& isElementLoaded(projectedWithinBudgetCaret, 5)
-				&& projectedWithinBudgetCaret.getAttribute("class").contains("down")
-				&& isElementLoaded(projectedOverBudgetCaret, 5)
-				&& projectedOverBudgetCaret.getAttribute("class").contains("up")
-				&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
-				&& projectedWithInOrOverBudgetLocations.size() ==2
-				&& areListElementVisible(projectedWithInOrOverBudgetMessage, 5)
-				&& projectedWithInOrOverBudgetMessage.size() ==2
-				&& projectedWithInOrOverBudgetMessage.get(0).getText().equalsIgnoreCase("Projected Within Budget")
-				&& projectedWithInOrOverBudgetMessage.get(1).getText().equalsIgnoreCase("Projected Over Budget")
-				&& isElementLoaded(viewSchedulesLink, 5)){
-			SimpleUtils.pass("The content on Location Summary Widget display correctly! ");
-		} else
-			SimpleUtils.fail("The content on Location Summary Widget display incorrectly! ", false);
+		String currentTimeOnProjectedHrs = "As of "+ SimpleUtils.getCurrentDateMonthYearWithTimeZone("PST", dateFormat);
+		if (isElementLoaded(projectedHoursAsCurrentTime,5)) {
+			String asOfTime = projectedHoursAsCurrentTime.getText();
+			if (asOfTime.substring(0, asOfTime.length() - 5).equals(currentTimeOnProjectedHrs.substring(0, currentTimeOnProjectedHrs.length() - 5)))
+				SimpleUtils.pass("The as of time under Projected  on " + org + " Summary Widget display correctly! ");
+			else
+				SimpleUtils.fail("The as of time under Projected  on " + org + " Summary Widget does not match", false);
+		} else if (MyThreadLocal.getDriver().getCurrentUrl().contains(parameterMap.get("KendraScott2_Enterprise")))
+		SimpleUtils.pass("The as of time under Projected  on " + org + " Summary Widget does not exist on nonTA env as expected");
+		else
+			SimpleUtils.fail("The as of time under Projected  on " + org + " Summary Widget failed to load", false);
+	}
+
+	@Override
+	public void clickOnViewSchedulesOnOrgSummaryWidget() throws Exception {
+		WebElement viewSchedulesLink = locationSummaryWidget.findElement(By.cssSelector(".sc-eJCack.fjssZO"));
+		WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
+		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All", "");
+		if (isElementLoaded(viewSchedulesLink, 5)) {
+			clickTheElement(viewSchedulesLink);
+			if (scheduleConsoleMenu.findElement(By.xpath("./..")).getAttribute("class").contains("active"))
+				SimpleUtils.pass("Dashboard Page: Click on \"View Schedules\" link on \"" + org + " Summary\" successfully");
+			else
+				SimpleUtils.fail("Dashboard Page: Failed to click on \"View Schedules\" link on \"" + org + " Summary\"",false);
+		} else {
+			SimpleUtils.fail("Dashboard Page: \"View Schedules\" link not loaded on \"" + org + "Summary\"", false);
+		}
 	}
 
 	public boolean isLocationSummaryWidgetDisplay() throws Exception {

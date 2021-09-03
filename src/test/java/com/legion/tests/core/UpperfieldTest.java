@@ -8,6 +8,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
@@ -15,6 +16,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +37,7 @@ public class UpperfieldTest extends TestBase {
     String[] opUpperFields3 = districtsMap.get("CinemarkWkdy_Enterprise3").split(">");
     private static String controlEnterprice = "Vailqacn_Enterprise";
     private static String opEnterprice = "CinemarkWkdy_Enterprise";
+    private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
 
     @Override
     @BeforeMethod()
@@ -452,7 +455,10 @@ public class UpperfieldTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
-            dashboardPage.clickOnDashboardConsoleMenu();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(BusinessUnit));
             SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
                     dashboardPage.isScheduleVsGuidanceByDayWidgetDisplay(), false);
 
@@ -493,7 +499,9 @@ public class UpperfieldTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-            dashboardPage.clickOnDashboardConsoleMenu();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(BusinessUnit));
             SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
                     dashboardPage.isScheduleVsGuidanceByDayWidgetDisplay(), false);
 
@@ -533,7 +541,10 @@ public class UpperfieldTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
-            dashboardPage.clickOnDashboardConsoleMenu();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(Region));
             SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
                     dashboardPage.isScheduleVsGuidanceByDayWidgetDisplay(), false);
 
@@ -574,7 +585,9 @@ public class UpperfieldTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-            dashboardPage.clickOnDashboardConsoleMenu();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(Region));
             SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
                     dashboardPage.isScheduleVsGuidanceByDayWidgetDisplay(), false);
 
@@ -613,7 +626,7 @@ public class UpperfieldTest extends TestBase {
 
             SimpleUtils.assertOnFail("Open Shifts widget not loaded successfully", dashboardPage.isOpenShiftsWidgetPresent(), false);
 
-            //Get values on open shifts widget and verify the info on Open_Shifts Widget
+            // Get values on open shifts widget and verify the info on Open_Shifts Widget
             if (dashboardPage.isRefreshButtonDisplay())
                 dashboardPage.clickOnRefreshButton();
             HashMap<String, Integer> valuesOnOpenShiftsWidget = dashboardPage.verifyContentOfOpenShiftsWidgetForUpperfield();
@@ -647,7 +660,7 @@ public class UpperfieldTest extends TestBase {
 
             SimpleUtils.assertOnFail("Open Shifts widget not loaded successfully", dashboardPage.isOpenShiftsWidgetPresent(), false);
 
-            //Get values on open shifts widget and verify the info on Open_Shifts Widget
+            // Get values on open shifts widget and verify the info on Open_Shifts Widget
             if (dashboardPage.isRefreshButtonDisplay())
                 dashboardPage.clickOnRefreshButton();
             HashMap<String, Integer> valuesOnOpenShiftsWidget = dashboardPage.verifyContentOfOpenShiftsWidgetForUpperfield();
@@ -796,7 +809,10 @@ public class UpperfieldTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-            dashboardPage.navigateToDashboard();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(BusinessUnit));
             SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
 
             // Validate the content on Payroll Projection widget with TA
@@ -840,7 +856,9 @@ public class UpperfieldTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
-            dashboardPage.clickOnDashboardConsoleMenu();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(BusinessUnit));
             SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
 
             // Validate the content in Payroll Projection widget with TA
@@ -879,7 +897,10 @@ public class UpperfieldTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-            dashboardPage.navigateToDashboard();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(Region));
             SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
 
             // Validate the content on Payroll Projection widget with TA
@@ -923,7 +944,9 @@ public class UpperfieldTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
-            dashboardPage.clickOnDashboardConsoleMenu();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(Region));
             SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
 
             // Validate the content in Payroll Projection widget with TA
@@ -937,6 +960,226 @@ public class UpperfieldTest extends TestBase {
                 SimpleUtils.pass("Dashboard Page: The sum of days matches the numbers in District Summary widget for Guidance, Scheduled and Projected");
             else
                 SimpleUtils.fail("Dashboard Page: The sum of days doesn't match the numbers in District Summary widget for Guidance, Scheduled and Projected",false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify Region Summary widget on Dashboard in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRegionSummaryWidgetOnDashboardInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
+
+            //  Set 'Apply labor budget to schedules?' to Yes
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            dashboardPage.navigateToDashboard();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(BusinessUnit));
+            SimpleUtils.assertOnFail("Regions Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
+
+            // Validate the content in Region Summary widget
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(true);
+
+            // Validate region number in Region Summary widget
+            List<String> regionList = locationSelectorPage.getOrgList();
+            int regionCountInNavigatorBar = regionList.size();
+            String title = dashboardPage.getTitleOnOrgSummaryWidget();
+            title = title.contains(" ")? title.split(" ")[0]:title;
+            SimpleUtils.assertOnFail("Region number in Regions Summary widget is incorrect", Integer.valueOf(title).equals(regionCountInNavigatorBar), false);
+
+            // Validate as of time under Projected in Region Summary widget
+            dashboardPage.validateAsOfTimeUnderProjectedOnOrgSummaryWidget();
+
+            // Validate Projected Hrs match
+            List<String> dataFromRegionSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            dashboardPage.clickOnViewSchedulesOnOrgSummaryWidget();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            List<Float> totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
+            DecimalFormat df1 = new DecimalFormat("###.#");
+            boolean isProjectedHrsMatched = dataFromRegionSummaryWidget.get(2).equals(df1.format(totalBudgetedScheduledProjectedHour.get(2)));
+            // SimpleUtils.assertOnFail("Projected hours in Regions Summary widget did not match", isProjectedHrsMatched, false);
+            // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5057
+
+            // Validate Projected Hrs match without TA
+            if (MyThreadLocal.getDriver().getCurrentUrl().contains(parameterMap.get("KendraScott2_Enterprise"))) {
+                isProjectedHrsMatched = dataFromRegionSummaryWidget.get(2).equals("--");
+                // SimpleUtils.assertOnFail("Projected hours in Regions Summary widget did not match", isProjectedHrsMatched, false);
+                // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5057
+            }
+
+            // Validate Scheduled Hrs match
+            boolean isScheduledHrsMatched = dataFromRegionSummaryWidget.get(1).equals(df1.format(totalBudgetedScheduledProjectedHour.get(1)));
+            SimpleUtils.assertOnFail("Scheduled hours in Regions Summary widget did not match", isScheduledHrsMatched, false);
+
+            // Validate the  ▲ ▼ caret and hours under Scheduled Hrs
+            List<String> regionNumbersFromRegionSummarySmartCard = scheduleDMViewPage.getLocationNumbersFromLocationSummarySmartCard();
+            List<String> textOnTheChartInRegionSummarySmartCard= scheduleDMViewPage.getTextFromTheChartInLocationSummarySmartCard();
+            boolean isHrsOfUnderOrCoverBudgetMatched = false;
+            isHrsOfUnderOrCoverBudgetMatched = dataFromRegionSummaryWidget.get(5).split(" ")[0].
+                    equals(textOnTheChartInRegionSummarySmartCard.get(6).split(" ")[0]);
+            // SimpleUtils.assertOnFail("The  ▲ ▼ caret and hours under Scheduled Hrs in Regions Summary widget did not match", isHrsOfUnderOrCoverBudgetMatched, false);
+            // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5165
+
+            // Validate Budgeted Hrs match
+            boolean isBudgetedHrsMatched = dataFromRegionSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
+            // SimpleUtils.assertOnFail("Budgeted hours in Regions Summary widget did not match", isBudgetedHrsMatched, false);
+            // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5165
+
+            // Validate the data of Projected Within Budget
+            boolean isProjectedWithinBudgetRegionsMatched = dataFromRegionSummaryWidget.get(3).equals(regionNumbersFromRegionSummarySmartCard.get(0));
+            SimpleUtils.assertOnFail("Budgeted hours in Regions Summary widget did not match", isProjectedWithinBudgetRegionsMatched, false);
+
+            // Validate the data of Projected Over Budget
+            boolean isProjectedOverBudgetRegionsMatched = dataFromRegionSummaryWidget.get(4).equals(regionNumbersFromRegionSummarySmartCard.get(1));
+            SimpleUtils.assertOnFail("Budgeted hours in Regions Summary widget did not match", isProjectedOverBudgetRegionsMatched, false);
+
+            //  Set 'Apply labor budget to schedules?' to No
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            dashboardPage.navigateToDashboard();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(BusinessUnit));
+            SimpleUtils.assertOnFail("Regions Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
+
+            // Validate the content in Region Summary widget
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(false);
+
+            //  Validate Guidance Hrs match
+            dataFromRegionSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            dashboardPage.clickOnViewSchedulesOnOrgSummaryWidget();
+            totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
+            boolean isGuidanceHrsMatched = dataFromRegionSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
+            // SimpleUtils.assertOnFail("Budgeted hours in Regions Summary widget did not match", isGuidanceHrsMatched, false);
+            // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5165
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify Region Summary widget on Dashboard in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDistrictSummaryWidgetOnDashboardInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
+
+            //  Set 'Apply labor budget to schedules?' to Yes
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            dashboardPage.navigateToDashboard();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
+            SimpleUtils.assertOnFail("Districts Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
+
+            // Validate the content in Region Summary widget
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(true);
+
+            // Validate district number in Region Summary widget
+            List<String> districtList = locationSelectorPage.getOrgList();
+            int districtCountInNavigatorBar = districtList.size();
+            String title = dashboardPage.getTitleOnOrgSummaryWidget();
+            title = title.contains(" ")? title.split(" ")[0]:title;
+            SimpleUtils.assertOnFail("District number in Districts Summary widget is incorrect", Integer.valueOf(title).equals(districtCountInNavigatorBar), false);
+
+            // Validate as of time under Projected in Region Summary widget
+            dashboardPage.validateAsOfTimeUnderProjectedOnOrgSummaryWidget();
+
+            // Validate Projected Hrs match
+            List<String> dataFromDistrictSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            dashboardPage.clickOnViewSchedulesOnOrgSummaryWidget();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            List<Float> totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
+            DecimalFormat df1 = new DecimalFormat("###.#");
+            boolean isProjectedHrsMatched = dataFromDistrictSummaryWidget.get(2).equals(df1.format(totalBudgetedScheduledProjectedHour.get(2)));
+            // SimpleUtils.assertOnFail("Projected hours in Districts Summary widget did not match", isProjectedHrsMatched, false);
+            // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5057
+
+            // Validate Projected Hrs match without TA
+            if (MyThreadLocal.getDriver().getCurrentUrl().contains(parameterMap.get("KendraScott2_Enterprise"))) {
+                isProjectedHrsMatched = dataFromDistrictSummaryWidget.get(2).equals("--");
+                // SimpleUtils.assertOnFail("Projected hours in Districts Summary widget did not match", isProjectedHrsMatched, false);
+                // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5057
+            }
+
+            // Validate Scheduled Hrs match
+            boolean isScheduledHrsMatched = dataFromDistrictSummaryWidget.get(1).equals(df1.format(totalBudgetedScheduledProjectedHour.get(1)));
+            SimpleUtils.assertOnFail("Scheduled hours in Districts Summary widget did not match", isScheduledHrsMatched, false);
+
+            // Validate the  ▲ ▼ caret and hours under Scheduled Hrs
+            List<String> regionNumbersFromRegionSummarySmartCard = scheduleDMViewPage.getLocationNumbersFromLocationSummarySmartCard();
+            List<String> textOnTheChartInRegionSummarySmartCard= scheduleDMViewPage.getTextFromTheChartInLocationSummarySmartCard();
+            boolean isHrsOfUnderOrCoverBudgetMatched = false;
+            isHrsOfUnderOrCoverBudgetMatched = dataFromDistrictSummaryWidget.get(5).split(" ")[0].
+                    equals(textOnTheChartInRegionSummarySmartCard.get(6).split(" ")[0]);
+            // SimpleUtils.assertOnFail("The  ▲ ▼ caret and hours under Scheduled Hrs in Districts Summary widget did not match", isHrsOfUnderOrCoverBudgetMatched, false);
+            // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5165
+
+            // Validate Budgeted Hrs match
+            boolean isBudgetedHrsMatched = dataFromDistrictSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
+            // SimpleUtils.assertOnFail("Budgeted hours in Districts Summary widget did not match", isBudgetedHrsMatched, false);
+            // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5165
+
+            // Validate the data of Projected Within Budget
+            boolean isProjectedWithinBudgetRegionsMatched = dataFromDistrictSummaryWidget.get(3).equals(regionNumbersFromRegionSummarySmartCard.get(0));
+            SimpleUtils.assertOnFail("Budgeted hours in Districts Summary widget did not match", isProjectedWithinBudgetRegionsMatched, false);
+
+            // Validate the data of Projected Over Budget
+            boolean isProjectedOverBudgetRegionsMatched = dataFromDistrictSummaryWidget.get(4).equals(regionNumbersFromRegionSummarySmartCard.get(1));
+            SimpleUtils.assertOnFail("Budgeted hours in Districts Summary widget did not match", isProjectedOverBudgetRegionsMatched, false);
+
+            //  Set 'Apply labor budget to schedules?' to No
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            dashboardPage.navigateToDashboard();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
+            SimpleUtils.assertOnFail("Districts Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
+
+            // Validate the content in Region Summary widget
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(false);
+
+            //  Validate Guidance Hrs match
+            dataFromDistrictSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            dashboardPage.clickOnViewSchedulesOnOrgSummaryWidget();
+            totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
+            boolean isGuidanceHrsMatched = dataFromDistrictSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
+            // SimpleUtils.assertOnFail("Budgeted hours in Districts Summary widget did not match", isGuidanceHrsMatched, false);
+            // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5165
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
