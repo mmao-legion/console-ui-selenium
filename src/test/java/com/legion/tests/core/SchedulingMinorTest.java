@@ -19,6 +19,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -458,6 +459,222 @@ public class SchedulingMinorTest extends TestBase {
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate Minor info in the Profile page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMinorInfoOnProfilePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        String firstNameOfMinor14 = "Minor14";
+        String firstNameOfMinor16 = "Minor16";
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.searchAndSelectTeamMemberByName(firstNameOfMinor14);
+        Map hrProfileInfo = profileNewUIPage.getHRProfileInfo();
+        SimpleUtils.assertOnFail("Minors info is correct!",String.valueOf(hrProfileInfo.get("MINOR")).contains("14-15"), false);
+        teamPage.goToTeam();
+        teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+        teamPage.searchAndSelectTeamMemberByName(firstNameOfMinor16);
+        hrProfileInfo = profileNewUIPage.getHRProfileInfo();
+        SimpleUtils.assertOnFail("Minors info is correct!",String.valueOf(hrProfileInfo.get("MINOR")).contains("16-17"), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate minor filter in the Schedule page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMinorFilterAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        String firstNameOfMinor14 = "Minor14";
+        String firstNameOfMinor16 = "Minor16";
+
+        //Go to the schedule page to create shifts for minors and check the filter.
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+        schedulePage.navigateToNextWeek();
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+
+        String workRole = schedulePage.getRandomWorkRole();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView(firstNameOfMinor14);
+        schedulePage.deleteTMShiftInWeekView(firstNameOfMinor14);
+        schedulePage.saveSchedule();
+        //create shifts for minors.
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.selectWorkRole(workRole);
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByNameNLocation(firstNameOfMinor14, location);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.selectWorkRole(workRole);
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByNameNLocation(firstNameOfMinor16, location);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
+        SimpleUtils.assertOnFail("There should be only one shift for minor 14!", 1 == schedulePage.getShiftsCount(), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (16-17)");
+        SimpleUtils.assertOnFail("There should be only one shift for minor 16!", 1 == schedulePage.getShiftsCount(), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        SimpleUtils.assertOnFail("There should be all shifts displaying!", 1 < schedulePage.getShiftsCount(), false);
+        schedulePage.clickOnWeekView();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
+        SimpleUtils.assertOnFail("There should be only one shift for minor 14!", 1 == schedulePage.getShiftsCount(), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (16-17)");
+        SimpleUtils.assertOnFail("There should be only one shift for minor 16!", 1 == schedulePage.getShiftsCount(), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        SimpleUtils.assertOnFail("There should be all shifts displaying!", 1 < schedulePage.getShiftsCount(), false);
+
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
+        SimpleUtils.assertOnFail("There should be only one shift for minor 14!", 1 == schedulePage.getShiftsCount(), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (16-17)");
+        SimpleUtils.assertOnFail("There should be only one shift for minor 16!", 1 == schedulePage.getShiftsCount(), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        SimpleUtils.assertOnFail("There should be all shifts displaying!", 1 < schedulePage.getShiftsCount(), false);
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
+        SimpleUtils.assertOnFail("There should be only one shift for minor 14!", 1 == schedulePage.getShiftsCount(), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (16-17)");
+        SimpleUtils.assertOnFail("There should be only one shift for minor 16!", 1 == schedulePage.getShiftsCount(), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        SimpleUtils.assertOnFail("There should be all shifts displaying!", 1 < schedulePage.getShiftsCount(), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate minor badge info")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMinorBadgeInfoAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        String firstNameOfMinor14 = "Minor14";
+        String firstNameOfMinor16 = "Minor16";
+
+        //Go to the schedule page to create shifts for minors and check the filter.
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+        schedulePage.navigateToNextWeek();
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+
+        String workRole = schedulePage.getRandomWorkRole();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.deleteTMShiftInWeekView(firstNameOfMinor14);
+        schedulePage.deleteTMShiftInWeekView(firstNameOfMinor14);
+        schedulePage.saveSchedule();
+        //create shifts for minors.
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.selectWorkRole(workRole);
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByNameNLocation(firstNameOfMinor14, location);
+        schedulePage.clickOnOfferOrAssignBtn();
+
+        schedulePage.clickOnDayViewAddNewShiftButton();
+        schedulePage.customizeNewShiftPage();
+        schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+        schedulePage.selectWorkRole(workRole);
+        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+        schedulePage.clickOnCreateOrNextBtn();
+        schedulePage.searchTeamMemberByNameNLocation(firstNameOfMinor16, location);
+        schedulePage.clickOnOfferOrAssignBtn();
+        schedulePage.saveSchedule();
+
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
+        schedulePage.verifyShiftsHasMinorsColorRing("minor-14");
+        SimpleUtils.assertOnFail("There should be minor info in i icon popup!",schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)).contains("Minor 14-15"), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (16-17)");
+        schedulePage.verifyShiftsHasMinorsColorRing("minor-16");
+        SimpleUtils.assertOnFail("There should be minor info in i icon popup!",schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)).contains("Minor 16-17"), false);
+        schedulePage.clickOnWeekView();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
+        schedulePage.verifyShiftsHasMinorsColorRing("minor-14");
+        SimpleUtils.assertOnFail("There should be minor info in i icon popup!",schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)).contains("Minor 14-15"), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (16-17)");
+        schedulePage.verifyShiftsHasMinorsColorRing("minor-16");
+        SimpleUtils.assertOnFail("There should be minor info in i icon popup!",schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)).contains("Minor 16-17"), false);
+
+        //verify again in edit mode.
+
+
+        System.out.println(schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)));
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
+        schedulePage.verifyShiftsHasMinorsColorRing("minor-14");
+        SimpleUtils.assertOnFail("There should be minor info in i icon popup!",schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)).contains("Minor 14-15"), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (16-17)");
+        schedulePage.verifyShiftsHasMinorsColorRing("minor-16");
+        SimpleUtils.assertOnFail("There should be minor info in i icon popup!",schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)).contains("Minor 16-17"), false);
+        schedulePage.clickOnDayView();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
+        schedulePage.verifyShiftsHasMinorsColorRing("minor-14");
+        SimpleUtils.assertOnFail("There should be minor info in i icon popup!",schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)).contains("Minor 14-15"), false);
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Minor (16-17)");
+        schedulePage.verifyShiftsHasMinorsColorRing("minor-16");
+        SimpleUtils.assertOnFail("There should be minor info in i icon popup!",schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)).contains("Minor 16-17"), false);
     }
 
     @Automated(automated = "Automated")

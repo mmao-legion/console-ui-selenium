@@ -2908,7 +2908,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	public void clickOnRefreshButton() throws Exception {
 		if (isElementLoaded(refreshButton, 10)) {
 			clickTheElement(refreshButton);
-			if(isElementLoaded(lastUpdatedIcon, 60)){
+			if(isElementLoaded(lastUpdatedIcon, 120)){
 				SimpleUtils.pass("Click on Refresh button Successfully!");
 			} else
 				SimpleUtils.fail("Refresh timeout! ", false);

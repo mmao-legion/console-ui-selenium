@@ -33,10 +33,10 @@
             <class name="com.legion.tests.core.TeamTestKendraScott2">
                 <methods>
                     <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
-                    <include name="validateCreateChangeAvailabilityRequestAsTeamMember" />
-                    <include name="validateCancelAvailabilityRequestAsTeamMember" />
-                    <include name="validateApproveAvailabilityRequestAsTeamMember" />
-                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsTeamMember" />
+                    <include name="validateCreateChangeAvailabilityRequestAsStoreManager" />
+                    <include name="validateCancelAvailabilityRequestAsStoreManager" />
+                    <include name="validateApproveAvailabilityRequestAsStoreManager" />
+                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
                     <include name="validateRejectAvailabilityRequestAsStoreManager" />
                     <include name="validateCreateAvailabilityRequestWithoutApprovalAsInternalAdmin" />
                 </methods>
@@ -99,6 +99,9 @@
                 <methods>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftIsNotDuringTheSettingTimeAsInternalAdmin" />
                     <include name="verifyWarningMessageForExceedWeekendHrsAsInternalAdmin"/>
+                    <include name="verifyMinorInfoOnProfilePageAsInternalAdmin" />
+                    <include name="verifyMinorFilterAsInternalAdmin" />
+                    <include name="verifyMinorBadgeInfoAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

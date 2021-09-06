@@ -683,4 +683,6 @@ public interface SchedulePage {
 	public void verifyGroupCanbeCollapsedNExpanded() throws Exception;
 	public void verifySpecificOptionEnabledOnShiftMenu(String optionName) throws Exception;
 	public boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception;
+	public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception;
+	public String getIIconTextInfo(WebElement shift) throws Exception;
 }

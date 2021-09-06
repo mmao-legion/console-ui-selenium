@@ -100,7 +100,7 @@
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
                     <include name="validateTheOOOHShiftsAsInternalAdmin" />
                     <include name="validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin" />
-<!--                    <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />  SCH-5074-->
+                    <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -110,7 +110,7 @@
         <classes>
             <class name="com.legion.tests.core.DashboardTestKendraScott2">
                 <methods>
-                    <!--                    <include name="verifyDashboardFunctionalityAsTeamMember" Blocked by SCH-4019/>-->
+                    <!--                    <include name="verifyDashboardFunctionalityAsTeamMember" Need fix/>-->
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
@@ -126,7 +126,7 @@
         <classes>
             <class name="com.legion.tests.core.TeamTestKendraScott2">
                 <methods>
-                    <!--                   <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by SCH-3934/>-->
+                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
                     <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                     <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
                     <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />
@@ -150,7 +150,7 @@
             <class name="com.legion.tests.core.ScheduleTest">
                 <methods>
                     <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
-                    <!--                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" Blocked by SCH-4171/>-->
+                    <!--                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" Need fix/>-->
                 </methods>
             </class>
         </classes>
@@ -208,7 +208,7 @@
                     <include name="verifyTurnOnGFEAsInternalAdmin" />
                     <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
                     <include name="verifyContentOfGFEAsInternalAdmin" />
-                    <!--                    <include name="verifyVSLInfoAsInternalAdmin" Blocked by SCH-4012/>-->
+                    <include name="verifyVSLInfoAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -237,11 +237,11 @@
             <class name="com.legion.tests.core.SchedulingMinorTest">
                 <methods>
                     <include name="verifyEditMinorRulesAsInternalAdmin"/>
-                    <!--SCH-4754              <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
-                                <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
-                                <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
-                                <include name="verifyTheWarningMessageAndViolationWhenMinorShiftDaysExceedTheWeekDaysInSettingAsInternalAdmin" />
-                               <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />  -->
+<!--                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
+                    <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftDaysExceedTheWeekDaysInSettingAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />   https://legiontech.atlassian.net/browse/SCH-4754 -->
                 </methods>
             </class>
         </classes>
@@ -264,6 +264,7 @@
         <classes>
             <class name="com.legion.tests.core.DeleteScheduleTest">
                 <methods>
+                    <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
                     <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
                     <include name="verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager" />
                     <!--Manage Schedule permission conflicts    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />-->

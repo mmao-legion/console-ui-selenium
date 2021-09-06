@@ -122,7 +122,7 @@ public interface DashboardPage {
     public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception;
     public void verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget() throws Exception;
     public List<String> getTheDataOnLocationSummaryWidget() throws Exception;
-    public void verifyTheContentOnLocationSummaryWidget() throws Exception;
+    public void verifyTheContentOnOrgSummaryWidget(boolean isLaborBudgetToApply) throws Exception;
     public boolean isLocationSummaryWidgetDisplay() throws Exception;
     public boolean isOpenShiftsWidgetDisplay() throws Exception;
     public void clickViewSchedulesLinkOnOpenShiftsWidget() throws Exception;
@@ -130,6 +130,7 @@ public interface DashboardPage {
     public void verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget() throws Exception;
     public boolean isConsoleNavigationBarIsGray(String consoleNavigationBarName) throws Exception;
     public boolean isConsoleNavigationBarBeenSelected (String consoleNavigationBarName) throws Exception;
+    public String getTitleOnOrgSummaryWidget() throws Exception;
 
     public void validateThePresenceOfUpperfield() throws Exception;
     public String getUpperfieldNameOnDashboard() throws Exception;
@@ -151,4 +152,6 @@ public interface DashboardPage {
     public void clickOnViewSchedulesOnOpenShiftsWidget() throws Exception;
     public boolean isRefreshButtonDisplay() throws Exception;
     public HashMap<String, Integer> getTheSumOfValuesOnPayrollProjectionWidget() throws Exception;
+    public void validateAsOfTimeUnderProjectedOnOrgSummaryWidget() throws Exception;
+    public void clickOnViewSchedulesOnOrgSummaryWidget() throws Exception;
 }

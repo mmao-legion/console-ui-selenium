@@ -281,6 +281,9 @@
                     <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                     <include name="verifyWarningMessageForExceedWeekendHrsAsInternalAdmin"/>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />
+                    <include name="verifyMinorInfoOnProfilePageAsInternalAdmin" />
+                    <include name="verifyMinorFilterAsInternalAdmin" />
+                    <include name="verifyMinorBadgeInfoAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -546,6 +549,8 @@
                         <include name="verifyComplianceViolationsWidgetOnDashboardInRegionViewAsInternalAdmin" />
                         <include name="verifyPayrollProjectionWidgetOnDashboardInBUViewAsInternalAdmin" />
                         <include name="verifyPayrollProjectionWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyRegionSummaryWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyDistrictSummaryWidgetOnDashboardInRegionViewAsInternalAdmin" />
 
                         <!-- Added by Mary -->
                         <include name="verifyRegionViewNavigationAsInternalAdmin" />
@@ -576,7 +581,12 @@
                         <include name="verifyRefreshFeatureOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-5058 -->
 <!--                        <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInBUViewAsInternalAdmin" />
                         <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/TA-5507-->
-
+                        <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInRegionViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>
