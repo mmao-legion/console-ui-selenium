@@ -13403,6 +13403,44 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void verifyShiftIsCopiedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        boolean isCopied = false;
+        boolean isExisted = false;
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
+            for (WebElement start : startElements) {
+                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                if (startName != null) {
+                    if (startName.getText().equalsIgnoreCase(firstName)) {
+                        SimpleUtils.pass("Can find the TM:" + firstName + " on " + startIndex);
+                        isCopied = true;
+                        break;
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the worker name elements!", false);
+                }
+            }
+            for (WebElement end : endElements) {
+                WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
+                if (endName != null) {
+                    if (endName.getText().equalsIgnoreCase(firstName)) {
+                        isCopied = true;
+                        break;
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the worker name elements!", false);
+                }
+            }
+            if (!isCopied && !isExisted) {
+                SimpleUtils.fail(firstName + " isn't copied to the day correctly, which index is: " + endIndex, false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
+        }
+    }
+
+    @Override
     public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception {
         boolean isDragged = false;
         List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
@@ -13848,7 +13886,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         waitForSeconds(3);
         boolean isDragged = false;
         List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
-        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"]"));
         WebElement weekDay = getDriver().findElement(By.cssSelector("[data-day-index=\""+endIndex+"\"] .sch-calendar-day-label"));
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0 && weekDay!=null) {
             for (WebElement start : startElements) {
