@@ -3923,44 +3923,48 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception {
         boolean selectOtherWeek = false;
-        if (areListElementVisible(createModalWeeks, 10)) {
-            SimpleUtils.pass("Copy Schedule page loaded Successfully!");
-            waitForSeconds(5);
-            for (WebElement createModalWeek : createModalWeeks) {
-                WebElement weekName = createModalWeek.findElement(By.className("generate-modal-week-name"));
-                if (!selectOtherWeek) {
-                    if (weekName != null && weekName.getText().toLowerCase().contains(weekInfo.toLowerCase())) {
+        try{
+            if (areListElementVisible(createModalWeeks, 10)) {
+                SimpleUtils.pass("Copy Schedule page loaded Successfully!");
+                waitForSeconds(5);
+                for (WebElement createModalWeek : createModalWeeks) {
+                    WebElement weekName = createModalWeek.findElement(By.className("generate-modal-week-name"));
+                    if (!selectOtherWeek) {
+                        if (weekName != null && weekName.getText().toLowerCase().contains(weekInfo.toLowerCase())) {
+                            WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
+                            if (weekContainer != null) {
+                                WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
+                                if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
+                                    int i = 0;
+                                    while (isElementLoaded(loadingIcon)&& i<20){
+                                        waitForSeconds(3);
+                                        i = i+1;
+                                    }
+                                    clickTheElement(weekContainer);
+                                    waitForSeconds(3);
+//                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + " with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+                                    break;
+                                } else {
+                                    selectOtherWeek = true;
+                                    SimpleUtils.warn("Scheduled Hour is 0, due to bug PLT-1082: [RC]Creating schedule keeps spinning and shows 0 scheduled hours! Will select another week as a workaround");
+                                }
+                            }
+                        }
+                    } else {
                         WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
                         if (weekContainer != null) {
                             WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
                             if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
-                                int i = 0;
-                                while (isElementLoaded(loadingIcon)&& i<20){
-                                    waitForSeconds(3);
-                                    i = i+1;
-                                }
                                 clickTheElement(weekContainer);
-                                waitForSeconds(3);
-//                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + " with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + "with scheduled hour: " + scheduledHours.getText() + " Successfully!");
                                 break;
-                            } else {
-                                selectOtherWeek = true;
-                                SimpleUtils.warn("Scheduled Hour is 0, due to bug PLT-1082: [RC]Creating schedule keeps spinning and shows 0 scheduled hours! Will select another week as a workaround");
                             }
-                        }
-                    }
-                } else {
-                    WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
-                    if (weekContainer != null) {
-                        WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
-                        if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
-                            clickTheElement(weekContainer);
-                            SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + "with scheduled hour: " + scheduledHours.getText() + " Successfully!");
-                            break;
                         }
                     }
                 }
             }
+        } catch (StaleElementReferenceException e){
+            SimpleUtils.report(e.getMessage());
         }
     }
 
@@ -4303,56 +4307,60 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
-        if (isElementLoaded(operatingHoursEditBtn, 10)) {
-            clickTheElement(operatingHoursEditBtn);
-            if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)
-                    && areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
-                    && locationsInLocationSelectorOnCreateSchedulePage.size() > 0) {
-                click(locationSelectorOnCreateSchedulePage);
-                selectRandomLocationOnCreateScheduleEditOperatingHoursPage();
-            }
-            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
-                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
-                if (areListElementVisible(operatingHoursDayLists, 15)) {
-                    for (WebElement dayList : operatingHoursDayLists) {
-                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
-                        if (weekDay != null) {
-                            WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
-                            if (!weekDaysToClose.contains(weekDay.getText())) {
-                                if (checkbox.getAttribute("class").contains("ng-empty")) {
-                                    clickTheElement(checkbox);
+        try{
+            if (isElementLoaded(operatingHoursEditBtn, 10)) {
+                clickTheElement(operatingHoursEditBtn);
+                if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)
+                        && areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
+                        && locationsInLocationSelectorOnCreateSchedulePage.size() > 0) {
+                    click(locationSelectorOnCreateSchedulePage);
+                    selectRandomLocationOnCreateScheduleEditOperatingHoursPage();
+                }
+                if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+                    SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
+                    if (areListElementVisible(operatingHoursDayLists, 15)) {
+                        for (WebElement dayList : operatingHoursDayLists) {
+                            WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                            if (weekDay != null) {
+                                WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                                if (!weekDaysToClose.contains(weekDay.getText())) {
+                                    if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                        clickTheElement(checkbox);
+                                    }
+                                    String[] operatingHours = null;
+                                    if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)) {
+                                        operatingHours = propertyOperatingHoursLG.get(weekDay.getText()).split("-");
+                                    } else
+                                        operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
+                                    List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                                    startNEndTimes.get(0).clear();
+                                    startNEndTimes.get(1).clear();
+                                    startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
+                                    startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
+                                } else {
+                                    if (!checkbox.getAttribute("class").contains("ng-empty")) {
+                                        clickTheElement(checkbox);
+                                    }
                                 }
-                                String[] operatingHours = null;
-                                if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)) {
-                                    operatingHours = propertyOperatingHoursLG.get(weekDay.getText()).split("-");
-                                } else
-                                    operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
-                                List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                                startNEndTimes.get(0).clear();
-                                startNEndTimes.get(1).clear();
-                                startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
-                                startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
                             } else {
-                                if (!checkbox.getAttribute("class").contains("ng-empty")) {
-                                    clickTheElement(checkbox);
-                                }
+                                SimpleUtils.fail("Failed to find weekday element!", false);
                             }
+                        }
+                        clickTheElement(operatingHoursSaveBtn);
+                        if (isElementEnabled(operatingHoursEditBtn, 15)) {
+                            SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                         } else {
-                            SimpleUtils.fail("Failed to find weekday element!", false);
+                            SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
                         }
                     }
-                    clickTheElement(operatingHoursSaveBtn);
-                    if (isElementEnabled(operatingHoursEditBtn, 15)) {
-                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
-                    } else {
-                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
-                    }
+                } else {
+                    SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
                 }
-            } else {
-                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
+            }else {
+                SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
             }
-        }else {
-            SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
+        } catch (StaleElementReferenceException e){
+            SimpleUtils.report(e.getMessage());
         }
     }
 

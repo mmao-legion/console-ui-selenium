@@ -272,12 +272,16 @@ public class SchedulingOPEnabledTest  extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUI();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Action Required");
+            schedulePage.deleteTMShiftInWeekView("");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             //make edits
             schedulePage.clickOnDayViewAddNewShiftButton();
             schedulePage.customizeNewShiftPage();
-            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount3.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.selectWorkRole(scheduleWorkRoles.get("GENERAL MANAGER"));
+            schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            schedulePage.selectWorkRole("");
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.saveSchedule();
@@ -512,20 +516,29 @@ public class SchedulingOPEnabledTest  extends TestBase {
             }
             schedulePage.createScheduleForNonDGFlowNewUI();
 
-            //verify shifts are auto assigned.
-            //schedulePage.verifyAllShiftsAssigned();
-            //schedulePage.clickOnEditButton();
+            //delete unassigned shifts and open shifts.
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Action Required");
+            //schedulePage.deleteTMShiftInWeekView("Unassigned");
+            //Delete all shifts are action required.
+            schedulePage.deleteTMShiftInWeekView("");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Open");
+            schedulePage.deleteTMShiftInWeekView("");
+            schedulePage.clickOnFilterBtn();
+            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            schedulePage.deleteAllShiftsInWeekView();
+            schedulePage.clickOnFilterBtn();
+            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.clickOnProfileIcon();
             schedulePage.clickOnConvertToOpenShift();
             schedulePage.convertToOpenShiftDirectly();
-            int index = schedulePage.getTheIndexOfEditedShift();
             schedulePage.saveSchedule();
             schedulePage.publishActiveSchedule();
-            schedulePage.clickProfileIconOfShiftByIndex(index);
+            schedulePage.clickOnProfileIconOfOpenShift();
             schedulePage.clickViewStatusBtn();
             schedulePage.verifyListOfOfferNotNull();
         } catch (Exception e){
