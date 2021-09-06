@@ -3113,4 +3113,103 @@ public class UpperfieldTest extends TestBase {
         }
     }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify UNPLANNED CLOCKS smart card on Timesheet in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+
+            //Validate the content on Unplanned Clocks summary smart card.
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            HashMap<String, Integer> valuesFromUnplannedClocksSummaryCard = schedulePage.getValueOnUnplannedClocksSmartCardAndVerifyInfo();
+            int index = schedulePage.getIndexOfColInDMViewTable("Unplanned Clocks");
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int unplannedClocks = 0;
+            for (Float f: data){
+                unplannedClocks = unplannedClocks + Math.round(f);
+            }
+            //The sum of numbers on UNPLANNED CLOCKS smart card should match the unplanned clocks smartcard
+            SimpleUtils.assertOnFail("Unplanned clocks from summary card and analytic table are inconsistent!",
+                    valuesFromUnplannedClocksSummaryCard.get("No Show")==unplannedClocks, false);
+
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            index = schedulePage.getIndexOfColInDMViewTable("Missed Meal");
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int missedMeal = 0;
+            for (Float f: data){
+                missedMeal = missedMeal + Math.round(f);
+            }
+            //Missed meal number on UNPLANNED CLOCKS smart card should match the sum of the missed meal column in the Compliance tab
+            SimpleUtils.assertOnFail("Miss meal from UNPLANNED CLOCKS smart card and compliance analytic table are inconsistent!",
+                    valuesFromUnplannedClocksSummaryCard.get("Missed Meal")==missedMeal, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify UNPLANNED CLOCKS smart card on Timesheet in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            //Validate the content on Unplanned Clocks summary smart card.
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            HashMap<String, Integer> valuesFromUnplannedClocksSummaryCard = schedulePage.getValueOnUnplannedClocksSmartCardAndVerifyInfo();
+            int index = schedulePage.getIndexOfColInDMViewTable("Unplanned Clocks");
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int unplannedClocks = 0;
+            for (Float f: data){
+                unplannedClocks = unplannedClocks + Math.round(f);
+            }
+            //The sum of numbers on UNPLANNED CLOCKS smart card should match the unplanned clocks smartcard
+            SimpleUtils.assertOnFail("Unplanned clocks from summary card and analytic table are inconsistent!",
+                    valuesFromUnplannedClocksSummaryCard.get("No Show")==unplannedClocks, false);
+
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            index = schedulePage.getIndexOfColInDMViewTable("Missed Meal");
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int missedMeal = 0;
+            for (Float f: data){
+                missedMeal = missedMeal + Math.round(f);
+            }
+            //Missed meal number on UNPLANNED CLOCKS smart card should match the sum of the missed meal column in the Compliance tab
+            SimpleUtils.assertOnFail("Miss meal from UNPLANNED CLOCKS smart card and compliance analytic table are inconsistent!",
+                    valuesFromUnplannedClocksSummaryCard.get("Missed Meal")==missedMeal, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
 }

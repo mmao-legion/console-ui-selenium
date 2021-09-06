@@ -583,6 +583,10 @@
                         <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/TA-5507-->
                         <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInBUViewAsInternalAdmin" />
                         <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInRegionViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>
