@@ -682,4 +682,5 @@ public interface SchedulePage {
 	public HashMap<String, String> getMealAndRestBreaksTime() throws Exception;
 	public void verifyGroupCanbeCollapsedNExpanded() throws Exception;
 	public void verifySpecificOptionEnabledOnShiftMenu(String optionName) throws Exception;
+	public boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception;
 }

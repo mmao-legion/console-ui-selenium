@@ -10963,8 +10963,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         click(cannelBtnInMealBreakButton);
     }
 
-
-    private boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception {
+    @Override
+    public boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception {
         if (isEditMealBreakEnabled){
             if (isElementLoaded(editMealBreakTitle,5) && isElementLoaded(addMealBreakButton,5) &&
                     isElementLoaded(cannelBtnInMealBreakButton,5) && isElementLoaded(continueBtnInMealBreakButton,5)
@@ -11216,7 +11216,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 10)) {
                                 clickTheElement(deleteShift);
-                                waitForSeconds(2);
+                                waitForSeconds(3);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
