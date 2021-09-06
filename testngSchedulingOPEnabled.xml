@@ -210,11 +210,11 @@
             </classes>
         </test>-->
 
-    <test name="Upperfield Test">
+<!--    <test name="Upperfield Test">
         <classes>
             <class name="com.legion.tests.core.UpperfieldTest">
                 <methods>
-                    <!-- Added by Mary -->
+
                     <include name="verifyRegionViewNavigationAsInternalAdmin" />
                     <include name="verifyBUViewNavigationAsInternalAdmin" />
                     <include name="verifyControlsInBUViewAsInternalAdmin" />
@@ -238,6 +238,6 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test> Will add back when upper field auto finish -->
 
 </suite> <!-- Suite -->

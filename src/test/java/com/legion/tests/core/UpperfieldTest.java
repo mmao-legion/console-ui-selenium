@@ -1213,7 +1213,6 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.isDMView();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
             //Validate navigating back to region view
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -1292,7 +1291,6 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             locationSelectorPage.isRegionView();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
             //Validate navigating back to BU view
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -2886,6 +2884,7 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
+            timeSheetPage.validateLoadingOfTimeSheetSmartCard();
 
             //Get time sheet rate from smart card
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -3001,6 +3000,114 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("The region approval rates are inconsistent on BU view and Region view, the rate on BU view is "+ timeSheetApprovalOfOneRegion +
                             ", the rate on review is "+ approvalRateOnTableOnRegionView,
                     timeSheetApprovalOfOneRegion == approvalRateOnTableOnRegionView, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Unplanned Clocks on Timesheet in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUnplannedClocksOnTimesheetInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+
+            //Get Unplanned Clocks and Total Timesheets from smart card
+            int unplannedClockFromSmartCard = timeSheetPage.getUnplannedClockSmartCardOnDMView();
+            int timesheetFromSmartCard = timeSheetPage.getTotalTimesheetFromSmartCardOnDMView();
+
+            //Get Unplanned Clocks and Total Timesheets from table
+            int totalUnplannedClocksOnTblView = timeSheetPage.getUnplannedClocksOnDMView();
+            int totalTimesheetsOnTblView = timeSheetPage.getTotalTimesheetsOnDMView();
+
+            int totalUnplannedClocksOnDMViewSmartCardDetailSummary = timeSheetPage.getUnplannedClocksDetailSummaryValue();
+            verifyUnplannedClockOnDMView(unplannedClockFromSmartCard, totalUnplannedClocksOnDMViewSmartCardDetailSummary,
+                    totalUnplannedClocksOnTblView);
+            verifyTimesheetOnDMView(timesheetFromSmartCard, totalTimesheetsOnTblView);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    public void verifyUnplannedClockOnDMView(int totalUnplannedClockSmartCardValOnDMView,
+                                             int totalUnplannedClocksOnDMViewSmartCardDetailSummary,
+                                             int totalUnplannedClocksOnTblView){
+        if(totalUnplannedClockSmartCardValOnDMView == totalUnplannedClocksOnDMViewSmartCardDetailSummary){
+            SimpleUtils.pass("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " matches " +
+                    "with Unplanned Clock in Details Summary Card " + totalUnplannedClocksOnDMViewSmartCardDetailSummary + " on DM View");
+        }else{
+            SimpleUtils.fail("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " do not match " +
+                    "with Unplanned Clock in Details Summary Card " + totalUnplannedClocksOnDMViewSmartCardDetailSummary + " on DM View",true);
+        }
+        if(totalUnplannedClockSmartCardValOnDMView == totalUnplannedClocksOnTblView){
+            SimpleUtils.pass("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " matches " +
+                    "with sum of Unplanned Clock per location in Timesheet table " + totalUnplannedClocksOnTblView + " on DM View");
+        }else{
+            SimpleUtils.fail("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " do not match " +
+                    "with sum of Unplanned Clock per location in Timesheet table " + totalUnplannedClocksOnTblView + " on DM View",true);
+        }
+    }
+
+    public void verifyTimesheetOnDMView(int totalTimesheetOnDMViewSmartCard,
+                                        int totalTimesheetsOnTblView){
+        if(totalTimesheetOnDMViewSmartCard == totalTimesheetsOnTblView){
+            SimpleUtils.pass("Total Timesheet Count from Smart Card " + totalTimesheetOnDMViewSmartCard + " matches " +
+                    "with sum of Timesheet entries per location in Timesheet table " + totalTimesheetsOnTblView + " on DM View");
+        }else{
+            SimpleUtils.fail("Total Timesheet Count from Smart Card " + totalTimesheetOnDMViewSmartCard + " do not match " +
+                    "with sum of Timesheet entries per location in Timesheet table  " + totalTimesheetsOnTblView + " on DM View",true);
+        }
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Unplanned Clocks on Timesheet in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            //Get Unplanned Clocks and Total Timesheets from smart card
+            int unplannedClockFromSmartCard = timeSheetPage.getUnplannedClockSmartCardOnDMView();
+            int timesheetFromSmartCard = timeSheetPage.getTotalTimesheetFromSmartCardOnDMView();
+
+            //Get Unplanned Clocks and Total Timesheets from table
+            int totalUnplannedClocksOnTblView = timeSheetPage.getUnplannedClocksOnDMView();
+            int totalTimesheetsOnTblView = timeSheetPage.getTotalTimesheetsOnDMView();
+
+            int totalUnplannedClocksOnDMViewSmartCardDetailSummary = timeSheetPage.getUnplannedClocksDetailSummaryValue();
+            verifyUnplannedClockOnDMView(unplannedClockFromSmartCard, totalUnplannedClocksOnDMViewSmartCardDetailSummary,
+                    totalUnplannedClocksOnTblView);
+            verifyTimesheetOnDMView(timesheetFromSmartCard, totalTimesheetsOnTblView);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }
