@@ -419,7 +419,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	
 	@Automated(automated = "Automated")
-	@Owner(owner = "Estelle/Mary")
+	@Owner(owner = "Mary/Estelle")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Schedule functionality - Week View - Context Menu")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)

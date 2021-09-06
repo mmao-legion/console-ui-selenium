@@ -6437,6 +6437,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned")) {
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
                 String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
+                waitForSeconds(2);
                 String jobTitle = weekShifts.get(index).findElement(By.cssSelector(".rows .week-schedule-role-name")).getText();
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
@@ -10975,8 +10976,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         click(cannelBtnInMealBreakButton);
     }
 
-
-    private boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception {
+    @Override
+    public boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception {
         if (isEditMealBreakEnabled){
             if (isElementLoaded(editMealBreakTitle,5) && isElementLoaded(addMealBreakButton,5) &&
                     isElementLoaded(cannelBtnInMealBreakButton,5) && isElementLoaded(continueBtnInMealBreakButton,5)
@@ -11228,7 +11229,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 10)) {
                                 clickTheElement(deleteShift);
-                                waitForSeconds(2);
+                                waitForSeconds(3);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
