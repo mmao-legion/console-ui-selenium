@@ -128,7 +128,7 @@
                 <methods>
                     <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
                     <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
-                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
+                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin" />
                     <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />
                 </methods>
             </class>
