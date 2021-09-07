@@ -266,6 +266,8 @@
                     <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
                     <include name="verifyDragDropToAMiddleDayToCopyShiftAsInternalAdmin" />
                     <include name="verifyDragDropToABlankMiddleDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToAMiddleDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToABlankMiddleDayToMoveShiftAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
