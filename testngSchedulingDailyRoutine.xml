@@ -12,32 +12,12 @@
         <classes>
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
-                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
-                    <include name="verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />
                     <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" />
-                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
-                    <include name="verifyComplianceViolationsWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin" />
-                    <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
-                    <include name="verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin" />
-                    <include name="verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin" />
-                    <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
-                    <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
-                    <include name="verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin" />
-                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
-                    <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
-                    <include name="verifyDMViewNavigationAsInternalAdmin" />
-                    <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
-                    <include name="verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
