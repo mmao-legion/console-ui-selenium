@@ -542,6 +542,7 @@ public interface SchedulePage {
 	public void moveAnywayWhenChangeShift() throws Exception;
 	public boolean ifMoveAnywayDialogDisplay() throws Exception;
 	public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
+	public void verifyShiftIsCopiedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
 	public String getTheMessageOfTMScheduledStatus() throws Exception;
 	public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception;
 	public void verifyTMNotSelected() throws Exception;
