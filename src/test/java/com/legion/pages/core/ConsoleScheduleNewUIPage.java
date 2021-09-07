@@ -14771,7 +14771,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     list = getLocationsInScheduleDMViewLocationsTable();
                 } else {
                     if (areListElementVisible(getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")),10)){
-                        list.add(columns.get(index-2).getText().replace("%",""));
+                        list.add(columns.get(index-2).getText().replace("%","").replace(",",""));
                     }
                 }
             } else {

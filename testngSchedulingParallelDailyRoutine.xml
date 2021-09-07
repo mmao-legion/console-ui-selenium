@@ -52,7 +52,7 @@
                 <methods>
                     <include name="verifyComplianceSmartCardFunctionality" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
-                    <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>  Blocked by SCH-5036-->
+                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>
@@ -71,7 +71,7 @@
                     <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
                     <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
-                    <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
+  <!--                  <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/OPS-3119 -->
                     <include name="verifyTMFullNameDisplayOnSearchTMRecommendedAndViewProfilePageAsInternalAdmin" />
                     <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
                     <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
@@ -82,7 +82,7 @@
             </class>
         </classes>
     </test>
-
+<!--
     <test name="Schedule Copy Improvement Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
@@ -91,7 +91,7 @@
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                     <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
-                    <!--<include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />  SCH-5036-->
+                    <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
                     <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" />
                     <include name="validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
@@ -104,7 +104,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>  Blocked by https://legiontech.atlassian.net/browse/OPS-3119 -->
 
     <test name="Dashboard Test">
         <classes>
@@ -253,7 +253,7 @@
                 <methods>
                     <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
                     <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
-                    <include name="verifyWarningModelForClopeningAsInternalAdmin" />
+<!--                    <include name="verifyWarningModelForClopeningAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/OPS-3119 -->
                     <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
                 </methods>
             </class>

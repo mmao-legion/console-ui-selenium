@@ -3212,4 +3212,175 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.fail(e.getMessage(),false);
         }
     }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate analytics table on Schedule in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            String field1 = "Region";
+            String field2 = "Published Status";
+            String field3 = "Budget Hrs";
+            String field4 = "Published Hrs";
+            String field5 = "Budget Variance";
+            SimpleUtils.assertOnFail(field1 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field1) > 0, false);
+            SimpleUtils.assertOnFail(field2 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field2) > 0, false);
+            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field3) > 0, false);
+            SimpleUtils.assertOnFail(field4 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field4) > 0, false);
+            SimpleUtils.assertOnFail(field5 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field5) > 0, false);
+
+            //Validate the field columns can be ordered.
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(2);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+
+            //Validate the data of analytics table for current week.
+            verifyAnalyticsTableOnBUView(regionName);
+
+            //Validate the data of analytics table for past week.
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            schedulePage.navigateToPreviousWeek();
+            verifyAnalyticsTableOnBUView(regionName);
+
+            //Validate the data of analytics table for future week.
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            verifyAnalyticsTableOnBUView(regionName);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    private void verifyAnalyticsTableOnBUView(String regionName) throws Exception {
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+        Map<String, String> regionInfoOnBUView = scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
+        schedulePage.clickSpecificLocationInDMViewAnalyticTable(regionName);
+
+        //Check publish status on BU and region view
+        int index = schedulePage.getIndexOfColInDMViewTable("Published Status");
+        List<String> publishedStatus = schedulePage.getListByColInTimesheetDMView(index);
+        if (publishedStatus.contains("Not Started")) {
+            SimpleUtils.assertOnFail("The region published status display inconsistent on BU and Region reivew",
+                    regionInfoOnBUView.get("publishedStatus").equalsIgnoreCase("Not Started"), false);
+        } else if (publishedStatus.contains("In Progress")) {
+            SimpleUtils.assertOnFail("The region published status display inconsistent on BU and Region reivew",
+                    regionInfoOnBUView.get("publishedStatus").equalsIgnoreCase("In Progress"), false);
+        } else {
+            SimpleUtils.assertOnFail("The region published status display inconsistent on BU and Region reivew",
+                    regionInfoOnBUView.get("publishedStatus").equalsIgnoreCase("Published"), false);
+        }
+
+        //Check budget hrs on BU and region view
+        index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+        List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+        float budgetHrsOnReviewView = 0;
+        for (float f: data){
+            budgetHrsOnReviewView += f;
+        }
+        SimpleUtils.assertOnFail("The Budget hrs display inconsistent on BU and Region reivew! It is "+ Float.parseFloat(regionInfoOnBUView.get("budgetedHours"))
+                        + " on BU view, and is "+ budgetHrsOnReviewView + "on Region view",
+                Float.parseFloat(regionInfoOnBUView.get("budgetedHours")) == budgetHrsOnReviewView, false);
+
+        //Check published hrs on BU and region view
+        index = schedulePage.getIndexOfColInDMViewTable("Published Hrs");
+        data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+        float publishedHrsOnReviewView = 0;
+        for (Float f: data){
+            publishedHrsOnReviewView += f;
+        }
+        SimpleUtils.assertOnFail("The Published hrs display inconsistent on BU and Region reivew! It is "+ Float.parseFloat(regionInfoOnBUView.get("publishedHours"))
+                        + " on BU view, and is "+ publishedHrsOnReviewView + "on Region view",
+                Float.parseFloat(regionInfoOnBUView.get("publishedHours")) == publishedHrsOnReviewView, false);
+
+        //Check Budget Variance on BU and region view
+        index = schedulePage.getIndexOfColInDMViewTable("Budget Variance");
+        data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+        float budgetVarianceOnReviewView = 0;
+        for (Float f: data){
+            budgetVarianceOnReviewView =+ f;
+        }
+//        SimpleUtils.assertOnFail("The Budget Variance display inconsistent on BU and Region reivew! It is "+ Float.parseFloat(regionInfoOnBUView.get("budgetVariance"))
+//                        + " on BU view, and is "+ budgetVarianceOnReviewView + "on Region view",        // Blocked by https://legiontech.atlassian.net/browse/SCH-5185
+//                Float.parseFloat(regionInfoOnBUView.get("budgetVariance")) == budgetVarianceOnReviewView, false);
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate analytics table on Schedule in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String districtName = selectedUpperFields.get(District);
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            String field1 = "District";
+            String field2 = "Published Status";
+            String field3 = "Budget Hrs";
+            String field4 = "Published Hrs";
+            String field5 = "Budget Variance";
+            SimpleUtils.assertOnFail(field1 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field1) > 0, false);
+            SimpleUtils.assertOnFail(field2 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field2) > 0, false);
+            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field3) > 0, false);
+            SimpleUtils.assertOnFail(field4 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field4) > 0, false);
+            SimpleUtils.assertOnFail(field5 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field5) > 0, false);
+
+            //Validate the field columns can be ordered.
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(2);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+
+            //Validate the data of analytics table for current week.
+            verifyAnalyticsTableOnBUView(districtName);
+
+            //Validate the data of analytics table for past week.
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            schedulePage.navigateToPreviousWeek();
+            verifyAnalyticsTableOnBUView(districtName);
+
+            //Validate the data of analytics table for future week.
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            Thread.sleep(5000);
+            verifyAnalyticsTableOnBUView(districtName);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
 }

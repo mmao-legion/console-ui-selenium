@@ -984,6 +984,9 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     private WebElement searchLocationInCompliancePage;
     @FindBy(css = "[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")
     private List<WebElement>  projectedHrs;
+    @FindBy(css = "projected-over-under text")
+    private List<WebElement> budgetVariances;
+
     public Map<String, String> getAllScheduleInfoFromScheduleInDMViewByLocation(String location) throws Exception {
         Map<String, String> allScheduleInfo = new HashMap<>();
         boolean isLocationMatched = false;
@@ -997,7 +1000,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         //add schedule Location Name
                         allScheduleInfo.put("locationName",locationNameInDMView);
                         //add Schedule Status
-                        allScheduleInfo.put("scheduleStatus", schedulesInDMView.get(i).findElement(By.className("analytics-new-table-published-status")).getText());
+                        allScheduleInfo.put("publishedStatus", schedulesInDMView.get(i).findElement(By.className("analytics-new-table-published-status")).getText());
                         //add Score
 //                        allScheduleInfo.add(schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_SCORE\"]")).getText());   //Need Turn off Score function on Schedule DM view
                         String budgetedHours = "";
@@ -1013,10 +1016,12 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         //add Budgeted Hours
                         allScheduleInfo.put("budgetedHours", budgetedHours);
                         //add Scheduled Hours
-                        allScheduleInfo.put("scheduledHours", schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")).getText());
+                        allScheduleInfo.put("publishedHours", schedulesInDMView.get(i).
+                                findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")).getText().replace(",",""));
                         if (areListElementVisible(projectedHrs, 5)){
                             //add Projected Hours
-                            String projectedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",","");
+                            String projectedHours = schedulesInDMView.get(i).
+                                    findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",","");
                             allScheduleInfo.put("projectedHours", projectedHours);
                             //add Projected Under/Over Budget Hours
                             if(Float.parseFloat(budgetedHours) > Float.parseFloat(projectedHours)){
@@ -1026,6 +1031,12 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                                 allScheduleInfo.put("projectedOverBudgetHours", schedulesInDMView.get(i).findElement(By.cssSelector("[text-anchor=\"start\"]")).getText());
                                 allScheduleInfo.put("projectedUnderBudgetHours", "");
                             }
+                        }
+
+                        //add Budget Variance
+                        if (areListElementVisible(budgetVariances, 5)) {
+                            allScheduleInfo.put("budgetVariance", schedulesInDMView.get(i).
+                                    findElement(By.cssSelector("projected-over-under text")).getText().replace(",",""));
                         }
 
                         //add projectedUnderOrOverBudgetByJobTitleHours on TA-DG env
