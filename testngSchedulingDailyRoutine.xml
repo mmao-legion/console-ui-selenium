@@ -16,7 +16,7 @@
                     <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />
-                    <include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" />
+                    <!--<include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" /> we don't have open shifts widget for now-->
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                 </methods>
             </class>
