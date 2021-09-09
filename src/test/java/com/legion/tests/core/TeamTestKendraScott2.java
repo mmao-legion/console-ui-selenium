@@ -689,54 +689,45 @@ public class TeamTestKendraScott2 extends TestBase{
 	@TestName(description = "Remove access to Employee Profile in Team Schedule view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		try {
-			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 
-			// Create schedule and publish it.
-			schedulePage.clickOnScheduleConsoleMenuItem();
-			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+		// Create schedule and publish it.
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 
-			if (schedulePage.isWeekGenerated()){
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
-			}
-			schedulePage.createScheduleForNonDGFlowNewUI();
-			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.deleteTMShiftInWeekView("unassigned");
-			schedulePage.saveSchedule();
-			schedulePage.publishActiveSchedule();
-			LoginPage loginPage = pageFactory.createConsoleLoginPage();
-			loginPage.logOut();
-
-			// Login as Store Manager
-			String fileName  = "UsersCredentials.json";
-			fileName = SimpleUtils.getEnterprise(controlEnterprice)+fileName;
-			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
-			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-			profileNewUIPage.clickOnUserProfileImage();//.getNickNameFromProfile();
-			dashboardPage.clickOnSwitchToEmployeeView();
-			schedulePage.clickOnScheduleConsoleMenuItem();
-			schedulePage.clickOnScheduleSubTab("Team Schedule");
-			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
-			loginPage.logOut();
-
-
-			// Login as Team Member
-			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-			schedulePage.clickOnScheduleConsoleMenuItem();
-			schedulePage.clickOnScheduleSubTab("Team Schedule");
-			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
-		} catch (Exception e){
-			SimpleUtils.fail(e.getMessage(), false);
+		if (schedulePage.isWeekGenerated()){
+			schedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
+		schedulePage.createScheduleForNonDGFlowNewUI();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.deleteTMShiftInWeekView("unassigned");
+		schedulePage.saveSchedule();
+		schedulePage.publishActiveSchedule();
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		// Login as Store Manager
+		loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		profileNewUIPage.clickOnUserProfileImage();//.getNickNameFromProfile();
+		dashboardPage.clickOnSwitchToEmployeeView();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab("Team Schedule");
+		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
+		loginPage.logOut();
+
+
+		// Login as Team Member
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		schedulePage.clickOnScheduleSubTab("Team Schedule");
+		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
 	}
 
 	@Automated(automated ="Automated")
