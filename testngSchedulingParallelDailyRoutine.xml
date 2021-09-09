@@ -226,6 +226,7 @@
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
 <!--                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />  Blocked by https://legiontech.atlassian.net/browse/SCH-5058-->
                </methods>
             </class>
