@@ -1373,4 +1373,190 @@ public class DragAndDropTest extends TestBase {
         schedulePage.saveSchedule();
         schedulePage.verifyShiftIsMovedToAnotherDay(0,firstNameOfTM1,3);
     }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "validate drag and drop to the first day of the week to copy shift(not blank day)")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyDragDropToTheFirstDayToCopyShiftAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
+
+        // Navigate to next week
+        schedulePage.navigateToNextWeek();
+        // create the schedule.
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated) {
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        //edit schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Action Required");
+        schedulePage.deleteTMShiftInWeekView("");
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        schedulePage.saveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        String firstNameOfTM1 = schedulePage.getNameOfTheFirstShiftInADay(6);;
+        schedulePage.dragOneShiftToAnotherDay(6, firstNameOfTM1, 0 );
+        schedulePage.selectCopyOrMoveByOptionName("copy");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        schedulePage.verifyShiftIsCopiedToAnotherDay(6,firstNameOfTM1,0);
+        schedulePage.saveSchedule();
+        schedulePage.verifyShiftIsCopiedToAnotherDay(6,firstNameOfTM1,0);
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "validate drag and drop to the first day of the week to copy shift(blank day)")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyDragDropToTheBlankFirstDayToCopyShiftAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
+
+        // Navigate to next week
+        schedulePage.navigateToNextWeek();
+        // create the schedule.
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated) {
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        //edit schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Action Required");
+        schedulePage.deleteTMShiftInWeekView("");
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        schedulePage.navigateDayViewWithIndex(0);
+        schedulePage.deleteAllShiftsInDayView();
+        schedulePage.clickOnWeekView();
+        schedulePage.saveSchedule();
+        int shiftCount = schedulePage.getShiftsCount();
+
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        String firstNameOfTM1 = schedulePage.getNameOfTheFirstShiftInADay(6);
+        schedulePage.dragOneShiftToAnotherDay(6, firstNameOfTM1, 0 );
+        schedulePage.selectCopyOrMoveByOptionName("copy");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+        schedulePage.verifyShiftIsCopiedToAnotherDay(6,firstNameOfTM1,0);
+        schedulePage.saveSchedule();
+        schedulePage.verifyShiftIsCopiedToAnotherDay(6,firstNameOfTM1,0);
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "validate drag and drop to the first day of the week to move shift(not blank day)")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyDragDropToTheFirstDayToMoveShiftAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
+
+        // Navigate to next week
+        schedulePage.navigateToNextWeek();
+        // create the schedule.
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated) {
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        //edit schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Action Required");
+        schedulePage.deleteTMShiftInWeekView("");
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        schedulePage.saveSchedule();
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+        String firstNameOfTM1 = schedulePage.getNameOfTheFirstShiftInADay(6);;
+        schedulePage.dragOneShiftToAnotherDay(6, firstNameOfTM1, 0 );
+        schedulePage.selectCopyOrMoveByOptionName("move");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        schedulePage.verifyShiftIsCopiedToAnotherDay(6,firstNameOfTM1,0);
+        schedulePage.saveSchedule();
+        schedulePage.verifyShiftIsCopiedToAnotherDay(6,firstNameOfTM1,0);
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "validate drag and drop to the first day of the week to move shift(blank day)")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyDragDropToTheBlankFirstDayToMoveShiftAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
+        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
+
+        // Navigate to next week
+        schedulePage.navigateToNextWeek();
+        // create the schedule.
+        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        if (isWeekGenerated) {
+            schedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        schedulePage.createScheduleForNonDGFlowNewUI();
+        //edit schedule
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        schedulePage.clickOnFilterBtn();
+        schedulePage.selectShiftTypeFilterByText("Action Required");
+        schedulePage.deleteTMShiftInWeekView("");
+        schedulePage.clickOnFilterBtn();
+        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+        schedulePage.navigateDayViewWithIndex(0);
+        schedulePage.deleteAllShiftsInDayView();
+        schedulePage.clickOnWeekView();
+        schedulePage.saveSchedule();
+        int shiftCount = schedulePage.getShiftsCount();
+
+        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        String firstNameOfTM1 = schedulePage.getNameOfTheFirstShiftInADay(6);
+        schedulePage.dragOneShiftToAnotherDay(6, firstNameOfTM1, 0 );
+        schedulePage.selectCopyOrMoveByOptionName("move");
+        schedulePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+        schedulePage.verifyShiftIsCopiedToAnotherDay(6,firstNameOfTM1,0);
+        schedulePage.saveSchedule();
+        schedulePage.verifyShiftIsCopiedToAnotherDay(6,firstNameOfTM1,0);
+    }
 }

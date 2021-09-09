@@ -535,6 +535,7 @@ public interface SchedulePage {
 	public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception;
 	public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception;
 	public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
+	public String getNameOfTheFirstShiftInADay(int dayIndex) throws Exception;
 	public boolean ifWarningModeDisplay() throws Exception;
 	public String getWarningMessageInDragShiftWarningMode() throws Exception;
 	public void clickOnOkButtonInWarningMode() throws Exception;

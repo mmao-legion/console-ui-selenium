@@ -248,6 +248,10 @@
                     <include name="verifyDragDropToABlankMiddleDayToCopyShiftAsInternalAdmin" />
                     <include name="verifyDragDropToAMiddleDayToMoveShiftAsInternalAdmin" />
                     <include name="verifyDragDropToABlankMiddleDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheFirstDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankFirstDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheFirstDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankFirstDayToMoveShiftAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

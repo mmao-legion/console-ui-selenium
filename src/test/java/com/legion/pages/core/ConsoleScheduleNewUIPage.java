@@ -13676,6 +13676,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement confirmBtnOnDragAndDropConfirmPage;
     @Override
     public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception {
+        waitForSeconds(3);
         if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage,15) && !confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")){
             click(confirmBtnOnDragAndDropConfirmPage);
             SimpleUtils.pass("confirm button is clicked successfully!");
@@ -13906,6 +13907,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
         }
+    }
+
+    @Override
+    public String getNameOfTheFirstShiftInADay(int dayIndex) throws Exception {
+        List<WebElement> elements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + dayIndex + "\"] .week-schedule-shift-wrapper"));
+        if (areListElementVisible(elements, 10)){
+            return elements.get(0).findElement(By.className("week-schedule-worker-name")).getText();
+        }
+        return null;
     }
 
     @FindBy(css = "div.lgn-alert-modal")
