@@ -903,20 +903,7 @@ public class LocationNavigationTest extends TestBase {
     public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            dashboardPage.isConsoleNavigationBarIsGray("Report");
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            //Check Report page is display after click Report tab
-            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-            analyticsPage.clickOnAnalyticsConsoleMenu();
-            SimpleUtils.assertOnFail("Report Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
-
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
-
-            //Verify the No data page loaded
-            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
-                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
-
             Map<String,String> upperFields = locationSelectorPage.getSelectedUpperFields();
             String locationName = location;
             String regionName = upperFields.get(Region);
@@ -924,6 +911,22 @@ public class LocationNavigationTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             upperFields = locationSelectorPage.getSelectedUpperFields();
             String buName = upperFields.get(BusinessUnit);
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            dashboardPage.isConsoleNavigationBarIsGray("Report");
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            //Check Report page is display after click Report tab
+            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+            analyticsPage.clickOnAnalyticsConsoleMenu();
+            SimpleUtils.assertOnFail("Report Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
+
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+
+            //Verify the No data page loaded
+            SimpleUtils.assertOnFail("The No data to show page fail to load! ",
+                    locationSelectorPage.isNoDataToShowPageLoaded(), false);
+
             String reportMenuTab = "Report";
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
@@ -972,9 +975,6 @@ public class LocationNavigationTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
-            analyticsPage.clickOnAnalyticsConsoleMenu();
-            String reportMenuTab = "Report";
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String,String> upperFields = locationSelectorPage.getSelectedUpperFields();
             String locationName = location;
@@ -983,6 +983,12 @@ public class LocationNavigationTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             upperFields = locationSelectorPage.getSelectedUpperFields();
             String buName = upperFields.get(BusinessUnit);
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+
+            AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
+            analyticsPage.clickOnAnalyticsConsoleMenu();
+            String reportMenuTab = "Report";
 
             SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
                     analyticsPage.isReportsPageLoaded(), false);
