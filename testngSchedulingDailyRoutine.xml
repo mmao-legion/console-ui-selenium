@@ -43,34 +43,6 @@
         </classes>
     </test>
 -->
-    <test name="Location Navigation Test">
-        <classes>
-            <class name="com.legion.tests.core.LocationNavigationTest">
-                <methods>
-                    <include name="verifyChangingLocationOnSMScheduleTabAsInternalAdmin" />
-                    <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
-                    <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" />
-                    <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" />
-
-                                        <!-- Run on Legion Coffee -->
-                    <include name="verifyChangingRegionOnSMScheduleTabAsInternalAdmin" />
-                    <include name="verifySearchingAndSelectingTheRegionOnSMScheduleTabAsInternalAdmin" />
-                    <include name="verifyChangingBusinessUnitOnSMScheduleTabAsInternalAdmin" />
-                    <include name="verifySearchingAndSelectingTheBusinessUnitOnSMScheduleTabAsInternalAdmin" />
-                    <include name="verifySelectingHQOnBusinessUnitScheduleTabAsInternalAdmin" />
-                    <include name="verifySearchingAndSelectingTheHQOnSMScheduleTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQScheduleTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQComplianceTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" />
-                    <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
 
     <test name="Delete Schedule Test">
         <classes>

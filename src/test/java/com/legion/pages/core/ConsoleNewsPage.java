@@ -149,7 +149,10 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 	@Override
 	public boolean checkIfNewsPageLoaded() throws Exception{
 		boolean ifNewsLoaded = false;
-		if (isElementEnabled(searchPostButton, 10)
+		if (areListElementVisible(newsSubNavigations, 10)
+				&& newsSubNavigations.size() == 2
+				&& newsSubNavigations.get(0).getText().equalsIgnoreCase("Newsfeed")
+				&& newsSubNavigations.get(1).getText().equalsIgnoreCase("Moderation")
 				&& isElementEnabled(newsFeedSection, 10)) {
 			ifNewsLoaded = true;
 		} else

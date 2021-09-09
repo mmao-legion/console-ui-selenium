@@ -1601,4 +1601,34 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         return upperFieldNames;
     }
 
+    @Override
+    public String changeAnotherLocation() throws Exception {
+        waitForSeconds(4);
+        String locationName = locationButton.getText();
+        try {
+            if (isChangeLocationButtonLoaded()) {
+                if(isElementLoaded(locationButton, 10)){
+                    click(locationButton);
+                }
+                if (isElementLoaded(locationDropDownButton, 5)) {
+                    availableLocationCardsName = getDriver().findElements(By.cssSelector("[search-hint=\"Search Location\"] div.lg-search-options__option"));
+                    if (availableLocationCardsName.size() != 0) {
+                        for (WebElement locationCardName : availableLocationCardsName) {
+                            if (!locationCardName.getText().contains(locationName)) {
+                                clickTheElement(locationCardName);
+                                SimpleUtils.pass("Location changed successfully to '" + locationCardName.getText() + "'");
+                                waitForSeconds(1);
+                                locationName = locationButton.getText();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch(Exception e) {
+            SimpleUtils.fail("Unable to change Location!", true);
+        }
+        return  locationName;
+    }
+
 }

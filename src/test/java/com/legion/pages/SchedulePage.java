@@ -581,7 +581,7 @@ public interface SchedulePage {
 	public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception;
 	public void clickOnRepublishButtonLoadedOnSchedulePage() throws Exception;
 	public List<Float> transferStringToFloat(List<String> listString) throws Exception;
-	public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String weekType) throws Exception;
+	public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String upperFieldType, String weekType) throws Exception;
 	public void verifyClockedOrProjectedInDMViewTable(String expected) throws Exception;
 	public int getIndexOfColInDMViewTable(String colName) throws Exception;
 	public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception;

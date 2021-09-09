@@ -1133,7 +1133,7 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
 
             //Validate the content of LOCATION SUMMARY smart card for current/future weeks.
-            HashMap<String, Float> valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("current");
+            HashMap<String, Float> valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("location","current");
 
             //Validate the data LOCATION SUMMARY smart card for current/future weeks.
             SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
@@ -1171,7 +1171,7 @@ public class DMViewTest extends TestBase {
 
             //Navigate to the past week to verify the info and data.
             schedulePage.navigateToPreviousWeek();
-            valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("past");
+            valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("location", "past");
 
             //Validate the data LOCATION SUMMARY smart card for the past weeks.
             SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
