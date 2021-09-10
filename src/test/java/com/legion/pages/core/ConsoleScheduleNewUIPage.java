@@ -16206,5 +16206,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("No profile icons!", false);
         }
     }
+
+    @FindBy (className = "header-navigation-label")
+    private WebElement headerLabel;
+
+    @Override
+    public String getHeaderOnSchedule() throws Exception {
+        String header = "";
+        if (isElementLoaded(headerLabel,5))
+            header = headerLabel.getText();
+        return header;
+    }
+
+    @Override
+    public void verifyHeaderOnSchedule() throws Exception {
+        String header = getHeaderOnSchedule();
+        if (header.equals("Schedule"))
+            SimpleUtils.pass("Schedule Page: Header is \"Schedule\" as expected");
+        else
+            SimpleUtils.fail("Dashboard Page: Header isn't \"Schedule\"",true);
+    }
 }
 

@@ -1,12 +1,7 @@
 package com.legion.pages.core;
 
-import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
 import com.legion.pages.*;
 import com.legion.utils.SimpleUtils;
-import org.apache.commons.collections.list.AbstractLinkedList;
-import org.apache.xpath.operations.Bool;
-import cucumber.api.java.ro.Si;
-import cucumber.api.java.sl.In;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -14,7 +9,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -1132,5 +1126,94 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             SimpleUtils.fail("Click schedule in DM View failed, there is no schedules display in DM view" , false);
         }
 
+    }
+
+    @FindBy(css = ".analytics-new-table-group-row-open")
+    private List<WebElement>  rowsInScheduleUpperfieldViewTable;
+
+    @FindBy (css = "lg-search.analytics-new-table-filter input")
+    private WebElement searchInSchedulePage;
+
+    @FindBy (css = ".analytics-new-table-group-row-open [jj-switch-when=\"cells.CELL_UNTOUCHED\"] span")
+    private List<WebElement> upperFieldNamesInScheduleTable;
+
+    public Map<String, String> getAllUpperFieldInfoFromScheduleByUpperField(String upperFieldName) throws Exception {
+        Map<String, String> allUpperFieldInfo = new HashMap<>();
+        boolean isUpperFieldMatched = false;
+        if (isElementLoaded(searchInSchedulePage,5)) {
+            searchInSchedulePage.sendKeys(upperFieldName);
+            waitForSeconds(3);
+            if (areListElementVisible(rowsInScheduleUpperfieldViewTable, 10) && rowsInScheduleUpperfieldViewTable.size() != 0) {
+                for (int i=0; i< rowsInScheduleUpperfieldViewTable.size(); i++){
+                    WebElement locationInDMView = rowsInScheduleUpperfieldViewTable.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_UNTOUCHED\"]"));
+                    if (locationInDMView != null){
+                        String locationNameInDMView = locationInDMView.getText();
+                        if (locationNameInDMView !=null && locationNameInDMView.equals(upperFieldName)){
+                            isUpperFieldMatched = true;
+                            //add schedule Location Name
+                            allUpperFieldInfo.put("locationName",locationNameInDMView);
+                            //add Schedule Status
+                            allUpperFieldInfo.put("scheduleStatus", schedulesInDMView.get(i).findElement(By.className("analytics-new-table-published-status")).getText());
+                            //add Score
+//                        allScheduleInfo.add(schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_SCORE\"]")).getText());   //Need Turn off Score function on Schedule DM view
+                            String budgetedHours = "";
+                            if (areListElementVisible(budgetHours, 5)){
+                                budgetedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText().replace(",","");
+                            } else {
+                                if (isElementLoaded(scheduleScoreSmartCard, 5)) {
+                                    budgetedHours = schedulesInDMView.get(i).findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(3).getText().replace(",","");
+                                } else
+                                    budgetedHours = schedulesInDMView.get(i).findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(2).getText().replace(",","");
+                            }
+
+                            //add Budgeted Hours
+                            allUpperFieldInfo.put("budgetedHours", budgetedHours);
+                            //add Scheduled Hours
+                            allUpperFieldInfo.put("scheduledHours", schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")).getText());
+                            if (areListElementVisible(projectedHrs, 5)){
+                                //add Projected Hours
+                                String projectedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",","");
+                                allUpperFieldInfo.put("projectedHours", projectedHours);
+                                //add Projected Under/Over Budget Hours
+                                if(Float.parseFloat(budgetedHours) > Float.parseFloat(projectedHours)){
+                                    allUpperFieldInfo.put("projectedUnderBudgetHours", schedulesInDMView.get(i).findElement(By.cssSelector("[text-anchor=\"end\"]")).getText());
+                                    allUpperFieldInfo.put("projectedOverBudgetHours", "");
+                                } else{
+                                    allUpperFieldInfo.put("projectedOverBudgetHours", schedulesInDMView.get(i).findElement(By.cssSelector("[text-anchor=\"start\"]")).getText());
+                                    allUpperFieldInfo.put("projectedUnderBudgetHours", "");
+                                }
+                            }
+
+                            //add projectedUnderOrOverBudgetByJobTitleHours on TA-DG env
+                            if(areListElementVisible(projectedUnderOrOverBudgetByJobTitleHours, 5)){
+                                List<WebElement> projectedUnderOrOverBudgetByJobTitleHours = schedulesInDMView.get(i).findElements(By.cssSelector("[jj-switch-when=\"extraCells\"]"));
+                                if(areListElementVisible(projectedUnderOrOverBudgetByJobTitleHours, 5)
+                                        && projectedUnderOrOverBudgetByJobTitleHours.size()==4){
+                                    allUpperFieldInfo.put("asmHours", projectedUnderOrOverBudgetByJobTitleHours.get(0).getText());
+                                    allUpperFieldInfo.put("lsaHours", projectedUnderOrOverBudgetByJobTitleHours.get(1).getText());
+                                    allUpperFieldInfo.put("saHours", projectedUnderOrOverBudgetByJobTitleHours.get(2).getText());
+                                    allUpperFieldInfo.put("openHours", projectedUnderOrOverBudgetByJobTitleHours.get(3).getText());
+                                    SimpleUtils.pass("Get Projected Under Or Over Budget By Job Title Hours successfully! ");
+                                } else
+                                    SimpleUtils.fail("Get Projected Under Or Over Budget By Job Title Hours fail! ", false);
+                            }
+                            break;
+                        }
+                    } else{
+                        SimpleUtils.fail("Get schedule info in DM View failed, there is no location display in this schedule" , false);
+                    }
+                }
+                if (!isUpperFieldMatched) {
+                    SimpleUtils.fail("Get upperField info in DM View failed, there is no matched upperField display in DM view", false);
+                } else {
+                    SimpleUtils.pass("Get upperField info in DM View successful! ");
+                }
+            } else
+                SimpleUtils.fail("Get upperField info in DM View failed, there is no upperField display in DM view", false);
+            searchInSchedulePage.clear();
+        } else {
+            SimpleUtils.fail("getDataInCompliancePage: search input fail to load!", true);
+        }
+        return allUpperFieldInfo;
     }
 }

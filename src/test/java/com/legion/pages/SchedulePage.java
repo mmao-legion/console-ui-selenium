@@ -684,4 +684,6 @@ public interface SchedulePage {
 	public void verifySpecificOptionEnabledOnShiftMenu(String optionName) throws Exception;
 	public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception;
 	public String getIIconTextInfo(WebElement shift) throws Exception;
+	public String getHeaderOnSchedule() throws Exception;
+	public void verifyHeaderOnSchedule() throws Exception;
 }

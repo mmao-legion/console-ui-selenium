@@ -27,4 +27,5 @@ public interface ScheduleDMViewPage {
     public void verifyTheContentOnScheduleStatusCards() throws Exception;
     public void verifyTheScheduleStatusAccountOnScheduleStatusCards() throws Exception;
     public Map<String, String> getAllScheduleInfoFromScheduleInDMViewByLocation(String location) throws Exception;
+    public Map<String, String> getAllUpperFieldInfoFromScheduleByUpperField(String upperFieldName) throws Exception;
 }

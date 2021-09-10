@@ -551,6 +551,8 @@
                         <include name="verifyPayrollProjectionWidgetOnDashboardInRegionViewAsInternalAdmin" />
                         <include name="verifyRegionSummaryWidgetOnDashboardInBUViewAsInternalAdmin" />
                         <include name="verifyDistrictSummaryWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyScheduleFunctionalityForBUViewAsInternalAdmin" />
+                        <include name="verifyScheduleFunctionalityForRegionViewAsInternalAdmin" />
 
                         <!-- Added by Mary -->
                         <include name="verifyRegionViewNavigationAsInternalAdmin" />

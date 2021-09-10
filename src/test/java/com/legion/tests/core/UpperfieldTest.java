@@ -545,7 +545,7 @@ public class UpperfieldTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(Region));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
                     dashboardPage.isScheduleVsGuidanceByDayWidgetDisplay(), false);
 
@@ -588,7 +588,7 @@ public class UpperfieldTest extends TestBase {
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(Region));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
                     dashboardPage.isScheduleVsGuidanceByDayWidgetDisplay(), false);
 
@@ -901,7 +901,7 @@ public class UpperfieldTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(Region));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
 
             // Validate the content on Payroll Projection widget with TA
@@ -947,7 +947,7 @@ public class UpperfieldTest extends TestBase {
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(selectedUpperFields.get(Region));
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
             SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
 
             // Validate the content in Payroll Projection widget with TA
@@ -1181,6 +1181,118 @@ public class UpperfieldTest extends TestBase {
             boolean isGuidanceHrsMatched = dataFromDistrictSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
             // SimpleUtils.assertOnFail("Budgeted hours in Districts Summary widget did not match", isGuidanceHrsMatched, false);
             // todo: Failed due to https://legiontech.atlassian.net/browse/SCH-5165
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify Schedule functionality in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleFunctionalityForBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String currentRegion = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, selectedUpperFields.get(BusinessUnit));
+
+            // Validate the title
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            schedulePage.verifyHeaderOnSchedule();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            Map<String, String> selectedUpperFieldsInSchedule = locationSelectorPage.getSelectedUpperFields();
+            if (selectedUpperFieldsInSchedule.get(BusinessUnit).equals(selectedUpperFields.get(BusinessUnit)) && locationSelectorPage.isRegionSelected("All Regions"))
+                SimpleUtils.pass("Schedule BU view page: The title includes selected BU and All Regions");
+
+            // Validate changing BUs on Schedule
+            String currentBU = selectedUpperFieldsInSchedule.get(BusinessUnit);
+            locationSelectorPage.changeAnotherBUInBUView();
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.verifyTheDisplayBUWithSelectedBUConsistent(selectedUpperFields.get(BusinessUnit));
+
+            // The field columns can be ordered successfully
+            List<String> regionsInScheduleBUViewRegionsTable =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+
+            // Validate search function
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(currentBU);
+            scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(currentRegion);
+
+            // Validate the clickability of forward and backward button
+            String weekInfo = schedulePage.getActiveWeekText();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToPreviousWeek();
+            schedulePage.navigateToPreviousWeek();
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Julie")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify Schedule functionality in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleFunctionalityForRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String currentDistrict = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, selectedUpperFields.get(Region));
+
+            // Validate the title
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            schedulePage.verifyHeaderOnSchedule();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            Map<String, String> selectedUpperFieldsInSchedule = locationSelectorPage.getSelectedUpperFields();
+            if (selectedUpperFieldsInSchedule.get(Region).equals(selectedUpperFields.get(Region)) && locationSelectorPage.isRegionSelected("All Districts"))
+                SimpleUtils.pass("Schedule Region view page: The title includes selected region and All Districts");
+
+            // Validate changing BUs on Schedule
+            String currentRegion = selectedUpperFieldsInSchedule.get(Region);
+            locationSelectorPage.changeAnotherRegionInRegionView();
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            locationSelectorPage.verifyTheDisplayRegionWithSelectedRegionConsistent(selectedUpperFields.get(Region));
+
+            // The field columns can be ordered successfully
+            List<String> regionsInScheduleRegionViewRegionsTable =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+
+            // Validate search function
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(currentRegion);
+            scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(currentDistrict);
+
+            // Validate the clickability of forward and backward button
+            String weekInfo = schedulePage.getActiveWeekText();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToPreviousWeek();
+            schedulePage.navigateToPreviousWeek();
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
