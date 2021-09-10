@@ -1693,6 +1693,12 @@ public class DMViewTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+
+        dashboardPage.clickOnDashboardConsoleMenu();
         String districtName = dashboardPage.getCurrentDistrict();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.reSelectDistrict(districtName);
@@ -1725,10 +1731,10 @@ public class DMViewTest extends TestBase {
         boolean isProjectedWithinBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(3).equals(locationNumbersFromLocationSummarySmartCard.get(0));
         boolean isProjectedOverBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(4).equals(locationNumbersFromLocationSummarySmartCard.get(1));
         boolean isHrsOfUnderOrCoverBudgetCorrect = false;
-//        if(isTAEnv){
-//            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
-//                    equals(textOnTheChartInLocationSummarySmartCard.get(6).split(" ")[0]);
-//        } else
+        if(isTAEnv){
+            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
+                    equals(textOnTheChartInLocationSummarySmartCard.get(6).split(" ")[0]);
+        } else
             isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
                     equals(textOnTheChartInLocationSummarySmartCard.get(4).split(" ")[0]);
 

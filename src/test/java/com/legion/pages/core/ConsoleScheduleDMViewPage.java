@@ -436,8 +436,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         float projectedTotalHours = 0;
         if (areListElementVisible(schedulesInDMView, 10) && schedulesInDMView.size() != 0){
             for (WebElement schedule : schedulesInDMView){
-                budgetedTotalHours += Float.parseFloat(schedule.findElement(By.xpath("./div[3]")).getText().replace(",",""));
-                scheduledTotalHours += Float.parseFloat(schedule.findElement(By.xpath("./div[4]")).getText().replace(",",""));
+//                budgetedTotalHours += Float.parseFloat(schedule.findElement(By.xpath("./div[3]")).getText().replace(",",""));
+//                scheduledTotalHours += Float.parseFloat(schedule.findElement(By.xpath("./div[4]")).getText().replace(",",""));
                 // projectedTotalHours += Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",",""));
                 // todo: failed due to https://legiontech.atlassian.net/browse/SCH-2524
 
