@@ -208,7 +208,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
     public Boolean isDashboardPageLoaded() throws Exception
     {
-    	if(isElementLoaded(dashboardSection))
+    	if(isElementLoaded(dashboardSection, 10))
     	{
     		SimpleUtils.pass("Dashboard loaded successfully");
     		return true;
@@ -954,7 +954,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(xpath = "//*[contains(text(),'Refresh')]")
 	private WebElement refreshButton;
 
-	@FindBy(css = "div.last-updated-countdown span")
+	@FindBy(css = ".react-dm-dashboard p")
 	private WebElement lastUpdatedIcon;
 
 
@@ -2357,7 +2357,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
             timestamp2 = justUpdated.getText();
         } else
             SimpleUtils.fail("Dashboard Page: Timestamp failed to load", false);
-        if (timestamp2.equals(timestamp1) && !timestamp1.equals("") && !refreshButton.getAttribute("label").equals("Refreshing...")) {
+        if (timestamp2.equals(timestamp1) && !timestamp1.equals("") && !refreshButton.getText().equals("Refreshing...")) {
             SimpleUtils.pass("Dashboard Page: It keeps the previous Last Updated time, not refreshing every time");
         } else {
             SimpleUtils.fail("Dashboard Page: It doesn't keep the previous Last Updated time", false);

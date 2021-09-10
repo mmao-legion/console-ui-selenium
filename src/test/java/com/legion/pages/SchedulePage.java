@@ -535,6 +535,7 @@ public interface SchedulePage {
 	public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception;
 	public List<String> getComplianceMessageFromInfoIconPopup(WebElement shift) throws Exception;
 	public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
+	public String getNameOfTheFirstShiftInADay(int dayIndex) throws Exception;
 	public boolean ifWarningModeDisplay() throws Exception;
 	public String getWarningMessageInDragShiftWarningMode() throws Exception;
 	public void clickOnOkButtonInWarningMode() throws Exception;
@@ -542,6 +543,7 @@ public interface SchedulePage {
 	public void moveAnywayWhenChangeShift() throws Exception;
 	public boolean ifMoveAnywayDialogDisplay() throws Exception;
 	public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
+	public void verifyShiftIsCopiedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
 	public String getTheMessageOfTMScheduledStatus() throws Exception;
 	public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception;
 	public void verifyTMNotSelected() throws Exception;
@@ -579,7 +581,7 @@ public interface SchedulePage {
 	public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception;
 	public void clickOnRepublishButtonLoadedOnSchedulePage() throws Exception;
 	public List<Float> transferStringToFloat(List<String> listString) throws Exception;
-	public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String weekType) throws Exception;
+	public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String upperFieldType, String weekType) throws Exception;
 	public void verifyClockedOrProjectedInDMViewTable(String expected) throws Exception;
 	public int getIndexOfColInDMViewTable(String colName) throws Exception;
 	public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception;
@@ -682,6 +684,7 @@ public interface SchedulePage {
 	public HashMap<String, String> getMealAndRestBreaksTime() throws Exception;
 	public void verifyGroupCanbeCollapsedNExpanded() throws Exception;
 	public void verifySpecificOptionEnabledOnShiftMenu(String optionName) throws Exception;
+	public boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception;
 	public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception;
 	public String getIIconTextInfo(WebElement shift) throws Exception;
 	public String getHeaderOnSchedule() throws Exception;

@@ -264,6 +264,14 @@
                     <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
                     <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
                     <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
+                    <include name="verifyDragDropToAMiddleDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToABlankMiddleDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToAMiddleDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToABlankMiddleDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheFirstDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankFirstDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheFirstDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankFirstDayToMoveShiftAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -583,7 +591,14 @@
                         <include name="verifyRefreshFeatureOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-5058 -->
 <!--                        <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInBUViewAsInternalAdmin" />
                         <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/TA-5507-->
-
+                        <include name="verifyUnplannedClocksOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" />
+                        <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" />
+                        <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>

@@ -3923,44 +3923,48 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception {
         boolean selectOtherWeek = false;
-        if (areListElementVisible(createModalWeeks, 10)) {
-            SimpleUtils.pass("Copy Schedule page loaded Successfully!");
-            waitForSeconds(5);
-            for (WebElement createModalWeek : createModalWeeks) {
-                WebElement weekName = createModalWeek.findElement(By.className("generate-modal-week-name"));
-                if (!selectOtherWeek) {
-                    if (weekName != null && weekName.getText().toLowerCase().contains(weekInfo.toLowerCase())) {
+        try{
+            if (areListElementVisible(createModalWeeks, 10)) {
+                SimpleUtils.pass("Copy Schedule page loaded Successfully!");
+                waitForSeconds(5);
+                for (WebElement createModalWeek : createModalWeeks) {
+                    WebElement weekName = createModalWeek.findElement(By.className("generate-modal-week-name"));
+                    if (!selectOtherWeek) {
+                        if (weekName != null && weekName.getText().toLowerCase().contains(weekInfo.toLowerCase())) {
+                            WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
+                            if (weekContainer != null) {
+                                WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
+                                if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
+                                    int i = 0;
+                                    while (isElementLoaded(loadingIcon)&& i<20){
+                                        waitForSeconds(3);
+                                        i = i+1;
+                                    }
+                                    clickTheElement(weekContainer);
+                                    waitForSeconds(3);
+//                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + " with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+                                    break;
+                                } else {
+                                    selectOtherWeek = true;
+                                    SimpleUtils.warn("Scheduled Hour is 0, due to bug PLT-1082: [RC]Creating schedule keeps spinning and shows 0 scheduled hours! Will select another week as a workaround");
+                                }
+                            }
+                        }
+                    } else {
                         WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
                         if (weekContainer != null) {
                             WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
                             if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
-                                int i = 0;
-                                while (isElementLoaded(loadingIcon)&& i<20){
-                                    waitForSeconds(3);
-                                    i = i+1;
-                                }
                                 clickTheElement(weekContainer);
-                                waitForSeconds(3);
-//                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + " with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + "with scheduled hour: " + scheduledHours.getText() + " Successfully!");
                                 break;
-                            } else {
-                                selectOtherWeek = true;
-                                SimpleUtils.warn("Scheduled Hour is 0, due to bug PLT-1082: [RC]Creating schedule keeps spinning and shows 0 scheduled hours! Will select another week as a workaround");
                             }
-                        }
-                    }
-                } else {
-                    WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
-                    if (weekContainer != null) {
-                        WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
-                        if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
-                            clickTheElement(weekContainer);
-                            SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + "with scheduled hour: " + scheduledHours.getText() + " Successfully!");
-                            break;
                         }
                     }
                 }
             }
+        } catch (StaleElementReferenceException e){
+            SimpleUtils.report(e.getMessage());
         }
     }
 
@@ -4303,56 +4307,60 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
-        if (isElementLoaded(operatingHoursEditBtn, 10)) {
-            clickTheElement(operatingHoursEditBtn);
-            if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)
-                    && areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
-                    && locationsInLocationSelectorOnCreateSchedulePage.size() > 0) {
-                click(locationSelectorOnCreateSchedulePage);
-                selectRandomLocationOnCreateScheduleEditOperatingHoursPage();
-            }
-            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
-                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
-                if (areListElementVisible(operatingHoursDayLists, 15)) {
-                    for (WebElement dayList : operatingHoursDayLists) {
-                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
-                        if (weekDay != null) {
-                            WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
-                            if (!weekDaysToClose.contains(weekDay.getText())) {
-                                if (checkbox.getAttribute("class").contains("ng-empty")) {
-                                    clickTheElement(checkbox);
+        try{
+            if (isElementLoaded(operatingHoursEditBtn, 10)) {
+                clickTheElement(operatingHoursEditBtn);
+                if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)
+                        && areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
+                        && locationsInLocationSelectorOnCreateSchedulePage.size() > 0) {
+                    click(locationSelectorOnCreateSchedulePage);
+                    selectRandomLocationOnCreateScheduleEditOperatingHoursPage();
+                }
+                if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+                    SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
+                    if (areListElementVisible(operatingHoursDayLists, 15)) {
+                        for (WebElement dayList : operatingHoursDayLists) {
+                            WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                            if (weekDay != null) {
+                                WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                                if (!weekDaysToClose.contains(weekDay.getText())) {
+                                    if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                        clickTheElement(checkbox);
+                                    }
+                                    String[] operatingHours = null;
+                                    if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)) {
+                                        operatingHours = propertyOperatingHoursLG.get(weekDay.getText()).split("-");
+                                    } else
+                                        operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
+                                    List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                                    startNEndTimes.get(0).clear();
+                                    startNEndTimes.get(1).clear();
+                                    startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
+                                    startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
+                                } else {
+                                    if (!checkbox.getAttribute("class").contains("ng-empty")) {
+                                        clickTheElement(checkbox);
+                                    }
                                 }
-                                String[] operatingHours = null;
-                                if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)) {
-                                    operatingHours = propertyOperatingHoursLG.get(weekDay.getText()).split("-");
-                                } else
-                                    operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
-                                List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                                startNEndTimes.get(0).clear();
-                                startNEndTimes.get(1).clear();
-                                startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
-                                startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
                             } else {
-                                if (!checkbox.getAttribute("class").contains("ng-empty")) {
-                                    clickTheElement(checkbox);
-                                }
+                                SimpleUtils.fail("Failed to find weekday element!", false);
                             }
+                        }
+                        clickTheElement(operatingHoursSaveBtn);
+                        if (isElementEnabled(operatingHoursEditBtn, 15)) {
+                            SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                         } else {
-                            SimpleUtils.fail("Failed to find weekday element!", false);
+                            SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
                         }
                     }
-                    clickTheElement(operatingHoursSaveBtn);
-                    if (isElementEnabled(operatingHoursEditBtn, 15)) {
-                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
-                    } else {
-                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
-                    }
+                } else {
+                    SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
                 }
-            } else {
-                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
+            }else {
+                SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
             }
-        }else {
-            SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
+        } catch (StaleElementReferenceException e){
+            SimpleUtils.report(e.getMessage());
         }
     }
 
@@ -6429,6 +6437,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned")) {
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
                 String lastName = getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
+                waitForSeconds(2);
                 String jobTitle = weekShifts.get(index).findElement(By.cssSelector(".rows .week-schedule-role-name")).getText();
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
@@ -10967,8 +10976,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         click(cannelBtnInMealBreakButton);
     }
 
-
-    private boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception {
+    @Override
+    public boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception {
         if (isEditMealBreakEnabled){
             if (isElementLoaded(editMealBreakTitle,5) && isElementLoaded(addMealBreakButton,5) &&
                     isElementLoaded(cannelBtnInMealBreakButton,5) && isElementLoaded(continueBtnInMealBreakButton,5)
@@ -11220,7 +11229,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 10)) {
                                 clickTheElement(deleteShift);
-                                waitForSeconds(2);
+                                waitForSeconds(3);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
@@ -13395,6 +13404,44 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
     @Override
+    public void verifyShiftIsCopiedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        boolean isCopied = false;
+        boolean isExisted = false;
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
+            for (WebElement start : startElements) {
+                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                if (startName != null) {
+                    if (startName.getText().equalsIgnoreCase(firstName)) {
+                        SimpleUtils.pass("Can find the TM:" + firstName + " on " + startIndex);
+                        isCopied = true;
+                        break;
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the worker name elements!", false);
+                }
+            }
+            for (WebElement end : endElements) {
+                WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
+                if (endName != null) {
+                    if (endName.getText().equalsIgnoreCase(firstName)) {
+                        isCopied = true;
+                        break;
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the worker name elements!", false);
+                }
+            }
+            if (!isCopied && !isExisted) {
+                SimpleUtils.fail(firstName + " isn't copied to the day correctly, which index is: " + endIndex, false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
+        }
+    }
+
+    @Override
     public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception {
         boolean isDragged = false;
         List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
@@ -13629,6 +13676,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement confirmBtnOnDragAndDropConfirmPage;
     @Override
     public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception {
+        waitForSeconds(3);
         if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage,15) && !confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")){
             click(confirmBtnOnDragAndDropConfirmPage);
             SimpleUtils.pass("confirm button is clicked successfully!");
@@ -13840,7 +13888,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         waitForSeconds(3);
         boolean isDragged = false;
         List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
-        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"]"));
         WebElement weekDay = getDriver().findElement(By.cssSelector("[data-day-index=\""+endIndex+"\"] .sch-calendar-day-label"));
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0 && weekDay!=null) {
             for (WebElement start : startElements) {
@@ -13859,6 +13907,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         } else {
             SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
         }
+    }
+
+    @Override
+    public String getNameOfTheFirstShiftInADay(int dayIndex) throws Exception {
+        List<WebElement> elements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + dayIndex + "\"] .week-schedule-shift-wrapper"));
+        if (areListElementVisible(elements, 10)){
+            return elements.get(0).findElement(By.className("week-schedule-worker-name")).getText();
+        }
+        return null;
     }
 
     @FindBy(css = "div.lgn-alert-modal")
@@ -14554,13 +14611,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return isCreateScheduleBtnLoaded;
     }
 
-    @FindBy(css = "div.card-carousel-fixed")
+    @FindBy(css = "div[class=\"card-carousel-card card-carousel-card-primary \"]")
     private WebElement locationSummary;
     @Override
-    public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String weekType) throws Exception {
+    public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String upperFieldType, String weekType) throws Exception {
         HashMap<String, Float> result = new HashMap<String, Float>();
         if (isElementLoaded(locationSummary,10) && locationSummary.findElements(By.cssSelector("text")).size()>=6){
-            if (locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().toLowerCase().contains("locations summary") || locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().toLowerCase().contains("location summary")){
+            String upperFieldSummaryTitle = locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().toLowerCase();
+            if (upperFieldSummaryTitle.contains(upperFieldType.toLowerCase() + "s summary")
+                    || upperFieldSummaryTitle.contains(upperFieldType.toLowerCase() + " summary")){
                 SimpleUtils.pass("Location Summary smart title displays correctly!");
                 String numOfLocations = locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().split(" ")[0];
                 if (SimpleUtils.isNumeric(numOfLocations)){
@@ -14572,12 +14631,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 SimpleUtils.fail("Location Summary smart title diaplays incorrectly!", false);
             }
             if (SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(0).getText().replace(",","")) && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(2).getText().replace(",",""))){
-                result.put(locationSummary.findElements(By.cssSelector("text")).get(1).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(0).getText().replace(",","")));
-                result.put(locationSummary.findElements(By.cssSelector("text")).get(3).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(2).getText().replace(",","")));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(1).getText(),
+                        Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(0).getText().replace(",","")));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(3).getText(),
+                        Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(2).getText().replace(",","")));
             } else {
                 SimpleUtils.fail("Budget hours and Published hours display incorrectly!", false);
             }
-            if (locationSummary.findElements(By.cssSelector("text")).size()==6 && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",",""))){
+            if (locationSummary.findElements(By.cssSelector("text")).size()==6
+                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",",""))){
                 result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",","")));
                 if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▼")){
                     if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#50b83c")){
@@ -14594,29 +14656,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             }
             if (locationSummary.findElements(By.cssSelector("text")).size()==8
-                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(",",""))
+                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",",""))
                     && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","").replace(",",""))){
-                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(",","")));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",","")));
                 result.put(locationSummary.findElements(By.cssSelector("text")).get(7).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","").replace(",","")));
 
-                if (locationSummary.findElements(By.cssSelector("text")).get(7).getText().contains("▼")){
-                    if (locationSummary.findElements(By.cssSelector("text")).get(7).getAttribute("fill").contains("#50b83c")){
+                if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▼")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#50b83c")){
                         SimpleUtils.pass("The color of the value is correct! -> green");
                     } else {
                         SimpleUtils.fail("The color of the value is incorrect! ->not green", false);
                     }
-                } else if (locationSummary.findElements(By.cssSelector("text")).get(7).getText().contains("▲")){
-                    if (locationSummary.findElements(By.cssSelector("text")).get(7).getAttribute("fill").contains("#ff0000")){
+                } else if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▲")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#ff0000")){
                         SimpleUtils.pass("The color of the value is correct! -> red");
                     } else {
                         SimpleUtils.fail("The color of the value is incorrect! ->not red", false);
                     }
                 }
             }
-            if(weekType.toLowerCase().contains("past") || weekType.contains("previous")){
+            if(weekType.toLowerCase().contains("current") || weekType.contains("previous")){
                 if (isElementLoaded(locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")),10)
-                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Scheduled within\nBudget")
-                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Scheduled over\nBudget")
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Scheduled Within Budget")
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Scheduled Over Budget")
                         && getLocationSummaryDataFromSchedulePage().size() == 3){
                     String numOfProjectedWithin = getLocationSummaryDataFromSchedulePage().get(1).split(" ")[0];
                     String numOfProjectedOver = getLocationSummaryDataFromSchedulePage().get(2).split(" ")[0];
@@ -14632,8 +14694,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 }
             } else {
                 if (isElementLoaded(locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")),10)
-                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Projected within\nBudget")
-                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Projected over\nBudget")
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Published Within Budget")
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Published Over Budget")
                         && getLocationSummaryDataFromSchedulePage().size() == 3){
                     String numOfProjectedWithin = getLocationSummaryDataFromSchedulePage().get(1).split(" ")[0];
                     String numOfProjectedOver = getLocationSummaryDataFromSchedulePage().get(2).split(" ")[0];
@@ -14724,7 +14786,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     list = getLocationsInScheduleDMViewLocationsTable();
                 } else {
                     if (areListElementVisible(getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")),10)){
-                        list.add(columns.get(index-2).getText().replace("%",""));
+                        list.add(columns.get(index-2).getText().replace("%","").replace(",",""));
                     }
                 }
             } else {

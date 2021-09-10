@@ -1133,7 +1133,7 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
 
             //Validate the content of LOCATION SUMMARY smart card for current/future weeks.
-            HashMap<String, Float> valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("current");
+            HashMap<String, Float> valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("location","current");
 
             //Validate the data LOCATION SUMMARY smart card for current/future weeks.
             SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
@@ -1171,7 +1171,7 @@ public class DMViewTest extends TestBase {
 
             //Navigate to the past week to verify the info and data.
             schedulePage.navigateToPreviousWeek();
-            valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("past");
+            valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("location", "past");
 
             //Validate the data LOCATION SUMMARY smart card for the past weeks.
             SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
@@ -1693,6 +1693,12 @@ public class DMViewTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+
+        dashboardPage.clickOnDashboardConsoleMenu();
         String districtName = dashboardPage.getCurrentDistrict();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.reSelectDistrict(districtName);
@@ -1725,10 +1731,10 @@ public class DMViewTest extends TestBase {
         boolean isProjectedWithinBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(3).equals(locationNumbersFromLocationSummarySmartCard.get(0));
         boolean isProjectedOverBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(4).equals(locationNumbersFromLocationSummarySmartCard.get(1));
         boolean isHrsOfUnderOrCoverBudgetCorrect = false;
-//        if(isTAEnv){
-//            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
-//                    equals(textOnTheChartInLocationSummarySmartCard.get(6).split(" ")[0]);
-//        } else
+        if(isTAEnv){
+            isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
+                    equals(textOnTheChartInLocationSummarySmartCard.get(6).split(" ")[0]);
+        } else
             isHrsOfUnderOrCoverBudgetCorrect = dataFromLocationSummaryWidget.get(5).split(" ")[0].
                     equals(textOnTheChartInLocationSummarySmartCard.get(4).split(" ")[0]);
 

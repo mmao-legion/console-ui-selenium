@@ -1325,7 +1325,6 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.isDMView();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
             //Validate navigating back to region view
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -1404,7 +1403,6 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             locationSelectorPage.isRegionView();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
             //Validate navigating back to BU view
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -2998,6 +2996,7 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
+            timeSheetPage.validateLoadingOfTimeSheetSmartCard();
 
             //Get time sheet rate from smart card
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -3118,4 +3117,613 @@ public class UpperfieldTest extends TestBase {
         }
     }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Unplanned Clocks on Timesheet in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUnplannedClocksOnTimesheetInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+
+            //Get Unplanned Clocks and Total Timesheets from smart card
+            int unplannedClockFromSmartCard = timeSheetPage.getUnplannedClockSmartCardOnDMView();
+            int timesheetFromSmartCard = timeSheetPage.getTotalTimesheetFromSmartCardOnDMView();
+
+            //Get Unplanned Clocks and Total Timesheets from table
+            int totalUnplannedClocksOnTblView = timeSheetPage.getUnplannedClocksOnDMView();
+            int totalTimesheetsOnTblView = timeSheetPage.getTotalTimesheetsOnDMView();
+
+            int totalUnplannedClocksOnDMViewSmartCardDetailSummary = timeSheetPage.getUnplannedClocksDetailSummaryValue();
+            verifyUnplannedClockOnDMView(unplannedClockFromSmartCard, totalUnplannedClocksOnDMViewSmartCardDetailSummary,
+                    totalUnplannedClocksOnTblView);
+            verifyTimesheetOnDMView(timesheetFromSmartCard, totalTimesheetsOnTblView);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    public void verifyUnplannedClockOnDMView(int totalUnplannedClockSmartCardValOnDMView,
+                                             int totalUnplannedClocksOnDMViewSmartCardDetailSummary,
+                                             int totalUnplannedClocksOnTblView){
+        if(totalUnplannedClockSmartCardValOnDMView == totalUnplannedClocksOnDMViewSmartCardDetailSummary){
+            SimpleUtils.pass("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " matches " +
+                    "with Unplanned Clock in Details Summary Card " + totalUnplannedClocksOnDMViewSmartCardDetailSummary + " on DM View");
+        }else{
+            SimpleUtils.fail("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " do not match " +
+                    "with Unplanned Clock in Details Summary Card " + totalUnplannedClocksOnDMViewSmartCardDetailSummary + " on DM View",true);
+        }
+        if(totalUnplannedClockSmartCardValOnDMView == totalUnplannedClocksOnTblView){
+            SimpleUtils.pass("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " matches " +
+                    "with sum of Unplanned Clock per location in Timesheet table " + totalUnplannedClocksOnTblView + " on DM View");
+        }else{
+            SimpleUtils.fail("Unplanned Clock from Smart Card " + totalUnplannedClockSmartCardValOnDMView + " do not match " +
+                    "with sum of Unplanned Clock per location in Timesheet table " + totalUnplannedClocksOnTblView + " on DM View",true);
+        }
+    }
+
+    public void verifyTimesheetOnDMView(int totalTimesheetOnDMViewSmartCard,
+                                        int totalTimesheetsOnTblView){
+        if(totalTimesheetOnDMViewSmartCard == totalTimesheetsOnTblView){
+            SimpleUtils.pass("Total Timesheet Count from Smart Card " + totalTimesheetOnDMViewSmartCard + " matches " +
+                    "with sum of Timesheet entries per location in Timesheet table " + totalTimesheetsOnTblView + " on DM View");
+        }else{
+            SimpleUtils.fail("Total Timesheet Count from Smart Card " + totalTimesheetOnDMViewSmartCard + " do not match " +
+                    "with sum of Timesheet entries per location in Timesheet table  " + totalTimesheetsOnTblView + " on DM View",true);
+        }
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Unplanned Clocks on Timesheet in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            //Get Unplanned Clocks and Total Timesheets from smart card
+            int unplannedClockFromSmartCard = timeSheetPage.getUnplannedClockSmartCardOnDMView();
+            int timesheetFromSmartCard = timeSheetPage.getTotalTimesheetFromSmartCardOnDMView();
+
+            //Get Unplanned Clocks and Total Timesheets from table
+            int totalUnplannedClocksOnTblView = timeSheetPage.getUnplannedClocksOnDMView();
+            int totalTimesheetsOnTblView = timeSheetPage.getTotalTimesheetsOnDMView();
+
+            int totalUnplannedClocksOnDMViewSmartCardDetailSummary = timeSheetPage.getUnplannedClocksDetailSummaryValue();
+            verifyUnplannedClockOnDMView(unplannedClockFromSmartCard, totalUnplannedClocksOnDMViewSmartCardDetailSummary,
+                    totalUnplannedClocksOnTblView);
+            verifyTimesheetOnDMView(timesheetFromSmartCard, totalTimesheetsOnTblView);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify UNPLANNED CLOCKS smart card on Timesheet in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            timeSheetPage.validateLoadingOfTimeSheetSmartCard();
+
+            //Validate the content on Unplanned Clocks summary smart card.
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            HashMap<String, Integer> valuesFromUnplannedClocksSummaryCard = schedulePage.getValueOnUnplannedClocksSmartCardAndVerifyInfo();
+            int index = schedulePage.getIndexOfColInDMViewTable("Unplanned Clocks");
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int unplannedClocks = 0;
+            for (Float f: data){
+                unplannedClocks = unplannedClocks + Math.round(f);
+            }
+            //The sum of numbers on UNPLANNED CLOCKS smart card should match the unplanned clocks smartcard
+            SimpleUtils.assertOnFail("Unplanned clocks from summary card and analytic table are inconsistent!",
+                    valuesFromUnplannedClocksSummaryCard.get("No Show")==unplannedClocks, false);
+
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            index = schedulePage.getIndexOfColInDMViewTable("Missed Meal");
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int missedMeal = 0;
+            for (Float f: data){
+                missedMeal = missedMeal + Math.round(f);
+            }
+            //Missed meal number on UNPLANNED CLOCKS smart card should match the sum of the missed meal column in the Compliance tab
+            SimpleUtils.assertOnFail("Miss meal from UNPLANNED CLOCKS smart card and compliance analytic table are inconsistent!",
+                    valuesFromUnplannedClocksSummaryCard.get("Missed Meal")==missedMeal, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify UNPLANNED CLOCKS smart card on Timesheet in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+
+            //Validate the content on Unplanned Clocks summary smart card.
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            HashMap<String, Integer> valuesFromUnplannedClocksSummaryCard = schedulePage.getValueOnUnplannedClocksSmartCardAndVerifyInfo();
+            int index = schedulePage.getIndexOfColInDMViewTable("Unplanned Clocks");
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int unplannedClocks = 0;
+            for (Float f: data){
+                unplannedClocks = unplannedClocks + Math.round(f);
+            }
+            //The sum of numbers on UNPLANNED CLOCKS smart card should match the unplanned clocks smartcard
+            SimpleUtils.assertOnFail("Unplanned clocks from summary card and analytic table are inconsistent!",
+                    valuesFromUnplannedClocksSummaryCard.get("No Show")==unplannedClocks, false);
+
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            index = schedulePage.getIndexOfColInDMViewTable("Missed Meal");
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            int missedMeal = 0;
+            for (Float f: data){
+                missedMeal = missedMeal + Math.round(f);
+            }
+            //Missed meal number on UNPLANNED CLOCKS smart card should match the sum of the missed meal column in the Compliance tab
+            SimpleUtils.assertOnFail("Miss meal from UNPLANNED CLOCKS smart card and compliance analytic table are inconsistent!",
+                    valuesFromUnplannedClocksSummaryCard.get("Missed Meal")==missedMeal, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate analytics table on Schedule in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            String field1 = "Region";
+            String field2 = "Published Status";
+            String field3 = "Budget Hrs";
+            String field4 = "Published Hrs";
+            String field5 = "Budget Variance";
+            SimpleUtils.assertOnFail(field1 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field1) > 0, false);
+            SimpleUtils.assertOnFail(field2 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field2) > 0, false);
+            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field3) > 0, false);
+            SimpleUtils.assertOnFail(field4 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field4) > 0, false);
+            SimpleUtils.assertOnFail(field5 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field5) > 0, false);
+
+            //Validate the field columns can be ordered.
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(2);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+
+            //Validate the data of analytics table for current week.
+            verifyAnalyticsTableOnBUView(regionName);
+
+            //Validate the data of analytics table for past week.
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            schedulePage.navigateToPreviousWeek();
+            verifyAnalyticsTableOnBUView(regionName);
+
+            //Validate the data of analytics table for future week.
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            verifyAnalyticsTableOnBUView(regionName);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    private void verifyAnalyticsTableOnBUView(String regionName) throws Exception {
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+        Map<String, String> regionInfoOnBUView = scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
+        schedulePage.clickSpecificLocationInDMViewAnalyticTable(regionName);
+
+        //Check publish status on BU and region view
+        int index = schedulePage.getIndexOfColInDMViewTable("Published Status");
+        List<String> publishedStatus = schedulePage.getListByColInTimesheetDMView(index);
+        if (publishedStatus.contains("Not Started")) {
+            SimpleUtils.assertOnFail("The region published status display inconsistent on BU and Region reivew",
+                    regionInfoOnBUView.get("publishedStatus").equalsIgnoreCase("Not Started"), false);
+        } else if (publishedStatus.contains("In Progress")) {
+            SimpleUtils.assertOnFail("The region published status display inconsistent on BU and Region reivew",
+                    regionInfoOnBUView.get("publishedStatus").equalsIgnoreCase("In Progress"), false);
+        } else {
+            SimpleUtils.assertOnFail("The region published status display inconsistent on BU and Region reivew",
+                    regionInfoOnBUView.get("publishedStatus").equalsIgnoreCase("Published"), false);
+        }
+
+        //Check budget hrs on BU and region view
+        index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+        List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+        float budgetHrsOnReviewView = 0;
+        for (float f: data){
+            budgetHrsOnReviewView += f;
+        }
+        SimpleUtils.assertOnFail("The Budget hrs display inconsistent on BU and Region reivew! It is "+ Float.parseFloat(regionInfoOnBUView.get("budgetedHours"))
+                        + " on BU view, and is "+ budgetHrsOnReviewView + "on Region view",
+                Float.parseFloat(regionInfoOnBUView.get("budgetedHours")) == budgetHrsOnReviewView, false);
+
+        //Check published hrs on BU and region view
+        index = schedulePage.getIndexOfColInDMViewTable("Published Hrs");
+        data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+        float publishedHrsOnReviewView = 0;
+        for (Float f: data){
+            publishedHrsOnReviewView += f;
+        }
+        SimpleUtils.assertOnFail("The Published hrs display inconsistent on BU and Region reivew! It is "+ Float.parseFloat(regionInfoOnBUView.get("publishedHours"))
+                        + " on BU view, and is "+ publishedHrsOnReviewView + "on Region view",
+                Float.parseFloat(regionInfoOnBUView.get("publishedHours")) == publishedHrsOnReviewView, false);
+
+        //Check Budget Variance on BU and region view
+        index = schedulePage.getIndexOfColInDMViewTable("Budget Variance");
+        data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+        float budgetVarianceOnReviewView = 0;
+        for (Float f: data){
+            budgetVarianceOnReviewView =+ f;
+        }
+//        SimpleUtils.assertOnFail("The Budget Variance display inconsistent on BU and Region reivew! It is "+ Float.parseFloat(regionInfoOnBUView.get("budgetVariance"))
+//                        + " on BU view, and is "+ budgetVarianceOnReviewView + "on Region view",        // Blocked by https://legiontech.atlassian.net/browse/SCH-5185
+//                Float.parseFloat(regionInfoOnBUView.get("budgetVariance")) == budgetVarianceOnReviewView, false);
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate analytics table on Schedule in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String districtName = selectedUpperFields.get(District);
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            String field1 = "District";
+            String field2 = "Published Status";
+            String field3 = "Budget Hrs";
+            String field4 = "Published Hrs";
+            String field5 = "Budget Variance";
+            SimpleUtils.assertOnFail(field1 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field1) > 0, false);
+            SimpleUtils.assertOnFail(field2 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field2) > 0, false);
+            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field3) > 0, false);
+            SimpleUtils.assertOnFail(field4 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field4) > 0, false);
+            SimpleUtils.assertOnFail(field5 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field5) > 0, false);
+
+            //Validate the field columns can be ordered.
+            schedulePage.verifySortByColForLocationsInDMView(1);
+            schedulePage.verifySortByColForLocationsInDMView(2);
+            schedulePage.verifySortByColForLocationsInDMView(3);
+            schedulePage.verifySortByColForLocationsInDMView(4);
+
+            //Validate the data of analytics table for current week.
+            verifyAnalyticsTableOnBUView(districtName);
+
+            //Validate the data of analytics table for past week.
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            schedulePage.navigateToPreviousWeek();
+            verifyAnalyticsTableOnBUView(districtName);
+
+            //Validate the data of analytics table for future week.
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            Thread.sleep(5000);
+            verifyAnalyticsTableOnBUView(districtName);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify REGION SUMMARY on Schedule in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            //Go to the Schedule page in BU view.
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+
+            //Validate the content of REGION SUMMARY smart card for current/future weeks.
+            HashMap<String, Float> valuesFromRegionSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(Region, "current");
+
+            //Validate the data REGION SUMMARY smart card for current/future weeks.
+            SimpleUtils.assertOnFail("Region counts in title are inconsistent!",
+                    Math.round(valuesFromRegionSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("Region counts from projected info are inconsistent!",
+                    (Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedWithin")) +
+                            Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            //verify budgeted hours.
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
+            float budgetedHrsFromTable = 0;
+            for (Float f: data){
+                budgetedHrsFromTable = budgetedHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
+                    (Math.abs(valuesFromRegionSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+            //verify scheduled hours
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
+            float scheduledHrsFromTable = 0;
+            for (Float f: data){
+                scheduledHrsFromTable = scheduledHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Published hours are inconsistent!",
+                    (Math.abs(valuesFromRegionSummaryCard.get("Scheduled Hrs")) - scheduledHrsFromTable) == 0, false);
+
+            //Verify difference value between budgeted and projected.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hrs")));
+            float projectedHours = 0;
+            for (Float f: data){
+                projectedHours = projectedHours + f;
+            }
+            if ((valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)>0){
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!",
+                        (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+            }
+            if ((valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)<0){
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!",
+                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+            }
+
+            //Verify currect week Projected Hours displays.
+            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hrs");
+
+            //Navigate to the past week to verify the info and data.
+            schedulePage.navigateToPreviousWeek();
+            valuesFromRegionSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(Region, "past");
+
+            //Validate the data REGION SUMMARY smart card for the past weeks.
+            SimpleUtils.assertOnFail("Region counts in title are inconsistent!",
+                    Math.round(valuesFromRegionSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("Region counts from projected info are inconsistent!",
+                    (Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedWithin")) +
+                            Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            //verify budgeted hours.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
+            budgetedHrsFromTable = 0;
+            for (Float f: data){
+                budgetedHrsFromTable = budgetedHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
+                    (Math.abs(valuesFromRegionSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+            //verify scheduled hours.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
+            scheduledHrsFromTable = 0;
+            for (Float f: data){
+                scheduledHrsFromTable = scheduledHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Published hours are inconsistent!",
+                    (Math.abs(valuesFromRegionSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
+            //Verify difference value between budgeted and projected.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hrs")));
+            projectedHours = 0;
+            for (Float f: data){
+                projectedHours = projectedHours + f;
+            }
+            if ((valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)>=0){
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!",
+                        (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+            } else {
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!",
+                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+
+            }
+            //Verify past week Clocked Hours displays.
+            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hrs");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify REGION SUMMARY on Schedule in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            //Go to the Schedule page in Region view.
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+
+            //Validate the content of District SUMMARY smart card for current/future weeks.
+            HashMap<String, Float> valuesFromDistrictSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(District, "current");
+
+            //Validate the data DISTRICT SUMMARY smart card for current/future weeks.
+            SimpleUtils.assertOnFail("District counts in title are inconsistent!",
+                    Math.round(valuesFromDistrictSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("District counts from projected info are inconsistent!",
+                    (Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedWithin")) +
+                            Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            //verify budgeted hours.
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
+            float budgetedHrsFromTable = 0;
+            for (Float f: data){
+                budgetedHrsFromTable = budgetedHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
+                    (Math.abs(valuesFromDistrictSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+            //verify scheduled hours
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
+            float scheduledHrsFromTable = 0;
+            for (Float f: data){
+                scheduledHrsFromTable = scheduledHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Published hours are inconsistent!",
+                    (Math.abs(valuesFromDistrictSummaryCard.get("Scheduled Hrs")) - scheduledHrsFromTable) == 0, false);
+
+            //Verify difference value between budgeted and projected.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hrs")));
+            float projectedHours = 0;
+            for (Float f: data){
+                projectedHours = projectedHours + f;
+            }
+            if ((valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)>0){
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!",
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+            }
+            if ((valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)<0){
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!",
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+            }
+
+            //Verify currect week Projected Hours displays.
+            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hrs");
+
+            //Navigate to the past week to verify the info and data.
+            schedulePage.navigateToPreviousWeek();
+            valuesFromDistrictSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(District, "past");
+
+            //Validate the data DISTRICT SUMMARY smart card for the past weeks.
+            SimpleUtils.assertOnFail("District counts in title are inconsistent!",
+                    Math.round(valuesFromDistrictSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("District counts from projected info are inconsistent!",
+                    (Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedWithin")) +
+                            Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            //verify budgeted hours.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
+            budgetedHrsFromTable = 0;
+            for (Float f: data){
+                budgetedHrsFromTable = budgetedHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
+                    (Math.abs(valuesFromDistrictSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+            //verify scheduled hours.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
+            scheduledHrsFromTable = 0;
+            for (Float f: data){
+                scheduledHrsFromTable = scheduledHrsFromTable + f;
+            }
+            SimpleUtils.assertOnFail("Published hours are inconsistent!",
+                    (Math.abs(valuesFromDistrictSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
+            //Verify difference value between budgeted and projected.
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hrs")));
+            projectedHours = 0;
+            for (Float f: data){
+                projectedHours = projectedHours + f;
+            }
+            if ((valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)>=0){
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!",
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+            } else {
+                SimpleUtils.assertOnFail("Difference hours is inconsistent!",
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+
+            }
+            //Verify past week Clocked Hours displays.
+            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hrs");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
 }

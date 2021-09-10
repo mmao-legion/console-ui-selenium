@@ -52,7 +52,7 @@
                 <methods>
                     <include name="verifyComplianceSmartCardFunctionality" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
-                    <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>  Blocked by SCH-5036-->
+                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>
@@ -91,7 +91,7 @@
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                     <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
-                    <!--<include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />  SCH-5036-->
+                    <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
                     <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" />
                     <include name="validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
@@ -128,7 +128,7 @@
                 <methods>
                     <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
                     <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
-                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
+                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin" />
                     <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />
                 </methods>
             </class>
@@ -226,6 +226,7 @@
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
 <!--                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />  Blocked by https://legiontech.atlassian.net/browse/SCH-5058-->
                </methods>
             </class>
@@ -237,11 +238,11 @@
             <class name="com.legion.tests.core.SchedulingMinorTest">
                 <methods>
                     <include name="verifyEditMinorRulesAsInternalAdmin"/>
-                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
+<!--                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
                     <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftDaysExceedTheWeekDaysInSettingAsInternalAdmin" />
-                    <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />   https://legiontech.atlassian.net/browse/SCH-4754 -->
                 </methods>
             </class>
         </classes>
@@ -295,5 +296,31 @@
         </classes>
     </test>
 
+    <test name="Location Navigation Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationNavigationTest">
+                <methods>
+                    <include name="verifyChangingLocationOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifyChangingRegionOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheRegionOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifyChangingBusinessUnitOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheBusinessUnitOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySelectingHQOnBusinessUnitScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheHQOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQScheduleTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQComplianceTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" />
+                    <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 </suite> <!-- Suite -->

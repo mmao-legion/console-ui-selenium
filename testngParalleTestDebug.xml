@@ -102,6 +102,7 @@
                     <include name="verifyMinorInfoOnProfilePageAsInternalAdmin" />
                     <include name="verifyMinorFilterAsInternalAdmin" />
                     <include name="verifyMinorBadgeInfoAsInternalAdmin" />
+                    <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
@@ -157,7 +158,6 @@
                     <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin" />
-                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyDMViewNavigationAsInternalAdmin" />
                     <include name="verifyLocationListAndSubLocationOnTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyAnalyticTableInTimesheetDMViewAsInternalAdmin" />
@@ -244,6 +244,14 @@
                     <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
                     <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" />
                     <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
+                    <include name="verifyDragDropToAMiddleDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToABlankMiddleDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToAMiddleDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToABlankMiddleDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheFirstDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankFirstDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheFirstDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankFirstDayToMoveShiftAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

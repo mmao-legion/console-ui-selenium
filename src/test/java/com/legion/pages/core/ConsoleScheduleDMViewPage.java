@@ -10,7 +10,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -19,9 +22,11 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @FindBy(css = ".analytics-new-table-group-row-open")
     private List<WebElement>  schedulesInDMView;
 
-
     @FindBy(css = "[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")
     private List<WebElement>  budgetHours;
+
+    @FindBy(css = "[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")
+    private List<WebElement>  publishedHours;
 
     public ConsoleScheduleDMViewPage() {
         PageFactory.initElements(getDriver(), this);
@@ -431,14 +436,28 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         float projectedTotalHours = 0;
         if (areListElementVisible(schedulesInDMView, 10) && schedulesInDMView.size() != 0){
             for (WebElement schedule : schedulesInDMView){
-                budgetedTotalHours += Float.parseFloat(schedule.findElement(By.xpath("./div[3]")).getText().replace(",",""));
-                scheduledTotalHours += Float.parseFloat(schedule.findElement(By.xpath("./div[4]")).getText().replace(",",""));
+//                budgetedTotalHours += Float.parseFloat(schedule.findElement(By.xpath("./div[3]")).getText().replace(",",""));
+//                scheduledTotalHours += Float.parseFloat(schedule.findElement(By.xpath("./div[4]")).getText().replace(",",""));
                 // projectedTotalHours += Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",",""));
                 // todo: failed due to https://legiontech.atlassian.net/browse/SCH-2524
+
+                if (areListElementVisible(budgetHours, 5) && areListElementVisible(publishedHours, 5)){
+                    budgetedTotalHours += Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText().replace(",",""));
+                    scheduledTotalHours += Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")).getText().replace(",",""));
+                } else {
+                    if (isElementLoaded(scheduleScoreSmartCard, 5)) {
+                        budgetedTotalHours += Float.parseFloat(schedule.findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(2).getText().replace(",",""));
+                        scheduledTotalHours += Float.parseFloat(schedule.findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(3).getText().replace(",",""));
+                    } else {
+                        budgetedTotalHours += Float.parseFloat(schedule.findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(1).getText().replace(",",""));
+                        scheduledTotalHours += Float.parseFloat(schedule.findElements(By.cssSelector("[ng-switch=\"headerIndexes[$index]\"]")).get(2).getText().replace(",",""));
+                    }
+                }
+                //There is no projected hrs for non-TA https://legiontech.atlassian.net/browse/SCH-2524
+//                projectedTotalHours += Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",",""));
             }
             totalHours.add(budgetedTotalHours);
             totalHours.add(scheduledTotalHours);
-            totalHours.add(projectedTotalHours);
             SimpleUtils.report("Get total budget, schedule and projected hours successfully in DM view! ");
         } else{
             SimpleUtils.fail("Get hours in DM View failed, there is no schedules display in DM view" , false);
@@ -841,8 +860,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                             && scheduleHoursOnScheduleDMView.get("lsaHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("lsaHours")))
                             && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))
                             && scheduleHoursOnScheduleDMView.get("openHours").equalsIgnoreCase(df1.format(projectionOpenShiftsFromScheduleDetailPage))))
-                       ||  (!isTAEnv
-                        && scheduleHoursOnScheduleDMView.get("budgetedHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(0))
+                            ||  (!isTAEnv
+                            && scheduleHoursOnScheduleDMView.get("budgetedHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(0))
                             && scheduleHoursOnScheduleDMView.get("scheduledHours").equalsIgnoreCase(scheduleHoursOnScheduleDMView.get(3))              //blocking by https://legiontech.atlassian.net/browse/SCH-1874
                             && scheduleHoursOnScheduleDMView.get("scheduleStatus").equalsIgnoreCase("Not Started")
                             && !checkIfTheSpecificHeaderDisplayInScheduleListOnScheduleDMView("Projected Hours"))){
@@ -869,7 +888,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                             && scheduleHoursOnScheduleDMView.get("lsaHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("lsaHours")))
                             && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))
                             && scheduleHoursOnScheduleDMView.get("openHours").equalsIgnoreCase(df1.format(projectionOpenShiftsFromScheduleDetailPage))))
-                       ||  (!isTAEnv
+                            ||  (!isTAEnv
                             && scheduleHoursOnScheduleDMView.get("budgetedHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(0))
                             && scheduleHoursOnScheduleDMView.get("scheduledHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(1))
                             && scheduleHoursOnScheduleDMView.get("scheduleStatus").equalsIgnoreCase("Published")
@@ -897,7 +916,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                             && scheduleHoursOnScheduleDMView.get("lsaHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("lsaHours")))
                             && scheduleHoursOnScheduleDMView.get("saHours").equalsIgnoreCase(df1.format(projectedOverBudgetHoursByJobTitle.get("saHours"))))
                             && scheduleHoursOnScheduleDMView.get("openHours").equalsIgnoreCase(df1.format(projectionOpenShiftsFromScheduleDetailPage))))
-                       ||  (!isTAEnv
+                            ||  (!isTAEnv
                             && scheduleHoursOnScheduleDMView.get("budgetedHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(0))
                             && scheduleHoursOnScheduleDMView.get("scheduledHours").equalsIgnoreCase(scheduleHoursOnScheduleDetailPage.get(1))              //blocking by https://legiontech.atlassian.net/browse/SCH-1874
                             && scheduleHoursOnScheduleDMView.get("scheduleStatus").equalsIgnoreCase("In Progress")
@@ -965,10 +984,13 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     private WebElement searchLocationInCompliancePage;
     @FindBy(css = "[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")
     private List<WebElement>  projectedHrs;
+    @FindBy(css = "projected-over-under text")
+    private List<WebElement> budgetVariances;
+
     public Map<String, String> getAllScheduleInfoFromScheduleInDMViewByLocation(String location) throws Exception {
         Map<String, String> allScheduleInfo = new HashMap<>();
         boolean isLocationMatched = false;
-        if (areListElementVisible(schedulesInDMView, 10) && schedulesInDMView.size() != 0){
+        if (areListElementVisible(schedulesInDMView, 20) && schedulesInDMView.size() != 0){
             for (int i=0; i< schedulesInDMView.size(); i++){
                 WebElement locationInDMView = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_UNTOUCHED\"]"));
                 if (locationInDMView != null){
@@ -978,7 +1000,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         //add schedule Location Name
                         allScheduleInfo.put("locationName",locationNameInDMView);
                         //add Schedule Status
-                        allScheduleInfo.put("scheduleStatus", schedulesInDMView.get(i).findElement(By.className("analytics-new-table-published-status")).getText());
+                        allScheduleInfo.put("publishedStatus", schedulesInDMView.get(i).findElement(By.className("analytics-new-table-published-status")).getText());
                         //add Score
 //                        allScheduleInfo.add(schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_SCORE\"]")).getText());   //Need Turn off Score function on Schedule DM view
                         String budgetedHours = "";
@@ -994,10 +1016,12 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         //add Budgeted Hours
                         allScheduleInfo.put("budgetedHours", budgetedHours);
                         //add Scheduled Hours
-                        allScheduleInfo.put("scheduledHours", schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")).getText());
+                        allScheduleInfo.put("publishedHours", schedulesInDMView.get(i).
+                                findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")).getText().replace(",",""));
                         if (areListElementVisible(projectedHrs, 5)){
                             //add Projected Hours
-                            String projectedHours = schedulesInDMView.get(i).findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",","");
+                            String projectedHours = schedulesInDMView.get(i).
+                                    findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",","");
                             allScheduleInfo.put("projectedHours", projectedHours);
                             //add Projected Under/Over Budget Hours
                             if(Float.parseFloat(budgetedHours) > Float.parseFloat(projectedHours)){
@@ -1007,6 +1031,12 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                                 allScheduleInfo.put("projectedOverBudgetHours", schedulesInDMView.get(i).findElement(By.cssSelector("[text-anchor=\"start\"]")).getText());
                                 allScheduleInfo.put("projectedUnderBudgetHours", "");
                             }
+                        }
+
+                        //add Budget Variance
+                        if (areListElementVisible(budgetVariances, 5)) {
+                            allScheduleInfo.put("budgetVariance", schedulesInDMView.get(i).
+                                    findElement(By.cssSelector("projected-over-under text")).getText().replace(",",""));
                         }
 
                         //add projectedUnderOrOverBudgetByJobTitleHours on TA-DG env
@@ -1045,7 +1075,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             if(
 //                    isElementLoaded(scheduleScoreSmartCard, 10) &&  //Score smart card should be turn off
                     isElementLoaded(locationSummarySmartCard, 10)
-                    && areListElementVisible(scheduleStatusCards, 10)){
+                            && areListElementVisible(scheduleStatusCards, 10)){
                 SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
             } else
                 SimpleUtils.fail("The smart cards on Schedule DM view page for past week loaded fail! ", false);
@@ -1053,7 +1083,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             if(
 //                    !isElementLoaded(scheduleScoreSmartCard, 10) && //Score smart card should be turn off
                     isElementLoaded(locationSummarySmartCard, 10)
-                    && areListElementVisible(scheduleStatusCards, 10)){
+                            && areListElementVisible(scheduleStatusCards, 10)){
                 SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
             } else
                 SimpleUtils.fail("The smart cards on Schedule DM view page for past week loaded fail! ", false);
@@ -1061,13 +1091,13 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     }
 
     public void verifySchedulesTableHeaderNames(boolean isApplyBudget, boolean isPastWeek) throws Exception {
-        
+
         if(areListElementVisible(schedulesTableHeaders, 10) && schedulesTableHeaders.size() == 7){
             String[] schedulesTableHeaderNames;
             if(isApplyBudget){
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
-                        "Budgeted Hours", "Scheduled Hours", "Projected Hours", "Projected Under/Over Budget"};
+                            "Budgeted Hours", "Scheduled Hours", "Projected Hours", "Projected Under/Over Budget"};
                 else
                     schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
                             "Budgeted Hours", "Scheduled Hours", "Clocked Hours", "Under/Over Budget"};
