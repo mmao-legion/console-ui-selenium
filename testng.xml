@@ -595,6 +595,8 @@
                         <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" />
                         <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" />
                         <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" />
+                        <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>

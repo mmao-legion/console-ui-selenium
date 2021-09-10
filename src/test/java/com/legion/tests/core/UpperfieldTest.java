@@ -3391,7 +3391,7 @@ public class UpperfieldTest extends TestBase {
     @TestName(description = "Verify REGION SUMMARY on Schedule in BU View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -3424,17 +3424,19 @@ public class UpperfieldTest extends TestBase {
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
-            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromRegionSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
+                    (Math.abs(valuesFromRegionSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours
             data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
             float scheduledHrsFromTable = 0;
             for (Float f: data){
                 scheduledHrsFromTable = scheduledHrsFromTable + f;
             }
-            SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromRegionSummaryCard.get("Scheduled Hrs")) - scheduledHrsFromTable) == 0, false);
+            SimpleUtils.assertOnFail("Published hours are inconsistent!",
+                    (Math.abs(valuesFromRegionSummaryCard.get("Scheduled Hrs")) - scheduledHrsFromTable) == 0, false);
 
             //Verify difference value between budgeted and projected.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Variance")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hrs")));
             float projectedHours = 0;
             for (Float f: data){
                 projectedHours = projectedHours + f;
@@ -3447,9 +3449,9 @@ public class UpperfieldTest extends TestBase {
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
                         (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
             }
-//
-//            //Verify currect week Projected Hours displays.
-//            schedulePage.verifyClockedOrProjectedInDMViewTable("Projected Hours");
+
+            //Verify currect week Projected Hours displays.
+            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hrs");
 
             //Navigate to the past week to verify the info and data.
             schedulePage.navigateToPreviousWeek();
@@ -3462,7 +3464,7 @@ public class UpperfieldTest extends TestBase {
                     (Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedWithin")) +
                             Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budgeted Hrs")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
             budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
@@ -3470,7 +3472,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
                     (Math.abs(valuesFromRegionSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Scheduled Hrs")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
             scheduledHrsFromTable = 0;
             for (Float f: data){
                 scheduledHrsFromTable = scheduledHrsFromTable + f;
@@ -3478,7 +3480,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Published hours are inconsistent!",
                     (Math.abs(valuesFromRegionSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
             //Verify difference value between budgeted and projected.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hrs")));
             projectedHours = 0;
             for (Float f: data){
                 projectedHours = projectedHours + f;
@@ -3491,12 +3493,12 @@ public class UpperfieldTest extends TestBase {
                         (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
 
             }
-//            //Verify past week Clocked Hours displays.
-//            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hours");
+            //Verify past week Clocked Hours displays.
+            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hrs");
 
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(),false);
-//        }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -3514,100 +3516,99 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            String buName = selectedUpperFields.get(BusinessUnit);
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
 
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 
-            //Go to the Schedule page in BU view.
+            //Go to the Schedule page in Region view.
             schedulePage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
 
-            //Validate the content of REGION SUMMARY smart card for current/future weeks.
-            HashMap<String, Float> valuesFromRegionSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(District, "current");
+            //Validate the content of District SUMMARY smart card for current/future weeks.
+            HashMap<String, Float> valuesFromDistrictSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(District, "current");
 
-            //Validate the data REGION SUMMARY smart card for current/future weeks.
-            SimpleUtils.assertOnFail("Region counts in title are inconsistent!",
-                    Math.round(valuesFromRegionSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
-            SimpleUtils.assertOnFail("Region counts from projected info are inconsistent!",
-                    (Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedWithin")) +
-                            Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            //Validate the data DISTRICT SUMMARY smart card for current/future weeks.
+            SimpleUtils.assertOnFail("District counts in title are inconsistent!",
+                    Math.round(valuesFromDistrictSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("District counts from projected info are inconsistent!",
+                    (Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedWithin")) +
+                            Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budgeted Hours")));
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
             float budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
-            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromRegionSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
+                    (Math.abs(valuesFromDistrictSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
             float scheduledHrsFromTable = 0;
             for (Float f: data){
                 scheduledHrsFromTable = scheduledHrsFromTable + f;
             }
-            SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromRegionSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
+            SimpleUtils.assertOnFail("Published hours are inconsistent!",
+                    (Math.abs(valuesFromDistrictSummaryCard.get("Scheduled Hrs")) - scheduledHrsFromTable) == 0, false);
 
             //Verify difference value between budgeted and projected.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hrs")));
             float projectedHours = 0;
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)>0){
+            if ((valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)>0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
             }
-            if ((valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)<0){
+            if ((valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)<0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
             }
 
             //Verify currect week Projected Hours displays.
-            schedulePage.verifyClockedOrProjectedInDMViewTable("Projected Hours");
+            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hrs");
 
             //Navigate to the past week to verify the info and data.
             schedulePage.navigateToPreviousWeek();
-            valuesFromRegionSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(District, "past");
+            valuesFromDistrictSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(District, "past");
 
-            //Validate the data REGION SUMMARY smart card for the past weeks.
-            SimpleUtils.assertOnFail("Region counts in title are inconsistent!",
-                    Math.round(valuesFromRegionSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
-            SimpleUtils.assertOnFail("Region counts from projected info are inconsistent!",
-                    (Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedWithin")) +
-                            Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            //Validate the data DISTRICT SUMMARY smart card for the past weeks.
+            SimpleUtils.assertOnFail("District counts in title are inconsistent!",
+                    Math.round(valuesFromDistrictSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("District counts from projected info are inconsistent!",
+                    (Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedWithin")) +
+                            Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budgeted Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
             budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
             SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
-                    (Math.abs(valuesFromRegionSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+                    (Math.abs(valuesFromDistrictSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
             scheduledHrsFromTable = 0;
             for (Float f: data){
                 scheduledHrsFromTable = scheduledHrsFromTable + f;
             }
             SimpleUtils.assertOnFail("Published hours are inconsistent!",
-                    (Math.abs(valuesFromRegionSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
+                    (Math.abs(valuesFromDistrictSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
             //Verify difference value between budgeted and projected.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hours")));
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hrs")));
             projectedHours = 0;
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)>=0){
+            if ((valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)>=0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
             } else {
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
 
             }
             //Verify past week Clocked Hours displays.
-            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hours");
+            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hrs");
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
