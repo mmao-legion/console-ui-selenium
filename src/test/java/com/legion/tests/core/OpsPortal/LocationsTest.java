@@ -178,47 +178,47 @@ public class LocationsTest extends TestBase {
     }
 
 //     NSO location is blocked by https://legiontech.atlassian.net/browse/OPS-2757
-//    @Automated(automated = "Automated")
-//    @Owner(owner = "Estelle")
-//    @Enterprise(name = "Op_Enterprise")
-//    @TestName(description = "Create a Type NSO location with below conditions successfully")
-//    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-//    public void verifyCreateNSOLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
-//        try{
-//            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-//            String currentTime =  dfs.format(new Date());
-//            String locationName = "AutoCreateNSO" +currentTime;
-//            int index =0;
-//            String searchCharactor = "No touch";
-//
-//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-//            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-//
-//            //go to locations tab
-//            locationsPage.clickOnLocationsTab();
-//            //check locations item
-//            locationsPage.validateItemsInLocations();
-//            //go to sub-locations tab
-//            locationsPage.goToSubLocationsInLocationsPage();
-//            locationsPage.addNewNSOLocation(locationName,searchCharactor, index);
-//            if (locationsPage.searchNewLocation(getLocationName())) {
-//                SimpleUtils.pass("Create new NSO location successfully");
-//            }else
-//                SimpleUtils.fail("Create new location failed or can't search created location",true);
-//
-//            //go to console to and vigate to NSO
-//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-//            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
-//
-//
-//        } catch (Exception e){
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
-//    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Create a Type NSO location with below conditions successfully")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateNSOLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
+        try{
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            String currentTime =  dfs.format(new Date());
+            String locationName = "AutoCreateNSO" +currentTime;
+            int index =0;
+            String searchCharactor = "No touch";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-locations tab
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.addNewNSOLocation(locationName,searchCharactor, index);
+            if (locationsPage.searchNewLocation(getLocationName())) {
+                SimpleUtils.pass("Create new NSO location successfully");
+            }else
+                SimpleUtils.fail("Create new location failed or can't search created location",true);
+
+            //go to console to and vigate to NSO
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
@@ -1286,18 +1286,18 @@ public class LocationsTest extends TestBase {
             configurationPage.saveBtnIsClickable();
             List<HashMap<String,String>>  templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftOverridden.get(1).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("Overridden scheduling rules successfully");
+                SimpleUtils.pass("Overridden Operating Hours successfully");
             }else
-                SimpleUtils.fail("Overridden scheduling rules failed",false);
+                SimpleUtils.fail("Overridden Operating Hours failed",false);
 
             //reset
             locationsPage.editLocationBtnIsClickableInLocationDetails();
             locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(1).get("Template Type"),"Reset");
             List<HashMap<String,String>>  templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftReset.get(1).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset scheduling rules successfully");
+                SimpleUtils.pass("Reset Operating Hours successfully");
             } else
-                SimpleUtils.fail("Reset scheduling rules failed",false);
+                SimpleUtils.fail("Reset Operating Hours failed",false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1338,18 +1338,18 @@ public class LocationsTest extends TestBase {
 
             List<HashMap<String,String>>  templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftOverridden.get(0).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("Overridden scheduling rules successfully");
+                SimpleUtils.pass("Overridden Assignment Rules successfully");
             }else
-                SimpleUtils.fail("Overridden scheduling rules failed",false);
+                SimpleUtils.fail("Overridden Assignment Rules failed",false);
 
             //reset
             locationsPage.editLocationBtnIsClickableInLocationDetails();
             locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(0).get("Template Type"),"Reset");
             List<HashMap<String,String>>  templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftReset.get(0).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset scheduling rules successfully");
+                SimpleUtils.pass("Reset Assignment Rules successfully");
             } else
-                SimpleUtils.fail("Reset scheduling rules failed",false);
+                SimpleUtils.fail("Reset Assignment Rules failed",false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1387,18 +1387,18 @@ public class LocationsTest extends TestBase {
 
             List<HashMap<String,String>>  templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftOverridden.get(7).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("Overridden scheduling rules successfully");
+                SimpleUtils.pass("Overridden Labor Model successfully");
             }else
-                SimpleUtils.fail("Overridden scheduling rules failed",false);
+                SimpleUtils.fail("Overridden Labor Model failed",false);
 
             //reset
             locationsPage.editLocationBtnIsClickableInLocationDetails();
             locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
             List<HashMap<String,String>>  templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftReset.get(7).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset scheduling rules successfully");
+                SimpleUtils.pass("Reset Labor Model successfully");
             } else
-                SimpleUtils.fail("Reset scheduling rules failed",false);
+                SimpleUtils.fail("Reset Labor Model failed",false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -2542,7 +2542,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	public List<String> getLocationName() throws Exception {
 		List<String> listLocationName = new ArrayList<>();
-		if(areListElementVisible(listLocations,1)){
+		if(areListElementVisible(listLocations,5)){
 			for(int i=0; i<listLocations.size();i++){
 				listLocationName.add(listLocations.get(i).getText());
 			}
