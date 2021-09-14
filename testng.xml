@@ -272,6 +272,10 @@
                     <include name="verifyDragDropToTheBlankFirstDayToCopyShiftAsInternalAdmin" />
                     <include name="verifyDragDropToTheFirstDayToMoveShiftAsInternalAdmin" />
                     <include name="verifyDragDropToTheBlankFirstDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheLastDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankLastDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheLastDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankLastDayToMoveShiftAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
