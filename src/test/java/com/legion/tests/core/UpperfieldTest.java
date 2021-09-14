@@ -3799,4 +3799,157 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.fail(e.getMessage(),false);
         }
     }
+
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the availability of region list and sub region on Schedule in BU View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = selectedUpperFields.get(BusinessUnit);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+
+            // Validate the region list
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
+
+            // Validate click one region
+            schedulePage.clickOnLocationNameInDMView(regionName);
+
+            // Validate go back from selected region in current week
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", schedulePage.isScheduleDMView(), false);
+
+            // Validate click given region and given week
+            schedulePage.navigateToPreviousWeek();
+            String weekInfo = scheduleDMViewPage.getCurrentWeekInDMView();
+            schedulePage.clickOnLocationNameInDMView(regionName);
+            SimpleUtils.assertOnFail("It didn't navigate to the Schedule page of the region in that week",
+                    weekInfo.equals(scheduleDMViewPage.getCurrentWeekInDMView()), false);
+
+            // Validate click other BU in past week
+            String[] upperFields2 = null;
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
+                upperFields2 = controlUpperFields2;
+            } else {
+                upperFields2 = opUpperFields2;
+            }
+            String anotherBUName = upperFields2[1];
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, anotherBUName.trim());
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", schedulePage.isScheduleDMView(), false);
+
+            // Validate click given region and given week
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            weekInfo = scheduleDMViewPage.getCurrentWeekInDMView();
+            schedulePage.clickOnLocationNameInDMView(regionName);
+            SimpleUtils.assertOnFail("It didn't navigate to the Schedule page of the region in that week",
+                    weekInfo.equals(scheduleDMViewPage.getCurrentWeekInDMView()), false);
+
+            // Validate click other BU in future week
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
+                upperFields2 = controlUpperFields2;
+            } else {
+                upperFields2 = opUpperFields2;
+            }
+            anotherBUName = upperFields2[1];
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, anotherBUName.trim());
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", schedulePage.isScheduleDMView(), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the availability of district list and sub district on Schedule in Region View")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String districtName = selectedUpperFields.get(District);
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+
+            // Validate the district list
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
+
+            // Validate click one district
+            schedulePage.clickOnLocationNameInDMView(districtName);
+
+            // Validate go back from selected district in current week
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", schedulePage.isScheduleDMView(), false);
+
+            // Validate click given district and given week
+            schedulePage.navigateToPreviousWeek();
+            String weekInfo = scheduleDMViewPage.getCurrentWeekInDMView();
+            schedulePage.clickOnLocationNameInDMView(districtName);
+            SimpleUtils.assertOnFail("It didn't navigate to the Schedule page of the district in that week",
+                    weekInfo.equals(scheduleDMViewPage.getCurrentWeekInDMView()), false);
+
+            // Validate click other Region in past week
+            String[] upperFields2 = null;
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
+                upperFields2 = controlUpperFields2;
+            } else {
+                upperFields2 = opUpperFields2;
+            }
+            String anotherRegionName = upperFields2[2];
+            String anotherDistrictName = upperFields2[3];
+            locationSelectorPage.changeUpperFieldDirect(Region, anotherRegionName.trim());
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", schedulePage.isScheduleDMView(), false);
+
+            // Validate click given region and given week
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            weekInfo = scheduleDMViewPage.getCurrentWeekInDMView();
+            schedulePage.clickOnLocationNameInDMView(anotherDistrictName.trim());
+            SimpleUtils.assertOnFail("It didn't navigate to the Schedule page of the district in that week",
+                    weekInfo.equals(scheduleDMViewPage.getCurrentWeekInDMView()), false);
+
+            // Validate click other BU in future week
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
+                upperFields2 = controlUpperFields2;
+            } else {
+                upperFields2 = opUpperFields2;
+            }
+            anotherRegionName = upperFields2[2];
+            locationSelectorPage.changeUpperFieldDirect(Region, anotherRegionName.trim());
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", schedulePage.isScheduleDMView(), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
 }
