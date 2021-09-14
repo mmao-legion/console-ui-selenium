@@ -8614,8 +8614,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             }else {
                 SimpleUtils.fail("Index: " + index + " is out of range, the total size is: " + tmIcons.size(), true);
             }
-        }else {
+        } else if (areListElementVisible(shifts, 10)) {
+            clickTheElement(profileIcons.get(index));
+        } else {
             SimpleUtils.fail("Shift Requests not loaded Successfully!", true);
+        }
+    }
+
+    @Override
+    public void verifyShiftInfoIsCorrectOnMealBreakPopUp(List<String> expectedShiftInfo) throws Exception {
+        try {
+            if (isElementLoaded(shiftInfoContainer, 10)) {
+                String actualShiftInfo = shiftInfoContainer.getText();
+                if (actualShiftInfo.contains(expectedShiftInfo.get(0)) && actualShiftInfo.contains(expectedShiftInfo.get(3)) &&
+                actualShiftInfo.contains(expectedShiftInfo.get(4)) && actualShiftInfo.contains(expectedShiftInfo.get(2))) {
+                    SimpleUtils.pass("Shift info on the Meal Break pop up is correct!");
+                } else {
+                    SimpleUtils.fail("Shift info on the Meal Break pop up is correct!", false);
+                }
+            } else {
+                SimpleUtils.fail("Shift container failed to load on meal break pop up!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
@@ -9937,7 +9958,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "div.modal-instance-header-title")
     private WebElement editMealBreakTitle;
 
-    @FindBy(css = "[ng-click=\"addMealBreak()\"]")
+    @FindBy(css = "[data-tootik=\"Add a meal break\"] img")
     private WebElement addMealBreakButton;
 
     @FindBy(css = "[ng-click=\"closeModal()\"]")
