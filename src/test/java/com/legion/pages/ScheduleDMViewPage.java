@@ -11,7 +11,7 @@ public interface ScheduleDMViewPage {
     public List<Float> getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView() throws Exception;
     public String getCurrentWeekInDMView() throws Exception;
     public String getBudgetComparisonInDMView() throws Exception;
-    public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isPastWeek) throws Exception;
+    public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isApplyBudget, boolean isPastWeek) throws Exception;
     public void verifySchedulesTableHeaderNames(boolean isApplyBudget, boolean isPastWeek) throws Exception;
     public void validateThePresenceOfRefreshButton() throws Exception;
     public void validateRefreshTimestamp() throws Exception;
@@ -28,4 +28,5 @@ public interface ScheduleDMViewPage {
     public void verifyTheScheduleStatusAccountOnScheduleStatusCards() throws Exception;
     public Map<String, String> getAllScheduleInfoFromScheduleInDMViewByLocation(String location) throws Exception;
     public Map<String, String> getAllUpperFieldInfoFromScheduleByUpperField(String upperFieldName) throws Exception;
+    public List<String> getLocationsWithInProgressSchedules() throws Exception;
 }

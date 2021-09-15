@@ -1770,10 +1770,10 @@ public class DMViewTest extends TestBase {
             //Validate the smart card and schedule table header for previous week
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             scheduleDMViewPage.verifySchedulesTableHeaderNames(true, false);
-            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true,false);
             schedulePage.navigateToPreviousWeek();
             scheduleDMViewPage.verifySchedulesTableHeaderNames(true, true);
-            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true,true);
 
             /*
             *  comment it because bug: https://legiontech.atlassian.net/browse/LEG-7198
@@ -1786,10 +1786,10 @@ public class DMViewTest extends TestBase {
 
             //Validate the smart card and schedule table header for current week
             scheduleDMViewPage.verifySchedulesTableHeaderNames(false, false);
-            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false, false);
             schedulePage.navigateToPreviousWeek();
             scheduleDMViewPage.verifySchedulesTableHeaderNames(false, true);
-            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false, true);
             *
             *
             *

@@ -561,6 +561,10 @@
                         <include name="verifyDistrictSummaryWidgetOnDashboardInRegionViewAsInternalAdmin" />
                         <include name="verifyScheduleFunctionalityForBUViewAsInternalAdmin" />
                         <include name="verifyScheduleFunctionalityForRegionViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnScheduleInRegionViewAsInternalAdmin" />
+                        <include name="verifyTheContentBetweenWeeksOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyTheContentBetweenWeeksOnScheduleInRegionViewAsInternalAdmin" />
 
                         <!-- Added by Mary -->
                         <include name="verifyRegionViewNavigationAsInternalAdmin" />

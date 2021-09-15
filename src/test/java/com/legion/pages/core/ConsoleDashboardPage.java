@@ -2917,7 +2917,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void verifyTheContentOnOrgSummaryWidget(boolean isLaborBudgetToApply) throws Exception {
         WebElement viewSchedulesLink = widgetsOnUpperFieldDashboard.get(0).findElement(By.xpath("//div[contains(text(),\"View Schedules\")]"));
         WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
-		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All", "");
+		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All ", "");
 		if (isLaborBudgetToApply) {
 			if (isElementLoaded(orgSummaryWidgetTitle, 5)
 					&& orgSummaryWidgetTitle.getText().contains(org + " Summary")
@@ -2970,7 +2970,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void validateAsOfTimeUnderProjectedOnOrgSummaryWidget() throws Exception {
 		WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
-		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All", "");
+		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All ", "");
 		SimpleDateFormat dateFormat = new SimpleDateFormat();
 		dateFormat.applyPattern("MMM dd, h:mm a");
 		clickOnRefreshButton();
@@ -2991,7 +2991,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void clickOnViewSchedulesOnOrgSummaryWidget() throws Exception {
 		WebElement viewSchedulesLink = locationSummaryWidget.findElement(By.cssSelector(".sc-eJCack.fjssZO"));
 		WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
-		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All", "");
+		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All ", "");
 		if (isElementLoaded(viewSchedulesLink, 5)) {
 			clickTheElement(viewSchedulesLink);
 			if (scheduleConsoleMenu.findElement(By.xpath("./..")).getAttribute("class").contains("active"))

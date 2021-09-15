@@ -1,6 +1,7 @@
 package com.legion.pages.core;
 
 import com.legion.pages.*;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -155,6 +156,9 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @FindBy (xpath = "//span[contains(text(),'Not Started')]")
     private List<WebElement> notStartedSchedules;
 
+    @FindBy (xpath = "//span[contains(text(),'In Progress')]")
+    private List<WebElement> inProgressSchedules;
+
     @FindBy (className = "analytics-new-table-group-open")
     private List<WebElement> rowsInAnalyticsTable;
 
@@ -298,6 +302,24 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         } else
             SimpleUtils.fail("Schedule Page: There are no \"Not Started\" schedules in the current page",false);
         return notStartedLocations;
+    }
+
+    @Override
+    public List<String> getLocationsWithInProgressSchedules() throws Exception {
+        List<String> inProgressLocations = new ArrayList<>();
+        WebElement location = null;
+        if (isNotStartedScheduleDisplay()) {
+            for (int i=0; i < inProgressSchedules.size(); i++) {
+                location = inProgressSchedules.get(i).findElement(By.xpath(".//../../preceding-sibling::div[1]/span/span"));
+                inProgressLocations.add(location.getText());
+            }
+            if (inProgressSchedules.size() == inProgressLocations.size())
+                SimpleUtils.pass("Schedule Page: Get all the locations with Not Started Schedules successfully");
+            else
+                SimpleUtils.fail("Schedule Page: Get all the locations with Not Started Schedules incompletely",false);
+        } else
+            SimpleUtils.fail("Schedule Page: There are no \"Not Started\" schedules in the current page",false);
+        return inProgressLocations;
     }
 
     @Override
@@ -492,7 +514,11 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @FindBy(css = "[jj-switch-when=\"extraCells\"]")
     private List<WebElement>  projectedUnderOrOverBudgetByJobTitleHours;
 
+    @FindBy(css = "[fill=\"#919EAB\"]")
+    private List<WebElement>  colsInOrgSummarySmartCard;
 
+    @FindBy(css = ".published-clocked-cols-summary-description")
+    private List<WebElement> publishedClockedColsSummaryDescription;
 
     public void verifyTheScheduleStatusAccountOnScheduleStatusCards() throws Exception {
         Map<String, Integer> scheduleStatusAccountFromScheduleStatusCards = getScheduleStatusAccountFromScheduleStatusCards();
@@ -1070,44 +1096,65 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         return allScheduleInfo;
     }
 
-    public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isPastWeek) throws Exception {
-        if(isPastWeek){
-            if(
-//                    isElementLoaded(scheduleScoreSmartCard, 10) &&  //Score smart card should be turn off
-                    isElementLoaded(locationSummarySmartCard, 10)
-                            && areListElementVisible(scheduleStatusCards, 10)){
-                SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
-            } else
-                SimpleUtils.fail("The smart cards on Schedule DM view page for past week loaded fail! ", false);
-        } else {
-            if(
-//                    !isElementLoaded(scheduleScoreSmartCard, 10) && //Score smart card should be turn off
-                    isElementLoaded(locationSummarySmartCard, 10)
-                            && areListElementVisible(scheduleStatusCards, 10)){
-                SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
-            } else
-                SimpleUtils.fail("The smart cards on Schedule DM view page for past week loaded fail! ", false);
-        }
+    public void verifySmartCardsAreLoadedForPastOrFutureWeek(boolean isApplyBudget, boolean isPastWeek) throws Exception {
+        String[] columnNamesInOrgSummarySmartCard;
+        if (
+//                    isElementLoaded(scheduleScoreSmartCard, 10) &&  //Score smart card maybe turned off
+                isElementLoaded(locationSummarySmartCard, 10)
+                        && areListElementVisible(scheduleStatusCards, 10)) {
+            SimpleUtils.pass("All smart cards on Schedule DM view page for Past week loaded successfully! ");
+            if (isApplyBudget) {
+                if (isPastWeek)
+                    columnNamesInOrgSummarySmartCard = new String[]{"Budgeted Hrs", "Published Hrs",
+                            "Clocked Hrs", "Published Within Budget", "Published Over Budget"};
+                else
+                    columnNamesInOrgSummarySmartCard = new String[]{"Budgeted Hrs", "Scheduled Hrs",
+                            "Projected Hrs", "Scheduled Within Budget", "Scheduled Over Budget"};
+            } else {
+                if (isPastWeek)
+                    columnNamesInOrgSummarySmartCard = new String[]{"Guidance Hrs", "Published Hrs",
+                            "Clocked Hrs", "Published Within Guidance", "Published Over Guidance"};
+                else
+                    columnNamesInOrgSummarySmartCard = new String[]{"Guidance Hrs", "Scheduled Hrs",
+                            "Projected Hrs", "Scheduled Within Guidance", "Scheduled Over Guidance"};
+            }
+            for(int i = 0;i < colsInOrgSummarySmartCard.size(); i++){
+                if(colsInOrgSummarySmartCard.get(i).getText().equals(columnNamesInOrgSummarySmartCard[i])){
+                    SimpleUtils.pass("Schedule table header: " + colsInOrgSummarySmartCard.get(i).getText()+" display correctly! ");
+                } else
+                    SimpleUtils.fail("Schedule table header: " + columnNamesInOrgSummarySmartCard[i] +" display incorrectly! ", false);
+            }
+            for(int i = colsInOrgSummarySmartCard.size(); i < colsInOrgSummarySmartCard.size() + publishedClockedColsSummaryDescription.size(); i++){
+                if(publishedClockedColsSummaryDescription.get(i - colsInOrgSummarySmartCard.size()).getText().equals(columnNamesInOrgSummarySmartCard[i])){
+                    SimpleUtils.pass("Schedule table header: " + publishedClockedColsSummaryDescription.get(i - colsInOrgSummarySmartCard.size()).getText()+" display correctly! ");
+                } else
+                    SimpleUtils.fail("Schedule table header: " + columnNamesInOrgSummarySmartCard[i] +" display incorrectly! ", false);
+            }
+        } else
+            SimpleUtils.fail("The smart cards on Schedule upperfield view page for past week loaded fail! ", false);
     }
 
     public void verifySchedulesTableHeaderNames(boolean isApplyBudget, boolean isPastWeek) throws Exception {
-
+        WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
+        String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All ", "");
+        if (org.length() > 1)
+            org = org.substring(0, org.length()-1);
         if(areListElementVisible(schedulesTableHeaders, 10) && schedulesTableHeaders.size() == 7){
             String[] schedulesTableHeaderNames;
             if(isApplyBudget){
                 if(!isPastWeek)
-                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
-                            "Budgeted Hours", "Scheduled Hours", "Projected Hours", "Projected Under/Over Budget"};
+                    schedulesTableHeaderNames = new String[]{org, "Schedule Status", "Score",
+                            "Budget Hrs", "Scheduled Hrs", "Projected Hrs", "Budget Variance"};
                 else
-                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
-                            "Budgeted Hours", "Scheduled Hours", "Clocked Hours", "Under/Over Budget"};
+                    schedulesTableHeaderNames = new String[]{org, "Schedule Status", "Score",
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance"};
             } else {
                 if(!isPastWeek)
-                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
-                            "Guidance Hours", "Scheduled Hours", "Projected Hours", "Projected Under/Over Budget"};
+                    schedulesTableHeaderNames = new String[]{org, "Schedule Status", "Score",
+                            "Guidance Hrs", "Scheduled Hrs", "Projected Hrs", "Guidance Variance"};
                 else
-                    schedulesTableHeaderNames = new String[]{"Location", "Schedule Status", "Score",
-                            "Guidance Hours", "Scheduled Hours", "Clocked Hours", "Under/Over Budget"};
+                    schedulesTableHeaderNames = new String[]{org, "Schedule Status", "Score",
+                            "Guidance Hrs", "Published Hrs", "Clocked Hours", "Guidance Variance"};
             }
             for(int i= 0;i<schedulesTableHeaders.size(); i++){
                 if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){
