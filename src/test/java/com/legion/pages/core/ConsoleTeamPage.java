@@ -639,7 +639,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement newTimeOffBtn;
 	@FindBy (css = ".user-profile-section")
 	private List<WebElement> userProfileSections;
-	@FindBy (css = "[ng-click=\"actionClicked('Activate')\"]")
+	@FindBy (css = "[class=\"inline-block ng-scope\"] [ng-click=\"actionClicked('Activate')\"]")
 	private WebElement activateButton;
 	@FindBy (css = "div.activate")
 	private WebElement activateWindow;
@@ -649,13 +649,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement deactivateButton;
 	@FindBy (css = "[ng-click=\"actionClicked('Terminate')\"] button")
 	private WebElement terminateButton;
-	@FindBy (css = "[ng-click=\"actionClicked('CancelTerminate')\"]")
+	@FindBy (css = "[class=\"pull-left ng-isolate-scope\"][ng-click=\"actionClicked('CancelTerminate')\"]")
 	private WebElement cancelTerminateButton;
 	@FindBy (css = "div.legion-status div.invitation-status")
 	private WebElement onBoardedDate;
 	@FindBy (css = "div.legion-status>div:nth-child(2)")
 	private WebElement tmStatus;
-	@FindBy (css = "[ng-click=\"actionClicked('CancelDeactivate')\"]")
+	@FindBy (css = "[class=\"pull-left ng-isolate-scope\"][ng-click=\"actionClicked('CancelDeactivate')\"]")
 	private WebElement cancelActivateButton;
 	@FindBy (className = "modal-content")
 	private WebElement deactivateWindow;

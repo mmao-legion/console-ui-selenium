@@ -14826,13 +14826,18 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             if (strList.size()==13 && strList.get(0).contains("UNPLANNED CLOCKS") && strList.get(2).contains("Early Clocks")&& strList.get(4).contains("Late Clocks")&& strList.get(6).contains("Incomplete Clocks")
                     && strList.get(8).contains("Missed Meal")&& strList.get(10).contains("No Show")&& strList.get(12).contains("Unscheduled")){
                 SimpleUtils.pass("Title and info on Unplanned Clocks Smart Card are expected!");
-                if (SimpleUtils.isNumeric(strList.get(1)) && SimpleUtils.isNumeric(strList.get(3)) && SimpleUtils.isNumeric(strList.get(5)) && SimpleUtils.isNumeric(strList.get(7)) && SimpleUtils.isNumeric(strList.get(9)) && SimpleUtils.isNumeric(strList.get(11))){
-                    result.put(strList.get(2), Integer.parseInt(strList.get(1)));
-                    result.put(strList.get(4), Integer.parseInt(strList.get(3)));
-                    result.put(strList.get(6), Integer.parseInt(strList.get(5)));
-                    result.put(strList.get(8), Integer.parseInt(strList.get(7)));
-                    result.put(strList.get(10), Integer.parseInt(strList.get(9)));
-                    result.put(strList.get(12), Integer.parseInt(strList.get(11)));
+                if (SimpleUtils.isNumeric(strList.get(1).replace(",", ""))
+                        && SimpleUtils.isNumeric(strList.get(3).replace(",", ""))
+                        && SimpleUtils.isNumeric(strList.get(5).replace(",", ""))
+                        && SimpleUtils.isNumeric(strList.get(7).replace(",", ""))
+                        && SimpleUtils.isNumeric(strList.get(9).replace(",", ""))
+                        && SimpleUtils.isNumeric(strList.get(11).replace(",", ""))){
+                    result.put(strList.get(2), Integer.parseInt(strList.get(1).replace(",", "")));
+                    result.put(strList.get(4), Integer.parseInt(strList.get(3).replace(",", "")));
+                    result.put(strList.get(6), Integer.parseInt(strList.get(5).replace(",", "")));
+                    result.put(strList.get(8), Integer.parseInt(strList.get(7).replace(",", "")));
+                    result.put(strList.get(10), Integer.parseInt(strList.get(9).replace(",", "")));
+                    result.put(strList.get(12), Integer.parseInt(strList.get(11).replace(",", "")));
                 } else {
                     SimpleUtils.fail("Datas on UNPLANNED CLOCKS smart card aren't numeric!", false);
                 }

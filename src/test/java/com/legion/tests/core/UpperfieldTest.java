@@ -1695,12 +1695,14 @@ public class UpperfieldTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
             String districtName = selectedUpperFields.get(District);
+            Thread.sleep(5000);
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             locationSelectorPage.isRegionView();
 
             //Validate user has see multiple regions in upperfield dropdown list
             List<String> upperFieldNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList(Region);
-            SimpleUtils.assertOnFail("The selected region should display in the search region dropdown list!", upperFieldNames.contains(selectedUpperFields.get(Region)), false);
+            SimpleUtils.assertOnFail("The selected region should display in the search region dropdown list!",
+                    upperFieldNames.contains(selectedUpperFields.get(Region)), false);
 
             //Validate drilling into a district
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
@@ -1769,7 +1771,6 @@ public class UpperfieldTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
-            String districtName = selectedUpperFields.get(District);
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String buName = selectedUpperFields.get(BusinessUnit);
@@ -2165,7 +2166,6 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.report("Total Extra Hours In Region View for future week is " + totalExtraHoursInRegionViewForFuture);
             SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the future week's data",
                     totalExtraHoursInRegionViewForFuture.equals("0"), false);
-
 
             // Validate Late Schedule is Yes or No
             compliancePage.navigateToPreviousWeek();

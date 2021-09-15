@@ -954,7 +954,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(xpath = "//*[contains(text(),'Refresh')]")
 	private WebElement refreshButton;
 
-	@FindBy(xpath = "//div[@class='last-updated-countdown']/i/following-sibling::span")
+	@FindBy(css = "div.react-dm-dashboard p")
 	private WebElement lastUpdatedIcon;
 
 
@@ -2717,6 +2717,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 //					}
 //				}
                 //compare the hours between widgets on dashboard page
+				clickOnRefreshButton();
 				String budgetHoursFromDashboard = budgetHoursMessageSpan.getText().split(" ")[0];
 				if (budgetHoursMessageOnLocationSummaryWidget.getText().split(" ")[0].equalsIgnoreCase(budgetHoursFromDashboard)) {
 					SimpleUtils.pass("Budget hrs display correctly on Schedule Vs Guidance By Day Widget!");
@@ -2728,6 +2729,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				click(scheduleConsoleMenu);
 				waitForSeconds(3);
 				ScheduleDMViewPage scheduleDMViewPage = new ConsoleScheduleDMViewPage();
+				scheduleDMViewPage.clickOnRefreshButton();
 				String budgetHoursFromSchedulePage = scheduleDMViewPage.
 						getTextFromTheChartInLocationSummarySmartCard().get(4).split(" ")[0];
 				if (budgetHoursFromDashboard.equalsIgnoreCase(budgetHoursFromSchedulePage)) {
