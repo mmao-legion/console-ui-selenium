@@ -954,7 +954,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(xpath = "//*[contains(text(),'Refresh')]")
 	private WebElement refreshButton;
 
-	@FindBy(css = ".react-dm-dashboard p")
+	@FindBy(xpath = "//div[@class='last-updated-countdown']/i/following-sibling::span")
 	private WebElement lastUpdatedIcon;
 
 
@@ -963,7 +963,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		waitForSeconds(3);
 		if (isElementLoaded(refreshButton, 20)) {
 			clickTheElement(refreshButton);
-			if(isElementLoaded(lastUpdatedIcon, 120)){
+			if(isElementLoaded(lastUpdatedIcon, 120) && lastUpdatedIcon.getText().equalsIgnoreCase("JUST UPDATED")){
 				SimpleUtils.pass("Click on Refresh button Successfully!");
 			} else
 				SimpleUtils.fail("Refresh timeout! ", false);

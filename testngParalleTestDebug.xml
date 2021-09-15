@@ -36,7 +36,6 @@
                     <include name="validateCreateChangeAvailabilityRequestAsStoreManager" />
                     <include name="validateCancelAvailabilityRequestAsStoreManager" />
                     <include name="validateApproveAvailabilityRequestAsStoreManager" />
-                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
                     <include name="validateRejectAvailabilityRequestAsStoreManager" />
                     <include name="validateCreateAvailabilityRequestWithoutApprovalAsInternalAdmin" />
                 </methods>
@@ -99,10 +98,6 @@
                 <methods>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftIsNotDuringTheSettingTimeAsInternalAdmin" />
                     <include name="verifyWarningMessageForExceedWeekendHrsAsInternalAdmin"/>
-                    <include name="verifyMinorInfoOnProfilePageAsInternalAdmin" />
-                    <include name="verifyMinorFilterAsInternalAdmin" />
-                    <include name="verifyMinorBadgeInfoAsInternalAdmin" />
-                    <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
@@ -252,16 +247,10 @@
                     <include name="verifyDragDropToTheBlankFirstDayToCopyShiftAsInternalAdmin" />
                     <include name="verifyDragDropToTheFirstDayToMoveShiftAsInternalAdmin" />
                     <include name="verifyDragDropToTheBlankFirstDayToMoveShiftAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Delete Schedule Test">
-        <classes>
-            <class name="com.legion.tests.core.DeleteScheduleTest">
-                <methods>
-                    <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
+                    <include name="verifyDragDropToTheLastDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankLastDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheLastDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankLastDayToMoveShiftAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

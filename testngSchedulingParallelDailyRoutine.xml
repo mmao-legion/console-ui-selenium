@@ -100,7 +100,7 @@
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
                     <include name="validateTheOOOHShiftsAsInternalAdmin" />
                     <include name="validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin" />
-                    <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />
+<!--                    <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5074 -->
                 </methods>
             </class>
         </classes>
@@ -130,6 +130,7 @@
                     <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                     <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin" />
                     <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />
+                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
                 </methods>
             </class>
         </classes>
@@ -238,6 +239,9 @@
             <class name="com.legion.tests.core.SchedulingMinorTest">
                 <methods>
                     <include name="verifyEditMinorRulesAsInternalAdmin"/>
+                    <include name="verifyMinorInfoOnProfilePageAsInternalAdmin" />
+                    <include name="verifyMinorFilterAsInternalAdmin" />
+                    <include name="verifyMinorBadgeInfoAsInternalAdmin" />
 <!--                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
                     <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />

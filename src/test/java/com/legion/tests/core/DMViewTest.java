@@ -1648,7 +1648,11 @@ public class DMViewTest extends TestBase {
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
             dashboardPage.clickOnDashboardConsoleMenu();
 
-            //Validate the Schedule Vs Guidance By Day widget is loaded on dashboard
+            //Try to refresh the Guidance message
+            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            schedulePage.clickOnScheduleConsoleMenuItem();
+            dashboardPage.clickOnDashboardConsoleMenu();
+            //Validate the Schedule Vs Guidance By Day widget is loaded on dashboard‘
             SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
                     dashboardPage.isScheduleVsGuidanceByDayWidgetDisplay(), false);
 
@@ -1695,9 +1699,12 @@ public class DMViewTest extends TestBase {
 
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         controlsNewUIPage.clickOnControlsConsoleMenu();
+        controlsNewUIPage.clickOnGlobalLocationButton();
         controlsNewUIPage.clickOnControlsSchedulingPolicies();
         controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-
+        dashboardPage.clickOnDashboardConsoleMenu();
+        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        schedulePage.clickOnScheduleConsoleMenuItem();
         dashboardPage.clickOnDashboardConsoleMenu();
         String districtName = dashboardPage.getCurrentDistrict();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1715,7 +1722,6 @@ public class DMViewTest extends TestBase {
 
         //Validate the hours on Location Summary widget is consistent with the hours on schedule page
         List<String> dataFromLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         schedulePage.clickOnScheduleConsoleMenuItem();
         ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         List<Float> totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();

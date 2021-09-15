@@ -689,4 +689,5 @@ public interface SchedulePage {
 	public String getIIconTextInfo(WebElement shift) throws Exception;
 	public String getHeaderOnSchedule() throws Exception;
 	public void verifyHeaderOnSchedule() throws Exception;
+	public void verifyShiftInfoIsCorrectOnMealBreakPopUp(List<String> expectedShiftInfo) throws Exception;
 }

@@ -272,6 +272,10 @@
                     <include name="verifyDragDropToTheBlankFirstDayToCopyShiftAsInternalAdmin" />
                     <include name="verifyDragDropToTheFirstDayToMoveShiftAsInternalAdmin" />
                     <include name="verifyDragDropToTheBlankFirstDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheLastDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankLastDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheLastDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankLastDayToMoveShiftAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -603,6 +607,10 @@
                         <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" />
                         <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
                         <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
+                        <include name="verifyScheduleStatusOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
+                        <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInRegionViewAsInternalAdmin" />
                     </methods>
                 </class>
             </classes>
