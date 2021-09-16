@@ -4764,4 +4764,19 @@ private List<WebElement> locationColumn;
 			SimpleUtils.fail("Calendar month names fail to load! ", false);
 		return  calendarMonthNames;
 	}
+
+
+
+	@FindBy (xpath = "//div[contains(@class,'calendar-cell ng-binding ng-scope non-school-day day-bold')]/preceding-sibling::div")
+	private List<WebElement> theNonSummerDaysInTheLastSchoolMonth;
+
+	public void setNonSchoolDaysForNonSchoolWeek () {
+		if (areListElementVisible(theNonSummerDaysInTheLastSchoolMonth, 10)) {
+			//Click the school days in the last school week to change to non-school day
+			click(theNonSummerDaysInTheLastSchoolMonth.get(theNonSummerDaysInTheLastSchoolMonth.size() - 1));
+			SimpleUtils.pass("Set the non-school week successfully! ");
+		} else {
+			SimpleUtils.fail("The school days fail to load! ", false);
+		}
+	}
 }

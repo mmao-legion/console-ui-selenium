@@ -165,6 +165,7 @@ public class CinemarkMinorTest extends TestBase {
                     (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
 
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
+            teamPage.setNonSchoolDaysForNonSchoolWeek();
             teamPage.inputCalendarName(calendarName);
             teamPage.clickOnSaveSchoolCalendarBtn();
             teamPage.goToTeam();
@@ -1492,8 +1493,8 @@ public class CinemarkMinorTest extends TestBase {
 
         if (isSchoolWeek){
             schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
         } else if (isNonSchoolWeek){
+            schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
         } else {
             schedulePage.navigateToNextWeek();

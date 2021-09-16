@@ -180,4 +180,5 @@ public interface TeamPage {
 	public List<String> getCalendarCurrentStartAndEndTime();
 	public void clickOnCancelSchoolSessionCalendarBtn() throws Exception;
 	public List<String> getAllCalendarMonthNames();
+	public void setNonSchoolDaysForNonSchoolWeek();
 }
