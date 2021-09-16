@@ -1410,7 +1410,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify the school week  settings for the Minors of Age 16 or 17")
+    @TestName(description = "Verify the school week settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{

@@ -14754,12 +14754,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public int getIndexOfColInDMViewTable(String colName) throws Exception {
         int index = 0;
+        boolean colExist = false;
         if (isElementLoaded(locationTableHeader, 10)){
             for (String s: locationTableHeader.getText().replace("\n(Hrs)","").split("\n")){
                 ++index;
                 if (s.toLowerCase().contains(colName.toLowerCase())){
+                    colExist = true;
                     break;
                 }
+            }
+            if (!colExist) {
+                index = 0;
             }
         } else {
             SimpleUtils.fail("Table header fail to load!", false);
