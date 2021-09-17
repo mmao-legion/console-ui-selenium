@@ -1715,7 +1715,7 @@ public class DMViewTest extends TestBase {
                 dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
         //Validate the content on Location Summary widget display correctly
-        dashboardPage.verifyTheContentOnOrgSummaryWidget(true);
+        dashboardPage.verifyTheContentOnOrgSummaryWidget(false, true);
 
         //Validate the Hrs Over Or Under Budget On Location Summary Widget
         dashboardPage.verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget();

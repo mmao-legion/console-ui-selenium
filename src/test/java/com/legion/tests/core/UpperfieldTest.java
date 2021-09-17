@@ -995,7 +995,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Regions Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
             // Validate the content in Region Summary widget
-            dashboardPage.verifyTheContentOnOrgSummaryWidget(true);
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(true,true);
 
             // Validate region number in Region Summary widget
             List<String> regionList = locationSelectorPage.getOrgList();
@@ -1061,7 +1061,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Regions Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
             // Validate the content in Region Summary widget
-            dashboardPage.verifyTheContentOnOrgSummaryWidget(false);
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(true,false);
 
             //  Validate Guidance Hrs match
             dataFromRegionSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
@@ -1102,7 +1102,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Districts Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
             // Validate the content in Region Summary widget
-            dashboardPage.verifyTheContentOnOrgSummaryWidget(true);
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(true, true);
 
             // Validate district number in Region Summary widget
             List<String> districtList = locationSelectorPage.getOrgList();
@@ -1169,7 +1169,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Districts Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
             // Validate the content in Region Summary widget
-            dashboardPage.verifyTheContentOnOrgSummaryWidget(false);
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(true, false);
 
             //  Validate Guidance Hrs match
             dataFromDistrictSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
@@ -2715,7 +2715,7 @@ public class UpperfieldTest extends TestBase {
             float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
             float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
             float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
-            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Double Time"))));
 
             if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
                 HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
@@ -2768,7 +2768,7 @@ public class UpperfieldTest extends TestBase {
             float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
             float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
             float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
-            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Double Time"))));
 
             if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
                 HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
@@ -3091,7 +3091,7 @@ public class UpperfieldTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            Thread.sleep(5000);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
@@ -3145,7 +3145,7 @@ public class UpperfieldTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            Thread.sleep(5000);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
@@ -3613,7 +3613,7 @@ public class UpperfieldTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            Thread.sleep(5000);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);

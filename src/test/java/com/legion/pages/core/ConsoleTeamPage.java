@@ -4539,7 +4539,7 @@ private List<WebElement> locationColumn;
 
 	public boolean checkIfTMExists(String tmName) throws Exception {
 		boolean isTMExists = false;
-		if(isElementLoaded(teamMemberSearchBox, 10) && areListElementVisible(teamMembers, 20)) {
+		if(isElementLoaded(teamMemberSearchBox, 20) && areListElementVisible(teamMembers, 20)) {
 			teamMemberSearchBox.clear();
 			teamMemberSearchBox.sendKeys(tmName);
 			waitForSeconds(4);

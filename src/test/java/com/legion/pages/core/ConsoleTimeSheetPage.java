@@ -2326,22 +2326,22 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 	public void validateLoadingOfTimeSheetSmartCard() throws Exception {
-		if(isElementEnabled(timesheetApprovalSmartCard,5)){
+		if(isElementEnabled(timesheetApprovalSmartCard,10)){
 			SimpleUtils.pass("Timesheet Approval Smart Card loaded Successfully!!");
 		}else{
 			SimpleUtils.fail("Timesheet Approval Smart Card not loaded Successfully!!",true);
 		}
-		if(isElementEnabled(totalUnplannedClocksSmartCard,5)){
+		if(isElementEnabled(totalUnplannedClocksSmartCard,10)){
 			SimpleUtils.pass("Total Unplanned Smart Card loaded Successfully!!");
 		}else{
 			SimpleUtils.fail("Total Unplanned Smart Card not loaded Successfully!!",true);
 		}
-		if(isElementEnabled(SummaryOfUnplannedClocksSmartCard,5)){
+		if(isElementEnabled(SummaryOfUnplannedClocksSmartCard,10)){
 			SimpleUtils.pass("Unplanned Clocks Detail Summary Smart Card loaded Successfully!!");
 		}else{
 			SimpleUtils.fail("Unplanned Clocks Detail Summary Smart Card not loaded Successfully!!",true);
 		}
-		if(areListElementVisible(timesheetTblRow,5)){
+		if(areListElementVisible(timesheetTblRow,10)){
 			SimpleUtils.pass("Rows of Timesheet table loaded Successfully on page!!");
 		}else{
 			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully on page!!",false);

@@ -2916,7 +2916,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return title;
 	}
 
-	public void verifyTheContentOnOrgSummaryWidget(boolean isLaborBudgetToApply) throws Exception {
+	public void verifyTheContentOnOrgSummaryWidget(boolean isClockEnable, boolean isLaborBudgetToApply) throws Exception {
         WebElement viewSchedulesLink = widgetsOnUpperFieldDashboard.get(0).findElement(By.xpath("//div[contains(text(),\"View Schedules\")]"));
         WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
 		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All ", "");
@@ -2930,7 +2930,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
 					&& areListElementVisible(bugetedScheduledProjectedHours, 5)
 					&& bugetedScheduledProjectedHours.size() == 3
-					&& isElementLoaded(projectedHoursAsCurrentTime, 5)
+					&& (isClockEnable? isElementLoaded(projectedHoursAsCurrentTime, 5): true)
 					&& isElementLoaded(projectedWithinBudgetCaret, 5)
 					&& isElementLoaded(projectedOverBudgetCaret, 5)
 					&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
