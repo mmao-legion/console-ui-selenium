@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest">
+<suite verbose ="0" thread-count="10" name="LegionTest" parallel="tests">
     <parameter name="environment" value="QA"/>
-    <parameter name="testRail" value="No"/>
+    <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Scheduling OP Enabled Regression"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
@@ -212,35 +212,6 @@
             </classes>
         </test>-->
 
-<!--    <test name="Upperfield Test">
-        <classes>
-            <class name="com.legion.tests.core.UpperfieldTest">
-                <methods>
-
-                    <include name="verifyRegionViewNavigationAsInternalAdmin" />
-                    <include name="verifyBUViewNavigationAsInternalAdmin" />
-                    <include name="verifyControlsInBUViewAsInternalAdmin" />
-                    <include name="verifyControlsInRegionViewAsInternalAdmin" />
-                    <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
-                    <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
-                    <include name="verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyRefreshFeatureOnComplianceInRegionViewAsInternalAdmin" />
-                    <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" />
-                    <include name="verifyTotalLocationsWithViolationCardInComplianceBUViewAsInternalAdmin" />
-                    <include name="verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin" />
-                    <include name="verifyTopViolationsCardInComplianceBUViewAsInternalAdmin" />
-                    <include name="verifyTopViolationsCardInComplianceRegionViewAsInternalAdmin" />
-                    <include name="verifyAnalyticTableInTimesheetBUViewAsInternalAdmin" />
-                    <include name="verifyAnalyticTableInTimesheetRegionViewAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test> Will add back when upper field auto finish -->
     <test name="Upperfield Test">
         <classes>
             <class name="com.legion.tests.core.UpperfieldTest">
