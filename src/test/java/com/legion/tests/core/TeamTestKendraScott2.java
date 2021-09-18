@@ -349,7 +349,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	}
 
 	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
+	@Owner(owner = "Nora&Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the team functionality in Roster - Sort")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
@@ -386,6 +386,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			teamPage.verifyTheSortFunctionInRosterByColumnName("EMPLOYEE ID");
 			// Verify JOB TITLE column can be sorted in ascending or descending order
 			teamPage.verifyTheSortFunctionInRosterByColumnName("JOB TITLE");
+			// Verify EMPLOYMENT column can be sorted in ascending or descending order
+			teamPage.verifyTheSortFunctionInRosterByColumnName("EMPLOYMENT");
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}

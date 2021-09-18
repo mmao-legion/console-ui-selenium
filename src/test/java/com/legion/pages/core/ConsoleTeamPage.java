@@ -697,6 +697,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> employeeIDsInRoster;
 	@FindBy(css = ".tr .lgn-xs-4 .title")
 	private List<WebElement> jobTitlesInRoster;
+	@FindBy(css = ".tr .employedStatus")
+	private List<WebElement> employmentStatus;
 
 	@Override
 	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception {
@@ -725,6 +727,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			targetList = getEmployeeIDListInRoster();
 		} else if (columnName.equals("JOB TITLE")) {
 			targetList = getJobTitleListInRoster();
+		} else if (columnName.equals("EMPLOYMENT")) {
+			targetList = getEmploymentListInRoster();
 		}
 		String className = column.getAttribute("class");
 		List<String> currentList = targetList;
@@ -778,6 +782,16 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 		}
 		return names;
+	}
+
+	private List<String> getEmploymentListInRoster() {
+		List<String> employments = new ArrayList<>();
+		if (areListElementVisible(employmentStatus, 5)) {
+			for (WebElement name : employmentStatus) {
+				employments.add(name.getText());
+			}
+		}
+		return employments;
 	}
 
 	@Override
@@ -3616,6 +3630,18 @@ private List<WebElement> locationColumn;
 			return true;
 		}else
 			return  false;
+	}
+
+	@Override
+	public boolean isColumnExisted(String colName) throws Exception {
+		if (areListElementVisible(columnsInRoster, 10)){
+			for (WebElement element: columnsInRoster){
+				if (colName.equalsIgnoreCase(element.getText())){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@FindBy(xpath = "//span[contains(text(),'School Calendars')]")
