@@ -1,6 +1,7 @@
 package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
+import com.legion.pages.ScheduleCommonPage;
 import com.legion.pages.SchedulePage;
 import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.tests.core.ScheduleNewUITest.SchedulePageSubTabText;
@@ -963,41 +964,41 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    @Override
-    public void clickOnWeekView() throws Exception {
-		/*WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
-			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'week')\"]"));*/
-
-        WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
-                findElement(By.cssSelector("div.lg-button-group-last"));
-        if (isElementLoaded(scheduleWeekViewButton,15)) {
-            if (!scheduleWeekViewButton.getAttribute("class").toString().contains("selected"))//selected
-            {
-                clickTheElement(scheduleWeekViewButton);
-            }
-            SimpleUtils.pass("Schedule page week view loaded successfully!");
-        } else {
-            SimpleUtils.fail("Schedule Page Week View Button not Loaded Successfully!", true);
-        }
-    }
-
-
-    @Override
-    public void clickOnDayView() throws Exception {
-		/*WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
-			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'day')\"]"));*/
-        WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
-                findElement(By.cssSelector("div.lg-button-group-first"));
-
-        if (isElementLoaded(scheduleDayViewButton)) {
-            if (!scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
-                click(scheduleDayViewButton);
-            }
-            SimpleUtils.pass("Schedule Page day view loaded successfully!");
-        } else {
-            SimpleUtils.fail("Schedule Page Day View Button not Loaded Successfully!", true);
-        }
-    }
+//    @Override
+//    public void clickOnWeekView() throws Exception {
+//		/*WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
+//			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'week')\"]"));*/
+//
+//        WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
+//                findElement(By.cssSelector("div.lg-button-group-last"));
+//        if (isElementLoaded(scheduleWeekViewButton,15)) {
+//            if (!scheduleWeekViewButton.getAttribute("class").toString().contains("selected"))//selected
+//            {
+//                clickTheElement(scheduleWeekViewButton);
+//            }
+//            SimpleUtils.pass("Schedule page week view loaded successfully!");
+//        } else {
+//            SimpleUtils.fail("Schedule Page Week View Button not Loaded Successfully!", true);
+//        }
+//    }
+//
+//
+//    @Override
+//    public void clickOnDayView() throws Exception {
+//		/*WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
+//			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'day')\"]"));*/
+//        WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
+//                findElement(By.cssSelector("div.lg-button-group-first"));
+//
+//        if (isElementLoaded(scheduleDayViewButton)) {
+//            if (!scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
+//                click(scheduleDayViewButton);
+//            }
+//            SimpleUtils.pass("Schedule Page day view loaded successfully!");
+//        } else {
+//            SimpleUtils.fail("Schedule Page Day View Button not Loaded Successfully!", true);
+//        }
+//    }
 
 
     @FindBy(xpath = "//*[@class='shift-hover-seperator']/following-sibling::div[1]/div[1]")
@@ -1164,48 +1165,48 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    @Override
-    public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) {
-        String currentWeekStartingDay = "NA";
-        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
-        for (int i = 0; i < weekCount; i++) {
-            if (ScheduleCalendarDayLabels.size() != 0) {
-                currentWeekStartingDay = ScheduleCalendarDayLabels.get(0).getText();
-            }
-
-            int displayedWeekCount = ScheduleCalendarDayLabels.size();
-            for (WebElement ScheduleCalendarDayLabel : ScheduleCalendarDayLabels) {
-                if (ScheduleCalendarDayLabel.getAttribute("class").toString().contains("day-week-picker-period-active")) {
-                    if (nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future")) {
-                        try {
-                            int activeWeekIndex = ScheduleCalendarDayLabels.indexOf(ScheduleCalendarDayLabel);
-                            if (activeWeekIndex < (displayedWeekCount - 1)) {
-                                click(ScheduleCalendarDayLabels.get(activeWeekIndex + 1));
-                            } else {
-                                click(calendarNavigationNextWeekArrow);
-                                click(ScheduleCalendarDayLabels.get(0));
-                            }
-                        } catch (Exception e) {
-                            SimpleUtils.report("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '" + ScheduleCalendarDayLabel.getText().replace("\n", "") + "'");
-                        }
-                    } else {
-                        try {
-                            int activeWeekIndex = ScheduleCalendarDayLabels.indexOf(ScheduleCalendarDayLabel);
-                            if (activeWeekIndex > 0) {
-                                click(ScheduleCalendarDayLabels.get(activeWeekIndex - 1));
-                            } else {
-                                click(calendarNavigationPreviousWeekArrow);
-                                click(ScheduleCalendarDayLabels.get(displayedWeekCount - 1));
-                            }
-                        } catch (Exception e) {
-                            SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '" + ScheduleCalendarDayLabel.getText().replace("\n", "") + "'", true);
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-    }
+//    @Override
+//    public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) {
+//        String currentWeekStartingDay = "NA";
+//        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+//        for (int i = 0; i < weekCount; i++) {
+//            if (ScheduleCalendarDayLabels.size() != 0) {
+//                currentWeekStartingDay = ScheduleCalendarDayLabels.get(0).getText();
+//            }
+//
+//            int displayedWeekCount = ScheduleCalendarDayLabels.size();
+//            for (WebElement ScheduleCalendarDayLabel : ScheduleCalendarDayLabels) {
+//                if (ScheduleCalendarDayLabel.getAttribute("class").toString().contains("day-week-picker-period-active")) {
+//                    if (nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future")) {
+//                        try {
+//                            int activeWeekIndex = ScheduleCalendarDayLabels.indexOf(ScheduleCalendarDayLabel);
+//                            if (activeWeekIndex < (displayedWeekCount - 1)) {
+//                                click(ScheduleCalendarDayLabels.get(activeWeekIndex + 1));
+//                            } else {
+//                                click(calendarNavigationNextWeekArrow);
+//                                click(ScheduleCalendarDayLabels.get(0));
+//                            }
+//                        } catch (Exception e) {
+//                            SimpleUtils.report("Schedule page Calender Next Week Arrows Not Loaded/Clickable after '" + ScheduleCalendarDayLabel.getText().replace("\n", "") + "'");
+//                        }
+//                    } else {
+//                        try {
+//                            int activeWeekIndex = ScheduleCalendarDayLabels.indexOf(ScheduleCalendarDayLabel);
+//                            if (activeWeekIndex > 0) {
+//                                click(ScheduleCalendarDayLabels.get(activeWeekIndex - 1));
+//                            } else {
+//                                click(calendarNavigationPreviousWeekArrow);
+//                                click(ScheduleCalendarDayLabels.get(displayedWeekCount - 1));
+//                            }
+//                        } catch (Exception e) {
+//                            SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable after '" + ScheduleCalendarDayLabel.getText().replace("\n", "") + "'", true);
+//                        }
+//                    }
+//                    break;
+//                }
+//            }
+//        }
+//    }
 
 
     @Override
@@ -2443,7 +2444,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public boolean inActiveWeekDayClosed(int dayIndex) throws Exception {
         if (isWeekGenerated()) {
-            navigateDayViewWithIndex(dayIndex);
+            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+            scheduleCommonPage.navigateDayViewWithIndex(dayIndex);
             if (isElementLoaded(holidayLogoContainer))
                 return true;
         } else {
@@ -2456,44 +2458,44 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-    @Override
-    public void navigateDayViewWithIndex(int dayIndex) {
-        if (dayIndex < 7 && dayIndex >= 0) {
-            try {
-                clickOnDayView();
-                List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
-                if (ScheduleCalendarDayLabels.size() == 7) {
-                    click(ScheduleCalendarDayLabels.get(dayIndex));
-                }
-            } catch (Exception e) {
-                SimpleUtils.fail("Unable to navigate to in Day View", false);
-            }
-        } else {
-            SimpleUtils.fail("Invalid dayIndex value to verify Store is Closed for the day", false);
-        }
+//    @Override
+//    public void navigateDayViewWithIndex(int dayIndex) {
+//        if (dayIndex < 7 && dayIndex >= 0) {
+//            try {
+//                clickOnDayView();
+//                List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+//                if (ScheduleCalendarDayLabels.size() == 7) {
+//                    click(ScheduleCalendarDayLabels.get(dayIndex));
+//                }
+//            } catch (Exception e) {
+//                SimpleUtils.fail("Unable to navigate to in Day View", false);
+//            }
+//        } else {
+//            SimpleUtils.fail("Invalid dayIndex value to verify Store is Closed for the day", false);
+//        }
+//
+//    }
 
-    }
-
-    @Override
-    public void navigateDayViewWithDayName(String dayName) throws Exception {
-        // The day name should be: Fri, Sat, Sun, Mon, Tue, Wed, Thu
-        clickOnDayView();
-        List<WebElement> scheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
-        if (scheduleCalendarDayLabels.size() == 7) {
-            boolean isDayNameExists = false;
-            for (WebElement day: scheduleCalendarDayLabels ){
-                if (day.getText().contains(dayName)) {
-                    click(day);
-                    isDayNameExists = true;
-                    break;
-                }
-            }
-            if(!isDayNameExists){
-                SimpleUtils.fail("The day name is not exists", false);
-            }
-        } else
-            SimpleUtils.fail("Week day picker display incorrectly! ", false);
-    }
+//    @Override
+//    public void navigateDayViewWithDayName(String dayName) throws Exception {
+//        // The day name should be: Fri, Sat, Sun, Mon, Tue, Wed, Thu
+//        clickOnDayView();
+//        List<WebElement> scheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+//        if (scheduleCalendarDayLabels.size() == 7) {
+//            boolean isDayNameExists = false;
+//            for (WebElement day: scheduleCalendarDayLabels ){
+//                if (day.getText().contains(dayName)) {
+//                    click(day);
+//                    isDayNameExists = true;
+//                    break;
+//                }
+//            }
+//            if(!isDayNameExists){
+//                SimpleUtils.fail("The day name is not exists", false);
+//            }
+//        } else
+//            SimpleUtils.fail("Week day picker display incorrectly! ", false);
+//    }
 
     @Override
     public String getActiveGroupByFilter() throws Exception {
@@ -2519,7 +2521,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public boolean isActiveWeekAssignedToCurrentUser(String userName) throws Exception {
-        clickOnWeekView();
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        scheduleCommonPage.clickOnWeekView();
         if (shiftsOnScheduleView.size() != 0) {
             for (WebElement shiftOnScheduleView : shiftsOnScheduleView) {
                 if (shiftOnScheduleView.getText().trim().length() > 0 && shiftOnScheduleView.isDisplayed()
@@ -3202,7 +3205,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @Override
     public void convertAllUnAssignedShiftToOpenShift() throws Exception {
         if (verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue())) {
-            clickOnWeekView();
+            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+            scheduleCommonPage.clickOnWeekView();
             clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             for (WebElement unAssignedShift : getUnAssignedShifts()) {
                 convertUnAssignedShiftToOpenShift(unAssignedShift);
@@ -3281,24 +3285,24 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
-    @Override
-    public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception {
-        String dayType = "Next";
-        int dayCount = 1;
-        if (isStoreClosedForActiveWeek())
-            navigateWeekViewOrDayViewToPastOrFuture(dayType, dayCount);
-        if (!isStoreClosedForActiveWeek())
-            SimpleUtils.pass("Navigated to Next day successfully!");
-    }
-
-    @Override
-    public boolean isStoreClosedForActiveWeek() throws Exception {
-        if (isElementLoaded(holidayLogoContainer, 10)) {
-            SimpleUtils.report("Store is Closed for the Day/Week: '" + getActiveWeekText() + "'.");
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception {
+//        String dayType = "Next";
+//        int dayCount = 1;
+//        if (isStoreClosedForActiveWeek())
+//            navigateWeekViewOrDayViewToPastOrFuture(dayType, dayCount);
+//        if (!isStoreClosedForActiveWeek())
+//            SimpleUtils.pass("Navigated to Next day successfully!");
+//    }
+//
+//    @Override
+//    public boolean isStoreClosedForActiveWeek() throws Exception {
+//        if (isElementLoaded(holidayLogoContainer, 10)) {
+//            SimpleUtils.report("Store is Closed for the Day/Week: '" + getActiveWeekText() + "'.");
+//            return true;
+//        }
+//        return false;
+//    }
 
     @Override
     public void validateBudgetPopUpHeader(String nextWeekView, int weekCount) {
@@ -5722,22 +5726,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    public void clickOnNextDaySchedule(String activeDay) throws Exception {
-        List<WebElement> activeWeek = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
-        for(int i=0; i<activeWeek.size();i++){
-            String currentDay = activeWeek.get(i).getText().replace("\n", " ").substring(0,3);
-            if(currentDay.equalsIgnoreCase(activeDay)){
-                if(i== activeWeek.size()-1){
-                    navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(),
-                            ScheduleNewUITest.weekCount.One.getValue());
-                    waitForSeconds(3);
-                }else{
-                    click(activeWeek.get(i+1));
-                }
-            }
-        }
-
-    }
+//    public void clickOnNextDaySchedule(String activeDay) throws Exception {
+//        List<WebElement> activeWeek = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+//        for(int i=0; i<activeWeek.size();i++){
+//            String currentDay = activeWeek.get(i).getText().replace("\n", " ").substring(0,3);
+//            if(currentDay.equalsIgnoreCase(activeDay)){
+//                if(i== activeWeek.size()-1){
+//                    navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(),
+//                            ScheduleNewUITest.weekCount.One.getValue());
+//                    waitForSeconds(3);
+//                }else{
+//                    click(activeWeek.get(i+1));
+//                }
+//            }
+//        }
+//
+//    }
 
     public void selectTeamMembersOptionForSchedule() throws Exception {
         if(isElementEnabled(btnSearchTeamMember,5)){
@@ -6850,16 +6854,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow, String currentTime) throws Exception {
         HashMap<String, String> upComingShifts = new HashMap<>();
         String activeDay = null;
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         if (isStartTomorrow) {
             activeDay = getActiveAndNextDay();
-            clickOnNextDaySchedule(activeDay);
+            scheduleCommonPage.clickOnNextDaySchedule(activeDay);
             upComingShifts = getAvailableShiftsForDayView(upComingShifts);
         }else {
             upComingShifts = getShiftsForCurrentDayIfStartingSoon(upComingShifts, currentTime);
         }
         while (upComingShifts.size() < 4) {
             activeDay = getActiveAndNextDay();
-            clickOnNextDaySchedule(activeDay);
+            scheduleCommonPage.clickOnNextDaySchedule(activeDay);
             upComingShifts = getAvailableShiftsForDayView(upComingShifts);
         }
         if (upComingShifts.size() >= 4) {
@@ -7762,22 +7767,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    public void clickOnPreviousDaySchedule(String activeDay) throws Exception {
-        List<WebElement> activeWeek = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
-        for(int i=0; i<activeWeek.size();i++){
-            String currentDay = activeWeek.get(i).getText().replace("\n", " ").substring(0,3);
-            if(currentDay.equalsIgnoreCase(activeDay)){
-                if(i== activeWeek.size()-1){
-                    navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(),
-                            ScheduleNewUITest.weekCount.One.getValue());
-                    waitForSeconds(3);
-                }else{
-                    click(activeWeek.get(i));
-                }
-            }
-        }
-
-    }
+//    public void clickOnPreviousDaySchedule(String activeDay) throws Exception {
+//        List<WebElement> activeWeek = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+//        for(int i=0; i<activeWeek.size();i++){
+//            String currentDay = activeWeek.get(i).getText().replace("\n", " ").substring(0,3);
+//            if(currentDay.equalsIgnoreCase(activeDay)){
+//                if(i== activeWeek.size()-1){
+//                    navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(),
+//                            ScheduleNewUITest.weekCount.One.getValue());
+//                    waitForSeconds(3);
+//                }else{
+//                    click(activeWeek.get(i));
+//                }
+//            }
+//        }
+//
+//    }
 
     public void legionIsDisplayingTheSchedul() throws Exception {
         if(isElementLoaded(groupByAllIcon,10)){
@@ -8954,29 +8959,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "[label=\"No\"]")
     private WebElement noButton;
 
-    public enum monthsOfCalendar {
-        Jan("January"),
-        Feb("February"),
-        Mar("March"),
-        Apr("April"),
-        May("May"),
-        Jun("June"),
-        Jul("July"),
-        Aug("August"),
-        Sep("September"),
-        Oct("October"),
-        Nov("November"),
-        Dec("December");
-        private final String value;
-
-        monthsOfCalendar(final String newValue) {
-            value = newValue;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
+//    public enum monthsOfCalendar {
+//        Jan("January"),
+//        Feb("February"),
+//        Mar("March"),
+//        Apr("April"),
+//        May("May"),
+//        Jun("June"),
+//        Jul("July"),
+//        Aug("August"),
+//        Sep("September"),
+//        Oct("October"),
+//        Nov("November"),
+//        Dec("December");
+//        private final String value;
+//
+//        monthsOfCalendar(final String newValue) {
+//            value = newValue;
+//        }
+//
+//        public String getValue() {
+//            return value;
+//        }
+//    }
 
     @Override
     public void verifyTheFunctionalityOfClearFilter() throws Exception {
@@ -9642,57 +9647,57 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return selectedWeek;
     }
 
-    @Override
-    public void verifySelectOtherWeeks() throws Exception {
-        String currentWeekPeriod = "";
-        String weekDate = "";
-        if (areListElementVisible(currentWeeks, 10)) {
-            for (int i = 0; i < currentWeeks.size(); i++) {
-                click(currentWeeks.get(i));
-                if (isElementLoaded(periodName, 5)) {
-                    currentWeekPeriod = periodName.getText().length() > 12 ? periodName.getText().substring(12) : "";
-                }
-                if (currentWeeks.get(i).getText().contains("\n")) {
-                    weekDate = currentWeeks.get(i).getText().split("\n").length >= 2 ? currentWeeks.get(i).getText().split("\n")[1] : "";
-                    if (weekDate.contains("-")) {
-                        String[] dates = weekDate.split("-");
-                        String shortMonth1 = dates[0].trim().substring(0, 3);
-                        String shortMonth2 = dates[1].trim().substring(0, 3);
-                        String fullMonth1 = getFullMonthName(shortMonth1);
-                        String fullMonth2 = getFullMonthName(shortMonth2);
-                        weekDate = weekDate.replaceAll(shortMonth1, fullMonth1);
-                        if (!shortMonth1.equalsIgnoreCase(shortMonth2)) {
-                            weekDate = weekDate.replaceAll(shortMonth2, fullMonth2);
-                        }
-                    }
-                }
-                if (weekDate.trim().equalsIgnoreCase(currentWeekPeriod.trim())) {
-                    SimpleUtils.pass("Selected week is: " + currentWeeks.get(i).getText() + " and current week is: " + currentWeekPeriod);
-                }else {
-                    SimpleUtils.fail("Selected week is: " + currentWeeks.get(i).getText() + " but current week is: " + currentWeekPeriod, false);
-                }
-                if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
-                    click(calendarNavigationNextWeekArrow);
-                    verifySelectOtherWeeks();
-                }
-            }
-        }else {
-            SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
-        }
-    }
+//    @Override
+//    public void verifySelectOtherWeeks() throws Exception {
+//        String currentWeekPeriod = "";
+//        String weekDate = "";
+//        if (areListElementVisible(currentWeeks, 10)) {
+//            for (int i = 0; i < currentWeeks.size(); i++) {
+//                click(currentWeeks.get(i));
+//                if (isElementLoaded(periodName, 5)) {
+//                    currentWeekPeriod = periodName.getText().length() > 12 ? periodName.getText().substring(12) : "";
+//                }
+//                if (currentWeeks.get(i).getText().contains("\n")) {
+//                    weekDate = currentWeeks.get(i).getText().split("\n").length >= 2 ? currentWeeks.get(i).getText().split("\n")[1] : "";
+//                    if (weekDate.contains("-")) {
+//                        String[] dates = weekDate.split("-");
+//                        String shortMonth1 = dates[0].trim().substring(0, 3);
+//                        String shortMonth2 = dates[1].trim().substring(0, 3);
+//                        String fullMonth1 = getFullMonthName(shortMonth1);
+//                        String fullMonth2 = getFullMonthName(shortMonth2);
+//                        weekDate = weekDate.replaceAll(shortMonth1, fullMonth1);
+//                        if (!shortMonth1.equalsIgnoreCase(shortMonth2)) {
+//                            weekDate = weekDate.replaceAll(shortMonth2, fullMonth2);
+//                        }
+//                    }
+//                }
+//                if (weekDate.trim().equalsIgnoreCase(currentWeekPeriod.trim())) {
+//                    SimpleUtils.pass("Selected week is: " + currentWeeks.get(i).getText() + " and current week is: " + currentWeekPeriod);
+//                }else {
+//                    SimpleUtils.fail("Selected week is: " + currentWeeks.get(i).getText() + " but current week is: " + currentWeekPeriod, false);
+//                }
+//                if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+//                    click(calendarNavigationNextWeekArrow);
+//                    verifySelectOtherWeeks();
+//                }
+//            }
+//        }else {
+//            SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
+//        }
+//    }
 
-    public String getFullMonthName(String shortName) {
-        String fullName = "";
-        monthsOfCalendar[] shortNames = monthsOfCalendar.values();
-        for (int i = 0; i < shortNames.length; i++) {
-            if (shortNames[i].name().equalsIgnoreCase(shortName)) {
-                fullName = shortNames[i].value;
-                SimpleUtils.report("Get the full name of " + shortName + ", is: " + fullName);
-                break;
-            }
-        }
-        return fullName;
-    }
+//    public String getFullMonthName(String shortName) {
+//        String fullName = "";
+//        monthsOfCalendar[] shortNames = monthsOfCalendar.values();
+//        for (int i = 0; i < shortNames.length; i++) {
+//            if (shortNames[i].name().equalsIgnoreCase(shortName)) {
+//                fullName = shortNames[i].value;
+//                SimpleUtils.report("Get the full name of " + shortName + ", is: " + fullName);
+//                break;
+//            }
+//        }
+//        return fullName;
+//    }
 
     //added by Estelle
     @Override
@@ -11847,78 +11852,78 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("My Schedule Page: It isn't in week view", true);
     }
 
-    @Override
-    public void validateForwardAndBackwardButtonClickable() throws Exception {
-        String activeWeekText = getActiveWeekText();
-        if (isElementLoaded(calendarNavigationNextWeekArrow, 10)) {
-            try {
-                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
-                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
-                if (activeWeekText.equals(getActiveWeekText()))
-                    SimpleUtils.pass("My Schedule Page: Forward and backward button to view previous or upcoming week is clickable successfully");
-            } catch (Exception e) {
-                SimpleUtils.fail("My Schedule Page: Exception occurs when clicking forward and backward button", true);
-            }
-        } else if (isElementLoaded(calendarNavigationPreviousWeekArrow, 10)) {
-            try {
-                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
-                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
-                if (activeWeekText.equals(getActiveWeekText()))
-                    SimpleUtils.pass("My Schedule Page: Forward and backward button to view previous or upcoming week is clickable successfully");
-            } catch (Exception e) {
-                SimpleUtils.fail("My Schedule Page: Exception occurs when clicking forward and backward button", true);
-            }
-        } else
-            SimpleUtils.fail("My Schedule Page: Forward and backward button failed to load to view previous or upcoming week", true);
-    }
+//    @Override
+//    public void validateForwardAndBackwardButtonClickable() throws Exception {
+//        String activeWeekText = getActiveWeekText();
+//        if (isElementLoaded(calendarNavigationNextWeekArrow, 10)) {
+//            try {
+//                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
+//                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
+//                if (activeWeekText.equals(getActiveWeekText()))
+//                    SimpleUtils.pass("My Schedule Page: Forward and backward button to view previous or upcoming week is clickable successfully");
+//            } catch (Exception e) {
+//                SimpleUtils.fail("My Schedule Page: Exception occurs when clicking forward and backward button", true);
+//            }
+//        } else if (isElementLoaded(calendarNavigationPreviousWeekArrow, 10)) {
+//            try {
+//                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
+//                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
+//                if (activeWeekText.equals(getActiveWeekText()))
+//                    SimpleUtils.pass("My Schedule Page: Forward and backward button to view previous or upcoming week is clickable successfully");
+//            } catch (Exception e) {
+//                SimpleUtils.fail("My Schedule Page: Exception occurs when clicking forward and backward button", true);
+//            }
+//        } else
+//            SimpleUtils.fail("My Schedule Page: Forward and backward button failed to load to view previous or upcoming week", true);
+//    }
 
-    @Override
-    public void validateTheDataAccordingToTheSelectedWeek() throws Exception {
-        if (isElementLoaded(calendarNavigationPreviousWeekArrow, 10)) {
-            navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
-        } else if (isElementLoaded(calendarNavigationNextWeekArrow, 10)) {
-            navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
-        } else
-            SimpleUtils.fail("My Schedule Page: Forward and backward button failed to load to view previous or upcoming week", true);
-        verifySelectOtherWeeks();
-        validateTheScheduleShiftsAccordingToTheSelectedWeek();
-    }
+//    @Override
+//    public void validateTheDataAccordingToTheSelectedWeek() throws Exception {
+//        if (isElementLoaded(calendarNavigationPreviousWeekArrow, 10)) {
+//            navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
+//        } else if (isElementLoaded(calendarNavigationNextWeekArrow, 10)) {
+//            navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
+//        } else
+//            SimpleUtils.fail("My Schedule Page: Forward and backward button failed to load to view previous or upcoming week", true);
+//        verifySelectOtherWeeks();
+//        validateTheScheduleShiftsAccordingToTheSelectedWeek();
+//    }
 
-    public void validateTheScheduleShiftsAccordingToTheSelectedWeek() throws Exception {
-        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20) && weekScheduleShiftsDateOfMySchedule.size() == 7 && isElementLoaded(currentActiveWeek, 5)) {
-            String activeWeek = currentActiveWeek.getText();
-            String weekScheduleShiftStartDate = weekScheduleShiftsDateOfMySchedule.get(0).getText();
-            String weekScheduleShiftEndDate = weekScheduleShiftsDateOfMySchedule.get(6).getText();
-            if (activeWeek.contains("\n") && weekScheduleShiftStartDate.contains(",") && weekScheduleShiftStartDate.contains(" ") && weekScheduleShiftEndDate.contains(",") && weekScheduleShiftEndDate.contains(" ") && activeWeek.contains("-")) {
-                try {
-                    if (weekScheduleShiftStartDate.split(",")[1].trim().split(" ")[1].startsWith("0")) {
-                        weekScheduleShiftStartDate = weekScheduleShiftStartDate.split(",")[1].trim().split(" ")[0] + " " + weekScheduleShiftStartDate.split(",")[1].split(" ")[2].substring(1, 2);
-                    } else {
-                        weekScheduleShiftStartDate = weekScheduleShiftStartDate.split(",")[1].trim();
-                    }
-                    if (weekScheduleShiftEndDate.split(",")[1].trim().split(" ")[1].startsWith("0")) {
-                        weekScheduleShiftEndDate = weekScheduleShiftEndDate.split(",")[1].trim().split(" ")[0] + " " + weekScheduleShiftEndDate.split(",")[1].split(" ")[2].substring(1, 2);
-                    } else {
-                        weekScheduleShiftEndDate = weekScheduleShiftEndDate.split(",")[1].trim();
-                    }
-                    activeWeek = activeWeek.split("\n")[1];
-                    SimpleUtils.report("weekScheduleShiftStartDate is " + weekScheduleShiftStartDate);
-                    SimpleUtils.report("weekScheduleShiftEndDate is " + weekScheduleShiftEndDate);
-                    SimpleUtils.report("activeWeek is " + activeWeek);
-                    if (weekScheduleShiftStartDate.equalsIgnoreCase(activeWeek.split("-")[0].trim()) && weekScheduleShiftEndDate.equalsIgnoreCase(activeWeek.split("-")[1].trim())) {
-                        SimpleUtils.pass("My Schedule Page: The schedule shifts show according to the selected week successfully");
-                    } else
-                        SimpleUtils.fail("My Schedule Page: The schedule shifts failed to show according to the selected week", true);
-                } catch (Exception e) {
-                    SimpleUtils.fail("My Schedule Page: The schedule shifts texts don't have enough length ", true);
-                }
-            }
-        } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
-            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
-        } else {
-            SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
-        }
-    }
+//    public void validateTheScheduleShiftsAccordingToTheSelectedWeek() throws Exception {
+//        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20) && weekScheduleShiftsDateOfMySchedule.size() == 7 && isElementLoaded(currentActiveWeek, 5)) {
+//            String activeWeek = currentActiveWeek.getText();
+//            String weekScheduleShiftStartDate = weekScheduleShiftsDateOfMySchedule.get(0).getText();
+//            String weekScheduleShiftEndDate = weekScheduleShiftsDateOfMySchedule.get(6).getText();
+//            if (activeWeek.contains("\n") && weekScheduleShiftStartDate.contains(",") && weekScheduleShiftStartDate.contains(" ") && weekScheduleShiftEndDate.contains(",") && weekScheduleShiftEndDate.contains(" ") && activeWeek.contains("-")) {
+//                try {
+//                    if (weekScheduleShiftStartDate.split(",")[1].trim().split(" ")[1].startsWith("0")) {
+//                        weekScheduleShiftStartDate = weekScheduleShiftStartDate.split(",")[1].trim().split(" ")[0] + " " + weekScheduleShiftStartDate.split(",")[1].split(" ")[2].substring(1, 2);
+//                    } else {
+//                        weekScheduleShiftStartDate = weekScheduleShiftStartDate.split(",")[1].trim();
+//                    }
+//                    if (weekScheduleShiftEndDate.split(",")[1].trim().split(" ")[1].startsWith("0")) {
+//                        weekScheduleShiftEndDate = weekScheduleShiftEndDate.split(",")[1].trim().split(" ")[0] + " " + weekScheduleShiftEndDate.split(",")[1].split(" ")[2].substring(1, 2);
+//                    } else {
+//                        weekScheduleShiftEndDate = weekScheduleShiftEndDate.split(",")[1].trim();
+//                    }
+//                    activeWeek = activeWeek.split("\n")[1];
+//                    SimpleUtils.report("weekScheduleShiftStartDate is " + weekScheduleShiftStartDate);
+//                    SimpleUtils.report("weekScheduleShiftEndDate is " + weekScheduleShiftEndDate);
+//                    SimpleUtils.report("activeWeek is " + activeWeek);
+//                    if (weekScheduleShiftStartDate.equalsIgnoreCase(activeWeek.split("-")[0].trim()) && weekScheduleShiftEndDate.equalsIgnoreCase(activeWeek.split("-")[1].trim())) {
+//                        SimpleUtils.pass("My Schedule Page: The schedule shifts show according to the selected week successfully");
+//                    } else
+//                        SimpleUtils.fail("My Schedule Page: The schedule shifts failed to show according to the selected week", true);
+//                } catch (Exception e) {
+//                    SimpleUtils.fail("My Schedule Page: The schedule shifts texts don't have enough length ", true);
+//                }
+//            }
+//        } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
+//            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+//        } else {
+//            SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+//        }
+//    }
 
     @Override
     public void validateTheSevenDaysIsAvailableInScheduleTable() throws Exception {
@@ -13388,7 +13393,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     public void verifySearchBoxNotDisplayInDayView() throws Exception {
         if (!switchDayViewAndWeeKViewButton.getAttribute("class").contains("hide")) {
-            clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             if (!isElementEnabled(openSearchBoxButton, 5) || !isElementEnabled(searchBox, 5)) {
                 SimpleUtils.pass("Search box is not display in Day View");
             } else

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -310,7 +311,8 @@ public class ControlsNewUITest extends TestBase{
   		  {
   			BasePage basePage = new BasePage();
   			basePage.click(week);
-  			schedulePage.clickOnDayView();
+  			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
   			HashMap<String, Integer> schedulePageBufferHours = schedulePage.getScheduleBufferHours();
   			
   			// verifying opening buffer Hours
@@ -432,7 +434,8 @@ public class ControlsNewUITest extends TestBase{
       			SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' Generated Successfully.");
       		else
       			SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not Generated.", false);
-      		schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
       		int shiftIntervalCountInAnHour = schedulePage.getScheduleShiftIntervalCountInAnHour();
       		if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue().split(" ")[0]))
       			SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() 

@@ -2,7 +2,9 @@ package com.legion.tests.core;
 
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LiquidDashboardPage;
+import com.legion.pages.ScheduleCommonPage;
 import com.legion.pages.SchedulePage;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -66,7 +68,8 @@ public class MealAndRestBreakTest extends TestBase {
             schedulePage.verifySpecificOptionEnabledOnShiftMenu(breakOption);
 
             // Verify Breaks option is enabled in non-Edit mode day view
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnProfileIcon();
             schedulePage.verifySpecificOptionEnabledOnShiftMenu(breakOption);
 
@@ -76,7 +79,7 @@ public class MealAndRestBreakTest extends TestBase {
             schedulePage.verifySpecificOptionEnabledOnShiftMenu(editBreakOption);
 
             // Verify Edit Breaks is enabled in edit mode week view
-            schedulePage.clickOnWeekView();
+            scheduleCommonPage.clickOnWeekView();
             schedulePage.clickOnProfileIcon();
             schedulePage.verifySpecificOptionEnabledOnShiftMenu(editBreakOption);
         } catch (Exception e){

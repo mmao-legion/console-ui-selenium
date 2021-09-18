@@ -16,12 +16,12 @@ public interface SchedulePage {
 	public void goToSchedule() throws Exception;
 	public void goToProjectedSales() throws Exception;
 	public void goToStaffingGuidance() throws Exception;
-	public void clickOnWeekView() throws Exception;
-	public void clickOnDayView() throws Exception;
+//	public void clickOnWeekView() throws Exception;
+//	public void clickOnDayView() throws Exception;
 	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception;
 	public List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception;
 	public void clickOnScheduleSubTab(String subTabString) throws Exception;
-	public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
+//	public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
 	public Boolean isWeekGenerated() throws Exception;
 	public Boolean isWeekPublished() throws Exception;
 	public void generateSchedule() throws Exception;
@@ -80,7 +80,7 @@ public interface SchedulePage {
 	public void deleteShiftGutterText();
 	public boolean getScheduleStatus() throws Exception;
 	public boolean inActiveWeekDayClosed(int dayIndex) throws Exception;
-	public void navigateDayViewWithIndex(int dayIndex);
+//	public void navigateDayViewWithIndex(int dayIndex);
 	public String getActiveGroupByFilter() throws Exception;
 	public boolean isActiveWeekHasOneDayClose() throws Exception;
 	public boolean isActiveWeekAssignedToCurrentUser(String userName) throws Exception;
@@ -113,7 +113,7 @@ public interface SchedulePage {
 	public void selectWorkRoleFilterByText(String workRoleLabel, boolean isClearWorkRoleFilters) throws Exception;
 	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception;
 	public boolean isActionButtonLoaded(String actionBtnText) throws Exception;
-	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception;
+//	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception;
 	/*public void validatingRequiredActionforUnAssignedShift() throws Exception;*/
 	public String getsmartCardTextByLabel(String cardLabel);
 	public String getWeatherTemperature() throws Exception;
@@ -127,7 +127,7 @@ public interface SchedulePage {
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
 	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception;
 	public void unGenerateActiveScheduleScheduleWeek() throws Exception;
-	public boolean isStoreClosedForActiveWeek() throws Exception;
+//	public boolean isStoreClosedForActiveWeek() throws Exception;
 	public int getScheduleShiftIntervalCountInAnHour() throws Exception;
 	public void toggleSummaryView() throws Exception;
 	public boolean isSummaryViewLoaded() throws Exception;
@@ -149,11 +149,11 @@ public interface SchedulePage {
 	public String getActiveAndNextDay() throws Exception;
 	public HashMap<String, String> getOperatingHrsValue(String day) throws Exception;
 	public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception;
-	public void clickOnNextDaySchedule(String activeDay) throws Exception;
+//	public void clickOnNextDaySchedule(String activeDay) throws Exception;
 	public void selectTeamMembersOptionForSchedule() throws Exception;
 	public void selectTeamMembersOptionForScheduleForClopening() throws Exception;
 	public void verifyClopeningHrs() throws Exception;
-	public void clickOnPreviousDaySchedule(String activeDay) throws Exception;
+//	public void clickOnPreviousDaySchedule(String activeDay) throws Exception;
 	public void verifyActiveScheduleType() throws Exception;
 	public List<Float> validateScheduleAndBudgetedHours() throws Exception;
 	public void compareHoursFromScheduleAndDashboardPage(List<Float> totalHoursFromSchTbl) throws Exception;
@@ -250,7 +250,7 @@ public interface SchedulePage {
 	public void	verifyTeamScheduleInViewMode() throws Exception;
 	public List<String> getWholeWeekSchedule() throws Exception;
 	public String getSelectedWeek() throws Exception;
-	public void verifySelectOtherWeeks() throws Exception;
+//	public void verifySelectOtherWeeks() throws Exception;
 	public boolean isSpecificSmartCardLoaded(String cardName) throws Exception;
 	public int getCountFromSmartCardByName(String cardName) throws Exception;
 	public void clickLinkOnSmartCardByName(String linkName) throws Exception;
@@ -382,9 +382,9 @@ public interface SchedulePage {
 
 	void validateTheFocusOfWeek(String currentDate) throws Exception;
 
-	void validateForwardAndBackwardButtonClickable() throws Exception;
+//	void validateForwardAndBackwardButtonClickable() throws Exception;
 
-	void validateTheDataAccordingToTheSelectedWeek() throws Exception;
+//	void validateTheDataAccordingToTheSelectedWeek() throws Exception;
 
 	void validateTheSevenDaysIsAvailableInScheduleTable() throws Exception;
 
@@ -654,7 +654,7 @@ public interface SchedulePage {
 	public List<String> getAllOperatingHrsOnCreateShiftPage() throws Exception;
 	public List<String> getStartAndEndOperatingHrsOnEditShiftPage() throws Exception;
 	public void clickOnCloseButtonOnCustomizeShiftPage() throws Exception;
-	public void navigateDayViewWithDayName(String dayName) throws Exception;
+//	public void navigateDayViewWithDayName(String dayName) throws Exception;
 	public Map<String, String> getActiveDayInfo() throws Exception;
 	public void verifyLocationFilterInLeft(boolean isLG) throws Exception;
 	public void verifyChildLocationShiftsLoadPerformance(String childLocation) throws Exception;
