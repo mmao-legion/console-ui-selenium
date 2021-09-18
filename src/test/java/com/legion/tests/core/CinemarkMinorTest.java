@@ -6,6 +6,7 @@ import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
@@ -143,7 +144,8 @@ public class CinemarkMinorTest extends TestBase {
             if (!isWeekGenerated){
                 schedulePage.createScheduleForNonDGFlowNewUI();
             }
-            schedulePage.navigateDayViewWithDayName("Sat");
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.navigateDayViewWithDayName("Sat");
             Map<String, String> dayInfo = schedulePage.getActiveDayInfo();
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();

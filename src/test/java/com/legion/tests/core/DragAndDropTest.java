@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import com.google.inject.internal.cglib.core.$WeakCacheKey;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -1251,9 +1252,10 @@ public class DragAndDropTest extends TestBase {
         schedulePage.deleteTMShiftInWeekView("");
         schedulePage.clickOnFilterBtn();
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-        schedulePage.navigateDayViewWithIndex(3);
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.navigateDayViewWithIndex(3);
         schedulePage.deleteAllShiftsInDayView();
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.saveSchedule();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
@@ -1353,9 +1355,10 @@ public class DragAndDropTest extends TestBase {
         schedulePage.deleteTMShiftInWeekView("");
         schedulePage.clickOnFilterBtn();
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-        schedulePage.navigateDayViewWithIndex(3);
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.navigateDayViewWithIndex(3);
         schedulePage.deleteAllShiftsInDayView();
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.saveSchedule();
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
@@ -1450,9 +1453,10 @@ public class DragAndDropTest extends TestBase {
         schedulePage.deleteTMShiftInWeekView("");
         schedulePage.clickOnFilterBtn();
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-        schedulePage.navigateDayViewWithIndex(0);
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.navigateDayViewWithIndex(0);
         schedulePage.deleteAllShiftsInDayView();
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.saveSchedule();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1542,9 +1546,10 @@ public class DragAndDropTest extends TestBase {
         schedulePage.deleteTMShiftInWeekView("");
         schedulePage.clickOnFilterBtn();
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-        schedulePage.navigateDayViewWithIndex(0);
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.navigateDayViewWithIndex(0);
         schedulePage.deleteAllShiftsInDayView();
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.saveSchedule();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1634,9 +1639,10 @@ public class DragAndDropTest extends TestBase {
         schedulePage.deleteTMShiftInWeekView("");
         schedulePage.clickOnFilterBtn();
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-        schedulePage.navigateDayViewWithIndex(6);
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.navigateDayViewWithIndex(6);
         schedulePage.deleteAllShiftsInDayView();
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.saveSchedule();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1726,9 +1732,10 @@ public class DragAndDropTest extends TestBase {
         schedulePage.deleteTMShiftInWeekView("");
         schedulePage.clickOnFilterBtn();
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-        schedulePage.navigateDayViewWithIndex(6);
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.navigateDayViewWithIndex(6);
         schedulePage.deleteAllShiftsInDayView();
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.saveSchedule();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1781,9 +1788,10 @@ public class DragAndDropTest extends TestBase {
         schedulePage.deleteTMShiftInWeekView("");
         schedulePage.clickOnFilterBtn();
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-        schedulePage.navigateDayViewWithIndex(1);
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.navigateDayViewWithIndex(1);
         schedulePage.deleteAllShiftsInDayView();
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.saveSchedule();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

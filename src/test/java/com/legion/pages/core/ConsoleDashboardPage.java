@@ -9,10 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import com.legion.pages.BasePage;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.ScheduleDMViewPage;
-import com.legion.pages.SchedulePage;
+import com.legion.pages.*;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;

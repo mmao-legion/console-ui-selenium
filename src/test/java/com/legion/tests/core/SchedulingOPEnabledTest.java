@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.test.core.mobile.LoginTest;
 import com.legion.tests.TestBase;
@@ -220,7 +221,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
     @TestName(description = "Assign TM warning: TM status is already Scheduled at Home location")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -248,9 +249,9 @@ public class SchedulingOPEnabledTest  extends TestBase {
             schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             schedulePage.clickOnCreateOrNextBtn();
             schedulePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0), firstShiftInfo.get(2));
-//        } catch (Exception e){
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -568,7 +569,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUI();
         }
         boolean isWeekView = true;
-        schedulePage.clickOnWeekView();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
         schedulePage.filterScheduleByJobTitle(isWeekView);
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -869,7 +871,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
         ForecastPage forecastPage = pageFactory.createForecastPage();
         forecastPage.clickForecast();
         //Validate Weather Smart card on Week View
-        schedulePage.clickOnWeekView();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnWeekView();
 
         Thread.sleep(5000);
         String activeWeekText = schedulePage.getActiveWeekText();
@@ -896,10 +899,10 @@ public class SchedulingOPEnabledTest  extends TestBase {
         }
 
         //Validate Weather Smart card on day View
-        schedulePage.clickOnDayView();
+        scheduleCommonPage.clickOnDayView();
         for (int index = 0; index < ScheduleNewUITest.dayCount.Seven.getValue(); index++) {
             if (index != 0)
-                schedulePage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
+                scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
 
             String activeDayText = schedulePage.getActiveWeekText();
             if (schedulePage.isSmartCardAvailableByLabel(WeatherCardText)) {
@@ -2431,10 +2434,12 @@ public class SchedulingOPEnabledTest  extends TestBase {
             String nickName = profileNewUIPage.getNickNameFromProfile();
 
             //T1838610 Validate the click ability of forward and backward button.
-            schedulePage.validateForwardAndBackwardButtonClickable();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.validateForwardAndBackwardButtonClickable();
 
             //T1838611 Validate the data according to the selected week.
-            schedulePage.validateTheDataAccordingToTheSelectedWeek();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            mySchedulePage.validateTheDataAccordingToTheSelectedWeek();
 
             //T1838612 Validate the seven days - Sunday to Saturday is available in schedule table.
             schedulePage.clickOnScheduleConsoleMenuItem();

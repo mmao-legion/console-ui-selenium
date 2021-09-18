@@ -6,19 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.tests.annotations.*;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
-import com.legion.pages.BasePage;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LocationSelectorPage;
-import com.legion.pages.LoginPage;
-import com.legion.pages.ScheduleOverviewPage;
-import com.legion.pages.SchedulePage;
-import com.legion.pages.StaffingGuidancePage;
 import com.legion.test.core.mobile.LoginTest;
 import com.legion.tests.TestBase;
 import com.legion.tests.data.CredentialDataProviderSource;
@@ -235,22 +230,23 @@ public class ScheduleNewUITest extends TestBase {
 	        }
 	        //Must have at least "Past Week" schedule published
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-	        schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+	        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
 	        SimpleUtils.assertOnFail("Schedule Page: Past week not generated!",schedulePage.isWeekGenerated() , true);
 	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",schedulePage.isWeekPublished() , true);
 	        //The schedules that are already published should remain unchanged
-	        schedulePage.clickOnDayView();
+			scheduleCommonPage.clickOnDayView();
 	        schedulePage.clickOnEditButton();
 	        SimpleUtils.assertOnFail("User can add new shift for past week", (! schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
 	        schedulePage.clickOnCancelButtonOnEditMode();
 	        // No generate button for Past Week
 	        SimpleUtils.assertOnFail("Generate Button displaying for Past week", (! schedulePage.isGenerateButtonLoaded()) , true);
 	        //there are at least one week in the future where schedule has not yet been published
-	        schedulePage.clickOnWeekView();
-	        schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			scheduleCommonPage.clickOnWeekView();
+	        scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 	        for(int index = 1; index < weekCount.values().length; index++)
 	        {
-	        	schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        	scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 	        	if(! schedulePage.isWeekGenerated()){
         			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+schedulePage.getScheduleWeekStartDayMonthDate()+"' not Generated!");
 	        	}
@@ -280,7 +276,8 @@ public class ScheduleNewUITest extends TestBase {
 	         *  Navigate to Schedule Week view
 	         */
 	        boolean isWeekView = true;
-	        schedulePage.clickOnWeekView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnWeekView();
 	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyAll.getValue());
 	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 	        schedulePage.clickOnEditButton();
@@ -304,7 +301,8 @@ public class ScheduleNewUITest extends TestBase {
 	         *  Navigate to Schedule Week view
 	         */
 	        boolean isWeekView = true;
-	        schedulePage.clickOnWeekView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnWeekView();
 	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
 	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 	        schedulePage.clickOnEditButton();
@@ -329,7 +327,8 @@ public class ScheduleNewUITest extends TestBase {
 	         *  Navigate to Schedule Week view
 	         */
 	        boolean isWeekView = true;
-	        schedulePage.clickOnWeekView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnWeekView();
 	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
 	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 	        schedulePage.clickOnEditButton();
@@ -355,8 +354,9 @@ public class ScheduleNewUITest extends TestBase {
 	         *  Navigate to Schedule Day view
 	         */
 	        boolean isWeekView = false;
-	        schedulePage.clickOnDayView();
-	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
+	        scheduleCommonPage.navigateToNextDayIfStoreClosedForActiveDay();
 	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyAll.getValue());
 	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 	        schedulePage.clickOnEditButton();
@@ -381,7 +381,8 @@ public class ScheduleNewUITest extends TestBase {
 	         *  Navigate to Schedule Day view
 	         */
 	        boolean isWeekView = false;
-	        schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 	        schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
 	        schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 	        schedulePage.clickOnEditButton();
@@ -401,17 +402,18 @@ public class ScheduleNewUITest extends TestBase {
 	        schedulePage = dashboardPage.goToTodayForNewUI();
 	        SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
 
-		/*
-		 *  Navigate to Schedule Day view
-		 */
-		boolean isWeekView = false;
-		schedulePage.clickOnWeekView();
-		schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
-		schedulePage.clickOnDayView();
-		schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
-		schedulePage.clickOnEditButton();
-		schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
-		schedulePage.clickOnCancelButtonOnEditMode();
+			/*
+			 *  Navigate to Schedule Day view
+			 */
+			boolean isWeekView = false;
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnWeekView();
+			schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
+			scheduleCommonPage.clickOnDayView();
+			schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+			schedulePage.clickOnEditButton();
+			schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+			schedulePage.clickOnCancelButtonOnEditMode();
 	}
 
 
@@ -452,7 +454,8 @@ public class ScheduleNewUITest extends TestBase {
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), true);
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		for (String weekStatus : overviewPageScheduledWeekStatus) {
 			boolean isSchedulePublished = schedulePage.isCurrentScheduleWeekPublished();
 			if (weekStatus.toLowerCase().contains(overviewWeeksStatus.Draft.getValue().toLowerCase())
@@ -462,7 +465,7 @@ public class ScheduleNewUITest extends TestBase {
 			else
 				SimpleUtils.assertOnFail("Published week:'" + schedulePage.getActiveWeekText()
 						+ "' Schedule is not visible for Team Lead", isSchedulePublished, true);
-			schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 		}
 		loginPage.logOut();
 
@@ -475,7 +478,7 @@ public class ScheduleNewUITest extends TestBase {
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), true);
-		schedulePage.clickOnWeekView();
+		scheduleCommonPage.clickOnWeekView();
 		for (String weekStatus : overviewPageScheduledWeekStatus) {
 			boolean isSchedulePublished = schedulePage.isCurrentScheduleWeekPublished();
 			if (weekStatus.toLowerCase().contains(overviewWeeksStatus.Draft.getValue().toLowerCase())
@@ -487,7 +490,7 @@ public class ScheduleNewUITest extends TestBase {
 				SimpleUtils.assertOnFail("Published week:'" + schedulePage.getActiveWeekText()
 						+ "' Schedule is not visible for Team Member", isSchedulePublished, true);
 			}
-			schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 		}
 	}
 
@@ -514,13 +517,14 @@ public class ScheduleNewUITest extends TestBase {
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 
 		int scheduleOverViewStatusCount = overviewPageScheduledWeekStatus.size();
 		for (int index = 0; index < scheduleOverViewStatusCount; index++) {
 			String status = overviewPageScheduledWeekStatus.get(index);
 			if (index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 
 			if (status.toLowerCase().equals(overviewWeeksStatus.Draft.getValue().toLowerCase())) {
 				SimpleUtils.report("Selected Week: '" + schedulePage.getActiveWeekText() + "'");
@@ -623,11 +627,12 @@ public class ScheduleNewUITest extends TestBase {
 
 		//Must have at least "Past Week" schedule published
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
 		SimpleUtils.assertOnFail("Schedule Page: Past week not generated!", schedulePage.isWeekGenerated(), true);
 		SimpleUtils.assertOnFail("Schedule Page: Past week not Published!", schedulePage.isWeekPublished(), true);
 		//The schedules that are already published should remain unchanged
-		schedulePage.clickOnDayView();
+		scheduleCommonPage.clickOnDayView();
 		schedulePage.navigateDayViewToPast(weekViewType.Previous.getValue(), dayCount.Seven.getValue());
 		schedulePage.clickOnEditButton();
 		SimpleUtils.assertOnFail("User can add new shift for past week", (!schedulePage.isAddNewDayViewShiftButtonLoaded()), false);
@@ -653,7 +658,8 @@ public class ScheduleNewUITest extends TestBase {
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
 		//The schedules that are already published should remain unchanged
-		schedulePage.clickOnDayView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
 		int previousGutterCount = schedulePage.getgutterSize();
 		scheduleNavigationTest(previousGutterCount);
 		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
@@ -698,7 +704,8 @@ public class ScheduleNewUITest extends TestBase {
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
 		//The schedules that are already published should remain unchanged
-		schedulePage.clickOnDayView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
 		int previousGutterCount = schedulePage.getgutterSize();
 		scheduleNavigationTest(previousGutterCount);
 		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
@@ -743,7 +750,8 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		schedulePage.clickOnDayView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
 		int previousGutterCount = schedulePage.getgutterSize();
 		scheduleNavigationTest(previousGutterCount);
 		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
@@ -855,14 +863,15 @@ public class ScheduleNewUITest extends TestBase {
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 
 		int scheduleOverViewStatusCount = overviewPageScheduledWeekStatus.size();
 		boolean isStoreClosed = false;
 		for (int index = 0; index < (scheduleOverViewStatusCount - 1); index++) {
 			String status = overviewPageScheduledWeekStatus.get(index);
 			if (index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 
 			SimpleUtils.report("Selected Week: '" + schedulePage.getActiveWeekText() + "'");
 			/*
@@ -875,7 +884,7 @@ public class ScheduleNewUITest extends TestBase {
 				if (isStoreClosed) {
 					SimpleUtils.report("Generating Schedule for the Week: '" + schedulePage.getActiveWeekText() + "'");
 					schedulePage.generateSchedule();
-					schedulePage.clickOnWeekView();
+					scheduleCommonPage.clickOnWeekView();
 					schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
 				}
 
@@ -891,7 +900,7 @@ public class ScheduleNewUITest extends TestBase {
 
 
 				isStoreClosed = schedulePage.isActiveWeekHasOneDayClose();
-				schedulePage.clickOnWeekView();
+				scheduleCommonPage.clickOnWeekView();
 				if (isStoreClosed)
 					schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
 			}
@@ -915,13 +924,13 @@ public class ScheduleNewUITest extends TestBase {
 		String newGroupByFilter = "";
 
 		// Remember Last Visited Day
-		schedulePage.clickOnWeekView();
+		scheduleCommonPage.clickOnWeekView();
 		if (!schedulePage.isWeekGenerated())
 			schedulePage.generateSchedule();
 		Thread.sleep(1000);
-		schedulePage.clickOnDayView();
+		scheduleCommonPage.clickOnDayView();
 		int dayIndex = 1;
-		schedulePage.navigateDayViewWithIndex(dayIndex);
+		scheduleCommonPage.navigateDayViewWithIndex(dayIndex);
 		oldActiveDay = schedulePage.getActiveWeekText();
 		SimpleUtils.report("Last visited day: '" + oldActiveDay + "'");
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -936,7 +945,7 @@ public class ScheduleNewUITest extends TestBase {
 
 
 		// Remember Last Group By Filter
-		schedulePage.clickOnWeekView();
+		scheduleCommonPage.clickOnWeekView();
 		schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
 
 		oldGroupByFilter = schedulePage.getActiveGroupByFilter();
@@ -974,7 +983,8 @@ public class ScheduleNewUITest extends TestBase {
 		 */
 		int workRoleIndex = 1;
 		Boolean isClearWorkRoleFilters = true;
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
 		schedulePage.isScheduleGroupByWorkRole(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
 		schedulePage.selectWorkRoleFilterByIndex(workRoleIndex, isClearWorkRoleFilters);
@@ -1021,13 +1031,14 @@ public class ScheduleNewUITest extends TestBase {
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 
 		int scheduleOverViewStatusCount = overviewPageScheduledWeekStatus.size();
 		for (int index = 0; index < scheduleOverViewStatusCount; index++) {
 			String status = overviewPageScheduledWeekStatus.get(index);
 			if (index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 
 			if (status.toLowerCase().equals(overviewWeeksStatus.Draft.getValue().toLowerCase())) {
 				boolean isRequiredActionUnAssignedShift = schedulePage.isRequiredActionUnAssignedShiftForActiveWeek();
@@ -1061,7 +1072,8 @@ public class ScheduleNewUITest extends TestBase {
 			if (overviewScheduleWeek.getText().toLowerCase().contains(overviewWeeksStatus.Draft.getValue().toLowerCase())) {
 				BasePage basePage = new BasePage();
 				basePage.click(overviewScheduleWeek);
-				schedulePage.clickOnDayView();
+				ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+				scheduleCommonPage.clickOnDayView();
 				String shiftTypeFilterText = "Compliance Review";
 				schedulePage.selectShiftTypeFilterByText(shiftTypeFilterText);
 				List<WebElement> availableShifts = schedulePage.getAvailableShiftsInDayView();
@@ -1104,14 +1116,15 @@ public class ScheduleNewUITest extends TestBase {
 		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		int scheduleOverViewStatusCount = schedulePlanningWindow.Eight.getValue();
 		for (int index = 0; index <= scheduleOverViewStatusCount; index++) {
 			if (index == scheduleOverViewStatusCount) {
 				schedulePage.disableNextWeekArrow();
 				break;
 			}
-			schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 		}
 	}
 
@@ -1230,14 +1243,15 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), true);
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		for (String weekStatus : overviewPageScheduledWeekStatus) {
 			if (!weekStatus.toLowerCase().contains(overviewWeeksStatus.NotAvailable.getValue().toLowerCase()))
 				isTeamMemberAssignedToOverviewWeeks.add(
 						schedulePage.isActiveWeekAssignedToCurrentUser(String.valueOf(teamMemberCredentials[0][0])));
 			else
 				isTeamMemberAssignedToOverviewWeeks.add(false);
-			schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 		}
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
 		loginPage.logOut();
@@ -1251,7 +1265,7 @@ public class ScheduleNewUITest extends TestBase {
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), true);
-		schedulePage.clickOnWeekView();
+		scheduleCommonPage.clickOnWeekView();
 		for (int index = 0; index < overviewPageScheduledWeekStatus.size(); index++) {
 			String weekStatus = overviewPageScheduledWeekStatus.get(index);
 			boolean isWeekAssignedToTM = isTeamMemberAssignedToOverviewWeeks.get(index);
@@ -1267,7 +1281,7 @@ public class ScheduleNewUITest extends TestBase {
 					SimpleUtils.assertOnFail("Published week:'" + schedulePage.getActiveWeekText()
 							+ "' not assigned to current Team Member and Schedule is not visible", isSchedulePublished, true);
 			}
-			schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 		}
 		loginPage.logOut();
 
@@ -1280,13 +1294,13 @@ public class ScheduleNewUITest extends TestBase {
 		dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
-		schedulePage.clickOnWeekView();
+		scheduleCommonPage.clickOnWeekView();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), true);
 		for (String weekStatus : overviewPageScheduledWeekStatus) {
 			if (weekStatus.toLowerCase().contains(overviewWeeksStatus.Finalized.getValue().toLowerCase())
 					|| weekStatus.toLowerCase().contains(overviewWeeksStatus.Published.getValue().toLowerCase())) {
-				schedulePage.clickOnDayView();
+				scheduleCommonPage.clickOnDayView();
 				activeDayText = schedulePage.getActiveWeekText();
 				shiftCountBeforeAdded = schedulePage.getAvailableShiftsInDayView().size();
 				schedulePage.clickOnEditButton();
@@ -1296,7 +1310,7 @@ public class ScheduleNewUITest extends TestBase {
 						(schedulePage.getAvailableShiftsInDayView().size() > shiftCountBeforeAdded), true);
 				break;
 			}
-			schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 		}
 		loginPage.logOut();
 
@@ -1309,11 +1323,11 @@ public class ScheduleNewUITest extends TestBase {
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), true);
-		schedulePage.clickOnWeekView();
+		scheduleCommonPage.clickOnWeekView();
 		for (String weekStatus : overviewPageScheduledWeekStatus) {
 			if (weekStatus.toLowerCase().contains(overviewWeeksStatus.Finalized.getValue().toLowerCase())
 					|| weekStatus.toLowerCase().contains(overviewWeeksStatus.Published.getValue().toLowerCase())) {
-				schedulePage.clickOnDayView();
+				scheduleCommonPage.clickOnDayView();
 				if (activeDayText.contains(schedulePage.getActiveWeekText())) {
 					SimpleUtils.assertOnFail("Schedule Modification Reflected to Team Member",
 							(schedulePage.getAvailableShiftsInDayView().size() <= shiftCountBeforeAdded), false);
@@ -1321,7 +1335,7 @@ public class ScheduleNewUITest extends TestBase {
 					break;
 				}
 			}
-			schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 		}
 	}
 
@@ -1344,10 +1358,11 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), true);
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		while (schedulePage.isNextWeekAvaibale()) {
 			if (!isFirstWeek)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 			boolean isSmartCardPanel = schedulePage.isSmartCardPanelDisplay();
 			SimpleUtils.assertOnFail("Schedule Page: Smart Card Panel loaded for Team Lead for Week: '" + schedulePage.getActiveWeekText() + "'",
 					(!isSmartCardPanel), false);
@@ -1365,11 +1380,11 @@ public class ScheduleNewUITest extends TestBase {
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), true);
-		schedulePage.clickOnWeekView();
+		scheduleCommonPage.clickOnWeekView();
 		isFirstWeek = true;
 		while (schedulePage.isNextWeekAvaibale()) {
 			if (!isFirstWeek)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 			boolean isSmartCardPanel = schedulePage.isSmartCardPanelDisplay();
 			SimpleUtils.assertOnFail("Schedule Page: Smart Card Panel loaded for Team Member for Week: '" + schedulePage.getActiveWeekText() + "'",
 					(!isSmartCardPanel), false);
@@ -1409,17 +1424,18 @@ public class ScheduleNewUITest extends TestBase {
 				isGuidanceWeekFound = true;
 				BasePage basePage = new BasePage();
 				basePage.click(overviewWeek);
-				schedulePage.clickOnWeekView();
+				ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+				scheduleCommonPage.clickOnWeekView();
 				boolean isClearWorkRoleFilters = true;
 				schedulePage.selectWorkRoleFilterByIndex(filtersIndex.Zero.getValue(), isClearWorkRoleFilters);
 				isClearWorkRoleFilters = false;
 				schedulePage.selectWorkRoleFilterByIndex(filtersIndex.One.getValue(), isClearWorkRoleFilters);
 				ArrayList<String> workroleActiveFiltersBeforeNavigation = schedulePage.getSelectedWorkRoleOnSchedule();
 				//Navigate to Guidance Week
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 				SimpleUtils.pass("Visited to Guidance Week: '" + schedulePage.getActiveWeekText() + "'");
 				//Navigate to Previous Week
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
 				ArrayList<String> workroleActiveFiltersAfterNavigation = schedulePage.getSelectedWorkRoleOnSchedule();
 				SimpleUtils.assertOnFail("WorkRole Filter not preserve selection on schedule generate page for the week: '" + schedulePage.getActiveWeekText() + "'",
 						(workroleActiveFiltersBeforeNavigation.equals(workroleActiveFiltersAfterNavigation)), false);
@@ -1489,9 +1505,10 @@ public class ScheduleNewUITest extends TestBase {
 		BasePage basePage = new BasePage();
 		basePage.click(overViewWeekList.get(0));
 		for (int index = 0; index < weekSize; index++) {
-			schedulePage.clickOnWeekView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnWeekView();
 			if (index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 
 			// Verify UnAssigned Shift SmartCard
 			String SmartCardLabelForUnassignedShift = "unassigned shift";
@@ -1511,7 +1528,7 @@ public class ScheduleNewUITest extends TestBase {
 				SimpleUtils.report("UnAssigned Shift SmartCard found for the Week: '" + schedulePage.getActiveWeekText() + "'");
 				String shiftTypeFilterText = "Compliance Review";
 				schedulePage.selectShiftTypeFilterByText(shiftTypeFilterText);
-				schedulePage.clickOnDayView();
+				scheduleCommonPage.clickOnDayView();
 				schedulePage.reduceOvertimeHoursOfActiveWeekShifts();
 
 				SimpleUtils.assertOnFail("Compliance Review smartcard not disappeared After reducing Overtime of Shift(s) for: '"
@@ -1560,7 +1577,8 @@ public class ScheduleNewUITest extends TestBase {
 			SimpleUtils.report("UnAssigned Shift SmartCard found for the Week: '" + schedulePage.getActiveWeekText() + "'");
 			String shiftTypeFilterText = "Compliance Review";
 			schedulePage.selectShiftTypeFilterByText(shiftTypeFilterText);
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 			schedulePage.reduceOvertimeHoursOfActiveWeekShifts();
 
 			SimpleUtils.assertOnFail("Compliance Review smartcard not disappeared After reducing Overtime of Shift(s) for: '"
@@ -1587,7 +1605,8 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), false);
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		schedulePage.selectWorkRoleFilterByText("Manager", true);
 		dashboardPage.navigateToDashboard();
 		schedulePage.clickOnScheduleConsoleMenuItem();
@@ -1614,11 +1633,12 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), false);
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		int scheduleWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
 		for (int index = 0; index < scheduleWeekCount; index++) {
 			if (index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 
 			if (schedulePage.isGenerateButtonLoaded()) {
 				SimpleUtils.pass("Guidance week found : '" + schedulePage.getActiveWeekText() + "'");
@@ -1669,11 +1689,12 @@ public class ScheduleNewUITest extends TestBase {
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), false);
 
-		schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+		scheduleCommonPage.navigateToNextDayIfStoreClosedForActiveDay();
 	}
 
 
@@ -1706,7 +1727,8 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), false);
-		schedulePage.clickOnDayView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
 		HashMap<String, Float> dayViewHours = schedulePage.getScheduleLabelHoursAndWages();
 
 		float bayAreaBudgetedHours = dayViewHours.get("budgetedHours");
@@ -1752,7 +1774,8 @@ public class ScheduleNewUITest extends TestBase {
 
 		String WeatherCardText = "WEATHER";
 		//Validate Weather Smart card on Week View
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		Thread.sleep(5000);
 		String activeWeekText = schedulePage.getActiveWeekText();
 
@@ -1777,10 +1800,10 @@ public class ScheduleNewUITest extends TestBase {
 		}
 
 		//Validate Weather Smart card on day View
-		schedulePage.clickOnDayView();
+		scheduleCommonPage.clickOnDayView();
 		for (int index = 0; index < dayCount.Seven.getValue(); index++) {
 			if (index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 
 			String activeDayText = schedulePage.getActiveWeekText();
 			if (schedulePage.isSmartCardAvailableByLabel(WeatherCardText)) {
@@ -1812,11 +1835,12 @@ public class ScheduleNewUITest extends TestBase {
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		schedulePage = dashboardPage.goToTodayForNewUI();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), false);
 
-	        schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+		scheduleCommonPage.navigateToNextDayIfStoreClosedForActiveDay();
 	    }
 
 
@@ -1845,13 +1869,14 @@ public class ScheduleNewUITest extends TestBase {
             String weatherSmartCardText = "WEATHER";
             
 	        int weeksToValidate = 6;
-	        schedulePage.clickOnWeekView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnWeekView();
 	        // Validation Start with Past week
-	        schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
 	        for(int index = 0; index < weeksToValidate; index++)
 	        {
 	        	if(index != 0)
-	        		schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+					scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 	        	boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 		        if(!isActiveWeekGenerated)
 		        	schedulePage.generateSchedule();
@@ -1992,7 +2017,8 @@ public class ScheduleNewUITest extends TestBase {
 	        	float demandForecast = todaysForcastData.get("demandForecast");
 	        	float guidanceHours = todaysForcastData.get("guidanceHours");
 	        	SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
-		        boolean isStoreClosedToday = schedulePage.isStoreClosedForActiveWeek();
+	        	ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		        boolean isStoreClosedToday = scheduleCommonPage.isStoreClosedForActiveWeek();
 		        if(! isStoreClosedToday && (demandForecast <= 0))
 		        	SimpleUtils.fail("Dashboard Page: Today's Forecast contains '0' Demand Forecast.", true);
 		        else
@@ -2015,11 +2041,12 @@ public class ScheduleNewUITest extends TestBase {
 	    	DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 	        schedulePage = dashboardPage.goToTodayForNewUI();
-	        schedulePage.clickOnWeekView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnWeekView();
 	        if(!schedulePage.isWeekGenerated())
 	        	schedulePage.generateSchedule();
-	        
-	        schedulePage.clickOnDayView();
+
+			scheduleCommonPage.clickOnDayView();
 	        System.out.println("Active Duration : "+schedulePage.getActiveWeekText());
 	        schedulePage.toggleSummaryView();
 	        if(schedulePage.isSummaryViewLoaded())
@@ -2083,7 +2110,8 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		schedulePage.clickOnDayView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
 		schedulePage.clickOnEditButton();
 		SimpleUtils.assertOnFail("User can add new shift for past week",
 				(schedulePage.isAddNewDayViewShiftButtonLoaded()), true);
@@ -2121,7 +2149,8 @@ public class ScheduleNewUITest extends TestBase {
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-        schedulePage.clickOnDayView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
         String activeDay = schedulePage.getActiveAndNextDay();
         schedulePage.toggleSummaryView();
         if (schedulePage.isSummaryViewLoaded()) {
@@ -2141,7 +2170,7 @@ public class ScheduleNewUITest extends TestBase {
         schedulePage.moveSliderAtCertainPoint(shiftEndTime, shiftSliderDroppable.EndPoint.getValue());
         schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_START_TIME_CLOPENING"), shiftSliderDroppable.StartPoint.getValue());
         validateAssignTeamMemberPageAndSaveSchedule();
-        schedulePage.clickOnNextDaySchedule(activeDay);
+        scheduleCommonPage.clickOnNextDaySchedule(activeDay);
         int previousGutterCountNextDay = schedulePage.getgutterSize();
         scheduleNavigationTest(previousGutterCountNextDay);
         schedulePage.clickNewDayViewShiftButtonLoaded();
@@ -2170,7 +2199,8 @@ public class ScheduleNewUITest extends TestBase {
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
         schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-        schedulePage.clickOnDayView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
         String activeDay = schedulePage.getActiveAndNextDay();
         schedulePage.toggleSummaryView();
         if (schedulePage.isSummaryViewLoaded()) {
@@ -2190,7 +2220,7 @@ public class ScheduleNewUITest extends TestBase {
         schedulePage.moveSliderAtCertainPoint(shiftEndTime, shiftSliderDroppable.EndPoint.getValue());
         schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_START_TIME_CLOPENING"), shiftSliderDroppable.StartPoint.getValue());
         validateAssignTeamMemberPageAndSaveSchedule();
-        schedulePage.clickOnNextDaySchedule(activeDay);
+        scheduleCommonPage.clickOnNextDaySchedule(activeDay);
         int previousGutterCountNextDay = schedulePage.getgutterSize();
         scheduleNavigationTest(previousGutterCountNextDay);
         schedulePage.clickNewDayViewShiftButtonLoaded();
@@ -2235,7 +2265,8 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
 		schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-		schedulePage.clickOnDayView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
 		String activeDay = schedulePage.getActiveAndNextDay();
 		schedulePage.toggleSummaryView();
 		if (schedulePage.isSummaryViewLoaded()) {
@@ -2255,7 +2286,7 @@ public class ScheduleNewUITest extends TestBase {
 		schedulePage.moveSliderAtCertainPoint(shiftEndTime, shiftSliderDroppable.EndPoint.getValue());
 		schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_START_TIME_CLOPENING"), shiftSliderDroppable.StartPoint.getValue());
 		validateAssignTeamMemberPageAndSaveSchedule();
-		schedulePage.clickOnNextDaySchedule(activeDay);
+		scheduleCommonPage.clickOnNextDaySchedule(activeDay);
 		int previousGutterCountNextDay = schedulePage.getgutterSize();
 		scheduleNavigationTest(previousGutterCountNextDay);
 		schedulePage.clickNewDayViewShiftButtonLoaded();

@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.gargoylesoftware.htmlunit.html.HtmlListing;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.OpsPortalConfigurationPage;
 import com.legion.utils.JsonUtil;
@@ -351,7 +352,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.dayWeekPickerSectionNavigatingCorrectly();
 		//In Day view  Clicking on Print button it should give option to print in Landscape mode only
 //		schedulePage.landscapeModeOnlyInDayView();
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		//Filter is working correctly if we select any one or more filters then schedule table data is updating according to that
 		//Todo:Run failed by  LEG-10210
 		schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
@@ -596,8 +598,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		schedulePage.createScheduleForNonDGFlowNewUI();
 		//click on Edit button to add new shift
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.clickOnDayView();
-		schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
+		scheduleCommonPage.navigateToNextDayIfStoreClosedForActiveDay();
 		schedulePage.deleteAllShiftsInDayView();
 		schedulePage.saveSchedule();
 		String workRole = schedulePage.getRandomWorkRole();
@@ -689,9 +692,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//If a TM has more than 40 working hours in a week (As defined in Controls) then Week OT hours should show (Week OT should be enabled in Controls)
 		int workWeekOverTime = Integer.valueOf(schedulePolicyData.get("single_workweek_overtime"));
 		int dayCountInOneWeek = Integer.valueOf(propertyCustomizeMap.get("WORKDAY_COUNT"));
-		schedulePage.clickOnWeekView();
+		scheduleCommonPage.clickOnWeekView();
 		float shiftHoursInWeekForTM = schedulePage.getShiftHoursByTMInWeekView(firstName);
-		schedulePage.clickOnDayView();
+		scheduleCommonPage.clickOnDayView();
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.deleteTMShiftInWeekView(firstName);
 		if (shiftHoursInWeekForTM == 0) {
@@ -711,7 +714,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.searchTeamMemberByName(firstName);
 			schedulePage.clickOnOfferOrAssignBtn();
 			schedulePage.saveSchedule();
-			schedulePage.clickOnWeekView();
+			scheduleCommonPage.clickOnWeekView();
 			float shiftHoursInWeekForTMAftAddNewShift = schedulePage.getShiftHoursByTMInWeekView(firstName);
 
 			if ((shiftHoursInWeekForTMAftAddNewShift -shiftHoursInWeekForTM)>workWeekOverTime) {
@@ -738,7 +741,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.searchTeamMemberByName(firstName);
 			schedulePage.clickOnOfferOrAssignBtn();
 			schedulePage.saveSchedule();
-			schedulePage.clickOnWeekView();
+			scheduleCommonPage.clickOnWeekView();
 			float shiftHoursInWeekForTMAftAddNewShift = schedulePage.getShiftHoursByTMInWeekView(firstName);
 
 			if (shiftHoursInWeekForTMAftAddNewShift > workWeekOverTime) {
@@ -774,7 +777,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.createScheduleForNonDGFlowNewUI();
 		}
 		boolean isWeekView = true;
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		schedulePage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
 		schedulePage.filterScheduleByJobTitle(isWeekView);
 		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -881,7 +885,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.validateTheFocusOfWeek(currentDate);
 
 			//T1838609 Validate the selection of previous and upcoming week.
-			schedulePage.verifySelectOtherWeeks();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			mySchedulePage.verifySelectOtherWeeks();
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(),false);
 		}
@@ -900,10 +905,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String nickName = profileNewUIPage.getNickNameFromProfile();
 
 			//T1838610 Validate the click ability of forward and backward button.
-			schedulePage.validateForwardAndBackwardButtonClickable();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.validateForwardAndBackwardButtonClickable();
 
 			//T1838611 Validate the data according to the selected week.
-			schedulePage.validateTheDataAccordingToTheSelectedWeek();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			mySchedulePage.validateTheDataAccordingToTheSelectedWeek();
 
 			//T1838612 Validate the seven days - Sunday to Saturday is available in schedule table.
 			schedulePage.clickOnScheduleConsoleMenuItem();
@@ -1161,7 +1168,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			// Verify that the closed week day should not have any shifts
 			schedulePage.verifyNoShiftsForSpecificWeekDay(weekDaysToClose);
 			// Go to day view, check the closed week day should show "Store is Closed"
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 			schedulePage.verifyStoreIsClosedForSpecificWeekDay(weekDaysToClose);
 			// Toggle Summary view, verify that the specific week days shows Closed
 			schedulePage.toggleSummaryView();
@@ -1476,7 +1484,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
 				originalComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
 			}
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
 				schedulePage.dragOneShiftToMakeItOverTime();
@@ -1489,7 +1498,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				schedulePage.clickOnUpdateEditShiftTimeButton();
 			}
 			schedulePage.saveSchedule();
-			schedulePage.clickOnWeekView();
+			scheduleCommonPage.clickOnWeekView();
 			int currentComplianceCount = 0;
 			if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
 				currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
@@ -1539,7 +1548,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
 				originalComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
 			}
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
 				schedulePage.dragOneShiftToMakeItOverTime();
@@ -1552,7 +1562,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				schedulePage.clickOnUpdateEditShiftTimeButton();
 			}
 			schedulePage.saveSchedule();
-			schedulePage.clickOnWeekView();
+			scheduleCommonPage.clickOnWeekView();
 			int currentComplianceCount = 0;
 			if (schedulePage.isSpecificSmartCardLoaded(cardName)) {
 				currentComplianceCount = schedulePage.getComplianceShiftCountFromSmartCard(cardName);
@@ -1757,10 +1767,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (!isWeekGenerated){
 				schedulePage.createScheduleForNonDGFlowNewUI();
 			}
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 			//navigate to the time off day
 			for (int i=0; i<6;i++){
-				schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+				scheduleCommonPage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
 			}
 			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			String workRole = schedulePage.getRandomWorkRole();
@@ -2482,7 +2493,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.verifyDayHasShifts("Thursday");
 			schedulePage.verifyDayHasShifts("Friday");
 			schedulePage.verifyDayHasShifts("Saturday");
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 			List<WebElement> shiftsInDayView = schedulePage.getAvailableShiftsInDayView();
 			SimpleUtils.assertOnFail("Day view shifts don't diaplay successfully!", !shiftsInDayView.isEmpty(), false);
 		} catch (Exception e){
@@ -3322,7 +3334,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.clickOnCancelEditShiftTimeButton();
 			schedulePage.clickOnCancelButtonOnEditMode();
 
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 			List<String> gridHeaderTimes = new ArrayList();
 			gridHeaderTimes = schedulePage.getScheduleDayViewGridTimeDuration();
 			SimpleUtils.assertOnFail("The grid header time should start as 6 AM, the actual time is: " +
@@ -3361,7 +3374,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			schedulePage.createScheduleForNonDGFlowNewUI();
 
 			//Go to day view
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 
 			//click search button
 			schedulePage.clickOnOpenSearchBoxButton();

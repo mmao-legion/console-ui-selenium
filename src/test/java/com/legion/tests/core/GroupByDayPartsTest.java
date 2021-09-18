@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -257,7 +258,8 @@ public class GroupByDayPartsTest extends TestBase {
 
 
             // Verify group by dayparts is available in day view
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             List<String> dayPartNamesInDayView = schedulePage.getDayScheduleGroupLabels();
             for (int i = 0; i < dayPartNamesInDayView.size(); i++) {
                 if (dayPartsDefined.contains(dayPartNamesInDayView.get(i))) {
@@ -329,7 +331,8 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify shift shows in the daypart when shift starts outside a daypart in day view
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             randomIndex = schedulePage.getRandomIndexOfShift();
             shift = schedulePage.getTheShiftByIndex(randomIndex);
@@ -417,7 +420,8 @@ public class GroupByDayPartsTest extends TestBase {
                 schedulePage.publishActiveSchedule();
 
                 // Verify shift shows in Unspecified when shift doesn't fall in a daypart in day view
-                schedulePage.clickOnDayView();
+                ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+                scheduleCommonPage.clickOnDayView();
                 schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 randomIndex = schedulePage.getRandomIndexOfShift();
                 shift = schedulePage.getTheShiftByIndex(randomIndex);
@@ -635,7 +639,8 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify shift just appears in the first daypart when a shift starts inside a daypart and ends inside another daypart in day view
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             shiftCountBefore = schedulePage.getShiftsCount();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             randomIndex = schedulePage.getRandomIndexOfShift();
@@ -700,7 +705,8 @@ public class GroupByDayPartsTest extends TestBase {
             if(schedulePage.isPublishButtonLoadedOnSchedulePage() || schedulePage.isRepublishButtonLoadedOnSchedulePage())
                 schedulePage.publishActiveSchedule();
             SimpleUtils.assertOnFail("Schedule page 'Group by Day Parts' option isn't in the drop down list", schedulePage.isGroupByDayPartsLoaded(), false);
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyDayParts.value);
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteAllShiftsOfGivenDayPartInDayView("UNSPECIFIED");
@@ -710,7 +716,7 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify no UNSPECIFIED when no shifts are within it in week view
-            schedulePage.clickOnWeekView();
+            scheduleCommonPage.clickOnWeekView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteAllShiftsOfGivenDayPartInWeekView("UNSPECIFIED");
             schedulePage.saveSchedule();
@@ -727,7 +733,7 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify the daypart is not shown when no shifts are within it in day view
-            schedulePage.clickOnDayView();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteAllShiftsOfGivenDayPartInDayView("LUNCH");
             schedulePage.saveSchedule();
@@ -777,7 +783,8 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify shift shows in the daypart when shift starts inside a daypart and ends outside another daypart in day view
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             randomIndex = schedulePage.getRandomIndexOfShift();
             shift = schedulePage.getTheShiftByIndex(randomIndex);
@@ -788,7 +795,7 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify shift shows in Unspecified when shift doesn't fall in a daypart in week view
-            schedulePage.clickOnWeekView();
+            scheduleCommonPage.clickOnWeekView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             randomIndex = schedulePage.getRandomIndexOfShift();
             shift = schedulePage.getTheShiftByIndex(randomIndex);
@@ -799,7 +806,7 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify shift shows in Unspecified when shift doesn't fall in a daypart in day view
-            schedulePage.clickOnDayView();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             randomIndex = schedulePage.getRandomIndexOfShift();
             shift = schedulePage.getTheShiftByIndex(randomIndex);
@@ -810,7 +817,7 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify the daypart is not shown when no shifts are within it in week view
-            schedulePage.clickOnWeekView();
+            scheduleCommonPage.clickOnWeekView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             randomIndex = schedulePage.getRandomIndexOfShift();
             shift = schedulePage.getTheShiftByIndex(randomIndex);
@@ -862,7 +869,8 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify shift shows in the daypart when shift starts inside a daypart and ends outside another daypart in day view
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             randomIndex = schedulePage.getRandomIndexOfShift();
             shift = schedulePage.getTheShiftByIndex(randomIndex);
@@ -873,7 +881,7 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify shift shows in Unspecified when shift doesn't fall in a daypart in week view
-            schedulePage.clickOnWeekView();
+            scheduleCommonPage.clickOnWeekView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             randomIndex = schedulePage.getRandomIndexOfShift();
             shift = schedulePage.getTheShiftByIndex(randomIndex);
@@ -884,7 +892,7 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify shift shows in Unspecified when shift doesn't fall in a daypart in day view
-            schedulePage.clickOnDayView();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             randomIndex = schedulePage.getRandomIndexOfShift();
             shift = schedulePage.getTheShiftByIndex(randomIndex);
@@ -895,7 +903,7 @@ public class GroupByDayPartsTest extends TestBase {
             schedulePage.publishActiveSchedule();
 
             // Verify the daypart is not shown when no shifts are within it in week view
-            schedulePage.clickOnWeekView();
+            scheduleCommonPage.clickOnWeekView();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             randomIndex = schedulePage.getRandomIndexOfShift();
             shift = schedulePage.getTheShiftByIndex(randomIndex);

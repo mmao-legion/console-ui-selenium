@@ -157,4 +157,33 @@ public class ConsoleWebPageFactory implements PageFactory {
 		return new OpsPortalLaborModelPage();
 	}
 
+	@Override
+	public AnalyzePage createAnalyzePage() { return new ConsoleAnalyzePage(); }
+
+	@Override
+	public CreateSchedulePage createCreateSchedulePage() { return new ConsoleCreateSchedulePage(); }
+
+	@Override
+	public DragAndDropPage createDragAndDropPage() { return new ConsoleDragAndDropPage(); }
+
+	@Override
+	public MySchedulePage createMySchedulePage() { return new ConsoleMySchedulePage(); }
+
+	@Override
+	public ScheduleCommonPage createScheduleCommonPage() { return new ConsoleScheduleCommonPage(); }
+
+	@Override
+	public ScheduleMainPage createScheduleMainPage() { return new ConsoleScheduleMainPage(); }
+
+	@Override
+	public ScheduleShiftTablePage createScheduleShiftTablePage() { return new ConsoleScheduleShiftTablePage(); }
+
+	@Override
+	public ShiftOperatePage createShiftOperatePage() { return new ConsoleShiftOperatePage(); }
+
+	@Override
+	public SmartCardPage createSmartCardPage() { return new ConsoleSmartCardPage(); }
+
+	@Override
+	public ToggleSummaryPage createToggleSummaryPage() { return new ConsoleToggleSummaryPage(); }
 }

@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -212,11 +213,12 @@ public class ConsolidatingFiltersTest extends TestBase {
                     allShiftsCount == schedulePage.getShiftsCount(), false);
 
             //Validate Compliance Review in day view
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnFilterBtn();
             schedulePage.selectShiftTypeFilterByText("Compliance Review");
             for (int i=0; i< 4; i++) {
-                schedulePage.navigateDayViewWithIndex(i);
+                scheduleCommonPage.navigateDayViewWithIndex(i);
                 schedulePage.clickOnFilterBtn();
                 complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
                 complianceShiftsCount = schedulePage.getShiftsCount();
@@ -323,11 +325,12 @@ public class ConsolidatingFiltersTest extends TestBase {
                     allShiftsCount == schedulePage.getShiftsCount(), false);
 
             //Validate Action Required shifts in day view
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnFilterBtn();
             schedulePage.selectShiftTypeFilterByText("Action Required");
             for (int i=0; i< 7; i++) {
-                schedulePage.navigateDayViewWithIndex(i);
+                scheduleCommonPage.navigateDayViewWithIndex(i);
                 schedulePage.clickOnFilterBtn();
                 unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
                 unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
@@ -385,11 +388,11 @@ public class ConsolidatingFiltersTest extends TestBase {
                     allShiftsCount == schedulePage.getShiftsCount(), false);
 
             //Validate Action Required shifts in day view
-            schedulePage.clickOnDayView();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnFilterBtn();
             schedulePage.selectShiftTypeFilterByText("Action Required");
             for (int i=0; i< 7; i++) {
-                schedulePage.navigateDayViewWithIndex(i);
+                scheduleCommonPage.navigateDayViewWithIndex(i);
                 schedulePage.clickOnFilterBtn();
                 unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
                 unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
@@ -489,11 +492,12 @@ public class ConsolidatingFiltersTest extends TestBase {
                     allShiftsCount == schedulePage.getShiftsCount(), false);
 
             //Validate Compliance Review in day view
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnFilterBtn();
             schedulePage.selectShiftTypeFilterByText("Action Required");
             for (int i=0; i< 7; i++) {
-                schedulePage.navigateDayViewWithIndex(i);
+                scheduleCommonPage.navigateDayViewWithIndex(i);
                 schedulePage.clickOnFilterBtn();
                 complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
                 complianceShiftsCount = schedulePage.getShiftsCount();

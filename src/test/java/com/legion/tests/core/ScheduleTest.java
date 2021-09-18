@@ -1,9 +1,11 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
+import java.nio.channels.MulticastChannel;
 import java.util.*;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import org.openqa.selenium.WebElement;
 
 import org.testng.annotations.BeforeMethod;
@@ -117,7 +119,8 @@ public class ScheduleTest extends TestBase{
 	        SchedulePage schedulePage = dashboardPage.goToToday();
 	        SimpleUtils.assertOnFail("Today's Schedule not loaded Successfully!",schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
 	        //get Week view Hours & Wages
-	        schedulePage.clickOnWeekView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnWeekView();
 	        HashMap<String, Float> scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWages();
 	        Float scheduleWeekScheduledHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.scheduledHours.getValue());
 	        Float scheduleWeekBudgetedHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.budgetedHours.getValue());
@@ -126,7 +129,7 @@ public class ScheduleTest extends TestBase{
 	        Float scheduleWeekWagesScheduledCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
 	        
 	        //get days hours & Wages for current week
-	        schedulePage.clickOnDayView();
+			scheduleCommonPage.clickOnDayView();
 	        List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = schedulePage.getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek();
 	        Float scheduleDaysScheduledHoursTotal = (float) 0;
 	        Float scheduleDaysBudgetedHoursTotal = (float) 0;
@@ -264,12 +267,13 @@ public class ScheduleTest extends TestBase{
 	        
 	        //Must have at least "Past Week" schedule published
 	        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-	        schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+	        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
 	        SimpleUtils.assertOnFail("Schedule Page: Past week not generated!",schedulePage.isWeekGenerated() , true);
 	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",schedulePage.isWeekPublished() , true);
 	        
 	        //The schedules that are already published should remain unchanged
-	        schedulePage.clickOnDayView();
+			scheduleCommonPage.clickOnDayView();
 	        schedulePage.clickOnEditButton();
 	        SimpleUtils.assertOnFail("User can add new shift for past week", (! schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
 	        schedulePage.clickOnCancelButtonOnEditMode();
@@ -279,13 +283,13 @@ public class ScheduleTest extends TestBase{
 
 
 	        //there are at least one week in the future where schedule has not yet been published
-	        schedulePage.clickOnWeekView();
-	        schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+			scheduleCommonPage.clickOnWeekView();
+	        scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 
 	        // to do -
 	        for(int index = 1; index < weekCount.values().length; index++)
 	        {
-	        	schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        	scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 	        	if(! schedulePage.isWeekGenerated()){
         			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+schedulePage.getScheduleWeekStartDayMonthDate()+"' not Generated!");
 	        	}
@@ -905,7 +909,8 @@ public class ScheduleTest extends TestBase{
 			// Validate the print feature
 			schedulePage.verifyThePrintFunction();
 			// Validate team schedule by selecting another week
-			schedulePage.verifySelectOtherWeeks();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			mySchedulePage.verifySelectOtherWeeks();
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
