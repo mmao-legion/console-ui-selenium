@@ -690,4 +690,8 @@ public interface SchedulePage {
 	public String getHeaderOnSchedule() throws Exception;
 	public void verifyHeaderOnSchedule() throws Exception;
 	public void verifyShiftInfoIsCorrectOnMealBreakPopUp(List<String> expectedShiftInfo) throws Exception;
+	public void verifyMealBreakAndRestBreakArePlacedCorrectly() throws Exception;
+	public List<String> verifyEditBreaks() throws Exception;
+	public void verifySpecificShiftHaveEditIcon(int index) throws Exception;
+	public void verifyBreakTimesAreUpdated(List<String> expectedBreakTimes) throws Exception;
 }

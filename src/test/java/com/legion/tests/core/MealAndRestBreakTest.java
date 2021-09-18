@@ -130,7 +130,23 @@ public class MealAndRestBreakTest extends TestBase {
             // Verify the shift info is correct
             schedulePage.verifyShiftInfoIsCorrectOnMealBreakPopUp(shiftInfo);
 
-            //
+            // Verify meal break and rest break are placed in the correct time
+            schedulePage.verifyMealBreakAndRestBreakArePlacedCorrectly();
+
+            // Verify can change the length of meal break and rest break
+            // Verify can move the place of meal break and rest break
+            schedulePage.verifyEditBreaks();
+            // Verify the functionality of CANCEL button
+            schedulePage.clickOnCancelEditShiftTimeButton();
+            // Verify the functionality of UPDATE button
+            List<String> breakTimes = schedulePage.verifyEditBreaks();
+            schedulePage.clickOnUpdateEditShiftTimeButton();
+            // Verify the shift should have edit icon
+            schedulePage.verifySpecificShiftHaveEditIcon(index);
+            // Verify the changed meal break and rest break should be updated
+            schedulePage.clickOnShiftByIndex(index);
+            schedulePage.clickOnEditMeaLBreakTime();
+            schedulePage.verifyBreakTimesAreUpdated(breakTimes);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

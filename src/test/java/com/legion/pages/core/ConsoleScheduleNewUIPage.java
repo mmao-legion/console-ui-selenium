@@ -8640,6 +8640,116 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @FindBy(css = ".noUi-connect.color_meal")
+    private List<WebElement> mealBreakDurations;
+    @FindBy(css = ".noUi-connect.color_rest")
+    private List<WebElement> restBreakDurations;
+    @FindBy(css = "[ng-click*=\"addBreak\"]")
+    private List<WebElement> addBreakBtns;
+    @FindBy(css = ".noUi-touch-area.color_meal")
+    private List<WebElement> mealStartEndAreas;
+    @FindBy(css = ".noUi-touch-area.color_rest")
+    private List<WebElement> restStartEndAreas;
+
+    @Override
+    public void verifyBreakTimesAreUpdated(List<String> expectedBreakTimes) throws Exception {
+        int count = 0;
+        if (areListElementVisible(mealBreakTimes, 5) && areListElementVisible(restBreakTimes, 5)) {
+            for (WebElement meal : mealBreakTimes) {
+                if (expectedBreakTimes.contains(meal.getText())) {
+                    count = count + 1;
+                }
+            }
+            for (WebElement rest : restBreakTimes) {
+                if (expectedBreakTimes.contains(rest.getText())) {
+                    count = count + 1;
+                }
+            }
+            if (count == expectedBreakTimes.size()) {
+                SimpleUtils.pass("Meal and rest break times are updated successfully!");
+            } else {
+                SimpleUtils.fail("Meal and rest break times are not updated successfully!", false);
+            }
+        } else {
+            SimpleUtils.fail("Meal and rest break times are not updated successfully!", false);
+        }
+    }
+
+    @Override
+    public void verifyMealBreakAndRestBreakArePlacedCorrectly() throws Exception {
+        try {
+            if (areListElementVisible(restBreakTimes, 5)) {
+                if (areListElementVisible(restBreakDurations, 5) && restBreakDurations.size() == restBreakTimes.size()) {
+                    SimpleUtils.pass("Rest breaks are shown!");
+                } else {
+                    SimpleUtils.fail("Rest breaks show incorrectly!", false);
+                }
+            }
+            if (areListElementVisible(mealBreakTimes, 5)) {
+                if (areListElementVisible(mealBreakDurations, 5) && mealBreakDurations.size() == mealBreakTimes.size()) {
+                    SimpleUtils.pass("Meal breaks are shown!");
+                } else {
+                    SimpleUtils.fail("Meal breaks show incorrectly!", false);
+                }
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
+    }
+
+    @Override
+    public List<String> verifyEditBreaks() throws Exception {
+        List<String> breakTimes = new ArrayList<>();
+        if (isMealBreakTimeWindowDisplayWell(true)) {
+            // Verify delete breaks functionality
+            while(deleteMealBreakButtons.size()>0){
+                click(deleteMealBreakButtons.get(0));
+            }
+            // Verify adding breaks functionality
+            if (areListElementVisible(addBreakBtns, 5)) {
+                for (WebElement addBreakBtn : addBreakBtns) {
+                    clickTheElement(addBreakBtn);
+                }
+            } else {
+                SimpleUtils.fail("Add meal & rest break buttons not loaded successfully!", false);
+            }
+            if (areListElementVisible(mealBreakDurations, 5) && areListElementVisible(restBreakDurations, 5) && mealBreakDurations.size() == 1
+            && restBreakDurations.size() == 1) {
+                moveDayViewCards(mealBreakDurations.get(0), 40);
+                moveDayViewCards(restBreakDurations.get(0), 40);
+            } else {
+                SimpleUtils.fail("Meal and rest breaks are not added after clicking the add button!", false);
+            }
+            if (areListElementVisible(mealStartEndAreas, 5) && areListElementVisible(restStartEndAreas, 5)) {
+                moveDayViewCards(mealStartEndAreas.get(0), 40);
+                moveDayViewCards(restStartEndAreas.get(0), 40);
+            } else {
+                SimpleUtils.fail("Meal and rest start/end area not loaded successfully!", false);
+            }
+            breakTimes.add(mealBreakTimes.get(0).getText());
+            breakTimes.add(restBreakTimes.get(0).getText());
+        }else
+            SimpleUtils.fail("Edit meal break window load failed",true);
+        return breakTimes;
+    }
+
+    @Override
+    public void verifySpecificShiftHaveEditIcon(int index) throws Exception {
+        if (areListElementVisible(shiftsWeekView, 5) && shiftsWeekView.size() > index) {
+            try {
+                if (isElementLoaded(shiftsWeekView.get(index).findElement(By.cssSelector("[src*=edited-shift-week]")))) {
+                    SimpleUtils.pass("The shift with index: " + index + " has edited - pencil icon!");
+                } else {
+                    SimpleUtils.fail("The shift with index: " + index + " doesn't have edited - pencil icon!", false);
+                }
+            } catch (Exception e) {
+                SimpleUtils.fail("The shift with index: " + index + " doesn't have edited - pencil icon!", false);
+            }
+        } else {
+            SimpleUtils.fail("Week view shifts failed to load!", false);
+        }
+    }
+
     @Override
     public void verifyClickOnSubmitButton() throws Exception {
         if (isElementLoaded(submitButton, 10)) {
@@ -11250,7 +11360,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 10)) {
                                 clickTheElement(deleteShift);
-                                waitForSeconds(3);
+                                waitForSeconds(4);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
