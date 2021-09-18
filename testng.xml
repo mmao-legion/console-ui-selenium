@@ -276,6 +276,8 @@
                     <include name="verifyDragDropToTheBlankLastDayToCopyShiftAsInternalAdmin" />
                     <include name="verifyDragDropToTheLastDayToMoveShiftAsInternalAdmin" />
                     <include name="verifyDragDropToTheBlankLastDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToCopyGetOverlappingShiftsAsInternalAdmin" />
+                    <include name="verifyDragDropToToTheSameDayAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
