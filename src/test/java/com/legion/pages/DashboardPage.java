@@ -122,7 +122,7 @@ public interface DashboardPage {
     public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception;
     public void verifyTheHrsUnderOrCoverBudgetOnScheduleVsGuidanceByDayWidget() throws Exception;
     public List<String> getTheDataOnLocationSummaryWidget() throws Exception;
-    public void verifyTheContentOnOrgSummaryWidget(boolean isLaborBudgetToApply) throws Exception;
+    public void verifyTheContentOnOrgSummaryWidget(boolean isClockEnable,boolean isLaborBudgetToApply) throws Exception;
     public boolean isLocationSummaryWidgetDisplay() throws Exception;
     public boolean isOpenShiftsWidgetDisplay() throws Exception;
     public void clickViewSchedulesLinkOnOpenShiftsWidget() throws Exception;

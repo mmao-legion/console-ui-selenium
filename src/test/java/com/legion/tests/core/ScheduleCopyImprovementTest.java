@@ -1445,9 +1445,11 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 
             // Create new shift for TM1 on seven days
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(tm1);
             schedulePage.deleteTMShiftInWeekView(tm2);
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = schedulePage.getRandomWorkRole();
@@ -1477,7 +1479,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.searchTeamMemberByName(tm2);
             schedulePage.clickOnOfferOrAssignBtn();
             schedulePage.saveSchedule();
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+
             schedulePage.publishActiveSchedule();
             SimpleUtils.assertOnFail("The schedule fail to publish! ", schedulePage.isCurrentScheduleWeekPublished(), false);
 

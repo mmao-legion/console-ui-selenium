@@ -2326,22 +2326,22 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 	}
 
 	public void validateLoadingOfTimeSheetSmartCard() throws Exception {
-		if(isElementEnabled(timesheetApprovalSmartCard,5)){
+		if(isElementEnabled(timesheetApprovalSmartCard,10)){
 			SimpleUtils.pass("Timesheet Approval Smart Card loaded Successfully!!");
 		}else{
 			SimpleUtils.fail("Timesheet Approval Smart Card not loaded Successfully!!",true);
 		}
-		if(isElementEnabled(totalUnplannedClocksSmartCard,5)){
+		if(isElementEnabled(totalUnplannedClocksSmartCard,10)){
 			SimpleUtils.pass("Total Unplanned Smart Card loaded Successfully!!");
 		}else{
 			SimpleUtils.fail("Total Unplanned Smart Card not loaded Successfully!!",true);
 		}
-		if(isElementEnabled(SummaryOfUnplannedClocksSmartCard,5)){
+		if(isElementEnabled(SummaryOfUnplannedClocksSmartCard,10)){
 			SimpleUtils.pass("Unplanned Clocks Detail Summary Smart Card loaded Successfully!!");
 		}else{
 			SimpleUtils.fail("Unplanned Clocks Detail Summary Smart Card not loaded Successfully!!",true);
 		}
-		if(areListElementVisible(timesheetTblRow,5)){
+		if(areListElementVisible(timesheetTblRow,10)){
 			SimpleUtils.pass("Rows of Timesheet table loaded Successfully on page!!");
 		}else{
 			SimpleUtils.fail("Rows of Timesheet table not loaded Successfully on page!!",false);
@@ -2413,7 +2413,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		if(areListElementVisible(detailSummaryUnplannedClocksVal,1)){
 			for(int i=0;i<detailSummaryUnplannedClocksVal.size();i++){
 				totalUnplannedClocksOnDMViewSmartCardDetailSummary  = totalUnplannedClocksOnDMViewSmartCardDetailSummary +
-						Integer.parseInt((detailSummaryUnplannedClocksVal.get(i).getText().split("\n"))[0]);
+						Integer.parseInt((detailSummaryUnplannedClocksVal.get(i).getText().replace(",", "").split("\n"))[0]);
 			}
 		}else{
 			SimpleUtils.fail("Detail Summary of Unplanned Smart Card Text not loaded Successfully!!",true);
@@ -2556,7 +2556,8 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		int totalUnplannedClocksOnDMView = 0;
 		if(areListElementVisible(unplannedClocksTblView,2)){
 			for(int i=0; i< unplannedClocksTblView.size();i++){
-				totalUnplannedClocksOnDMView  = totalUnplannedClocksOnDMView + Integer.parseInt((unplannedClocksTblView.get(i).getText()));
+				totalUnplannedClocksOnDMView  = totalUnplannedClocksOnDMView +
+						Integer.parseInt((unplannedClocksTblView.get(i).getText().replace(",", "")));
 			}
 		}else{
 			SimpleUtils.fail("Unplanned Clocks data not displayed on DM view of Timesheet table",true);
@@ -2568,7 +2569,8 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 		int totalTimesheetsOnDMView = 0;
 		if(areListElementVisible(totalTimesheetsTblView,2)){
 			for(int i=0; i< totalTimesheetsTblView.size();i++){
-				totalTimesheetsOnDMView  = totalTimesheetsOnDMView + Integer.parseInt((totalTimesheetsTblView.get(i).getText()));
+				totalTimesheetsOnDMView  = totalTimesheetsOnDMView +
+						Integer.parseInt((totalTimesheetsTblView.get(i).getText().replace(",", "")));
 			}
 		}else{
 			SimpleUtils.fail("Total Timesheet data not displayed on DM view of Timesheet table",true);

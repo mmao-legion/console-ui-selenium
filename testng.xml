@@ -276,6 +276,8 @@
                     <include name="verifyDragDropToTheBlankLastDayToCopyShiftAsInternalAdmin" />
                     <include name="verifyDragDropToTheLastDayToMoveShiftAsInternalAdmin" />
                     <include name="verifyDragDropToTheBlankLastDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToCopyGetOverlappingShiftsAsInternalAdmin" />
+                    <include name="verifyDragDropToToTheSameDayAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -565,18 +567,22 @@
                         <include name="verifyDistrictSummaryWidgetOnDashboardInRegionViewAsInternalAdmin" />
                         <include name="verifyScheduleFunctionalityForBUViewAsInternalAdmin" />
                         <include name="verifyScheduleFunctionalityForRegionViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnScheduleInRegionViewAsInternalAdmin" />
+                        <include name="verifyTheContentBetweenWeeksOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyTheContentBetweenWeeksOnScheduleInRegionViewAsInternalAdmin" />
 
                         <!-- Added by Mary -->
                         <include name="verifyRegionViewNavigationAsInternalAdmin" />
                         <include name="verifyBUViewNavigationAsInternalAdmin" />
                         <include name="verifyControlsInBUViewAsInternalAdmin" />
                         <include name="verifyControlsInRegionViewAsInternalAdmin" />
-                        <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" />
-                        <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
-                        <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
-                        <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
-                        <include name="verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin" />
-                        <include name="verifyRefreshFeatureOnComplianceInRegionViewAsInternalAdmin" />
+                        <!--                         <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525 -->
+                                                <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
+                                                <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
+                                                <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
+                        <!--                        <include name="verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin" />
+                                                <include name="verifyRefreshFeatureOnComplianceInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525 -->
                         <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
                         <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
                         <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" />

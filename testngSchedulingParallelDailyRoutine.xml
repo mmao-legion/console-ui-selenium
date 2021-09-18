@@ -130,6 +130,7 @@
                     <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                     <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin" />
                     <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />
+                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
                 </methods>
             </class>
         </classes>
@@ -238,6 +239,9 @@
             <class name="com.legion.tests.core.SchedulingMinorTest">
                 <methods>
                     <include name="verifyEditMinorRulesAsInternalAdmin"/>
+                    <include name="verifyMinorInfoOnProfilePageAsInternalAdmin" />
+                    <include name="verifyMinorFilterAsInternalAdmin" />
+                    <include name="verifyMinorBadgeInfoAsInternalAdmin" />
 <!--                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
                     <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
@@ -323,4 +327,53 @@
         </classes>
     </test>
 
+    <test name="Upperfield Test">
+        <classes>
+            <class name="com.legion.tests.core.UpperfieldTest">
+                <methods>
+                    <!-- Added by Mary -->
+                    <include name="verifyRegionViewNavigationAsInternalAdmin" />
+                    <include name="verifyBUViewNavigationAsInternalAdmin" />
+                    <include name="verifyControlsInBUViewAsInternalAdmin" />
+                    <include name="verifyControlsInRegionViewAsInternalAdmin" />
+                    <!--                         <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525 -->
+                    <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
+                    <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
+                    <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
+                    <!--                        <include name="verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin" />
+                                            <include name="verifyRefreshFeatureOnComplianceInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525 -->
+                    <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
+                    <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
+                    <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" />
+                    <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceBUViewAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceBUViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceRegionViewAsInternalAdmin" />
+                    <include name="verifyAnalyticTableInTimesheetBUViewAsInternalAdmin" />
+                    <include name="verifyAnalyticTableInTimesheetRegionViewAsInternalAdmin" />
+                    <!--                       <include name="verifyRegionListAndSubRegionOnTimesheetInBUViewAsInternalAdmin" />
+                                           <include name="verifyRegionListAndSubRegionOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525-->
+                    <include name="verifyTimesheetFunctionalityInBUViewAsInternalAdmin" />
+                    <include name="verifyTimesheetFunctionalityInRegionViewAsInternalAdmin" />
+                    <!--                        <include name="verifyRefreshFeatureOnTimesheetInBUViewAsInternalAdmin" />
+                                            <include name="verifyRefreshFeatureOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-5058 -->
+                    <!--                        <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInBUViewAsInternalAdmin" />
+                                            <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/TA-5507-->
+                    <include name="verifyUnplannedClocksOnTimesheetInBUViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" />
+                    <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" />
+                    <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" />
+                    <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
+                    <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
+                    <include name="verifyScheduleStatusOnScheduleInBUViewAsInternalAdmin" />
+                    <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
+                    <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInBUViewAsInternalAdmin" />
+                    <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInRegionViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->
