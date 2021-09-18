@@ -28,7 +28,7 @@
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
   <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
-                    <include name="verifyComplianceSmartCardFunctionality" />
+                    <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
  <!--                   <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView" />
