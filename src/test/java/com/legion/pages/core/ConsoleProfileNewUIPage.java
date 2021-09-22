@@ -3275,7 +3275,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					if(areListElementVisible(saveBtnsOfProfile, 5)){
 						scrollToElement(saveBtnsOfProfile.get(0));
 						clickTheElement(saveBtnsOfProfile.get(0));
-						verifyAlertDialog();
+						verifyEmailAddressInvalidAlertDialog();
 					}
 				}
 			}
@@ -3294,7 +3294,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return false;
 	}
 
-	private void verifyAlertDialog() throws Exception{
+	private void verifyEmailAddressInvalidAlertDialog() throws Exception{
 		if (isElementLoaded(alertDialog,10) && alertDialog.findElement(By.cssSelector(".lgn-alert-message.ng-scope.warning")).getText().contains("Email address invalid")){
 			clickOnOKBtnOnAlert();
 			SimpleUtils.pass("Email is valid so can not save successfully!");
@@ -3783,6 +3783,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	public void clickAvailabilityEditButton() throws Exception{
 		if (isElementLoaded(editBtn,10)){
+			scrollToBottom();
 			moveToElementAndClick(editBtn);
 		}else{
 			SimpleUtils.fail("Edit button is not loaded!", false);
@@ -4064,5 +4065,30 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("There shouldn't be any buttons pop up for cancelled request!", false);
 			}
 		}
+	}
+
+
+	@Override
+	public boolean isAlertDialogLoaded() throws Exception{
+		boolean isAlertDialogLoaded = false;
+		if (isElementLoaded(alertDialog,10)){
+			isAlertDialogLoaded = true;
+			SimpleUtils.report("Email is valid so can not save successfully!");
+		} else {
+			SimpleUtils.report("No alert dialog for invalid email format!");
+		}
+		return isAlertDialogLoaded;
+	}
+
+	@Override
+	public String getMessageFromAlertDialog () throws Exception{
+		String message = "";
+		if (isElementLoaded(alertDialog,10)){
+			message = alertDialog.findElement(By.cssSelector("span")).getText();
+			SimpleUtils.pass("Email is valid so can not save successfully!");
+		} else {
+			SimpleUtils.fail("No alert dialog for invalid email format!",false);
+		}
+		return message;
 	}
 }

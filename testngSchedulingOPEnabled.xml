@@ -261,4 +261,14 @@
             </class>
         </classes>
     </test>
+
+    <test name="Profile Test">
+        <classes>
+            <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
+                <methods>
+                   <include name="verifyManagerCannotEditTheAvailabilityWhenTMHasPendingRequestAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

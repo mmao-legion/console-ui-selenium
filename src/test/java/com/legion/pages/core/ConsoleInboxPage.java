@@ -387,7 +387,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
 
     @Override
     public void checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(boolean isTurnOn) throws Exception {
-        if (isElementLoaded(createAnnouncementIcon,5)) {
+        if (isElementLoaded(createAnnouncementIcon,10)) {
             clickTheElement(createAnnouncementIcon);
             if(isElementLoaded(newAnnouncementModal,5)){
                 // check 'Create new announcement' text

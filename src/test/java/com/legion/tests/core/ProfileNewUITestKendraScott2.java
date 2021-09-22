@@ -1,13 +1,16 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.junit.experimental.theories.Theories;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -15,8 +18,8 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static com.legion.utils.MyThreadLocal.getTimeOffEndTime;
-import static com.legion.utils.MyThreadLocal.getTimeOffStartTime;
+import static com.legion.utils.MyThreadLocal.*;
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class ProfileNewUITestKendraScott2 extends TestBase {
 
@@ -793,6 +796,80 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
                     changedPreferredAvailabilities.size()==0, false);
             SimpleUtils.assertOnFail("The changed busy availabilities should not load! ",
                     changedBusyAvailabilities.size()==0, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the manager cannot edit the availability of the TM that has pending request")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void verifyManagerCannotEditTheAvailabilityWhenTMHasPendingRequestAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            //Login as TM
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String tmName = profileNewUIPage.getNickNameFromProfile();
+            String myProfileLabel = "My Work Preferences";
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+            int i = 0;
+            while (!profileNewUIPage.getCountForStatus("pending").trim().equalsIgnoreCase("0") && i <20) {
+                profileNewUIPage.cancelAllPendingAvailabilityRequest();
+                Thread.sleep(2000);
+                i++;
+            }
+            //Create multiple availability requests
+            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+                profileNewUIPage.clickNextWeek();
+            }
+            String availabilityWeek1 = profileNewUIPage.getAvailabilityWeek();
+            profileNewUIPage.clickAvailabilityEditButton();
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+            profileNewUIPage.clickNextWeek();
+            String availabilityWeek2 = profileNewUIPage.getAvailabilityWeek();
+            profileNewUIPage.clickAvailabilityEditButton();
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+            //Get the editable week info
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            //Login as SM
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(tmName);
+            profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
+            profileNewUIPage.clickAvailabilityEditButton();
+            SimpleUtils.assertOnFail("The availability cannot be edited alert fail to load! ",
+                    profileNewUIPage.isAlertDialogLoaded()
+                            && profileNewUIPage.getMessageFromAlertDialog().equalsIgnoreCase("This Team Member current has open Availability Requests. Please approve or deny the requests before making any changes"), false);
+            profileNewUIPage.clickOnOKBtnOnAlert();
+
+            //Approve or reject one request, then try to edit the TM's availability
+            profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest( availabilityWeek1, "Approve");
+            Thread.sleep(3000);
+            profileNewUIPage.clickAvailabilityEditButton();
+            SimpleUtils.assertOnFail("The availability cannot be edited alert fail to load! ",
+                    profileNewUIPage.isAlertDialogLoaded()
+                            && profileNewUIPage.getMessageFromAlertDialog().equalsIgnoreCase("This Team Member current has an open Availability Request. Please approve or deny the request before making any changes"), false);
+            profileNewUIPage.clickOnOKBtnOnAlert();
+
+            //Approve or reject all requests, then try to edit the TM's availability
+            profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(availabilityWeek2, "Reject");
+            Thread.sleep(3000);
+            profileNewUIPage.clickAvailabilityEditButton();
+            SimpleUtils.assertOnFail("The availability cannot be edited alert fail to load! ",
+                    !profileNewUIPage.isAlertDialogLoaded(), false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
