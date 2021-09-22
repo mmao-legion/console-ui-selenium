@@ -79,7 +79,7 @@
         </classes>
     </test>
 
-    <test name="Cinemark Minor Test">
+<!--    <test name="Cinemark Minor Test"> Blocked by SCH-5291
         <classes>
             <class name="com.legion.tests.core.CinemarkMinorTest">
                 <methods>
@@ -102,19 +102,19 @@
                     <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
-                    <!--                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" Debug/>-->
+                    &lt;!&ndash;                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" Debug/>&ndash;&gt;
                     <include name="verifySchoolCalendarListAsInternalAdmin" />
                     <include name="verifyCreateCalendarAsInternalAdmin" />
                     <include name="verifyAddDatesForBreaksAsInternalAdmin" />
-                    <!-- blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" />-->
-                    <!--                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>-->
-                    <!-- blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" />-->
+                    &lt;!&ndash; blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" />&ndash;&gt;
+                    &lt;!&ndash;                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>&ndash;&gt;
+                    &lt;!&ndash; blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" />&ndash;&gt;
                     <include name="verifySchoolCalendarDefaultMonthAsInternalAdmin" />
                     <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 <!--
     <test name="Schedule Copy Improvement Test">
         <classes>
