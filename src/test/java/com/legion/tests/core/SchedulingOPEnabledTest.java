@@ -2203,12 +2203,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager to check the activity
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise") + fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
