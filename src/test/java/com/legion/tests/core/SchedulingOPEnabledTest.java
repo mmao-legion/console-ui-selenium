@@ -2727,12 +2727,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             loginPage.logOut();
 
             // Login as Team Member
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise") + fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             schedulePage.goToSchedulePageAsTeamMember();
