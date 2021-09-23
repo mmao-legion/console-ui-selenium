@@ -694,4 +694,8 @@ public interface SchedulePage {
 	public List<String> verifyEditBreaks() throws Exception;
 	public void verifySpecificShiftHaveEditIcon(int index) throws Exception;
 	public void verifyBreakTimesAreUpdated(List<String> expectedBreakTimes) throws Exception;
+	public void verifyShiftNotesContent(String shiftNotes) throws Exception;
+	public void addShiftNotesToTextarea(String notes) throws Exception;
+	public String getShiftInfoInEditShiftDialog() throws Exception;
+	public void clickOnEditShiftNotesOption() throws Exception;
 }

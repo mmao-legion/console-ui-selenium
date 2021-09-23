@@ -390,6 +390,8 @@
                     <include name="verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin" />
+                    <include name="verifyEditNotesOptionIsAvailableAsInternalAdmin" />
+                    <include name="verifyEditNotesOptionIsAvailableForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
