@@ -33,7 +33,6 @@
         </classes>
     </test>
     -->
-<!-- Bloced by SCH-5216
     <test name="Drag And Drop Test">
         <classes>
             <class name="com.legion.tests.core.DragAndDropTest">
@@ -43,7 +42,6 @@
             </class>
         </classes>
     </test>
--->
 
     <test name="Delete Schedule Test">
         <classes>
