@@ -49,16 +49,6 @@
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyAccessControlsOnActivitiesPage" />
                     <include name="verifyTheContentOnActivityAsStoreManager" />
- <!--                   <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
-                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
-                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
-                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
-                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
-                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin" />
-                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />-->
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
     <!--                <include name="verifyDashboardFunctionalityAsTeamMember" />-->
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
@@ -74,6 +64,22 @@
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Activity Test">
+        <classes>
+            <class name="com.legion.tests.core.ActivityTest">
+                <methods>
+                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
+<!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />-->
+                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
