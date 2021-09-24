@@ -3287,6 +3287,113 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	}
 
 	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "validate update notes for assigned shifts")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyUpdateShiftNotesForAssignedShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//edit schedule
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnFilterBtn();
+		schedulePage.selectShiftTypeFilterByText("Action Required");
+		schedulePage.deleteTMShiftInWeekView("");
+		schedulePage.clickOnFilterBtn();
+		schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+		int i = 0;
+		int index = 0;
+		List<String> shiftInfo = schedulePage.getTheShiftInfoByIndex(i);
+		while (shiftInfo.size() == 0 && shiftInfo.get(0).toLowerCase().contains("open")) {
+			i++;
+			if (i>10 && i>= schedulePage.getShiftsCount()){
+				break;
+			}
+			shiftInfo = schedulePage.getTheShiftInfoByIndex(i);
+			index = i;
+		}
+		schedulePage.clickProfileIconOfShiftByIndex(index);
+		schedulePage.clickOnEditShiftNotesOption();
+		//add shift notes.
+		schedulePage.addShiftNotesToTextarea("shift notes version1");
+		schedulePage.saveSchedule();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickProfileIconOfShiftByIndex(index);
+		schedulePage.clickOnEditShiftNotesOption();
+		//update shift notes.
+		schedulePage.addShiftNotesToTextarea("shift notes version2");
+		schedulePage.saveSchedule();
+		schedulePage.clickProfileIconOfShiftByIndex(index);
+		schedulePage.clickOnEditShiftNotesOption();
+		schedulePage.verifyShiftNotesContent("shift notes version2");
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "validate update notes for open shifts")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyUpdateEditNotesForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		schedulePage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		schedulePage.navigateToNextWeek();
+		boolean isWeekGenerated = schedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			schedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//edit schedule
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickOnFilterBtn();
+		schedulePage.selectShiftTypeFilterByText("Action Required");
+		schedulePage.deleteTMShiftInWeekView("");
+		schedulePage.clickOnFilterBtn();
+		schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+		String workRole = schedulePage.getRandomWorkRole();
+		//create an open shifts.
+		schedulePage.clickOnDayViewAddNewShiftButton();
+		schedulePage.customizeNewShiftPage();
+		//schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		schedulePage.moveSliderAtCertainPoint("8","8");
+		schedulePage.selectWorkRole(workRole);
+		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+		schedulePage.clickOnCreateOrNextBtn();
+		schedulePage.clickOnFilterBtn();
+		schedulePage.selectShiftTypeFilterByText("open");
+		int index = 0;
+		schedulePage.clickProfileIconOfShiftByIndex(index);
+		schedulePage.clickOnEditShiftNotesOption();
+		//add shift notes.
+		schedulePage.addShiftNotesToTextarea("shift notes version1");
+		schedulePage.saveSchedule();
+		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		schedulePage.clickProfileIconOfShiftByIndex(index);
+		schedulePage.clickOnEditShiftNotesOption();
+		//update shift notes.
+		schedulePage.addShiftNotesToTextarea("shift notes version2");
+		schedulePage.saveSchedule();
+		schedulePage.clickProfileIconOfShiftByIndex(index);
+		schedulePage.clickOnEditShiftNotesOption();
+		schedulePage.verifyShiftNotesContent("shift notes version2");
+	}
+
+	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify assign TM warning: If SM wants to schedule a TM from another location and schedule hasn’t been generated")

@@ -392,6 +392,8 @@
                     <include name="verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin" />
                     <include name="verifyEditNotesOptionIsAvailableAsInternalAdmin" />
                     <include name="verifyEditNotesOptionIsAvailableForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyUpdateShiftNotesForAssignedShiftsAsInternalAdmin" />
+                    <include name="verifyUpdateEditNotesForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
