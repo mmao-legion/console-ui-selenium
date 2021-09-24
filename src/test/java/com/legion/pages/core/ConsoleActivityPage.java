@@ -745,7 +745,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                     }
                 }
                 // Wait for the card to change the status message, such as approved or rejected
-                waitForSeconds(3);
+                waitForSeconds(30);
                 if (areListElementVisible(activityCards, 15)) {
                     WebElement approveOrRejectMessage = activityCards.get(0).findElement(By.className("notification-approved"));
                     if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {

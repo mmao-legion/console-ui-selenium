@@ -107,7 +107,7 @@
                     <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
-                    <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
+                    <include name="verifySMCanSelectACalendarForMinorAsInternalAdmin" />
                     <!--                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" Debug/>-->
                     <include name="verifySchoolCalendarListAsInternalAdmin" />
                     <include name="verifyCreateCalendarAsInternalAdmin" />

@@ -309,7 +309,7 @@
                 <methods>
                     <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
                     <include name="verifyMinorFieldIsDisplayedOnTMProfileAsInternalAdmin" />
-                    <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
+                    <include name="verifySMCanSelectACalendarForMinorAsInternalAdmin" />
                     <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />
                     <include name="verifySchoolCalendarListAsInternalAdmin" />
                     <include name="verifyCreateCalendarAsInternalAdmin" />
@@ -390,6 +390,8 @@
                     <include name="verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin" />
+                    <include name="verifyEditNotesOptionIsAvailableAsInternalAdmin" />
+                    <include name="verifyEditNotesOptionIsAvailableForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

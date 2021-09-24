@@ -5361,6 +5361,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private WebElement openPopYesButton;
     @FindBy(css = "div[ng-class*='OfferTMs']")
     private WebElement OfferTMS;
+    @FindBy(css = "div[ng-class*='EditShiftNotes']")
+    private WebElement EditShiftNotes;
 
     public void beforeEdit() {
         if (areListElementVisible(imageSize, 5)) {
@@ -10672,6 +10674,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
+    @Override
+    public void clickOnEditShiftNotesOption() throws Exception {
+        if(isElementLoaded(EditShiftNotes,5)) {
+            clickTheElement(EditShiftNotes);
+            SimpleUtils.pass("Clicked on EditShiftNotes option ");
+        } else {
+            SimpleUtils.fail("EditShiftNotes is disabled or not available to Click ", false);
+        }
+    }
 
     @Override
     public void verifyRecommendedTableHasTM() throws Exception{
@@ -16434,6 +16445,63 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.pass("Schedule Page: Header is \"Schedule\" as expected");
         else
             SimpleUtils.fail("Dashboard Page: Header isn't \"Schedule\"",true);
+    }
+
+    @FindBy(css = "div.modal-dialog div.edit-shift-notes")
+    private WebElement EditShiftNotesDialog;
+
+    @Override
+    public void verifyShiftNotesContent(String shiftNotes){
+        if (isElementEnabled(EditShiftNotesDialog, 10)){
+            //verify dialog title.
+            if (EditShiftNotesDialog.findElement(By.cssSelector("div.modal-instance-header-title")).getText().equalsIgnoreCase("Edit Shift Notes")){
+                SimpleUtils.pass("Edit shift notes dialog title is correct!");
+            } else {
+                SimpleUtils.fail("Edit shift notes dialog title is incorrect!", false);
+            }
+            //verify placeholder.
+            if (EditShiftNotesDialog.findElement(By.cssSelector("textarea")).getAttribute("placeholder").equalsIgnoreCase("Add note (Optional)")){
+                SimpleUtils.pass("Shift notes placeholder is expected!");
+            } else {
+                SimpleUtils.fail("Shift notes placeholder is incorrect!", false);
+            }
+            //verify shift notes content.
+            if (EditShiftNotesDialog.findElement(By.cssSelector("textarea")).getAttribute("value").equalsIgnoreCase(shiftNotes)){
+                SimpleUtils.pass("Shift notes is not expected!");
+            } else {
+                SimpleUtils.fail("Shift notes is not expected!", false);
+            }
+        } else {
+            SimpleUtils.fail("Edit shift notes dialog is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void addShiftNotesToTextarea(String notes){
+        if (isElementEnabled(EditShiftNotesDialog.findElement(By.cssSelector("textarea")), 10)){
+            EditShiftNotesDialog.findElement(By.cssSelector("textarea")).clear();
+            EditShiftNotesDialog.findElement(By.cssSelector("textarea")).sendKeys(notes);
+            clickOnSaveBtnOnEditShiftNotesDialog();
+        } else {
+            SimpleUtils.fail("Edit shift notes dialog is not loaded!", false);
+        }
+    }
+
+    public void clickOnSaveBtnOnEditShiftNotesDialog(){
+        if (isElementEnabled(EditShiftNotesDialog.findElement(By.cssSelector("div.confirm")), 10)){
+            clickTheElement(EditShiftNotesDialog.findElement(By.cssSelector("div.confirm")));
+            SimpleUtils.pass("Update button is clicked!");
+        } else {
+            SimpleUtils.fail("Edit shift notes dialog is not loaded!", false);
+        }
+    }
+
+    @Override
+    public String getShiftInfoInEditShiftDialog() throws Exception {
+        if (isElementEnabled(EditShiftNotesDialog.findElement(By.cssSelector(".sch-day-view-shift-outer")), 10)){
+            return EditShiftNotesDialog.findElement(By.cssSelector(".sch-day-view-shift-outer .left-shift-box")).getText()+EditShiftNotesDialog.findElement(By.cssSelector(".sch-day-view-shift-outer .right-shift-box")).getText();
+        }
+        return null;
     }
 }
 

@@ -130,6 +130,8 @@
                     <include name="verifyComplianceWarningInPublishConfirmModalAsInternalAdmin" />
                     <include name="verifyHrsOverBudgetInPublishConfirmModalForNonDGAsInternalAdmin" />
                     <include name="verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin" />
+                    <include name="verifyEditNotesOptionIsAvailableAsInternalAdmin" />
+                    <include name="verifyEditNotesOptionIsAvailableForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
