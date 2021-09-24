@@ -1443,7 +1443,7 @@ public class DMViewTest extends TestBase {
         float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
         float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
         float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
-        float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+        float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Double time"))));
 
 
         if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
@@ -1464,13 +1464,6 @@ public class DMViewTest extends TestBase {
             if (valuesFromLocationsWithViolationCard.containsKey("Doubletime (Hrs)")){
                 SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime (Hrs)")-topViolationInDoubletimeCol)==0, false);
             }
-        }
-        //Validate the content on top violations card.
-
-        try {
-
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
@@ -1715,7 +1708,7 @@ public class DMViewTest extends TestBase {
                 dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
         //Validate the content on Location Summary widget display correctly
-        dashboardPage.verifyTheContentOnOrgSummaryWidget(true);
+        dashboardPage.verifyTheContentOnOrgSummaryWidget(false, true);
 
         //Validate the Hrs Over Or Under Budget On Location Summary Widget
         dashboardPage.verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget();

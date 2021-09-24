@@ -3,6 +3,7 @@ package com.legion.tests.core;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -936,7 +937,8 @@ public class LocationGroupTest extends TestBase {
         schedulePage.clickOnFilterBtn();
         schedulePage.selectChildLocationFilterByText("Child1");
         schedulePage.clickOnFilterBtn();
-        schedulePage.clickOnDayView();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnDayView();
 
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteAllShiftsInDayView();
@@ -1028,7 +1030,8 @@ public class LocationGroupTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             schedulePage.selectChildLocationFilterByText("Mountain View");
             schedulePage.clickOnFilterBtn();
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
 
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteAllShiftsInDayView();
@@ -1447,7 +1450,8 @@ public class LocationGroupTest extends TestBase {
             schedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
             schedulePage.clickNextBtnOnCreateScheduleWindow();
 
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnFilterBtn();
             schedulePage.selectChildLocationFilterByText("Child1");
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -2229,7 +2233,8 @@ public class LocationGroupTest extends TestBase {
 
             // Verify the LG schedule can be printed and the shift display correctly in print file in day view
             /// In day view, print the schedule by click Print button
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             SimpleUtils.assertOnFail("Print Icon not loaded Successfully!", schedulePage.isPrintIconLoaded(), false);
             schedulePage.verifyThePrintFunction();
 
@@ -2318,7 +2323,8 @@ public class LocationGroupTest extends TestBase {
 
             // Verify the LG schedule can be printed and the shift display correctly in print file in day view
             /// In day view, print the schedule by click Print button
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             SimpleUtils.assertOnFail("Print Icon not loaded Successfully!", schedulePage.isPrintIconLoaded(), false);
             schedulePage.verifyThePrintFunction();
 

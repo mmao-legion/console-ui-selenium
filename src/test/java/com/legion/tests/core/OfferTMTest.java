@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -79,16 +80,17 @@ public class OfferTMTest extends TestBase {
         //verify assigned shift in non-edit mode for week view and day view
         schedulePage.clickOnProfileIcon();
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
-        schedulePage.clickOnDayView();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnDayView();
         schedulePage.clickOnProfileIconOfShiftInDayView("no");
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
 
         //verify assigned shift in edit mode for week view and day view
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.clickOnProfileIcon();
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
-        schedulePage.clickOnDayView();
+        scheduleCommonPage.clickOnDayView();
         schedulePage.clickOnProfileIconOfShiftInDayView("no");
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", !schedulePage.isOfferTMOptionVisible(), false);
         schedulePage.saveSchedule();
@@ -108,19 +110,19 @@ public class OfferTMTest extends TestBase {
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
         SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
         //--verify in week view
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.clickOnProfileIconOfOpenShift();
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
         SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
         schedulePage.saveSchedule();
         //verify auto open shift in non-edit mode.
         //--verify in day view
-        schedulePage.clickOnDayView();
+        scheduleCommonPage.clickOnDayView();
         schedulePage.clickOnProfileIconOfShiftInDayView("open");
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
         SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
         //--verify in week view
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.clickOnProfileIconOfOpenShift();
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
         SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
@@ -128,7 +130,7 @@ public class OfferTMTest extends TestBase {
         //create manual open shifts.
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView("open");
-        schedulePage.clickOnDayView();
+        scheduleCommonPage.clickOnDayView();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
@@ -143,19 +145,19 @@ public class OfferTMTest extends TestBase {
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
         SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
         //--verify in week view
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.clickOnProfileIconOfOpenShift();
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
         SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
         schedulePage.saveSchedule();
         //verify manual open shifts in non-edit mode.
         //--verify in day view
-        schedulePage.clickOnDayView();
+        scheduleCommonPage.clickOnDayView();
         schedulePage.clickOnProfileIconOfShiftInDayView("open");
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
         SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);
         //--verify in week view
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.clickOnProfileIconOfOpenShift();
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", schedulePage.isOfferTMOptionVisible(), false);
         SimpleUtils.assertOnFail("Offer TMs option should be enabled!", schedulePage.isOfferTMOptionEnabled(), false);

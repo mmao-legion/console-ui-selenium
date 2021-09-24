@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleForecastPage;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -99,11 +100,12 @@ public class ForecastTest extends TestBase{
 			Float sum = 0.0f;
 			HashMap<String, Float> insightDataInWeek = new HashMap<String, Float>();
 			insightDataInWeek = ForecastPage.getInsightDataInShopperWeekView();
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 			//click the first day of a week
-			schedulePage.clickOnPreviousDaySchedule("Sun");
+			scheduleCommonPage.clickOnPreviousDaySchedule("Sun");
 			for (int index = 0; index < ConsoleScheduleNewUIPage.dayCount.Seven.getValue(); index++) {
-				schedulePage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+				scheduleCommonPage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
 				if (schedulePage.inActiveWeekDayClosed(index)){
 					SimpleUtils.report("Store is closed and there is no insight smartc");
 				}else {
@@ -120,7 +122,7 @@ public class ForecastTest extends TestBase{
 				//SimpleUtils.fail("verifyShopperForecastFunctionality: Total Shoppers data is wrong",true);
 				SimpleUtils.warn("BUG existed-->SF-418:Total Shoppers data is wrong!");
 			}
-			schedulePage.clickOnWeekView();
+			scheduleCommonPage.clickOnWeekView();
 			//navigate to <> buttons are working
 			ForecastPage.verifyNextPreviousBtnCorrectOrNot();
 			//After selecting of all display filter option, data in Projected shoppers is showing according to filters
@@ -156,7 +158,8 @@ public class ForecastTest extends TestBase{
 		ForecastPage forecastPage = pageFactory.createForecastPage();
 		forecastPage.clickForecast();
 		//Validate Weather Smart card on Week View
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 
 		Thread.sleep(5000);
 		String activeWeekText = schedulePage.getActiveWeekText();
@@ -183,10 +186,10 @@ public class ForecastTest extends TestBase{
 		}
 
 		//Validate Weather Smart card on day View
-		schedulePage.clickOnDayView();
+		scheduleCommonPage.clickOnDayView();
 		for (int index = 0; index < ScheduleNewUITest.dayCount.Seven.getValue(); index++) {
 			if (index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
 
 			String activeDayText = schedulePage.getActiveWeekText();
 			if (schedulePage.isSmartCardAvailableByLabel(WeatherCardText)) {

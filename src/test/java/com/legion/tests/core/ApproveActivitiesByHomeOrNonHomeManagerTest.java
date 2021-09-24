@@ -458,7 +458,8 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         String linkName = "View Shifts";
         schedulePage.clickLinkOnSmartCardByName(linkName);
         SimpleUtils.assertOnFail("Open shifts not load Successfully!", schedulePage.areShiftsPresent(), false);
-        List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+        List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
+        Thread.sleep(5000);
         schedulePage.selectOneShiftIsClaimShift(claimShift);
         schedulePage.clickTheShiftRequestByName(claimShift.get(0));
         schedulePage.verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval();
@@ -614,8 +615,8 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         schedulePage.navigateToNextWeek();
 
         //Check the shift is not assigned TM
-        List<WebElement> shiftsOfTuesday = schedulePage.getOneDayShiftByName(0, teamMemberName);
-        SimpleUtils.assertOnFail("The shift should not been assigned! ",shiftsOfTuesday.size()==0, false);
+        List<WebElement> shiftsOfTM = schedulePage.getOneDayShiftByName(0, teamMemberName);
+        SimpleUtils.assertOnFail("The shift should not been assigned! ",shiftsOfTM.size()==0, false);
         loginPage.logOut();
 
         // 4.Login with TM's non-home SM to check activity
@@ -635,7 +636,8 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         schedulePage.navigateToNextWeek();
 
         //Check the shift is assigned TM
-        shiftsOfTuesday = schedulePage.getOneDayShiftByName(0, teamMemberName);
-        SimpleUtils.assertOnFail("The shift should not been assigned! ",shiftsOfTuesday.size()> 0, false);
+        Thread.sleep(3000);
+        shiftsOfTM = schedulePage.getOneDayShiftByName(0, teamMemberName);
+        SimpleUtils.assertOnFail("The shift should not been assigned! ",shiftsOfTM.size()> 0, false);
     }
 }

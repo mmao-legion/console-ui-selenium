@@ -2,7 +2,9 @@ package com.legion.tests.core;
 
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LiquidDashboardPage;
+import com.legion.pages.ScheduleCommonPage;
 import com.legion.pages.SchedulePage;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -66,7 +68,8 @@ public class MealAndRestBreakTest extends TestBase {
             schedulePage.verifySpecificOptionEnabledOnShiftMenu(breakOption);
 
             // Verify Breaks option is enabled in non-Edit mode day view
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnProfileIcon();
             schedulePage.verifySpecificOptionEnabledOnShiftMenu(breakOption);
 
@@ -76,7 +79,7 @@ public class MealAndRestBreakTest extends TestBase {
             schedulePage.verifySpecificOptionEnabledOnShiftMenu(editBreakOption);
 
             // Verify Edit Breaks is enabled in edit mode week view
-            schedulePage.clickOnWeekView();
+            scheduleCommonPage.clickOnWeekView();
             schedulePage.clickOnProfileIcon();
             schedulePage.verifySpecificOptionEnabledOnShiftMenu(editBreakOption);
         } catch (Exception e){
@@ -130,7 +133,23 @@ public class MealAndRestBreakTest extends TestBase {
             // Verify the shift info is correct
             schedulePage.verifyShiftInfoIsCorrectOnMealBreakPopUp(shiftInfo);
 
-            //
+            // Verify meal break and rest break are placed in the correct time
+            schedulePage.verifyMealBreakAndRestBreakArePlacedCorrectly();
+
+            // Verify can change the length of meal break and rest break
+            // Verify can move the place of meal break and rest break
+            schedulePage.verifyEditBreaks();
+            // Verify the functionality of CANCEL button
+            schedulePage.clickOnCancelEditShiftTimeButton();
+            // Verify the functionality of UPDATE button
+            List<String> breakTimes = schedulePage.verifyEditBreaks();
+            schedulePage.clickOnUpdateEditShiftTimeButton();
+            // Verify the shift should have edit icon
+            schedulePage.verifySpecificShiftHaveEditIcon(index);
+            // Verify the changed meal break and rest break should be updated
+            schedulePage.clickOnShiftByIndex(index);
+            schedulePage.clickOnEditMeaLBreakTime();
+            schedulePage.verifyBreakTimesAreUpdated(breakTimes);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

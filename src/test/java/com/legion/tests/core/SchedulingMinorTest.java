@@ -4,6 +4,7 @@ import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -519,7 +520,8 @@ public class SchedulingMinorTest extends TestBase {
         schedulePage.saveSchedule();
         //create shifts for minors.
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayView();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnDayView();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
@@ -548,7 +550,7 @@ public class SchedulingMinorTest extends TestBase {
         schedulePage.clickOnFilterBtn();
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
         SimpleUtils.assertOnFail("There should be all shifts displaying!", 1 < schedulePage.getShiftsCount(), false);
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.clickOnFilterBtn();
         schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
         SimpleUtils.assertOnFail("There should be only one shift for minor 14!", 1 == schedulePage.getShiftsCount(), false);
@@ -569,7 +571,7 @@ public class SchedulingMinorTest extends TestBase {
         schedulePage.clickOnFilterBtn();
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
         SimpleUtils.assertOnFail("There should be all shifts displaying!", 1 < schedulePage.getShiftsCount(), false);
-        schedulePage.clickOnDayView();
+        scheduleCommonPage.clickOnDayView();
         schedulePage.clickOnFilterBtn();
         schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
         SimpleUtils.assertOnFail("There should be only one shift for minor 14!", 1 == schedulePage.getShiftsCount(), false);
@@ -615,7 +617,8 @@ public class SchedulingMinorTest extends TestBase {
         schedulePage.saveSchedule();
         //create shifts for minors.
         schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayView();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnDayView();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
@@ -643,7 +646,7 @@ public class SchedulingMinorTest extends TestBase {
         schedulePage.selectShiftTypeFilterByText("Minor (16-17)");
         schedulePage.verifyShiftsHasMinorsColorRing("minor-16");
         SimpleUtils.assertOnFail("There should be minor info in i icon popup!",schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)).contains("Minor 16-17"), false);
-        schedulePage.clickOnWeekView();
+        scheduleCommonPage.clickOnWeekView();
         schedulePage.clickOnFilterBtn();
         schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
         schedulePage.verifyShiftsHasMinorsColorRing("minor-14");
@@ -666,7 +669,7 @@ public class SchedulingMinorTest extends TestBase {
         schedulePage.selectShiftTypeFilterByText("Minor (16-17)");
         schedulePage.verifyShiftsHasMinorsColorRing("minor-16");
         SimpleUtils.assertOnFail("There should be minor info in i icon popup!",schedulePage.getIIconTextInfo(schedulePage.getTheShiftByIndex(0)).contains("Minor 16-17"), false);
-        schedulePage.clickOnDayView();
+        scheduleCommonPage.clickOnDayView();
         schedulePage.clickOnFilterBtn();
         schedulePage.selectShiftTypeFilterByText("Minor (14-15)");
         schedulePage.verifyShiftsHasMinorsColorRing("minor-14");

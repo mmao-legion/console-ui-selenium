@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -25,15 +26,10 @@ import static com.legion.utils.MyThreadLocal.teamMemberName;
 
 public class ScheduleCopyImprovementTest extends TestBase {
 
-    private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
-    private static Map<String, String> newTMDetails1 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
-    private static Map<String, String> newTMDetails2 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember2.json");
     private static HashMap<String, Object[][]> controlTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("VailqacnTeamMembers.json");
     private static HashMap<String, Object[][]> opTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
     private static String controlEnterprice = "Vailqacn_Enterprise";
     private static String opEnterprice = "CinemarkWkdy_Enterprise";
-    private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
-    private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
 
     @Override
     @BeforeMethod()
@@ -627,10 +623,11 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Check unassigned shifts on day view
             List<WebElement> allShiftsInDayView = new ArrayList<>();
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             if(isCopySchedule && option.equalsIgnoreCase("No, keep as unassigned")){
                 for (int i = 0; i< 7; i++) {
-                    schedulePage.navigateDayViewWithIndex(i);
+                    scheduleCommonPage.navigateDayViewWithIndex(i);
                     if (schedulePage.isRequiredActionSmartCardLoaded()){
                         SimpleUtils.pass("The " +i+ " day has unassigned shifts! ");
                         Thread.sleep(2000);
@@ -663,7 +660,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             } else if (!isCopySchedule && option.equalsIgnoreCase("No, keep as unassigned")) {
                 boolean hasActionRequiredSmartCardInDayView = false;
                 for (int i = 0; i< 7; i++) {
-                    schedulePage.navigateDayViewWithIndex(i);
+                    scheduleCommonPage.navigateDayViewWithIndex(i);
                     if (schedulePage.isRequiredActionSmartCardLoaded()){
                         hasActionRequiredSmartCardInDayView = true;
                         allShiftsInDayView = schedulePage.getAvailableShiftsInDayView();
@@ -917,10 +914,11 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Check OOOH shifts on day view
             List<WebElement> allShiftsInDayView = new ArrayList<>();
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
 
             for (int i = 0; i< 7; i++) {
-                schedulePage.navigateDayViewWithIndex(i);
+                scheduleCommonPage.navigateDayViewWithIndex(i);
                 if (schedulePage.isRequiredActionSmartCardLoaded()){
                     SimpleUtils.pass("The " +i+ " day has OOOH shifts! ");
                     Thread.sleep(2000);
@@ -1445,9 +1443,11 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 
             // Create new shift for TM1 on seven days
+            schedulePage.convertAllUnAssignedShiftToOpenShift();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(tm1);
             schedulePage.deleteTMShiftInWeekView(tm2);
+            schedulePage.deleteTMShiftInWeekView("Unassigned");
             schedulePage.saveSchedule();
             schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = schedulePage.getRandomWorkRole();
@@ -1477,7 +1477,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.searchTeamMemberByName(tm2);
             schedulePage.clickOnOfferOrAssignBtn();
             schedulePage.saveSchedule();
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+
             schedulePage.publishActiveSchedule();
             SimpleUtils.assertOnFail("The schedule fail to publish! ", schedulePage.isCurrentScheduleWeekPublished(), false);
 
@@ -1868,10 +1868,11 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             schedulePage.clickOnFinishButtonOnCreateSchedulePage();
 
-            schedulePage.clickOnDayView();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnDayView();
             List<String> gridHeaderTimes = new ArrayList();
             for (int i = 0; i< 7; i++) {
-                schedulePage.navigateDayViewWithIndex(i);
+                scheduleCommonPage.navigateDayViewWithIndex(i);
                 String weekDay = schedulePage.getScheduleWeekStartDayMonthDate();
                 gridHeaderTimes = schedulePage.getScheduleDayViewGridTimeDuration();
                 if (weekDay.contains("Sun")) {

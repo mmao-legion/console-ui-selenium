@@ -111,7 +111,8 @@ public class LoginTest extends TestBase{
 			}
 		}
 
-		schedulePage.clickOnDayView();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
 		int previousGutterCount = schedulePage.getgutterSize();
 		scheduleNavigationTest(previousGutterCount);
 		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();

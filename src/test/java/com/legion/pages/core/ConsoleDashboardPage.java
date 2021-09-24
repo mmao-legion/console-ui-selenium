@@ -9,10 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import com.legion.pages.BasePage;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.ScheduleDMViewPage;
-import com.legion.pages.SchedulePage;
+import com.legion.pages.*;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -963,7 +960,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		waitForSeconds(3);
 		if (isElementLoaded(refreshButton, 20)) {
 			clickTheElement(refreshButton);
-			if(isElementLoaded(lastUpdatedIcon, 120) && lastUpdatedIcon.getText().equalsIgnoreCase("JUST UPDATED")){
+			waitForSeconds(2);
+			if(isElementLoaded(lastUpdatedIcon, 60) && lastUpdatedIcon.getText().equalsIgnoreCase("JUST UPDATED")){
 				SimpleUtils.pass("Click on Refresh button Successfully!");
 			} else
 				SimpleUtils.fail("Refresh timeout! ", false);
@@ -2717,6 +2715,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 //					}
 //				}
                 //compare the hours between widgets on dashboard page
+				clickOnRefreshButton();
 				String budgetHoursFromDashboard = budgetHoursMessageSpan.getText().split(" ")[0];
 				if (budgetHoursMessageOnLocationSummaryWidget.getText().split(" ")[0].equalsIgnoreCase(budgetHoursFromDashboard)) {
 					SimpleUtils.pass("Budget hrs display correctly on Schedule Vs Guidance By Day Widget!");
@@ -2728,6 +2727,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				click(scheduleConsoleMenu);
 				waitForSeconds(3);
 				ScheduleDMViewPage scheduleDMViewPage = new ConsoleScheduleDMViewPage();
+				scheduleDMViewPage.clickOnRefreshButton();
 				String budgetHoursFromSchedulePage = scheduleDMViewPage.
 						getTextFromTheChartInLocationSummarySmartCard().get(4).split(" ")[0];
 				if (budgetHoursFromDashboard.equalsIgnoreCase(budgetHoursFromSchedulePage)) {
@@ -2914,7 +2914,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return title;
 	}
 
-	public void verifyTheContentOnOrgSummaryWidget(boolean isLaborBudgetToApply) throws Exception {
+	public void verifyTheContentOnOrgSummaryWidget(boolean isClockEnable, boolean isLaborBudgetToApply) throws Exception {
         WebElement viewSchedulesLink = widgetsOnUpperFieldDashboard.get(0).findElement(By.xpath("//div[contains(text(),\"View Schedules\")]"));
         WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
 		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All ", "");
@@ -2928,7 +2928,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
 					&& areListElementVisible(bugetedScheduledProjectedHours, 5)
 					&& bugetedScheduledProjectedHours.size() == 3
-					&& isElementLoaded(projectedHoursAsCurrentTime, 5)
+					&& (isClockEnable? isElementLoaded(projectedHoursAsCurrentTime, 5): true)
 					&& isElementLoaded(projectedWithinBudgetCaret, 5)
 					&& isElementLoaded(projectedOverBudgetCaret, 5)
 					&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)

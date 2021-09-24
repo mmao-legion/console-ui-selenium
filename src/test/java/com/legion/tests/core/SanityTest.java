@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.mobile.LoginPageAndroid;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
@@ -388,13 +389,14 @@ public class SanityTest extends TestBase{
 		String weatherSmartCardText = "WEATHER";
 
 		int weeksToValidate = 6;
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		// Validation Start with Past week
-		schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+		scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
 		for(int index = 0; index < weeksToValidate; index++)
 		{
 			if(index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
 			boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
 			if(!isActiveWeekGenerated)
 				schedulePage.generateOrUpdateAndGenerateSchedule();
@@ -442,12 +444,13 @@ public class SanityTest extends TestBase{
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-		schedulePage.clickOnWeekView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnWeekView();
 		int scheduleWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
 		for(int index = 0; index < scheduleWeekCount; index++)
 		{
 			if(index != 0)
-				schedulePage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
+				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
 
 			if(schedulePage.isGenerateButtonLoaded())
 			{
@@ -633,9 +636,10 @@ public class SanityTest extends TestBase{
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
 		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		//The schedules that are already published should remain unchanged
-		schedulePage.clickOnDayView();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnDayView();
 		boolean isStoreClosed = false;
-		schedulePage.navigateToNextDayIfStoreClosedForActiveDay();
+		scheduleCommonPage.navigateToNextDayIfStoreClosedForActiveDay();
 		int previousGutterCount = schedulePage.getgutterSize();
 		scheduleNavigationTest(previousGutterCount);
 		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
@@ -709,7 +713,8 @@ public class SanityTest extends TestBase{
 					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' Generated Successfully.");
 				else
 					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not Generated.", false);
-				schedulePage.clickOnDayView();
+				ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+				scheduleCommonPage.clickOnDayView();
 				int shiftIntervalCountInAnHour = schedulePage.getScheduleShiftIntervalCountInAnHour();
 				if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue().split(" ")[0]))
 					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()

@@ -126,14 +126,26 @@ public class TestRailOperation {
 
     public static List<Integer> getTestCaseIDFromTitle(String title, int projectID, APIClient client)
     {
-        JSONArray testCasesList;
+        JSONArray testCasesList = new JSONArray();
+        JSONObject result;
         JSONObject jsonSectionName;
-        JSONArray sectionNameList;
+        JSONArray sectionNameList = new JSONArray();
+        String s = null;
         int suiteId = Integer.valueOf(TestBase.testSuiteID);
         int testCaseID = 0;
         List<Integer> testCaseIDList = new ArrayList<>();
         try {
-            sectionNameList = (JSONArray) client.sendGet("get_sections/"+projectID+"/&suite_id="+suiteId);
+            do {
+                if (s == null){
+                    result = (JSONObject)client.sendGet("get_sections/"+projectID+"/&suite_id="+suiteId);
+                } else {
+                    result = (JSONObject)client.sendGet(s.replace("/api/v2/",""));
+                }
+                sectionNameList.addAll((JSONArray) result.get("sections")) ;
+                s = String.valueOf(((JSONObject)result.get("_links")).get("next"));
+            } while (s != null && s.contains("/api/v2/"));
+
+
             for(Object sectionName : sectionNameList)
             {
 
@@ -142,7 +154,18 @@ public class TestRailOperation {
                 {
                     long longSectionID = (Long) jsonSectionName.get("id");
                     int sectionID = (int)longSectionID;
-                    testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&suite_id="+suiteId+"&section_id="+sectionID);
+                    do {
+                        if (s == null || s.equalsIgnoreCase("null")){
+                            result = (JSONObject)client.sendGet("get_cases/"+projectID+"/&suite_id="+suiteId+"&section_id="+sectionID);
+                        } else {
+                            result = (JSONObject)client.sendGet(s.replace("/api/v2/",""));
+                        }
+                        testCasesList.addAll((JSONArray) result.get("cases")) ;
+                        s = String.valueOf(((JSONObject)result.get("_links")).get("next"));
+                    } while (s != null && s.contains("/api/v2/"));
+
+
+                    //testCasesList = (JSONArray) client.sendGet("get_cases/"+projectID+"/&suite_id="+suiteId+"&section_id="+sectionID);
                     for(Object testCaseList : testCasesList){
                         JSONObject testCaseId = (JSONObject) testCaseList;
                         long longTestCaseID = (Long) testCaseId.get("id");

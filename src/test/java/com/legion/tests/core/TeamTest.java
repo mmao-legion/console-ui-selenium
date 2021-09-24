@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import cucumber.api.java.ro.Si;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -161,7 +162,8 @@ public class TeamTest extends TestBase{
 			if (!schedulePage.isWeekGenerated()) {
 				schedulePage.generateOrUpdateAndGenerateSchedule();
 			}
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 			schedulePage.clickOnEditButton();
 			schedulePage.isAddNewDayViewShiftButtonLoaded();
 			schedulePage.clickNewDayViewShiftButtonLoaded();
@@ -174,7 +176,7 @@ public class TeamTest extends TestBase{
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.searchTeamMemberByName(firstName);
 			schedulePage.clickOnOfferOrAssignBtn();
-			schedulePage.clickOnWeekView();
+			scheduleCommonPage.clickOnWeekView();
 			// Verify Shifts will go to Auto Scheduling  after Activating any TM
 			schedulePage.verifyNewShiftsAreShownOnSchedule(firstName);
 		} catch (Exception e){
@@ -230,7 +232,8 @@ public class TeamTest extends TestBase{
 			if (!schedulePage.isWeekGenerated()) {
 				schedulePage.generateOrUpdateAndGenerateSchedule();
 			}
-			schedulePage.clickOnDayView();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnDayView();
 			schedulePage.clickOnEditButton();
 			schedulePage.isAddNewDayViewShiftButtonLoaded();
 			schedulePage.clickNewDayViewShiftButtonLoaded();
@@ -243,7 +246,7 @@ public class TeamTest extends TestBase{
 			schedulePage.clickOnCreateOrNextBtn();
 			schedulePage.searchTeamMemberByName(firstName);
 			schedulePage.clickOnOfferOrAssignBtn();
-			schedulePage.clickOnWeekView();
+			scheduleCommonPage.clickOnWeekView();
 			schedulePage.verifyNewShiftsAreShownOnSchedule(firstName);
 			schedulePage.clickSaveBtn();
 			List<Integer> indexes = schedulePage.getAddedShiftIndexes(firstName);

@@ -995,7 +995,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Regions Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
             // Validate the content in Region Summary widget
-            dashboardPage.verifyTheContentOnOrgSummaryWidget(true);
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(true,true);
 
             // Validate region number in Region Summary widget
             List<String> regionList = locationSelectorPage.getOrgList();
@@ -1061,7 +1061,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Regions Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
             // Validate the content in Region Summary widget
-            dashboardPage.verifyTheContentOnOrgSummaryWidget(false);
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(true,false);
 
             //  Validate Guidance Hrs match
             dataFromRegionSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
@@ -1102,7 +1102,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Districts Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
             // Validate the content in Region Summary widget
-            dashboardPage.verifyTheContentOnOrgSummaryWidget(true);
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(true, true);
 
             // Validate district number in Region Summary widget
             List<String> districtList = locationSelectorPage.getOrgList();
@@ -1169,7 +1169,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Districts Summary widget loaded fail!", dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
             // Validate the content in Region Summary widget
-            dashboardPage.verifyTheContentOnOrgSummaryWidget(false);
+            dashboardPage.verifyTheContentOnOrgSummaryWidget(true, false);
 
             //  Validate Guidance Hrs match
             dataFromDistrictSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
@@ -1680,27 +1680,28 @@ public class UpperfieldTest extends TestBase {
         }
     }
 
+
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Region View Navigation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyRegionViewNavigationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyRegionViewNavigationAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            String regionName = selectedUpperFields.get(Region);
             String districtName = selectedUpperFields.get(District);
+            String regionName = selectedUpperFields.get(Region);
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            locationSelectorPage.isRegionView();
 
             //Validate user has see multiple regions in upperfield dropdown list
             List<String> upperFieldNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList(Region);
-            SimpleUtils.assertOnFail("The selected region should display in the search region dropdown list!", upperFieldNames.contains(selectedUpperFields.get(Region)), false);
+            SimpleUtils.assertOnFail("The selected region should display in the search region dropdown list!",
+                    upperFieldNames.contains(selectedUpperFields.get(Region)), false);
 
             //Validate drilling into a district
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
@@ -1711,7 +1712,6 @@ public class UpperfieldTest extends TestBase {
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             schedulePage.clickOnScheduleConsoleMenuItem();
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            locationSelectorPage.isRegionView();
 
             //Validate navigating back to region view
             SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!",
@@ -1754,7 +1754,6 @@ public class UpperfieldTest extends TestBase {
         }
     }
 
-
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Vailqacn_Enterprise")
@@ -1769,7 +1768,6 @@ public class UpperfieldTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
-            String districtName = selectedUpperFields.get(District);
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String buName = selectedUpperFields.get(BusinessUnit);
@@ -1782,7 +1780,6 @@ public class UpperfieldTest extends TestBase {
 
             //Validate drilling into a region
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            locationSelectorPage.isRegionView();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 
             //Validate navigating back to BU view
@@ -2165,7 +2162,6 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.report("Total Extra Hours In Region View for future week is " + totalExtraHoursInRegionViewForFuture);
             SimpleUtils.assertOnFail("Compliance Page: Analytics table doesn't match the future week's data",
                     totalExtraHoursInRegionViewForFuture.equals("0"), false);
-
 
             // Validate Late Schedule is Yes or No
             compliancePage.navigateToPreviousWeek();
@@ -2719,7 +2715,7 @@ public class UpperfieldTest extends TestBase {
             float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
             float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
             float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
-            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Double Time"))));
 
             if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
                 HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
@@ -2772,7 +2768,7 @@ public class UpperfieldTest extends TestBase {
             float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
             float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
             float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
-            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+            float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Double Time"))));
 
             if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
                 HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
@@ -3095,7 +3091,7 @@ public class UpperfieldTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            Thread.sleep(5000);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
@@ -3149,7 +3145,7 @@ public class UpperfieldTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            Thread.sleep(5000);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
@@ -3617,7 +3613,7 @@ public class UpperfieldTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            Thread.sleep(5000);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
@@ -3736,7 +3732,8 @@ public class UpperfieldTest extends TestBase {
             String field5 = "Budget Variance";
             SimpleUtils.assertOnFail(field1 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field1) > 0, false);
             SimpleUtils.assertOnFail(field2 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field2) > 0, false);
-            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field3) > 0, false);
+            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable("Budget Hrs") > 0
+                    || schedulePage.getIndexOfColInDMViewTable("Guidance Hrs") > 0 , false);
             SimpleUtils.assertOnFail(field4 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field4) > 0, false);
             SimpleUtils.assertOnFail(field5 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field5) > 0, false);
 
@@ -3786,7 +3783,11 @@ public class UpperfieldTest extends TestBase {
         }
 
         //Check budget hrs on BU and region view
-        index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+        if (schedulePage.getIndexOfColInDMViewTable("Budget Hrs") > 0)
+            index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+        else
+            index = schedulePage.getIndexOfColInDMViewTable("Guidance Hrs");
+
         List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
         float budgetHrsOnReviewView = 0;
         for (float f: data){
@@ -3847,7 +3848,9 @@ public class UpperfieldTest extends TestBase {
             String field5 = "Budget Variance";
             SimpleUtils.assertOnFail(field1 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field1) > 0, false);
             SimpleUtils.assertOnFail(field2 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field2) > 0, false);
-            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field3) > 0, false);
+            SimpleUtils.assertOnFail(field3 + " field doesn't show up!",
+                    schedulePage.getIndexOfColInDMViewTable(field3) > 0 ||
+                            schedulePage.getIndexOfColInDMViewTable("Guidance Hrs") > 0, false);
             SimpleUtils.assertOnFail(field4 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field4) > 0, false);
             SimpleUtils.assertOnFail(field5 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field5) > 0, false);
 
@@ -3912,13 +3915,22 @@ public class UpperfieldTest extends TestBase {
                     (Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedWithin")) +
                             Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
+            int index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+            if ( index == 0)
+                index = schedulePage.getIndexOfColInDMViewTable("Guidance Hrs");
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
             float budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
+            float budgetHourOnSummaryCard = 0;
+            index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+            if (index == 0)
+                budgetHourOnSummaryCard = valuesFromRegionSummaryCard.get("Guidance Hrs");
+            else
+                budgetHourOnSummaryCard = valuesFromRegionSummaryCard.get("Budgeted Hrs");
             SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
-                    (Math.abs(valuesFromRegionSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+                    (Math.abs(budgetHourOnSummaryCard) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours
             data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
             float scheduledHrsFromTable = 0;
@@ -3934,16 +3946,16 @@ public class UpperfieldTest extends TestBase {
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)>0){
+            if ((budgetHourOnSummaryCard- projectedHours)>0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             }
-            if ((valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)<0){
+            if ((budgetHourOnSummaryCard - projectedHours)<0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             }
 
-            //Verify currect week Projected Hours displays.
+            //Verify current week Projected Hours displays.
             schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hrs");
 
             //Navigate to the past week to verify the info and data.
@@ -3957,13 +3969,23 @@ public class UpperfieldTest extends TestBase {
                     (Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedWithin")) +
                             Math.round(valuesFromRegionSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
+            if (schedulePage.getIndexOfColInDMViewTable("Budget Hrs") > 0)
+                index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+            else
+                index = schedulePage.getIndexOfColInDMViewTable("Guidance Hrs");
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
             budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
-            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
-                    (Math.abs(valuesFromRegionSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+            index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+            if (index == 0)
+                budgetHourOnSummaryCard = valuesFromRegionSummaryCard.get("Guidance Hrs");
+            else
+                budgetHourOnSummaryCard = valuesFromRegionSummaryCard.get("Budgeted Hrs");
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent! The budget hours on summary card is : "+ budgetHourOnSummaryCard
+                            + " The budget hours on the table is: "+ budgetedHrsFromTable,
+                    (Math.abs(budgetHourOnSummaryCard) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours.
             data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
             scheduledHrsFromTable = 0;
@@ -3978,12 +4000,12 @@ public class UpperfieldTest extends TestBase {
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)>=0){
+            if ((budgetHourOnSummaryCard - projectedHours)>=0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             } else {
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (valuesFromRegionSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
 
             }
             //Verify past week Clocked Hours displays.
@@ -4026,13 +4048,22 @@ public class UpperfieldTest extends TestBase {
                     (Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedWithin")) +
                             Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
+            int index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+            if ( index == 0)
+                index = schedulePage.getIndexOfColInDMViewTable("Guidance Hrs");
+            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
             float budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
+            float budgetHourOnSummaryCard = 0;
+            index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+            if (index == 0)
+                budgetHourOnSummaryCard = valuesFromDistrictSummaryCard.get("Guidance Hrs");
+            else
+                budgetHourOnSummaryCard = valuesFromDistrictSummaryCard.get("Budgeted Hrs");
             SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
-                    (Math.abs(valuesFromDistrictSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+                    (Math.abs(budgetHourOnSummaryCard) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours
             data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
             float scheduledHrsFromTable = 0;
@@ -4048,16 +4079,16 @@ public class UpperfieldTest extends TestBase {
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)>0){
+            if ((budgetHourOnSummaryCard - projectedHours)>0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             }
-            if ((valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)<0){
+            if ((budgetHourOnSummaryCard - projectedHours)<0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             }
 
-            //Verify currect week Projected Hours displays.
+            //Verify current week Projected Hours displays.
             schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hrs");
 
             //Navigate to the past week to verify the info and data.
@@ -4071,13 +4102,23 @@ public class UpperfieldTest extends TestBase {
                     (Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedWithin")) +
                             Math.round(valuesFromDistrictSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budget Hrs")));
+            if (schedulePage.getIndexOfColInDMViewTable("Budget Hrs") > 0)
+                index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+            else
+                index = schedulePage.getIndexOfColInDMViewTable("Guidance Hrs");
+            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
             budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
-            SimpleUtils.assertOnFail("Budgeted hours are inconsistent!",
-                    (Math.abs(valuesFromDistrictSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
+            index = schedulePage.getIndexOfColInDMViewTable("Budget Hrs");
+            if (index == 0)
+                budgetHourOnSummaryCard = valuesFromDistrictSummaryCard.get("Guidance Hrs");
+            else
+                budgetHourOnSummaryCard = valuesFromDistrictSummaryCard.get("Budgeted Hrs");
+            SimpleUtils.assertOnFail("Budgeted hours are inconsistent! The budget hours on summary card is : "+ budgetHourOnSummaryCard
+                            + " The budget hours on the table is: "+ budgetedHrsFromTable,
+                    (Math.abs(budgetHourOnSummaryCard) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours.
             data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Published Hrs")));
             scheduledHrsFromTable = 0;
@@ -4092,12 +4133,12 @@ public class UpperfieldTest extends TestBase {
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)>=0){
+            if ((budgetHourOnSummaryCard - projectedHours)>=0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             } else {
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (valuesFromDistrictSummaryCard.get("Budgeted Hrs") - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
 
             }
             //Verify past week Clocked Hours displays.

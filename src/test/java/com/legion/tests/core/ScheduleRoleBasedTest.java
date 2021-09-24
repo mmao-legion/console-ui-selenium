@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.legion.pages.ScheduleCommonPage;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -209,7 +211,8 @@ public class ScheduleRoleBasedTest extends TestBase {
     public HashMap<String, Float> getCurrentWeekData() throws Exception {
         HashMap<String, Float> scheduleWeekViewLabelData = new HashMap<String, Float>();
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnWeekView();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnWeekView();
         scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWages();
 
         return scheduleWeekViewLabelData;
@@ -219,7 +222,8 @@ public class ScheduleRoleBasedTest extends TestBase {
     public synchronized List<HashMap<String, Float>> getDaysDataofCurrentWeek() throws Exception {
         List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays = new ArrayList<HashMap<String, Float>>();
         SchedulePage schedulePage= pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnDayView();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnDayView();
         scheduleDaysViewLabelDataForWeekDays = schedulePage.getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek();
 
         return scheduleDaysViewLabelDataForWeekDays;

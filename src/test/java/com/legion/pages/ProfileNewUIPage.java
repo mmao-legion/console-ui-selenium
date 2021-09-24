@@ -286,4 +286,8 @@ public interface ProfileNewUIPage {
 	public void approveSpecificRejectedAvailabilityRequest(String availabilityWeek) throws Exception;
 
 	public void verifyClickCancelledAvalabilityRequest() throws Exception;
+
+	public boolean isAlertDialogLoaded() throws Exception;
+
+	public String getMessageFromAlertDialog () throws Exception;
 }

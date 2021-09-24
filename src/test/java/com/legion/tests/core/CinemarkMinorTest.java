@@ -6,6 +6,7 @@ import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
@@ -143,7 +144,8 @@ public class CinemarkMinorTest extends TestBase {
             if (!isWeekGenerated){
                 schedulePage.createScheduleForNonDGFlowNewUI();
             }
-            schedulePage.navigateDayViewWithDayName("Sat");
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.navigateDayViewWithDayName("Sat");
             Map<String, String> dayInfo = schedulePage.getActiveDayInfo();
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -165,6 +167,7 @@ public class CinemarkMinorTest extends TestBase {
                     (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
 
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
+            teamPage.setNonSchoolDaysForNonSchoolWeek();
             teamPage.inputCalendarName(calendarName);
             teamPage.clickOnSaveSchoolCalendarBtn();
             teamPage.goToTeam();
@@ -1414,7 +1417,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify the school week  settings for the Minors of Age 16 or 17")
+    @TestName(description = "Verify the school week settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
@@ -1496,8 +1499,8 @@ public class CinemarkMinorTest extends TestBase {
 
         if (isSchoolWeek){
             schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
         } else if (isNonSchoolWeek){
+            schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
         } else {
             schedulePage.navigateToNextWeek();

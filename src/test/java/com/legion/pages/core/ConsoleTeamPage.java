@@ -639,7 +639,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement newTimeOffBtn;
 	@FindBy (css = ".user-profile-section")
 	private List<WebElement> userProfileSections;
-	@FindBy (css = "[ng-click=\"actionClicked('Activate')\"]")
+	@FindBy (css = "[class=\"inline-block ng-scope\"] [ng-click=\"actionClicked('Activate')\"]")
 	private WebElement activateButton;
 	@FindBy (css = "div.activate")
 	private WebElement activateWindow;
@@ -649,13 +649,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement deactivateButton;
 	@FindBy (css = "[ng-click=\"actionClicked('Terminate')\"] button")
 	private WebElement terminateButton;
-	@FindBy (css = "[ng-click=\"actionClicked('CancelTerminate')\"]")
+	@FindBy (css = "[class=\"pull-left ng-isolate-scope\"][ng-click=\"actionClicked('CancelTerminate')\"]")
 	private WebElement cancelTerminateButton;
 	@FindBy (css = "div.legion-status div.invitation-status")
 	private WebElement onBoardedDate;
 	@FindBy (css = "div.legion-status>div:nth-child(2)")
 	private WebElement tmStatus;
-	@FindBy (css = "[ng-click=\"actionClicked('CancelDeactivate')\"]")
+	@FindBy (css = "[class=\"pull-left ng-isolate-scope\"][ng-click=\"actionClicked('CancelDeactivate')\"]")
 	private WebElement cancelActivateButton;
 	@FindBy (className = "modal-content")
 	private WebElement deactivateWindow;
@@ -697,6 +697,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> employeeIDsInRoster;
 	@FindBy(css = ".tr .lgn-xs-4 .title")
 	private List<WebElement> jobTitlesInRoster;
+	@FindBy(css = ".tr .employedStatus")
+	private List<WebElement> employmentStatus;
 
 	@Override
 	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception {
@@ -725,6 +727,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			targetList = getEmployeeIDListInRoster();
 		} else if (columnName.equals("JOB TITLE")) {
 			targetList = getJobTitleListInRoster();
+		} else if (columnName.equals("EMPLOYMENT")) {
+			targetList = getEmploymentListInRoster();
 		}
 		String className = column.getAttribute("class");
 		List<String> currentList = targetList;
@@ -778,6 +782,16 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 		}
 		return names;
+	}
+
+	private List<String> getEmploymentListInRoster() {
+		List<String> employments = new ArrayList<>();
+		if (areListElementVisible(employmentStatus, 5)) {
+			for (WebElement name : employmentStatus) {
+				employments.add(name.getText());
+			}
+		}
+		return employments;
 	}
 
 	@Override
@@ -3618,6 +3632,18 @@ private List<WebElement> locationColumn;
 			return  false;
 	}
 
+	@Override
+	public boolean isColumnExisted(String colName) throws Exception {
+		if (areListElementVisible(columnsInRoster, 10)){
+			for (WebElement element: columnsInRoster){
+				if (colName.equalsIgnoreCase(element.getText())){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	@FindBy(xpath = "//span[contains(text(),'School Calendars')]")
 	private WebElement schoolCalendarTab;
 	@Override
@@ -4539,7 +4565,7 @@ private List<WebElement> locationColumn;
 
 	public boolean checkIfTMExists(String tmName) throws Exception {
 		boolean isTMExists = false;
-		if(isElementLoaded(teamMemberSearchBox, 10) && areListElementVisible(teamMembers, 20)) {
+		if(isElementLoaded(teamMemberSearchBox, 20) && areListElementVisible(teamMembers, 20)) {
 			teamMemberSearchBox.clear();
 			teamMemberSearchBox.sendKeys(tmName);
 			waitForSeconds(4);
@@ -4763,5 +4789,20 @@ private List<WebElement> locationColumn;
 		}else
 			SimpleUtils.fail("Calendar month names fail to load! ", false);
 		return  calendarMonthNames;
+	}
+
+
+
+	@FindBy (xpath = "//div[contains(@class,'calendar-cell ng-binding ng-scope non-school-day day-bold')]/preceding-sibling::div")
+	private List<WebElement> theNonSummerDaysInTheLastSchoolMonth;
+
+	public void setNonSchoolDaysForNonSchoolWeek () {
+		if (areListElementVisible(theNonSummerDaysInTheLastSchoolMonth, 10)) {
+			//Click the school days in the last school week to change to non-school day
+			click(theNonSummerDaysInTheLastSchoolMonth.get(theNonSummerDaysInTheLastSchoolMonth.size() - 1));
+			SimpleUtils.pass("Set the non-school week successfully! ");
+		} else {
+			SimpleUtils.fail("The school days fail to load! ", false);
+		}
 	}
 }

@@ -3,6 +3,7 @@ package com.legion.tests.core;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import com.legion.pages.ScheduleCommonPage;
 import com.legion.test.core.mobile.LoginTest;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.WebElement;
@@ -88,7 +89,8 @@ public class ScheduleOverviewTest extends TestBase{
 		{ 
 			if(!scheduleWeekStatus.contains(scheduleWeekStatusToVerify)) {
 				if(isCurrentWeekSelected) {
-					schedulePage.navigateWeekViewOrDayViewToPastOrFuture("next", 1);
+					ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+					scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture("next", 1);
 				}
 				else {
 					scheduleOverviewPage.clickOnCurrentWeekToOpenSchedule();
