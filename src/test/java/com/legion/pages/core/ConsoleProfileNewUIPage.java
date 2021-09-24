@@ -2854,7 +2854,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
-	@FindBy(css = "[ng-if=\"tm.isMinor\"] .profile-heading")
+	@FindBy(css = "[ng-if=\"tm.isMinor && console.isSchoolCalendarsEnabled\"] .profile-heading")
 	private WebElement schoolCalendar;
 
 	@FindBy(css = "[options=\"schoolCalendars\"]")

@@ -300,8 +300,12 @@ public class CinemarkMinorTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify SM will have ability to select a calendar for the minor from a dropdown menu within the profile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifySMCanSelectACalendarForMinorAsStoreManager(String browser, String username, String password, String location) throws Exception {
+    public void verifySMCanSelectACalendarForMinorAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
