@@ -1,8 +1,6 @@
 package com.legion.pages.core;
 
-import com.legion.pages.BasePage;
-import com.legion.pages.ScheduleCommonPage;
-import com.legion.pages.SchedulePage;
+import com.legion.pages.*;
 import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.tests.core.ScheduleNewUITest.SchedulePageSubTabText;
 import com.legion.tests.core.ScheduleNewUITest.staffingOption;
@@ -826,68 +824,68 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     Map<String, String> weeklyTableRowsDatesAndStatus = new LinkedHashMap<String, String>();
 
 
-    final static String consoleScheduleMenuItemText = "Schedule";
+//    final static String consoleScheduleMenuItemText = "Schedule";
+//
+//
+//    public void clickOnScheduleConsoleMenuItem() {
+//        if (areListElementVisible(consoleNavigationMenuItems, 10) && consoleNavigationMenuItems.size() != 0) {
+//            WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
+//            clickTheElement(consoleScheduleMenuElement);
+//            SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
+//        } else {
+//            SimpleUtils.fail("'Schedule' Console Menu Items Not Loaded Successfully!", false);
+//        }
+//    }
+//
+//    @Override
+//    public void goToSchedulePage() throws Exception {
+//
+//        checkElementVisibility(goToScheduleButton);
+//        activeConsoleName = analyticsConsoleName.getText();
+//        click(goToScheduleButton);
+//        SimpleUtils.pass("Schedule Page Loading..!");
+//
+//        if (isElementLoaded(draft)) {
+//            SimpleUtils.pass("Draft is Displayed on the page");
+//        } else {
+//            SimpleUtils.fail("Draft not displayed on the page", true);
+//        }
+//
+//        if (isElementLoaded(published)) {
+//            SimpleUtils.pass("Published is Displayed on the page");
+//        } else {
+//            SimpleUtils.fail("Published not displayed on the page", true);
+//        }
+//
+//        if (isElementLoaded(finalized)) {
+//            SimpleUtils.pass("Finalized is Displayed on the page");
+//        } else {
+//            SimpleUtils.fail("Finalized not displayed on the page", true);
+//        }
+//    }
+//
+//
+//    @Override
+//    public boolean isSchedulePage() throws Exception {
+//        if (isElementLoaded(overviewSectionElement)) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
 
-    public void clickOnScheduleConsoleMenuItem() {
-        if (areListElementVisible(consoleNavigationMenuItems, 10) && consoleNavigationMenuItems.size() != 0) {
-            WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
-            clickTheElement(consoleScheduleMenuElement);
-            SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
-        } else {
-            SimpleUtils.fail("'Schedule' Console Menu Items Not Loaded Successfully!", false);
-        }
-    }
-
-    @Override
-    public void goToSchedulePage() throws Exception {
-
-        checkElementVisibility(goToScheduleButton);
-        activeConsoleName = analyticsConsoleName.getText();
-        click(goToScheduleButton);
-        SimpleUtils.pass("Schedule Page Loading..!");
-
-        if (isElementLoaded(draft)) {
-            SimpleUtils.pass("Draft is Displayed on the page");
-        } else {
-            SimpleUtils.fail("Draft not displayed on the page", true);
-        }
-
-        if (isElementLoaded(published)) {
-            SimpleUtils.pass("Published is Displayed on the page");
-        } else {
-            SimpleUtils.fail("Published not displayed on the page", true);
-        }
-
-        if (isElementLoaded(finalized)) {
-            SimpleUtils.pass("Finalized is Displayed on the page");
-        } else {
-            SimpleUtils.fail("Finalized not displayed on the page", true);
-        }
-    }
-
-
-    @Override
-    public boolean isSchedulePage() throws Exception {
-        if (isElementLoaded(overviewSectionElement)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    @Override
-    public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
-        if (isElementLoaded(activatedSubTabElement,15)) {
-            if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText.toUpperCase())) {
-                return true;
-            }
-        } else {
-            SimpleUtils.fail("Schedule Page not loaded successfully", true);
-        }
-        return false;
-    }
+//    @Override
+//    public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
+//        if (isElementLoaded(activatedSubTabElement,15)) {
+//            if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText.toUpperCase())) {
+//                return true;
+//            }
+//        } else {
+//            SimpleUtils.fail("Schedule Page not loaded successfully", true);
+//        }
+//        return false;
+//    }
 
     @Override
     public void goToSchedule() throws Exception {
@@ -896,8 +894,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         activeConsoleName = analyticsConsoleName.getText();
         click(goToScheduleTab);
         SimpleUtils.pass("Schedule Page Loading..!");
-
-        if (isWeekGenerated()) {
+        CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
+        if (createSchedulePage.isWeekGenerated()) {
             if (isElementLoaded(analyze)) {
                 SimpleUtils.pass("Analyze is Displayed on Schdule page");
             } else {
@@ -924,7 +922,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Sales Forecast not Displayed on the page",true);
         }
 
-        verifyRefreshBtnOnSalesForecast();
+         verifyRefreshBtnOnSalesForecast();
     }
 
     public void verifyRefreshBtnOnSalesForecast() throws Exception {
@@ -1051,119 +1049,119 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     }
 
-    @Override
-    public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
-        HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("[ng-if*=\"isTitleBasedBudget()\"] .card-carousel-card"));
-        if(isElementEnabled(budgetedScheduledLabelsDivElement,5))
-        {
-//			Thread.sleep(2000);
-            String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
-            String [] tmp =  scheduleWagesAndHoursCardText.split("\n");
-            String[] scheduleWagesAndHours = new String[5];
-            if (tmp.length>6) {
-                scheduleWagesAndHours[0] = tmp[0];
-                scheduleWagesAndHours[1] = tmp[1];
-                scheduleWagesAndHours[2] = tmp[2];
-                scheduleWagesAndHours[3] = tmp[3]+" "+tmp[4]+" "+tmp[5];
-                scheduleWagesAndHours[4] = tmp[6];
-            }else
-                scheduleWagesAndHours =tmp;
-            for(int i = 0; i < scheduleWagesAndHours.length; i++)
-            {
-                if(scheduleWagesAndHours[i].toLowerCase().contains(scheduleHoursAndWagesData.hours.getValue().toLowerCase()))
-                {
-                    if (scheduleWagesAndHours[i].split(" ").length == 4) {
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[1],
-                                scheduleHoursAndWagesData.budgetedHours.getValue());
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[2],
-                                scheduleHoursAndWagesData.scheduledHours.getValue());
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[3],
-                                scheduleHoursAndWagesData.otherHours.getValue());
-                    } else {
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i].split(" ")[1],
-                                scheduleHoursAndWagesData.budgetedHours.getValue());
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 1],
-                                scheduleHoursAndWagesData.scheduledHours.getValue());
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 2],
-                                scheduleHoursAndWagesData.otherHours.getValue());
-                    }
-                    break;
-                }
-                else if(scheduleWagesAndHours[i].toLowerCase().contains(scheduleHoursAndWagesData.wages.getValue().toLowerCase()))
-                {
-                    if (scheduleWagesAndHours[i].split(" ").length == 4) {
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[1]
-                                .replace("$", ""), scheduleHoursAndWagesData.budgetedWages.getValue());
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[2]
-                                .replace("$", ""), scheduleHoursAndWagesData.scheduledWages.getValue());
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[3]
-                                .replace("$", ""), scheduleHoursAndWagesData.otherWages.getValue());
-                    } else {
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i].split(" ")[1]
-                                .replace("$", ""), scheduleHoursAndWagesData.budgetedWages.getValue());
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 1]
-                                .replace("$", ""), scheduleHoursAndWagesData.scheduledWages.getValue());
-                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 1]
-                                .replace("$", ""), scheduleHoursAndWagesData.otherWages.getValue());
-                    }
-                    break;
-                }
-            }
-        }
-        return scheduleHoursAndWages;
-    }
+//    @Override
+//    public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
+//        HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
+//        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("[ng-if*=\"isTitleBasedBudget()\"] .card-carousel-card"));
+//        if(isElementEnabled(budgetedScheduledLabelsDivElement,5))
+//        {
+////			Thread.sleep(2000);
+//            String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
+//            String [] tmp =  scheduleWagesAndHoursCardText.split("\n");
+//            String[] scheduleWagesAndHours = new String[5];
+//            if (tmp.length>6) {
+//                scheduleWagesAndHours[0] = tmp[0];
+//                scheduleWagesAndHours[1] = tmp[1];
+//                scheduleWagesAndHours[2] = tmp[2];
+//                scheduleWagesAndHours[3] = tmp[3]+" "+tmp[4]+" "+tmp[5];
+//                scheduleWagesAndHours[4] = tmp[6];
+//            }else
+//                scheduleWagesAndHours =tmp;
+//            for(int i = 0; i < scheduleWagesAndHours.length; i++)
+//            {
+//                if(scheduleWagesAndHours[i].toLowerCase().contains(scheduleHoursAndWagesData.hours.getValue().toLowerCase()))
+//                {
+//                    if (scheduleWagesAndHours[i].split(" ").length == 4) {
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[1],
+//                                scheduleHoursAndWagesData.budgetedHours.getValue());
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[2],
+//                                scheduleHoursAndWagesData.scheduledHours.getValue());
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[3],
+//                                scheduleHoursAndWagesData.otherHours.getValue());
+//                    } else {
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i].split(" ")[1],
+//                                scheduleHoursAndWagesData.budgetedHours.getValue());
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 1],
+//                                scheduleHoursAndWagesData.scheduledHours.getValue());
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 2],
+//                                scheduleHoursAndWagesData.otherHours.getValue());
+//                    }
+//                    break;
+//                }
+//                else if(scheduleWagesAndHours[i].toLowerCase().contains(scheduleHoursAndWagesData.wages.getValue().toLowerCase()))
+//                {
+//                    if (scheduleWagesAndHours[i].split(" ").length == 4) {
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[1]
+//                                .replace("$", ""), scheduleHoursAndWagesData.budgetedWages.getValue());
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[2]
+//                                .replace("$", ""), scheduleHoursAndWagesData.scheduledWages.getValue());
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages , scheduleWagesAndHours[i].split(" ")[3]
+//                                .replace("$", ""), scheduleHoursAndWagesData.otherWages.getValue());
+//                    } else {
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i].split(" ")[1]
+//                                .replace("$", ""), scheduleHoursAndWagesData.budgetedWages.getValue());
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 1]
+//                                .replace("$", ""), scheduleHoursAndWagesData.scheduledWages.getValue());
+//                        scheduleHoursAndWages = updateScheduleHoursAndWages(scheduleHoursAndWages, scheduleWagesAndHours[i + 1]
+//                                .replace("$", ""), scheduleHoursAndWagesData.otherWages.getValue());
+//                    }
+//                    break;
+//                }
+//            }
+//        }
+//        return scheduleHoursAndWages;
+//    }
 
 
-    public static HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
-                                                                     String hours, String hoursAndWagesKey) {
-        scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours.replaceAll(",","")));
-        return scheduleHoursAndWages;
-    }
+//    public static HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
+//                                                                     String hours, String hoursAndWagesKey) {
+//        scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours.replaceAll(",","")));
+//        return scheduleHoursAndWages;
+//    }
 
-    @Override
-    public synchronized List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception {
-        List<HashMap<String, Float>> ScheduleLabelHoursAndWagesDataForDays = new ArrayList<HashMap<String, Float>>();
-        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
-        if(isScheduleDayViewActive()) {
-            if(ScheduleCalendarDayLabels.size() != 0) {
-                for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
-                {
-                    click(ScheduleCalendarDayLabel);
-                    ScheduleLabelHoursAndWagesDataForDays.add(getScheduleLabelHoursAndWages());
-                }
-            }
-            else {
-                SimpleUtils.fail("Schedule Page Day View Calender not Loaded Successfully!", true);
-            }
-        }
-        else {
-            SimpleUtils.fail("Schedule Page Day View Button not Active!", true);
-        }
-        return ScheduleLabelHoursAndWagesDataForDays;
-    }
+//    @Override
+//    public synchronized List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception {
+//        List<HashMap<String, Float>> ScheduleLabelHoursAndWagesDataForDays = new ArrayList<HashMap<String, Float>>();
+//        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+//        if(isScheduleDayViewActive()) {
+//            if(ScheduleCalendarDayLabels.size() != 0) {
+//                for(WebElement ScheduleCalendarDayLabel: ScheduleCalendarDayLabels)
+//                {
+//                    click(ScheduleCalendarDayLabel);
+//                    ScheduleLabelHoursAndWagesDataForDays.add(getScheduleLabelHoursAndWages());
+//                }
+//            }
+//            else {
+//                SimpleUtils.fail("Schedule Page Day View Calender not Loaded Successfully!", true);
+//            }
+//        }
+//        else {
+//            SimpleUtils.fail("Schedule Page Day View Button not Active!", true);
+//        }
+//        return ScheduleLabelHoursAndWagesDataForDays;
+//    }
 
 
-    @Override
-    public void clickOnScheduleSubTab(String subTabString) throws Exception {
-        if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
-            for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
-                if (ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString)) {
-                    waitForSeconds(5);
-                    clickTheElement(ScheduleSubTabElement);
-                    waitForSeconds(3);
-                    break;
-                }
-            }
-
-        }
-
-        if (verifyActivatedSubTab(subTabString)) {
-            SimpleUtils.pass("Schedule Page: '" + subTabString + "' tab loaded Successfully!");
-        } else {
-            SimpleUtils.fail("Schedule Page: '" + subTabString + "' tab not loaded Successfully!", true);
-        }
-    }
+//    @Override
+//    public void clickOnScheduleSubTab(String subTabString) throws Exception {
+//        if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+//            for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
+//                if (ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString)) {
+//                    waitForSeconds(5);
+//                    clickTheElement(ScheduleSubTabElement);
+//                    waitForSeconds(3);
+//                    break;
+//                }
+//            }
+//
+//        }
+//
+//        if (verifyActivatedSubTab(subTabString)) {
+//            SimpleUtils.pass("Schedule Page: '" + subTabString + "' tab loaded Successfully!");
+//        } else {
+//            SimpleUtils.fail("Schedule Page: '" + subTabString + "' tab not loaded Successfully!", true);
+//        }
+//    }
 
 //    @Override
 //    public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount) {
@@ -1209,79 +1207,79 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //    }
 
 
-    @Override
-    public Boolean isWeekGenerated() throws Exception {
-        if (isElementEnabled(generateSheduleButton, 10) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
-            return false;
-        }else if(isElementEnabled(generateScheduleBtn, 10)){
-            return false;
-        }else if(isElementLoaded(publishSheduleButton, 10)) {
-            return true;
-        }else if(isElementLoaded(reGenerateScheduleButton, 10)) {
-            return true;
-        }else if(isElementLoaded(deleteScheduleButton, 10)) {
-            return true;
-        }
-        if(areListElementVisible(shiftsWeekView,3) || isElementLoaded(editScheduleButton,5)){
-            SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Generated!");
-            return true;
-        }
-        return false;
-    }
-
-
-    @Override
-    public Boolean isWeekPublished() throws Exception {
-        if (isElementLoaded(publishSheduleButton,5)) {
-            if (publishSheduleButton.isEnabled()) {
-                return false;
-            } else {
-                clickOnScheduleAnalyzeButton();
-                if (isElementLoaded(analyzePopupLatestVersionLabel)) {
-                    String latestVersion = analyzePopupLatestVersionLabel.getText();
-                    latestVersion = latestVersion.split(" ")[1].split(".")[0];
-                    closeStaffingGuidanceAnalyzePopup();
-                    if (Integer.valueOf(latestVersion) < 1) {
-                        return false;
-                    }
-                }
-            }
-        } else if (isConsoleMessageError()) {
-            return false;
-        }
-        SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Published!");
-        return true;
-
-    }
-
-
-
-    @Override
-    public void generateSchedule() throws Exception {
-        if (isElementLoaded(generateSheduleButton)) {
-            click(generateSheduleButton);
-            Thread.sleep(2000);
-            if (isElementLoaded(generateScheduleBtn))
-                click(generateScheduleBtn);
-            Thread.sleep(4000);
-            if (isElementLoaded(checkOutTheScheduleButton)) {
-                click(checkOutTheScheduleButton);
-                SimpleUtils.pass("Schedule Generated Successfuly!");
-            }
-
-            Thread.sleep(2000);
-            if (isElementLoaded(upgradeAndGenerateScheduleBtn)) {
-                click(upgradeAndGenerateScheduleBtn);
-                Thread.sleep(5000);
-                if (isElementLoaded(checkOutTheScheduleButton)) {
-                    click(checkOutTheScheduleButton);
-                    SimpleUtils.pass("Schedule Generated Successfuly!");
-                }
-            }
-        } else {
-            SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
-        }
-    }
+//    @Override
+//    public Boolean isWeekGenerated() throws Exception {
+//        if (isElementEnabled(generateSheduleButton, 10) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
+//            return false;
+//        }else if(isElementEnabled(generateScheduleBtn, 10)){
+//            return false;
+//        }else if(isElementLoaded(publishSheduleButton, 10)) {
+//            return true;
+//        }else if(isElementLoaded(reGenerateScheduleButton, 10)) {
+//            return true;
+//        }else if(isElementLoaded(deleteScheduleButton, 10)) {
+//            return true;
+//        }
+//        if(areListElementVisible(shiftsWeekView,3) || isElementLoaded(editScheduleButton,5)){
+//            SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Generated!");
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//
+//    @Override
+//    public Boolean isWeekPublished() throws Exception {
+//        if (isElementLoaded(publishSheduleButton,5)) {
+//            if (publishSheduleButton.isEnabled()) {
+//                return false;
+//            } else {
+//                clickOnScheduleAnalyzeButton();
+//                if (isElementLoaded(analyzePopupLatestVersionLabel)) {
+//                    String latestVersion = analyzePopupLatestVersionLabel.getText();
+//                    latestVersion = latestVersion.split(" ")[1].split(".")[0];
+//                    closeStaffingGuidanceAnalyzePopup();
+//                    if (Integer.valueOf(latestVersion) < 1) {
+//                        return false;
+//                    }
+//                }
+//            }
+//        } else if (isConsoleMessageError()) {
+//            return false;
+//        }
+//        SimpleUtils.pass("Week: '" + getActiveWeekText() + "' Already Published!");
+//        return true;
+//
+//    }
+//
+//
+//
+//    @Override
+//    public void generateSchedule() throws Exception {
+//        if (isElementLoaded(generateSheduleButton)) {
+//            click(generateSheduleButton);
+//            Thread.sleep(2000);
+//            if (isElementLoaded(generateScheduleBtn))
+//                click(generateScheduleBtn);
+//            Thread.sleep(4000);
+//            if (isElementLoaded(checkOutTheScheduleButton)) {
+//                click(checkOutTheScheduleButton);
+//                SimpleUtils.pass("Schedule Generated Successfuly!");
+//            }
+//
+//            Thread.sleep(2000);
+//            if (isElementLoaded(upgradeAndGenerateScheduleBtn)) {
+//                click(upgradeAndGenerateScheduleBtn);
+//                Thread.sleep(5000);
+//                if (isElementLoaded(checkOutTheScheduleButton)) {
+//                    click(checkOutTheScheduleButton);
+//                    SimpleUtils.pass("Schedule Generated Successfuly!");
+//                }
+//            }
+//        } else {
+//            SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
+//        }
+//    }
 
 
     public Boolean isScheduleWeekViewActive() {
@@ -1305,16 +1303,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
-    public void clickOnScheduleAnalyzeButton() throws Exception {
-        if (isElementLoaded(analyze)) {
-            click(analyze);
-            if (isElementLoaded(scheduleHistoryInAnalyzePopUp,5)) {
-                SimpleUtils.pass("Analyze button is clickable and pop up page displayed");
-            }
-        } else {
-            SimpleUtils.fail("Schedule Analyze Button not loaded successfully!", false);
-        }
-    }
+//    public void clickOnScheduleAnalyzeButton() throws Exception {
+//        if (isElementLoaded(analyze)) {
+//            click(analyze);
+//            if (isElementLoaded(scheduleHistoryInAnalyzePopUp,5)) {
+//                SimpleUtils.pass("Analyze button is clickable and pop up page displayed");
+//            }
+//        } else {
+//            SimpleUtils.fail("Schedule Analyze Button not loaded successfully!", false);
+//        }
+//    }
 
     public void closeStaffingGuidanceAnalyzePopup() throws Exception {
         if (isStaffingGuidanceAnalyzePopupAppear()) {
@@ -1329,32 +1327,32 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
-    public String getScheduleWeekStartDayMonthDate() {
-        String scheduleWeekStartDuration = "NA";
-        WebElement scheduleCalendarActiveWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
-        try {
-            if (isElementLoaded(scheduleCalendarActiveWeek)) {
-                scheduleWeekStartDuration = scheduleCalendarActiveWeek.getText().replace("\n", "");
-            }
-        } catch (Exception e) {
-            SimpleUtils.fail("Calender duration bar not loaded successfully", true);
-        }
-        return scheduleWeekStartDuration;
-    }
+//    public String getScheduleWeekStartDayMonthDate() {
+//        String scheduleWeekStartDuration = "NA";
+//        WebElement scheduleCalendarActiveWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+//        try {
+//            if (isElementLoaded(scheduleCalendarActiveWeek)) {
+//                scheduleWeekStartDuration = scheduleCalendarActiveWeek.getText().replace("\n", "");
+//            }
+//        } catch (Exception e) {
+//            SimpleUtils.fail("Calender duration bar not loaded successfully", true);
+//        }
+//        return scheduleWeekStartDuration;
+//    }
 
-    public void clickOnEditButton() throws Exception {
-        if (isElementEnabled(newEdit,2)) {
-            click(newEdit);
-            if (isElementLoaded(editAnywayPopupButton, 2)) {
-                click(editAnywayPopupButton);
-                SimpleUtils.pass("Schedule edit shift page loaded successfully!");
-            } else {
-                SimpleUtils.pass("Schedule edit shift page loaded successfully for Draft or Publish Status");
-            }
-        } else {
-            SimpleUtils.pass("Schedule Edit button is not enabled Successfully!");
-        }
-    }
+//    public void clickOnEditButton() throws Exception {
+//        if (isElementEnabled(newEdit,2)) {
+//            click(newEdit);
+//            if (isElementLoaded(editAnywayPopupButton, 2)) {
+//                click(editAnywayPopupButton);
+//                SimpleUtils.pass("Schedule edit shift page loaded successfully!");
+//            } else {
+//                SimpleUtils.pass("Schedule edit shift page loaded successfully for Draft or Publish Status");
+//            }
+//        } else {
+//            SimpleUtils.pass("Schedule Edit button is not enabled Successfully!");
+//        }
+//    }
 
     public void clickOnSuggestedButton() throws Exception {
         if (isElementEnabled(scheduleTypeSystem, 5)) {
@@ -1364,66 +1362,66 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("the schedule is not generated, generated schedule firstly",true);
         }
     }
+//
+//    @FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/following-sibling::div[1]")
+//    private WebElement immediateNextToCurrentActiveWeek;
+//
+//    @FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/preceding-sibling::div[1]")
+//    private WebElement immediatePastToCurrentActiveWeek;
+//
+//    public void clickImmediateNextToCurrentActiveWeekInDayPicker() {
+//        if (isElementEnabled(immediateNextToCurrentActiveWeek, 30)) {
+//            click(immediateNextToCurrentActiveWeek);
+//        } else {
+//            SimpleUtils.report("This is a last week in Day Week picker");
+//        }
+//    }
+//
+//    public void clickImmediatePastToCurrentActiveWeekInDayPicker() {
+//        if (isElementEnabled(immediatePastToCurrentActiveWeek, 30)) {
+//            click(immediatePastToCurrentActiveWeek);
+//        } else {
+//            SimpleUtils.report("This is a last week in Day Week picker");
+//        }
+//    }
 
-    @FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/following-sibling::div[1]")
-    private WebElement immediateNextToCurrentActiveWeek;
 
-    @FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/preceding-sibling::div[1]")
-    private WebElement immediatePastToCurrentActiveWeek;
+//    public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception {
+//        if (isElementLoaded(createNewShiftWeekView)) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//
+//    }
 
-    public void clickImmediateNextToCurrentActiveWeekInDayPicker() {
-        if (isElementEnabled(immediateNextToCurrentActiveWeek, 30)) {
-            click(immediateNextToCurrentActiveWeek);
-        } else {
-            SimpleUtils.report("This is a last week in Day Week picker");
-        }
-    }
-
-    public void clickImmediatePastToCurrentActiveWeekInDayPicker() {
-        if (isElementEnabled(immediatePastToCurrentActiveWeek, 30)) {
-            click(immediatePastToCurrentActiveWeek);
-        } else {
-            SimpleUtils.report("This is a last week in Day Week picker");
-        }
-    }
-
-
-    public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception {
-        if (isElementLoaded(createNewShiftWeekView)) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
-    public void clickOnCancelButtonOnEditMode() throws Exception {
-        if (isElementLoaded(scheduleEditModeCancelButton)) {
-            click(scheduleEditModeCancelButton);
-            SimpleUtils.pass("Schedule edit shift page cancelled successfully!");
-        }
-    }
-
-    public Boolean isGenerateButtonLoaded() throws Exception {
-        if (isElementLoaded(scheduleGenerateButton,2)) {
-            return true;
-        }
-        return false;
-    }
-
-    public Boolean isGenerateButtonLoadedForManagerView() throws Exception {
-        if (isElementLoaded(generateScheduleBtn,2)) {
-            return true;
-        }
-        return false;
-    }
-
-    public Boolean isReGenerateButtonLoadedForManagerView() throws Exception {
-        if (isElementLoaded(reGenerateScheduleButton, 10)) {
-            return true;
-        }
-        return false;
-    }
+//    public void clickOnCancelButtonOnEditMode() throws Exception {
+//        if (isElementLoaded(scheduleEditModeCancelButton)) {
+//            click(scheduleEditModeCancelButton);
+//            SimpleUtils.pass("Schedule edit shift page cancelled successfully!");
+//        }
+//    }
+//
+//    public Boolean isGenerateButtonLoaded() throws Exception {
+//        if (isElementLoaded(scheduleGenerateButton,2)) {
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//    public Boolean isGenerateButtonLoadedForManagerView() throws Exception {
+//        if (isElementLoaded(generateScheduleBtn,2)) {
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//    public Boolean isReGenerateButtonLoadedForManagerView() throws Exception {
+//        if (isElementLoaded(reGenerateScheduleButton, 10)) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     public String getActiveWeekDayMonthAndDateForEachDay() throws Exception {
         String activeWeekTimeDuration = "";
@@ -1461,40 +1459,40 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return false;
     }
 
-    public boolean isCurrentScheduleWeekPublished() {
-        String scheduleStatus = "No Published Schedule";
-        try {
-            List<WebElement> noPublishedSchedule = MyThreadLocal.getDriver().findElements(By.className("holiday-text"));
-            if (noPublishedSchedule.size() > 0) {
-                if (noPublishedSchedule.get(0).getText().contains(scheduleStatus))
-                    return false;
-            } else if (isConsoleMessageError()) {
-                return false;
-            } else if (isElementLoaded(publishSheduleButton)) {
-                return false;
-            } else if (isElementLoaded(generateSheduleButton, 5)) {
-                return false;
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        SimpleUtils.pass("Schedule is Published for current Week!");
-        return true;
-    }
+//    public boolean isCurrentScheduleWeekPublished() {
+//        String scheduleStatus = "No Published Schedule";
+//        try {
+//            List<WebElement> noPublishedSchedule = MyThreadLocal.getDriver().findElements(By.className("holiday-text"));
+//            if (noPublishedSchedule.size() > 0) {
+//                if (noPublishedSchedule.get(0).getText().contains(scheduleStatus))
+//                    return false;
+//            } else if (isConsoleMessageError()) {
+//                return false;
+//            } else if (isElementLoaded(publishSheduleButton)) {
+//                return false;
+//            } else if (isElementLoaded(generateSheduleButton, 5)) {
+//                return false;
+//            }
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
+//        SimpleUtils.pass("Schedule is Published for current Week!");
+//        return true;
+//    }
 
-    public boolean isConsoleMessageError() throws Exception {
-        List<WebElement> carouselCards = MyThreadLocal.getDriver().findElements(By.cssSelector("div.card-carousel-card.card-carousel-card-default"));
-        WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
-        if (carouselCards.size() != 0) {
-            for (WebElement carouselCard : carouselCards) {
-                if (carouselCard.getText().toUpperCase().contains("CONSOLE MESSAGE")) {
-                    SimpleUtils.report("Week: '" + activeWeek.getText().replace("\n", " ") + "' Not Published because of Console Message Error: '" + carouselCard.getText().replace("\n", " ") + "'");
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+//    public boolean isConsoleMessageError() throws Exception {
+//        List<WebElement> carouselCards = MyThreadLocal.getDriver().findElements(By.cssSelector("div.card-carousel-card.card-carousel-card-default"));
+//        WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+//        if (carouselCards.size() != 0) {
+//            for (WebElement carouselCard : carouselCards) {
+//                if (carouselCard.getText().toUpperCase().contains("CONSOLE MESSAGE")) {
+//                    SimpleUtils.report("Week: '" + activeWeek.getText().replace("\n", " ") + "' Not Published because of Console Message Error: '" + carouselCard.getText().replace("\n", " ") + "'");
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
 
     public String getActiveWeekText() throws Exception {
         if (isElementLoaded(MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")),15))
@@ -1565,24 +1563,24 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     //added by Nishant
 
-    public void navigateDayViewToPast(String PreviousWeekView, int dayCount)
-    {
-        String currentWeekStartingDay = "NA";
-        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
-        for(int i = 0; i < dayCount; i++)
-        {
-
-            try {
-                click(ScheduleCalendarDayLabels.get(i));
-                clickOnEditButton();
-                clickOnCancelButtonOnEditMode();
-            } catch (Exception e) {
-                SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable", true);
-            }
-
-
-        }
-    }
+//    public void navigateDayViewToPast(String PreviousWeekView, int dayCount)
+//    {
+//        String currentWeekStartingDay = "NA";
+//        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+//        for(int i = 0; i < dayCount; i++)
+//        {
+//
+//            try {
+//                click(ScheduleCalendarDayLabels.get(i));
+//                clickOnEditButton();
+//                clickOnCancelButtonOnEditMode();
+//            } catch (Exception e) {
+//                SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable", true);
+//            }
+//
+//
+//        }
+//    }
 
 
     //added by Nishant
@@ -1889,35 +1887,35 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return gridDayHourTeamCount;
     }
 
-    public void clickSaveBtn() throws Exception {
-        if (isElementLoaded(newScheduleSaveButton)) {
-            click(newScheduleSaveButton);
-            clickOnVersionSaveBtn();
-            clickOnPostSaveBtn();
-        } else {
-            SimpleUtils.fail("Schedule Save button not clicked Successfully!", false);
-        }
-    }
-
-    public void clickOnVersionSaveBtn() throws Exception {
-        if (isElementLoaded(popUpPreSave) && isElementLoaded(scheduleVersionSaveBtn)) {
-            click(scheduleVersionSaveBtn);
-            SimpleUtils.pass("Schedule Version Save button clicked Successfully!");
-            waitForSeconds(3);
-        } else {
-            SimpleUtils.fail("Schedule Version Save button not clicked Successfully!", false);
-        }
-    }
-
-    public void clickOnPostSaveBtn() throws Exception {
-        if (isElementLoaded(popUpPostSave) && isElementLoaded(btnOK)) {
-            click(btnOK);
-            SimpleUtils.pass("Schedule Ok button clicked Successfully!");
-            waitForSeconds(3);
-        } else {
-            SimpleUtils.fail("Schedule Ok button not clicked Successfully!", false);
-        }
-    }
+//    public void clickSaveBtn() throws Exception {
+//        if (isElementLoaded(newScheduleSaveButton)) {
+//            click(newScheduleSaveButton);
+//            clickOnVersionSaveBtn();
+//            clickOnPostSaveBtn();
+//        } else {
+//            SimpleUtils.fail("Schedule Save button not clicked Successfully!", false);
+//        }
+//    }
+//
+//    public void clickOnVersionSaveBtn() throws Exception {
+//        if (isElementLoaded(popUpPreSave) && isElementLoaded(scheduleVersionSaveBtn)) {
+//            click(scheduleVersionSaveBtn);
+//            SimpleUtils.pass("Schedule Version Save button clicked Successfully!");
+//            waitForSeconds(3);
+//        } else {
+//            SimpleUtils.fail("Schedule Version Save button not clicked Successfully!", false);
+//        }
+//    }
+//
+//    public void clickOnPostSaveBtn() throws Exception {
+//        if (isElementLoaded(popUpPostSave) && isElementLoaded(btnOK)) {
+//            click(btnOK);
+//            SimpleUtils.pass("Schedule Ok button clicked Successfully!");
+//            waitForSeconds(3);
+//        } else {
+//            SimpleUtils.fail("Schedule Ok button not clicked Successfully!", false);
+//        }
+//    }
 
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters() {
         HashMap<String, ArrayList<WebElement>> scheduleFilters = new HashMap<String, ArrayList<WebElement>>();
@@ -1981,7 +1979,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(shiftTypeFilter);
                 click(filterButton);
                 String cardHoursAndWagesText = "";
-                HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
+                SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+                HashMap<String, Float> hoursAndWagesCardData = smartCardPage.getScheduleLabelHoursAndWages();
                 for (Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
                     if (cardHoursAndWagesText != "")
                         cardHoursAndWagesText = cardHoursAndWagesText + ", " + hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
@@ -2012,7 +2011,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 click(shiftTypeFilter);
                 click(filterButton);
                 String cardHoursAndWagesText = "";
-                HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
+                SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+                HashMap<String, Float> hoursAndWagesCardData = smartCardPage.getScheduleLabelHoursAndWages();
                 for (Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
                     if (cardHoursAndWagesText != "")
                         cardHoursAndWagesText = cardHoursAndWagesText + ", " + hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
@@ -2159,7 +2159,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         Float weekDaysScheduleHours = (float) 0;
         Float activeWeekScheduleHoursOnCard = (float) 0;
         try {
-            activeWeekScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
+            SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+            activeWeekScheduleHoursOnCard = smartCardPage.getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
             if (weekDaySummeryHoursAndTeamMembers.size() != 0) {
                 for (WebElement weekDayHoursAndTMs : weekDaySummeryHoursAndTeamMembers) {
                     float dayScheduleHours = Float.parseFloat(weekDayHoursAndTMs.getText().split("HRs")[0]);
@@ -2189,8 +2190,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     private boolean newVerifyActiveWeekDailyScheduleHoursInWeekView() throws Exception {
         Float weekDaysScheduleHours = 0.0f;
         Float activeWeekScheduleHoursOnCard = 0.0f;
-        activeWeekScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue())
-                + getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.otherHours.getValue());
+        SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+        activeWeekScheduleHoursOnCard = smartCardPage.getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue())
+                + smartCardPage.getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.otherHours.getValue());
         if (weekDaySummeryHoursAndTeamMembers.size() != 0) {
             for (WebElement weekDayHoursAndTMs : weekDaySummeryHoursAndTeamMembers) {
                 float dayScheduleHours = Float.parseFloat(weekDayHoursAndTMs.getText().split("HRs")[0]);
@@ -2347,6 +2349,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         String workRoleFilterKey = "workrole";
         ArrayList<HashMap<String, String>> eachWorkRolesData = new ArrayList<HashMap<String, String>>();
         HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+        SmartCardPage smartCardPage = new ConsoleSmartCardPage();
         if (availableFilters.size() > 1) {
             ArrayList<WebElement> workRoleFilters = availableFilters.get(workRoleFilterKey);
             for (WebElement workRoleFilter : workRoleFilters) {
@@ -2360,7 +2363,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                 workRole.put("workRole", workRoleFilter.getText());
 
                 //Adding Card data (Hours & Wages)
-                for (Entry<String, Float> e : getScheduleLabelHoursAndWages().entrySet())
+                for (Entry<String, Float> e : smartCardPage.getScheduleLabelHoursAndWages().entrySet())
                     workRole.put(e.getKey(), e.getValue().toString());
                 // Adding Shifts Count
                 workRole.put("shiftsCount", "" + getAllAvailableShiftsInWeekView().size());
@@ -2402,32 +2405,32 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    @Override
-    public void publishActiveSchedule() throws Exception {
-        if (!isCurrentScheduleWeekPublished()) {
-            if (isConsoleMessageError())
-                SimpleUtils.fail("Schedule Can not be publish because of Action Require for week: '" + getActiveWeekText() + "'", false);
-            else {
-                clickTheElement(publishSheduleButton);
-                if (isElementLoaded(publishConfirmBtn)) {
-                    clickTheElement(publishConfirmBtn);
-                    SimpleUtils.pass("Schedule published successfully for week: '" + getActiveWeekText() + "'");
-                    // It will pop up a window: Welcome to Legion!
-                    if (isElementLoaded(closeButton, 5)) {
-                        clickTheElement(closeButton);
-                    }
-                    if (isElementLoaded(successfulPublishOkBtn)) {
-                        clickTheElement(successfulPublishOkBtn);
-                    }
-                    if (isElementLoaded(publishSheduleButton, 5)) {
-                        // Wait for the Publish button to disappear.
-                        waitForSeconds(10);
-                    }
-                }
-            }
-
-        }
-    }
+//    @Override
+//    public void publishActiveSchedule() throws Exception {
+//        if (!isCurrentScheduleWeekPublished()) {
+//            if (isConsoleMessageError())
+//                SimpleUtils.fail("Schedule Can not be publish because of Action Require for week: '" + getActiveWeekText() + "'", false);
+//            else {
+//                clickTheElement(publishSheduleButton);
+//                if (isElementLoaded(publishConfirmBtn)) {
+//                    clickTheElement(publishConfirmBtn);
+//                    SimpleUtils.pass("Schedule published successfully for week: '" + getActiveWeekText() + "'");
+//                    // It will pop up a window: Welcome to Legion!
+//                    if (isElementLoaded(closeButton, 5)) {
+//                        clickTheElement(closeButton);
+//                    }
+//                    if (isElementLoaded(successfulPublishOkBtn)) {
+//                        clickTheElement(successfulPublishOkBtn);
+//                    }
+//                    if (isElementLoaded(publishSheduleButton, 5)) {
+//                        // Wait for the Publish button to disappear.
+//                        waitForSeconds(10);
+//                    }
+//                }
+//            }
+//
+//        }
+//    }
 
     public boolean isPublishButtonLoaded() {
         try {
@@ -2443,7 +2446,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public boolean inActiveWeekDayClosed(int dayIndex) throws Exception {
-        if (isWeekGenerated()) {
+        CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
+        if (createSchedulePage.isWeekGenerated()) {
             ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
             scheduleCommonPage.navigateDayViewWithIndex(dayIndex);
             if (isElementLoaded(holidayLogoContainer))
@@ -2638,9 +2642,9 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    public List<WebElement> getAvailableShiftsInDayView() {
-        return dayViewAvailableShifts;
-    }
+//    public List<WebElement> getAvailableShiftsInDayView() {
+//        return dayViewAvailableShifts;
+//    }
 
     public void dragShiftToRightSide(WebElement shift, int xOffSet) {
         WebElement shiftRightSlider = shift.findElement(By.cssSelector("div.sch-day-view-shift-pinch.right"));
@@ -2717,9 +2721,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             String[] scheduleWagesAndHours = scheduleWagesAndHoursCardText.split("\n");
             for (String wagesAndHours : scheduleWagesAndHours) {
                 if (wagesAndHours.toLowerCase().contains(scheduleHoursAndWagesData.hours.getValue().toLowerCase())) {
-                    scheduleHours = updateScheduleHoursAndWages(scheduleHours, wagesAndHours.split(" ")[2],
+                    SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+                    scheduleHours = smartCardPage.updateScheduleHoursAndWages(scheduleHours, wagesAndHours.split(" ")[2],
                             scheduleHoursAndWagesData.scheduledHours.getValue());
-                    scheduleHours = updateScheduleHoursAndWages(scheduleHours, wagesAndHours.split(" ")[3],
+                    scheduleHours = smartCardPage.updateScheduleHoursAndWages(scheduleHours, wagesAndHours.split(" ")[3],
                             scheduleHoursAndWagesData.otherHours.getValue());
                 }
 
@@ -3204,10 +3209,11 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void convertAllUnAssignedShiftToOpenShift() throws Exception {
-        if (verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue())) {
-            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+        if (scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue())) {
             scheduleCommonPage.clickOnWeekView();
-            clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             for (WebElement unAssignedShift : getUnAssignedShifts()) {
                 convertUnAssignedShiftToOpenShift(unAssignedShift);
             }
@@ -3252,28 +3258,27 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return unAssignedShiftsObj;
     }
 
-    @Override
-    public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception {
-        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
-        for (WebElement activeWeekDay : ScheduleCalendarDayLabels) {
-            click(activeWeekDay);
-            List<WebElement> availableDayShifts = getAvailableShiftsInDayView();
-            if (availableDayShifts.size() != 0) {
-                clickOnEditButton();
-                for (WebElement shiftWithOT : getAvailableShiftsInDayView()) {
-                    WebElement shiftRightSlider = shiftWithOT.findElement(By.cssSelector("div.sch-day-view-shift-pinch.right"));
-                    String OTString = "hrs ot";
-                    int xOffSet = -50;
-                    while (shiftWithOT.getText().toLowerCase().contains(OTString)) {
-                        moveDayViewCards(shiftRightSlider, xOffSet);
-                    }
-                }
-                clickSaveBtn();
-                break;
-            }
-        }
-
-    }
+//    @Override
+//    public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception {
+//        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+//        for (WebElement activeWeekDay : ScheduleCalendarDayLabels) {
+//            click(activeWeekDay);
+//            List<WebElement> availableDayShifts = getAvailableShiftsInDayView();
+//            if (availableDayShifts.size() != 0) {
+//                clickOnEditButton();
+//                for (WebElement shiftWithOT : getAvailableShiftsInDayView()) {
+//                    WebElement shiftRightSlider = shiftWithOT.findElement(By.cssSelector("div.sch-day-view-shift-pinch.right"));
+//                    String OTString = "hrs ot";
+//                    int xOffSet = -50;
+//                    while (shiftWithOT.getText().toLowerCase().contains(OTString)) {
+//                        moveDayViewCards(shiftRightSlider, xOffSet);
+//                    }
+//                }
+//                clickSaveBtn();
+//                break;
+//            }
+//        }
+//    }
 
 
     @Override
@@ -3672,58 +3677,58 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //		}
 //	}
 
-    public void checkoutSchedule() {
-        clickTheElement(checkOutTheScheduleButton);
-        SimpleUtils.pass("Schedule Generated Successfuly!");
-    }
-
-    public void updateAndGenerateSchedule() {
-        if (isElementEnabled(updateAndGenerateScheduleButton)) {
-            click(updateAndGenerateScheduleButton);
-            SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
-            if (isElementEnabled(checkOutTheScheduleButton)) {
-                checkoutSchedule();
-            }
-        } else {
-            SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
-        }
-    }
-
-    @Override
-    public void generateOrUpdateAndGenerateSchedule() throws Exception {
-        if (isElementEnabled(generateSheduleButton,5)) {
-            clickTheElement(generateSheduleButton);
-            openBudgetPopUp();
-//            openBudgetPopUpGenerateSchedule();
-            if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
-                click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                    checkoutSchedule();
-                    switchToManagerView();
-                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
-                    updateAndGenerateSchedule();
-                    switchToManagerView();
-                } else {
-                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
-                }
-            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
-                updateAndGenerateSchedule();
-                switchToManagerView();
-            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
-                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
-                SimpleUtils.pass("Schedule Generated Successfully!");
-                switchToManagerView();
-            } else {
-                SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
-            }
-
-        } else if(isElementEnabled(generateScheduleBtn,5)){
-            switchToManagerView();
-        }
-        else {
-            SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
-        }
-    }
+//    public void checkoutSchedule() {
+//        clickTheElement(checkOutTheScheduleButton);
+//        SimpleUtils.pass("Schedule Generated Successfuly!");
+//    }
+//
+//    public void updateAndGenerateSchedule() {
+//        if (isElementEnabled(updateAndGenerateScheduleButton)) {
+//            click(updateAndGenerateScheduleButton);
+//            SimpleUtils.pass("Schedule Update and Generate button clicked Successfully!");
+//            if (isElementEnabled(checkOutTheScheduleButton)) {
+//                checkoutSchedule();
+//            }
+//        } else {
+//            SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+//        }
+//    }
+//
+//    @Override
+//    public void generateOrUpdateAndGenerateSchedule() throws Exception {
+//        if (isElementEnabled(generateSheduleButton,5)) {
+//            clickTheElement(generateSheduleButton);
+//            openBudgetPopUp();
+////            openBudgetPopUpGenerateSchedule();
+//            if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
+//                click(generateSheduleForEnterBudgetBtn);
+//                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+//                    checkoutSchedule();
+//                    switchToManagerView();
+//                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+//                    updateAndGenerateSchedule();
+//                    switchToManagerView();
+//                } else {
+//                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+//                }
+//            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+//                updateAndGenerateSchedule();
+//                switchToManagerView();
+//            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
+//                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+//                SimpleUtils.pass("Schedule Generated Successfully!");
+//                switchToManagerView();
+//            } else {
+//                SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+//            }
+//
+//        } else if(isElementEnabled(generateScheduleBtn,5)){
+//            switchToManagerView();
+//        }
+//        else {
+//            SimpleUtils.assertOnFail("Schedule Already generated for active week!", false, true);
+//        }
+//    }
 
     // Added by Nora: for day view overtime
     @Override
@@ -3869,161 +3874,161 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy (css = "[value=\"config.partialSchedule\"]")
     private WebElement copyPartialScheduleSwitch;
 
-    @FindBy (css = "[ng-repeat=\"assignment in assignments\"]")
-    private List<WebElement> copyShiftAssignments;
-
-    public void selectSpecificCopyShiftAssignments (List<String> specificShiftAssignments) {
-        if (areListElementVisible(copyShiftAssignments, 10) && copyShiftAssignments.size()>0) {
-            for (WebElement copyShiftAssignment: copyShiftAssignments){
-                if (specificShiftAssignments.contains(copyShiftAssignment.getText())){
-                    click(copyShiftAssignment);
-                    SimpleUtils.pass("Selected shift assignment: " + copyShiftAssignment.getText() +" successfully! ");
-                }
-            }
-        } else
-            SimpleUtils.fail("Copy shift assignments loaded fail! ", false);
-    }
-
-
-    @Override
-    public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception {
-        float budgetHours = 0;
-        String subTitle = "Confirm Operating Hours";
-        waitForSeconds(2);
-        if (isElementLoaded(generateSheduleButton,60)) {
-            clickTheElement(generateSheduleButton);
-            if (isElementLoaded(generateModalTitle, 20) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 20)) {
-                editTheOperatingHours(weekDaysToClose);
-                waitForSeconds(1);
-                clickTheElement(nextButtonOnCreateSchedule);
-                budgetHours = checkEnterBudgetWindowLoadedForNonDG();
-                selectWhichWeekToCopyFrom(weekInfo);
-                if(copyShiftAssignments !=null && copyShiftAssignments.size()>0){
-                    if (isElementLoaded(copyPartialScheduleSwitch, 10)){
-                        click(copyPartialScheduleSwitch);
-                    } else
-                        SimpleUtils.fail("Copy Partial Schedule Switch loaded fail! ", false);
-                    clickTheElement(nextButtonOnCreateSchedule);
-                    selectSpecificCopyShiftAssignments(copyShiftAssignments);
-                    clickTheElement(nextButtonOnCreateSchedule);
-                } else
-                    clickOnFinishButtonOnCreateSchedulePage();
-                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                    checkoutSchedule();
-                }
-
-            } else {
-                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
-            }
-        }else {
-            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
-        }
-        return budgetHours;
-    }
+//    @FindBy (css = "[ng-repeat=\"assignment in assignments\"]")
+//    private List<WebElement> copyShiftAssignments;
+//
+//    public void selectSpecificCopyShiftAssignments (List<String> specificShiftAssignments) {
+//        if (areListElementVisible(copyShiftAssignments, 10) && copyShiftAssignments.size()>0) {
+//            for (WebElement copyShiftAssignment: copyShiftAssignments){
+//                if (specificShiftAssignments.contains(copyShiftAssignment.getText())){
+//                    click(copyShiftAssignment);
+//                    SimpleUtils.pass("Selected shift assignment: " + copyShiftAssignment.getText() +" successfully! ");
+//                }
+//            }
+//        } else
+//            SimpleUtils.fail("Copy shift assignments loaded fail! ", false);
+//    }
 
 
+//    @Override
+//    public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception {
+//        float budgetHours = 0;
+//        String subTitle = "Confirm Operating Hours";
+//        waitForSeconds(2);
+//        if (isElementLoaded(generateSheduleButton,60)) {
+//            clickTheElement(generateSheduleButton);
+//            if (isElementLoaded(generateModalTitle, 20) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+//                    && isElementLoaded(nextButtonOnCreateSchedule, 20)) {
+//                editTheOperatingHours(weekDaysToClose);
+//                waitForSeconds(1);
+//                clickTheElement(nextButtonOnCreateSchedule);
+//                budgetHours = checkEnterBudgetWindowLoadedForNonDG();
+//                selectWhichWeekToCopyFrom(weekInfo);
+//                if(copyShiftAssignments !=null && copyShiftAssignments.size()>0){
+//                    if (isElementLoaded(copyPartialScheduleSwitch, 10)){
+//                        click(copyPartialScheduleSwitch);
+//                    } else
+//                        SimpleUtils.fail("Copy Partial Schedule Switch loaded fail! ", false);
+//                    clickTheElement(nextButtonOnCreateSchedule);
+//                    selectSpecificCopyShiftAssignments(copyShiftAssignments);
+//                    clickTheElement(nextButtonOnCreateSchedule);
+//                } else
+//                    clickOnFinishButtonOnCreateSchedulePage();
+//                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+//                    checkoutSchedule();
+//                }
+//
+//            } else {
+//                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
+//            }
+//        }else {
+//            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+//        }
+//        return budgetHours;
+//    }
 
-    @Override
-    public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception {
-        boolean selectOtherWeek = false;
-        try{
-            if (areListElementVisible(createModalWeeks, 10)) {
-                SimpleUtils.pass("Copy Schedule page loaded Successfully!");
-                waitForSeconds(5);
-                for (WebElement createModalWeek : createModalWeeks) {
-                    WebElement weekName = createModalWeek.findElement(By.className("generate-modal-week-name"));
-                    if (!selectOtherWeek) {
-                        if (weekName != null && weekName.getText().toLowerCase().contains(weekInfo.toLowerCase())) {
-                            WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
-                            if (weekContainer != null) {
-                                WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
-                                if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
-                                    int i = 0;
-                                    while (isElementLoaded(loadingIcon)&& i<20){
-                                        waitForSeconds(3);
-                                        i = i+1;
-                                    }
-                                    clickTheElement(weekContainer);
-                                    waitForSeconds(3);
-//                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + " with scheduled hour: " + scheduledHours.getText() + " Successfully!");
-                                    break;
-                                } else {
-                                    selectOtherWeek = true;
-                                    SimpleUtils.warn("Scheduled Hour is 0, due to bug PLT-1082: [RC]Creating schedule keeps spinning and shows 0 scheduled hours! Will select another week as a workaround");
-                                }
-                            }
-                        }
-                    } else {
-                        WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
-                        if (weekContainer != null) {
-                            WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
-                            if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
-                                clickTheElement(weekContainer);
-                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + "with scheduled hour: " + scheduledHours.getText() + " Successfully!");
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (StaleElementReferenceException e){
-            SimpleUtils.report(e.getMessage());
-        }
-    }
 
-    @Override
-    public float checkEnterBudgetWindowLoadedForNonDG() throws Exception {
-        float budgetHour = 0;
-        String title = "Enter Budget";
-        waitForSeconds(2);
-        try {
-            if (isElementLoaded(generateModalTitle, 10) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
-                editTheBudgetForNondgFlow();
-                waitForSeconds(5);
-                try {
-                    List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
-                    if (areListElementVisible(trs, 5) && trs.size() > 0) {
-                        WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("th:nth-child(4)"));
-                        budgetHour = Float.parseFloat(budget == null ? "" : budget.getText());
-                        SimpleUtils.report("Enter Budget Window: Get the budget hour: " + budgetHour);
-                    }
-                } catch (Exception e) {
-                    // Nothing
-                }
-                waitForSeconds(5);
-                clickTheElement(nextButtonOnCreateSchedule);
-            }
-            if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                checkoutSchedule();
-            }
-        } catch (Exception e) {
-            // do nothing
-        }
-        return budgetHour;
-    }
 
-    @Override
-    public void clickOnFinishButtonOnCreateSchedulePage() throws Exception {
-        if (isElementLoaded(nextButtonOnCreateSchedule, 5)) {
-            clickTheElement(nextButtonOnCreateSchedule);
-            WebElement element = (new WebDriverWait(getDriver(), 120))
-                    .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
-            waitForSeconds(3);
-            if (isElementLoaded(element, 5)) {
-                checkoutSchedule();
-                SimpleUtils.pass("Schedule Page: Schedule is generated within 2 minutes successfully");
-            } else {
-                SimpleUtils.fail("Schedule Page: Schedule isn't generated within 2 minutes", false);
-            }
-            if (areListElementVisible(shiftsWeekView, 60) && shiftsWeekView.size() > 0) {
-                SimpleUtils.pass("Create the schedule successfully!");
-            }else {
-                SimpleUtils.fail("Not able to generate the schedule successfully!", false);
-            }
-        }
-    }
+//    @Override
+//    public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception {
+//        boolean selectOtherWeek = false;
+//        try{
+//            if (areListElementVisible(createModalWeeks, 10)) {
+//                SimpleUtils.pass("Copy Schedule page loaded Successfully!");
+//                waitForSeconds(5);
+//                for (WebElement createModalWeek : createModalWeeks) {
+//                    WebElement weekName = createModalWeek.findElement(By.className("generate-modal-week-name"));
+//                    if (!selectOtherWeek) {
+//                        if (weekName != null && weekName.getText().toLowerCase().contains(weekInfo.toLowerCase())) {
+//                            WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
+//                            if (weekContainer != null) {
+//                                WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
+//                                if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
+//                                    int i = 0;
+//                                    while (isElementLoaded(loadingIcon)&& i<20){
+//                                        waitForSeconds(3);
+//                                        i = i+1;
+//                                    }
+//                                    clickTheElement(weekContainer);
+//                                    waitForSeconds(3);
+////                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + " with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+//                                    break;
+//                                } else {
+//                                    selectOtherWeek = true;
+//                                    SimpleUtils.warn("Scheduled Hour is 0, due to bug PLT-1082: [RC]Creating schedule keeps spinning and shows 0 scheduled hours! Will select another week as a workaround");
+//                                }
+//                            }
+//                        }
+//                    } else {
+//                        WebElement weekContainer = createModalWeek.findElement(By.className("generate-modal-week-container"));
+//                        if (weekContainer != null) {
+//                            WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
+//                            if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
+//                                clickTheElement(weekContainer);
+//                                SimpleUtils.pass("Create Schedule: Select the " + weekName.getText() + "with scheduled hour: " + scheduledHours.getText() + " Successfully!");
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (StaleElementReferenceException e){
+//            SimpleUtils.report(e.getMessage());
+//        }
+//    }
+
+//    @Override
+//    public float checkEnterBudgetWindowLoadedForNonDG() throws Exception {
+//        float budgetHour = 0;
+//        String title = "Enter Budget";
+//        waitForSeconds(2);
+//        try {
+//            if (isElementLoaded(generateModalTitle, 10) && title.equalsIgnoreCase(generateModalTitle.getText().trim())
+//                    && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
+//                editTheBudgetForNondgFlow();
+//                waitForSeconds(5);
+//                try {
+//                    List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
+//                    if (areListElementVisible(trs, 5) && trs.size() > 0) {
+//                        WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("th:nth-child(4)"));
+//                        budgetHour = Float.parseFloat(budget == null ? "" : budget.getText());
+//                        SimpleUtils.report("Enter Budget Window: Get the budget hour: " + budgetHour);
+//                    }
+//                } catch (Exception e) {
+//                    // Nothing
+//                }
+//                waitForSeconds(5);
+//                clickTheElement(nextButtonOnCreateSchedule);
+//            }
+//            if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+//                checkoutSchedule();
+//            }
+//        } catch (Exception e) {
+//            // do nothing
+//        }
+//        return budgetHour;
+//    }
+
+//    @Override
+//    public void clickOnFinishButtonOnCreateSchedulePage() throws Exception {
+//        if (isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+//            clickTheElement(nextButtonOnCreateSchedule);
+//            WebElement element = (new WebDriverWait(getDriver(), 120))
+//                    .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
+//            waitForSeconds(3);
+//            if (isElementLoaded(element, 5)) {
+//                checkoutSchedule();
+//                SimpleUtils.pass("Schedule Page: Schedule is generated within 2 minutes successfully");
+//            } else {
+//                SimpleUtils.fail("Schedule Page: Schedule isn't generated within 2 minutes", false);
+//            }
+//            if (areListElementVisible(shiftsWeekView, 60) && shiftsWeekView.size() > 0) {
+//                SimpleUtils.pass("Create the schedule successfully!");
+//            }else {
+//                SimpleUtils.fail("Not able to generate the schedule successfully!", false);
+//            }
+//        }
+//    }
 
     @Override
     public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception {
@@ -4140,94 +4145,94 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return hoursNTeamMembersCount;
     }
 
-    @Override
-    public void createScheduleForNonDGFlowNewUI() throws Exception {
-        String subTitle = "Confirm Operating Hours";
-        waitForSeconds(3);
-        if (isElementLoaded(generateSheduleButton,120)) {
-            clickTheElement(generateSheduleButton);
-            openBudgetPopUp();
-            if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
-                editTheOperatingHours(new ArrayList<>());
-                waitForSeconds(3);
-                clickTheElement(nextButtonOnCreateSchedule);
-                checkEnterBudgetWindowLoadedForNonDG();
-                selectWhichWeekToCopyFrom("SUGGESTED");
-                clickOnFinishButtonOnCreateSchedulePage();
-                switchToManagerViewToCheckForSecondGenerate();
-            }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
-                click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                    checkoutSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
-                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
-                    updateAndGenerateSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
-                } else {
-                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
-                }
-            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
-                updateAndGenerateSchedule();
-                switchToManagerViewToCheckForSecondGenerate();
-            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
-                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
-                SimpleUtils.pass("Schedule Generated Successfully!");
-                switchToManagerViewToCheckForSecondGenerate();
-            } else {
-                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
-            }
-        }else {
-            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
-        }
-    }
+//    @Override
+//    public void createScheduleForNonDGFlowNewUI() throws Exception {
+//        String subTitle = "Confirm Operating Hours";
+//        waitForSeconds(3);
+//        if (isElementLoaded(generateSheduleButton,120)) {
+//            clickTheElement(generateSheduleButton);
+//            openBudgetPopUp();
+//            if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+//                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
+//                editTheOperatingHours(new ArrayList<>());
+//                waitForSeconds(3);
+//                clickTheElement(nextButtonOnCreateSchedule);
+//                checkEnterBudgetWindowLoadedForNonDG();
+//                selectWhichWeekToCopyFrom("SUGGESTED");
+//                clickOnFinishButtonOnCreateSchedulePage();
+//                switchToManagerViewToCheckForSecondGenerate();
+//            }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
+//                click(generateSheduleForEnterBudgetBtn);
+//                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+//                    checkoutSchedule();
+//                    switchToManagerViewToCheckForSecondGenerate();
+//                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+//                    updateAndGenerateSchedule();
+//                    switchToManagerViewToCheckForSecondGenerate();
+//                } else {
+//                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+//                }
+//            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+//                updateAndGenerateSchedule();
+//                switchToManagerViewToCheckForSecondGenerate();
+//            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
+//                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+//                SimpleUtils.pass("Schedule Generated Successfully!");
+//                switchToManagerViewToCheckForSecondGenerate();
+//            } else {
+//                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
+//            }
+//        }else {
+//            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+//        }
+//    }
 
-    @Override
-    public void clickNextBtnOnCreateScheduleWindow() throws Exception {
-        if (isElementLoaded(nextButtonOnCreateSchedule, 15)){
-            clickTheElement(nextButtonOnCreateSchedule);
-            checkEnterBudgetWindowLoadedForNonDG();
-        } else {
-            SimpleUtils.fail("There is not next button!", false);
-        }
-    }
+//    @Override
+//    public void clickNextBtnOnCreateScheduleWindow() throws Exception {
+//        if (isElementLoaded(nextButtonOnCreateSchedule, 15)){
+//            clickTheElement(nextButtonOnCreateSchedule);
+//            checkEnterBudgetWindowLoadedForNonDG();
+//        } else {
+//            SimpleUtils.fail("There is not next button!", false);
+//        }
+//    }
 
-    public void editTheBudgetForNondgFlow() throws Exception {
-        if (isElementLoaded(editBudgetBtn, 20)) {
-            clickTheElement(editBudgetBtn);
-            // Cancel and Save buttons are consistent with operating hours
-            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
-                SimpleUtils.pass("Create Schedule - Enter Budget: Click on Edit button Successfully!");
-                if (areListElementVisible(roleHoursRows, 5)) {
-                    for (WebElement roleHoursRow : roleHoursRows) {
-                        try {
-                            WebElement forecastHour = roleHoursRow.findElement(By.cssSelector("td:nth-child(3)"));
-                            WebElement budgetHour = roleHoursRow.findElement(By.cssSelector("input[type=\"number\"]"));
-                            if (forecastHour != null && budgetHour != null) {
-                                String forecastHourString = "";
-                                if (forecastHour.getText().trim().contains(".")) {
-                                    forecastHourString = forecastHour.getText().trim().substring(0, forecastHour.getText().trim().indexOf("."));
-                                }
-                                budgetHour.clear();
-                                budgetHour.sendKeys(forecastHourString);
-                            }
-                        }catch (Exception e) {
-                            continue;
-                        }
-                    }
-                }
-                clickTheElement(operatingHoursSaveBtn);
-                waitForSeconds(3);
-                if (isElementEnabled(editBudgetBtn, 10)) {
-                    SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
-                }else {
-                    SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
-                }
-            }
-        }else {
-            SimpleUtils.fail("Create Schedule - Enter Budget: Edit button not loaded Successfully!", false);
-        }
-    }
+//    public void editTheBudgetForNondgFlow() throws Exception {
+//        if (isElementLoaded(editBudgetBtn, 20)) {
+//            clickTheElement(editBudgetBtn);
+//            // Cancel and Save buttons are consistent with operating hours
+//            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+//                SimpleUtils.pass("Create Schedule - Enter Budget: Click on Edit button Successfully!");
+//                if (areListElementVisible(roleHoursRows, 5)) {
+//                    for (WebElement roleHoursRow : roleHoursRows) {
+//                        try {
+//                            WebElement forecastHour = roleHoursRow.findElement(By.cssSelector("td:nth-child(3)"));
+//                            WebElement budgetHour = roleHoursRow.findElement(By.cssSelector("input[type=\"number\"]"));
+//                            if (forecastHour != null && budgetHour != null) {
+//                                String forecastHourString = "";
+//                                if (forecastHour.getText().trim().contains(".")) {
+//                                    forecastHourString = forecastHour.getText().trim().substring(0, forecastHour.getText().trim().indexOf("."));
+//                                }
+//                                budgetHour.clear();
+//                                budgetHour.sendKeys(forecastHourString);
+//                            }
+//                        }catch (Exception e) {
+//                            continue;
+//                        }
+//                    }
+//                }
+//                clickTheElement(operatingHoursSaveBtn);
+//                waitForSeconds(3);
+//                if (isElementEnabled(editBudgetBtn, 10)) {
+//                    SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
+//                }else {
+//                    SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
+//                }
+//            }
+//        }else {
+//            SimpleUtils.fail("Create Schedule - Enter Budget: Edit button not loaded Successfully!", false);
+//        }
+//    }
 
     @FindBy (css = ".generate-modal-operating-hours-step-container .lg-picker-input")
     private WebElement locationSelectorOnCreateSchedulePage;
@@ -4295,78 +4300,78 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("Ungenerate schedule page: Search location buttons fail to load! ", false);
     }
 
-    public void selectRandomLocationOnCreateScheduleEditOperatingHoursPage() throws Exception {
-        int randomLocations = (new Random()).nextInt(locationsInLocationSelectorOnCreateSchedulePage.size());
-        String randomLocationName = locationsInLocationSelectorOnCreateSchedulePage.get(randomLocations).getText();
-        waitForSeconds(3);
-        if(isElementLoaded(searchLocationOnCreateSchedulePage, 5)){
-            searchLocationOnCreateSchedulePage.sendKeys(randomLocationName);
-        }
-        click(locationsInLocationSelectorOnCreateSchedulePage.get(0));
-        if(selectedLocationOnCreateSchedulePage.getText().equals(randomLocationName)){
-            SimpleUtils.pass("Select locations on Edit Operating hours successfully! ");
-        } else
-            SimpleUtils.fail("Select locations on Edit Operating hours failed! ", false);
-    }
+//    public void selectRandomLocationOnCreateScheduleEditOperatingHoursPage() throws Exception {
+//        int randomLocations = (new Random()).nextInt(locationsInLocationSelectorOnCreateSchedulePage.size());
+//        String randomLocationName = locationsInLocationSelectorOnCreateSchedulePage.get(randomLocations).getText();
+//        waitForSeconds(3);
+//        if(isElementLoaded(searchLocationOnCreateSchedulePage, 5)){
+//            searchLocationOnCreateSchedulePage.sendKeys(randomLocationName);
+//        }
+//        click(locationsInLocationSelectorOnCreateSchedulePage.get(0));
+//        if(selectedLocationOnCreateSchedulePage.getText().equals(randomLocationName)){
+//            SimpleUtils.pass("Select locations on Edit Operating hours successfully! ");
+//        } else
+//            SimpleUtils.fail("Select locations on Edit Operating hours failed! ", false);
+//    }
 
-    @Override
-    public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
-        try{
-            if (isElementLoaded(operatingHoursEditBtn, 10)) {
-                clickTheElement(operatingHoursEditBtn);
-                if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)
-                        && areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
-                        && locationsInLocationSelectorOnCreateSchedulePage.size() > 0) {
-                    click(locationSelectorOnCreateSchedulePage);
-                    selectRandomLocationOnCreateScheduleEditOperatingHoursPage();
-                }
-                if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
-                    SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
-                    if (areListElementVisible(operatingHoursDayLists, 15)) {
-                        for (WebElement dayList : operatingHoursDayLists) {
-                            WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
-                            if (weekDay != null) {
-                                WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
-                                if (!weekDaysToClose.contains(weekDay.getText())) {
-                                    if (checkbox.getAttribute("class").contains("ng-empty")) {
-                                        clickTheElement(checkbox);
-                                    }
-                                    String[] operatingHours = null;
-                                    if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)) {
-                                        operatingHours = propertyOperatingHoursLG.get(weekDay.getText()).split("-");
-                                    } else
-                                        operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
-                                    List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                                    startNEndTimes.get(0).clear();
-                                    startNEndTimes.get(1).clear();
-                                    startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
-                                    startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
-                                } else {
-                                    if (!checkbox.getAttribute("class").contains("ng-empty")) {
-                                        clickTheElement(checkbox);
-                                    }
-                                }
-                            } else {
-                                SimpleUtils.fail("Failed to find weekday element!", false);
-                            }
-                        }
-                        clickTheElement(operatingHoursSaveBtn);
-                        if (isElementEnabled(operatingHoursEditBtn, 15)) {
-                            SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
-                        } else {
-                            SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
-                        }
-                    }
-                } else {
-                    SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
-                }
-            }else {
-                SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
-            }
-        } catch (StaleElementReferenceException e){
-            SimpleUtils.report(e.getMessage());
-        }
-    }
+//    @Override
+//    public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception {
+//        try{
+//            if (isElementLoaded(operatingHoursEditBtn, 10)) {
+//                clickTheElement(operatingHoursEditBtn);
+//                if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)
+//                        && areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
+//                        && locationsInLocationSelectorOnCreateSchedulePage.size() > 0) {
+//                    click(locationSelectorOnCreateSchedulePage);
+//                    selectRandomLocationOnCreateScheduleEditOperatingHoursPage();
+//                }
+//                if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+//                    SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
+//                    if (areListElementVisible(operatingHoursDayLists, 15)) {
+//                        for (WebElement dayList : operatingHoursDayLists) {
+//                            WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+//                            if (weekDay != null) {
+//                                WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+//                                if (!weekDaysToClose.contains(weekDay.getText())) {
+//                                    if (checkbox.getAttribute("class").contains("ng-empty")) {
+//                                        clickTheElement(checkbox);
+//                                    }
+//                                    String[] operatingHours = null;
+//                                    if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)) {
+//                                        operatingHours = propertyOperatingHoursLG.get(weekDay.getText()).split("-");
+//                                    } else
+//                                        operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
+//                                    List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+//                                    startNEndTimes.get(0).clear();
+//                                    startNEndTimes.get(1).clear();
+//                                    startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
+//                                    startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
+//                                } else {
+//                                    if (!checkbox.getAttribute("class").contains("ng-empty")) {
+//                                        clickTheElement(checkbox);
+//                                    }
+//                                }
+//                            } else {
+//                                SimpleUtils.fail("Failed to find weekday element!", false);
+//                            }
+//                        }
+//                        clickTheElement(operatingHoursSaveBtn);
+//                        if (isElementEnabled(operatingHoursEditBtn, 15)) {
+//                            SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
+//                        } else {
+//                            SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
+//                        }
+//                    }
+//                } else {
+//                    SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
+//                }
+//            }else {
+//                SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
+//            }
+//        } catch (StaleElementReferenceException e){
+//            SimpleUtils.report(e.getMessage());
+//        }
+//    }
 
     private boolean isOperatingHoursConsistentWithTheRequiredHours() throws Exception {
         boolean isConsistent = true;
@@ -4394,89 +4399,89 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return isConsistent;
     }
 
-    public void switchToManagerViewToCheckForSecondGenerate() throws Exception {
-        try {
-            String activeWeekText = getActiveWeekText();
-            if (isScheduleTypeLoaded()) {
-                if (activScheduleType.getText().equalsIgnoreCase("Suggested")) {
-                    click(scheduleTypeManager);
-                    waitForSeconds(3);
-                    if (isReGenerateButtonLoadedForManagerView()) {
-                        click(reGenerateScheduleButton);
-                        generateScheduleFromCreateNewScheduleWindow(activeWeekText);
-                        selectWhichWeekToCopyFrom("SUGGESTED");
-                        clickOnFinishButtonOnCreateSchedulePage();
-                    } else if (isElementLoaded(publishSheduleButton, 5)) {
-                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
-                    } else if (areListElementVisible(weekShifts, 5)) {
-                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
-                    } else {
-                        SimpleUtils.fail("Generate button or Publish Button not found on page", false);
-                    }
-                } else {
-                    if (isReGenerateButtonLoadedForManagerView()) {
-                        click(reGenerateScheduleButton);
-                        generateScheduleFromCreateNewScheduleWindow(activeWeekText);
-                    } else if (isElementLoaded(publishSheduleButton, 10)) {
-                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
-                    } else if (areListElementVisible(weekShifts, 10)) {
-                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
-                    } else {
-                        SimpleUtils.fail("Generate button or Publish not found on page", false);
-                    }
-                }
-            } else {
-                SimpleUtils.report("Schedule Type Suggested/Manager is disabled");
-//                getDriver().navigate().refresh();
-//                waitForSeconds(5);
-                if (isReGenerateButtonLoadedForManagerView()) {
-                    click(reGenerateScheduleButton);
-                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
-                } else if (isElementLoaded(publishSheduleButton, 5)) {
-                    SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
-                } else if (areListElementVisible(weekShifts, 5)) {
-                    SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
-                } else {
-                    SimpleUtils.fail("Generate button or Publish not found on page", false);
-                }
-            }
-            if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                checkoutSchedule();
-            }
-            waitForSeconds(5);
-            if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
-                SimpleUtils.pass("Create the schedule successfully!");
-            } else {
-                SimpleUtils.fail("Not able to generate the schedule successfully!", false);
-            }
-        } catch (Exception e) {
-            // Do nothing
-        }
-    }
+//    public void switchToManagerViewToCheckForSecondGenerate() throws Exception {
+//        try {
+//            String activeWeekText = getActiveWeekText();
+//            if (isScheduleTypeLoaded()) {
+//                if (activScheduleType.getText().equalsIgnoreCase("Suggested")) {
+//                    click(scheduleTypeManager);
+//                    waitForSeconds(3);
+//                    if (isReGenerateButtonLoadedForManagerView()) {
+//                        click(reGenerateScheduleButton);
+//                        generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+//                        selectWhichWeekToCopyFrom("SUGGESTED");
+//                        clickOnFinishButtonOnCreateSchedulePage();
+//                    } else if (isElementLoaded(publishSheduleButton, 5)) {
+//                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+//                    } else if (areListElementVisible(weekShifts, 5)) {
+//                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+//                    } else {
+//                        SimpleUtils.fail("Generate button or Publish Button not found on page", false);
+//                    }
+//                } else {
+//                    if (isReGenerateButtonLoadedForManagerView()) {
+//                        click(reGenerateScheduleButton);
+//                        generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+//                    } else if (isElementLoaded(publishSheduleButton, 10)) {
+//                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+//                    } else if (areListElementVisible(weekShifts, 10)) {
+//                        SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+//                    } else {
+//                        SimpleUtils.fail("Generate button or Publish not found on page", false);
+//                    }
+//                }
+//            } else {
+//                SimpleUtils.report("Schedule Type Suggested/Manager is disabled");
+////                getDriver().navigate().refresh();
+////                waitForSeconds(5);
+//                if (isReGenerateButtonLoadedForManagerView()) {
+//                    click(reGenerateScheduleButton);
+//                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+//                } else if (isElementLoaded(publishSheduleButton, 5)) {
+//                    SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+//                } else if (areListElementVisible(weekShifts, 5)) {
+//                    SimpleUtils.pass("Generate the schedule for week: " + activeWeekText + " Successfully!");
+//                } else {
+//                    SimpleUtils.fail("Generate button or Publish not found on page", false);
+//                }
+//            }
+//            if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+//                checkoutSchedule();
+//            }
+//            waitForSeconds(5);
+//            if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > 0) {
+//                SimpleUtils.pass("Create the schedule successfully!");
+//            } else {
+//                SimpleUtils.fail("Not able to generate the schedule successfully!", false);
+//            }
+//        } catch (Exception e) {
+//            // Do nothing
+//        }
+//    }
 
-    private boolean isScheduleTypeLoaded() {
-        try {
-            if (isElementEnabled(activScheduleType, 10)) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-    }
+//    private boolean isScheduleTypeLoaded() {
+//        try {
+//            if (isElementEnabled(activScheduleType, 10)) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
 
     //added by haya, create button for non-dg flow
-    @Override
-    public void clickCreateScheduleBtn() throws Exception {
-        if (isElementEnabled(generateSheduleButton,10)) {
-            click(generateSheduleButton);
-            openBudgetPopUp();
-
-        }else {
-            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
-        }
-    }
+//    @Override
+//    public void clickCreateScheduleBtn() throws Exception {
+//        if (isElementEnabled(generateSheduleButton,10)) {
+//            click(generateSheduleButton);
+//            openBudgetPopUp();
+//
+//        }else {
+//            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+//        }
+//    }
 
     @FindBy(css = "div[ng-click=\"back()\"]")
     private WebElement backBtnOnCreateScheduleWindow;
@@ -4504,142 +4509,142 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     //added by haya, edit operating hours when create new schedule for non-dg flow.
     //e.g.: day: Sunday, startTime->09:00AM, endTime->05:00PM
-    @Override
-    public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception {
-        if (isElementLoaded(operatingHoursEditBtn, 10)) {
-            clickTheElement(operatingHoursEditBtn);
-            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
-                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
-                if (areListElementVisible(operatingHoursDayLists, 15)) {
-                    for (WebElement dayList : operatingHoursDayLists) {
-                        WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
-                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
-                        List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                        if (checkbox != null && weekDay != null && startNEndTimes != null && startNEndTimes.size() == 2) {
-                            if (checkbox.getAttribute("class").contains("ng-empty")) {
-                                SimpleUtils.warn("editOperatingHoursWithGivingPrameters: All seven day of a week should be checked by default when create schedule.");
-                                clickTheElement(checkbox);
-                            }
-                            if (weekDay.getText().toLowerCase().contains(day.toLowerCase())){
-                                startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                                String openTime = startNEndTimes.get(0).getAttribute("value");
-                                String closeTime = startNEndTimes.get(1).getAttribute("value");
-                                if (!openTime.equals(startTime) || !closeTime.equals(endTime)) {
-                                    startNEndTimes.get(0).clear();
-                                    startNEndTimes.get(1).clear();
-                                    startNEndTimes.get(0).sendKeys(startTime);
-                                    startNEndTimes.get(1).sendKeys(endTime);
-                                }
-
-                            }
-                        }else {
-                            SimpleUtils.fail("Failed to find the checkbox, weekday or start and end time elements!", false);
-                        }
-                    }
-                    clickTheElement(operatingHoursSaveBtn);
-                    if (isElementEnabled(operatingHoursEditBtn, 10)) {
-                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
-                    }else {
-                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
-                    }
-                }
-            }else {
-                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
-            }
-        }else {
-            SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
-        }
-    }
+//    @Override
+//    public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception {
+//        if (isElementLoaded(operatingHoursEditBtn, 10)) {
+//            clickTheElement(operatingHoursEditBtn);
+//            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+//                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
+//                if (areListElementVisible(operatingHoursDayLists, 15)) {
+//                    for (WebElement dayList : operatingHoursDayLists) {
+//                        WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+//                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+//                        List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+//                        if (checkbox != null && weekDay != null && startNEndTimes != null && startNEndTimes.size() == 2) {
+//                            if (checkbox.getAttribute("class").contains("ng-empty")) {
+//                                SimpleUtils.warn("editOperatingHoursWithGivingPrameters: All seven day of a week should be checked by default when create schedule.");
+//                                clickTheElement(checkbox);
+//                            }
+//                            if (weekDay.getText().toLowerCase().contains(day.toLowerCase())){
+//                                startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+//                                String openTime = startNEndTimes.get(0).getAttribute("value");
+//                                String closeTime = startNEndTimes.get(1).getAttribute("value");
+//                                if (!openTime.equals(startTime) || !closeTime.equals(endTime)) {
+//                                    startNEndTimes.get(0).clear();
+//                                    startNEndTimes.get(1).clear();
+//                                    startNEndTimes.get(0).sendKeys(startTime);
+//                                    startNEndTimes.get(1).sendKeys(endTime);
+//                                }
+//
+//                            }
+//                        }else {
+//                            SimpleUtils.fail("Failed to find the checkbox, weekday or start and end time elements!", false);
+//                        }
+//                    }
+//                    clickTheElement(operatingHoursSaveBtn);
+//                    if (isElementEnabled(operatingHoursEditBtn, 10)) {
+//                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
+//                    }else {
+//                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
+//                    }
+//                }
+//            }else {
+//                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
+//            }
+//        }else {
+//            SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
+//        }
+//    }
 
     //added by haya, create schedule for non-dg flow with giving parameters.
     //e.g.: day: Sunday, startTime->09:00AM, endTime->05:00PM
-    @Override
-    public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception {
-        String subTitle = "Confirm Operating Hours";
-        if (isElementLoaded(generateSheduleButton,10)) {
-            moveToElementAndClick(generateSheduleButton);
-            openBudgetPopUp();
-            if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
-                editOperatingHoursWithGivingPrameters(day, startTime, endTime);
-                waitForSeconds(3);
-                clickTheElement(nextButtonOnCreateSchedule);
-                checkEnterBudgetWindowLoadedForNonDG();
-                selectWhichWeekToCopyFrom("SUGGESTED");
-                clickOnFinishButtonOnCreateSchedulePage();
-                switchToManagerViewToCheckForSecondGenerate();
-            }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
-                click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                    checkoutSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
-                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
-                    updateAndGenerateSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
-                } else {
-                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
-                }
-            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
-                updateAndGenerateSchedule();
-                switchToManagerViewToCheckForSecondGenerate();
-            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
-                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
-                SimpleUtils.pass("Schedule Generated Successfully!");
-                switchToManagerViewToCheckForSecondGenerate();
-            } else {
-                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
-            }
-        }else {
-            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
-        }
-    }
-    @Override
-    public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception {
-        String subTitle = "Confirm Operating Hours";
-        if (isElementLoaded(generateSheduleButton,10)) {
-            moveToElementAndClick(generateSheduleButton);
-            openBudgetPopUp();
-            if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
-                editOperatingHoursWithGivingPrameters("Sunday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Monday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Tuesday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Wednesday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Thursday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Friday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Saturday", startTime, endTime);
-                waitForSeconds(3);
-                clickTheElement(nextButtonOnCreateSchedule);
-                waitForSeconds(2);
-                checkEnterBudgetWindowLoadedForNonDG();
-                selectWhichWeekToCopyFrom("SUGGESTED");
-                clickOnFinishButtonOnCreateSchedulePage();
-                switchToManagerViewToCheckForSecondGenerate();
-            }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
-                click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                    checkoutSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
-                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
-                    updateAndGenerateSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
-                } else {
-                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
-                }
-            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
-                updateAndGenerateSchedule();
-                switchToManagerViewToCheckForSecondGenerate();
-            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
-                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
-                SimpleUtils.pass("Schedule Generated Successfully!");
-                switchToManagerViewToCheckForSecondGenerate();
-            } else {
-                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
-            }
-        }else {
-            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
-        }
-    }
+//    @Override
+//    public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception {
+//        String subTitle = "Confirm Operating Hours";
+//        if (isElementLoaded(generateSheduleButton,10)) {
+//            moveToElementAndClick(generateSheduleButton);
+//            openBudgetPopUp();
+//            if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+//                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
+//                editOperatingHoursWithGivingPrameters(day, startTime, endTime);
+//                waitForSeconds(3);
+//                clickTheElement(nextButtonOnCreateSchedule);
+//                checkEnterBudgetWindowLoadedForNonDG();
+//                selectWhichWeekToCopyFrom("SUGGESTED");
+//                clickOnFinishButtonOnCreateSchedulePage();
+//                switchToManagerViewToCheckForSecondGenerate();
+//            }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
+//                click(generateSheduleForEnterBudgetBtn);
+//                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+//                    checkoutSchedule();
+//                    switchToManagerViewToCheckForSecondGenerate();
+//                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+//                    updateAndGenerateSchedule();
+//                    switchToManagerViewToCheckForSecondGenerate();
+//                } else {
+//                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+//                }
+//            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+//                updateAndGenerateSchedule();
+//                switchToManagerViewToCheckForSecondGenerate();
+//            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
+//                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+//                SimpleUtils.pass("Schedule Generated Successfully!");
+//                switchToManagerViewToCheckForSecondGenerate();
+//            } else {
+//                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
+//            }
+//        }else {
+//            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+//        }
+//    }
+//    @Override
+//    public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception {
+//        String subTitle = "Confirm Operating Hours";
+//        if (isElementLoaded(generateSheduleButton,10)) {
+//            moveToElementAndClick(generateSheduleButton);
+//            openBudgetPopUp();
+//            if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+//                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
+//                editOperatingHoursWithGivingPrameters("Sunday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Monday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Tuesday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Wednesday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Thursday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Friday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Saturday", startTime, endTime);
+//                waitForSeconds(3);
+//                clickTheElement(nextButtonOnCreateSchedule);
+//                waitForSeconds(2);
+//                checkEnterBudgetWindowLoadedForNonDG();
+//                selectWhichWeekToCopyFrom("SUGGESTED");
+//                clickOnFinishButtonOnCreateSchedulePage();
+//                switchToManagerViewToCheckForSecondGenerate();
+//            }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
+//                click(generateSheduleForEnterBudgetBtn);
+//                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+//                    checkoutSchedule();
+//                    switchToManagerViewToCheckForSecondGenerate();
+//                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+//                    updateAndGenerateSchedule();
+//                    switchToManagerViewToCheckForSecondGenerate();
+//                } else {
+//                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+//                }
+//            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+//                updateAndGenerateSchedule();
+//                switchToManagerViewToCheckForSecondGenerate();
+//            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
+//                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+//                SimpleUtils.pass("Schedule Generated Successfully!");
+//                switchToManagerViewToCheckForSecondGenerate();
+//            } else {
+//                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
+//            }
+//        }else {
+//            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+//        }
+//    }
 
     //added by Haya
     @FindBy (css = "button.dropdown-toggle")
@@ -6047,46 +6052,46 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    public void switchToManagerView() throws Exception {
-        String activeWeekText = getActiveWeekText();
-        if(isElementEnabled(activScheduleType,5)){
-            if(activScheduleType.getText().equalsIgnoreCase("Suggested")){
-                click(scheduleTypeManager);
-                if(isGenerateButtonLoadedForManagerView()){
-                    click(generateScheduleBtn);
-                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
-                }else{
-                    SimpleUtils.fail("Generate button not found on page",false);
-                }
-            }else{
-                if(isGenerateButtonLoadedForManagerView()){
-                    click(generateScheduleBtn);
-                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
-                }else{
-                    SimpleUtils.fail("Generate button not found on page",false);
-                }
-            }
-        }else{
-            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
-        }
-    }
+//    public void switchToManagerView() throws Exception {
+//        String activeWeekText = getActiveWeekText();
+//        if(isElementEnabled(activScheduleType,5)){
+//            if(activScheduleType.getText().equalsIgnoreCase("Suggested")){
+//                click(scheduleTypeManager);
+//                if(isGenerateButtonLoadedForManagerView()){
+//                    click(generateScheduleBtn);
+//                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+//                }else{
+//                    SimpleUtils.fail("Generate button not found on page",false);
+//                }
+//            }else{
+//                if(isGenerateButtonLoadedForManagerView()){
+//                    click(generateScheduleBtn);
+//                    generateScheduleFromCreateNewScheduleWindow(activeWeekText);
+//                }else{
+//                    SimpleUtils.fail("Generate button not found on page",false);
+//                }
+//            }
+//        }else{
+//            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+//        }
+//    }
 
-    public void generateScheduleFromCreateNewScheduleWindow(String activeWeekText) throws Exception {
-        if(isElementEnabled(copySchedulePopUp,5)){
-            SimpleUtils.pass("Copy From Schedule Window opened for week " + activeWeekText);
-            if(isElementEnabled(btnContinue,2)){
-                JavascriptExecutor jse = (JavascriptExecutor) getDriver();
-                jse.executeScript("arguments[0].click();", btnContinue);
-            }else{
-                SimpleUtils.fail("Continue button was not present on page",false);
-            }
-        }else if (isElementEnabled(publishSheduleButton,5)){
-            SimpleUtils.pass("Copy From Schedule Window not opened for " + activeWeekText +" because there was no past week published schedule" + activeWeekText);
-        }
-        else{
-            SimpleUtils.fail("Copy From Schedule Window not opened for week " + activeWeekText,false);
-        }
-    }
+//    public void generateScheduleFromCreateNewScheduleWindow(String activeWeekText) throws Exception {
+//        if(isElementEnabled(copySchedulePopUp,5)){
+//            SimpleUtils.pass("Copy From Schedule Window opened for week " + activeWeekText);
+//            if(isElementEnabled(btnContinue,2)){
+//                JavascriptExecutor jse = (JavascriptExecutor) getDriver();
+//                jse.executeScript("arguments[0].click();", btnContinue);
+//            }else{
+//                SimpleUtils.fail("Continue button was not present on page",false);
+//            }
+//        }else if (isElementEnabled(publishSheduleButton,5)){
+//            SimpleUtils.pass("Copy From Schedule Window not opened for " + activeWeekText +" because there was no past week published schedule" + activeWeekText);
+//        }
+//        else{
+//            SimpleUtils.fail("Copy From Schedule Window not opened for week " + activeWeekText,false);
+//        }
+//    }
     //added by Nishant for DM Test cases
 
     @FindBy(css = "div.analytics-new-table-group")
@@ -6601,7 +6606,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     }
                 }
                 click(currentWeeks.get(i));
-                if (isWeekGenerated()) {
+                CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
+                if (createSchedulePage.isWeekGenerated()) {
                     unGenerateActiveScheduleScheduleWeek();
                 }
                 if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
@@ -7286,15 +7292,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
     @Override
     public void toNFroNavigationFromDMToSMSchedule(String CurrentWeek, String locationToSelectFromDMViewSchedule, String districtName, String nextWeekViewOrPreviousWeekView) throws Exception {
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         String weekSelected = null;
         loadingOfDMViewSchedulePage(CurrentWeek);
         checkNavDMtoSMScheduleNSMScheduleLoading(locationToSelectFromDMViewSchedule, districtName, CurrentWeek);
         if (nextWeekViewOrPreviousWeekView.toLowerCase().contains("next") || nextWeekViewOrPreviousWeekView.toLowerCase().contains("future")) {
-            clickImmediateNextToCurrentActiveWeekInDayPicker();
+            scheduleCommonPage.clickImmediateNextToCurrentActiveWeekInDayPicker();
             weekSelected = daypicker.getText().replace("\n", " ");
             checkNavDMtoSMScheduleNSMScheduleLoading(locationToSelectFromDMViewSchedule, districtName, weekSelected);
         } else {
-            clickImmediatePastToCurrentActiveWeekInDayPicker();
+            scheduleCommonPage.clickImmediatePastToCurrentActiveWeekInDayPicker();
             weekSelected = daypicker.getText().replace("\n", " ");
             checkNavDMtoSMScheduleNSMScheduleLoading(locationToSelectFromDMViewSchedule, districtName, weekSelected);
         }
@@ -7512,48 +7519,49 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "span[ng-if='canEditWages(budget)'] span")
     private List<WebElement> editListWagesHrs;
 
-    public void openBudgetPopUpGenerateSchedule() throws Exception{
-        if(isElementEnabled(btnGenerateBudgetPopUP,5)){
-            click(btnGenerateBudgetPopUP);
-        }else{
-            SimpleUtils.fail("Generate btn not clickable on Budget pop up", false);
-        }
-    }
+//    public void openBudgetPopUpGenerateSchedule() throws Exception{
+//        if(isElementEnabled(btnGenerateBudgetPopUP,5)){
+//            click(btnGenerateBudgetPopUP);
+//        }else{
+//            SimpleUtils.fail("Generate btn not clickable on Budget pop up", false);
+//        }
+//    }
 
-    public void openBudgetPopUp() throws Exception{
-        if(isElementLoaded(popUpGenerateScheduleTitleTxt,5)){
-            if(areListElementVisible(editBudgetHrs,5)){
-                fillBudgetValues(editBudgetHrs);
-                openBudgetPopUpGenerateSchedule();
-            }else if(areListElementVisible(editWagesHrs,5)){
-                fillBudgetValues(editWagesHrs);
-                openBudgetPopUpGenerateSchedule();
-            } else if(isElementLoaded(btnGenerateBudgetPopUP, 5)){
-                openBudgetPopUpGenerateSchedule();
-            }
-        }
-    }
+//    public void openBudgetPopUp() throws Exception{
+//        if(isElementLoaded(popUpGenerateScheduleTitleTxt,5)){
+//            if(areListElementVisible(editBudgetHrs,5)){
+//                fillBudgetValues(editBudgetHrs);
+//                openBudgetPopUpGenerateSchedule();
+//            }else if(areListElementVisible(editWagesHrs,5)){
+//                fillBudgetValues(editWagesHrs);
+//                openBudgetPopUpGenerateSchedule();
+//            } else if(isElementLoaded(btnGenerateBudgetPopUP, 5)){
+//                openBudgetPopUpGenerateSchedule();
+//            }
+//        }
+//    }
 
-    @FindBy(css = "input[ng-class='hoursFieldClass(budget)']")
-    private List<WebElement> inputHrs;
-    @FindBy(css = "tr.table-row.ng-scope")
-    private List<WebElement> budgetTableRow;
-
-    public void fillBudgetValues(List<WebElement> element) throws Exception {
-        if(areListElementVisible(budgetTableRow,5)){
-            for(int i=0; i<budgetTableRow.size()-1;i++){
-                click(element.get(i));
-                int fillBudgetInNumbers = SimpleUtils.generateRandomNumbers();
-                inputHrs.get(i).clear();
-                inputHrs.get(i).sendKeys(String.valueOf(fillBudgetInNumbers));
-            }
-        }else{
-            SimpleUtils.fail("Not able to see Budget table row for filling up the data",false);
-        }
-    }
+//    @FindBy(css = "input[ng-class='hoursFieldClass(budget)']")
+//    private List<WebElement> inputHrs;
+//    @FindBy(css = "tr.table-row.ng-scope")
+//    private List<WebElement> budgetTableRow;
+//
+//    public void fillBudgetValues(List<WebElement> element) throws Exception {
+//        if(areListElementVisible(budgetTableRow,5)){
+//            for(int i=0; i<budgetTableRow.size()-1;i++){
+//                click(element.get(i));
+//                int fillBudgetInNumbers = SimpleUtils.generateRandomNumbers();
+//                inputHrs.get(i).clear();
+//                inputHrs.get(i).sendKeys(String.valueOf(fillBudgetInNumbers));
+//            }
+//        }else{
+//            SimpleUtils.fail("Not able to see Budget table row for filling up the data",false);
+//        }
+//    }
 
     public void updatebudgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount) {
         // TODO Auto-generated method stub
+        CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
         waitForSeconds(3);
         for(int i = 0; i < weekCount; i++)
         {
@@ -7580,10 +7588,10 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                             click(enterBudgetLink);
                             waitForSeconds(3);
                             if(areListElementVisible(editBudgetHrs,5)){
-                                fillBudgetValues(editBudgetHrs);
+                                createSchedulePage.fillBudgetValues(editBudgetHrs);
                                 compareBudgetValueForScheduleAndBudgetSmartCardWhenBudgetByHour(weekDuration);
                             }else if(areListElementVisible(editWagesHrs,5)){
-                                fillBudgetValues(editWagesHrs);
+                                createSchedulePage.fillBudgetValues(editWagesHrs);
                                 compareBudgetValueForScheduleAndBudgetSmartCardWhenBudgetByWages(weekDuration);
                             }
 
@@ -8134,29 +8142,29 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //        }
     }
 
-    @Override
-    public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception {
-        clickOnScheduleAnalyzeButton();
-        for (WebElement e:scheduleHistoryListInAnalyzePopUp
-        ) {
-            if(verifyScrollBarWorkingInAnalyzePopUP(e)){
-                SimpleUtils.report("Staffing Guidance Schedule History-Scrollbar is working correctly version x details");
-
-            }else {
-                SimpleUtils.fail("Staffing Guidance Schedule History-Scrollbar is not working correctly version x details",true);
-            }
-        }
-        if (isElementLoaded(scheduleAnalyzePopupCloseButtonInKS2,10)){
-            click(scheduleAnalyzePopupCloseButtonInKS2);
-            SimpleUtils.pass("close button is working");
-        } else if (isElementLoaded(scheduleAnalyzePopupCloseButton)){
-            click(scheduleAnalyzePopupCloseButton);
-            SimpleUtils.pass("close button is working");
-        } else{
-            SimpleUtils.fail("No close button on schedule analyse popup",true);
-        }
-
-    }
+//    @Override
+//    public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception {
+//        clickOnScheduleAnalyzeButton();
+//        for (WebElement e:scheduleHistoryListInAnalyzePopUp
+//        ) {
+//            if(verifyScrollBarWorkingInAnalyzePopUP(e)){
+//                SimpleUtils.report("Staffing Guidance Schedule History-Scrollbar is working correctly version x details");
+//
+//            }else {
+//                SimpleUtils.fail("Staffing Guidance Schedule History-Scrollbar is not working correctly version x details",true);
+//            }
+//        }
+//        if (isElementLoaded(scheduleAnalyzePopupCloseButtonInKS2,10)){
+//            click(scheduleAnalyzePopupCloseButtonInKS2);
+//            SimpleUtils.pass("close button is working");
+//        } else if (isElementLoaded(scheduleAnalyzePopupCloseButton)){
+//            click(scheduleAnalyzePopupCloseButton);
+//            SimpleUtils.pass("close button is working");
+//        } else{
+//            SimpleUtils.fail("No close button on schedule analyse popup",true);
+//        }
+//
+//    }
 
     @Override
     public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception {
@@ -8165,41 +8173,42 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             */
         waitForSeconds(10);
         if (isElementLoaded(scheduleSmartCard,20) ){
-            HashMap<String, Float> hoursWagesText = getScheduleLabelHoursAndWages();
+            SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+            HashMap<String, Float> hoursWagesText = smartCardPage.getScheduleLabelHoursAndWages();
             return hoursWagesText;
         }
         return null;
     }
 
-    public boolean verifyScrollBarWorkingInAnalyzePopUP(WebElement element) throws Exception {
-        if (areListElementVisible(scheduleHistoryListInAnalyzePopUp,10)&scheduleHistoryListInAnalyzePopUp.size()>4) {
-            SimpleUtils.report("versions are more enough and there is a scroll bar to check details");
-            scrollToElement(element);
-            click(element);
-            String versionNubScrollToText = versionDetailsInAnalyzePopUp.getText().trim().split(" ")[1];
-            if (versionNubScrollToText.equals(element.getText().trim().split(" ")[1])) {
-                SimpleUtils.pass("scroll bar can work normally");
-                return  true;
-            }else {
-                SimpleUtils.fail("scroll bar can not  work normally",true);
-            }
-        }else if(scheduleHistoryListInAnalyzePopUp.size()<=4){
-
-            SimpleUtils.report("there are some versions,but not scroll bar");
-            click(element);
-            String versionNubScrollToText = versionDetailsInAnalyzePopUp.getText().trim().split(" ")[1];
-            if (versionNubScrollToText.equals(element.getText().trim().split(" ")[1])) {
-                SimpleUtils.pass("schedule version work well");
-                return  true;
-            }else {
-                SimpleUtils.fail("schedule version doesn't work well",true);
-            }
-
-        }
-        return  false;
-
-
-    }
+//    public boolean verifyScrollBarWorkingInAnalyzePopUP(WebElement element) throws Exception {
+//        if (areListElementVisible(scheduleHistoryListInAnalyzePopUp,10)&scheduleHistoryListInAnalyzePopUp.size()>4) {
+//            SimpleUtils.report("versions are more enough and there is a scroll bar to check details");
+//            scrollToElement(element);
+//            click(element);
+//            String versionNubScrollToText = versionDetailsInAnalyzePopUp.getText().trim().split(" ")[1];
+//            if (versionNubScrollToText.equals(element.getText().trim().split(" ")[1])) {
+//                SimpleUtils.pass("scroll bar can work normally");
+//                return  true;
+//            }else {
+//                SimpleUtils.fail("scroll bar can not  work normally",true);
+//            }
+//        }else if(scheduleHistoryListInAnalyzePopUp.size()<=4){
+//
+//            SimpleUtils.report("there are some versions,but not scroll bar");
+//            click(element);
+//            String versionNubScrollToText = versionDetailsInAnalyzePopUp.getText().trim().split(" ")[1];
+//            if (versionNubScrollToText.equals(element.getText().trim().split(" ")[1])) {
+//                SimpleUtils.pass("schedule version work well");
+//                return  true;
+//            }else {
+//                SimpleUtils.fail("schedule version doesn't work well",true);
+//            }
+//
+//        }
+//        return  false;
+//
+//
+//    }
     private void goToPostWeekNextToCurrentWeek() throws Exception {
         if (isElementLoaded(postWeekNextToCurrentWeek,5)) {
             click(postWeekNextToCurrentWeek);
@@ -9827,19 +9836,19 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         else SimpleUtils.fail("Group By Selector is not available on screen ", true);
     }
 
-    @Override
-    public boolean checkEditButton() throws Exception {
-        if(isElementLoaded(editScheduleButton,10))
-        {
-
-            SimpleUtils.pass("Edit button is Editable");
-            return true;
-        }
-        else {
-            SimpleUtils.fail("Edit button is not Enable on screen", false);
-            return false;
-        }
-    }
+//    @Override
+//    public boolean checkEditButton() throws Exception {
+//        if(isElementLoaded(editScheduleButton,10))
+//        {
+//
+//            SimpleUtils.pass("Edit button is Editable");
+//            return true;
+//        }
+//        else {
+//            SimpleUtils.fail("Edit button is not Enable on screen", false);
+//            return false;
+//        }
+//    }
 
     @FindBy(css = "div.modal-content")
     private WebElement popupAlertPremiumPay;
@@ -9856,76 +9865,76 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "button.btn.lgn-action-button.lgn-action-button-default")
     private WebElement btnCancelOnAlertPopup;
 
-    public void clickOnEditButtonNoMaterScheduleFinalizedOrNot() throws Exception {
-        waitForSeconds(5);
-        if(checkEditButton())
-        {
-            // Validate what happens next to the Edit!
-            // When Status is finalized, look for extra popup.
-            clickTheElement(editScheduleButton);
-            waitForSeconds(3);
-            if(isElementLoaded(popupAlertPremiumPay,10) ) {
-                SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
-                // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
-                if(isElementEnabled(btnEditAnyway,10) && isElementEnabled(btnCancelOnAlertPopup,10)){
-                    SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
-                    SimpleUtils.report("Click on EDIT ANYWAY button and check for next save and cancel buttons");
-                    clickTheElement(btnEditAnyway);
-                } else {
-                    SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
-                }
-            }
-            waitForSeconds(5);
-            if(checkSaveButton() && checkCancelButton()) {
-                SimpleUtils.pass("Save and Cancel buttons are enabled ");
-            } else{
-                SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
-            }
-        }else{
-            generateOrUpdateAndGenerateSchedule();
-        }
-
-/*        if(checkEditButton())
-        {
-            // Validate what happens next to the Edit!
-            // When Status is finalized, look for extra popup.
-            if(isScheduleFinalized())
-            {
-                click(editScheduleButton);
-                String warningMessage1 = "Editing finalized schedule\n" + "Editing a finalized schedule after the ";
-                String warningMessage2 = "-day advance notice period may incur a schedule change premium.";
-                String editFinalizedScheduleWarning = editFinalizedScheduleWarningTitle.getText() + "\n" + editFinalizedScheduleWarningMessage.getText();
-                if(isElementLoaded(popupAlertPremiumPay,5) && editFinalizedScheduleWarning.contains(warningMessage1) &&
-                editFinalizedScheduleWarning.contains(warningMessage2)) {
-                    SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
-                    // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
-                    if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){
-                        SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
-                        SimpleUtils.report("Click on EDIT ANYWAY button and check for next save and cancel buttons");
-                        click(btnEditAnyway);
-                        if(checkSaveButton() && checkCancelButton()) {
-                            SimpleUtils.pass("Save and Cancel buttons are enabled ");
-                        }
-                        else
-                            SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
-                    }
-                    else
-                        SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
-                }
-            }
-            else
-            {
-                clickTheElement(editScheduleButton);
-                // Validate Save and cancel buttons are enabled!
-                if(checkSaveButton() && checkCancelButton()) {
-                    SimpleUtils.pass("Save and Cancel buttons are enabled ");
-                }
-                else
-                    SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
-            }
-        }else
-            generateOrUpdateAndGenerateSchedule(); */
-    }
+//    public void clickOnEditButtonNoMaterScheduleFinalizedOrNot() throws Exception {
+//        waitForSeconds(5);
+//        if(checkEditButton())
+//        {
+//            // Validate what happens next to the Edit!
+//            // When Status is finalized, look for extra popup.
+//            clickTheElement(editScheduleButton);
+//            waitForSeconds(3);
+//            if(isElementLoaded(popupAlertPremiumPay,10) ) {
+//                SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
+//                // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
+//                if(isElementEnabled(btnEditAnyway,10) && isElementEnabled(btnCancelOnAlertPopup,10)){
+//                    SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
+//                    SimpleUtils.report("Click on EDIT ANYWAY button and check for next save and cancel buttons");
+//                    clickTheElement(btnEditAnyway);
+//                } else {
+//                    SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
+//                }
+//            }
+//            waitForSeconds(5);
+//            if(checkSaveButton() && checkCancelButton()) {
+//                SimpleUtils.pass("Save and Cancel buttons are enabled ");
+//            } else{
+//                SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
+//            }
+//        }else{
+//            generateOrUpdateAndGenerateSchedule();
+//        }
+//
+///*        if(checkEditButton())
+//        {
+//            // Validate what happens next to the Edit!
+//            // When Status is finalized, look for extra popup.
+//            if(isScheduleFinalized())
+//            {
+//                click(editScheduleButton);
+//                String warningMessage1 = "Editing finalized schedule\n" + "Editing a finalized schedule after the ";
+//                String warningMessage2 = "-day advance notice period may incur a schedule change premium.";
+//                String editFinalizedScheduleWarning = editFinalizedScheduleWarningTitle.getText() + "\n" + editFinalizedScheduleWarningMessage.getText();
+//                if(isElementLoaded(popupAlertPremiumPay,5) && editFinalizedScheduleWarning.contains(warningMessage1) &&
+//                editFinalizedScheduleWarning.contains(warningMessage2)) {
+//                    SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
+//                    // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
+//                    if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){
+//                        SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
+//                        SimpleUtils.report("Click on EDIT ANYWAY button and check for next save and cancel buttons");
+//                        click(btnEditAnyway);
+//                        if(checkSaveButton() && checkCancelButton()) {
+//                            SimpleUtils.pass("Save and Cancel buttons are enabled ");
+//                        }
+//                        else
+//                            SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
+//                    }
+//                    else
+//                        SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
+//                }
+//            }
+//            else
+//            {
+//                clickTheElement(editScheduleButton);
+//                // Validate Save and cancel buttons are enabled!
+//                if(checkSaveButton() && checkCancelButton()) {
+//                    SimpleUtils.pass("Save and Cancel buttons are enabled ");
+//                }
+//                else
+//                    SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
+//            }
+//        }else
+//            generateOrUpdateAndGenerateSchedule(); */
+//    }
 
     @Override
     public void clickOnOpenShitIcon() {
@@ -9936,50 +9945,50 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("there is no open shift",true);
     }
 
-    @Override
-    public void verifyEditButtonFuntionality() throws Exception {
-
-        if(checkEditButton())
-        {
-            // Validate what happens next to the Edit!
-            // When Status is finalized, look for extra popup.
-            if(isScheduleFinalized())
-            {
-                click(editScheduleButton);
-                if(isElementLoaded(popupAlertPremiumPay,5)) {
-                    SimpleUtils.pass("Alert(premium pay pop-up) is appeared on Screen");
-                    // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
-                    if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){
-                        SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
-                        click(btnEditAnyway);
-                        if(checkSaveButton() && checkCancelButton()) {
-                            SimpleUtils.pass("Save and Cancel buttons are enabled ");
-                            selectCancelButton();
-                        }
-                        else
-                            SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
-
-                    }
-                    else
-                        SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
-                }
-                else
-                    SimpleUtils.fail("Alert(premium pay pop-up) is not appeared on Screen",false);
-            }
-            else
-            {
-                click(editScheduleButton);
-                SimpleUtils.pass("Edit button is clickable");
-                // Validate Save and cancel buttons are enabled!
-                if(checkSaveButton() && checkCancelButton()) {
-                    SimpleUtils.pass("Save and Cancel buttons are enabled ");
-                    selectCancelButton();
-                }
-                else
-                    SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
-            }
-        }
-    }
+//    @Override
+//    public void verifyEditButtonFuntionality() throws Exception {
+//
+//        if(checkEditButton())
+//        {
+//            // Validate what happens next to the Edit!
+//            // When Status is finalized, look for extra popup.
+//            if(isScheduleFinalized())
+//            {
+//                click(editScheduleButton);
+//                if(isElementLoaded(popupAlertPremiumPay,5)) {
+//                    SimpleUtils.pass("Alert(premium pay pop-up) is appeared on Screen");
+//                    // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
+//                    if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){
+//                        SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
+//                        click(btnEditAnyway);
+//                        if(checkSaveButton() && checkCancelButton()) {
+//                            SimpleUtils.pass("Save and Cancel buttons are enabled ");
+//                            selectCancelButton();
+//                        }
+//                        else
+//                            SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
+//
+//                    }
+//                    else
+//                        SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
+//                }
+//                else
+//                    SimpleUtils.fail("Alert(premium pay pop-up) is not appeared on Screen",false);
+//            }
+//            else
+//            {
+//                click(editScheduleButton);
+//                SimpleUtils.pass("Edit button is clickable");
+//                // Validate Save and cancel buttons are enabled!
+//                if(checkSaveButton() && checkCancelButton()) {
+//                    SimpleUtils.pass("Save and Cancel buttons are enabled ");
+//                    selectCancelButton();
+//                }
+//                else
+//                    SimpleUtils.fail("Save and Cancel buttons are not enabled. ", false);
+//            }
+//        }
+//    }
 
 
     @FindBy(css = "lg-button[ng-click=\"controlPanel.fns.saveConfirmation($event)\"]")
@@ -9987,72 +9996,72 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "lg-button[ng-click=\"controlPanel.fns.cancelAction($event)\"]")
     private WebElement btnCancelOnSchedulePage;
 
-    @Override
-    public boolean checkCancelButton() throws Exception {
-        if(isElementEnabled(btnCancelOnSchedulePage,10))
-        {
-            SimpleUtils.pass("Cancel button is enabled ");
-            return true;
-        }
-        else
-        {
-            SimpleUtils.fail("Cancel button is not enabled. ", true);
-            return false;
-        }
-    }
+//    @Override
+//    public boolean checkCancelButton() throws Exception {
+//        if(isElementEnabled(btnCancelOnSchedulePage,10))
+//        {
+//            SimpleUtils.pass("Cancel button is enabled ");
+//            return true;
+//        }
+//        else
+//        {
+//            SimpleUtils.fail("Cancel button is not enabled. ", true);
+//            return false;
+//        }
+//    }
 
-    @Override
-    public void selectCancelButton() throws Exception {
-        if(checkCancelButton())
-        {
-            click(btnCancelOnSchedulePage);
-            SimpleUtils.pass("Cancel button is clicked ! ");
-        }
-        else
-        {
-            SimpleUtils.fail("Cancel Button cannot be clicked! ",false);
-        }
-    }
+//    @Override
+//    public void selectCancelButton() throws Exception {
+//        if(checkCancelButton())
+//        {
+//            click(btnCancelOnSchedulePage);
+//            SimpleUtils.pass("Cancel button is clicked ! ");
+//        }
+//        else
+//        {
+//            SimpleUtils.fail("Cancel Button cannot be clicked! ",false);
+//        }
+//    }
 
-    @Override
-    public boolean checkSaveButton() throws Exception {
-        if(isElementEnabled(btnSaveOnSchedulePage,10))
-        {
-            SimpleUtils.pass("Save button is enabled ");
-            return true;
-        }
-        else
-        {
-            SimpleUtils.fail("Save button is not enabled. ", true);
-            return false;
-        }
-    }
+//    @Override
+//    public boolean checkSaveButton() throws Exception {
+//        if(isElementEnabled(btnSaveOnSchedulePage,10))
+//        {
+//            SimpleUtils.pass("Save button is enabled ");
+//            return true;
+//        }
+//        else
+//        {
+//            SimpleUtils.fail("Save button is not enabled. ", true);
+//            return false;
+//        }
+//    }
 
-    @Override
-    public void selectSaveButton() throws Exception {
-        if(checkCancelButton())
-        {
-            click(btnSaveOnSchedulePage);
-            SimpleUtils.pass("Save button is clicked ! ");
-        }
-        else
-        {
-            SimpleUtils.fail("Save Button cannot be clicked! ",false);
-        }
+//    @Override
+//    public void selectSaveButton() throws Exception {
+//        if(checkCancelButton())
+//        {
+//            click(btnSaveOnSchedulePage);
+//            SimpleUtils.pass("Save button is clicked ! ");
+//        }
+//        else
+//        {
+//            SimpleUtils.fail("Save Button cannot be clicked! ",false);
+//        }
+//
+//    }
 
-    }
 
-
-    @Override
-    public boolean isScheduleFinalized() throws Exception {
-        if(isElementLoaded(publishButton,5))
-        {
-            SimpleUtils.report("Publish button is loaded on screen, Hence We don't expect Alert Popup.  ");
-            return false;  }
-        else {
-            SimpleUtils.report("Publish button is not loaded on screen, Hence We have to expect Alert Popup.  ");
-            return true;  }
-    }
+//    @Override
+//    public boolean isScheduleFinalized() throws Exception {
+//        if(isElementLoaded(publishButton,5))
+//        {
+//            SimpleUtils.report("Publish button is loaded on screen, Hence We don't expect Alert Popup.  ");
+//            return false;  }
+//        else {
+//            SimpleUtils.report("Publish button is not loaded on screen, Hence We have to expect Alert Popup.  ");
+//            return true;  }
+//    }
 
     @FindBy(css = ".week-schedule-shift .shift-container .rows .worker-image-optimized img")
     private List<WebElement> profileIcons;
@@ -11409,7 +11418,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             clickTheElement(jobTitleFilter.findElement(By.cssSelector("input[type=\"checkbox\"]")));
             click(filterButton);
             String cardHoursAndWagesText = "";
-            HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
+            SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+            HashMap<String, Float> hoursAndWagesCardData = smartCardPage.getScheduleLabelHoursAndWages();
             for (Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
                 if (cardHoursAndWagesText != "")
                     cardHoursAndWagesText = cardHoursAndWagesText + ", " + hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
@@ -11434,7 +11444,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(jobTitleFilter);
             click(filterButton);
             String cardHoursAndWagesText = "";
-            HashMap<String, Float> hoursAndWagesCardData = getScheduleLabelHoursAndWages();
+            SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+            HashMap<String, Float> hoursAndWagesCardData = smartCardPage.getScheduleLabelHoursAndWages();
             for (Entry<String, Float> hoursAndWages : hoursAndWagesCardData.entrySet()) {
                 if (cardHoursAndWagesText != "")
                     cardHoursAndWagesText = cardHoursAndWagesText + ", " + hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
@@ -11442,7 +11453,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
                     cardHoursAndWagesText = hoursAndWages.getKey() + ": '" + hoursAndWages.getValue() + "'";
             }
             SimpleUtils.report("Active Day Card's Data: " + cardHoursAndWagesText);
-            float activeDayScheduleHoursOnCard = getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
+            float activeDayScheduleHoursOnCard = smartCardPage.getScheduleLabelHoursAndWages().get(scheduleHoursAndWagesData.scheduledHours.getValue());
             float totalShiftsWorkTime = getActiveShiftHoursInDayView();
             SimpleUtils.report("Active Day Total Work Time Data: " + totalShiftsWorkTime);
             if (availableJobTitleList.contains(jobTitle.toLowerCase().trim())) {
@@ -11767,7 +11778,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         if (isElementLoaded(consoleSchedulePageTabElement, 5)) {
             clickTheElement(consoleSchedulePageTabElement);
             clickTheElement(ScheduleSubMenu);
-            if (verifyActivatedSubTab("Schedule"))
+            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+            if (scheduleCommonPage.verifyActivatedSubTab("Schedule"))
                 SimpleUtils.pass("Schedule Page: 'Schedule' tab loaded Successfully!");
             else
                 SimpleUtils.fail("Schedule Page: 'Schedule' tab not loaded", false);
@@ -12382,153 +12394,153 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
         return weekInfo;
     }
+//
+//    @Override
+//    public void verifyTheContentOnEnterBudgetWindow(String weekInfo, String location) throws Exception {
+//        if (isElementLoaded(headerWhileCreateSchedule,5) && headerWhileCreateSchedule.getText().contains(weekInfo)){
+//            SimpleUtils.pass("Create Schedule - Enter Budget: \"" + weekInfo +"\" as header displays correctly");
+//        } else
+//            SimpleUtils.fail("Enter Budget: Week information as header not loaded or displays incorrectly",true);
+//        if (isElementLoaded(locationWhileCreateSchedule,5) && locationWhileCreateSchedule.getText().contains(location)){
+//            SimpleUtils.pass("Create Schedule - Enter Budget: \"" + location +"\" as location displays correctly");
+//        } else
+//            SimpleUtils.fail("Enter Budget: Location not loaded or displays correctly",true);
+//        if (isElementLoaded(generateModalTitle,5) && generateModalTitle.getText().contains("Enter Budget")){
+//            SimpleUtils.pass("Create Schedule - Enter Budget: Enter Budget as subhead displays correctly");
+//        } else
+//            SimpleUtils.fail("Enter Budget: Enter Budget as subhead not loaded or displays incorrectly",true);
+//        if (isElementLoaded(editBudgetBtn,5) && editBudgetBtn.getText().contains("Edit")){
+//            SimpleUtils.pass("Create Schedule - Enter Budget: Edit button displays correctly");
+//        } else
+//            SimpleUtils.fail("Enter Budget: Edit button not loaded or displays incorrectly",true);
+//        if (isElementLoaded(editBudgetBtn,5) && editBudgetBtn.getText().contains("Edit")){
+//            SimpleUtils.pass("Create Schedule - Enter Budget: Edit button displays correctly");
+//        } else
+//            SimpleUtils.fail("Enter Budget: Edit button not loaded or displays incorrectly",true);
+//        if (isElementLoaded(backButton,5) && backButton.getText().contains("Back")){
+//            SimpleUtils.pass("Create Schedule - Enter Budget: Back button displays correctly");
+//        } else
+//            SimpleUtils.fail("Create Schedule - Enter Budget:  Back button not loaded or displays incorrectly",true);
+//        if (isElementLoaded(nextButtonOnCreateSchedule,5) && nextButtonOnCreateSchedule.getText().contains("Next")){
+//            SimpleUtils.pass("Create Schedule - Enter Budget: Next button displays correctly");
+//        } else
+//            SimpleUtils.fail("Create Schedule - Enter Budget: Next button not loaded or displays incorrectly",true);
+//    }
+//
+//    @Override
+//    public List<String> setAndGetBudgetForNonDGFlow() throws Exception {
+//        List<String> budgetForNonDGFlow = new ArrayList<>();
+//        Float sumOfBudgetHours = 0.00f;
+//        if (isElementLoaded(editBudgetBtn, 5)) {
+//            clickTheElement(editBudgetBtn);
+//            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+//                SimpleUtils.pass("Create Schedule - Enter Budget: Click on Edit button Successfully!");
+//                if (areListElementVisible(roleHoursRows, 5)) {
+//                    for (WebElement roleHoursRow : roleHoursRows) {
+//                        try {
+//                            WebElement forecastHour = roleHoursRow.findElement(By.cssSelector("td:nth-child(3)"));
+//                            WebElement budgetHour = roleHoursRow.findElement(By.cssSelector("input[type=\"number\"]"));
+//                            if (forecastHour != null && budgetHour != null) {
+//                                String forecastHourString = "";
+//                                forecastHourString = forecastHour.getText().trim().replaceAll("[a-zA-Z]", "");
+//                                float forecastHourFloat= Float.valueOf(forecastHourString);
+//                                float random = (float) (Math.random() * forecastHourFloat);
+//                                budgetHour.clear();
+//                                DecimalFormat decimalFormat =new DecimalFormat("#.00");
+//                                String value = decimalFormat.format(random);
+//                                System.out.println(forecastHourString);
+//                                System.out.println(forecastHourFloat);
+//                                System.out.println(random);
+//                                System.out.println(value);
+//                                budgetHour.sendKeys(value);
+//                                sumOfBudgetHours += Float.valueOf(value);
+//                                budgetForNonDGFlow.add(value);
+//                            }
+//                        } catch (Exception e) {
+//                            continue;
+//                        }
+//                    }
+//                    clickTheElement(operatingHoursSaveBtn);
+//                    if (isElementEnabled(editBudgetBtn, 5)) {
+//                        SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
+//                    } else
+//                        SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
+//                    String totalBudget = MyThreadLocal.getDriver().findElement(By.xpath("//th[contains(text(), \"Total\")]/following-sibling::th[2]")).getText().trim();
+//                    System.out.println("sumOfBudgetHours is " + sumOfBudgetHours);
+//                    if (sumOfBudgetHours == Float.valueOf(totalBudget)) {
+//                        budgetForNonDGFlow.add(sumOfBudgetHours.toString());
+//                        SimpleUtils.pass("Create Schedule - Enter Budget: The total budget value is consistent with the summary of the edited value");
+//                    } else
+//                        SimpleUtils.fail("Create Schedule - Enter Budget: The total budget value is inconsistent with the summary of the edited value, please check",true);
+//                }
+//            }
+//        } else
+//            SimpleUtils.fail("Create Schedule - Enter Budget: Edit button not loaded Successfully!", false);
+//        return budgetForNonDGFlow;
+//    }
 
-    @Override
-    public void verifyTheContentOnEnterBudgetWindow(String weekInfo, String location) throws Exception {
-        if (isElementLoaded(headerWhileCreateSchedule,5) && headerWhileCreateSchedule.getText().contains(weekInfo)){
-            SimpleUtils.pass("Create Schedule - Enter Budget: \"" + weekInfo +"\" as header displays correctly");
-        } else
-            SimpleUtils.fail("Enter Budget: Week information as header not loaded or displays incorrectly",true);
-        if (isElementLoaded(locationWhileCreateSchedule,5) && locationWhileCreateSchedule.getText().contains(location)){
-            SimpleUtils.pass("Create Schedule - Enter Budget: \"" + location +"\" as location displays correctly");
-        } else
-            SimpleUtils.fail("Enter Budget: Location not loaded or displays correctly",true);
-        if (isElementLoaded(generateModalTitle,5) && generateModalTitle.getText().contains("Enter Budget")){
-            SimpleUtils.pass("Create Schedule - Enter Budget: Enter Budget as subhead displays correctly");
-        } else
-            SimpleUtils.fail("Enter Budget: Enter Budget as subhead not loaded or displays incorrectly",true);
-        if (isElementLoaded(editBudgetBtn,5) && editBudgetBtn.getText().contains("Edit")){
-            SimpleUtils.pass("Create Schedule - Enter Budget: Edit button displays correctly");
-        } else
-            SimpleUtils.fail("Enter Budget: Edit button not loaded or displays incorrectly",true);
-        if (isElementLoaded(editBudgetBtn,5) && editBudgetBtn.getText().contains("Edit")){
-            SimpleUtils.pass("Create Schedule - Enter Budget: Edit button displays correctly");
-        } else
-            SimpleUtils.fail("Enter Budget: Edit button not loaded or displays incorrectly",true);
-        if (isElementLoaded(backButton,5) && backButton.getText().contains("Back")){
-            SimpleUtils.pass("Create Schedule - Enter Budget: Back button displays correctly");
-        } else
-            SimpleUtils.fail("Create Schedule - Enter Budget:  Back button not loaded or displays incorrectly",true);
-        if (isElementLoaded(nextButtonOnCreateSchedule,5) && nextButtonOnCreateSchedule.getText().contains("Next")){
-            SimpleUtils.pass("Create Schedule - Enter Budget: Next button displays correctly");
-        } else
-            SimpleUtils.fail("Create Schedule - Enter Budget: Next button not loaded or displays incorrectly",true);
-    }
-
-    @Override
-    public List<String> setAndGetBudgetForNonDGFlow() throws Exception {
-        List<String> budgetForNonDGFlow = new ArrayList<>();
-        Float sumOfBudgetHours = 0.00f;
-        if (isElementLoaded(editBudgetBtn, 5)) {
-            clickTheElement(editBudgetBtn);
-            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
-                SimpleUtils.pass("Create Schedule - Enter Budget: Click on Edit button Successfully!");
-                if (areListElementVisible(roleHoursRows, 5)) {
-                    for (WebElement roleHoursRow : roleHoursRows) {
-                        try {
-                            WebElement forecastHour = roleHoursRow.findElement(By.cssSelector("td:nth-child(3)"));
-                            WebElement budgetHour = roleHoursRow.findElement(By.cssSelector("input[type=\"number\"]"));
-                            if (forecastHour != null && budgetHour != null) {
-                                String forecastHourString = "";
-                                forecastHourString = forecastHour.getText().trim().replaceAll("[a-zA-Z]", "");
-                                float forecastHourFloat= Float.valueOf(forecastHourString);
-                                float random = (float) (Math.random() * forecastHourFloat);
-                                budgetHour.clear();
-                                DecimalFormat decimalFormat =new DecimalFormat("#.00");
-                                String value = decimalFormat.format(random);
-                                System.out.println(forecastHourString);
-                                System.out.println(forecastHourFloat);
-                                System.out.println(random);
-                                System.out.println(value);
-                                budgetHour.sendKeys(value);
-                                sumOfBudgetHours += Float.valueOf(value);
-                                budgetForNonDGFlow.add(value);
-                            }
-                        } catch (Exception e) {
-                            continue;
-                        }
-                    }
-                    clickTheElement(operatingHoursSaveBtn);
-                    if (isElementEnabled(editBudgetBtn, 5)) {
-                        SimpleUtils.pass("Create Schedule: Save the budget hours Successfully!");
-                    } else
-                        SimpleUtils.fail("Create Schedule: Click on Save the budget hours button failed, Next button is not enabled!", false);
-                    String totalBudget = MyThreadLocal.getDriver().findElement(By.xpath("//th[contains(text(), \"Total\")]/following-sibling::th[2]")).getText().trim();
-                    System.out.println("sumOfBudgetHours is " + sumOfBudgetHours);
-                    if (sumOfBudgetHours == Float.valueOf(totalBudget)) {
-                        budgetForNonDGFlow.add(sumOfBudgetHours.toString());
-                        SimpleUtils.pass("Create Schedule - Enter Budget: The total budget value is consistent with the summary of the edited value");
-                    } else
-                        SimpleUtils.fail("Create Schedule - Enter Budget: The total budget value is inconsistent with the summary of the edited value, please check",true);
-                }
-            }
-        } else
-            SimpleUtils.fail("Create Schedule - Enter Budget: Edit button not loaded Successfully!", false);
-        return budgetForNonDGFlow;
-    }
-
-    @Override
-    public HashMap<String, String> verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(String weekInfo, String location) throws Exception {
-        String subTitle = "Confirm Operating Hours";
-        String totalBudget = "";
-        String targetBudgetHrs = "";
-        List<String> budgetForNonDGFlow = new ArrayList<>();
-        HashMap<String, String> budgetNSchedule = new HashMap<>();
-        if (isElementLoaded(generateSheduleButton, 10)) {
-            moveToElementAndClick(generateSheduleButton);
-            openBudgetPopUp();
-            if (isElementLoaded(generateModalTitle, 5) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
-                editTheOperatingHours(new ArrayList<>());
-                waitForSeconds(3);
-                clickTheElement(nextButtonOnCreateSchedule);
-                verifyTheContentOnEnterBudgetWindow(weekInfo, location);
-                budgetForNonDGFlow = setAndGetBudgetForNonDGFlow();
-                clickTheElement(nextButtonOnCreateSchedule);
-                selectWhichWeekToCopyFrom("SUGGESTED");
-                targetBudgetHrs = targetBudget.getText().trim();
-                if (targetBudgetHrs.contains(" ")) {
-                    targetBudgetHrs = targetBudgetHrs.split(" ")[0];
-                }
-                if (budgetForNonDGFlow.size() > 1)
-                    totalBudget = budgetForNonDGFlow.get(budgetForNonDGFlow.size() - 1);
-                if (targetBudgetHrs.equals(totalBudget)) {
-                    budgetNSchedule.put("Budget", targetBudgetHrs);
-                    SimpleUtils.pass("Total budget in enter budget window and target budget in copy schedule window are consistent");
-                } else
-                    SimpleUtils.fail("Total budget in enter budget window and target budget in copy schedule window are inconsistent", false);
-                for (WebElement budgetHrs : budgetHrsOnGraph) {
-                    if (budgetHrs.getText().equals(targetBudgetHrs))
-                        SimpleUtils.pass("The budget in graph is consistent with the target budget in copy schedule window");
-                    else
-                        SimpleUtils.fail("The budget in graph is inconsistent with the target budget in copy schedule window", false);
-                }
-                if (isElementLoaded(scheduledHrsOnGraph,10))
-                    budgetNSchedule.put("Scheduled", scheduledHrsOnGraph.getText());
-                clickOnFinishButtonOnCreateSchedulePage();
-            } else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
-                click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                    checkoutSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
-                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
-                    updateAndGenerateSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
-                } else
-                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
-            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
-                updateAndGenerateSchedule();
-                switchToManagerViewToCheckForSecondGenerate();
-            } else if (isElementEnabled(checkOutTheScheduleButton, 20)) {
-                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
-                SimpleUtils.pass("Schedule Generated Successfully!");
-                switchToManagerViewToCheckForSecondGenerate();
-            } else
-                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
-        } else
-            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
-        return budgetNSchedule;
-    }
+//    @Override
+//    public HashMap<String, String> verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(String weekInfo, String location) throws Exception {
+//        String subTitle = "Confirm Operating Hours";
+//        String totalBudget = "";
+//        String targetBudgetHrs = "";
+//        List<String> budgetForNonDGFlow = new ArrayList<>();
+//        HashMap<String, String> budgetNSchedule = new HashMap<>();
+//        if (isElementLoaded(generateSheduleButton, 10)) {
+//            moveToElementAndClick(generateSheduleButton);
+//            openBudgetPopUp();
+//            if (isElementLoaded(generateModalTitle, 5) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+//                    && isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+//                editTheOperatingHours(new ArrayList<>());
+//                waitForSeconds(3);
+//                clickTheElement(nextButtonOnCreateSchedule);
+//                verifyTheContentOnEnterBudgetWindow(weekInfo, location);
+//                budgetForNonDGFlow = setAndGetBudgetForNonDGFlow();
+//                clickTheElement(nextButtonOnCreateSchedule);
+//                selectWhichWeekToCopyFrom("SUGGESTED");
+//                targetBudgetHrs = targetBudget.getText().trim();
+//                if (targetBudgetHrs.contains(" ")) {
+//                    targetBudgetHrs = targetBudgetHrs.split(" ")[0];
+//                }
+//                if (budgetForNonDGFlow.size() > 1)
+//                    totalBudget = budgetForNonDGFlow.get(budgetForNonDGFlow.size() - 1);
+//                if (targetBudgetHrs.equals(totalBudget)) {
+//                    budgetNSchedule.put("Budget", targetBudgetHrs);
+//                    SimpleUtils.pass("Total budget in enter budget window and target budget in copy schedule window are consistent");
+//                } else
+//                    SimpleUtils.fail("Total budget in enter budget window and target budget in copy schedule window are inconsistent", false);
+//                for (WebElement budgetHrs : budgetHrsOnGraph) {
+//                    if (budgetHrs.getText().equals(targetBudgetHrs))
+//                        SimpleUtils.pass("The budget in graph is consistent with the target budget in copy schedule window");
+//                    else
+//                        SimpleUtils.fail("The budget in graph is inconsistent with the target budget in copy schedule window", false);
+//                }
+//                if (isElementLoaded(scheduledHrsOnGraph,10))
+//                    budgetNSchedule.put("Scheduled", scheduledHrsOnGraph.getText());
+//                clickOnFinishButtonOnCreateSchedulePage();
+//            } else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
+//                click(generateSheduleForEnterBudgetBtn);
+//                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+//                    checkoutSchedule();
+//                    switchToManagerViewToCheckForSecondGenerate();
+//                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+//                    updateAndGenerateSchedule();
+//                    switchToManagerViewToCheckForSecondGenerate();
+//                } else
+//                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+//            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+//                updateAndGenerateSchedule();
+//                switchToManagerViewToCheckForSecondGenerate();
+//            } else if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+//                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+//                SimpleUtils.pass("Schedule Generated Successfully!");
+//                switchToManagerViewToCheckForSecondGenerate();
+//            } else
+//                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
+//        } else
+//            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+//        return budgetNSchedule;
+//    }
 
     @Override
     public List<String> getBudgetedHoursOnSTAFF() throws Exception {
@@ -15126,50 +15138,50 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             click(filterButton);
     }
 
-    @Override
-    public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception {
-        if (isElementLoaded(operatingHoursEditBtn, 10)) {
-            clickTheElement(operatingHoursEditBtn);
-            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
-                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
-                if (areListElementVisible(operatingHoursDayLists, 15)) {
-                    for (WebElement dayList : operatingHoursDayLists) {
-                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
-                        if (weekDay != null) {
-                            WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
-                            if (!weekDaysToClose.contains(weekDay.getText())) {
-                                if (checkbox.getAttribute("class").contains("ng-empty")) {
-                                    clickTheElement(checkbox);
-                                }
-                                String[] operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
-                                List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                                startNEndTimes.get(0).clear();
-                                startNEndTimes.get(1).clear();
-                                startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
-                                startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
-                            } else {
-                                if (!checkbox.getAttribute("class").contains("ng-empty")) {
-                                    clickTheElement(checkbox);
-                                }
-                            }
-                        } else {
-                            SimpleUtils.fail("Failed to find weekday element!", false);
-                        }
-                    }
-                    clickTheElement(operatingHoursSaveBtn);
-                    if (isElementEnabled(operatingHoursEditBtn, 15)) {
-                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
-                    }else {
-                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
-                    }
-                }
-            }else {
-                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
-            }
-        }else {
-            SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
-        }
-    }
+//    @Override
+//    public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception {
+//        if (isElementLoaded(operatingHoursEditBtn, 10)) {
+//            clickTheElement(operatingHoursEditBtn);
+//            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+//                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
+//                if (areListElementVisible(operatingHoursDayLists, 15)) {
+//                    for (WebElement dayList : operatingHoursDayLists) {
+//                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+//                        if (weekDay != null) {
+//                            WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+//                            if (!weekDaysToClose.contains(weekDay.getText())) {
+//                                if (checkbox.getAttribute("class").contains("ng-empty")) {
+//                                    clickTheElement(checkbox);
+//                                }
+//                                String[] operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
+//                                List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+//                                startNEndTimes.get(0).clear();
+//                                startNEndTimes.get(1).clear();
+//                                startNEndTimes.get(0).sendKeys(operatingHours[0].trim());
+//                                startNEndTimes.get(1).sendKeys(operatingHours[1].trim());
+//                            } else {
+//                                if (!checkbox.getAttribute("class").contains("ng-empty")) {
+//                                    clickTheElement(checkbox);
+//                                }
+//                            }
+//                        } else {
+//                            SimpleUtils.fail("Failed to find weekday element!", false);
+//                        }
+//                    }
+//                    clickTheElement(operatingHoursSaveBtn);
+//                    if (isElementEnabled(operatingHoursEditBtn, 15)) {
+//                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
+//                    }else {
+//                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
+//                    }
+//                }
+//            }else {
+//                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
+//            }
+//        }else {
+//            SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
+//        }
+//    }
 
     @Override
     public String getTheShiftInfoByIndexInDayview(int index) throws Exception {

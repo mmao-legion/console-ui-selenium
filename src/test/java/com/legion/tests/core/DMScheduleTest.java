@@ -226,11 +226,12 @@ public class DMScheduleTest extends TestBase{
 
 
     public void scheduleNavigationTest(int previousGutterCount) throws Exception{
-        schedulePage.clickOnEditButton();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        scheduleMainPage.clickOnEditButton();
         boolean bolDeleteShift = checkAddedShift(previousGutterCount);
         if(bolDeleteShift){
-            schedulePage.clickSaveBtn();
-            schedulePage.clickOnEditButton();
+            scheduleMainPage.clickSaveBtn();
+            scheduleMainPage.clickOnEditButton();
         }
     }
 
@@ -262,7 +263,8 @@ public class DMScheduleTest extends TestBase{
             locationSelectorPage.reSelectDistrict(districtName);
 
             schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             List<Float> totalHoursFromSchTbl = schedulePage.validateScheduleAndBudgetedHours();
             dashboardPage.navigateToDashboard();
             schedulePage.compareHoursFromScheduleAndDashboardPage(totalHoursFromSchTbl);
@@ -289,7 +291,8 @@ public class DMScheduleTest extends TestBase{
             locationSelectorPage.reSelectDistrict(districtName);
 
             schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.pass("Comments added Successfully in Test Rail");
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             List<Float> totalHoursFromSchTbl = scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
@@ -320,10 +323,11 @@ public class DMScheduleTest extends TestBase{
             locationSelectorPage.reSelectDistrict(districtName);
 
             schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             dashboardPage.navigateToDashboard();
             String DateOnDashboard = schedulePage.getDateFromDashboard();
             List<String> ListLocationSummaryOnDashboard = schedulePage.getLocationSummaryDataFromDashBoard();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             String dateOnSchdeule = schedulePage.getActiveWeekText();
             schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeule, DateOnDashboard);
             List<String> ListLocationSummaryOnSchedule = schedulePage.getLocationSummaryDataFromSchedulePage();

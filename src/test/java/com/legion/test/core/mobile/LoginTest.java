@@ -88,37 +88,39 @@ public class LoginTest extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void gotoLoginPageTest(String username, String password, String browser, String location) throws Exception {
 	   DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	   CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-       schedulePage.clickOnScheduleConsoleMenuItem();
+       ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+	   ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+       scheduleCommonPage.clickOnScheduleConsoleMenuItem();
        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
        List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
-       schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-       SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+       scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+       SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
        List<WebElement> overviewPageScheduledWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
        for(int i=0; i <overviewPageScheduledWeeks.size();i++)
 		{
 			if(overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(overviewWeeksStatus.Guidance.getValue().toLowerCase()))
 			{
 				scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
-				if(schedulePage.isGenerateButtonLoaded())
+				if(createSchedulePage.isGenerateButtonLoaded())
 				{
 					SimpleUtils.pass("Guidance week found : '"+ schedulePage.getActiveWeekText() +"'");
-					schedulePage.generateOrUpdateAndGenerateSchedule();
+					createSchedulePage.generateOrUpdateAndGenerateSchedule();
 					schedulePage.clickOnSchedulePublishButton();
 					break;
 				}
 			}
 		}
 
-        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		scheduleCommonPage.clickOnDayView();
 		int previousGutterCount = schedulePage.getgutterSize();
 		scheduleNavigationTest(previousGutterCount);
 		HashMap<String, Float> ScheduledHours = schedulePage.getScheduleLabelHours();
 		Float scheduledHoursBeforeEditing = ScheduledHours.get("scheduledHours");
 		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
-		SimpleUtils.assertOnFail("User can add new shift for past week", (schedulePage.isAddNewDayViewShiftButtonLoaded()) , true);
+		SimpleUtils.assertOnFail("User can add new shift for past week", (scheduleMainPage.isAddNewDayViewShiftButtonLoaded()) , true);
 		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
 		schedulePage.customizeNewShiftPage();
 		schedulePage.compareCustomizeStartDay(textStartDay);
@@ -135,7 +137,7 @@ public class LoginTest extends TestBase{
 		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
 		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
 		verifyTeamCount(previousTeamCount,currentTeamCount);
-		schedulePage.clickSaveBtn();
+		scheduleMainPage.clickSaveBtn();
 		HashMap<String, Float> editScheduledHours = schedulePage.getScheduleLabelHours();
 		Float scheduledHoursAfterEditing = editScheduledHours.get("scheduledHours");
 		verifyScheduleLabelHours(shiftTimeSchedule.get("ScheduleHrDifference"), scheduledHoursBeforeEditing, scheduledHoursAfterEditing);
@@ -198,11 +200,12 @@ public class LoginTest extends TestBase{
 
 
 	public void scheduleNavigationTest(int previousGutterCount) throws Exception{
-		schedulePage.clickOnEditButton();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		scheduleMainPage.clickOnEditButton();
 		boolean bolDeleteShift = checkAddedShift(previousGutterCount);
 		if(bolDeleteShift){
-			schedulePage.clickSaveBtn();
-			schedulePage.clickOnEditButton();
+			scheduleMainPage.clickSaveBtn();
+			scheduleMainPage.clickOnEditButton();
 		}
 	}
 

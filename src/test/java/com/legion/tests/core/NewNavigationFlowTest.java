@@ -141,8 +141,8 @@ public class NewNavigationFlowTest extends TestBase {
 
 
             // Go to schedule page, schedule tab
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
                 SimpleUtils.pass("Schedule tab is grey out and show empty page successfully");
             }else
@@ -481,8 +481,8 @@ public class NewNavigationFlowTest extends TestBase {
 
         //Validated navigation bar show after switch to other tabs and then return to dashboard page
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         controlsNewUIPage.clickOnControlsConsoleMenu();
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
