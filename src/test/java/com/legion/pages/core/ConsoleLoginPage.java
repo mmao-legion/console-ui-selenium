@@ -107,7 +107,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	private WebElement legionHeaderIcon;
 	@Override
 	public boolean isLoginSuccess() throws Exception {
-		WebDriverWait tempWait = new WebDriverWait(getDriver(), 30);
+		WebDriverWait tempWait = new WebDriverWait(getDriver(), 60);
 		try {
 			tempWait.until(ExpectedConditions.visibilityOf(legionHeaderIcon));
 			return true;
