@@ -24,7 +24,7 @@
   "CHROME" : "Chrome",
   "FIREFOX" : "Firefox",
   "console_logs" : "true",
-  "close_browser" : "false",
+  "close_browser" : "true",
   "show_report" : "true",
   "VERSION" : "68",
   "OS" : "WINDOW",
