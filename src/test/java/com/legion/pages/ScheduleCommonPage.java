@@ -1,6 +1,9 @@
 package com.legion.pages;
 
 public interface ScheduleCommonPage {
+    public void clickOnScheduleConsoleMenuItem();
+    public void goToSchedulePage() throws Exception;
+    public boolean isSchedulePage() throws Exception;
     public void clickOnWeekView() throws Exception;
     public void clickOnDayView() throws Exception;
     public void navigateDayViewWithIndex(int dayIndex);
@@ -13,4 +16,11 @@ public interface ScheduleCommonPage {
     public void clickOnPreviousDaySchedule(String activeDay) throws Exception;
     public void validateForwardAndBackwardButtonClickable() throws Exception;
 //    public void validateTheDataAccordingToTheSelectedWeek() throws Exception;
+    public void clickOnScheduleSubTab(String subTabString) throws Exception;
+    public Boolean verifyActivatedSubTab(String SubTabText) throws Exception;
+    public Boolean isScheduleDayViewActive();
+    public String getScheduleWeekStartDayMonthDate();
+    public void navigateDayViewToPast(String PreviousWeekView, int dayCount);
+    public void clickImmediateNextToCurrentActiveWeekInDayPicker();
+    public void clickImmediatePastToCurrentActiveWeekInDayPicker();
 }

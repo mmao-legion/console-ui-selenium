@@ -111,12 +111,12 @@ public class LocationsTest extends TestBase {
 //            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
 //            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
 //            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-//            schedulePage.clickOnScheduleConsoleMenuItem();
-//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+//            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
 //            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
-//                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+//                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -160,12 +160,12 @@ public class LocationsTest extends TestBase {
 ////            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
 ////            locationSelectorPage.changeLocation(locationName+"-MOCK");
 ////           SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-////           schedulePage.clickOnScheduleConsoleMenuItem();
-////           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-////           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-////           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+////           scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+////           scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+////           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
+////           scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
 ////           SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
-////                   schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+////                   scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
 //       } catch (Exception e){
 //            SimpleUtils.fail(e.getMessage(), false);
 //        }
@@ -755,16 +755,19 @@ public class LocationsTest extends TestBase {
 
             List<String> wfsGroup = new ArrayList<>();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
-            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 schedulePage.clickOnDayViewAddNewShiftButton();
                 schedulePage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
@@ -814,8 +817,8 @@ public class LocationsTest extends TestBase {
                     SimpleUtils.pass("Workforce sharing function work well");
 
             } else {
-                schedulePage.createScheduleForNonDGFlowNewUI();
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 schedulePage.clickOnDayViewAddNewShiftButton();
                 schedulePage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
@@ -854,16 +857,19 @@ public class LocationsTest extends TestBase {
 
             List<String> wfsGroup = new ArrayList<>();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             schedulePage.navigateToNextWeek();
-            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 schedulePage.clickOnDayViewAddNewShiftButton();
                 schedulePage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
@@ -913,8 +919,8 @@ public class LocationsTest extends TestBase {
                     SimpleUtils.pass("Workforce sharing function work well");
 
             } else {
-                schedulePage.createScheduleForNonDGFlowNewUI();
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 schedulePage.clickOnDayViewAddNewShiftButton();
                 schedulePage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {

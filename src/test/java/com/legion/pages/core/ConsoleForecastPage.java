@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ForecastPage;
+import com.legion.pages.SmartCardPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -700,6 +701,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public HashMap<String, Float> getSummaryLaborHoursAndWages() throws Exception {
 		HashMap<String, Float> summaryHoursAndWages = new HashMap<String, Float>();
+		SmartCardPage smartCardPage = new ConsoleSmartCardPage();
 		WebElement summaryLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-card.card-carousel-card-primary.card-carousel-card-table"));
 		if (isElementLoaded(summaryLabelsDivElement,5)) {
 			String sumarySmartCardText = summaryLabelsDivElement.getText();
@@ -708,12 +710,12 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 				if(hoursAndBudget.toLowerCase().contains(ConsoleScheduleNewUIPage.scheduleHoursAndWagesData.hours.getValue().toLowerCase()))
 				{
-					summaryHoursAndWages = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(summaryHoursAndWages , hoursAndBudget.split(" ")[1],
+					summaryHoursAndWages = smartCardPage.updateScheduleHoursAndWages(summaryHoursAndWages , hoursAndBudget.split(" ")[1],
 							"ForecastHours");
 				}
 				else if(hoursAndBudget.toLowerCase().contains(ConsoleScheduleNewUIPage.scheduleHoursAndWagesData.wages.getValue().toLowerCase()))
 				{
-					summaryHoursAndWages = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(summaryHoursAndWages , hoursAndBudget.split(" ")[1]
+					summaryHoursAndWages = smartCardPage.updateScheduleHoursAndWages(summaryHoursAndWages , hoursAndBudget.split(" ")[1]
 							.replace("$", ""), "ForecastWages");
 				}
 			}
@@ -747,6 +749,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public HashMap<String, Float> getInsightDataInShopperWeekView() throws Exception {
 		HashMap<String, Float> insightData = new HashMap<String, Float>();
+		SmartCardPage smartCardPage = new ConsoleSmartCardPage();
 		WebElement insightIsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-fixed"));
 		if (isElementLoaded(insightIsDivElement,5)) {
 			String insightSmartCardText = insightIsDivElement.getText();
@@ -757,20 +760,20 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				if (actualDataInSightSmartCard.size()> 0) {
 					if(peakShopperDay.toLowerCase().contains("peak items"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"actualEditedPeakItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
 								"actualPeakItems");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak shoppers"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"peakEditedShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
 								"actualPeakShoppers");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak day"))
@@ -790,20 +793,20 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					}
 					else if(peakShopperDay.toLowerCase().contains("total items"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"totalEditedItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
 								"actualTotalItems");
 					}
 					else if(peakShopperDay.toLowerCase().contains("total shoppers"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"totalEditedShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
 								"actualTotalShoppers");
 					}
 	//				else {
@@ -812,16 +815,16 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				}else {
 					if(peakShopperDay.toLowerCase().contains("peak items"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakItems");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak shoppers"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"peakEditedShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
 								"actualTotalShoppers");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak day"))
@@ -836,16 +839,16 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					}
 					else if(peakShopperDay.toLowerCase().contains("total items"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalItems");
 					}
 					else if(peakShopperDay.toLowerCase().contains("total shoppers"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"totalEditedShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
 								"actualTotalShoppers");
 					}
 	//				else {
@@ -864,6 +867,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public HashMap<String, Float> getInsightDataInShopperDayView() throws Exception {
 		HashMap<String, Float> insightData = new HashMap<String, Float>();
+		SmartCardPage smartCardPage = new ConsoleSmartCardPage();
 		WebElement insightIsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-fixed"));
 		if (isElementLoaded(insightIsDivElement,5)) {
 			String insightSmartCardText = insightIsDivElement.getText();
@@ -871,14 +875,14 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			for (String peakShopperDay: peakShopperDayInInsight) {
 				if (SimpleUtils.isNumeric(peakShopperDay.split(" ")[2]) && SimpleUtils.isNumeric(peakShopperDay.split(" ")[3])){
 					if(peakShopperDay.toLowerCase().contains("peak items")) {
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"actualEditedPeakItems");
 					} else if(peakShopperDay.toLowerCase().contains("peak shoppers")) {
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"peakEditedShoppers");
 					} else if(peakShopperDay.toLowerCase().contains("peak day")) {
 						Float editedPeakday=null;
@@ -889,14 +893,14 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						insightData.put(peakShopperDay.split(" ")[2],peaktime);
 						insightData.put(peakShopperDay.split(" ")[3],editedPeaktime);
 					} else if(peakShopperDay.toLowerCase().contains("total items")) {
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"totalEditedItems");
 					} else if(peakShopperDay.toLowerCase().contains("total shoppers")) {
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"totalEditedShoppers");
 					}
 				} else {

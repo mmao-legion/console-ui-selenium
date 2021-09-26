@@ -671,34 +671,36 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             if(!isScheduleExists){
                 theSelectedScheduleLocationName = schedulesInDMView.get(0).findElement(By.cssSelector("[class=\"ng-binding\"]")).getText();
                 click(schedulesInDMView.get(0).findElement(By.className("ng-binding")));
-                if (schedulePage.isWeekGenerated()){
+                if (createSchedulePage.isWeekGenerated()){
                     schedulePage.unGenerateActiveScheduleScheduleWeek();
                 }
                 if (scheduleStatus.equalsIgnoreCase("Published")){
-                    schedulePage.createScheduleForNonDGFlowNewUI();
-                    schedulePage.publishActiveSchedule();
+                    createSchedulePage.createScheduleForNonDGFlowNewUI();
+                    createSchedulePage.publishActiveSchedule();
                 } else if (scheduleStatus.equalsIgnoreCase("In Progress")){
-                    schedulePage.createScheduleForNonDGFlowNewUI();
+                    createSchedulePage.createScheduleForNonDGFlowNewUI();
                 }
             }
              */
 
             //Select specific location schedule to test, because that not all schedules are available
             SchedulePage schedulePage = new ConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
             Map<String,String> scheduleHoursOnScheduleDMView = new HashMap<>();
             List<String> scheduleHoursOnScheduleDetailPage = new ArrayList<>();
             String theSelectedScheduleLocationName = locationName;
             clickSpecificScheduleByLocationName(theSelectedScheduleLocationName);
-            if (schedulePage.isWeekGenerated()){
+            if (createSchedulePage.isWeekGenerated()){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             if (scheduleStatus.equals("Published")){
                 List<String> toCloseDays = new ArrayList<>();
                 schedulePage.editOperatingHoursOnScheduleOldUIPage("8", "20", toCloseDays);
-                schedulePage.createScheduleForNonDGFlowNewUI();
-                schedulePage.publishActiveSchedule();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.publishActiveSchedule();
             } else if (scheduleStatus.equalsIgnoreCase("In Progress")){
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 
             //Check the buttons on schedule page
@@ -707,7 +709,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
             switch (scheduleStatus) {
                 case "Not Started":
-                    if(!schedulePage.isWeekGenerated()){
+                    if(!createSchedulePage.isWeekGenerated()){
                         SimpleUtils.pass("The 'Not Started' schedule status display correctly! ");
                     } else
                         SimpleUtils.fail("The 'Not Started' schedule status display incorrectly! ", false);
@@ -735,7 +737,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         SimpleUtils.pass("The 'Published' schedule status display correctly! ");
                         if (schedulePage.isRepublishButtonLoadedOnSchedulePage()){
 //                            schedulePage.clickOnRepublishButtonLoadedOnSchedulePage();
-                            schedulePage.publishActiveSchedule();
+                            createSchedulePage.publishActiveSchedule();
                         }
                     } else
                         SimpleUtils.fail("The 'Published' schedule status display incorrectly! ", false);
@@ -851,7 +853,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
             String districtName = dashboardPage.getCurrentDistrict();
             locationSelectorPage.selectCurrentUpperFieldAgain("District");
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             if(isTAEnv){
                 switch(specificWeek){
                     case "Current Week":

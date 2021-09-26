@@ -129,22 +129,23 @@ public class CinemarkMinorTest extends TestBase {
     public void prepareTheCalendarForAllMinorsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
-            if (!isWeekGenerated){
-                schedulePage.createScheduleForNonDGFlowNewUI();
-            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            schedulePage.navigateToNextWeek();
+            schedulePage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
             scheduleCommonPage.navigateDayViewWithDayName("Sat");
             Map<String, String> dayInfo = schedulePage.getActiveDayInfo();
 
@@ -351,6 +352,8 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -370,12 +373,13 @@ public class CinemarkMinorTest extends TestBase {
 
             // Go to Schedule page and navigate to a week
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
 
@@ -391,14 +395,14 @@ public class CinemarkMinorTest extends TestBase {
             }
 
             // Ungenerate the schedule if it is created or published
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
 
             // Create new shift for the minor at weekday, weekend and holiday if have
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = schedulePage.getRandomWorkRole();
             schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -699,11 +703,14 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             String districtName = dashboardPage.getCurrentDistrict();
 
             //Go to OP page
@@ -741,21 +748,21 @@ public class CinemarkMinorTest extends TestBase {
 //            String minorLocation = "Test For Minors";
 //            locationSelectorPage.changeLocation(minorLocation);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
             // Navigate to a week
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated){
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = schedulePage.getRandomWorkRole();
             schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
             schedulePage.clickOnDayViewAddNewShiftButton();
@@ -1155,41 +1162,44 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyDayOvertimeViolationsForMinors(String minorName, String shiftTime1, String shiftTime2, String shiftTime3, String workRole,
                                                      String scheduleFromToTime, String scheduleMaxHours, boolean isSummerWeek, String selectWeekDayName) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
         schedulePage.navigateToNextWeek();
         if (isSummerWeek){
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
         }
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         Thread.sleep(5000);
         List<String> toCloseDays = new ArrayList<>();
         //schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
         schedulePage.saveSchedule();
         if(schedulePage.isRequiredActionSmartCardLoaded()){
             schedulePage.convertAllUnAssignedShiftToOpenShift();
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteAllOOOHShiftInWeekView();
             schedulePage.saveSchedule();
         }
-        schedulePage.publishActiveSchedule();
+        createSchedulePage.publishActiveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
 
@@ -1243,11 +1253,11 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
         schedulePage.clickOnFilterBtn();
         //Create new shift with shift hours is more than minor setting for TM1
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
         schedulePage.saveSchedule();
-        schedulePage.publishActiveSchedule();
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        createSchedulePage.publishActiveSchedule();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
 
@@ -1298,11 +1308,11 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnClearFilterOnFilterDropdownPopup();
         schedulePage.clickOnFilterBtn();
         //Create new shift that not avoid the minor settings for TM1
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
         schedulePage.saveSchedule();
-        schedulePage.publishActiveSchedule();
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        createSchedulePage.publishActiveSchedule();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
 
@@ -1488,14 +1498,17 @@ public class CinemarkMinorTest extends TestBase {
                                                       String maxOfDays, String maxOfScheduleHours,
                                                       boolean isSchoolWeek, boolean isNonSchoolWeek) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
         if (isSchoolWeek){
             schedulePage.navigateToNextWeek();
@@ -1507,21 +1520,21 @@ public class CinemarkMinorTest extends TestBase {
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
         }
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
             schedulePage.unGenerateActiveScheduleScheduleWeek();
         }
 //        List<String> toCloseDays = new ArrayList<>();
         //schedulePage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
         Thread.sleep(3000);
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
         schedulePage.saveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
 
@@ -1537,7 +1550,7 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.clickOnOfferOrAssignBtn();
         schedulePage.saveSchedule();
 
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.moveSliderAtCertainPoint(shiftTime1.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
@@ -1581,14 +1594,14 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.fail("Get new added shift failed! ", false);
 
         //to close the i icon popup
-        schedulePage.publishActiveSchedule();
+        createSchedulePage.publishActiveSchedule();
         schedulePage.verifyClearFilterFunction();
         //Create new shift with shift hours is more than minor setting for TM1
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
         schedulePage.saveSchedule();
-        schedulePage.publishActiveSchedule();
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        createSchedulePage.publishActiveSchedule();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.moveSliderAtCertainPoint(shiftTime2.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
@@ -1603,7 +1616,7 @@ public class CinemarkMinorTest extends TestBase {
         schedulePage.saveSchedule();
 
 
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         schedulePage.clickOnDayViewAddNewShiftButton();
         schedulePage.customizeNewShiftPage();
         schedulePage.moveSliderAtCertainPoint(shiftTime2.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());

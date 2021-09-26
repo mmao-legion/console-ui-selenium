@@ -8,17 +8,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.legion.pages.*;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.legion.pages.AnalyticsPage;
-import com.legion.pages.ControlsNewUIPage;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.ProjectedSalesPage;
-import com.legion.pages.ScheduleOverviewPage;
-import com.legion.pages.SchedulePage;
-import com.legion.pages.StaffingGuidancePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -74,14 +68,14 @@ public class AnalyticsTestKendraScott2 extends TestBase{
 		ArrayList<LinkedHashMap<String, Float>> scheduleOverviewAllWeekHours = new ArrayList<LinkedHashMap<String, Float>>();
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        
-        SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-        		schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
+        		scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
         
-        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-        		schedulePage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
+        		scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , false);
         
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
         List<WebElement> scheduleOverViewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
@@ -162,8 +156,9 @@ public class AnalyticsTestKendraScott2 extends TestBase{
 		   System.out.println("totalDaysStaffingGuidanceHours: "+totalDaysStaffingGuidanceHours);
 		   System.out.println("totalDaysProjectedSalesHours: "+totalDaysProjectedSalesHours);
 		   SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-		   schedulePage.clickOnScheduleConsoleMenuItem();
-		   SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()),false);
+		   ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		   scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		   SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()),false);
 		   StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
 	       staffingGuidancePage.navigateToStaffingGuidanceTab();
 	       SimpleUtils.assertOnFail( "Staffing Guidance tab not loaded successfully!", staffingGuidancePage.isStaffingGuidanceTabActive(),false);

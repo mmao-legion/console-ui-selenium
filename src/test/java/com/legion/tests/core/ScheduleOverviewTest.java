@@ -3,16 +3,13 @@ package com.legion.tests.core;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import com.legion.pages.ScheduleCommonPage;
+import com.legion.pages.*;
 import com.legion.test.core.mobile.LoginTest;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.legion.pages.LocationSelectorPage;
-import com.legion.pages.ScheduleOverviewPage;
-import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -45,8 +42,9 @@ public class ScheduleOverviewTest extends TestBase{
     public void verifyCurrentWeekDateAndDayTest(String username, String password, String browser, String location) throws Exception { 
 //    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
     	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-	    schedulePage.clickOnScheduleConsoleMenuItem();
-        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+	    scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
         //Map<String, String> currentWeekCalendarWeekDaysAndStartDay = scheduleOverviewPage.getWeekStartDayAndCurrentWeekDates();
 	    SimpleUtils.assertOnFail("Current Week not Highlighted!",scheduleOverviewPage.isCurrentWeekHighLighted(), false);
@@ -61,8 +59,9 @@ public class ScheduleOverviewTest extends TestBase{
     public void verifyDateAndDayForEachWeeksUntilNotAvailableTest(String username, String password, String browser, String location) throws Exception { 
 //    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
     	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-	    schedulePage.clickOnScheduleConsoleMenuItem();
-        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+	    scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 	    SimpleUtils.assertOnFail("DateAndDay verification failed for each week",
 	    		scheduleOverviewPage.verifyDateAndDayForEachWeekUntilNotAvailable(), false);
@@ -79,8 +78,9 @@ public class ScheduleOverviewTest extends TestBase{
     	int index = 0;
 //    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
     	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-	    schedulePage.clickOnScheduleConsoleMenuItem();
-        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+	    scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
         List<String> currentAndUpcomingActiveWeeksDatesOnCalendar = scheduleOverviewPage.getCurrentAndUpcomingActiveWeeksDaysOnCalendar();
 		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
@@ -89,7 +89,6 @@ public class ScheduleOverviewTest extends TestBase{
 		{ 
 			if(!scheduleWeekStatus.contains(scheduleWeekStatusToVerify)) {
 				if(isCurrentWeekSelected) {
-					ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 					scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture("next", 1);
 				}
 				else {
@@ -115,8 +114,10 @@ public class ScheduleOverviewTest extends TestBase{
 	public void verifyScheduleFunctionalityOverviewAsStoreManager(String username, String password, String browser, String location) throws Exception {
 		try {
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-			schedulePage.clickOnScheduleConsoleMenuItem();
-			schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 
 			//	Current +2 month calendar is visible
@@ -142,15 +143,15 @@ public class ScheduleOverviewTest extends TestBase{
 			scheduleOverviewPage.clickOnCurrentWeekToOpenSchedule();
 			SimpleUtils.pass("user can click on Schedule week which will navigate to Schedule page");
 
-			boolean isWeekGenerated = schedulePage.isWeekGenerated();
+			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (!isWeekGenerated) {
-				schedulePage.createScheduleForNonDGFlowNewUI();
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
 			}
 			HashMap<String, Float> scheduleSmartCardHoursWages = schedulePage.getScheduleBudgetedHoursInScheduleSmartCard();
 
-			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
             //	Weekly Budgeted/Scheduled,other hour are showing in overview and matching with the Schedule smartcard of Schedule page
 			List<WebElement> scheduleOverViewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
 			HashMap<String, Float> overviewData = scheduleOverviewPage.getWeekHoursByWeekElement(scheduleOverViewWeeks.get(0));
@@ -182,9 +183,9 @@ public class ScheduleOverviewTest extends TestBase{
 					String scheduleStatusAftGenerated = null;
 					scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
 					Thread.sleep(5000);
-					if (!schedulePage.isWeekGenerated()) {
-						schedulePage.createScheduleForNonDGFlowNewUI();
-						schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+					if (!createSchedulePage.isWeekGenerated()) {
+						createSchedulePage.createScheduleForNonDGFlowNewUI();
+						scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 
 						List<String> scheduleActivityInfo = scheduleOverviewPage.getScheduleActivityInfo();
 						String activityInfoAfterGenerateSchedule = scheduleActivityInfo.get(i);

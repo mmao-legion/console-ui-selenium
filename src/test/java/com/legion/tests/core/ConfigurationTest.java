@@ -590,26 +590,28 @@ public class ConfigurationTest extends TestBase {
             List<String> daysHasShifts = new ArrayList<String>();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             //Back to console
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
             SimpleUtils.assertOnFail("Console Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             locationSelectorPage.changeLocation(locationName);
             //go to schedule function
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             daysHasShifts = schedulePage.verifyDaysHasShifts();
 
             for(String day:days){
@@ -647,26 +649,28 @@ public class ConfigurationTest extends TestBase {
             HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             //Back to console to select one location
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
             SimpleUtils.assertOnFail("Console Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             locationSelectorPage.changeLocation(locationName);
             //go to schedule function
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             hoursNTeamMembersCount = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
 
             List<String> numbersOfShifts = new ArrayList<String>();
@@ -706,9 +710,11 @@ public class ConfigurationTest extends TestBase {
             List<String> indexes = new ArrayList<String>();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             //back to console mode
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
@@ -716,17 +722,17 @@ public class ConfigurationTest extends TestBase {
             //Switch select one location
             locationSelectorPage.changeLocation(locationName);
             //go to schedule function
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             indexes = schedulePage.getIndexOfDaysHaveShifts();
             for(String index:indexes){
                 schedulePage.verifyShiftTimeInReadMode(index,shiftTime);
@@ -749,9 +755,12 @@ public class ConfigurationTest extends TestBase {
             HashMap<String,String> mealRestBreaks= new HashMap<String,String>();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             //back to console mode
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
@@ -759,19 +768,19 @@ public class ConfigurationTest extends TestBase {
             //Switch select one location
             locationSelectorPage.changeLocation(locationName);
             //go to schedule function
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
 //          Click on edit button on week view
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), false);
 //          Click On Profile icon -> Breaks
             schedulePage.clickOnProfileIcon();

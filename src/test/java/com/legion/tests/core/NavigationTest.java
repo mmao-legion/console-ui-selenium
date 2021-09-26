@@ -1,18 +1,12 @@
 package com.legion.tests.core;
 
+import com.legion.pages.*;
 import com.legion.tests.annotations.*;
 import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
-import com.legion.pages.AnalyticsPage;
-import com.legion.pages.SalesForecastPage;
-import com.legion.pages.ScheduleOverviewPage;
-import com.legion.pages.SchedulePage;
-import com.legion.pages.StaffingGuidancePage;
-import com.legion.pages.TeamPage;
-import com.legion.pages.DashboardPage;
 import com.legion.tests.TestBase;
 import com.legion.utils.SimpleUtils;
 
@@ -48,7 +42,8 @@ public class NavigationTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.verifyDashboardPageLoadedProperly();
         SchedulePage schedulePage = dashboardPage.goToToday();
-        schedulePage.goToSchedulePage();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.goToSchedulePage();
         schedulePage.goToProjectedSales();
         schedulePage.goToStaffingGuidance();
         schedulePage.goToSchedule();
@@ -67,7 +62,8 @@ public class NavigationTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.verifyDashboardPageLoadedProperly();
         SchedulePage schedulePage = dashboardPage.goToToday();
-        schedulePage.goToSchedulePage();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.goToSchedulePage();
         schedulePage.goToProjectedSales();
         schedulePage.goToStaffingGuidance();
         schedulePage.goToSchedule();

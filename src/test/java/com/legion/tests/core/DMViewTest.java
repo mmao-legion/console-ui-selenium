@@ -317,6 +317,7 @@ public class DMViewTest extends TestBase {
     public void verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
@@ -324,7 +325,8 @@ public class DMViewTest extends TestBase {
             locationSelectorPage.reSelectDistrict(districtName);
 
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
 
@@ -364,10 +366,10 @@ public class DMViewTest extends TestBase {
                 String notStartedLocation = scheduleDMViewPage.getLocationsWithNotStartedSchedules().get(0);
                 schedulePage.clickOnLocationNameInDMView(notStartedLocation);
                 SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-                boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                 if (!isWeekGenerated) {
-                    schedulePage.createScheduleForNonDGFlowNewUI();
+                    createSchedulePage.createScheduleForNonDGFlowNewUI();
                 }
                 locationSelectorPage.reSelectDistrict(districtName);
                 scheduleDMViewPage.clickOnRefreshButton();
@@ -378,8 +380,8 @@ public class DMViewTest extends TestBase {
                     SimpleUtils.fail("Schedule Page: After the first refreshing, it isn't \"In Progress\" status", false);
                 schedulePage.clickOnLocationNameInDMView(notStartedLocation);
                 SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-                schedulePage.publishActiveSchedule();
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                createSchedulePage.publishActiveSchedule();
                 locationSelectorPage.reSelectDistrict(districtName);
                 scheduleDMViewPage.clickOnRefreshButton();
                 scheduleStatus = scheduleDMViewPage.getScheduleStatusForGivenLocation(notStartedLocation);
@@ -403,6 +405,7 @@ public class DMViewTest extends TestBase {
     public void verifyRefreshFeatureOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
@@ -410,6 +413,7 @@ public class DMViewTest extends TestBase {
             locationSelectorPage.reSelectDistrict(districtName);
 
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
@@ -442,13 +446,13 @@ public class DMViewTest extends TestBase {
             if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
                 timeSheetPage.navigateToSchedule();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-                schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-                boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                 if (!isWeekGenerated) {
-                    schedulePage.createScheduleForNonDGFlowNewUI();
+                    createSchedulePage.createScheduleForNonDGFlowNewUI();
                 }
-                schedulePage.publishActiveSchedule();
+                createSchedulePage.publishActiveSchedule();
                 timeSheetPage.clickOnTimeSheetConsoleMenu();
                 SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
             }
@@ -487,6 +491,7 @@ public class DMViewTest extends TestBase {
     public void verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
         String districtName = dashboardPage.getCurrentDistrict();
@@ -496,6 +501,7 @@ public class DMViewTest extends TestBase {
         CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         compliancePage.clickOnComplianceConsoleMenu();
         SimpleUtils.assertOnFail("Compliance page not loaded successfully", compliancePage.isCompliancePageLoaded(), false);
 
@@ -537,13 +543,13 @@ public class DMViewTest extends TestBase {
         if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
             timeSheetPage.navigateToSchedule();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            schedulePage.publishActiveSchedule();
+            createSchedulePage.publishActiveSchedule();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
         }
@@ -706,6 +712,7 @@ public class DMViewTest extends TestBase {
     public void verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
@@ -786,14 +793,15 @@ public class DMViewTest extends TestBase {
             controlsNewUIPage.updateDaysInAdvancePublishSchedulesInSchedulingPolicies("7");
 
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
             schedulePage.clickOnLocationNameInDMView(location);
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated)
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            schedulePage.publishActiveSchedule();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.publishActiveSchedule();
             locationSelectorPage.reSelectDistrict(districtName);
 
             compliancePage.clickOnComplianceConsoleMenu();
@@ -805,15 +813,15 @@ public class DMViewTest extends TestBase {
                 SimpleUtils.fail("Compliance Page: Late Schedule is not Yes",false);
 
             // Validate Late Schedule is No
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             schedulePage.clickOnLocationNameInDMView(location);
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
-            isWeekGenerated = schedulePage.isWeekGenerated();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated)
                 schedulePage.unGenerateActiveScheduleScheduleWeek();
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            schedulePage.publishActiveSchedule();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.publishActiveSchedule();
             locationSelectorPage.reSelectDistrict(districtName);
 
             compliancePage.clickOnComplianceConsoleMenu();
@@ -883,8 +891,8 @@ public class DMViewTest extends TestBase {
 
             //Validate the data of Schedule Publish Status widget
             Map<String, Integer> scheduleStatusFromSchedulePublishStatusWidget = dashboardPage.getAllScheduleStatusFromSchedulePublishStatusWidget();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             Map<String, Integer> scheduleStatusFromScheduleDMViewPage = scheduleDMViewPage.getThreeWeeksScheduleStatusFromScheduleDMViewPage();
             SimpleUtils.assertOnFail("Schedule status on Schedule Publish Status widget and Schedule DM view page are different! ",
@@ -902,35 +910,36 @@ public class DMViewTest extends TestBase {
     public void verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             // Create open shift in schedule so that we can verify the content on Open_Shifts Widget
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 
-            if (schedulePage.isWeekGenerated() && !schedulePage.isWeekPublished()){
-                schedulePage.publishActiveSchedule();
+            if (createSchedulePage.isWeekGenerated() && !createSchedulePage.isWeekPublished()){
+                createSchedulePage.publishActiveSchedule();
             }
             int openShiftsNumForLoc1 = schedulePage.getShiftsNumberByName("open");
             int shiftsNumForLoc1 = schedulePage.getShiftsNumberByName("");
             dashboardPage.navigateToDashboard();
             locationSelectorPage.changeLocation("NY CENTRAL");
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-            if (schedulePage.isWeekGenerated() && !schedulePage.isWeekPublished()){
-                schedulePage.publishActiveSchedule();
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+            if (createSchedulePage.isWeekGenerated() && !createSchedulePage.isWeekPublished()){
+                createSchedulePage.publishActiveSchedule();
             }
             int openShiftsNumForLoc2 = schedulePage.getShiftsNumberByName("open");
             int shiftsNumForLoc2 = schedulePage.getShiftsNumberByName("");
@@ -992,10 +1001,11 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Go to the Schedule page in DM view. And to verify the title.
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(districtName);
             locationSelectorPage.isLocationSelected("All Locations");
@@ -1015,7 +1025,7 @@ public class DMViewTest extends TestBase {
             //Change to another district.
             dashboardPage.navigateToDashboard();
             locationSelectorPage.changeAnotherDistrict();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             String anotherDistrictName = dashboardPage.getCurrentDistrict();
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
             List<String> locationInDistrict2 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
@@ -1037,16 +1047,17 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Go to the Schedule page in DM view.
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
 
             //Click on a location name and go to the schedule page.
             schedulePage.clickOnLocationNameInDMView(location);
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
             //Validate go back from one location---function changed: cannot go back to DM View in schedule page
             //locationSelectorPage.reSelectDistrictInDMView(districtName);
             //SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
@@ -1054,12 +1065,12 @@ public class DMViewTest extends TestBase {
             //Validate click given location and given week
             dashboardPage.navigateToDashboard();
             locationSelectorPage.reSelectDistrict(districtName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
             String weekInfo = schedulePage.getActiveWeekText();
             schedulePage.clickOnLocationNameInDMView(location);
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
             SimpleUtils.assertOnFail("Didn't go to the right week!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
 
         } catch (Exception e) {
@@ -1126,10 +1137,11 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Go to the Schedule page in DM view.
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
 
             //Validate the content of LOCATION SUMMARY smart card for current/future weeks.
@@ -1479,6 +1491,7 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             //Validate user has access to 1 district.
             locationSelectorPage.reSelectDistrict(districtName);
@@ -1490,7 +1503,7 @@ public class DMViewTest extends TestBase {
 
             //Validate navigating back to district view.
             //Validate default date.
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             locationSelectorPage.reSelectDistrict(districtName);
             SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
             if (currentWeek.toLowerCase().contains(MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n")[MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n").length-1])) {
@@ -1502,8 +1515,8 @@ public class DMViewTest extends TestBase {
             //Validate changing date and location.
             dashboardPage.navigateToDashboard();
             locationSelectorPage.changeLocation(location);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab("Schedule");
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab("Schedule");
             schedulePage.navigateToNextWeek();
             String weekInfo = schedulePage.getActiveWeekText();
             locationSelectorPage.reSelectDistrict(districtName);
@@ -1642,8 +1655,8 @@ public class DMViewTest extends TestBase {
             dashboardPage.clickOnDashboardConsoleMenu();
 
             //Try to refresh the Guidance message
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             dashboardPage.clickOnDashboardConsoleMenu();
             //Validate the Schedule Vs Guidance By Day widget is loaded on dashboard‘
             SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
@@ -1696,8 +1709,8 @@ public class DMViewTest extends TestBase {
         controlsNewUIPage.clickOnControlsSchedulingPolicies();
         controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
         dashboardPage.clickOnDashboardConsoleMenu();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         dashboardPage.clickOnDashboardConsoleMenu();
         String districtName = dashboardPage.getCurrentDistrict();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1715,7 +1728,7 @@ public class DMViewTest extends TestBase {
 
         //Validate the hours on Location Summary widget is consistent with the hours on schedule page
         List<String> dataFromLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
-        schedulePage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         List<Float> totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
         List<String> locationNumbersFromLocationSummarySmartCard= scheduleDMViewPage.getLocationNumbersFromLocationSummarySmartCard();
@@ -1764,7 +1777,8 @@ public class DMViewTest extends TestBase {
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Validate the smart card and schedule table header for previous week
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
@@ -1781,7 +1795,7 @@ public class DMViewTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Validate the smart card and schedule table header for current week
             scheduleDMViewPage.verifySchedulesTableHeaderNames(false, false);
@@ -1813,8 +1827,8 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 
@@ -1856,8 +1870,8 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 
@@ -1899,8 +1913,8 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 

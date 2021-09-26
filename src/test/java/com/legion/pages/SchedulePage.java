@@ -9,31 +9,31 @@ import net.sourceforge.htmlunit.corejs.javascript.EcmaError;
 import org.openqa.selenium.WebElement;
 
 public interface SchedulePage {
-	public void clickOnScheduleConsoleMenuItem();
-	public void goToSchedulePage() throws Exception;
-	public boolean isSchedulePage() throws Exception;
-	public Boolean verifyActivatedSubTab(String SubTabText) throws Exception;
+//	public void clickOnScheduleConsoleMenuItem();
+//	public void goToSchedulePage() throws Exception;
+//	public boolean isSchedulePage() throws Exception;
+//	public Boolean verifyActivatedSubTab(String SubTabText) throws Exception;
 	public void goToSchedule() throws Exception;
 	public void goToProjectedSales() throws Exception;
 	public void goToStaffingGuidance() throws Exception;
 //	public void clickOnWeekView() throws Exception;
 //	public void clickOnDayView() throws Exception;
-	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception;
-	public List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception;
-	public void clickOnScheduleSubTab(String subTabString) throws Exception;
+//	public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception;
+//	public List<HashMap<String, Float>> getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek() throws Exception;
+//	public void clickOnScheduleSubTab(String subTabString) throws Exception;
 //	public void navigateWeekViewOrDayViewToPastOrFuture(String nextWeekViewOrPreviousWeekView, int weekCount);
-	public Boolean isWeekGenerated() throws Exception;
-	public Boolean isWeekPublished() throws Exception;
-	public void generateSchedule() throws Exception;
-	public String getScheduleWeekStartDayMonthDate();
-	public void clickOnEditButton() throws Exception;
-	public void clickImmediateNextToCurrentActiveWeekInDayPicker() throws Exception;
-	public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception;
-	public void clickOnCancelButtonOnEditMode() throws Exception;
-	public Boolean isGenerateButtonLoaded() throws Exception;
+//	public Boolean isWeekGenerated() throws Exception;
+//	public Boolean isWeekPublished() throws Exception;
+//	public void generateSchedule() throws Exception;
+//	public String getScheduleWeekStartDayMonthDate();
+//	public void clickOnEditButton() throws Exception;
+//	public void clickImmediateNextToCurrentActiveWeekInDayPicker() throws Exception;
+//	public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception;
+//	public void clickOnCancelButtonOnEditMode() throws Exception;
+//	public Boolean isGenerateButtonLoaded() throws Exception;
 	public String getActiveWeekDayMonthAndDateForEachDay() throws Exception;
 	public Boolean validateScheduleActiveWeekWithOverviewCalendarWeek(String overviewCalendarWeekDate, String overviewCalendarWeekDays, String scheduleActiveWeekDuration);
-	public boolean isCurrentScheduleWeekPublished();
+//	public boolean isCurrentScheduleWeekPublished();
 	public void validatingRefreshButtononPublishedSchedule() throws Exception;
 	public void isGenerateScheduleButton() throws Exception;
 	public void validatingScheduleRefreshButton() throws Exception;
@@ -42,7 +42,7 @@ public interface SchedulePage {
 	public boolean isComplianceWarningMsgLoad() throws Exception;
 	public void clickPublishBtn() throws Exception;
 	public String getMessageForComplianceWarningInPublishConfirmModal() throws Exception;
-	public void navigateDayViewToPast(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception;
+//	public void navigateDayViewToPast(String nextWeekViewOrPreviousWeekView, int weekCount) throws Exception;
 	public String clickNewDayViewShiftButtonLoaded() throws Exception;
 	public void customizeNewShiftPage() throws Exception;
 	public void compareCustomizeStartDay(String textStartDay) throws Exception;
@@ -56,9 +56,9 @@ public interface SchedulePage {
 			HashMap<String, String> previousTeamCount, HashMap<List<String>,List<String>>
 			gridDayHourPrevTeamCount)throws Exception;
 	public List<String> calculateCurrentTeamCount(HashMap<String, String> shiftTiming)throws Exception;
-	public void clickSaveBtn() throws Exception;
-	public void clickOnVersionSaveBtn() throws Exception;
-	public void clickOnPostSaveBtn() throws Exception;
+//	public void clickSaveBtn() throws Exception;
+//	public void clickOnVersionSaveBtn() throws Exception;
+//	public void clickOnPostSaveBtn() throws Exception;
 	public void filterScheduleByWorkRoleAndShiftType(boolean isWeekView) throws Exception;
 	public void selectGroupByFilter(String optionVisibleText);
 	public void verifyNewAddedShiftFallsInDayPart(String nameOfTheShift, String dayPart) throws Exception;
@@ -66,7 +66,7 @@ public interface SchedulePage {
 	public ArrayList<WebElement> getAllAvailableShiftsInWeekView();
 	public ArrayList<HashMap<String, String>> getHoursAndShiftsCountForEachWorkRolesInWeekView() throws Exception;
 	public ArrayList<Float> getAllVesionLabels() throws Exception;
-	public void publishActiveSchedule()throws Exception;
+//	public void publishActiveSchedule()throws Exception;
 	public boolean isPublishButtonLoaded();
 	public HashMap<String, Float> getScheduleLabelHours() throws Exception;
 	public int getgutterSize();
@@ -90,7 +90,7 @@ public interface SchedulePage {
 	public boolean isRequiredActionUnAssignedShiftForActiveWeek() throws Exception;
 	public void clickOnRefreshButton() throws Exception;
 	public void selectShiftTypeFilterByText(String filterText) throws Exception;
-	public List<WebElement> getAvailableShiftsInDayView();
+//	public List<WebElement> getAvailableShiftsInDayView();
 	public void dragShiftToRightSide(WebElement shift, int xOffSet);
 	public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
 	public void validateBudgetPopUpHeader(String nextWeekView, int weekCount);
@@ -111,7 +111,7 @@ public interface SchedulePage {
 	public boolean isSmartCardPanelDisplay() throws Exception;
 	public void convertAllUnAssignedShiftToOpenShift() throws Exception;
 	public void selectWorkRoleFilterByText(String workRoleLabel, boolean isClearWorkRoleFilters) throws Exception;
-	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception;
+//	public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception;
 	public boolean isActionButtonLoaded(String actionBtnText) throws Exception;
 //	public void navigateToNextDayIfStoreClosedForActiveDay() throws Exception;
 	/*public void validatingRequiredActionforUnAssignedShift() throws Exception;*/
@@ -119,11 +119,11 @@ public interface SchedulePage {
 	public String getWeatherTemperature() throws Exception;
 	public void validatingGenrateSchedule() throws Exception;
 	public boolean loadSchedule() throws Exception;
-	public void generateOrUpdateAndGenerateSchedule() throws Exception;
-	public void createScheduleForNonDGFlowNewUI() throws Exception;
-	public void clickOnFinishButtonOnCreateSchedulePage() throws Exception;
-	public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception;
-	public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception;
+//	public void generateOrUpdateAndGenerateSchedule() throws Exception;
+//	public void createScheduleForNonDGFlowNewUI() throws Exception;
+//	public void clickOnFinishButtonOnCreateSchedulePage() throws Exception;
+//	public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception;
+//	public void editTheOperatingHours(List<String> weekDaysToClose) throws Exception;
 	public HashMap<String, Integer> getScheduleBufferHours() throws Exception;
 	public boolean isComlianceReviewRequiredForActiveWeek() throws Exception;
 	public void unGenerateActiveScheduleScheduleWeek() throws Exception;
@@ -166,7 +166,7 @@ public interface SchedulePage {
 	public List<String> getLocationSummaryDataFromDashBoard() throws Exception;
 	public List<String> getLocationSummaryDataFromSchedulePage() throws Exception;
 	public void compareLocationSummaryFromDashboardAndSchedule(List<String> ListLocationSummaryOnDashboard, List<String> ListLocationSummaryOnSchedule);
-	public void openBudgetPopUpGenerateSchedule() throws Exception;
+//	public void openBudgetPopUpGenerateSchedule() throws Exception;
 	public void updatebudgetInScheduleNBudgetSmartCard(String nextWeekView, int weekCount);
 	public void toNFroNavigationFromDMToSMSchedule(String CurrentWeek, String locationToSelectFromDMViewSchedule, String districtName, String nextWeekViewOrPreviousWeekView) throws Exception;
 	public void toNFroNavigationFromDMDashboardToDMSchedule(String CurrentWeek) throws Exception;
@@ -219,7 +219,7 @@ public interface SchedulePage {
 
 	public void  verifyShiftSwapCoverRequestedIsDisplayInTo();
 
-	public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception;
+//	public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception;
 
 	public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception;
 
@@ -271,16 +271,16 @@ public interface SchedulePage {
 	public void verifyClickAcceptSwapButton() throws Exception;
 	public void verifyTheContentOfMessageOnSubmitCover() throws Exception;
 	public void verifyShiftRequestStatus(String expectedStatus) throws Exception;
-	public Boolean isGenerateButtonLoadedForManagerView() throws Exception;
+//	public Boolean isGenerateButtonLoadedForManagerView() throws Exception;
 
 	public void validateGroupBySelectorSchedulePage(boolean isLocationGroup) throws Exception;
-	public boolean checkEditButton() 	throws Exception;
-	public void verifyEditButtonFuntionality() 		throws Exception;
-	public boolean checkCancelButton() 	throws Exception;
-	public void selectCancelButton()	throws Exception;
-	public boolean checkSaveButton()	throws Exception;
-	public void selectSaveButton()		throws Exception;
-	public boolean isScheduleFinalized() throws Exception;
+//	public boolean checkEditButton() 	throws Exception;
+//	public void verifyEditButtonFuntionality() 		throws Exception;
+//	public boolean checkCancelButton() 	throws Exception;
+//	public void selectCancelButton()	throws Exception;
+//	public boolean checkSaveButton()	throws Exception;
+//	public void selectSaveButton()		throws Exception;
+//	public boolean isScheduleFinalized() throws Exception;
 	public boolean isProfileIconsEnable() throws Exception;
 	public boolean isProfileIconsClickable() throws Exception;
 	public WebElement clickOnProfileIcon() throws Exception;
@@ -312,7 +312,7 @@ public interface SchedulePage {
 
 	public void clickOnEditMeaLBreakTime() throws Exception;
 
-	public void clickOnEditButtonNoMaterScheduleFinalizedOrNot() throws Exception;
+//	public void clickOnEditButtonNoMaterScheduleFinalizedOrNot() throws Exception;
 
 	public void clickOnOpenShitIcon();
 
@@ -443,13 +443,13 @@ public interface SchedulePage {
 	public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception;
 	public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception;
 	public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
-	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception;
-	public void clickCreateScheduleBtn() throws Exception;
+//	public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception;
+//	public void clickCreateScheduleBtn() throws Exception;
 	public boolean isPartialCopyOptionLoaded() throws Exception;
 	public void clickBackBtnAndExitCreateScheduleWindow() throws Exception;
-	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
-	public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
-	public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception;
+//	public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
+//	public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
+//	public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception;
 	public void goToToggleSummaryView() throws Exception;
 	public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception;
 	public void verifyDayHasShifts(String day) throws Exception;
@@ -459,9 +459,9 @@ public interface SchedulePage {
 	public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception;
 	public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception;
 	public String getWeekInfoBeforeCreateSchedule() throws Exception;
-	public void verifyTheContentOnEnterBudgetWindow(String weekInfo, String location) throws Exception;
-	public List<String> setAndGetBudgetForNonDGFlow() throws Exception;
-	public HashMap<String, String> verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(String weekInfo, String location) throws Exception;
+//	public void verifyTheContentOnEnterBudgetWindow(String weekInfo, String location) throws Exception;
+//	public List<String> setAndGetBudgetForNonDGFlow() throws Exception;
+//	public HashMap<String, String> verifyNGetBudgetNScheduleWhileCreateScheduleForNonDGFlowNewUI(String weekInfo, String location) throws Exception;
 	public List<String> getBudgetedHoursOnSTAFF() throws Exception;
 	public String getBudgetOnWeeklyBudget() throws Exception;
 	public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception;
@@ -565,7 +565,7 @@ public interface SchedulePage {
 	public  boolean suggestedButtonIsHighlighted() throws Exception;
 	public boolean verifyWFSFunction();
 	public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception;
-	public void clickNextBtnOnCreateScheduleWindow() throws Exception;
+//	public void clickNextBtnOnCreateScheduleWindow() throws Exception;
 	public float getStaffingGuidanceHrs() throws Exception;
 	public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception;
 	public String convertDateStringFormat(String dateString) throws Exception;
@@ -611,9 +611,9 @@ public interface SchedulePage {
 	public void verifyEditMealBreakTimeFunctionalityForAShiftInDayView(boolean isSavedChange, String shiftid) throws Exception;
 	public void changeWorkRoleInPromptOfAShiftInDayView(boolean isApplyChange, String shiftid) throws Exception;
 	public void chooseLocationInCreateSchedulePopupWindow(String location) throws Exception;
-	public void selectRandomLocationOnCreateScheduleEditOperatingHoursPage() throws Exception;
+//	public void selectRandomLocationOnCreateScheduleEditOperatingHoursPage() throws Exception;
 	public void closeViewStatusContainer() throws Exception;
-	public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception;
+//	public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception;
 	public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception;
 	public int getShiftIndexById(String id) throws Exception;
 	public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
@@ -665,7 +665,7 @@ public interface SchedulePage {
 	public int getDaysBetweenFinalizeDateAndScheduleStartDate(String finalizeByDate, String scheduleStartDate) throws Exception;
 	public void verifyShiftTypeInLeft(boolean isLG) throws Exception;
 	public void verifyShiftTypeFilters() throws Exception;
-	public float checkEnterBudgetWindowLoadedForNonDG() throws Exception;
+//	public float checkEnterBudgetWindowLoadedForNonDG() throws Exception;
 	public boolean isCopyScheduleWindow() throws Exception;
 	public int getSpecificFiltersCount (String filterText) throws Exception;
 	public void deleteMealBreakForOneShift(WebElement shift) throws Exception;

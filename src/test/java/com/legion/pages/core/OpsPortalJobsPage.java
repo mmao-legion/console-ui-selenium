@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.JobsPage;
+import com.legion.pages.SmartCardPage;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -744,6 +745,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 	public HashMap<String, Float> getSummaryComplateInprogressAndNotStartNum() throws Exception {
 		HashMap<String, Float> summaryComplateInprogressAndNotStartNums = new HashMap<String, Float>();
+		SmartCardPage smartCardPage = new ConsoleSmartCardPage();
 		WebElement smartCardElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table ']"));
 		if (isElementLoaded(smartCardElement,5)) {
 			String sumarySmartCardText = smartCardElement.getText();
@@ -752,17 +754,17 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 				if(complateInprogressAndNotStartNum.toLowerCase().contains(jobSummarySmartCardData.jobsCompleted.getValue().toLowerCase()))
 				{
-					summaryComplateInprogressAndNotStartNums = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1],
+					summaryComplateInprogressAndNotStartNums = smartCardPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1],
 							"ComplatedNum");
 				}
 				else if(complateInprogressAndNotStartNum.toLowerCase().contains(jobSummarySmartCardData.jobsInProgress.getValue().toLowerCase()))
 				{
-					summaryComplateInprogressAndNotStartNums = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1]
+					summaryComplateInprogressAndNotStartNums = smartCardPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1]
 							.replace("$", ""), "InProgressNum");
 				}
 				else if(complateInprogressAndNotStartNum.toLowerCase().contains(jobSummarySmartCardData.notStarted.getValue().toLowerCase()))
 				{
-					summaryComplateInprogressAndNotStartNums = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1]
+					summaryComplateInprogressAndNotStartNums = smartCardPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1]
 							.replace("$", ""), "NotStartNum");
 				}
 			}

@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.legion.pages.ScheduleCommonPage;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -57,8 +58,8 @@ public class SalesForecastTest extends TestBase{
 //    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()),false);
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()),false);
         SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();  
         salesForecastPage.navigateToSalesForecastTab();
         SimpleUtils.assertOnFail( "Projected Sales Tab not Active!",salesForecastPage.isSalesForecastTabActive() ,false);

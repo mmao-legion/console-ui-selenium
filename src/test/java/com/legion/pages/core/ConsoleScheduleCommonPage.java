@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ScheduleCommonPage;
+import com.legion.pages.ScheduleMainPage;
 import com.legion.tests.core.ScheduleNewUITest;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -18,6 +19,85 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommonPage {
     public ConsoleScheduleCommonPage() {
         PageFactory.initElements(getDriver(), this);
+    }
+
+
+
+    @FindBy(className = "console-navigation-item")
+    private List<WebElement> consoleNavigationMenuItems;
+
+    @FindBy(css = "div.console-navigation-item-label.Schedule")
+    private WebElement goToScheduleButton;
+
+    @FindBy(css = "#legion-app navigation div:nth-child(4)")
+    private WebElement analyticsConsoleName;
+
+    @FindBy(css = "div[helper-text*='Work in progress Schedule'] span.legend-label")
+    private WebElement draft;
+
+    @FindBy(css = "div[helper-text-position='top'] span.legend-label")
+    private WebElement published;
+
+    @FindBy(css = "div[helper-text*='final per schedule changes'] span.legend-label")
+    private WebElement finalized;
+
+    @FindBy(className = "overview-view")
+    private WebElement overviewSectionElement;
+
+    @FindBy(css = "lg-button[data-tootik=\"Edit Schedule\"]")
+    private WebElement newEdit;
+
+    @FindBy(css = "[ng-click=\"callOkCallback()\"]")
+    private WebElement editAnywayPopupButton;
+
+    final static String consoleScheduleMenuItemText = "Schedule";
+
+
+    public void clickOnScheduleConsoleMenuItem() {
+        if (areListElementVisible(consoleNavigationMenuItems, 10) && consoleNavigationMenuItems.size() != 0) {
+            WebElement consoleScheduleMenuElement = SimpleUtils.getSubTabElement(consoleNavigationMenuItems, consoleScheduleMenuItemText);
+            clickTheElement(consoleScheduleMenuElement);
+            SimpleUtils.pass("'Schedule' Console Menu Loaded Successfully!");
+        } else {
+            SimpleUtils.fail("'Schedule' Console Menu Items Not Loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void goToSchedulePage() throws Exception {
+
+        checkElementVisibility(goToScheduleButton);
+        activeConsoleName = analyticsConsoleName.getText();
+        click(goToScheduleButton);
+        SimpleUtils.pass("Schedule Page Loading..!");
+
+        if (isElementLoaded(draft)) {
+            SimpleUtils.pass("Draft is Displayed on the page");
+        } else {
+            SimpleUtils.fail("Draft not displayed on the page", true);
+        }
+
+        if (isElementLoaded(published)) {
+            SimpleUtils.pass("Published is Displayed on the page");
+        } else {
+            SimpleUtils.fail("Published not displayed on the page", true);
+        }
+
+        if (isElementLoaded(finalized)) {
+            SimpleUtils.pass("Finalized is Displayed on the page");
+        } else {
+            SimpleUtils.fail("Finalized not displayed on the page", true);
+        }
+    }
+
+
+    @Override
+    public boolean isSchedulePage() throws Exception {
+        if (isElementLoaded(overviewSectionElement)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
@@ -228,7 +308,108 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
             SimpleUtils.fail("My Schedule Page: Forward and backward button failed to load to view previous or upcoming week", true);
     }
 
+    @FindBy(css = "div.sub-navigation-view-link")
+    private List<WebElement> ScheduleSubTabsElement;
+    @FindBy(css = "div.sub-navigation-view-link.active")
+    private WebElement activatedSubTabElement;
+
+    @Override
+    public void clickOnScheduleSubTab(String subTabString) throws Exception {
+        if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+            for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
+                if (ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString)) {
+                    waitForSeconds(5);
+                    clickTheElement(ScheduleSubTabElement);
+                    waitForSeconds(3);
+                    break;
+                }
+            }
+
+        }
+
+        if (verifyActivatedSubTab(subTabString)) {
+            SimpleUtils.pass("Schedule Page: '" + subTabString + "' tab loaded Successfully!");
+        } else {
+            SimpleUtils.fail("Schedule Page: '" + subTabString + "' tab not loaded Successfully!", true);
+        }
+    }
+
+    @Override
+    public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
+        if (isElementLoaded(activatedSubTabElement,15)) {
+            if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText.toUpperCase())) {
+                return true;
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page not loaded successfully", true);
+        }
+        return false;
+    }
+
+    public Boolean isScheduleDayViewActive() {
+//        WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
+//                findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'day')\"]"));
+        WebElement scheduleDayViewButton = MyThreadLocal.getDriver().
+                findElement(By.cssSelector("div.lg-button-group-first"));
+        if (scheduleDayViewButton.getAttribute("class").contains("selected")) {
+            return true;
+        }
+        return false;
+    }
+
+    public String getScheduleWeekStartDayMonthDate() {
+        String scheduleWeekStartDuration = "NA";
+        WebElement scheduleCalendarActiveWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+        try {
+            if (isElementLoaded(scheduleCalendarActiveWeek)) {
+                scheduleWeekStartDuration = scheduleCalendarActiveWeek.getText().replace("\n", "");
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Calender duration bar not loaded successfully", true);
+        }
+        return scheduleWeekStartDuration;
+    }
+
+    public void navigateDayViewToPast(String PreviousWeekView, int dayCount)
+    {
+        ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+        String currentWeekStartingDay = "NA";
+        List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
+        for(int i = 0; i < dayCount; i++)
+        {
+
+            try {
+                click(ScheduleCalendarDayLabels.get(i));
+                scheduleMainPage.clickOnEditButton();
+                scheduleMainPage.clickOnCancelButtonOnEditMode();
+            } catch (Exception e) {
+                SimpleUtils.fail("Schedule page Calender Previous Week Arrows Not Loaded/Clickable", true);
+            }
 
 
+        }
+    }
 
+
+    @FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/following-sibling::div[1]")
+    private WebElement immediateNextToCurrentActiveWeek;
+
+    @FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/preceding-sibling::div[1]")
+    private WebElement immediatePastToCurrentActiveWeek;
+
+    public void clickImmediateNextToCurrentActiveWeekInDayPicker() {
+        if (isElementEnabled(immediateNextToCurrentActiveWeek, 30)) {
+            click(immediateNextToCurrentActiveWeek);
+        } else {
+            SimpleUtils.report("This is a last week in Day Week picker");
+        }
+    }
+
+    public void clickImmediatePastToCurrentActiveWeekInDayPicker() {
+        if (isElementEnabled(immediatePastToCurrentActiveWeek, 30)) {
+            click(immediatePastToCurrentActiveWeek);
+        } else {
+            SimpleUtils.report("This is a last week in Day Week picker");
+        }
+    }
 }
