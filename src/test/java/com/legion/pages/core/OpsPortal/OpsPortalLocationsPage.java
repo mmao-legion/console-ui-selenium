@@ -1713,6 +1713,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "div.lg-modal")
 	private WebElement enabledDisableUpperfieldModal;
 
+	private void doEnableOrDisable(String current, String action) {
+		if (current.equalsIgnoreCase(action)) {
+			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
+			if (isElementEnabled(enabledDisableUpperfieldModal, 10)) {
+				click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
+			} else
+				SimpleUtils.fail("Enable/Disabled Upperfield windows load failed", false);
+			waitForSeconds(5);
+		} else
+			SimpleUtils.fail("No such action supported", true);
+	}
+
+
+
 	@Override
 	public void disableEnableUpperfield(String upperfieldName, String action) throws Exception {
 		upperfieldsSearchInputBox.clear();
@@ -1721,17 +1735,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			List<WebElement> upperfieldDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(upperfieldDetailsLinks.get(0));
 			waitForSeconds(3);
-			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
-			if (isElementEnabled(enabledDisableUpperfieldModal, 10)) {
-				click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
-			} else
-				SimpleUtils.fail("Enable/Disabled Upperfield windows load failed", false);
-			waitForSeconds(5);
-			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
-				SimpleUtils.pass(action + " " + upperfieldName + " successfully");
-			} else
-				SimpleUtils.fail(action + " " + upperfieldName + " failed", true);
+			String currentStustus=getDriver().findElement(By.xpath("//lg-button[@label='Edit Upperfield']/preceding-sibling::lg-button")).getText().trim();
+			doEnableOrDisable(currentStustus,action);
+			if (!currentStustus.equals(action)) {
+					SimpleUtils.pass(action + " " + upperfieldName + " successfully");
+				} else
+					SimpleUtils.fail(action + " " + upperfieldName + " failed", true);
 			click(backBtnInLocationDetailsPage);
+
 		} else
 			SimpleUtils.fail("No search result", true);
 	}
@@ -2427,6 +2438,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 				upperfieldNameInput.sendKeys(upperfieldsName);
 				upperfieldIdInput.sendKeys(upperfieldsId);
+				scrollToBottom();
 				click(cancelBtn);
 				if (isElementEnabled(leaveThisPageBtn, 5)) {
 					click(leaveThisPageBtn);
