@@ -76,7 +76,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				for (WebElement subOption : modelSwitchOption) {
 					if (subOption.getText().equalsIgnoreCase(value)) {
 						click(subOption);
-						waitForSeconds(3);
+						waitForSeconds(5);
 					}
 				}
 
@@ -247,24 +247,31 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]:nth-child(2) > td.one-line-overflow > div > lg-button > button > span > span")
-	private WebElement locationsName;
+//	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]:nth-child(2) > td.one-line-overflow > div > lg-button > button > span > span")
+	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]> td.one-line-overflow > div > lg-button > button > span > span")
+	private List<WebElement> locationsName;
 
 	@Override
 	public boolean searchNewLocation(String locationName) {
+		boolean existRe=false;
 		waitForSeconds(30);
 		if (isElementEnabled(searchInput, 8)) {
 			searchInput.sendKeys(locationName);
 			searchInput.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
-			if (locationsName.getText().trim().equalsIgnoreCase(locationName.trim())) {
-				SimpleUtils.pass("the location is searched");
-				return true;
-			}else
-				SimpleUtils.fail("There are no locations that match your criteria. ",false);
+			for(WebElement es:locationsName) {
+				if (es.getText().trim().equalsIgnoreCase(locationName.trim())) {
+					existRe = true;
+					break;
+				}
+			}
+				if(existRe)
+					SimpleUtils.pass("the location is searched");
+				else
+					SimpleUtils.fail("There are no locations that match your criteria. ", false);
 		} else
 			SimpleUtils.fail("search filed load failed", false);
-		return false;
+		return existRe;
 	}
 
 	@Override
@@ -295,7 +302,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				selectByVisibleText(configTypeSelect, newLocationParas.get("Configuration_Type"));
 			}
 			click(selectOneInChooseDistrict);
-			selectLocationOrDistrict(searchCharactor, index);
+			selectLocationOrDistrict("No touch no delete", index);
 			click(effectiveDateSelect);
 			click(previousMonthBtn.get(0));
 			click(firstDay.findElement(By.cssSelector("div:nth-child(8)")));
@@ -362,7 +369,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			scrollToBottom();
 			waitForSeconds(2);
 			click(createLocationBtn);
-			waitForSeconds(300);
+			waitForSeconds(60);
 			SimpleUtils.report("Mock location create done");
 
 		} else
@@ -761,10 +768,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean verifyUpdateLocationResult(String locationName) throws Exception {
 		searchLocation(locationName);
-		if (isElementLoaded(locationsName, 10) && locationsName.getText().contains(locationName)) {
-			return true;
+		boolean existLoc=false;
+		for(WebElement es:locationsName) {
+			if (es.getText().trim().contains(locationName)) {
+				existLoc=true;
+				break;
+			}
 		}
-		return false;
+		return existLoc;
 	}
 
 	@Override

@@ -152,12 +152,12 @@ public class LocationsTest extends TestBase {
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
             //add one mock location，first create one new location and then to mock that -to avoid duplication
-//            locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
-            locationsPage.addNewMockLocationWithAllFields(searchCharactor,index);
+            locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
+            locationsPage.addNewMockLocationWithAllFields(locationName,index);
             //search created location
-            if (locationsPage.searchNewLocation(searchCharactor+"-MOCK")) {
+            if (locationsPage.searchNewLocation(locationName+"-MOCK")) {
                 SimpleUtils.pass("Create new mock location successfully");
-                locationsPage.disableLocation(searchCharactor+"-MOCK");
+                locationsPage.disableLocation(locationName+"-MOCK");
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
 //            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);

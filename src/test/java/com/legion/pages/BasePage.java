@@ -47,6 +47,7 @@ public class BasePage {
         try {
             waitUntilElementIsVisible(element);
             element.click();
+            waitForSeconds(2);
         } catch (TimeoutException te) {
             ExtentTestManager.getTest().log(Status.WARNING,te);
         }
