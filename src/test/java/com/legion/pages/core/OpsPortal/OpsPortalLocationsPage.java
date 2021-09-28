@@ -1729,11 +1729,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
 			if (isElementEnabled(enabledDisableUpperfieldModal, 10)) {
 				click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
+				SimpleUtils.pass(current +" successfully");
 			} else
-				SimpleUtils.fail("Enable/Disabled Upperfield windows load failed", false);
+				SimpleUtils.fail(current +"Failed!", false);
 			waitForSeconds(5);
-		} else
-			SimpleUtils.fail("No such action supported", true);
+		}
+		else if (!current.equals(action)) {
+			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + current + "\"] ")));
+			if (isElementEnabled(enabledDisableUpperfieldModal, 10)) {
+				click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + current + "\"] ")));
+				SimpleUtils.pass(current + " successfully");
+			} else
+				SimpleUtils.fail(current + "Failed!", false);
+		}
 	}
 
 
@@ -1748,12 +1756,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			waitForSeconds(3);
 			String currentStustus=getDriver().findElement(By.xpath("//lg-button[@label='Edit Upperfield']/preceding-sibling::lg-button")).getText().trim();
 			doEnableOrDisable(currentStustus,action);
-			if (!currentStustus.equals(action)) {
-					SimpleUtils.pass(action + " " + upperfieldName + " successfully");
-				} else
-					SimpleUtils.fail(action + " " + upperfieldName + " failed", true);
 			click(backBtnInLocationDetailsPage);
-
 		} else
 			SimpleUtils.fail("No search result", true);
 	}
