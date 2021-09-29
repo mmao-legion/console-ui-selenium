@@ -200,7 +200,20 @@
             </class>
         </classes>
     </test>
-
+    <test name="Absent Management Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.AbsentManagementTemplateTest">
+                <methods>
+                    <include name="verifyEmployeeManagementModuleAndDashboardAsInternalAdminForEmployeeManagement"/>
+                    <include name="verifyAddEditSearchAndDisableTemplateAsInternalAdminForEmployeeManagement"/>
+                    <include name="verifyActionsInSettingsTabAsInternalAdminForEmployeeManagement"/>
+                    <include name="verifyTemplateDetailsAsInternalAdminForEmployeeManagement"/>
+                    <include name="verifyTimeOffConfigurationAsInternalAdminForEmployeeManagement"/>
+                    <include name="verifyTimeOffRequestRulesAsInternalAdminForEmployeeManagement"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->
 
 

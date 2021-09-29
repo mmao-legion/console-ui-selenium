@@ -14,6 +14,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 public class ModelSwitchPage extends BasePage {
     public ModelSwitchPage() {
         PageFactory.initElements(getDriver(), this);
+        waitForPageLoaded(getDriver());
     }
 
     // Added by Sophia
@@ -27,7 +28,9 @@ public class ModelSwitchPage extends BasePage {
     private WebElement timeClock;
 
     public void openModeSwitchMenu() {
+        waitForSeconds(5);
         modeSwitchIcon.click();
+        waitForSeconds(3);
     }
 
     public void switchToOpsPortal() {

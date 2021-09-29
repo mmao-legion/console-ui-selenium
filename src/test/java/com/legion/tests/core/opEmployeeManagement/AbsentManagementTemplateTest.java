@@ -1,0 +1,611 @@
+package com.legion.tests.core.opEmployeeManagement;
+
+import com.legion.pages.core.opemployeemanagement.AbsentManagePage;
+import com.legion.pages.core.opemployeemanagement.EmployeeManagementPanelPage;
+import com.legion.pages.core.opemployeemanagement.TimeOffReasonConfigurationPage;
+import com.legion.pages.core.opusermanagement.ModelSwitchPage;
+import com.legion.pages.core.opusermanagement.OpsPortalNavigationPage;
+import com.legion.tests.TestBase;
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Enterprise;
+import com.legion.tests.annotations.Owner;
+import com.legion.tests.annotations.TestName;
+import com.legion.tests.data.CredentialDataProviderSource;
+import org.testng.Assert;
+import org.testng.Reporter;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class AbsentManagementTemplateTest extends TestBase {
+    @Override
+    @BeforeMethod()
+    public void firstTest(Method testMethod, Object[] params) throws Exception {
+        this.createDriver((String) params[0], "83", "Window");
+        visitPage(testMethod);
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String) params[1], (String) params[2], (String) params[3]);
+        ModelSwitchPage modelSwitchPage = new ModelSwitchPage();
+        modelSwitchPage.switchToOpsPortal();
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Employee manage tab and absence management tile")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEmployeeManagementModuleAndDashboardAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        //verify that employee management is enabled.
+        navigationPage.navigateToEmployeeManagement();
+        Reporter.log("EmployeeManagement Module is enabled!");
+        //verify the absent management dashboard card content
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        String dashboardText = panelPage.getDashboardCardContent();
+        Assert.assertEquals(dashboardText, "Absence Management\n" +
+                "Configure Time Offs\n" +
+                "Time Off Reasons\n" +
+                "Time Off Accrual Rules", "Invalid content on dashboard card!");
+        Reporter.log("Succeeded in validating Absent Management dashboard card content!");
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Templates list page validation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddEditSearchAndDisableTemplateAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        navigationPage.navigateToEmployeeManagement();
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToAbsentManagementPage();
+        //verify that there are 2 tabs in absent manage
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        Assert.assertTrue(absentManagePage.isTemplateTabDisplayed(), "Template tab on absent manage page didn't show!");
+        Assert.assertTrue(absentManagePage.isSettingsTabDisplayed(), "Settings tab on absent manage page didn't show!");
+        Reporter.log("Template tab and settings tab can be displayed normally!");
+        //Verify there is a new template button
+        Assert.assertTrue(absentManagePage.isNewTemplateButtonDisplayedAndEnabled(), "New template button didn't show or it is disabled!");
+        Reporter.log("Succeeded in validating new template button shown!");
+
+        //verify cancel creating template
+        absentManagePage.createANewTemplate("CancelCreating", "for test");
+        absentManagePage.cancel();
+        Reporter.log("Succeeded in canceling creation!");
+
+        //verify new template works well
+        absentManagePage.createANewTemplate("AutoTest01", "for test");
+        absentManagePage.submit();
+        absentManagePage.saveTemplateAs("Save as draft");
+        Reporter.log("Succeeded in creating a template!");
+
+        //verify search template UI
+        Assert.assertEquals(absentManagePage.getTemplateSearchBoxPlaceHolder(), "You can search by template name, status and creator.", "Wrong place holder in template search box!");
+        Reporter.log("Succeeded in validating place holder in template search box is correct!");
+        //Verify search function
+        //no match
+        absentManagePage.search("CancelCreating");
+        Assert.assertEquals(absentManagePage.noMatch(), "No matching Templates found.", "The template canceled should not be searched out!");
+        Reporter.log("Succeeded in validating no match!");
+
+        //Fuzzy matching
+        absentManagePage.search("test");
+        Assert.assertTrue(absentManagePage.isRelated("test"), "Failed to search out related items!");
+        Reporter.log("Succeeded in validating Fuzzy matching!");
+
+        //exactly matching
+        absentManagePage.search("AutoTest01");
+        Assert.assertEquals(absentManagePage.getResult(), "AutoTest01", "Failed to search out the template just created!");
+        Reporter.log("Succeeded in searching template by name!");
+
+        //verify edit template
+        absentManagePage.clickInDetails();
+        //cancel editing
+        absentManagePage.editTemplateInfo("Auto-CancelEditing", "", "test");
+        absentManagePage.okToActionInModal(false);
+        //save editing
+        absentManagePage.editTemplateInfo("Auto-SaveEditing", "test save editing", "test");
+        absentManagePage.okToActionInModal(true);
+        Assert.assertTrue(absentManagePage.getTemplateTitle().contains("Auto-SaveEditing"), "Failed to save the editing!");
+        absentManagePage.saveTemplateAs("SaveAsDraft");
+        absentManagePage.search("Auto-SaveEditing");
+        Assert.assertEquals(absentManagePage.getResult(), "Auto-SaveEditing", "Failed to search out the template just created!");
+        Reporter.log("Succeeded in editing template!");
+
+        //verify delete a template
+        absentManagePage.clickInDetails();
+        String mes = absentManagePage.deleteTheTemplate();
+        Assert.assertTrue(mes.contains("You will no longer recover this template."), "Failed to get delete confirm message in modal!");//Are you sure you want to Delete?
+
+
+        Reporter.log("Succeeded in opening delete template modal!");
+        absentManagePage.okToActionInModal(true);
+        Reporter.log("Succeeded in deleting template!");
+
+        absentManagePage.search("Auto-SaveEditing");
+        Assert.assertEquals(absentManagePage.noMatch(), "No matching Templates found.", "The template canceled should not be searched out!");
+
+        absentManagePage.search("");
+        Assert.assertEquals(absentManagePage.getTemplateTableHeaders(), templateColumns(), "Incorrect template table headers!");
+        Reporter.log("Succeeded in template table column validation!");
+
+        Assert.assertTrue(absentManagePage.smartCardFilter(), "It doesn't filter correctly!");
+        Reporter.log("Succeeded in smart card filter validation!");
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Settings page validation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyActionsInSettingsTabAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        navigationPage.navigateToEmployeeManagement();
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToAbsentManagementPage();
+
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        absentManagePage.switchToSettings();
+        //reason name is required when creating a new time off
+        Assert.assertFalse(absentManagePage.isOKButtonEnabled(), "OK button should not be enabled while missing reason name!");
+        Reporter.log("Succeeded in reason name required validation!");
+        absentManagePage.cancelCreatingTimeOff();
+        //add new reason not unique!
+        absentManagePage.addTimeOff("Sick");
+        absentManagePage.okCreatingTimeOff();
+        Assert.assertEquals(absentManagePage.getErrorMessage(), "Time off reason name should be unique.", "Failed to add for Using an existing time off reason name!!!");
+        Reporter.log("Succeeded in reason name unique validation!");
+        absentManagePage.cancelCreatingTimeOff();
+        //cancel adding new time off
+        String timeOffName = "ZZ-vacation";
+        absentManagePage.addTimeOff(timeOffName);
+        absentManagePage.cancelCreatingTimeOff();
+        Assert.assertFalse(absentManagePage.isTimeOffReasonDisplayed(timeOffName), "Failed to cancel adding!");
+        Reporter.log("Succeeded in canceling new time off!");
+
+        //add new time off
+        absentManagePage.addTimeOff(timeOffName);
+        absentManagePage.okCreatingTimeOff();
+        Assert.assertTrue(absentManagePage.isTimeOffReasonDisplayed(timeOffName), "Failed to add new time off!");
+        Reporter.log("Succeeded in creating new time off!");
+
+        //cancel editing time off
+        String editName = "ZZ-vacation-editing";
+        absentManagePage.editTimeOffReason(editName);
+        absentManagePage.okToActionInModal(false);
+        Assert.assertFalse(absentManagePage.isTimeOffReasonDisplayed(editName), "Failed to cancel editing!");
+        Reporter.log("Succeeded in canceling edit action!");
+
+        //edit time off
+        absentManagePage.editTimeOffReason(editName);
+        absentManagePage.okToActionInModal(true);
+        Assert.assertTrue(absentManagePage.isTimeOffReasonDisplayed(editName), "Failed to edit an existing time off!");
+        Reporter.log("Succeeded in updating a time off reason!");
+
+        //cancel removing
+        Assert.assertEquals(absentManagePage.removeTimeOffInSettings(), "Are you sure you want to remove this time off reason?", "Failed to get confirm message in remove modal!");
+        absentManagePage.okToActionInModal(false);
+        Assert.assertTrue(absentManagePage.isTimeOffReasonDisplayed(editName), "Failed to cancel remove!");
+        Reporter.log("Succeeded in canceling remove action!");
+
+        //remove
+        Assert.assertEquals(absentManagePage.removeTimeOffInSettings(), "Are you sure you want to remove this time off reason?", "Failed to get confirm message in remove modal!");
+        absentManagePage.okToActionInModal(true);
+        Assert.assertFalse(absentManagePage.isTimeOffReasonDisplayed(editName), "Failed to remove!");
+        Reporter.log("Succeeded in removing time off!");
+
+        //settings
+        Assert.assertEquals(absentManagePage.getQuestionTitle(), "Do time off reasons use accruals?", "Failed to Switch to settings page!");
+        Reporter.log("Succeeded in switching to settings!");
+
+
+        //set accrual toggle as false
+        absentManagePage.setAccrualToggle(false);
+        absentManagePage.switchToTemplates();
+        absentManagePage.configureTemplate("Accrual-usedForAutomation");
+        absentManagePage.configureTimeOffRules("Sick");
+        TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
+        Assert.assertFalse(configurationPage.isAccrualDistributionLabelDisplayed(), "The accrual distribution label should not be displayed as accrual toggle is off!");
+        Reporter.log("Succeeded in turning off accrual toggle!");
+
+        absentManagePage.back();
+        absentManagePage.back();
+        absentManagePage.switchToSettings();
+
+        //set accrual toggle as ture
+        absentManagePage.setAccrualToggle(true);
+        absentManagePage.switchToTemplates();
+        absentManagePage.configureTemplate("Accrual-usedForAutomation");
+        absentManagePage.configureTimeOffRules("Sick");
+        Assert.assertTrue(configurationPage.isAccrualDistributionLabelDisplayed(), "The accrual distribution label should be displayed as accrual toggle is on!");
+        Reporter.log("Succeeded in turning on accrual toggle!");
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Template Details Page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTemplateDetailsAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        navigationPage.navigateToEmployeeManagement();
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToAbsentManagementPage();
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+
+        Random random = new Random();
+        String tempName = "AutoTest_Accrual" + random.nextInt(100);
+        absentManagePage.createANewTemplate(tempName, "accrual test");
+        absentManagePage.submit();
+        absentManagePage.closeWelcomeModal();
+        absentManagePage.saveTemplateAs("Save as draft");
+        Reporter.log("Succeeded in creating template: " + tempName + " !");
+
+        absentManagePage.search(tempName);
+        //click in details--update a template info--save draft base on draft mode
+        absentManagePage.clickInDetails();
+
+        //template name
+        Assert.assertTrue(absentManagePage.getTemplateTitle().contains(tempName), "History button should be displayed!");
+        Reporter.log("Succeeded in validating template name displayed well!");
+        //buttons
+        Assert.assertTrue(absentManagePage.isHistoryButtonDisplayed(), "History button should be displayed!");
+        Assert.assertTrue(absentManagePage.isDeleteButtonDisplayed(), "History button should be displayed!");
+        Assert.assertTrue(absentManagePage.isEditButtonDisplayed(), "History button should be displayed!");
+        Reporter.log("Succeeded in validating buttons displayed well!");
+
+        //switch between details and associations
+        absentManagePage.switchToAssociation();
+        Assert.assertEquals(absentManagePage.getTemplateAssociationTitle(), "Dynamic Groups", "Failed to switch to association page!");
+        absentManagePage.switchToDetails();
+        Assert.assertEquals(absentManagePage.getCanEmployeeRequestLabel(), "Can employees request time off ?", "Failed to switch to details page!");
+        Reporter.log("Succeeded in validating switch between details and association");
+
+        //open template history
+        absentManagePage.openTemplateHistory();
+        Assert.assertTrue(absentManagePage.getCreatedRecord().contains("Template Created"), "It should display template created info!");
+        absentManagePage.closeHistory();
+
+        //save as draft on draft version.
+        absentManagePage.editTemplateInfo(tempName, "accrual", "1234");
+        absentManagePage.okToActionInModal(true);
+        absentManagePage.setTemplateLeverCanRequest(false);
+        absentManagePage.saveTemplateAs("Save as draft");
+        absentManagePage.search(tempName);
+        absentManagePage.clickInDetails();
+        Assert.assertTrue(absentManagePage.isToggleAsSetted(false), "Failed to turn off the template lever--can employee request! ");
+        absentManagePage.back();
+        //set as true
+        absentManagePage.configureTemplate(tempName);
+        absentManagePage.setTemplateLeverCanRequest(true);
+        //template lever weekly limits
+        absentManagePage.setTemplateLeverWeeklyLimits("40");
+        //save as draft on a draft version
+        absentManagePage.saveTemplateAs("Save as draft");
+        absentManagePage.search(tempName);
+        Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Draft"), "Failed to save the template as draft!");
+        Reporter.log("Succeeded in saving as draft");
+
+        //validate the toggle setting and weekly limit setting
+        absentManagePage.clickInDetails();
+        Assert.assertTrue(absentManagePage.isToggleAsSetted(true), "Failed to turn on the template lever--can employee request! ");
+        //validate weekly limits
+        /*Assert.assertEquals(absentManagePage.getWeeklyLimitHrs(), "40", "Failed to validate the number as set before!");*/
+        Reporter.log("Succeeded in validating template lever--can employee request toggle!");
+        absentManagePage.back();
+
+        //publish later after associating
+        absentManagePage.configureTemplate(tempName);
+        absentManagePage.associateTemplate();
+        Reporter.log("Succeeded in associating the template!");
+        absentManagePage.switchToDetails();
+        absentManagePage.saveTemplateAs("Publish later");
+
+        absentManagePage.search(tempName);
+        Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Pending"), "Failed to save the template as publish later!");
+        Reporter.log("Succeeded in saving as publish later!");
+
+        //publish now
+        absentManagePage.configureTemplate(tempName);
+        absentManagePage.saveTemplateAs("Publish now");
+        absentManagePage.search(tempName);
+        Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Published"), "Failed to save the template as publish now!");
+        Reporter.log("Succeeded in saving as publish now!");
+
+        //validate there are 2 versions
+        absentManagePage.configureTemplate(tempName);
+        absentManagePage.saveTemplateAs("Save as draft");
+        absentManagePage.search(tempName);
+        Assert.assertTrue(absentManagePage.getTemplateStatus().size() == 2 && absentManagePage.getTemplateStatus().get(0).equals("Published") && absentManagePage.getTemplateStatus().get(1).equals("Draft"));
+        Reporter.log("Succeeded in saving as draft on a published version!");
+
+        //delete a draft template
+        absentManagePage.clickInDetails();
+        absentManagePage.deleteTheTemplate();
+        absentManagePage.okToActionInModal(true);
+        absentManagePage.search(tempName);
+        Assert.assertTrue(absentManagePage.getTemplateStatus().size() == 1 && absentManagePage.getTemplateStatus().get(0).equals("Published"));
+        Reporter.log("Succeeded in deleting a draft template!");
+
+
+        //Mark template as default (published)
+        absentManagePage.clickInDetails();
+        absentManagePage.markAsDefaultTemplate();
+        absentManagePage.back();
+        absentManagePage.search(tempName);
+        Assert.assertEquals(absentManagePage.getDefaultLabel(), "Default", "Failed to mark as default template! ");
+        Reporter.log("Succeeded in marking as default template!");
+
+        //archive
+        absentManagePage.search(tempName);
+        absentManagePage.clickInDetails();
+        //verify archive button displays well!
+        Assert.assertTrue(absentManagePage.isArchiveButtonDisplayed(), "Archive button should display here!");
+        Reporter.log("Succeeded in validating archive button!");
+        //archive published template
+        absentManagePage.archivePublishedTemplate();
+        absentManagePage.okToActionInModal(true);
+        absentManagePage.search(tempName);
+        Assert.assertEquals(absentManagePage.noMatch(), "No matching Templates found.", "Failed to archive the template");
+        Reporter.log("Succeeded in archiving published template!");
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Template Details Page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimeOffConfigurationAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        navigationPage.navigateToEmployeeManagement();
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToAbsentManagementPage();
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+
+        //Create a new template
+        Random random = new Random();
+        String tempName = "AutoTest_Accrual" + random.nextInt(1000);
+        absentManagePage.createANewTemplate(tempName, "accrual test");
+        absentManagePage.submit();
+        absentManagePage.closeWelcomeModal();
+        absentManagePage.saveTemplateAs("Save as draft");
+        Reporter.log("Succeeded in creating template: " + tempName + " !");
+
+        absentManagePage.configureTemplate(tempName);
+        //configure
+        String timeOffReason = "Sick";
+        absentManagePage.configureTimeOffRules(timeOffReason);
+        TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
+
+        //verify accrual started options
+        Assert.assertTrue(configurationPage.getAccrualStartOptions().equals(accrualStarted()), "Failed to assert accrual started as expected!");
+        Reporter.log("Succeeded in validating accrual started as expected!");
+
+        //verify accrual end option
+        Assert.assertTrue(configurationPage.getAccrualEndOptions().equals(accrualEnd()), "Failed to assert accrual end as expected!");
+        Reporter.log("Succeeded in validating accrual end as expected!");
+
+        //set the reinstatement months
+        configurationPage.setReinstatementMonth("6");
+
+        //verify distribution method options
+        Assert.assertTrue(configurationPage.getDistributionOptions().equals(distributionMethod()), "Failed to assert Distribution methhods as expected!");
+        Reporter.log("Succeeded in validating distribution method options!");
+
+        //add service lever
+        configurationPage.addServiceLever();
+        configurationPage.addSecondServiceLever();
+
+        configurationPage.saveTimeOffConfiguration(true);
+
+        Reporter.log("Succeeded in validating configure button is clickable, adding service lever, and configure function works well!");
+
+        //edit
+        absentManagePage.configureTimeOffRules(timeOffReason);
+        //assert reinstatement
+        //
+        configurationPage.removeServiceLever();
+        configurationPage.saveTimeOffConfiguration(true);
+        Reporter.log("Succeeded in validating edit button is clickable, remove service lever, and edit function works well!");
+        absentManagePage.saveTemplateAs("Save As Draft");
+
+
+        //verify it is readOnly in view mode
+        absentManagePage.search(tempName);
+        absentManagePage.clickInDetails();
+        absentManagePage.viewTimeOffConfigure(timeOffReason);
+        Assert.assertEquals(configurationPage.getTimeOffReasonName(), timeOffReason, "Failed to open time off reason configuration page!");
+        Assert.assertTrue(configurationPage.isTimeOffConfigurationReadOnly(), "Failed to assert it is read-only in view mode!");
+        Reporter.log("Succeeded in validating it is read-only in view mode!");
+        Assert.assertEquals(configurationPage.getServiceLeverNum(), 1, "Failed to remove one of the service lever!");
+        Reporter.log("Succeeded in validating remove service lever!");
+
+        configurationPage.back();
+        absentManagePage.back();
+        //remove time off rules
+        absentManagePage.configureTemplate(tempName);
+        absentManagePage.removeTimeOffRules(timeOffReason);
+        absentManagePage.saveTemplateAs("Save As Draft");
+        absentManagePage.search(tempName);
+        absentManagePage.clickInDetails();
+        Assert.assertEquals(absentManagePage.getNotConfigured(), "Not Configured", "Failed to remove time off reason rules!");
+        Reporter.log("Succeeded in validating removing time off rules works well!");
+
+        absentManagePage.deleteTheTemplate();
+        absentManagePage.okToActionInModal(true);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Template Details Page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimeOffRequestRulesAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        navigationPage.navigateToEmployeeManagement();
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToAbsentManagementPage();
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+
+        //Create a new template
+        Random random = new Random();
+        String tempName = "AutoTest_Accrual" + random.nextInt(1000);
+        absentManagePage.createANewTemplate(tempName, "accrual test");
+        absentManagePage.submit();
+        absentManagePage.closeWelcomeModal();
+        absentManagePage.saveTemplateAs("Save as draft");
+        Reporter.log("Succeeded in creating template: " + tempName + " !");
+
+        absentManagePage.configureTemplate(tempName);
+        //configure
+        String timeOffReason = "Sick";
+        absentManagePage.configureTimeOffRules(timeOffReason);
+        TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
+
+        //verify request rules labels
+        Assert.assertTrue(configurationPage.getRequestRuleLabels().equals(requestRules()), "Failed to assert request rules is shown as expected!");
+        Reporter.log("Succeeded in validating all request rules!");
+        //
+        Assert.assertTrue(configurationPage.getProbationPeriodUnitOptions().equals(probationUnit()), "Failed to probation unit is shown as expected!");
+        Reporter.log("Succeeded in validating probation options!");
+
+        //set all rule toggles as yes
+        //set value for rules
+        configurationPage.setTimeOffRequestRuleAs("Employee can request ?", true);
+        configurationPage.setTimeOffRequestRuleAs("Employee can request partial day ?", true);
+        configurationPage.setTimeOffRequestRuleAs("Manager can submit in timesheet ?", true);
+        configurationPage.setValueForTimeOffRequestRules("Weekly limits(hours)", "32");
+        configurationPage.setValueForTimeOffRequestRules("Days request must be made in advance", "2");
+        configurationPage.setValueForTimeOffRequestRules("Configure all day time off default", "8");
+        configurationPage.setValueForTimeOffRequestRules("Days an employee can request at one time", "3");
+        configurationPage.setTimeOffRequestRuleAs("Auto reject time off which exceed accrued hours ?", true);
+        configurationPage.setTimeOffRequestRuleAs("Allow Paid Time Off to compute to overtime ?", true);
+        configurationPage.setTimeOffRequestRuleAs("Does this time off reason track Accruals ?", true);
+        configurationPage.setValueForTimeOffRequestRules("Max hours in advance of what you earn", "8");
+        configurationPage.setTimeOffRequestRuleAs("Enforce Yearly Limits", true);
+        configurationPage.setValueForTimeOffRequestRules("Probation Period", "3");
+        configurationPage.setProbationUnitAsMonths();
+        configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "5");
+
+        configurationPage.addServiceLever();
+        configurationPage.saveTimeOffConfiguration(true);
+        //verify results of above action
+        absentManagePage.configureTimeOffRules(timeOffReason);
+        Assert.assertTrue(configurationPage.isTimeOffRuleToggleTurnOn("Employee can request ?"), "Failed to turn on--Employee can request ?");
+        Assert.assertTrue(configurationPage.isTimeOffRuleToggleTurnOn("Employee can request partial day ?"), "Failed to turn on--Employee can request partial day ?");
+        Assert.assertTrue(configurationPage.isTimeOffRuleToggleTurnOn("Manager can submit in timesheet ?"), "Failed to turn on--Manager can submit in timesheet ?");
+        Assert.assertTrue(configurationPage.isTimeOffRuleToggleTurnOn("Auto reject time off which exceed accrued hours ?"), "Failed to turn on--Auto reject time off which exceed accrued hours ?");
+        Assert.assertTrue(configurationPage.isTimeOffRuleToggleTurnOn("Allow Paid Time Off to compute to overtime ?"), "Failed to turn on--Allow Paid Time Off to compute to overtime ?");
+        Assert.assertTrue(configurationPage.isTimeOffRuleToggleTurnOn("Does this time off reason track Accruals ?"), "Failed to turn on--Does this time off reason track Accruals ?");
+        Assert.assertTrue(configurationPage.isTimeOffRuleToggleTurnOn("Enforce Yearly Limits"), "Failed to turn on--Enforce Yearly Limits");
+
+        //verify values we set before
+        Assert.assertEquals(configurationPage.getNumSetForTimeOffRequestRules("Weekly limits(hours)"), "32");
+        Assert.assertEquals(configurationPage.getNumSetForTimeOffRequestRules("Days request must be made in advance"), "2");
+        Assert.assertEquals(configurationPage.getNumSetForTimeOffRequestRules("Configure all day time off default"), "8");
+        Assert.assertEquals(configurationPage.getNumSetForTimeOffRequestRules("Days an employee can request at one time"), "3");
+        Assert.assertEquals(configurationPage.getNumSetForTimeOffRequestRules("Max hours in advance of what you earn"), "8");
+        Assert.assertEquals(configurationPage.getNumSetForTimeOffRequestRules("Probation Period"), "3");
+        Assert.assertEquals(configurationPage.getNumSetForTimeOffRequestRules("Annual Use Limit"), "5");
+        Reporter.log("Succeeded in setting all request rules!");
+        //set all rule toggles as no
+        configurationPage.setTimeOffRequestRuleAs("Employee can request ?", false);
+        configurationPage.setTimeOffRequestRuleAs("Employee can request partial day ?", false);
+        configurationPage.setTimeOffRequestRuleAs("Manager can submit in timesheet ?", false);
+        configurationPage.setTimeOffRequestRuleAs("Auto reject time off which exceed accrued hours ?", false);
+        configurationPage.setTimeOffRequestRuleAs("Allow Paid Time Off to compute to overtime ?", false);
+        configurationPage.setTimeOffRequestRuleAs("Does this time off reason track Accruals ?", false);
+        configurationPage.setTimeOffRequestRuleAs("Enforce Yearly Limits", false);
+        //save edit
+        configurationPage.saveTimeOffConfiguration(true);
+        //verify results
+        absentManagePage.configureTimeOffRules(timeOffReason);
+        Assert.assertFalse(configurationPage.isTimeOffRuleToggleTurnOn("Employee can request ?"), "Failed to turn off--Employee can request ?");
+        Assert.assertFalse(configurationPage.isTimeOffRuleToggleTurnOn("Employee can request partial day ?"), "Failed to turn off--Employee can request partial day ?");
+        Assert.assertFalse(configurationPage.isTimeOffRuleToggleTurnOn("Manager can submit in timesheet ?"), "Failed to turn off--Manager can submit in timesheet ?");
+        Assert.assertFalse(configurationPage.isTimeOffRuleToggleTurnOn("Auto reject time off which exceed accrued hours ?"), "Failed to turn off--Auto reject time off which exceed accrued hours ?");
+        Assert.assertFalse(configurationPage.isTimeOffRuleToggleTurnOn("Allow Paid Time Off to compute to overtime ?"), "Failed to turn off--Allow Paid Time Off to compute to overtime ?");
+        Assert.assertFalse(configurationPage.isTimeOffRuleToggleTurnOn("Does this time off reason track Accruals ?"), "Failed to turn off--Does this time off reason track Accruals ?");
+        Assert.assertFalse(configurationPage.isTimeOffRuleToggleTurnOn("Enforce Yearly Limits"), "Failed to turn off--Enforce Yearly Limits");
+
+        //verify cancel button is clickable
+        configurationPage.saveTimeOffConfiguration(false);
+        Reporter.log("Succeeded in validating cancel button in time-off rules configuration page is clickable!");
+        absentManagePage.saveTemplateAs("Save as draft");
+        //clear test data
+        absentManagePage.search(tempName);
+        absentManagePage.clickInDetails();
+        absentManagePage.deleteTheTemplate();
+        absentManagePage.okToActionInModal(true);
+    }
+
+
+    public ArrayList<String> templateColumns() {
+        ArrayList<String> col = new ArrayList<String>();
+        col.add("");
+        col.add("Template");
+        col.add("Status");
+        col.add("Creator");
+        col.add("Effective Date");
+        col.add("Last Modified Date");
+        return col;
+    }
+
+    public ArrayList<String> accrualStarted() {
+        ArrayList<String> accrualStarted = new ArrayList<String>();
+        accrualStarted.add("Hire Date");
+        accrualStarted.add("Seniority Date");
+        accrualStarted.add("Specified Date");
+        return accrualStarted;
+    }
+
+    public ArrayList<String> accrualEnd() {
+        ArrayList<String> accrualEnd = new ArrayList<String>();
+        accrualEnd.add("");
+        accrualEnd.add("Hire Date");
+        accrualEnd.add("Seniority Date");
+        accrualEnd.add("Specified Date");
+        return accrualEnd;
+    }
+
+    public ArrayList<String> distributionMethod() {
+        ArrayList<String> distribution = new ArrayList<String>();
+        distribution.add("Monthly");
+        distribution.add("Weekly");
+        distribution.add("Worked Hours");
+        distribution.add("Lump Sum");
+        return distribution;
+    }
+
+    public ArrayList<String> requestRules() {
+        ArrayList<String> requestRules = new ArrayList<String>();
+        requestRules.add("Employee can request ?");
+        requestRules.add("Employee can request partial day ?");
+        requestRules.add("Manager can submit in timesheet ?");
+        requestRules.add("Weekly limits(hours)");
+        requestRules.add("Days request must be made in advance");
+        requestRules.add("Configure all day time off default");
+        requestRules.add("Days an employee can request at one time");
+        requestRules.add("Auto reject time off which exceed accrued hours ?");
+        requestRules.add("Allow Paid Time Off to compute to overtime ?");
+        requestRules.add("Does this time off reason track Accruals ?");
+        requestRules.add("Max hours in advance of what you earn");
+        requestRules.add("Enforce Yearly Limits");
+        requestRules.add("Probation Period");
+        requestRules.add("Annual Use Limit");
+        return requestRules;
+    }
+
+    public ArrayList<String> probationUnit() {
+        ArrayList<String> proUnit = new ArrayList<String>();
+        proUnit.add("Days");
+        proUnit.add("Months");
+        return proUnit;
+    }
+
+}

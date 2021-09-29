@@ -880,6 +880,17 @@ public class BasePage {
             // Do nothing
         }
     }
+
+    public Boolean isElementDisplayed(WebElement element) {
+        try {
+            return element.isDisplayed();
+        } catch (Exception NoSuchElementException) {
+            return false;
+        }
+    }
+    public void removeHidden(WebElement element){
+        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].style.display='block';", element);
+    }
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){
