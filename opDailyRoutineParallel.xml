@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite  verbose ="10" name="Legion Test" parallel="classes" thread-count="5">
+<suite verbose="10" name="Legion Test" parallel="classes" thread-count="5">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Automation - Daily Routine"/>
     <test name="Legion Test">
         <classes>
-            <class name = "com.legion.tests.core.OpsPortal.LocationsTest"/>
-            <class name = "com.legion.tests.core.OpsPortal.LocationsGroupTestInOP"/>
-            <class name = "com.legion.tests.core.OpsPortal.JobTest"/>
-            <class name = "com.legion.tests.core.OpsPortal.NewNavigationFlowTest"/>
-            <class name = "com.legion.tests.core.OpsPortal.ConfigurationTest"/>
-            <class name = "com.legion.tests.core.OpsPortal.UserManagementTest"/>
-            <class name = "com.legion.tests.core.OpsPortal.LaborModelTest"/>
+            <class name="com.legion.tests.core.OpsPortal.LocationsTest"/>
+            <class name="com.legion.tests.core.OpsPortal.LocationsGroupTestInOP"/>
+            <class name="com.legion.tests.core.OpsPortal.JobTest"/>
+            <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest"/>
+            <class name="com.legion.tests.core.OpsPortal.ConfigurationTest"/>
+            <class name="com.legion.tests.core.OpsPortal.UserManagementTest"/>
+            <class name="com.legion.tests.core.OpsPortal.LaborModelTest"/>
+            <class name="com.legion.tests.core.opEmployeeManagement.AbsentManagementTemplateTest"/>
         </classes>
     </test>
 </suite>
