@@ -198,6 +198,9 @@ public class DragAndDropTest extends TestBase {
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
             SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
             controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
+            controlsNewUIPage.clickOnGlobalLocationButton();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.setWFS("Yes");
 
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
