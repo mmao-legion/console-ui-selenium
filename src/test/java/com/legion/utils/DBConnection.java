@@ -17,9 +17,9 @@ public class DBConnection {
                 System.out.println("------Connect DB successfully!------");
             Statement statement = con.createStatement();
             int result = statement.executeUpdate(sql);
-            if(result>0){
+            if (result > 0) {
                 System.out.println("-------Update DB successfully----------" + "\t");
-            }else {
+            } else {
                 System.out.println("-------Update operation failed----------" + "\t");
             }
 
@@ -78,31 +78,5 @@ public class DBConnection {
         }
         return value;
     }
-
-    public static void main(String[] args) {
-        //"select username from legiondb.UserRevEntity where id='776'";
-
-        String sql1 = "INSERT INTO legiondb.UserRevEntity VALUES ('1596','1482278609925','SYSTEM_newCreated')";
-        updateDB(sql1);
-        queryDB("legiondb.UserRevEntity", "username", "id='1596'");
-        String sql2 = "Update legiondb.UserRevEntity set username = 'SYSTEM_USER_update1596' where id = 1596";
-        updateDB(sql2);
-        queryDB("legiondb.UserRevEntity", "username", "id='1596'");
-        String sql3 = "Delete from legiondb.UserRevEntity where id = 1596";
-        updateDB(sql3);
-
-
-        //SQL
-        //INSERT INTO table_name (column1, column2, column3, ...) VALUES (value1, value2, value3, ...);
-        //INSERT INTO table_name VALUES (value1, value2, value3, ...);
-        //update a filed value
-        //UPDATE Customers SET ContactName = 'Alfred Schmidt', City= 'Frankfurt' WHERE CustomerID = 1;
-        //String sql3 = "Update legiondb.UserRevEntity set username = 'SYSTEM_USER_update' where id = 776";
-        //Delete from DB
-        //Delete from legiondb.UserRevEntity where id = 776
-        /*queryDB("legiondb.UserRevEntity", "username", "id='1596'");*/
-
-    }
-
 
 }
