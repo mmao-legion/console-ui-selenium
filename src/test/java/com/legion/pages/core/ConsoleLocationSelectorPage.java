@@ -206,9 +206,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
 
     //added by estelle to search location if the location is not in recent list
-    @FindBy(css = "input[placeholder=\"Search Location\"]")
-    private WebElement locationSearchInput;
     @FindBy(css = "input[placeholder=\"Search\"]")
+    private WebElement locationSearchInput;
+    @FindBy(css = "input[placeholder=\"Search Location\"]")
     private WebElement upperFieldSearchInput;
     private void searchLocationAndSelect(String locationName) throws Exception {
         if (isElementLoaded(locationSearchInput,5)) {
