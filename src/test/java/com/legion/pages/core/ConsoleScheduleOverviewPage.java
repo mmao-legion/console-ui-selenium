@@ -434,7 +434,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			}else{
 				SimpleUtils.fail("Calendar on Schedule Overview Not Loaded Successfully!", false);
 			}
-			if(isElementLoaded(scheduleTable, 15)){
+			if(isElementLoaded(scheduleTable, 60)){
 				flag = true;
 				SimpleUtils.pass("Schedule Table on Schedule Overview Loaded Successfully!");
 			}else{

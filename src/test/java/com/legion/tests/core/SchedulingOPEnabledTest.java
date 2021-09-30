@@ -476,8 +476,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the Schedule functionality > Schedule smartcard")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyScheduleFunctionalityScheduleSmartCard(String username, String password, String browser, String location)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleFunctionalityScheduleSmartCardAsStoreManager(String username, String password, String browser, String location)
             throws Exception {
         ArrayList<LinkedHashMap<String, Float>> scheduleOverviewAllWeekHours = new ArrayList<LinkedHashMap<String, Float>>();
         HashMap<String, Float> scheduleSmartCardHoursWages = new HashMap<>();
@@ -633,8 +633,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the Schedule functionality > Job Title Filter Functionality > Combination")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView(String username, String password, String browser, String location)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsStoreManager(String username, String password, String browser, String location)
             throws Exception {
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -832,8 +832,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the Schedule functionality > Forecast")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyScheduleFunctionalityForecast(String username, String password, String browser, String location)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleFunctionalityForecastAsStoreManager(String username, String password, String browser, String location)
             throws Exception {
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
         scheduleOverviewPage.loadScheduleOverview();
@@ -856,8 +856,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the Schedule functionality > Labor Forecast")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyScheduleLaborForeCastFunctionality(String username, String password, String browser, String location)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleLaborForeCastFunctionalityAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
         scheduleOverviewPage.loadScheduleOverview();
