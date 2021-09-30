@@ -344,7 +344,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
 
 
     // Added by Nora
-    @FindBy(css = ".gridster-item")
+    @FindBy(xpath = "//*[contains(@class, \"gridster-item\")]")
     private List<WebElement> widgets;
     @FindBy(css = "div.background-current-week-legend-table")
     private WebElement currentWeekOnSchedules;
@@ -494,7 +494,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                     if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)) ||
                             widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)))) {
                         try {
-                            WebElement link = getDriver().findElements(By.xpath("//*[contains(@class, \"gridster-item\")]")).get(i).findElement(By.xpath("//*[contains(@class,\"dms-action-link\")]"));
+                            WebElement link = widgets.get(i).findElement(By.cssSelector(".dms-action-link"));
                             if (link != null && linkName.toLowerCase().equals(link.getText().toLowerCase().trim())) {
                                 clickTheElement(link);
                                 SimpleUtils.pass("Click on: \"" + linkName + "\" on Widget: \"" + widgetName + "\" Successfully!");
