@@ -1413,13 +1413,13 @@ public class DMViewTest extends TestBase {
             HashMap<String, Integer> valuesFromLocationsWithViolationCard = compliancePage.getValueOnLocationsWithViolationCardAndVerifyInfo("Location");
             int index = schedulePage.getIndexOfColInDMViewTable("Extra Hours");
             List<Float> extraHours = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
-            index = schedulePage.getIndexOfColInDMViewTable("Schedule Published On Time");
+            index = schedulePage.getIndexOfColInDMViewTable("Late Schedule");
             List<String> publishStatus = schedulePage.getListByColInTimesheetDMView(index);
             SimpleUtils.assertOnFail("The extra hour count should consistent with publish status count! ", extraHours.size() == publishStatus.size(), false);
             int totalLocationWithViolation = 0;
 
             for (int i = 0; i < extraHours.size(); i++){
-                if (extraHours.get(i) >0 || publishStatus.get(i).equals("No")){
+                if (extraHours.get(i) >0 || publishStatus.get(i).equals("Yes")){
                     totalLocationWithViolation ++;
                 }
             }
@@ -1433,7 +1433,7 @@ public class DMViewTest extends TestBase {
     }
 
     @Owner(owner = "Haya")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify TOP x VIOLATIONS (HRS) on Compliance in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTopViolationsCardInComplianceDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {

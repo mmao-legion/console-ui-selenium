@@ -487,12 +487,12 @@ public class SchedulingMinorTest extends TestBase {
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
         teamPage.searchAndSelectTeamMemberByName(firstNameOfMinor14);
         Map hrProfileInfo = profileNewUIPage.getHRProfileInfo();
-        SimpleUtils.assertOnFail("Minors info is correct!",String.valueOf(hrProfileInfo.get("MINOR")).contains("14-15"), false);
+        SimpleUtils.assertOnFail("Minors info is correct!",String.valueOf(hrProfileInfo.get("MINOR")).contains("Yes"), false);
         teamPage.goToTeam();
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
         teamPage.searchAndSelectTeamMemberByName(firstNameOfMinor16);
         hrProfileInfo = profileNewUIPage.getHRProfileInfo();
-        SimpleUtils.assertOnFail("Minors info is correct!",String.valueOf(hrProfileInfo.get("MINOR")).contains("16-17"), false);
+        SimpleUtils.assertOnFail("Minors info is correct!",String.valueOf(hrProfileInfo.get("MINOR")).contains("Yes"), false);
     }
 
     @Automated(automated = "Automated")
