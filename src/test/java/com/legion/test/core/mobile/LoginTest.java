@@ -93,6 +93,7 @@ public class LoginTest extends TestBase{
        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 	   ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+	   NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
        List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
@@ -106,7 +107,7 @@ public class LoginTest extends TestBase{
 				scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
 				if(createSchedulePage.isGenerateButtonLoaded())
 				{
-					SimpleUtils.pass("Guidance week found : '"+ schedulePage.getActiveWeekText() +"'");
+					SimpleUtils.pass("Guidance week found : '"+ scheduleCommonPage.getActiveWeekText() +"'");
 					createSchedulePage.generateOrUpdateAndGenerateSchedule();
 					schedulePage.clickOnSchedulePublishButton();
 					break;
@@ -122,17 +123,17 @@ public class LoginTest extends TestBase{
 		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
 		SimpleUtils.assertOnFail("User can add new shift for past week", (scheduleMainPage.isAddNewDayViewShiftButtonLoaded()) , true);
 		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
+		newShiftPage.customizeNewShiftPage();
 		schedulePage.compareCustomizeStartDay(textStartDay);
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.verifySelectTeamMembersOption();
-		schedulePage.clickOnOfferOrAssignBtn();
+		newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+		newShiftPage.clickOnCreateOrNextBtn();
+		newShiftPage.customizeNewShiftPage();
+		newShiftPage.verifySelectTeamMembersOption();
+		newShiftPage.clickOnOfferOrAssignBtn();
 		int updatedGutterCount = schedulePage.getgutterSize();
 		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
 		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);

@@ -23,4 +23,12 @@ public interface ScheduleCommonPage {
     public void navigateDayViewToPast(String PreviousWeekView, int dayCount);
     public void clickImmediateNextToCurrentActiveWeekInDayPicker();
     public void clickImmediatePastToCurrentActiveWeekInDayPicker();
+    public String getActiveAndNextDay() throws Exception;
+    public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception;
+    public void currentWeekIsGettingOpenByDefault(String location) throws Exception;
+    public void goToScheduleNewUI() throws Exception;
+    public void dayWeekPickerSectionNavigatingCorrectly() throws Exception;
+    public int getMinutesFromTime(String time);
+    public int getTheIndexOfCurrentDayInDayView() throws Exception;
+    public String getActiveWeekText() throws Exception;
 }

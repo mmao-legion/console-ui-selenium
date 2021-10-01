@@ -186,4 +186,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public ToggleSummaryPage createToggleSummaryPage() { return new ConsoleToggleSummaryPage(); }
+
+	@Override
+	public NewShiftPage createNewShiftPage() { return new ConsoleNewShiftPage(); }
 }

@@ -300,7 +300,7 @@ public class JobTest extends TestBase {
 //            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //
 //            if (createSchedulePage.isWeekGenerated()){
-//                schedulePage.unGenerateActiveScheduleScheduleWeek();
+//                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 //            }else {
 //                SimpleUtils.pass("Current week schedule is not  Generated!");
 //                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());

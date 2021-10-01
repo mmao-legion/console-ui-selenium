@@ -291,14 +291,14 @@ public class RegressionTest extends TestBase{
 				isWeekFoundToUnGenerate = true;
 				basePase.click(overviewWeek);
 				boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-				SimpleUtils.assertOnFail("Schedule with status: '" + weekStatus + "' not Generated for week: '"+ schedulePage.getActiveWeekText() +"'"
+				SimpleUtils.assertOnFail("Schedule with status: '" + weekStatus + "' not Generated for week: '"+ scheduleCommonPage.getActiveWeekText() +"'"
 						, isActiveWeekGenerated, false);
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 				isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 				if(! isActiveWeekGenerated)
-					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' UnGenerated Successfully.");
+					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ scheduleCommonPage.getActiveWeekText() +"' UnGenerated Successfully.");
 				else
-					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not UnGenerated.", false);
+					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ scheduleCommonPage.getActiveWeekText() +"' not UnGenerated.", false);
 				break;
 			}
 		}
@@ -319,6 +319,7 @@ public class RegressionTest extends TestBase{
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -343,32 +344,32 @@ public class RegressionTest extends TestBase{
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if(!isActiveWeekGenerated)
 				createSchedulePage.generateOrUpdateAndGenerateSchedule();
-			boolean isBudgetSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(budgetSmartCardText);
-			boolean isScheduleSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(scheduleSmartCardText);
-			boolean isHolidaySmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(holidaySmartCardText);
-			boolean isComplianceSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(complianceSmartCardText);
-			boolean isUnassignedSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(unassignedSmartCardText);
-			boolean isWeatherSmartCardLoaded = schedulePage.isSmartCardAvailableByLabel(weatherSmartCardText);
+			boolean isBudgetSmartCardLoaded = smartCardPage.isSmartCardAvailableByLabel(budgetSmartCardText);
+			boolean isScheduleSmartCardLoaded = smartCardPage.isSmartCardAvailableByLabel(scheduleSmartCardText);
+			boolean isHolidaySmartCardLoaded = smartCardPage.isSmartCardAvailableByLabel(holidaySmartCardText);
+			boolean isComplianceSmartCardLoaded = smartCardPage.isSmartCardAvailableByLabel(complianceSmartCardText);
+			boolean isUnassignedSmartCardLoaded = smartCardPage.isSmartCardAvailableByLabel(unassignedSmartCardText);
+			boolean isWeatherSmartCardLoaded = smartCardPage.isSmartCardAvailableByLabel(weatherSmartCardText);
 
 			if(isBudgetSmartCardLoaded)
-				SimpleUtils.report("Schedule Page: Budget Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+				SimpleUtils.report("Schedule Page: Budget Smartcard loaded successfully for the week - '"+ scheduleCommonPage.getActiveWeekText() +"'.");
 
 			if(isScheduleSmartCardLoaded)
-				SimpleUtils.report("Schedule Page: Scheduled Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+				SimpleUtils.report("Schedule Page: Scheduled Smartcard loaded successfully for the week - '"+ scheduleCommonPage.getActiveWeekText() +"'.");
 
 			if(isHolidaySmartCardLoaded)
-				SimpleUtils.report("Schedule Page: Holiday Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+				SimpleUtils.report("Schedule Page: Holiday Smartcard loaded successfully for the week - '"+ scheduleCommonPage.getActiveWeekText() +"'.");
 
 			if(isComplianceSmartCardLoaded && schedulePage.isComlianceReviewRequiredForActiveWeek())
-				SimpleUtils.report("Schedule Page: Compliance Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+				SimpleUtils.report("Schedule Page: Compliance Smartcard loaded successfully for the week - '"+ scheduleCommonPage.getActiveWeekText() +"'.");
 			else if(! isComplianceSmartCardLoaded && schedulePage.isComlianceReviewRequiredForActiveWeek())
 				SimpleUtils.fail("Schedule Page: Compliance Smartcard not loaded even compliance review required for Active week ('"
-						+ schedulePage.getActiveWeekText() +"').", true);
+						+ scheduleCommonPage.getActiveWeekText() +"').", true);
 			if(isUnassignedSmartCardLoaded)
-				SimpleUtils.report("Schedule Page: Unassigned Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+				SimpleUtils.report("Schedule Page: Unassigned Smartcard loaded successfully for the week - '"+ scheduleCommonPage.getActiveWeekText() +"'.");
 
 			if(isWeatherSmartCardLoaded)
-				SimpleUtils.report("Schedule Page: Weather Smartcard loaded successfully for the week - '"+ schedulePage.getActiveWeekText() +"'.");
+				SimpleUtils.report("Schedule Page: Weather Smartcard loaded successfully for the week - '"+ scheduleCommonPage.getActiveWeekText() +"'.");
 		}
 	}
 
@@ -397,35 +398,35 @@ public class RegressionTest extends TestBase{
 
 			if(createSchedulePage.isGenerateButtonLoaded() || createSchedulePage.isGenerateButtonLoadedForManagerView())
 			{
-				SimpleUtils.pass("Guidance/Draft week found : '"+ schedulePage.getActiveWeekText() +"'");
+				SimpleUtils.pass("Guidance/Draft week found : '"+ scheduleCommonPage.getActiveWeekText() +"'");
 
-				SimpleUtils.assertOnFail("Schedule Page: 'Edit' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
+				SimpleUtils.assertOnFail("Schedule Page: 'Edit' Button Displaying on Guidance Week :'"+scheduleCommonPage.getActiveWeekText() +"'",
 						(! schedulePage.isActionButtonLoaded("Edit")) , false);
 
-					SimpleUtils.assertOnFail("Schedule Page: 'Analyze' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
+					SimpleUtils.assertOnFail("Schedule Page: 'Analyze' Button Displaying on Guidance Week :'"+scheduleCommonPage.getActiveWeekText() +"'",
 						(! schedulePage.isActionButtonLoaded("Analyze")) , false);
 
-				SimpleUtils.assertOnFail("Schedule Page: 'Republish' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
+				SimpleUtils.assertOnFail("Schedule Page: 'Republish' Button Displaying on Guidance Week :'"+scheduleCommonPage.getActiveWeekText() +"'",
 						(! schedulePage.isActionButtonLoaded("Republish")) , false);
 
-				SimpleUtils.assertOnFail("Schedule Page: 'Refresh' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
+				SimpleUtils.assertOnFail("Schedule Page: 'Refresh' Button Displaying on Guidance Week :'"+scheduleCommonPage.getActiveWeekText() +"'",
 						(! schedulePage.isActionButtonLoaded("Refresh")) , false);
 
-				SimpleUtils.assertOnFail("Schedule Page: 'Publish' Button Displaying on Guidance Week :'"+schedulePage.getActiveWeekText() +"'",
+				SimpleUtils.assertOnFail("Schedule Page: 'Publish' Button Displaying on Guidance Week :'"+scheduleCommonPage.getActiveWeekText() +"'",
 						(! schedulePage.isActionButtonLoaded("Publish")) , false);
 
 				createSchedulePage.generateOrUpdateAndGenerateSchedule();
 
-				SimpleUtils.assertOnFail("Schedule Page: 'Generate' Button Displaying on after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
+				SimpleUtils.assertOnFail("Schedule Page: 'Generate' Button Displaying on after Generating Schedule on :'"+scheduleCommonPage.getActiveWeekText() +"'",
 						(! createSchedulePage.isGenerateButtonLoaded()) , false);
 
 //				ArrayList<Float> versionHistory = schedulePage.getAllVesionLabels();
 //				float scheduleInitialVersion = (float) 0.0;
 //
-//				SimpleUtils.assertOnFail("Schedule Page: Version History Displaying more then one versions after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
+//				SimpleUtils.assertOnFail("Schedule Page: Version History Displaying more then one versions after Generating Schedule on :'"+scheduleCommonPage.getActiveWeekText() +"'",
 //						(1 == versionHistory.size()) , false);
 //
-//				SimpleUtils.assertOnFail("Schedule Page: Version History not starting with '0.0' after Generating Schedule on :'"+schedulePage.getActiveWeekText() +"'",
+//				SimpleUtils.assertOnFail("Schedule Page: Version History not starting with '0.0' after Generating Schedule on :'"+scheduleCommonPage.getActiveWeekText() +"'",
 //						(versionHistory.get(0).equals(scheduleInitialVersion)) , false);
 
 				SimpleUtils.pass("Schedule Generation functionality working fine.");
@@ -583,6 +584,7 @@ public class RegressionTest extends TestBase{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -605,17 +607,17 @@ public class RegressionTest extends TestBase{
 		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
 		SimpleUtils.assertOnFail("User can add new shift for past week", (scheduleMainPage.isAddNewDayViewShiftButtonLoaded()) , true);
 		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
+		newShiftPage.customizeNewShiftPage();
 		schedulePage.compareCustomizeStartDay(textStartDay);
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.verifySelectTeamMembersOption();
-		schedulePage.clickOnOfferOrAssignBtn();
+		newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+		newShiftPage.clickOnCreateOrNextBtn();
+		newShiftPage.customizeNewShiftPage();
+		newShiftPage.verifySelectTeamMembersOption();
+		newShiftPage.clickOnOfferOrAssignBtn();
 		int updatedGutterCount = schedulePage.getgutterSize();
 		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
 		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
@@ -667,17 +669,17 @@ public class RegressionTest extends TestBase{
 				createSchedulePage.generateOrUpdateAndGenerateSchedule();
 				boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 				if(isActiveWeekGenerated)
-					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' Generated Successfully.");
+					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ scheduleCommonPage.getActiveWeekText() +"' Generated Successfully.");
 				else
-					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not Generated.", false);
+					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ scheduleCommonPage.getActiveWeekText() +"' not Generated.", false);
 				scheduleCommonPage.clickOnDayView();
 				scheduleCommonPage.navigateToNextDayIfStoreClosedForActiveDay();
 				int shiftIntervalCountInAnHour = schedulePage.getScheduleShiftIntervalCountInAnHour();
 				if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue().split(" ")[0]))
-					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
+					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ scheduleCommonPage.getActiveWeekText()
 							+"' Shift Interval Time matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.");
 				else
-					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
+					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ scheduleCommonPage.getActiveWeekText()
 							+"' Shift Interval Time not matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.", false);
 				break;
 			}
@@ -755,13 +757,14 @@ public class RegressionTest extends TestBase{
 	public void verifyFiltersWhileNavigatingToGuidanceAndScheduleTabAsStoreManager(String browser, String username, String password, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 		scheduleCommonPage.clickOnWeekView();
-		schedulePage.selectWorkRoleFilterByText("Manager", true);
+		scheduleMainPage.selectWorkRoleFilterByText("Manager", true);
 		dashboardPage.navigateToDashboard();
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
@@ -859,6 +862,7 @@ public class RegressionTest extends TestBase{
 		String bayAreaLocation = "Bay Area";
 		String austinDowntownLocation = "AUSTIN DOWNTOWN";
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		if (locationSelectorPage.isLocationSelected(bayAreaLocation))
@@ -873,13 +877,13 @@ public class RegressionTest extends TestBase{
 		//Validate Weather Smart card on Week View
 		scheduleCommonPage.clickOnWeekView();
 		Thread.sleep(5000);
-		String activeWeekText = schedulePage.getActiveWeekText();
+		String activeWeekText = scheduleCommonPage.getActiveWeekText();
 
-		if (schedulePage.isSmartCardAvailableByLabel(WeatherCardText)) {
+		if (smartCardPage.isSmartCardAvailableByLabel(WeatherCardText)) {
 			SimpleUtils.pass("Weather Forecart Smart Card appeared for week view duration: '" + activeWeekText + "'");
 			String[] splitActiveWeekText = activeWeekText.split(" ");
-			String smartCardTextByLabel = schedulePage.getsmartCardTextByLabel(WeatherCardText);
-			String weatherTemperature = schedulePage.getWeatherTemperature();
+			String smartCardTextByLabel = smartCardPage.getsmartCardTextByLabel(WeatherCardText);
+			String weatherTemperature = smartCardPage.getWeatherTemperature();
 
 			SimpleUtils.assertOnFail("Weather Forecart Smart Card not contain starting day('" + splitActiveWeekText[0] + "') of active week: '" + activeWeekText + "'",
 					smartCardTextByLabel.toLowerCase().contains(splitActiveWeekText[0].toLowerCase()), true);
@@ -901,14 +905,14 @@ public class RegressionTest extends TestBase{
 			if (index != 0)
 				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
 
-			String activeDayText = schedulePage.getActiveWeekText();
-			if (schedulePage.isSmartCardAvailableByLabel(WeatherCardText)) {
+			String activeDayText = scheduleCommonPage.getActiveWeekText();
+			if (smartCardPage.isSmartCardAvailableByLabel(WeatherCardText)) {
 				SimpleUtils.pass("Weather Forecart Smart Card appeared for week view duration: '" + activeDayText + "'");
 				String[] splitActiveWeekText = activeDayText.split(" ");
-				String smartCardTextByLabel = schedulePage.getsmartCardTextByLabel(WeatherCardText);
+				String smartCardTextByLabel = smartCardPage.getsmartCardTextByLabel(WeatherCardText);
 				SimpleUtils.assertOnFail("Weather Forecart Smart Card not contain starting day('" + splitActiveWeekText[1] + "') of active day: '" + activeDayText + "'",
 						smartCardTextByLabel.toLowerCase().contains(splitActiveWeekText[1].toLowerCase()), true);
-				String weatherTemperature = schedulePage.getWeatherTemperature();
+				String weatherTemperature = smartCardPage.getWeatherTemperature();
 				if (weatherTemperature != "")
 					SimpleUtils.pass("Weather Forecart Smart Card contains Temperature value: '" + weatherTemperature + "' for the duration: '" +
 							activeWeekText + "'");
@@ -950,7 +954,7 @@ public class RegressionTest extends TestBase{
 				basePase.click(overviewWeek);
 				createSchedulePage.publishActiveSchedule();
 				basePase.waitForSeconds(2);
-				SimpleUtils.assertOnFail("Schedule not published for week: '"+ schedulePage.getActiveWeekText() +"'"
+				SimpleUtils.assertOnFail("Schedule not published for week: '"+ scheduleCommonPage.getActiveWeekText() +"'"
 						,createSchedulePage.isWeekPublished(), false);
 				break;
 			}
@@ -959,11 +963,11 @@ public class RegressionTest extends TestBase{
 				isWeekFoundToPublish = true;
 				basePase.click(overviewWeek);
 				createSchedulePage.generateOrUpdateAndGenerateSchedule();
-				SimpleUtils.assertOnFail("Schedule not Generated for week: '"+ schedulePage.getActiveWeekText() +"'"
+				SimpleUtils.assertOnFail("Schedule not Generated for week: '"+ scheduleCommonPage.getActiveWeekText() +"'"
 						, createSchedulePage.isWeekGenerated(), false);
 				createSchedulePage.publishActiveSchedule();
 				basePase.waitForSeconds(2);
-				SimpleUtils.assertOnFail("Schedule not published for week: '"+ schedulePage.getActiveWeekText() +"'"
+				SimpleUtils.assertOnFail("Schedule not published for week: '"+ scheduleCommonPage.getActiveWeekText() +"'"
 						, createSchedulePage.isWeekPublished(), false);
 				break;
 			}
@@ -1012,6 +1016,7 @@ public class RegressionTest extends TestBase{
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1020,15 +1025,15 @@ public class RegressionTest extends TestBase{
 			createSchedulePage.generateSchedule();
 
 		scheduleCommonPage.clickOnDayView();
-		System.out.println("Active Duration : "+schedulePage.getActiveWeekText());
-		schedulePage.toggleSummaryView();
-		if(schedulePage.isSummaryViewLoaded())
+		System.out.println("Active Duration : "+scheduleCommonPage.getActiveWeekText());
+		toggleSummaryPage.toggleSummaryView();
+		if(toggleSummaryPage.isSummaryViewLoaded())
 		{
-			String day = schedulePage.getActiveWeekText().split(" ")[0];
+			String day = scheduleCommonPage.getActiveWeekText().split(" ")[0];
 			String startTime = "10:00am";
 			String endTime = "6:00pm";
 			schedulePage.updateScheduleOperatingHours(day, startTime, endTime);
-			schedulePage.toggleSummaryView();
+			toggleSummaryPage.toggleSummaryView();
 			boolean isOperatingHoursUpdated = schedulePage.isScheduleOperatingHoursUpdated(startTime, endTime);
 			if(isOperatingHoursUpdated)
 				SimpleUtils.pass("Updated Operating Hours Reflecting on Schedule page.");
@@ -1036,7 +1041,7 @@ public class RegressionTest extends TestBase{
 				SimpleUtils.fail("Updated Operating Hours not Reflecting on Schedule page.", false);
 		}
 		else
-			SimpleUtils.fail("Unable to load Summary view on the week '"+ schedulePage.getActiveWeekText() +"'.", false);
+			SimpleUtils.fail("Unable to load Summary view on the week '"+ scheduleCommonPage.getActiveWeekText() +"'.", false);
 	}
 
 	@MobilePlatform(platform = "Android")
@@ -1065,8 +1070,8 @@ public class RegressionTest extends TestBase{
 //		schedulePage.changeWorkerRole();
 //		schedulePage.assignTeamMember();
 //		//		schedulePage.assignTeamMemberFlyout();
-//		schedulePage.verifySelectTeamMembersOption();
-//		schedulePage.clickOnOfferOrAssignBtn();
+//		newShiftPage.verifySelectTeamMembersOption();
+//		newShiftPage.clickOnOfferOrAssignBtn();
 		schedulePage.convertToOpenShift();
 
 	}
@@ -1083,6 +1088,7 @@ public class RegressionTest extends TestBase{
 //	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1097,15 +1103,15 @@ public class RegressionTest extends TestBase{
 		SimpleUtils.assertOnFail("User can add new shift for past week",
 				(scheduleMainPage.isAddNewDayViewShiftButtonLoaded()), true);
 		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.selectTeamMembersOptionForOverlappingSchedule();
-		schedulePage.clickOnOfferOrAssignBtn();
+		newShiftPage.customizeNewShiftPage();
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		newShiftPage.clickOnCreateOrNextBtn();
+		newShiftPage.customizeNewShiftPage();
+		newShiftPage.selectTeamMembersOptionForOverlappingSchedule();
+		newShiftPage.clickOnOfferOrAssignBtn();
 		scheduleMainPage.clickSaveBtn();
 		schedulePage.verifyScheduleStatusAsOpen();
 		schedulePage.verifyScheduleStatusAsTeamMember();
@@ -1126,19 +1132,21 @@ public class RegressionTest extends TestBase{
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
 		scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		scheduleCommonPage.clickOnDayView();
-		String activeDay = schedulePage.getActiveAndNextDay();
-		schedulePage.toggleSummaryView();
-		if (schedulePage.isSummaryViewLoaded()) {
-			day = schedulePage.getActiveWeekText().split(" ")[0];
+		String activeDay = scheduleCommonPage.getActiveAndNextDay();
+		toggleSummaryPage.toggleSummaryView();
+		if (toggleSummaryPage.isSummaryViewLoaded()) {
+			day = scheduleCommonPage.getActiveWeekText().split(" ")[0];
 		}else{
-			SimpleUtils.fail("Unable to load Summary view on the week '" + schedulePage.getActiveWeekText() + "'.", false);
+			SimpleUtils.fail("Unable to load Summary view on the week '" + scheduleCommonPage.getActiveWeekText() + "'.", false);
 		}
-		HashMap<String, String> activeDayAndOperatingHrs = schedulePage.getOperatingHrsValue(day);
+		HashMap<String, String> activeDayAndOperatingHrs = toggleSummaryPage.getOperatingHrsValue(day);
 		String shiftStartTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[1].replaceAll("[^0-9]","");
 		String shiftEndTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[2].replaceAll("[^0-9]","");
 		scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
@@ -1146,17 +1154,17 @@ public class RegressionTest extends TestBase{
 		int previousGutterCount = schedulePage.getgutterSize();
 		scheduleNavigationTest(previousGutterCount);
 		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtCertainPoint(shiftEndTime, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_START_TIME_CLOPENING"), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.customizeNewShiftPage();
+		newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_START_TIME_CLOPENING"), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 		validateAssignTeamMemberPageAndSaveSchedule();
 		scheduleCommonPage.clickOnNextDaySchedule(activeDay);
 		int previousGutterCountNextDay = schedulePage.getgutterSize();
 		scheduleNavigationTest(previousGutterCountNextDay);
 		schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_END_TIME_CLOPENING"), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtCertainPoint(shiftStartTime, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.customizeNewShiftPage();
+		newShiftPage.moveSliderAtCertainPoint(propertyCustomizeMap.get("INCREASE_END_TIME_CLOPENING"), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 		validateAssignTeamMemberPageAndSaveSchedule();
 		schedulePage.verifyClopeningHrs();
 		scheduleCommonPage.clickOnPreviousDaySchedule(activeDay);
@@ -1266,6 +1274,7 @@ public class RegressionTest extends TestBase{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 		navigateToControlsSchedulingPolicies(controlsNewUIPage);
 
 		// Enable Budget Smartcard
@@ -1279,7 +1288,7 @@ public class RegressionTest extends TestBase{
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
 
 		String budgetSmartcardText = "WEEKLY BUDGET";
-		boolean isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
+		boolean isBudgetSmartcardAppeared = smartCardPage.isSmartCardAvailableByLabel(budgetSmartcardText);
 		SimpleUtils.assertOnFail("Budget Smartcard not loaded on 'Schedule' tab even Scheduling policies Enabled Budget Smartcard.",
 				isBudgetSmartcardAppeared , false);
 		if(isBudgetSmartcardAppeared)
@@ -1293,7 +1302,7 @@ public class RegressionTest extends TestBase{
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
-		isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
+		isBudgetSmartcardAppeared = smartCardPage.isSmartCardAvailableByLabel(budgetSmartcardText);
 		SimpleUtils.assertOnFail("Budget Smartcard loaded on 'Schedule' tab even Scheduling policies Disabled Budget Smartcard.",
 				! isBudgetSmartcardAppeared , false);
 		if(! isBudgetSmartcardAppeared)
@@ -1395,16 +1404,16 @@ public class RegressionTest extends TestBase{
 				createSchedulePage.generateOrUpdateAndGenerateSchedule();
 				boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 				if(isActiveWeekGenerated)
-					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' Generated Successfully.");
+					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ scheduleCommonPage.getActiveWeekText() +"' Generated Successfully.");
 				else
-					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText() +"' not Generated.", false);
+					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ scheduleCommonPage.getActiveWeekText() +"' not Generated.", false);
 				scheduleCommonPage.clickOnDayView();
 				int shiftIntervalCountInAnHour = schedulePage.getScheduleShiftIntervalCountInAnHour();
 				if((minutesInAnHours /shiftIntervalCountInAnHour) == Integer.valueOf(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue().split(" ")[0]))
-					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
+					SimpleUtils.pass("Schedule Page: Schedule week for duration:'"+ scheduleCommonPage.getActiveWeekText()
 							+"' Shift Interval Time matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.");
 				else
-					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ schedulePage.getActiveWeekText()
+					SimpleUtils.fail("Schedule Page: Schedule week for duration:'"+ scheduleCommonPage.getActiveWeekText()
 							+"' Shift Interval Time not matched as '"+ ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue() +"'.", false);
 				break;
 			}
@@ -1438,7 +1447,7 @@ public class RegressionTest extends TestBase{
 //		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
 //
 //		String budgetSmartcardText = "WEEKLY BUDGET";
-//		boolean isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
+//		boolean isBudgetSmartcardAppeared = smartCardPage.isSmartCardAvailableByLabel(budgetSmartcardText);
 //		SimpleUtils.assertOnFail("Budget Smartcard not loaded on 'Schedule' tab even Scheduling policies Enabled Budget Smartcard.",
 //				isBudgetSmartcardAppeared , false);
 //		if(isBudgetSmartcardAppeared)
@@ -1452,7 +1461,7 @@ public class RegressionTest extends TestBase{
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , true);
-//		isBudgetSmartcardAppeared = schedulePage.isSmartCardAvailableByLabel(budgetSmartcardText);
+//		isBudgetSmartcardAppeared = smartCardPage.isSmartCardAvailableByLabel(budgetSmartcardText);
 //		SimpleUtils.assertOnFail("Budget Smartcard loaded on 'Schedule' tab even Scheduling policies Disabled Budget Smartcard.",
 //				! isBudgetSmartcardAppeared , false);
 //		if(! isBudgetSmartcardAppeared)
@@ -2218,6 +2227,7 @@ public class RegressionTest extends TestBase{
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -2231,9 +2241,9 @@ public class RegressionTest extends TestBase{
 			if (overviewPageScheduledWeeks.get(i).getText().toLowerCase().contains(LoginTest.overviewWeeksStatus.Guidance.getValue().toLowerCase())) {
 				scheduleOverviewPage.clickOnGuidanceBtnOnOverview(i);
 				if (createSchedulePage.isGenerateButtonLoaded()) {
-					SimpleUtils.pass("Guidance week found : '" + schedulePage.getActiveWeekText() + "'");
+					SimpleUtils.pass("Guidance week found : '" + scheduleCommonPage.getActiveWeekText() + "'");
 					createSchedulePage.generateOrUpdateAndGenerateSchedule();
-					schedulePage.verifyScheduledHourNTMCountIsCorrect();
+					scheduleShiftTablePage.verifyScheduledHourNTMCountIsCorrect();
 					break;
 				}
 			}
@@ -2255,6 +2265,7 @@ public class RegressionTest extends TestBase{
 //	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -2271,17 +2282,17 @@ public class RegressionTest extends TestBase{
 		SimpleUtils.assertOnFail("User can add new shift for past week",
 				(scheduleMainPage.isAddNewDayViewShiftButtonLoaded()), true);
 		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
+		newShiftPage.customizeNewShiftPage();
 		schedulePage.compareCustomizeStartDay(textStartDay);
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.customizeNewShiftPage();
-		schedulePage.verifySelectTeamMembersOption();
-		schedulePage.clickOnOfferOrAssignBtn();
+		newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		newShiftPage.clickOnCreateOrNextBtn();
+		newShiftPage.customizeNewShiftPage();
+		newShiftPage.verifySelectTeamMembersOption();
+		newShiftPage.clickOnOfferOrAssignBtn();
 		int updatedGutterCount = schedulePage.getgutterSize();
 		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule, teamCount);
 		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
@@ -2304,6 +2315,7 @@ public class RegressionTest extends TestBase{
 //	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -2320,14 +2332,14 @@ public class RegressionTest extends TestBase{
 		HashMap<List<String>, List<String>> teamCount = schedulePage.calculateTeamCount();
 		SimpleUtils.assertOnFail("User can add new shift for past week", (scheduleMainPage.isAddNewDayViewShiftButtonLoaded()), true);
 		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-		schedulePage.customizeNewShiftPage();
+		newShiftPage.customizeNewShiftPage();
 		schedulePage.compareCustomizeStartDay(textStartDay);
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
+		newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+		newShiftPage.clickOnCreateOrNextBtn();
 		int updatedGutterCount = schedulePage.getgutterSize();
 		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule, teamCount);
 		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
@@ -2362,10 +2374,10 @@ public class RegressionTest extends TestBase{
 		boolean isWeekView = false;
 		scheduleCommonPage.clickOnDayView();
 		scheduleCommonPage.navigateToNextDayIfStoreClosedForActiveDay();
-		schedulePage.selectGroupByFilter(ScheduleNewUITest.scheduleGroupByFilterOptions.groupbyAll.getValue());
-		schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+		scheduleMainPage.selectGroupByFilter(ScheduleNewUITest.scheduleGroupByFilterOptions.groupbyAll.getValue());
+		scheduleMainPage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 		scheduleMainPage.clickOnEditButton();
-		schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+		scheduleMainPage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 		scheduleMainPage.clickOnCancelButtonOnEditMode();
 	}
 
@@ -2389,10 +2401,10 @@ public class RegressionTest extends TestBase{
 		 */
 		boolean isWeekView = false;
 		scheduleCommonPage.clickOnDayView();
-		schedulePage.selectGroupByFilter(ScheduleNewUITest.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
-		schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+		scheduleMainPage.selectGroupByFilter(ScheduleNewUITest.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+		scheduleMainPage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 		scheduleMainPage.clickOnEditButton();
-		schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+		scheduleMainPage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 		scheduleMainPage.clickOnCancelButtonOnEditMode();
 	}
 
@@ -2416,11 +2428,11 @@ public class RegressionTest extends TestBase{
 		 */
 		boolean isWeekView = false;
 		scheduleCommonPage.clickOnWeekView();
-		schedulePage.selectGroupByFilter(ScheduleNewUITest.scheduleGroupByFilterOptions.groupbyTM.getValue());
+		scheduleMainPage.selectGroupByFilter(ScheduleNewUITest.scheduleGroupByFilterOptions.groupbyTM.getValue());
 		scheduleCommonPage.clickOnDayView();
-		schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+		scheduleMainPage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 		scheduleMainPage.clickOnEditButton();
-		schedulePage.filterScheduleByWorkRoleAndShiftType(isWeekView);
+		scheduleMainPage.filterScheduleByWorkRoleAndShiftType(isWeekView);
 		scheduleMainPage.clickOnCancelButtonOnEditMode();
 	}
 
@@ -2463,17 +2475,17 @@ public class RegressionTest extends TestBase{
 		HashMap<List<String>,List<String>> teamCount = schedulePage.calculateTeamCount();
 		SimpleUtils.assertOnFail("User can add new shift for past week", (scheduleMainPage.isAddNewDayViewShiftButtonLoaded()) , true);
 //		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
-//		schedulePage.customizeNewShiftPage();
+//		newShiftPage.customizeNewShiftPage();
 //		schedulePage.compareCustomizeStartDay(textStartDay);
-//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-//		schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+//		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+//		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
 //		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
-//		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-//		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-//		schedulePage.clickOnCreateOrNextBtn();
-//		schedulePage.customizeNewShiftPage();
-//		schedulePage.verifySelectTeamMembersOption();
-//		schedulePage.clickOnOfferOrAssignBtn();
+//		newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+//		newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+//		newShiftPage.clickOnCreateOrNextBtn();
+//		newShiftPage.customizeNewShiftPage();
+//		newShiftPage.verifySelectTeamMembersOption();
+//		newShiftPage.clickOnOfferOrAssignBtn();
 //		int updatedGutterCount = schedulePage.getgutterSize();
 //		List<String> previousTeamCount = schedulePage.calculatePreviousTeamCount(shiftTimeSchedule,teamCount);
 //		List<String> currentTeamCount = schedulePage.calculateCurrentTeamCount(shiftTimeSchedule);
@@ -2576,13 +2588,14 @@ public class RegressionTest extends TestBase{
 
 
 	public void validateAssignTeamMemberPageAndSaveSchedule() throws Exception{
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-		schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-		schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-		schedulePage.clickOnCreateOrNextBtn();
-		schedulePage.customizeNewShiftPage();
+		newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+		newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+		newShiftPage.clickOnCreateOrNextBtn();
+		newShiftPage.customizeNewShiftPage();
 		schedulePage.selectTeamMembersOptionForScheduleForClopening();
-		schedulePage.clickOnOfferOrAssignBtn();
+		newShiftPage.clickOnOfferOrAssignBtn();
 		scheduleMainPage.clickSaveBtn();
 	}
 

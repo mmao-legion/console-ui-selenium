@@ -4,6 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.ScheduleCommonPage;
 import com.legion.pages.ScheduleMainPage;
 import com.legion.tests.core.ScheduleNewUITest;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
@@ -11,8 +12,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -21,6 +25,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         PageFactory.initElements(getDriver(), this);
     }
 
+    private static HashMap<String, String> propertyTimeZoneMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/LocationTimeZone.json");
 
 
     @FindBy(className = "console-navigation-item")
@@ -411,5 +416,160 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         } else {
             SimpleUtils.report("This is a last week in Day Week picker");
         }
+    }
+
+    @Override
+    public String getActiveWeekText() throws Exception {
+        if (isElementLoaded(MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")),15))
+            return MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")).getText().replace("\n", " ");
+        return "";
+    }
+
+    public String getActiveAndNextDay() throws Exception{
+        WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+        String activeDay = "";
+        if(isElementLoaded(activeWeek)){
+            activeDay = activeWeek.getText().replace("\n", " ").substring(0,3);
+        }
+        return activeDay;
+    }
+
+    @FindBy (css = "lg-button-group[buttons*=\"custom\"] div.lg-button-group-first")
+    private WebElement scheduleDayViewButton;
+    @FindBy (className = "period-name")
+    private WebElement periodName;
+    @Override
+    public void isScheduleForCurrentDayInDayView(String dateFromDashboard) throws Exception {
+        String tagName = "span";
+        if (isElementLoaded(scheduleDayViewButton, 5) && isElementLoaded(periodName, 5)) {
+            if (scheduleDayViewButton.getAttribute("class").contains("lg-button-group-selected")){
+                SimpleUtils.pass("The Schedule Day View Button is selected!");
+            }else{
+                SimpleUtils.fail("The Schedule Day View Button isn't selected!", true);
+            }
+            /*
+             * @periodName format "Schedule for Wednesday, February 12"
+             */
+            if (periodName.getText().contains(dateFromDashboard)) {
+                SimpleUtils.pass("The Schedule is for current day!");
+            }else{
+                SimpleUtils.fail("The Schedule isn't for current day!", true);
+            }
+        }else{
+            SimpleUtils.fail("The Schedule Day View Button isn't loaded!",true);
+        }
+    }
+
+
+    public void currentWeekIsGettingOpenByDefault(String location) throws Exception {
+        String jsonTimeZoon = propertyTimeZoneMap.get(location);
+        TimeZone timeZone = TimeZone.getTimeZone(jsonTimeZoon);
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+        dfs.setTimeZone(timeZone);
+        String currentTime =  dfs.format(new Date());
+        Date currentDate = dfs.parse(currentTime);
+        String weekBeginEndByCurrentDate = SimpleUtils.getThisWeekTimeInterval(currentDate);
+        String weekBeginEndByCurrentDate2 = weekBeginEndByCurrentDate.replace("-","").replace(",","");
+        String weekBeginBYCurrentDate = weekBeginEndByCurrentDate2.substring(6,8);
+        String weekEndBYCurrentDate = weekBeginEndByCurrentDate2.substring(weekBeginEndByCurrentDate2.length()-2);
+        SimpleUtils.report("weekBeginBYCurrentDate is : "+ weekBeginBYCurrentDate);
+        SimpleUtils.report("weekEndBYCurrentDate is : "+ weekEndBYCurrentDate);
+        String activeWeekText =getActiveWeekText();
+        String weekDefaultBegin = activeWeekText.substring(14,16);
+        SimpleUtils.report("weekDefaultBegin is :"+weekDefaultBegin);
+        String weekDefaultEnd = activeWeekText.substring(activeWeekText.length()-2);
+        SimpleUtils.report("weekDefaultEnd is :"+weekDefaultEnd);
+        if (SimpleUtils.isNumeric(weekBeginBYCurrentDate.trim()) && SimpleUtils.isNumeric(weekDefaultBegin.trim()) &&
+                SimpleUtils.isNumeric(weekEndBYCurrentDate.trim()) && SimpleUtils.isNumeric(weekDefaultEnd.trim())) {
+            if (Math.abs(Integer.parseInt(weekBeginBYCurrentDate.trim()) - Integer.parseInt(weekDefaultBegin.trim())) <= 1 &&
+                    Math.abs(Integer.parseInt(weekEndBYCurrentDate.trim()) - Integer.parseInt(weekDefaultEnd.trim())) <= 1 &&
+                    (Math.abs(Integer.parseInt(weekBeginBYCurrentDate.trim()) - Integer.parseInt(weekDefaultBegin.trim())) ==
+                            Math.abs(Integer.parseInt(weekEndBYCurrentDate.trim()) - Integer.parseInt(weekDefaultEnd.trim())))) {
+                SimpleUtils.pass("Current week is getting open by default");
+            } else {
+                SimpleUtils.fail("Current week is not getting open by default", false);
+            }
+        }else {
+            SimpleUtils.fail("The date is not the numeric format!", false);
+        }
+    }
+
+
+    @FindBy (xpath = "//span[contains(text(),'Schedule')]")
+    private WebElement ScheduleSubMenu;
+
+    @FindBy(css = "[ng-click=\"showTodos($event)\"]")
+    private WebElement todoButton;
+
+    public void goToScheduleNewUI() throws Exception {
+
+        if (isElementLoaded(goToScheduleButton,5)) {
+            click(goToScheduleButton);
+            click(ScheduleSubMenu);
+            if (isElementLoaded(todoButton,5)) {
+                SimpleUtils.pass("Schedule New UI load successfully");
+            }
+        }else{
+            SimpleUtils.fail("Schedule New UI load failed", true);
+        }
+
+    }
+
+
+    @FindBy(css = "div.day-week-picker-period-active")
+    private WebElement daypicker;
+
+    @FindBy(xpath = "//*[text()=\"Day\"]")
+    private WebElement daypButton;
+    public void dayWeekPickerSectionNavigatingCorrectly()  throws Exception{
+        String weekIcon = "Sun - Sat";
+        String activeWeekText = getActiveWeekText();
+        if(activeWeekText.contains(weekIcon)){
+            SimpleUtils.pass("Week pick show correctly");
+        }else {
+            SimpleUtils.fail("it's not week mode", true);
+        }
+        click(daypButton);
+        if(isElementLoaded(daypicker,3)){
+            SimpleUtils.pass("Day pick show correctly");
+        }else {
+            SimpleUtils.fail("change to day pick failed", true);
+        }
+
+    }
+
+
+    public int getMinutesFromTime(String time) {
+        int minutes = 0;
+        if (time.contains(":")) {
+            String minute = time.split(":")[1].substring(0, time.split(":")[1].length()-2).trim();
+            minutes = (Integer.parseInt(time.split(":")[0].trim())) * 60 + Integer.parseInt(minute);
+        }else {
+            minutes = Integer.parseInt(time.substring(0, time.length()-2)) * 60;
+        }
+        if (time.toLowerCase().endsWith("pm")) {
+            minutes += 12 * 60;
+        }
+        return minutes;
+    }
+
+
+    @FindBy (css = "div.day-week-picker-period")
+    private List<WebElement> dayPickerAllDaysInDayView;
+    @Override
+    public int getTheIndexOfCurrentDayInDayView() throws Exception {
+        int index = 7;
+        if (areListElementVisible(dayPickerAllDaysInDayView, 10)) {
+            for (int i = 0; i < dayPickerAllDaysInDayView.size(); i++) {
+                if (dayPickerAllDaysInDayView.get(i).getAttribute("class").contains("day-week-picker-period-active")) {
+                    index = i;
+                    SimpleUtils.pass("Schedule Day view: Get the current day index: " + index);
+                }
+            }
+        }
+        if (index == 7) {
+            SimpleUtils.fail("Schedule Day view: Failed to get the index of CurrentDay", false);
+        }
+        return index;
     }
 }

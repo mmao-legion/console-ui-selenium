@@ -173,9 +173,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            disableCopyRestriction(location);
+//            disableCopyRestriction(location);
             String option = "No, keep as unassigned";
-            changeConvertToOpenShiftsSettings(option, location);
+//            changeConvertToOpenShiftsSettings(option, location);
             validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(true, option, false);
 
         } catch (Exception e) {
@@ -263,6 +263,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
         String firstNameOfTM = "";
         String lastNameOfTM = "";
         String workRoleOfTM = "";
@@ -321,7 +324,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
         schedulePage.navigateToNextWeek();
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         Thread.sleep(5000);
         if(!isCopySchedule && option.equalsIgnoreCase("Yes, except opening/closing shifts")) {
@@ -343,32 +346,32 @@ public class ScheduleCopyImprovementTest extends TestBase {
         // For copy schedule, select one TM -> create time off for TM -> create schedule by copy last week schedule
         if (isCopySchedule){
             // Delete all the shifts that are assigned to the team member
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
             schedulePage.deleteTMShiftInWeekView("open");
             schedulePage.deleteTMShiftInWeekView("unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
 
             // Create new shift for TM on seven days
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
-            schedulePage.selectWorkRole(workRoleOfTM);
-            schedulePage.moveSliderAtCertainPoint("3pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("10am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(firstNameOfTM);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.selectWorkRole(workRoleOfTM);
+            newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
             //Get the info of this week for copy schedule
-            String firstWeekInfo = schedulePage.getActiveWeekText();
+            String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
                 if (firstWeekInfo.contains("-")) {
@@ -382,7 +385,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             schedulePage.navigateToNextWeek();
             //Get the date info of the week for create time off
-            String activeWeek = schedulePage.getActiveWeekText();
+            String activeWeek = scheduleCommonPage.getActiveWeekText();
             List<String> year = schedulePage.getYearsFromCalendarMonthYearText();
             String[] items = activeWeek.split(" ");
             String fromDate = year.get(0)+ " " + items[3] + " " + items[4];
@@ -418,7 +421,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
             createSchedulePage.clickCreateScheduleBtn();
@@ -454,14 +457,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
         //Check the Action required smart card is not display
         if (option.equalsIgnoreCase("Yes, all unassigned shifts")) {
-            if (!schedulePage.isRequiredActionSmartCardLoaded()) {
+            if (!smartCardPage.isRequiredActionSmartCardLoaded()) {
                 SimpleUtils.pass("Action Required smart card should not be loaded! ");
             } else
                 SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
                         !schedulePage.getWholeMessageFromActionRequiredSmartCard().contains("Unassigned"), false);
             //Check there is no unassigned shifts
             SimpleUtils.assertOnFail("The unassigned shifts should not display in this schedule! ",
-                    schedulePage.getAllShiftsOfOneTM("unassigned").size()==0, false);
+                    scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size()==0, false);
             //Check there are open shifts
             for (int i = 0; i<7 ;i++){
                 SimpleUtils.assertOnFail("The open shifts display incorrectly! ",
@@ -475,9 +478,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     tooltip.equalsIgnoreCase("Please address required action(s)"), false);
             //Check the Action required smart card is display
             SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
-                    schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    smartCardPage.isRequiredActionSmartCardLoaded(), false);
             //Check the Unassigned shifts will display
-            int unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            int unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
             SimpleUtils.assertOnFail("Thers are 4 unassigned shifts should display! but actually there are "+unassignedShiftsCount+" display",
                     unassignedShiftsCount >= 4, false);
             //Check the message on the Action required smart card
@@ -509,7 +512,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     SimpleUtils.assertOnFail("There should has at least 1 unassigned shifts in this day! ", unassignedShifts.size()>0, false);
 
                     for (WebElement unassignedShift: unassignedShifts) {
-                        complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
+                        complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                         SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                 complianceMessage.contains("Unassigned Shift"), false);
                         unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
@@ -529,7 +532,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     SimpleUtils.assertOnFail("There should has at least 1 open shifts in this day! ", openShifts.size()>0, false);
 
                     for (WebElement unassignedShift: unassignedShifts) {
-                        complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
+                        complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                         SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                 complianceMessage.contains("Unassigned Shift"), false);
                         unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
@@ -545,19 +548,19 @@ public class ScheduleCopyImprovementTest extends TestBase {
             }
 
             //Convert unassigned shifts to open
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             Thread.sleep(10000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteAllOOOHShiftInWeekView();
-            schedulePage.saveSchedule();
+            shiftOperatePage.deleteAllOOOHShiftInWeekView();
+            scheduleMainPage.saveSchedule();
 
             //Check there is no Unassigned shifts display
-            unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
             SimpleUtils.assertOnFail("Unassigned shifts should display! ",
                     unassignedShiftsCount == 0, false);
             //Check the Action required smart card is display
             SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
-                    !schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    !smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
             //Check the publish button is enabled
             SimpleUtils.assertOnFail("The tooltip of publish button should display as blank! But the actual tooltip is: "+ tooltip,
@@ -572,13 +575,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     tooltip.equalsIgnoreCase("Please address required action(s)"), false);
             //Check there is no open shifts
             SimpleUtils.assertOnFail("The open shifts should not display in this schedule! ",
-                    schedulePage.getAllShiftsOfOneTM("open").size()==0, false);
+                    scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()==0, false);
             //Check the Unassigned shifts will display
-            int unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            int unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
             SimpleUtils.assertOnFail("Unassigned shifts should display! ",unassignedShiftsCount >= 7, false);
             //Check the Action required smart card is display
             SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
-                    schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    smartCardPage.isRequiredActionSmartCardLoaded(), false);
             //Check there are unassigned shifts on every day
             for (int i = 0; i<7 ;i++){
                 SimpleUtils.assertOnFail("The unassigned shifts in the "+ i+ " day display incorrectly! ",
@@ -590,7 +593,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             int oOOHShiftsCount = 0;
             if(ifVerifyOOOHShifts){
                 //Check the message on the Action required smart card
-                List<WebElement> allOOOHShifts = schedulePage.getAllOOOHShifts();
+                List<WebElement> allOOOHShifts = scheduleShiftTablePage.getAllOOOHShifts();
                 oOOHShiftsCount = allOOOHShifts.size();
                 HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
                 SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,
@@ -607,18 +610,18 @@ public class ScheduleCopyImprovementTest extends TestBase {
             }
 
             //Verify view shifts button
-            schedulePage.clickOnViewShiftsBtnOnRequiredActionSmartCard();
+            smartCardPage.clickOnViewShiftsBtnOnRequiredActionSmartCard();
             SimpleUtils.assertOnFail("The unassigned shifts count is not correct after click View Shifts! ",
-                    schedulePage.getAllShiftsOfOneTM("unassigned").size() == unassignedShiftsCount,
+                    scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size() == unassignedShiftsCount,
                     false);
             if(ifVerifyOOOHShifts){
                 SimpleUtils.assertOnFail("The OOOH shifts count is not correct after click View Shifts! ",
-                        schedulePage.getAllOOOHShifts().size() == oOOHShiftsCount, false);
+                        scheduleShiftTablePage.getAllOOOHShifts().size() == oOOHShiftsCount, false);
             }
-            ArrayList<WebElement> allShiftsInWeekView = schedulePage.getAllAvailableShiftsInWeekView();
+            ArrayList<WebElement> allShiftsInWeekView = scheduleShiftTablePage.getAllAvailableShiftsInWeekView();
             List<String> complianceMessage = new ArrayList<>();
             for (int i = 0; i< allShiftsInWeekView.size(); i ++) {
-                complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(allShiftsInWeekView.get(i));
+                complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(allShiftsInWeekView.get(i));
                 SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                         complianceMessage.contains("Unassigned Shift") || complianceMessage.contains("Outside Operating hours"), false);
             }
@@ -631,14 +634,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
             if(isCopySchedule && option.equalsIgnoreCase("No, keep as unassigned")){
                 for (int i = 0; i< 7; i++) {
                     scheduleCommonPage.navigateDayViewWithIndex(i);
-                    if (schedulePage.isRequiredActionSmartCardLoaded()){
+                    if (smartCardPage.isRequiredActionSmartCardLoaded()){
                         SimpleUtils.pass("The " +i+ " day has unassigned shifts! ");
                         Thread.sleep(2000);
                         allShiftsInDayView = scheduleShiftTablePage.getAvailableShiftsInDayView();
                         if (ifVerifyOOOHShifts){
                             HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
-                            oOOHShiftsCount = schedulePage.getAllOOOHShifts().size();
-                            unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+                            oOOHShiftsCount = scheduleShiftTablePage.getAllOOOHShifts().size();
+                            unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
                             SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,(
                                     message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount+ " shifts\n" +
                                             "Outside Operating Hours")
@@ -650,7 +653,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                         }
                         if (allShiftsInDayView.size()>0){
                             for (int j = 0; j< allShiftsInDayView.size(); j ++) {
-                                complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(allShiftsInDayView.get(j));
+                                complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(allShiftsInDayView.get(j));
                                 SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                         complianceMessage.contains("Unassigned Shift") || complianceMessage.contains("Outside Operating hours"), false);
                             }
@@ -664,11 +667,11 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 boolean hasActionRequiredSmartCardInDayView = false;
                 for (int i = 0; i< 7; i++) {
                     scheduleCommonPage.navigateDayViewWithIndex(i);
-                    if (schedulePage.isRequiredActionSmartCardLoaded()){
+                    if (smartCardPage.isRequiredActionSmartCardLoaded()){
                         hasActionRequiredSmartCardInDayView = true;
                         allShiftsInDayView = scheduleShiftTablePage.getAvailableShiftsInDayView();
                         for (int j = 0; j< allShiftsInDayView.size(); j ++) {
-                            complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(allShiftsInDayView.get(j));
+                            complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(allShiftsInDayView.get(j));
                             SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                     complianceMessage.contains("Unassigned Shift") || complianceMessage.contains("Outside Operating hours"), false);
                         }
@@ -684,14 +687,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             schedulePage.clickOnFilterBtn();
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             Thread.sleep(10000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             if (ifVerifyOOOHShifts){
                 HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
-                oOOHShiftsCount = schedulePage.getAllOOOHShifts().size();
+                oOOHShiftsCount = scheduleShiftTablePage.getAllOOOHShifts().size();
                 SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,
                         message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount+ " shifts\n" +
                                 "Outside Operating Hours") &&
@@ -699,24 +702,24 @@ public class ScheduleCopyImprovementTest extends TestBase {
                         false);
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteAllOOOHShiftInWeekView();
-            schedulePage.saveSchedule();
+            shiftOperatePage.deleteAllOOOHShiftInWeekView();
+            scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteAllOOOHShiftInWeekView();
-            schedulePage.saveSchedule();
+            shiftOperatePage.deleteAllOOOHShiftInWeekView();
+            scheduleMainPage.saveSchedule();
 
             //Check there is no Unassigned shifts display
-            unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
             SimpleUtils.assertOnFail("Unassigned shifts should not display! but there are "+unassignedShiftsCount+" unassigned shifts display!",
                     unassignedShiftsCount == 0, false);
             if (ifVerifyOOOHShifts) {
-                oOOHShiftsCount = schedulePage.getAllOOOHShifts().size();
+                oOOHShiftsCount = scheduleShiftTablePage.getAllOOOHShifts().size();
                 SimpleUtils.assertOnFail("OOOH shifts should display! ",
                         oOOHShiftsCount == 0, false);
             }
             //Check the Action required smart card is not display
             SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
-                    !schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    !smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
             //Check the publish button is enabled
             SimpleUtils.assertOnFail("The tooltip of publish button should display as blank! But the actual tooltip is: "+ tooltip,
@@ -727,15 +730,15 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
         //Check the schedule can be saved and published
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        String workRole = schedulePage.getRandomWorkRole();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.selectWorkRole(workRole);
+        String workRole = shiftOperatePage.getRandomWorkRole();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.customizeNewShiftPage();
+        newShiftPage.selectWorkRole(workRole);
 
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
 
-        schedulePage.saveSchedule();
+        scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
 
 
@@ -835,6 +838,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
 //                disableCopyRestriction();
@@ -853,14 +858,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(3000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             createSchedulePage.publishActiveSchedule();
             //Get the info of this week for copy schedule
-            String firstWeekInfo = schedulePage.getActiveWeekText();
+            String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
                 if (firstWeekInfo.contains("-")) {
@@ -874,7 +879,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
             createSchedulePage.clickCreateScheduleBtn();
@@ -896,10 +901,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Check the Action required smart card is display
             SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
-                    schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
             //Check the message on the Action required smart card
-            List<WebElement> allOOOHShifts = schedulePage.getAllOOOHShifts();
+            List<WebElement> allOOOHShifts = scheduleShiftTablePage.getAllOOOHShifts();
             int oOOHShiftsCount = allOOOHShifts.size();
             HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
             SimpleUtils.assertOnFail("OOOH shifts message display incorrectly! The actual message is: " + message.get("OOOH"),
@@ -907,14 +912,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
                                     "Outside Operating Hours"), false);
 
             //Verify view shifts button
-            schedulePage.clickOnViewShiftsBtnOnRequiredActionSmartCard();
+            smartCardPage.clickOnViewShiftsBtnOnRequiredActionSmartCard();
             SimpleUtils.assertOnFail("The OOOH shifts count is not correct after click View Shifts! ",
-                    schedulePage.getAllOOOHShifts().size() == oOOHShiftsCount, false);
+                    scheduleShiftTablePage.getAllOOOHShifts().size() == oOOHShiftsCount, false);
 
-            ArrayList<WebElement> allShiftsInWeekView = schedulePage.getAllAvailableShiftsInWeekView();
+            ArrayList<WebElement> allShiftsInWeekView = scheduleShiftTablePage.getAllAvailableShiftsInWeekView();
             List<String> complianceMessage = new ArrayList<>();
             for (int i = 0; i< allShiftsInWeekView.size(); i ++) {
-                complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(allShiftsInWeekView.get(i));
+                complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(allShiftsInWeekView.get(i));
                 SimpleUtils.assertOnFail("The OOOH violation message display incorrectly in i icon popup! ",
                         complianceMessage.contains("Unassigned Shift") || complianceMessage.contains("Outside Operating hours"), false);
             }
@@ -925,13 +930,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             for (int i = 0; i< 7; i++) {
                 scheduleCommonPage.navigateDayViewWithIndex(i);
-                if (schedulePage.isRequiredActionSmartCardLoaded()){
+                if (smartCardPage.isRequiredActionSmartCardLoaded()){
                     SimpleUtils.pass("The " +i+ " day has OOOH shifts! ");
                     Thread.sleep(2000);
                     allShiftsInDayView = scheduleShiftTablePage.getAvailableShiftsInDayView();
                     if (allShiftsInDayView.size()>0){
                         for (int j = 0; j< allShiftsInDayView.size(); j ++) {
-                            complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(allShiftsInDayView.get(j));
+                            complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(allShiftsInDayView.get(j));
                             SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                     complianceMessage.contains("Unassigned Shift") || complianceMessage.contains("Outside Operating hours"), false);
                         }
@@ -946,19 +951,19 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             schedulePage.clickOnFilterBtn();
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteAllOOOHShiftInWeekView();
-            schedulePage.saveSchedule();
+            shiftOperatePage.deleteAllOOOHShiftInWeekView();
+            scheduleMainPage.saveSchedule();
 
             //Check there is no OOOH shifts display
-            allOOOHShifts = schedulePage.getAllOOOHShifts();
+            allOOOHShifts = scheduleShiftTablePage.getAllOOOHShifts();
             oOOHShiftsCount = allOOOHShifts.size();
             SimpleUtils.assertOnFail("OOOH shifts should not display! ",
                     oOOHShiftsCount == 0, false);
             //Check the Action required smart card is not display
             SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
-                    !schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    !smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
             //Check the publish button is enabled
             SimpleUtils.assertOnFail("The tooltip of publish button should display as blank! But the actual tooltip is: "+ tooltip,
@@ -984,6 +989,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "No, keep as unassigned";
@@ -1003,7 +1012,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
@@ -1014,10 +1023,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Check the Action required smart card is display
             SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
-                    schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
             //Check the message on the Action required smart card
-            int unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            int unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
             HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
             SimpleUtils.assertOnFail("Unassigned shifts message display incorrectly! ",
                     message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+" shifts\n" +"Unassigned") ||
@@ -1028,14 +1037,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
             schedulePage.clickOnFilterBtn();
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteAllOOOHShiftInWeekView();
-            schedulePage.saveSchedule();
+            shiftOperatePage.deleteAllOOOHShiftInWeekView();
+            scheduleMainPage.saveSchedule();
 
             //Check the Action required smart card is not display
             SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
-                    !schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    !smartCardPage.isRequiredActionSmartCardLoaded(), false);
             //Check the Schedule Not Publish smart card will display
             SimpleUtils.assertOnFail("Schedule not published smart card should display for new generate schedule! ",
                     schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
@@ -1044,7 +1053,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             //Check the Schedule Not Publish smart card will not display on edit mode
             SimpleUtils.assertOnFail("Schedule not published smart card should not display on edit mode! ",
                     !schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             //Check the Schedule Not Publish smart card will display
             SimpleUtils.assertOnFail("Schedule not published smart card should display for new generate schedule! ",
                     schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
@@ -1056,18 +1065,18 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     !schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
             //Check the Action required smart card is not display
             SimpleUtils.assertOnFail("Action Required smart card should not be loaded! ",
-                    !schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    !smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
             //Edit the schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            String workRole = schedulePage.getRandomWorkRole();
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.selectWorkRole(workRole);
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
 
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.saveSchedule();
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
 
             schedulePage.verifyChangesNotPublishSmartCard(1);
 
@@ -1076,7 +1085,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Change not published smart card should not display after publish! ",
                     !schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
 
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             //Check the Schedule Not Publish smart card will display
             SimpleUtils.assertOnFail("Schedule not published smart card should display for new generate schedule! ",
                     schedulePage.isScheduleNotPublishedSmartCardLoaded(),false);
@@ -1104,6 +1113,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
 //                disableCopyRestriction();
@@ -1165,7 +1178,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
@@ -1177,27 +1190,27 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM);
             schedulePage.deleteTMShiftInWeekView("open");
             schedulePage.deleteTMShiftInWeekView("unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
 
             // Create new shift for TM on seven days
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
-            schedulePage.selectWorkRole(workRoleOfTM);
-            schedulePage.moveSliderAtCertainPoint("1pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(firstNameOfTM);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.selectWorkRole(workRoleOfTM);
+            newShiftPage.moveSliderAtCertainPoint("1pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
             //Get the info of this week for copy schedule
-            String firstWeekInfo = schedulePage.getActiveWeekText();
+            String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
                 if (firstWeekInfo.contains("-")) {
@@ -1211,7 +1224,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             schedulePage.navigateToNextWeek();
             //Get the date info of the week for create time off
-            String activeWeek = schedulePage.getActiveWeekText();
+            String activeWeek = scheduleCommonPage.getActiveWeekText();
             List<String> year = schedulePage.getYearsFromCalendarMonthYearText();
             String[] items = activeWeek.split(" ");
             String fromDate = year.get(0)+ " " + items[3] + " " + items[4];
@@ -1246,7 +1259,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "05:00PM");
@@ -1266,14 +1279,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("The tooltip of publish button should display as: Please address required action(s)! But the actual tooltip is: "+ tooltip,
                     tooltip.equalsIgnoreCase("Please address required action(s)"), false);
             //Check the Unassigned shifts will display
-            int unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            int unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
             SimpleUtils.assertOnFail("Unassigned shifts should display! ",unassignedShiftsCount >= 0, false);
             //Check the Action required smart card is display
             SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
-                    schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
             int oOOHShiftsCount = 0;
-            List<WebElement> allOOOHShifts = schedulePage.getAllOOOHShifts();
+            List<WebElement> allOOOHShifts = scheduleShiftTablePage.getAllOOOHShifts();
             oOOHShiftsCount = allOOOHShifts.size();
             HashMap<String, String> message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
             SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,
@@ -1300,20 +1313,20 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     SimpleUtils.assertOnFail("There should has at least 1 unassigned shifts in this day! ", unassignedShifts.size()>0, false);
                     boolean isTheShiftWithBothViolationsExist = false;
                     for (WebElement unassignedShift: unassignedShifts) {
-                        unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
-                        oOOHShiftsCount = schedulePage.getAllOOOHShifts().size();
+                        unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
+                        oOOHShiftsCount = scheduleShiftTablePage.getAllOOOHShifts().size();
                         unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
                         if(unassignedShiftTimes.contains("8am - 1pm")) {
                             isTheShiftWithBothViolationsExist = true;
                             //To close the i icon popup
                             schedulePage.clickOnOpenSearchBoxButton();
-                            complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
+                            complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                             SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                     complianceMessage.contains("Unassigned Shift") && complianceMessage.contains("Outside Operating hours"), false);
                             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                            schedulePage.convertUnAssignedShiftToOpenShift(unassignedShift);
-                            schedulePage.saveSchedule();
-                            complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
+                            shiftOperatePage.convertUnAssignedShiftToOpenShift(unassignedShift);
+                            scheduleMainPage.saveSchedule();
+                            complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                             SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                     !complianceMessage.contains("Unassigned Shift") && complianceMessage.contains("Outside Operating hours"), false);
                             message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
@@ -1323,14 +1336,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
                                             (message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount-1+" shifts\n" +"Unassigned")
                                                     || message.get("unassigned").equalsIgnoreCase("")), false);
                             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                            schedulePage.editTheShiftTimeForSpecificShift(unassignedShift, "11am", "3pm");
-                            schedulePage.saveSchedule();
-                            complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
+                            shiftOperatePage.editTheShiftTimeForSpecificShift(unassignedShift, "11am", "3pm");
+                            scheduleMainPage.saveSchedule();
+                            complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                             SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                     !complianceMessage.contains("Unassigned Shift") && !complianceMessage.contains("Outside Operating hours"), false);
                             message = schedulePage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
                             SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,
-                                    schedulePage.isRequiredActionSmartCardLoaded() ||
+                                    smartCardPage.isRequiredActionSmartCardLoaded() ||
                                             ((message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount-1+ " shifts\n" +
                                             "Outside Operating Hours") || message.get("OOOH").equalsIgnoreCase("")) &&
                                             (message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount-1+" shifts\n" +"Unassigned")
@@ -1347,19 +1360,19 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Check the schedule can be saved and published
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            String workRole = schedulePage.getRandomWorkRole();
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.selectWorkRole(workRole);
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
 
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.saveSchedule();
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
 
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteAllOOOHShiftInWeekView();
-            schedulePage.saveSchedule();
+            shiftOperatePage.deleteAllOOOHShiftInWeekView();
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
             teamPage.goToTeam();
@@ -1385,6 +1398,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
 //                disableCopyRestriction();
@@ -1419,7 +1436,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             //Get the date info of the week for create time off, leave and terminate
-            String activeWeek = schedulePage.getActiveWeekText();
+            String activeWeek = scheduleCommonPage.getActiveWeekText();
             List<String> year = schedulePage.getYearsFromCalendarMonthYearText();
             String[] items = activeWeek.split(" ");
             String fromDate = year.get(0)+ " " + items[3] + " " + items[4];
@@ -1452,52 +1469,52 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 
             // Create new shift for TM1 on seven days
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(tm1);
             schedulePage.deleteTMShiftInWeekView(tm2);
             schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            String workRole = schedulePage.getRandomWorkRole();
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
-            schedulePage.selectWorkRole(workRole);
+            newShiftPage.selectWorkRole(workRole);
 
-            schedulePage.moveSliderAtCertainPoint("3pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("10am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(tm1);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(tm1);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
             // Create new shift for TM2 on seven days
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(7);
-            schedulePage.selectWorkRole(workRole);
-            schedulePage.moveSliderAtCertainPoint("4pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(tm2);
-            schedulePage.clickOnOfferOrAssignBtn();
-            schedulePage.saveSchedule();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(tm2);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
 
             createSchedulePage.publishActiveSchedule();
             SimpleUtils.assertOnFail("The schedule fail to publish! ", createSchedulePage.isCurrentScheduleWeekPublished(), false);
 
             //Get the info of this week for copy schedule
-            String firstWeekInfo = schedulePage.getActiveWeekText();
+            String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
                 if (firstWeekInfo.contains("-")) {
@@ -1512,7 +1529,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.editOperatingHoursWithGivingPrameters("Sunday", "08:00AM", "08:00PM");
@@ -1532,11 +1549,11 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("The tooltip of publish button should display as: Please address required action(s)! But the actual tooltip is: "+ tooltip,
                     tooltip.equalsIgnoreCase("Please address required action(s)"), false);
             //Check the Unassigned shifts will display
-            int unassignedShiftsCount = schedulePage.getAllShiftsOfOneTM("unassigned").size();
+            int unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
             SimpleUtils.assertOnFail("Unassigned shifts should display! ",unassignedShiftsCount >= 14, false);
             //Check the Action required smart card is display
             SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
-                    schedulePage.isRequiredActionSmartCardLoaded(), false);
+                    smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
             List<String> unassignedShiftTimes = new ArrayList<>();
             List<String> openShiftTimes = new ArrayList<>();
@@ -1553,7 +1570,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 SimpleUtils.assertOnFail("There should has at least 2 unassigned shifts in this day! ", unassignedShifts.size()>1, false);
 
                 for (WebElement unassignedShift: unassignedShifts) {
-                    complianceMessage = schedulePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
+                    complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                     SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                             complianceMessage.contains("Unassigned Shift"), false);
                     unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
@@ -1606,6 +1623,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
 //                disableCopyRestriction();
@@ -1694,7 +1713,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("05:00AM", "11:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1704,65 +1723,65 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView(teamMember2);
             schedulePage.deleteTMShiftInWeekView(teamMember3);
             schedulePage.deleteTMShiftInWeekView("unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
 
             //Create shift for tm1 on the first day
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(1);
-            schedulePage.selectWorkRole(teamMember1WorkRole);
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(teamMember1);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.selectWorkRole(teamMember1WorkRole);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(teamMember1);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
             // Create new shift for TM2 and make it has overtime violation
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(1);
-            schedulePage.selectWorkRole(teamMember2WorkRole);
-            schedulePage.moveSliderAtCertainPoint("11pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(teamMember2);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.selectWorkRole(teamMember2WorkRole);
+            newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(teamMember2);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
             //Create new shifts for TM3 and make it has clopening violation
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(1);
-            schedulePage.selectWorkRole(teamMember3WorkRole);
-            schedulePage.moveSliderAtCertainPoint("11pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("6pm", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(teamMember3);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.selectWorkRole(teamMember3WorkRole);
+            newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("6pm", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(teamMember3);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
 
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectDaysByIndex(1,1,1);
-            schedulePage.selectWorkRole(teamMember3WorkRole);
-            schedulePage.moveSliderAtCertainPoint("1pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("7am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(teamMember3);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(1,1,1);
+            newShiftPage.selectWorkRole(teamMember3WorkRole);
+            newShiftPage.moveSliderAtCertainPoint("1pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("7am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(teamMember3);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
 
             //Get the info of this week for copy schedule
-            String firstWeekInfo = schedulePage.getActiveWeekText();
+            String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
                 if (firstWeekInfo.contains("-")) {
@@ -1777,7 +1796,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.editOperatingHoursWithGivingPrameters("Sunday", "05:00AM", "11:00PM");
@@ -1796,7 +1815,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             shifts = schedulePage.getOneDayShiftByName(0, teamMember2);
             SimpleUtils.assertOnFail("Get compliance shift failed",shifts.size()==1, false);
-            List<String> violations = schedulePage.getComplianceMessageFromInfoIconPopup(shifts.get(0));
+            List<String> violations = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shifts.get(0));
             boolean hasOTViolation = false;
             for (String violation: violations) {
                 if (violation.contains("overtime")){
@@ -1809,12 +1828,12 @@ public class ScheduleCopyImprovementTest extends TestBase {
             shifts = schedulePage.getOneDayShiftByName(0, teamMember3);
             SimpleUtils.assertOnFail("Get compliance shift failed",shifts.size()==1, false);
             SimpleUtils.assertOnFail("Clopening compliance message display failed",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(shifts.get(0)).contains("Clopening"), false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shifts.get(0)).contains("Clopening"), false);
 
             shifts = schedulePage.getOneDayShiftByName(1, teamMember3);
             SimpleUtils.assertOnFail("Get compliance shift failed",shifts.size()==1, false);
             SimpleUtils.assertOnFail("Clopening compliance message display failed",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(shifts.get(0)).contains("Clopening"), false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shifts.get(0)).contains("Clopening"), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
@@ -1833,6 +1852,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
 //                disableCopyRestriction();
@@ -1849,17 +1869,17 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
             //Get the info of this week for copy schedule
-            String firstWeekInfo = schedulePage.getActiveWeekText();
+            String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
                 if (firstWeekInfo.contains("-")) {
@@ -1874,7 +1894,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             schedulePage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
             createSchedulePage.clickCreateScheduleBtn();
@@ -1894,7 +1914,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             for (int i = 0; i< 7; i++) {
                 scheduleCommonPage.navigateDayViewWithIndex(i);
                 String weekDay = scheduleCommonPage.getScheduleWeekStartDayMonthDate();
-                gridHeaderTimes = schedulePage.getScheduleDayViewGridTimeDuration();
+                gridHeaderTimes = scheduleShiftTablePage.getScheduleDayViewGridTimeDuration();
                 if (weekDay.contains("Sun")) {
                     SimpleUtils.assertOnFail("The grid header time should start as 8 AM, the actual time is: " +
                             gridHeaderTimes.get(0), gridHeaderTimes.get(0).contains("8 AM"), false);

@@ -1230,12 +1230,12 @@ public class UpperfieldTest extends TestBase {
             scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(currentRegion);
 
             // Validate the clickability of forward and backward button
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToPreviousWeek();
             schedulePage.navigateToPreviousWeek();
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
@@ -1286,12 +1286,12 @@ public class UpperfieldTest extends TestBase {
             scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(currentDistrict);
 
             // Validate the clickability of forward and backward button
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToPreviousWeek();
             schedulePage.navigateToPreviousWeek();
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
@@ -1307,6 +1307,7 @@ public class UpperfieldTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1392,9 +1393,9 @@ public class UpperfieldTest extends TestBase {
                         if (!isWeekGenerated) {
                             createSchedulePage.createScheduleForNonDGFlowNewUI();
                         }
-                        schedulePage.deleteAllOOOHShiftInWeekView();
+                        shiftOperatePage.deleteAllOOOHShiftInWeekView();
                         schedulePage.deleteTMShiftInWeekView("Unassigned");
-                        if (schedulePage.isPublishButtonLoaded() || schedulePage.isRepublishButtonLoadedOnSchedulePage()) {
+                        if (createSchedulePage.isPublishButtonLoaded() || createSchedulePage.isRepublishButtonLoadedOnSchedulePage()) {
                             createSchedulePage.publishActiveSchedule();
                         }
                         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(inProgressDistrict);
@@ -1425,6 +1426,7 @@ public class UpperfieldTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1500,9 +1502,9 @@ public class UpperfieldTest extends TestBase {
                     if (!isWeekGenerated) {
                         createSchedulePage.createScheduleForNonDGFlowNewUI();
                     }
-                    schedulePage.deleteAllOOOHShiftInWeekView();
+                    shiftOperatePage.deleteAllOOOHShiftInWeekView();
                     schedulePage.deleteTMShiftInWeekView("Unassigned");
-                    if (schedulePage.isPublishButtonLoaded() || schedulePage.isRepublishButtonLoadedOnSchedulePage()) {
+                    if (createSchedulePage.isPublishButtonLoaded() || createSchedulePage.isRepublishButtonLoadedOnSchedulePage()) {
                         createSchedulePage.publishActiveSchedule();
                     }
                     locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(notStartedDistrict);
@@ -2216,6 +2218,7 @@ public class UpperfieldTest extends TestBase {
     public void verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -2247,12 +2250,12 @@ public class UpperfieldTest extends TestBase {
 
             //Validate the clickability of backward button.
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             schedulePage.navigateToPreviousWeek();
 
             //Validate the clickability of forward button.
             schedulePage.navigateToNextWeek();
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
             //Validate changing BUs on Compliance
             String[] upperFields3 = null;
@@ -2282,6 +2285,7 @@ public class UpperfieldTest extends TestBase {
     public void verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -2310,12 +2314,12 @@ public class UpperfieldTest extends TestBase {
 
             //Validate the click ability of backward button.
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             schedulePage.navigateToPreviousWeek();
 
             //Validate the click ability of forward button.
             schedulePage.navigateToNextWeek();
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
             //Validate changing Regions on Compliance
             String[] upperFields2 = null;
@@ -2628,14 +2632,14 @@ public class UpperfieldTest extends TestBase {
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             int index = schedulePage.getIndexOfColInDMViewTable("Extra Hours");
             List<Float> extraHours = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
-            index = schedulePage.getIndexOfColInDMViewTable("Schedule Published On Time");
+            index = schedulePage.getIndexOfColInDMViewTable("Late Schedule");
             List<String> publishStatus = schedulePage.getListByColInTimesheetDMView(index);
             SimpleUtils.assertOnFail("The extra hour count should consistent with publish status count! ",
                     extraHours.size() == publishStatus.size(), false);
             int totalLocationWithViolation = 0;
 
             for (int i = 0; i < extraHours.size(); i++){
-                if (extraHours.get(i) >0 || publishStatus.get(i).equals("No")){
+                if (extraHours.get(i) == 0 || publishStatus.get(i).equals("No")){
                     totalLocationWithViolation ++;
                 }
             }
@@ -2675,14 +2679,14 @@ public class UpperfieldTest extends TestBase {
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             int index = schedulePage.getIndexOfColInDMViewTable("Extra Hours");
             List<Float> extraHours = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
-            index = schedulePage.getIndexOfColInDMViewTable("Schedule Published On Time");
+            index = schedulePage.getIndexOfColInDMViewTable("Late Schedule");
             List<String> publishStatus = schedulePage.getListByColInTimesheetDMView(index);
             SimpleUtils.assertOnFail("The extra hour count should consistent with publish status count! ",
                     extraHours.size() == publishStatus.size(), false);
             int totalLocationWithViolation = 0;
 
             for (int i = 0; i < extraHours.size(); i++){
-                if (extraHours.get(i) >0 || publishStatus.get(i).equals("No")){
+                if (extraHours.get(i) == 0 || publishStatus.get(i).equals("No")){
                     totalLocationWithViolation ++;
                 }
             }
@@ -3102,6 +3106,7 @@ public class UpperfieldTest extends TestBase {
     public void verifyTimesheetFunctionalityInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             Thread.sleep(5000);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -3131,12 +3136,12 @@ public class UpperfieldTest extends TestBase {
             //Validate the click ability of backward button.
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             schedulePage.navigateToPreviousWeek();
 
             //Validate the click ability of forward button.
             schedulePage.navigateToNextWeek();
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
             //Validate search function.
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
@@ -3156,6 +3161,7 @@ public class UpperfieldTest extends TestBase {
     public void verifyTimesheetFunctionalityInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             Thread.sleep(5000);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -3184,12 +3190,12 @@ public class UpperfieldTest extends TestBase {
             //Validate the click ability of backward button.
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             schedulePage.navigateToPreviousWeek();
 
             //Validate the click ability of forward button.
             schedulePage.navigateToNextWeek();
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
             //Validate search function.
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
@@ -3907,6 +3913,7 @@ public class UpperfieldTest extends TestBase {
     public void verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -3924,7 +3931,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
 
             //Validate the content of REGION SUMMARY smart card for current/future weeks.
-            HashMap<String, Float> valuesFromRegionSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(Region, "current");
+            HashMap<String, Float> valuesFromRegionSummaryCard =  scheduleDMViewPage.getValuesAndVerifyInfoForLocationSummaryInDMView(Region, "current");
 
             //Validate the data REGION SUMMARY smart card for current/future weeks.
             SimpleUtils.assertOnFail("Region counts in title are inconsistent!",
@@ -3978,7 +3985,7 @@ public class UpperfieldTest extends TestBase {
 
             //Navigate to the past week to verify the info and data.
             schedulePage.navigateToPreviousWeek();
-            valuesFromRegionSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(Region, "past");
+            valuesFromRegionSummaryCard =  scheduleDMViewPage.getValuesAndVerifyInfoForLocationSummaryInDMView(Region, "past");
 
             //Validate the data REGION SUMMARY smart card for the past weeks.
             SimpleUtils.assertOnFail("Region counts in title are inconsistent!",
@@ -4043,6 +4050,7 @@ public class UpperfieldTest extends TestBase {
     public void verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -4057,7 +4065,7 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
 
             //Validate the content of District SUMMARY smart card for current/future weeks.
-            HashMap<String, Float> valuesFromDistrictSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(District, "current");
+            HashMap<String, Float> valuesFromDistrictSummaryCard =  scheduleDMViewPage.getValuesAndVerifyInfoForLocationSummaryInDMView(District, "current");
 
             //Validate the data DISTRICT SUMMARY smart card for current/future weeks.
             SimpleUtils.assertOnFail("District counts in title are inconsistent!",
@@ -4111,7 +4119,7 @@ public class UpperfieldTest extends TestBase {
 
             //Navigate to the past week to verify the info and data.
             schedulePage.navigateToPreviousWeek();
-            valuesFromDistrictSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView(District, "past");
+            valuesFromDistrictSummaryCard =  scheduleDMViewPage.getValuesAndVerifyInfoForLocationSummaryInDMView(District, "past");
 
             //Validate the data DISTRICT SUMMARY smart card for the past weeks.
             SimpleUtils.assertOnFail("District counts in title are inconsistent!",

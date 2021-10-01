@@ -101,5 +101,5 @@ public interface PageFactory {
 
     ToggleSummaryPage createToggleSummaryPage();
 
-
+    NewShiftPage createNewShiftPage();
 }

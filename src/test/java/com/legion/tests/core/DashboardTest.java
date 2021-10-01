@@ -72,6 +72,8 @@ public class DashboardTest extends TestBase{
 			HashMap<String, String> fourShifts = new HashMap<>();
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			SchedulePage schedulePage = null;
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			dashboardPage.verifyDashboardPageLoadedProperly();
@@ -90,8 +92,8 @@ public class DashboardTest extends TestBase{
 			SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(
 					ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
 			// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
-			schedulePage.isScheduleForCurrentDayInDayView(dateFromDashboard);
-			HashMap<String, String> hoursOnSchedule = schedulePage.getHoursFromSchedulePage();
+			scheduleCommonPage.isScheduleForCurrentDayInDayView(dateFromDashboard);
+			HashMap<String, String> hoursOnSchedule = smartCardPage.getHoursFromSchedulePage();
 			// Verify scheduled and other hours are matching with the Schedule smart card of Schedule page
 			if (hoursOnDashboard != null && hoursOnSchedule != null) {
 				if (hoursOnDashboard.equals(hoursOnSchedule)) {
@@ -105,7 +107,7 @@ public class DashboardTest extends TestBase{
 			}
 			// Verify that Starting soon shifts and Scheduled hours are not showing when current week's schedule is in Guidance or Draft
 			if (!createSchedulePage.isGenerateButtonLoaded()) {
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 				createSchedulePage.isGenerateButtonLoaded();
 			}
 			dashboardPage.navigateToDashboard();
@@ -117,7 +119,7 @@ public class DashboardTest extends TestBase{
 			// Verify starting soon section
 			schedulePage = dashboardPage.goToTodayForNewUI();
 			scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-			if (!schedulePage.isPublishButtonLoaded()) {
+			if (!createSchedulePage.isPublishButtonLoaded()) {
 				createSchedulePage.generateOrUpdateAndGenerateSchedule();
 			}
 			createSchedulePage.publishActiveSchedule();
@@ -129,7 +131,7 @@ public class DashboardTest extends TestBase{
 				upComingShifts = dashboardPage.getUpComingShifts();
 				schedulePage = dashboardPage.goToTodayForNewUI();
 				scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-				fourShifts = schedulePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
+				fourShifts = scheduleShiftTablePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
 				schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
 			} else {
 				SimpleUtils.fail("Shifts failed to load on Dashboard when the schedule is published!", true);

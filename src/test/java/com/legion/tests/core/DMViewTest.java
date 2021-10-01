@@ -799,7 +799,7 @@ public class DMViewTest extends TestBase {
             schedulePage.clickOnLocationNameInDMView(location);
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated)
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             createSchedulePage.publishActiveSchedule();
             locationSelectorPage.reSelectDistrict(districtName);
@@ -819,7 +819,7 @@ public class DMViewTest extends TestBase {
             schedulePage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated)
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             createSchedulePage.publishActiveSchedule();
             locationSelectorPage.reSelectDistrict(districtName);
@@ -1014,13 +1014,13 @@ public class DMViewTest extends TestBase {
             schedulePage.verifySortByColForLocationsInDMView(1);
             schedulePage.verifySortByColForLocationsInDMView(3);
             schedulePage.verifySortByColForLocationsInDMView(3);
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToNextWeek();
             schedulePage.navigateToPreviousWeek();
             schedulePage.navigateToPreviousWeek();
-            System.out.println(schedulePage.getActiveWeekText());
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            System.out.println(scheduleCommonPage.getActiveWeekText());
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
             schedulePage.verifySearchLocationInScheduleDMView(location);
             //Change to another district.
             dashboardPage.navigateToDashboard();
@@ -1067,11 +1067,11 @@ public class DMViewTest extends TestBase {
             locationSelectorPage.reSelectDistrict(districtName);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             schedulePage.navigateToNextWeek();
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             schedulePage.clickOnLocationNameInDMView(location);
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-            SimpleUtils.assertOnFail("Didn't go to the right week!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            SimpleUtils.assertOnFail("Didn't go to the right week!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1085,6 +1085,7 @@ public class DMViewTest extends TestBase {
     public void verifyTimesheetFunctionalityInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
@@ -1110,12 +1111,12 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("TimeSheet DM view page fail to update!", !locationInDistrict1.containsAll(locationInDistrict2), false);
 
             //Validate the clickability of backward button.
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             schedulePage.navigateToPreviousWeek();
 
             //Validate the clickability of forward button.
             schedulePage.navigateToNextWeek();
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
             //Validate search function.
             locationSelectorPage.reSelectDistrict(districtName);
@@ -1132,6 +1133,7 @@ public class DMViewTest extends TestBase {
     public void verifyLocationSummaryInScheduleDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
@@ -1145,7 +1147,7 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
 
             //Validate the content of LOCATION SUMMARY smart card for current/future weeks.
-            HashMap<String, Float> valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("location","current");
+            HashMap<String, Float> valuesFromLocationSummaryCard =  scheduleDMViewPage.getValuesAndVerifyInfoForLocationSummaryInDMView("location","current");
 
             //Validate the data LOCATION SUMMARY smart card for current/future weeks.
             SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
@@ -1183,7 +1185,7 @@ public class DMViewTest extends TestBase {
 
             //Navigate to the past week to verify the info and data.
             schedulePage.navigateToPreviousWeek();
-            valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("location", "past");
+            valuesFromLocationSummaryCard =  scheduleDMViewPage.getValuesAndVerifyInfoForLocationSummaryInDMView("location", "past");
 
             //Validate the data LOCATION SUMMARY smart card for the past weeks.
             SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
@@ -1304,6 +1306,7 @@ public class DMViewTest extends TestBase {
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Validate the title and info of Compliance page.
@@ -1327,12 +1330,12 @@ public class DMViewTest extends TestBase {
             schedulePage.verifySearchLocationInScheduleDMView(location);
 
             //Validate the clickability of backward button.
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             schedulePage.navigateToPreviousWeek();
 
             //Validate the clickability of forward button.
             schedulePage.navigateToNextWeek();
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1518,9 +1521,9 @@ public class DMViewTest extends TestBase {
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab("Schedule");
             schedulePage.navigateToNextWeek();
-            String weekInfo = schedulePage.getActiveWeekText();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             locationSelectorPage.reSelectDistrict(districtName);
-            SimpleUtils.assertOnFail("Dates are inconsistent after changing date and location!", schedulePage.getActiveWeekText().equalsIgnoreCase(weekInfo), false);
+            SimpleUtils.assertOnFail("Dates are inconsistent after changing date and location!", scheduleCommonPage.getActiveWeekText().equalsIgnoreCase(weekInfo), false);
 
             //Changing district and navigate to Timesheet page(Checked in other script).
             //Verify no timesheet tab in non-TA env.

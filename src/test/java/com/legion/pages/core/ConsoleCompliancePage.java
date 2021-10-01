@@ -526,7 +526,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         - Doubletime (Hrs)
         - Late Schedule?*/
         boolean isMatched = false;
-        List<String> fieldNamesExpected = Arrays.asList(new String[]{upperFieldType, "Extra Hours", "Overtime", "Clopening", "Missed Meal", "Schedule Changed Premium", "Double Time", "Schedule Published On Time"});
+        List<String> fieldNamesExpected = Arrays.asList(new String[]{upperFieldType, "Extra Hours", "Overtime", "Clopening", "Missed Meal", "Schedule Changed Premium", "Double Time", "Late Schedule"});
         if (isElementLoaded(analyticsTableHeader,10)) {
             List<WebElement> fields = analyticsTableHeader.findElements(By.xpath("./div"));
             for (WebElement field: fields) {

@@ -672,7 +672,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                 theSelectedScheduleLocationName = schedulesInDMView.get(0).findElement(By.cssSelector("[class=\"ng-binding\"]")).getText();
                 click(schedulesInDMView.get(0).findElement(By.className("ng-binding")));
                 if (createSchedulePage.isWeekGenerated()){
-                    schedulePage.unGenerateActiveScheduleScheduleWeek();
+                    createSchedulePage.unGenerateActiveScheduleScheduleWeek();
                 }
                 if (scheduleStatus.equalsIgnoreCase("Published")){
                     createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -687,16 +687,18 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             SchedulePage schedulePage = new ConsoleScheduleNewUIPage();
             ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
             CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
+            NewShiftPage newShiftPage = new ConsoleNewShiftPage();
             Map<String,String> scheduleHoursOnScheduleDMView = new HashMap<>();
             List<String> scheduleHoursOnScheduleDetailPage = new ArrayList<>();
             String theSelectedScheduleLocationName = locationName;
             clickSpecificScheduleByLocationName(theSelectedScheduleLocationName);
             if (createSchedulePage.isWeekGenerated()){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             if (scheduleStatus.equals("Published")){
                 List<String> toCloseDays = new ArrayList<>();
-                schedulePage.editOperatingHoursOnScheduleOldUIPage("8", "20", toCloseDays);
+                newShiftPage.editOperatingHoursOnScheduleOldUIPage("8", "20", toCloseDays);
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
                 createSchedulePage.publishActiveSchedule();
             } else if (scheduleStatus.equalsIgnoreCase("In Progress")){
@@ -732,10 +734,10 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                     hoursFromScheduleSMOnDGEnv.put("ScheduledOpen","0");
                     break;
                 case "Published":
-                    if(!schedulePage.isPublishButtonLoadedOnSchedulePage()
+                    if(!createSchedulePage.isPublishButtonLoadedOnSchedulePage()
                             && !schedulePage.isCreateScheduleBtnLoadedOnSchedulePage()){
                         SimpleUtils.pass("The 'Published' schedule status display correctly! ");
-                        if (schedulePage.isRepublishButtonLoadedOnSchedulePage()){
+                        if (createSchedulePage.isRepublishButtonLoadedOnSchedulePage()){
 //                            schedulePage.clickOnRepublishButtonLoadedOnSchedulePage();
                             createSchedulePage.publishActiveSchedule();
                         }
@@ -761,7 +763,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
                     break;
                 case "In Progress":
-                    if(schedulePage.isPublishButtonLoadedOnSchedulePage()
+                    if(createSchedulePage.isPublishButtonLoadedOnSchedulePage()
                             && !schedulePage.isCreateScheduleBtnLoadedOnSchedulePage()){
                         SimpleUtils.pass("The 'In Progress' schedule status display correctly! ");
                     } else
@@ -781,10 +783,10 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             float projectionOpenShiftsFromScheduleDetailPage = 0;
             switch (specificWeek){
                 case "Current Week":
-                    projectionOpenShiftsFromScheduleDetailPage = schedulePage.getTotalProjectionOpenShiftsHoursForCurrentWeek();
+//                    projectionOpenShiftsFromScheduleDetailPage = schedulePage.getTotalProjectionOpenShiftsHoursForCurrentWeek();
                     break;
                 case "Next Week":
-                    projectionOpenShiftsFromScheduleDetailPage = schedulePage.newCalcTotalScheduledHourForDayInWeekView();
+                    projectionOpenShiftsFromScheduleDetailPage = scheduleShiftTablePage.newCalcTotalScheduledHourForDayInWeekView();
                     break;
             }
             //Only for DG env: get timesheet hours from Time sheet page
@@ -1294,5 +1296,138 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             SimpleUtils.fail("getDataInCompliancePage: search input fail to load!", true);
         }
         return allUpperFieldInfo;
+    }
+
+    @FindBy(css = "div.card-carousel-card-title")
+    private WebElement locationsSummaryTitleOnSchedule;
+
+    @FindBy(css = "div.published-clocked-cols-summary-title")
+    private List<WebElement> locationsSummarySmartCardOnSchedule;
+    public List<String> getLocationSummaryDataFromSchedulePage() throws Exception{
+        String locationSummaryTitleOnSchedule = null;
+        List<String> ListLocationSummaryOnSchedule = new ArrayList<>();
+        if(isElementLoaded(locationsSummaryTitleOnSchedule, 10)){
+            locationSummaryTitleOnSchedule = locationsSummaryTitleOnSchedule.getText();
+            ListLocationSummaryOnSchedule.add(locationSummaryTitleOnSchedule);
+        }else{
+            SimpleUtils.fail("Location Summary Title not available on Dashboard Page", true);
+        }
+
+        if(areListElementVisible(locationsSummarySmartCardOnSchedule,10) && locationsSummarySmartCardOnSchedule.size()!=0){
+            for(int i =0; i< locationsSummarySmartCardOnSchedule.size();i++){
+                ListLocationSummaryOnSchedule.add(locationsSummarySmartCardOnSchedule.get(i).getText());
+            }
+        }else{
+            SimpleUtils.fail("Location Summary Smart Card not available on Dashboard Page", true);
+        }
+
+        return ListLocationSummaryOnSchedule;
+    }
+
+
+    @FindBy(css = "div[class=\"card-carousel-card card-carousel-card-primary \"]")
+    private WebElement locationSummary;
+    @Override
+    public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String upperFieldType, String weekType) throws Exception {
+        HashMap<String, Float> result = new HashMap<String, Float>();
+        if (isElementLoaded(locationSummary,10) && locationSummary.findElements(By.cssSelector("text")).size()>=6){
+            String upperFieldSummaryTitle = locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().toLowerCase();
+            if (upperFieldSummaryTitle.contains(upperFieldType.toLowerCase() + "s summary")
+                    || upperFieldSummaryTitle.contains(upperFieldType.toLowerCase() + " summary")){
+                SimpleUtils.pass("Location Summary smart title displays correctly!");
+                String numOfLocations = locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().split(" ")[0];
+                if (SimpleUtils.isNumeric(numOfLocations)){
+                    result.put("NumOfLocations", Float.valueOf(numOfLocations));
+                } else {
+                    SimpleUtils.fail("Location count in title fail to load!", false);
+                }
+            } else {
+                SimpleUtils.fail("Location Summary smart title diaplays incorrectly!", false);
+            }
+            if (SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(0).getText().replace(",","")) && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(2).getText().replace(",",""))){
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(1).getText(),
+                        Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(0).getText().replace(",","")));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(3).getText(),
+                        Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(2).getText().replace(",","")));
+            } else {
+                SimpleUtils.fail("Budget hours and Published hours display incorrectly!", false);
+            }
+            if (locationSummary.findElements(By.cssSelector("text")).size()==6
+                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",",""))){
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",","")));
+                if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▼")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#50b83c")){
+                        SimpleUtils.pass("The color of the value is correct! -> green");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not green", false);
+                    }
+                } else if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▲")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#ff0000")){
+                        SimpleUtils.pass("The color of the value is correct! -> red");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not red", false);
+                    }
+                }
+            }
+            if (locationSummary.findElements(By.cssSelector("text")).size()==8
+                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",",""))
+                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","").replace(",",""))){
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",","")));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(7).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","").replace(",","")));
+
+                if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▼")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#50b83c")){
+                        SimpleUtils.pass("The color of the value is correct! -> green");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not green", false);
+                    }
+                } else if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▲")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#ff0000")){
+                        SimpleUtils.pass("The color of the value is correct! -> red");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not red", false);
+                    }
+                }
+            }
+            if(weekType.toLowerCase().contains("current") || weekType.contains("previous")){
+                if (isElementLoaded(locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")),10)
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Scheduled Within Budget")
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Scheduled Over Budget")
+                        && getLocationSummaryDataFromSchedulePage().size() == 3){
+                    String numOfProjectedWithin = getLocationSummaryDataFromSchedulePage().get(1).split(" ")[0];
+                    String numOfProjectedOver = getLocationSummaryDataFromSchedulePage().get(2).split(" ")[0];
+                    if (SimpleUtils.isNumeric(numOfProjectedWithin.replace(",","")) && SimpleUtils.isNumeric(numOfProjectedOver.replace(",",""))){
+                        result.put("NumOfProjectedWithin", Float.valueOf(numOfProjectedWithin.replace(",","")));
+                        result.put("NumOfProjectedOver", Float.valueOf(numOfProjectedOver.replace(",","")));
+                    } else {
+                        SimpleUtils.fail("Scheduled Location count in title fail to load!", false);
+                    }
+                    SimpleUtils.pass("Scheduled locations info load successfully!");
+                } else {
+                    SimpleUtils.fail("Scheduled locations info fail to load!", false);
+                }
+            } else {
+                if (isElementLoaded(locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")),10)
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Published Within Budget")
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Published Over Budget")
+                        && getLocationSummaryDataFromSchedulePage().size() == 3){
+                    String numOfProjectedWithin = getLocationSummaryDataFromSchedulePage().get(1).split(" ")[0];
+                    String numOfProjectedOver = getLocationSummaryDataFromSchedulePage().get(2).split(" ")[0];
+                    if (SimpleUtils.isNumeric(numOfProjectedWithin.replace(",","")) && SimpleUtils.isNumeric(numOfProjectedOver.replace(",",""))){
+                        result.put("NumOfProjectedWithin", Float.valueOf(numOfProjectedWithin.replace(",","")));
+                        result.put("NumOfProjectedOver", Float.valueOf(numOfProjectedOver.replace(",","")));
+                    } else {
+                        SimpleUtils.fail("Projected Location count in title fail to load!", false);
+                    }
+                    SimpleUtils.pass("Projected locations info load successfully!");
+                } else {
+                    SimpleUtils.fail("Projected locations info fail to load!", false);
+                }
+            }
+
+        } else {
+            SimpleUtils.fail("Location summary smart card fail to load!", false);
+        }
+        return result;
     }
 }

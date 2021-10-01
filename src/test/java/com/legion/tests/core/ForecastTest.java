@@ -86,6 +86,7 @@ public class ForecastTest extends TestBase{
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			scheduleOverviewPage.loadScheduleOverview();
 			ForecastPage ForecastPage  = pageFactory.createForecastPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			ForecastPage.clickForecast();
 		    //In Shoppers,Smartcard are available in correct alignment
 			ForecastPage.verifySmartcardAreAvailableInShoppers();
@@ -100,12 +101,11 @@ public class ForecastTest extends TestBase{
 			Float sum = 0.0f;
 			HashMap<String, Float> insightDataInWeek = new HashMap<String, Float>();
 			insightDataInWeek = ForecastPage.getInsightDataInShopperWeekView();
-			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnDayView();
 			//click the first day of a week
 			scheduleCommonPage.clickOnPreviousDaySchedule("Sun");
 			for (int index = 0; index < ConsoleScheduleNewUIPage.dayCount.Seven.getValue(); index++) {
-				scheduleCommonPage.clickOnNextDaySchedule(schedulePage.getActiveAndNextDay());
+				scheduleCommonPage.clickOnNextDaySchedule(scheduleCommonPage.getActiveAndNextDay());
 				if (schedulePage.inActiveWeekDayClosed(index)){
 					SimpleUtils.report("Store is closed and there is no insight smartc");
 				}else {
@@ -113,7 +113,7 @@ public class ForecastTest extends TestBase{
 					peakItemsShoppers[index] =insightData1.get("peakShoppers");
 					totalItemsShoppers[index] =insightData1.get("totalShoppers");
 					sum+=totalItemsShoppers[index];
-					SimpleUtils.report("Store is Open for the Day/Week: '" + schedulePage.getActiveWeekText() + ":"+insightData1);
+					SimpleUtils.report("Store is Open for the Day/Week: '" + scheduleCommonPage.getActiveWeekText() + ":"+insightData1);
 				}
 			}
 			if (insightDataInWeek.get("totalShoppers").equals(sum)) {
@@ -152,6 +152,7 @@ public class ForecastTest extends TestBase{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 				scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
@@ -162,13 +163,13 @@ public class ForecastTest extends TestBase{
 		scheduleCommonPage.clickOnWeekView();
 
 		Thread.sleep(5000);
-		String activeWeekText = schedulePage.getActiveWeekText();
+		String activeWeekText = scheduleCommonPage.getActiveWeekText();
 
-		if (schedulePage.isSmartCardAvailableByLabel(WeatherCardText)) {
+		if (smartCardPage.isSmartCardAvailableByLabel(WeatherCardText)) {
 			SimpleUtils.pass("Weather Forecart Smart Card appeared for week view duration: '" + activeWeekText + "'");
 			String[] splitActiveWeekText = activeWeekText.split(" ");
-			String smartCardTextByLabel = schedulePage.getsmartCardTextByLabel(WeatherCardText);
-			String weatherTemperature = schedulePage.getWeatherTemperature();
+			String smartCardTextByLabel = smartCardPage.getsmartCardTextByLabel(WeatherCardText);
+			String weatherTemperature = smartCardPage.getWeatherTemperature();
 
 			SimpleUtils.assertOnFail("Weather Forecart Smart Card not contain starting day('" + splitActiveWeekText[0] + "') of active week: '" + activeWeekText + "'",
 					smartCardTextByLabel.toLowerCase().contains(splitActiveWeekText[0].toLowerCase()), true);
@@ -191,14 +192,14 @@ public class ForecastTest extends TestBase{
 			if (index != 0)
 				scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.One.getValue());
 
-			String activeDayText = schedulePage.getActiveWeekText();
-			if (schedulePage.isSmartCardAvailableByLabel(WeatherCardText)) {
+			String activeDayText = scheduleCommonPage.getActiveWeekText();
+			if (smartCardPage.isSmartCardAvailableByLabel(WeatherCardText)) {
 				SimpleUtils.pass("Weather Forecart Smart Card appeared for week view duration: '" + activeDayText + "'");
 				String[] splitActiveWeekText = activeDayText.split(" ");
-				String smartCardTextByLabel = schedulePage.getsmartCardTextByLabel(WeatherCardText);
+				String smartCardTextByLabel = smartCardPage.getsmartCardTextByLabel(WeatherCardText);
 				SimpleUtils.assertOnFail("Weather Forecart Smart Card not contain starting day('" + splitActiveWeekText[1] + "') of active day: '" + activeDayText + "'",
 						smartCardTextByLabel.toLowerCase().contains(splitActiveWeekText[1].toLowerCase()), true);
-				String weatherTemperature = schedulePage.getWeatherTemperature();
+				String weatherTemperature = smartCardPage.getWeatherTemperature();
 				if (weatherTemperature != "")
 					SimpleUtils.pass("Weather Forecart Smart Card contains Temperature value: '" + weatherTemperature + "' for the duration: '" +
 							activeWeekText + "'");

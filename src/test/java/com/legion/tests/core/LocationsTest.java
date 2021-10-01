@@ -759,6 +759,7 @@ public class LocationsTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -768,16 +769,16 @@ public class LocationsTest extends TestBase {
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.clickOnDayViewAddNewShiftButton();
-                schedulePage.customizeNewShiftPage();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
                 } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
                 }
-                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-                schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("aglae");
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByName("aglae");
                 if (!schedulePage.verifyWFSFunction()) {
                     //to check WFS group exist or not
                     LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -819,16 +820,16 @@ public class LocationsTest extends TestBase {
             } else {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.clickOnDayViewAddNewShiftButton();
-                schedulePage.customizeNewShiftPage();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
                 } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
                 }
-                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-                schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("Aglae");
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByName("Aglae");
                 if (!schedulePage.verifyWFSFunction()) {
                     SimpleUtils.fail("Workforce sharing function work failed",false);
                 }else
@@ -861,6 +862,7 @@ public class LocationsTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -870,16 +872,16 @@ public class LocationsTest extends TestBase {
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.clickOnDayViewAddNewShiftButton();
-                schedulePage.customizeNewShiftPage();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
                 } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
                 }
-                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-                schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("Alysha");
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByName("Alysha");
                 if (!schedulePage.verifyWFSFunction()) {
                     //to check WFS group exist or not
                     LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -921,16 +923,16 @@ public class LocationsTest extends TestBase {
             } else {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.clickOnDayViewAddNewShiftButton();
-                schedulePage.customizeNewShiftPage();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
                 } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
                 }
-                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-                schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("Alysha");
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByName("Alysha");
                 if (!schedulePage.verifyWFSFunction()) {
                     SimpleUtils.fail("Workforce sharing function work failed",false);
                 }else

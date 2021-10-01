@@ -88,6 +88,9 @@ public class ConsolidatingFiltersTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -116,7 +119,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(3000);
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
@@ -128,68 +131,68 @@ public class ConsolidatingFiltersTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
 
             // Create new shift for TM1 on first and second day for Clopening violation
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
             schedulePage.selectSpecificWorkDay(1);
-            schedulePage.selectWorkRole(workRoleOfTM1);
-            schedulePage.moveSliderAtCertainPoint("11pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("6pm", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(firstNameOfTM1);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.selectWorkRole(workRoleOfTM1);
+            newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("6pm", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectDaysByIndex(1, 1, 1);
-            schedulePage.selectWorkRole(workRoleOfTM1);
-            schedulePage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(firstNameOfTM1);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(1, 1, 1);
+            newShiftPage.selectWorkRole(workRoleOfTM1);
+            newShiftPage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
             //Create new shift for TM on third day for meal break violation
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectDaysByIndex(2, 2, 2);
-            schedulePage.selectWorkRole(workRoleOfTM1);
-            schedulePage.moveSliderAtCertainPoint("4pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(firstNameOfTM1);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(2, 2, 2);
+            newShiftPage.selectWorkRole(workRoleOfTM1);
+            newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
             //Create new shift for TM on forth day for OT violation
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectDaysByIndex(3, 3, 3);
-            schedulePage.selectWorkRole(workRoleOfTM1);
-            schedulePage.moveSliderAtCertainPoint("8pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(firstNameOfTM1);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(3, 3, 3);
+            newShiftPage.selectWorkRole(workRoleOfTM1);
+            newShiftPage.moveSliderAtCertainPoint("8pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
 
             // Edit the Schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<WebElement> shiftsOfThirdDay = schedulePage.getOneDayShiftByName(2, firstNameOfTM1);
-            schedulePage.deleteMealBreakForOneShift(shiftsOfThirdDay.get(0));
-            schedulePage.saveSchedule();
+            shiftOperatePage.deleteMealBreakForOneShift(shiftsOfThirdDay.get(0));
+            scheduleMainPage.saveSchedule();
 
             schedulePage.clickOnFilterBtn();
             int allShiftsCount = schedulePage.getShiftsCount();
             int complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
-            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
             int complianceShiftsCount = schedulePage.getShiftsCount();
             SimpleUtils.assertOnFail("The compliance shift count display incorrectly in schedule filter dropdown list! ",
                     complianceReviewCount == complianceShiftsCount, false);
@@ -201,16 +204,16 @@ public class ConsolidatingFiltersTest extends TestBase {
 
             //Check the clopening violation shifts on the first and second day
             SimpleUtils.assertOnFail("Clopening compliance message display failed",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("Clopening")
-                            && schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfSecondDay.get(0)).contains("Clopening") , false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("Clopening")
+                            && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfSecondDay.get(0)).contains("Clopening") , false);
 
             //Check the meal break violation shifts on the third day
             SimpleUtils.assertOnFail("Meal break compliance message display failed",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
 
     //            //Check the OT violation shifts on the forth day. Blocked by SCH-4250
     //            SimpleUtils.assertOnFail("OT compliance message display failed",
-    //                    schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
+    //                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
 
             schedulePage.clickOnFilterBtn();
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
@@ -220,7 +223,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             //Validate Compliance Review in day view
             scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
             for (int i=0; i< 4; i++) {
                 scheduleCommonPage.navigateDayViewWithIndex(i);
                 schedulePage.clickOnFilterBtn();
@@ -233,21 +236,21 @@ public class ConsolidatingFiltersTest extends TestBase {
                 if (i ==0 || i==1) {
                     shiftsOfFirstDay = schedulePage.getShiftsByNameOnDayView(firstNameOfTM1);
                     SimpleUtils.assertOnFail("Clopening compliance message display failed",
-                            schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("Clopening"), false);
+                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("Clopening"), false);
                 }
 
                 //Check the meal break violation shifts on the third day
                 if (i==2) {
                     shiftsOfThirdDay = schedulePage.getShiftsByNameOnDayView(firstNameOfTM1);
                     SimpleUtils.assertOnFail("Meal break compliance message display failed",
-                            schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
+                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
                 }
 
                 //Check the OT violation shifts on the forth day. Blocked by SCH-4250
 //                if (i==3) {
 //                      shiftsOfForthDay = schedulePage.getShiftsByNameOnDayView(firstNameOfTM1);
 //                    SimpleUtils.assertOnFail("OT compliance message display failed",
-//                            schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
+//                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
 //                }
             }
 
@@ -266,6 +269,8 @@ public class ConsolidatingFiltersTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "No, keep as unassigned";
@@ -312,7 +317,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(3000);
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "08:00PM");
@@ -320,7 +325,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             int allShiftsCount = schedulePage.getShiftsCount();
             int unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
-            schedulePage.selectShiftTypeFilterByText("Action Required");
+            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
             int unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
             SimpleUtils.assertOnFail("The Action Required shift count display incorrectly in schedule filter dropdown list! ",
                     unassignedAndOOOHShiftCount == unassignedAndOOOHShiftCountInFilter, false);
@@ -333,7 +338,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             //Validate Action Required shifts in day view
             scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText("Action Required");
+            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
             for (int i=0; i< 7; i++) {
                 scheduleCommonPage.navigateDayViewWithIndex(i);
                 schedulePage.clickOnFilterBtn();
@@ -344,12 +349,12 @@ public class ConsolidatingFiltersTest extends TestBase {
             }
 
             schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             createSchedulePage.publishActiveSchedule();
 
 
             //Get the info of this week for copy schedule
-            String firstWeekInfo = schedulePage.getActiveWeekText();
+            String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
                 if (firstWeekInfo.contains("-")) {
@@ -365,7 +370,7 @@ public class ConsolidatingFiltersTest extends TestBase {
 
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "08:00PM");
@@ -382,7 +387,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             allShiftsCount = schedulePage.getShiftsCount();
             unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
-            schedulePage.selectShiftTypeFilterByText("Action Required");
+            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
             unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
             SimpleUtils.assertOnFail("The Action Required shift count display incorrectly in schedule filter dropdown list! ",
                     unassignedAndOOOHShiftCount == unassignedAndOOOHShiftCountInFilter, false);
@@ -395,7 +400,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             //Validate Action Required shifts in day view
             scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText("Action Required");
+            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
             for (int i=0; i< 7; i++) {
                 scheduleCommonPage.navigateDayViewWithIndex(i);
                 schedulePage.clickOnFilterBtn();
@@ -481,7 +486,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
@@ -491,7 +496,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             schedulePage.clickOnFilterBtn();
             int allShiftsCount = schedulePage.getShiftsCount();
             int complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
-            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
             int complianceShiftsCount = schedulePage.getShiftsCount();
             SimpleUtils.assertOnFail("The compliance shift count display incorrectly in schedule filter dropdown list! ",
                     complianceReviewCount == complianceShiftsCount, false);
@@ -504,7 +509,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             //Validate Compliance Review in day view
             scheduleCommonPage.clickOnDayView();
             schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText("Action Required");
+            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
             for (int i=0; i< 7; i++) {
                 scheduleCommonPage.navigateDayViewWithIndex(i);
                 schedulePage.clickOnFilterBtn();

@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.*;
+import static com.legion.utils.MyThreadLocal.setWorkerLocation;
 
 public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedulePage {
     public ConsoleCreateSchedulePage() {
@@ -1142,5 +1143,135 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         } else
             SimpleUtils.fail("Create Schedule - Enter Budget: Edit button not loaded Successfully!", false);
         return budgetForNonDGFlow;
+    }
+
+
+    @FindBy(css = ".modal-dialog ")
+    WebElement popUpDialog;
+    @FindBy(css = ".modal-dialog .publish-confirm-modal-message-container-compliance")
+    WebElement complianceWarningMsgInConfirmModal;
+    @Override
+    public String getMessageForComplianceWarningInPublishConfirmModal() throws Exception {
+        if (isElementLoaded(popUpDialog, 5)){
+            return popUpDialog.findElement(By.cssSelector(".publish-confirm-modal-message-container-compliance")).getText();
+        } else {
+            SimpleUtils.fail("No dialog pop up.", false);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isComplianceWarningMsgLoad() throws Exception {
+        if (isElementLoaded(complianceWarningMsgInConfirmModal, 10)){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isPublishButtonLoaded() {
+        try {
+            if (isElementLoaded(publishSheduleButton))
+                return true;
+            else
+                return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    @FindBy (css = "div.redesigned-modal")
+    private WebElement deleteSchedulePopup;
+
+    @FindBy (css = ".redesigned-modal input")
+    private WebElement deleteScheduleCheckBox;
+
+    @FindBy (css = ".redesigned-button-ok")
+    private WebElement deleteButtonOnDeleteSchedulePopup;
+
+    @FindBy (css = ".redesigned-button-cancel-gray")
+    private WebElement cancelButtonOnDeleteSchedulePopup;
+
+    @Override
+    public void unGenerateActiveScheduleScheduleWeek() throws Exception {
+
+        if(isElementLoaded(deleteScheduleButton, 60)){
+            click(deleteScheduleButton);
+            if(isElementLoaded(deleteSchedulePopup, 15)
+                    && isElementLoaded(deleteScheduleCheckBox, 5)
+                    && isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5)){
+                click(deleteScheduleCheckBox);
+                waitForSeconds(1);
+                click(deleteButtonOnDeleteSchedulePopup);
+                if (isElementLoaded(generateSheduleButton, 60)) {
+                    SimpleUtils.pass("Schedule Page: Active Week ('" + getActiveWeekText() + "') Ungenerated Successfully.");
+                } else {
+                    SimpleUtils.fail("Schedule Page: Active Week ('" + getActiveWeekText() + "') isn't deleted successfully!", false);
+                }
+            } else
+                SimpleUtils.fail("Schedule Page: Delete schedule popup or delete schedule Button not loaded for the week: '"
+                        + getActiveWeekText() + "'.", false);
+
+        } else
+            SimpleUtils.fail("Schedule Page: Delete schedule button not loaded to Ungenerate the Schedule for the Week : '"
+                    + getActiveWeekText() + "'.", false);
+    }
+
+    @FindBy (css = ".day-week-picker-period-week")
+    private List<WebElement> currentWeeks;
+
+    @FindBy(className = "day-week-picker-arrow-right")
+    private WebElement calendarNavigationNextWeekArrow;
+    @Override
+    public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception {
+        if (areListElementVisible(currentWeeks, 10)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                // Current week is at the center by default, since we don't need to ungenerate the schedule for previous week
+                if (loopCount == 0) {
+                    if (i == 0) {
+                        continue;
+                    }
+                }
+                click(currentWeeks.get(i));
+                CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
+                if (createSchedulePage.isWeekGenerated()) {
+                    unGenerateActiveScheduleScheduleWeek();
+                }
+                if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                    click(calendarNavigationNextWeekArrow);
+                    loopCount += 1;
+                    unGenerateActiveScheduleFromCurrentWeekOnward(loopCount);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Current Weeks' elements not loaded Successfully!", false);
+        }
+    }
+
+
+
+    @FindBy(css = "[ng-click=\"controlPanel.fns.publishConfirmation($event, false)\"]")
+    private WebElement publishButton;
+    @FindBy(css = "lg-button[label*=\"Republish\"]")
+    private WebElement republishButton;
+
+    public boolean isPublishButtonLoadedOnSchedulePage() throws Exception {
+        boolean isPublishButtonLoaded = false;
+        if (isElementLoaded(publishButton, 4)){
+            isPublishButtonLoaded = true;
+            SimpleUtils.report("Publish button loaded successfully on schedule page! ");
+        } else
+            SimpleUtils.report("Publish button loaded fail on schedule page! ");
+        return isPublishButtonLoaded;
+    }
+
+    public boolean isRepublishButtonLoadedOnSchedulePage() throws Exception {
+        boolean isRepublishButtonLoaded = false;
+        if (isElementLoaded(republishButton, 4)){
+            isRepublishButtonLoaded = true;
+            SimpleUtils.report("Republish button loaded successfully on schedule page! ");
+        } else
+            SimpleUtils.report("Republish button loaded fail on schedule page! ");
+        return isRepublishButtonLoaded;
     }
 }

@@ -200,6 +200,7 @@ public class LiquidDashboardTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -213,7 +214,7 @@ public class LiquidDashboardTest extends TestBase {
             schedulePage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             // Deleting the existing shifts for swap team members
@@ -221,11 +222,11 @@ public class LiquidDashboardTest extends TestBase {
             schedulePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
             schedulePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
             schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             // Add the new shifts for swap team members
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addNewShiftsByNames(swapCoverNames, workRoleName);
-            schedulePage.saveSchedule();
+            newShiftPage.addNewShiftsByNames(swapCoverNames, workRoleName);
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -242,7 +243,8 @@ public class LiquidDashboardTest extends TestBase {
             prepareTheSwapShiftsAsInternalAdmin(browser, username, password, location);
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
-
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
@@ -260,21 +262,21 @@ public class LiquidDashboardTest extends TestBase {
 
             // For Swap Feature
             List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
-            int index = schedulePage.verifyClickOnAnyShift();
+            int index = mySchedulePage.verifyClickOnAnyShift();
             String request = "Request to Swap Shift";
             String title = "Find Shifts to Swap";
-            schedulePage.clickTheShiftRequestByName(request);
-            SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+            mySchedulePage.clickTheShiftRequestByName(request);
+            SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
             schedulePage.verifyComparableShiftsAreLoaded();
             schedulePage.verifySelectMultipleSwapShifts();
             // Validate the Submit button feature
             schedulePage.verifyClickOnNextButtonOnSwap();
             title = "Submit Swap Request";
-            SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), false);
+            SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), false);
             schedulePage.verifyClickOnSubmitButton();
             // Validate the disappearence of Request to Swap and Request to Cover option
             schedulePage.clickOnShiftByIndex(index);
-            if (!schedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
+            if (!mySchedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
                 SimpleUtils.pass("Request to Swap and Request to Cover options are disappear");
             } else {
                 SimpleUtils.fail("Request to Swap and Request to Cover options are still shown!", false);
@@ -295,13 +297,13 @@ public class LiquidDashboardTest extends TestBase {
 
             // Validate that swap request smartcard is available to recipient team member
             String smartCard = "SWAP REQUESTS";
-            schedulePage.isSmartCardAvailableByLabel(smartCard);
+            smartCardPage.isSmartCardAvailableByLabel(smartCard);
             // Validate the availability of all swap request shifts in schedule table
             String linkName = "View All";
             schedulePage.clickLinkOnSmartCardByName(linkName);
             schedulePage.verifySwapRequestShiftsLoaded();
             // Validate that recipient can claim the swap request shift.
-            schedulePage.verifyClickAcceptSwapButton();
+            mySchedulePage.verifyClickAcceptSwapButton();
 
             loginPage.logOut();
 
@@ -350,7 +352,7 @@ public class LiquidDashboardTest extends TestBase {
 
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             dashboardPage.navigateToDashboard();
 
@@ -376,11 +378,11 @@ public class LiquidDashboardTest extends TestBase {
                 //verify week info on widget
                 //gp to schedule, get week info of current week, last week and next week.
                 liquidDashboardPage.clickFirstWeekOnSchedulesGoToSchedule();
-                String startDayOfLastWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+                String startDayOfLastWeek = scheduleCommonPage.getActiveWeekText().split(" - ")[1];
                 schedulePage.navigateToNextWeek();
-                String startDayOfCurrentWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+                String startDayOfCurrentWeek = scheduleCommonPage.getActiveWeekText().split(" - ")[1];
                 schedulePage.navigateToNextWeek();
-                String startDayOfNextWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+                String startDayOfNextWeek = scheduleCommonPage.getActiveWeekText().split(" - ")[1];
 
                 //go back to dashboard to verify week info on widget is consistent with the ones in schedule.
                 dashboardPage.navigateToDashboard();
@@ -465,6 +467,7 @@ public class LiquidDashboardTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -492,7 +495,7 @@ public class LiquidDashboardTest extends TestBase {
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
             dashboardPage.navigateToDashboard();
@@ -507,7 +510,7 @@ public class LiquidDashboardTest extends TestBase {
                 liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Starting_Soon.getValue(), linkNames.View_Schedule.getValue());
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
                 String timeFromDashboard = dashboardPage.getDateFromTimeZoneOfLocation("hh:mm aa");
-                HashMap<String, String> shiftsFromDayView = schedulePage.getFourUpComingShifts(false, timeFromDashboard);
+                HashMap<String, String> shiftsFromDayView = scheduleShiftTablePage.getFourUpComingShifts(false, timeFromDashboard);
                 schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, shiftsFromDayView);
             } else {
                 SimpleUtils.fail("No upcoming shifts loaded!", false);
@@ -527,8 +530,8 @@ public class LiquidDashboardTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Starting_Soon.getValue())) {
                 // Verify Edit mode Dashboard loaded
                 liquidDashboardPage.enterEditMode();
@@ -547,7 +550,7 @@ public class LiquidDashboardTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Ungenerate the schedule from current week
-            schedulePage.unGenerateActiveScheduleFromCurrentWeekOnward(0);
+            createSchedulePage.unGenerateActiveScheduleFromCurrentWeekOnward(0);
 
             // Navigate to dashboard page to check there should no shifts in Starting soon, there should show "No published shifts for today"
             dashboardPage.navigateToDashboard();
@@ -723,6 +726,7 @@ public class LiquidDashboardTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
 
@@ -761,7 +765,7 @@ public class LiquidDashboardTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated && schedulePage.isDeleteScheduleButtonLoaded()) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -848,9 +852,9 @@ public class LiquidDashboardTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteAllOOOHShiftInWeekView();
+            shiftOperatePage.deleteAllOOOHShiftInWeekView();
             schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -898,9 +902,9 @@ public class LiquidDashboardTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             if (!createSchedulePage.isWeekPublished()) {
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.deleteAllOOOHShiftInWeekView();
+                shiftOperatePage.deleteAllOOOHShiftInWeekView();
                 schedulePage.deleteTMShiftInWeekView("Unassigned");
-                schedulePage.saveSchedule();
+                scheduleMainPage.saveSchedule();
                 createSchedulePage.publishActiveSchedule();
             }
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
@@ -959,7 +963,7 @@ public class LiquidDashboardTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Open_Shifts.getValue())) {
                 // Verify Edit mode Dashboard loaded
@@ -996,8 +1000,8 @@ public class LiquidDashboardTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithLastDay("MOD");
-            schedulePage.saveSchedule();
+            newShiftPage.addOpenShiftWithLastDay("MOD");
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
             // Verify the content on Open_Shifts Widget
@@ -1013,7 +1017,7 @@ public class LiquidDashboardTest extends TestBase {
             liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Open_Shifts.getValue(), linkNames.View_Schedules.getValue());
             SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), true);
             if (createSchedulePage.isWeekGenerated())
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -1078,6 +1082,8 @@ public class LiquidDashboardTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -1103,8 +1109,8 @@ public class LiquidDashboardTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addOpenShiftWithLastDay("MOD");
-            schedulePage.saveSchedule();
+            newShiftPage.addOpenShiftWithLastDay("MOD");
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
             // Verify the content on Open_Shifts Widget
@@ -1125,8 +1131,8 @@ public class LiquidDashboardTest extends TestBase {
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.addOpenShiftWithLastDay("MOD");
-            schedulePage.saveSchedule();
+            newShiftPage.addOpenShiftWithLastDay("MOD");
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
             // Verify if unclaimed number can increase successfully and % show correctly
@@ -1150,8 +1156,8 @@ public class LiquidDashboardTest extends TestBase {
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.deleteLatestOpenShift();
-            schedulePage.saveSchedule();
+            shiftOperatePage.deleteLatestOpenShift();
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
             // Verify if unclaimed number can decrease successfully and % show correctly
@@ -1185,6 +1191,8 @@ public class LiquidDashboardTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded() , false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String tmName = profileNewUIPage.getNickNameFromProfile();
@@ -1214,10 +1222,10 @@ public class LiquidDashboardTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView(tmName);
             schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.addManualShiftWithLastDay("MOD", tmName);
-            schedulePage.saveSchedule();
+            newShiftPage.addManualShiftWithLastDay("MOD", tmName);
+            scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
             // Get the data on Open_Shifts Widget before claiming shift
@@ -1243,10 +1251,10 @@ public class LiquidDashboardTest extends TestBase {
             String linkName = "View Shifts";
             schedulePage.clickLinkOnSmartCardByName(linkName);
             List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
-            int index = schedulePage.selectOneShiftIsClaimShift(claimShift);
-            schedulePage.clickTheShiftRequestByName(claimShift.get(0));
+            int index = mySchedulePage.selectOneShiftIsClaimShift(claimShift);
+            mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
             schedulePage.clickOnShiftByIndex(index);
-            schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
             loginPage.logOut();
 
             // Log in as store manager to approve the request in activity->shift offer
@@ -1286,6 +1294,7 @@ public class LiquidDashboardTest extends TestBase {
     public void verifyComplianceViolationWidgetsAsStoreManager(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
             // Verify Edit mode Dashboard loaded
@@ -1300,18 +1309,18 @@ public class LiquidDashboardTest extends TestBase {
             //gp to schedule, get week info of current week, last week and next week.
             liquidDashboardPage.clickFirstWeekOnSchedulesGoToSchedule();
             String startDayOfLastWeek = "";
-            if (schedulePage.getActiveWeekText().split("-").length>1){
-                startDayOfLastWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+            if (scheduleCommonPage.getActiveWeekText().split("-").length>1){
+                startDayOfLastWeek = scheduleCommonPage.getActiveWeekText().split(" - ")[1];
             }
             schedulePage.navigateToNextWeek();
             String startDayOfCurrentWeek = "";
-            if (schedulePage.getActiveWeekText().split("-").length>1){
-                startDayOfCurrentWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+            if (scheduleCommonPage.getActiveWeekText().split("-").length>1){
+                startDayOfCurrentWeek = scheduleCommonPage.getActiveWeekText().split(" - ")[1];
             }
             schedulePage.navigateToNextWeek();
             String startDayOfNextWeek = "";
-            if (schedulePage.getActiveWeekText().split("-").length>1){
-                startDayOfNextWeek = schedulePage.getActiveWeekText().split(" - ")[1];
+            if (scheduleCommonPage.getActiveWeekText().split("-").length>1){
+                startDayOfNextWeek = scheduleCommonPage.getActiveWeekText().split(" - ")[1];
             }
 
             //go back to dashboard to verify week info on widget is consistent with the ones in schedule.

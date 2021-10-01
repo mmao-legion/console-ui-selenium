@@ -34,5 +34,12 @@ public interface CreateSchedulePage {
     public void clickNextBtnOnCreateScheduleWindow() throws Exception;
     public void verifyTheContentOnEnterBudgetWindow(String weekInfo, String location) throws Exception;
     public List<String> setAndGetBudgetForNonDGFlow() throws Exception;
+    public boolean isComplianceWarningMsgLoad() throws Exception;
+    public String getMessageForComplianceWarningInPublishConfirmModal() throws Exception;
+    public boolean isPublishButtonLoaded();
+    public void unGenerateActiveScheduleScheduleWeek() throws Exception;
+    public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception;
+    public boolean isPublishButtonLoadedOnSchedulePage() throws Exception;
+    public boolean isRepublishButtonLoadedOnSchedulePage() throws Exception;
 
 }

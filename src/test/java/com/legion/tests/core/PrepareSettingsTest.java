@@ -197,19 +197,19 @@ public class PrepareSettingsTest extends TestBase {
         CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         schedulePage.navigateToNextWeek();
         isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         schedulePage.navigateToNextWeek();
         isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
     }

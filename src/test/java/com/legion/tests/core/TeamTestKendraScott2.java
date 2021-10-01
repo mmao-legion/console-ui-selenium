@@ -368,7 +368,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if(isActiveWeekGenerated){
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			boolean isLocationGroup = schedulePage.isLocationGroup();
 
@@ -708,12 +708,12 @@ public class TeamTestKendraScott2 extends TestBase{
 				scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
 
 		if (createSchedulePage.isWeekGenerated()){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
 		createSchedulePage.createScheduleForNonDGFlowNewUI();
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		schedulePage.deleteTMShiftInWeekView("unassigned");
-		schedulePage.saveSchedule();
+		scheduleMainPage.saveSchedule();
 		createSchedulePage.publishActiveSchedule();
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
 		loginPage.logOut();

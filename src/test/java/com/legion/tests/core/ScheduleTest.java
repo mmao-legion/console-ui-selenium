@@ -682,6 +682,7 @@ public class ScheduleTest extends TestBase{
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -695,7 +696,7 @@ public class ScheduleTest extends TestBase{
 			schedulePage.navigateToNextWeek();
 			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (isWeekGenerated) {
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
 			// Deleting the existing shifts for swap team members
@@ -703,11 +704,11 @@ public class ScheduleTest extends TestBase{
 			schedulePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
 			schedulePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
 			schedulePage.deleteTMShiftInWeekView("Unassigned");
-			schedulePage.saveSchedule();
+			scheduleMainPage.saveSchedule();
 			// Add the new shifts for swap team members
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.addNewShiftsByNames(swapCoverNames, workRoleName);
-			schedulePage.saveSchedule();
+			newShiftPage.addNewShiftsByNames(swapCoverNames, workRoleName);
+			scheduleMainPage.saveSchedule();
 			createSchedulePage.publishActiveSchedule();
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
@@ -725,6 +726,7 @@ public class ScheduleTest extends TestBase{
 		try {
 			prepareTheSwapShiftsAsInternalAdmin(browser, username, password, location);
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			loginPage.logOut();
 
 			Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
@@ -752,14 +754,14 @@ public class ScheduleTest extends TestBase{
 			// Verify On My Schedule page, Schedule shifts should be present on Schedule table
 			SimpleUtils.assertOnFail("Schedule Shifts are not present!", schedulePage.areShiftsPresent(), true);
 			// Verify After click on any shift from Schedule table, 2 Button should be available for : 1. Request to Swap shift 2. Request to cover shift
-			schedulePage.verifyClickOnAnyShift();
+			mySchedulePage.verifyClickOnAnyShift();
 			List<String> requests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
-			SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), true);
+			SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", mySchedulePage.verifyShiftRequestButtonOnPopup(requests), true);
 			// Verify After click on the Request to swap shift, Find Shifts to Swap page should be opened.
 			String swapRequest = "Request to Swap Shift";
 			String swapTitle = "Find Shifts to Swap";
-			schedulePage.clickTheShiftRequestByName(swapRequest);
-			SimpleUtils.assertOnFail(swapTitle + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(swapTitle), true);
+			mySchedulePage.clickTheShiftRequestByName(swapRequest);
+			SimpleUtils.assertOnFail(swapTitle + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(swapTitle), true);
 			// Verify On Find Shifts to Swap page should have comparable shifts that you can ask to trade
 			schedulePage.verifyComparableShiftsAreLoaded();
 			// Verify After requesting for Swap shift, Request should go to the another TM
@@ -780,6 +782,7 @@ public class ScheduleTest extends TestBase{
 		try {
 			prepareTheSwapShiftsAsInternalAdmin(browser, username, password, location);
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			loginPage.logOut();
 
 			Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
@@ -807,12 +810,12 @@ public class ScheduleTest extends TestBase{
 			// Verify On My Schedule page, Schedule shifts should be present on Schedule table
 			SimpleUtils.assertOnFail("Schedule Shifts are not present!", schedulePage.areShiftsPresent(), true);
 			// Verify After click on any shift from Schedule table, 2 Button should be available for : 1. Request to Swap shift 2. Request to cover shift
-			int index = schedulePage.verifyClickOnAnyShift();
+			int index = mySchedulePage.verifyClickOnAnyShift();
 			// Verify After Click on the Request to Cover shift, Submit Cover Request should be opened.
 			String request = "Request to Cover Shift";
 			String title = "Submit Cover Request";
-			schedulePage.clickTheShiftRequestByName(request);
-			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+			mySchedulePage.clickTheShiftRequestByName(request);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
 			// Verify Submit Cover Request should have Message Text box, Submit and cancel button
 			schedulePage.verifyComponentsOnSubmitCoverRequest();
 			// Verify After Click on the Submit button, confirmation pop-up should be opened.
@@ -820,17 +823,17 @@ public class ScheduleTest extends TestBase{
 			// Verify After requesting for cover request, View Cover Request status should be shown
 			schedulePage.clickOnShiftByIndex(index);
 			List<String> requests = new ArrayList<>(Arrays.asList("View Cover Request Status"));
-			SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), false);
+			SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", mySchedulePage.verifyShiftRequestButtonOnPopup(requests), false);
 			// Verify After Click on the View Cover Request , Cover Request status page should be opened
-			schedulePage.clickTheShiftRequestByName(requests.get(0));
+			mySchedulePage.clickTheShiftRequestByName(requests.get(0));
 			title = "Cover Request Status";
-			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), false);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), false);
 			// Validate the cancellation of cover request
-			schedulePage.verifyClickCancelSwapOrCoverRequest();
+			mySchedulePage.verifyClickCancelSwapOrCoverRequest();
 			// Validate the Submit swap/cover request pop-up keep Showing
 			schedulePage.clickOnShiftByIndex(index);
 			requests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
-			SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(requests), false);
+			SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", mySchedulePage.verifyShiftRequestButtonOnPopup(requests), false);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
@@ -848,6 +851,7 @@ public class ScheduleTest extends TestBase{
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -862,17 +866,17 @@ public class ScheduleTest extends TestBase{
 			//make publish schedule activity
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (isActiveWeekGenerated) {
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.deleteTMShiftInWeekView("Unassigned");
-			schedulePage.clickOnDayViewAddNewShiftButton();
-			schedulePage.customizeNewShiftPage();
-			schedulePage.selectWorkRole("Event Manager");
-			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
-			schedulePage.clickOnCreateOrNextBtn();
-			schedulePage.saveSchedule();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.selectWorkRole("Event Manager");
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			scheduleMainPage.saveSchedule();
 			createSchedulePage.publishActiveSchedule();
 			List<String> weekSchedule = schedulePage.getWholeWeekSchedule();
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -918,7 +922,7 @@ public class ScheduleTest extends TestBase{
 				SimpleUtils.fail("The number of open shift in smart card is: " + openShiftCount + ", but actual count is: " + openShiftCountWeekView, false);
 			}
 			// Validate the filters results for team schedule
-			schedulePage.filterScheduleByShiftTypeAsTeamMember(true);
+			scheduleMainPage.filterScheduleByShiftTypeAsTeamMember(true);
 			// Validate the availbity of Print icon
 			SimpleUtils.assertOnFail("Print Icon not loaded Successfully!", schedulePage.isPrintIconLoaded(), false);
 			// Validate the print feature
@@ -941,6 +945,8 @@ public class ScheduleTest extends TestBase{
 	  	try {
 			prepareTheSwapShiftsAsInternalAdmin(browser, username, password, location);
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 			loginPage.logOut();
 
 			Object[][] credential = swapCoverCredentials.get(swapCoverNames.get(0));
@@ -958,13 +964,13 @@ public class ScheduleTest extends TestBase{
 			scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			schedulePage.navigateToNextWeek();
 			// Validate the availibility of Swap and Cover request options
-			int index = schedulePage.verifyClickOnAnyShift();
+			int index = mySchedulePage.verifyClickOnAnyShift();
 			// Verify the availability of Request to cover shift option
 			String request = "Request to Cover Shift";
 			String title = "Submit Cover Request";
-			schedulePage.clickTheShiftRequestByName(request);
+			mySchedulePage.clickTheShiftRequestByName(request);
 			// Validate the clickabilityof option of Request to Cover
-			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
 			// Validate the data of Submit Cover Request popup
 			schedulePage.verifyComponentsOnSubmitCoverRequest();
 			// Validate the content of Add Message text box on Submit Cover Request pop-up
@@ -973,35 +979,35 @@ public class ScheduleTest extends TestBase{
 			schedulePage.clickCancelButtonOnPopupWindow();
 			// Validate the functionality of Submit button of Submit Cover Request popup
 			schedulePage.clickOnShiftByIndex(index);
-			schedulePage.clickTheShiftRequestByName(request);
-			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+			mySchedulePage.clickTheShiftRequestByName(request);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
 			schedulePage.verifyComponentsOnSubmitCoverRequest();
 			schedulePage.verifyClickOnSubmitButton();
 			// Validate the unavailibity of Request to Swap and Request to Cover post submission of Cover request
 			schedulePage.clickOnShiftByIndex(index);
 			List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
-			if (!schedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
+			if (!mySchedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
 				SimpleUtils.pass("Request to Swap and Request to Cover options are disappear");
 			} else {
 				SimpleUtils.fail("Request to Swap and Request to Cover options are still shown!", false);
 			}
 			// Validate the Shift after requesting for cover
 			List<String> viewCoverRequests = new ArrayList<>(Arrays.asList("View Cover Request Status"));
-			SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", schedulePage.verifyShiftRequestButtonOnPopup(viewCoverRequests), true);
-			schedulePage.clickTheShiftRequestByName(viewCoverRequests.get(0));
+			SimpleUtils.assertOnFail("Requests on pop-up shows incorrectly!", mySchedulePage.verifyShiftRequestButtonOnPopup(viewCoverRequests), true);
+			mySchedulePage.clickTheShiftRequestByName(viewCoverRequests.get(0));
 			title = "Cover Request Status";
-			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
 			String status = "Pending";
 			schedulePage.verifyShiftRequestStatus(status);
-			schedulePage.verifyClickCancelSwapOrCoverRequest();
+			mySchedulePage.verifyClickCancelSwapOrCoverRequest();
 
 			// For Swap Feature
-			index = schedulePage.verifyClickOnAnyShift();
+			index = mySchedulePage.verifyClickOnAnyShift();
 			// Validate the clickability of Cover and Swap request options
 			request = "Request to Swap Shift";
 			title = "Find Shifts to Swap";
-			schedulePage.clickTheShiftRequestByName(request);
-			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+			mySchedulePage.clickTheShiftRequestByName(request);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
 			// Validate the Request to Swap feature
 			schedulePage.verifyComparableShiftsAreLoaded();
 			// Validate the data of the available TMs to swap the shift
@@ -1016,24 +1022,24 @@ public class ScheduleTest extends TestBase{
 			schedulePage.clickCancelButtonOnPopupWindow();
 			// Validate the redirection of Next button to Submit Swap Request popup
 			schedulePage.clickOnShiftByIndex(index);
-			schedulePage.clickTheShiftRequestByName(request);
-			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), false);
+			mySchedulePage.clickTheShiftRequestByName(request);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), false);
 			schedulePage.verifyClickOnNextButtonOnSwap();
 			title = "Submit Swap Request";
-			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), false);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), false);
 			// Validate the availability of Back and Submit buttons in Submit Swap Request popup
-			schedulePage.verifyBackNSubmitBtnLoaded();
+			mySchedulePage.verifyBackNSubmitBtnLoaded();
 			// Validate the redirection of Back button
-			schedulePage.verifyTheRedirectionOfBackButton();
+			mySchedulePage.verifyTheRedirectionOfBackButton();
 			// Validate the multiselection feature of Swap request
 			schedulePage.verifySelectMultipleSwapShifts();
 			// Validate the Submit button feature
 			schedulePage.verifyClickOnNextButtonOnSwap();
-			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), false);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), false);
 			schedulePage.verifyClickOnSubmitButton();
 			// Validate the disappearence of Request to Swap and Request to Cover option
 			schedulePage.clickOnShiftByIndex(index);
-			if (!schedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
+			if (!mySchedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
 				SimpleUtils.pass("Request to Swap and Request to Cover options are disappear");
 			} else {
 				SimpleUtils.fail("Request to Swap and Request to Cover options are still shown!", false);
@@ -1054,13 +1060,13 @@ public class ScheduleTest extends TestBase{
 			schedulePage.navigateToNextWeek();
 			// Validate that swap request smartcard is available to recipient team member
 			String smartCard = "SWAP REQUESTS";
-			schedulePage.isSmartCardAvailableByLabel(smartCard);
+			smartCardPage.isSmartCardAvailableByLabel(smartCard);
 			// Validate the availability of all swap request shifts in schedule table
 			String linkName = "View All";
 			schedulePage.clickLinkOnSmartCardByName(linkName);
 			schedulePage.verifySwapRequestShiftsLoaded();
 			// Validate that recipient can claim the swap request shift.
-			schedulePage.verifyClickAcceptSwapButton();
+			mySchedulePage.verifyClickAcceptSwapButton();
 
 			loginPage.logOut();
 			credential = swapCoverCredentials.get(swapCoverNames.get(0));
@@ -1077,22 +1083,22 @@ public class ScheduleTest extends TestBase{
 
 			schedulePage.clickOnShiftByIndex(index);
 			List<String> viewSwapRequest = new ArrayList<>(Arrays.asList("View Swap Request Status"));
-			if (!schedulePage.verifyShiftRequestButtonOnPopup(viewSwapRequest)) {
+			if (!mySchedulePage.verifyShiftRequestButtonOnPopup(viewSwapRequest)) {
 				schedulePage.clickOnShiftByIndex(index);
 				// Create the Swap request again, so that it can be cancelled
 				createTheSwapRequest(index);
 				schedulePage.clickOnShiftByIndex(index);
 			}
-			schedulePage.clickTheShiftRequestByName(viewSwapRequest.get(0));
+			mySchedulePage.clickTheShiftRequestByName(viewSwapRequest.get(0));
 			title = "Swap Request Status";
-			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
 			// Validate the cancellation of Swap request
-			schedulePage.verifyClickCancelSwapOrCoverRequest();
+			mySchedulePage.verifyClickCancelSwapOrCoverRequest();
 			// Validate that user can resend the swap request after cancelling it first
 			createTheSwapRequest(index);
 			// Validate the unavailibity of Request to Swap and Request to Cover forPast shifts
 			schedulePage.clickOnShiftByIndex(index);
-			if (!schedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
+			if (!mySchedulePage.verifyShiftRequestButtonOnPopup(swapCoverRequsts)) {
 				SimpleUtils.pass("Request to Swap and Request to Cover options are disappear");
 			} else {
 				SimpleUtils.fail("Request to Swap and Request to Cover options are still shown!", false);
@@ -1113,6 +1119,8 @@ public class ScheduleTest extends TestBase{
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1126,15 +1134,15 @@ public class ScheduleTest extends TestBase{
 			schedulePage.navigateToNextWeek();
 			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (isWeekGenerated) {
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
-			String workRole = schedulePage.getRandomWorkRole();
+			String workRole = shiftOperatePage.getRandomWorkRole();
 			// Deleting the existing shifts for swap team members
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.deleteTMShiftInWeekView("Unassigned");
-			schedulePage.addOpenShiftWithLastDay(workRole);
-			schedulePage.saveSchedule();
+			newShiftPage.addOpenShiftWithLastDay(workRole);
+			scheduleMainPage.saveSchedule();
 			createSchedulePage.publishActiveSchedule();
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -1151,14 +1159,14 @@ public class ScheduleTest extends TestBase{
 			// Validate the feature of filter
 			schedulePage.verifyScheduledNOpenFilterLoaded();
 			// Validate the filter - Schedule and Open
-			schedulePage.checkAndUnCheckTheFilters();
+			scheduleMainPage.checkAndUnCheckTheFilters();
 			// Validate the filter results by applying scheduled filter
 			// Validate the filter results by applying Open filter
-			schedulePage.filterScheduleByShiftTypeAsTeamMember(true);
+			scheduleMainPage.filterScheduleByShiftTypeAsTeamMember(true);
 			// Validate the filter results by applying both filters and none of them
-			schedulePage.filterScheduleByBothAndNone();
+			scheduleMainPage.filterScheduleByBothAndNone();
 			// Validate the filter value by moving to other weeks
-			String selectedFilter = schedulePage.selectOneFilter();
+			String selectedFilter = scheduleMainPage.selectOneFilter();
 			schedulePage.verifySelectedFilterPersistsWhenSelectingOtherWeeks(selectedFilter);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
@@ -1176,6 +1184,9 @@ public class ScheduleTest extends TestBase{
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			String tmName = profileNewUIPage.getNickNameFromProfile();
@@ -1204,23 +1215,23 @@ public class ScheduleTest extends TestBase{
 
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (isActiveWeekGenerated) {
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			schedulePage.deleteTMShiftInWeekView(tmName);
 			schedulePage.deleteTMShiftInWeekView("Unassigned");
-			String workRole = schedulePage.getRandomWorkRole();
-			schedulePage.saveSchedule();
+			String workRole = shiftOperatePage.getRandomWorkRole();
+			scheduleMainPage.saveSchedule();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.clickOnDayViewAddNewShiftButton();
-			schedulePage.customizeNewShiftPage();
-			schedulePage.selectWorkRole(workRole);
-			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-			schedulePage.clickOnCreateOrNextBtn();
-			schedulePage.searchTeamMemberByName(tmName);
-			schedulePage.clickOnOfferOrAssignBtn();
-			schedulePage.saveSchedule();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
 			createSchedulePage.publishActiveSchedule();
 
 			loginPage.logOut();
@@ -1239,10 +1250,10 @@ public class ScheduleTest extends TestBase{
 			SimpleUtils.assertOnFail("Open shifts not loaed Successfully!", schedulePage.areShiftsPresent(), false);
 			List<String> shiftHours = schedulePage.getShiftHoursFromInfoLayout();
 			List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
-			int index = schedulePage.selectOneShiftIsClaimShift(claimShift);
+			int index = mySchedulePage.selectOneShiftIsClaimShift(claimShift);
 			String weekDay = schedulePage.getSpecificShiftWeekDay(index);
 			// Validate the availability of Claim Shift Request popup
-			schedulePage.clickTheShiftRequestByName(claimShift.get(0));
+			mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
 			// Validate the availability of Decline and Accept buttons in popup
 			schedulePage.verifyClaimShiftOfferNBtnsLoaded();
 			// Validate the date and time of Claim Shift Request popup
@@ -1251,27 +1262,27 @@ public class ScheduleTest extends TestBase{
 			// schedulePage.verifyClickCancelBtnOnClaimShiftOffer();
 			// Validate the clickability of I Agree button
 			// schedulePage.clickOnShiftByIndex(index);
-			// schedulePage.clickTheShiftRequestByName(claimShift.get(0));
-			schedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+			// mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
+			mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
 			// Validate the status of Claim request
 			schedulePage.clickOnShiftByIndex(index);
 			List<String> claimStatus = new ArrayList<>(Arrays.asList("Claim Shift Approval Pending", "Cancel Claim Request"));
-			schedulePage.verifyShiftRequestButtonOnPopup(claimStatus);
+			mySchedulePage.verifyShiftRequestButtonOnPopup(claimStatus);
 			// Validate the availability of Cancel Claim Request option.
-			schedulePage.verifyTheColorOfCancelClaimRequest(claimStatus.get(1));
+			mySchedulePage.verifyTheColorOfCancelClaimRequest(claimStatus.get(1));
 			// Validate that Cancel claim request is clickable and popup is displaying by clicking on it to reconfirm the cancellation
-			schedulePage.clickTheShiftRequestByName(claimStatus.get(1));
-			schedulePage.verifyReConfirmDialogPopup();
+			mySchedulePage.clickTheShiftRequestByName(claimStatus.get(1));
+			mySchedulePage.verifyReConfirmDialogPopup();
 			// Validate that Claim request remains in Pending state after clicking on No button
 			schedulePage.verifyClickNoButton();
 			schedulePage.clickOnShiftByIndex(index);
-			schedulePage.verifyShiftRequestButtonOnPopup(claimStatus);
+			mySchedulePage.verifyShiftRequestButtonOnPopup(claimStatus);
 			// Validate the Cancellation of Claim request by clicking  on Yes
-			schedulePage.clickTheShiftRequestByName(claimStatus.get(1));
-			schedulePage.verifyReConfirmDialogPopup();
-			schedulePage.verifyClickOnYesButton();
+			mySchedulePage.clickTheShiftRequestByName(claimStatus.get(1));
+			mySchedulePage.verifyReConfirmDialogPopup();
+			mySchedulePage.verifyClickOnYesButton();
 			schedulePage.clickOnShiftByIndex(index);
-			schedulePage.verifyShiftRequestButtonOnPopup(claimShift);
+			mySchedulePage.verifyShiftRequestButtonOnPopup(claimShift);
 			// Validate the functionality of clear filter in Open shift smart card
 			schedulePage.verifyTheFunctionalityOfClearFilter();
 		} catch (Exception e){
@@ -1281,15 +1292,16 @@ public class ScheduleTest extends TestBase{
 
 	public void createTheSwapRequest(int index) throws Exception {
 	  	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 		schedulePage.clickOnShiftByIndex(index);
 		String request = "Request to Swap Shift";
 		String title = "Find Shifts to Swap";
-		schedulePage.clickTheShiftRequestByName(request);
-		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), true);
+		mySchedulePage.clickTheShiftRequestByName(request);
+		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
 		schedulePage.verifySelectOneShiftNVerifyNextButtonEnabled();
 		schedulePage.verifyClickOnNextButtonOnSwap();
 		title = "Submit Swap Request";
-		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", schedulePage.isPopupWindowLoaded(title), false);
+		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), false);
 		schedulePage.verifyClickOnSubmitButton();
 	}
 }

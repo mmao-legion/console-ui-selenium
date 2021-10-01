@@ -609,7 +609,7 @@ public class ConfigurationTest extends TestBase {
             // create the schedule if not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             daysHasShifts = schedulePage.verifyDaysHasShifts();
@@ -668,7 +668,7 @@ public class ConfigurationTest extends TestBase {
             // create the schedule if not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             hoursNTeamMembersCount = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
@@ -730,7 +730,7 @@ public class ConfigurationTest extends TestBase {
             // create the schedule if not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             indexes = schedulePage.getIndexOfDaysHaveShifts();
@@ -757,6 +757,7 @@ public class ConfigurationTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -776,15 +777,15 @@ public class ConfigurationTest extends TestBase {
             // create the schedule if not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 //          Click on edit button on week view
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), false);
+            SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , shiftOperatePage.verifyContextOfTMDisplay(), false);
 //          Click On Profile icon -> Breaks
-            schedulePage.clickOnProfileIcon();
-            schedulePage.clickOnEditMeaLBreakTime();
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
             mealRestBreaks = schedulePage.getMealAndRestBreaksTime();
 
             if(mealRestBreaks.get("Meal Break").compareToIgnoreCase(mealBreakTime) == 0){

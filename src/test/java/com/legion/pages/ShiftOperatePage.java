@@ -1,4 +1,60 @@
 package com.legion.pages;
 
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
+
 public interface ShiftOperatePage {
+    public void deleteShift() throws Exception;
+	public void deleteAllShiftsInDayView() throws Exception;
+    public void convertAllUnAssignedShiftToOpenShift() throws Exception;
+    public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception;
+    public void  verifyDeleteShift() throws Exception;
+    public boolean isDeleteShiftShowWell() throws Exception;
+    public void deleteLatestOpenShift() throws Exception;
+    public void selectAShiftToAssignTM(String username) throws Exception;
+    public void deleteAllShiftsOfGivenDayPartInWeekView(String dayPart) throws Exception;
+    public void closeViewStatusContainer() throws Exception;
+    public void deleteAllShiftsOfGivenDayPartInDayView(String dayPart) throws Exception;
+    public void  verifyDeleteShiftCancelButton() throws Exception;
+    public WebElement clickOnProfileIcon() throws Exception;
+    public boolean isProfileIconsEnable() throws Exception;
+    public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) throws Exception;
+    public void verifyDeleteMealBreakFunctionality() throws Exception;
+    public void verifyEditMealBreakTimeFunctionality(boolean isSavedChange) throws Exception;
+    public boolean isMealBreakTimeWindowDisplayWell(boolean isEditMealBreakEnabled) throws Exception;
+    public void clickOnEditMeaLBreakTime() throws Exception;
+    public void editAndVerifyShiftTime(boolean isSaveChange) throws Exception;
+    public void clickOnEditShiftTime() throws Exception;
+    public List<String> editShiftTime() throws Exception;
+    public void clickOnUpdateEditShiftTimeButton() throws Exception;
+    public void clickOnCancelEditShiftTimeButton() throws Exception;
+    public boolean verifyContextOfTMDisplay() throws Exception;
+    public boolean isViewProfileEnable() throws Exception;
+    public void clickOnViewProfile() throws Exception;
+    public boolean isViewOpenShiftEnable() throws Exception;
+    public boolean isChangeRoleEnable() throws Exception;
+    public boolean isAssignTMEnable() throws Exception;
+    public void clickonAssignTM() throws Exception;
+    public void clickOnConvertToOpenShift() throws Exception;
+    public void verifyOfferTMOptionIsAvailable() throws Exception;
+    public boolean isConvertToOpenEnable() throws Exception;
+    public boolean isOfferTMOptionVisible() throws Exception;
+    public boolean isOfferTMOptionEnabled() throws Exception;
+    public WebElement clickOnProfileIconOfOpenShift() throws Exception;
+    public String getTMDetailNameFromProfilePage(WebElement shift) throws Exception;
+    public List<String> verifyEditBreaks() throws Exception;
+    public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception;
+    public void changeWorkRoleInPromptOfAShiftInDayView(boolean isApplyChange, String shiftid) throws Exception;
+    public void verifyEditMealBreakTimeFunctionalityForAShift(boolean isSavedChange, WebElement shift) throws Exception;
+    public void verifyEditMealBreakTimeFunctionalityForAShiftInDayView(boolean isSavedChange, String shiftid) throws Exception;
+    public void editTheShiftTimeForSpecificShift(WebElement shift, String startTime, String endTime) throws Exception;
+    public void deleteMealBreakForOneShift(WebElement shift) throws Exception;
+    public String getRandomWorkRole() throws Exception;
+    public void deleteAllOOOHShiftInWeekView() throws Exception;
+    public void editShiftTimeToTheLargest() throws Exception;
+    public void clickOnChangeRole() throws Exception;
+    public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception;
+    public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception;
+    public boolean isEditMealBreakEnabled() throws Exception;
 }

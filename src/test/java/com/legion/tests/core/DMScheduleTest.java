@@ -320,6 +320,7 @@ public class DMScheduleTest extends TestBase{
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             schedulePage = pageFactory.createConsoleScheduleNewUIPage();
@@ -328,9 +329,9 @@ public class DMScheduleTest extends TestBase{
             String DateOnDashboard = schedulePage.getDateFromDashboard();
             List<String> ListLocationSummaryOnDashboard = schedulePage.getLocationSummaryDataFromDashBoard();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            String dateOnSchdeule = schedulePage.getActiveWeekText();
+            String dateOnSchdeule = scheduleCommonPage.getActiveWeekText();
             schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeule, DateOnDashboard);
-            List<String> ListLocationSummaryOnSchedule = schedulePage.getLocationSummaryDataFromSchedulePage();
+            List<String> ListLocationSummaryOnSchedule = scheduleDMViewPage.getLocationSummaryDataFromSchedulePage();
             schedulePage.compareLocationSummaryFromDashboardAndSchedule(ListLocationSummaryOnDashboard,ListLocationSummaryOnSchedule);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
@@ -444,6 +445,7 @@ public class DMScheduleTest extends TestBase{
             throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
             String districtName = dashboardPage.getCurrentDistrict();
@@ -454,12 +456,12 @@ public class DMScheduleTest extends TestBase{
             dashboardPage.navigateToDashboard();
             String DateOnDashboard = schedulePage.getDateFromDashboard();
             schedulePage.clickOnViewScheduleLocationSummaryDMViewDashboard();
-            String dateOnScheduleOnNavigatingFromLocSummary = schedulePage.getActiveWeekText();
+            String dateOnScheduleOnNavigatingFromLocSummary = scheduleCommonPage.getActiveWeekText();
             schedulePage.compareDashboardAndScheduleWeekDate(dateOnScheduleOnNavigatingFromLocSummary, DateOnDashboard);
             schedulePage.toNFroNavigationFromDMToSMSchedule(dateOnScheduleOnNavigatingFromLocSummary, location, districtName, weekViewType.Next.getValue());
             dashboardPage.navigateToDashboard();
             schedulePage.clickOnViewSchedulePayrollProjectionDMViewDashboard();
-            String dateOnSchdeuleOnNavigatingFromPayroleProjection = schedulePage.getActiveWeekText();
+            String dateOnSchdeuleOnNavigatingFromPayroleProjection = scheduleCommonPage.getActiveWeekText();
             schedulePage.compareDashboardAndScheduleWeekDate(dateOnSchdeuleOnNavigatingFromPayroleProjection, DateOnDashboard);
             schedulePage.toNFroNavigationFromDMDashboardToDMSchedule(dateOnSchdeuleOnNavigatingFromPayroleProjection);
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();

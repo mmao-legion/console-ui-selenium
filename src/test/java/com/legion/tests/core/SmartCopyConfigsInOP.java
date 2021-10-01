@@ -127,7 +127,7 @@ public class SmartCopyConfigsInOP extends TestBase {
 
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.clickNextBtnOnCreateScheduleWindow();
@@ -166,7 +166,7 @@ public class SmartCopyConfigsInOP extends TestBase {
             schedulePage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.clickNextBtnOnCreateScheduleWindow();
@@ -206,7 +206,7 @@ public class SmartCopyConfigsInOP extends TestBase {
             schedulePage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.clickNextBtnOnCreateScheduleWindow();
@@ -246,7 +246,7 @@ public class SmartCopyConfigsInOP extends TestBase {
             schedulePage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.clickNextBtnOnCreateScheduleWindow();

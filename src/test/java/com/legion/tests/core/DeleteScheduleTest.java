@@ -54,7 +54,7 @@ public class DeleteScheduleTest extends TestBase {
 
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             } else {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -78,7 +78,7 @@ public class DeleteScheduleTest extends TestBase {
             // Delete the Unassigned shifts to unblock publishing
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
 
             createSchedulePage.publishActiveSchedule();
             String publishedDeleteMessage = "This action can’t be undone. The schedule has been published, it will be withdrawn from team members";
@@ -92,7 +92,7 @@ public class DeleteScheduleTest extends TestBase {
             // Verify the functionality of Cancel button when schedule is published
             schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
             // Verify the functionality of Delete button when schedule is published
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -119,7 +119,7 @@ public class DeleteScheduleTest extends TestBase {
 
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             } else {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -153,7 +153,7 @@ public class DeleteScheduleTest extends TestBase {
             // Verify the functionality of Cancel button
             schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
             // Verify the functionality of Delete button when schedule is unpublished
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -171,6 +171,7 @@ public class DeleteScheduleTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
@@ -185,7 +186,7 @@ public class DeleteScheduleTest extends TestBase {
             }
             boolean isSchedulePublished = createSchedulePage.isCurrentScheduleWeekPublished();
             if (!isSchedulePublished) {
-                schedulePage.convertAllUnAssignedShiftToOpenShift();
+                shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
                 createSchedulePage.publishActiveSchedule();
             }
 
@@ -239,7 +240,7 @@ public class DeleteScheduleTest extends TestBase {
 
             boolean isScheduleCreated = createSchedulePage.isWeekGenerated();
             if (isScheduleCreated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
@@ -326,7 +327,7 @@ public class DeleteScheduleTest extends TestBase {
 
             boolean isSchedulePublished = createSchedulePage.isCurrentScheduleWeekPublished();
             if (isSchedulePublished) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 

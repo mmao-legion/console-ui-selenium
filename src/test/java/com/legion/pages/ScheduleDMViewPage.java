@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,4 +30,6 @@ public interface ScheduleDMViewPage {
     public Map<String, String> getAllScheduleInfoFromScheduleInDMViewByLocation(String location) throws Exception;
     public Map<String, String> getAllUpperFieldInfoFromScheduleByUpperField(String upperFieldName) throws Exception;
     public List<String> getLocationsWithInProgressSchedules() throws Exception;
+    public List<String> getLocationSummaryDataFromSchedulePage() throws Exception;
+    public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String upperFieldType, String weekType) throws Exception;
 }
