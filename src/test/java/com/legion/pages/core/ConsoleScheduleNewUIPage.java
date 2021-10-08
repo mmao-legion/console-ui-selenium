@@ -10502,6 +10502,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 
             if (isElementEnabled(applyButtonChangeRole, 5) && isElementEnabled(cancelButtonChangeRole, 5)) {
                 SimpleUtils.pass("Apply and Cancel buttons are enabled");
+                scrollToTop();
                 click(applyButtonChangeRole);
                 if (isElementEnabled(roleViolationAlter, 5)) {
                     click(roleViolationAlterOkButton);

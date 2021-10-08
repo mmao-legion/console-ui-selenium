@@ -627,7 +627,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         boolean isEditMealBreakEnabled = false;
         if(isElementLoaded(editMealBreakTime,5) )
         {
-            if(editMealBreakTime.getText().equalsIgnoreCase("Edit Meal Break Time")){
+            if(editMealBreakTime.getText().equalsIgnoreCase("Edit Breaks")){
                 isEditMealBreakEnabled = true;
                 SimpleUtils.report("Edit Meal Break function is enabled! ");
             } else{

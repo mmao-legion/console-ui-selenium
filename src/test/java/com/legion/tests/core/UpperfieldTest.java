@@ -2639,7 +2639,7 @@ public class UpperfieldTest extends TestBase {
             int totalLocationWithViolation = 0;
 
             for (int i = 0; i < extraHours.size(); i++){
-                if (extraHours.get(i) == 0 || publishStatus.get(i).equals("No")){
+                if (extraHours.get(i) > 0 || publishStatus.get(i).equals("No")){
                     totalLocationWithViolation ++;
                 }
             }
@@ -2686,7 +2686,7 @@ public class UpperfieldTest extends TestBase {
             int totalLocationWithViolation = 0;
 
             for (int i = 0; i < extraHours.size(); i++){
-                if (extraHours.get(i) == 0 || publishStatus.get(i).equals("No")){
+                if (extraHours.get(i) > 0 || publishStatus.get(i).equals("No")){
                     totalLocationWithViolation ++;
                 }
             }
@@ -3659,7 +3659,12 @@ public class UpperfieldTest extends TestBase {
             }
             //The sum of numbers on UNPLANNED CLOCKS smart card should match the unplanned clocks smartcard
             SimpleUtils.assertOnFail("Unplanned clocks from summary card and analytic table are inconsistent!",
-                    valuesFromUnplannedClocksSummaryCard.get("No Show")==unplannedClocks, false);
+                    valuesFromUnplannedClocksSummaryCard.get("No Show") +
+                            valuesFromUnplannedClocksSummaryCard.get("Early Clocks") +
+                            valuesFromUnplannedClocksSummaryCard.get("Late Clocks") +
+                            valuesFromUnplannedClocksSummaryCard.get("Incomplete Clocks") +
+                            valuesFromUnplannedClocksSummaryCard.get("Missed Meal") +
+                            valuesFromUnplannedClocksSummaryCard.get("Unscheduled")==unplannedClocks, false);
 
             timeSheetPage.clickOnComplianceConsoleMenu();
             index = schedulePage.getIndexOfColInDMViewTable("Missed Meal");
@@ -3707,7 +3712,12 @@ public class UpperfieldTest extends TestBase {
             }
             //The sum of numbers on UNPLANNED CLOCKS smart card should match the unplanned clocks smartcard
             SimpleUtils.assertOnFail("Unplanned clocks from summary card and analytic table are inconsistent!",
-                    valuesFromUnplannedClocksSummaryCard.get("No Show")==unplannedClocks, false);
+                    valuesFromUnplannedClocksSummaryCard.get("No Show") +
+                            valuesFromUnplannedClocksSummaryCard.get("Early Clocks") +
+                            valuesFromUnplannedClocksSummaryCard.get("Late Clocks") +
+                            valuesFromUnplannedClocksSummaryCard.get("Incomplete Clocks") +
+                            valuesFromUnplannedClocksSummaryCard.get("Missed Meal") +
+                            valuesFromUnplannedClocksSummaryCard.get("Unscheduled")==unplannedClocks, false);
 
             timeSheetPage.clickOnComplianceConsoleMenu();
             index = schedulePage.getIndexOfColInDMViewTable("Missed Meal");

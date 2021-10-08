@@ -3726,6 +3726,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (isWeekGenerated) {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
+			Thread.sleep(5000);
 			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
