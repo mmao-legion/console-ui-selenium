@@ -25,9 +25,9 @@
 <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
 <!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
 <!--                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" Blocked by Bug/>-->
-                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
-                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
-  <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
+<!--                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />   Blocked by SCH-5311-->
+<!--                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />   Blocked by SCH-5311-->
+                      <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
                     <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCardAsStoreManager" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />

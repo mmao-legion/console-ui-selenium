@@ -220,7 +220,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                         }
                     } else {
                         scrollToElement(widgetTemp);
-                        click(widgetTemp.findElement(By.cssSelector(".boxclose")));
+                        clickTheElement(widgetTemp.findElement(By.cssSelector(".boxclose")));
                         if (!verifyIfSpecificWidgetDisplayed(widgetTitle)){
                             flag = true;
                         }
