@@ -899,6 +899,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
