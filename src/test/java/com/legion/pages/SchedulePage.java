@@ -217,7 +217,7 @@ public interface SchedulePage {
 
 
 
-	public void  verifyShiftSwapCoverRequestedIsDisplayInTo();
+//	public void  verifyShiftSwapCoverRequestedIsDisplayInTo();
 
 //	public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception;
 
@@ -227,7 +227,7 @@ public interface SchedulePage {
 	//	public HashMap<String, String> getFourUpComingShifts(boolean isStartTomorrow) throws Exception;
 	public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
 	public void clickOnCreateNewShiftButton() throws Exception;
-	public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception;
+//	public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception;
 	public void selectDaysFromCurrentDay(String currentDay) throws Exception;
 //	public void searchTeamMemberByName(String name) throws Exception;
 //	public void searchTeamMemberByNameNLocation(String name, String location) throws Exception;
@@ -288,7 +288,7 @@ public interface SchedulePage {
 //	public boolean isViewOpenShiftEnable() throws Exception;
 //	public boolean isChangeRoleEnable() throws Exception;
 //	public boolean isAssignTMEnable() throws Exception;
-	public boolean isConvertToOpenEnable() throws Exception;
+//	public boolean isConvertToOpenEnable() throws Exception;
 	public void selectNextWeekSchedule() throws Exception;
 //	public void clickOnViewProfile() throws Exception;
 //	public void clickOnChangeRole() throws Exception;
@@ -314,7 +314,7 @@ public interface SchedulePage {
 
 //	public void clickOnEditButtonNoMaterScheduleFinalizedOrNot() throws Exception;
 
-	public void clickOnOpenShitIcon();
+//	public void clickOnOpenShitIcon();
 
 	public String getTimeDurationWhenCreateNewShift() throws Exception;
 
@@ -340,7 +340,7 @@ public interface SchedulePage {
 
 //	public WebElement clickOnProfileOfUnassignedShift() throws Exception;
 
-	public void clickOnCancelPublishBtn() throws Exception;
+//	public void clickOnCancelPublishBtn() throws Exception;
 
 //	public void filterScheduleByJobTitle(boolean isWeekView) throws Exception;
 
@@ -365,7 +365,7 @@ public interface SchedulePage {
 	String getSpecificShiftWeekDay(int index) throws Exception;
 //	void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception;
 //	public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception;
-	void verifyClickCancelBtnOnClaimShiftOffer() throws Exception;
+//	void verifyClickCancelBtnOnClaimShiftOffer() throws Exception;
 //	void verifyTheColorOfCancelClaimRequest(String cancelClaim) throws Exception;
 //	void verifyReConfirmDialogPopup() throws Exception;
 	void verifyClickNoButton() throws Exception;
@@ -416,7 +416,7 @@ public interface SchedulePage {
 
 //	void verifyTheAvailabilityOfClaimOpenShiftPopup() throws Exception;
 
-	List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception;
+//	List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception;
 
 	List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception;
 
@@ -489,7 +489,7 @@ public interface SchedulePage {
 //	public void clickOnCancelEditShiftTimeButton() throws Exception;
 //	public void clickOnUpdateEditShiftTimeButton() throws Exception;
 //	public void verifyShiftTime(String shiftTime) throws Exception;
-	public String getShiftTime();
+//	public String getShiftTime();
 //	public void  verifyDeleteShiftCancelButton() throws Exception;
 //	public void verifyDeleteMealBreakFunctionality() throws Exception;
 //	public void verifyEditMealBreakTimeFunctionality(boolean isSavedChange) throws Exception;
@@ -501,7 +501,7 @@ public interface SchedulePage {
 	public void closeAnalyzeWindow() throws Exception;
 	public void verifyVersionInSaveMessage(String version) throws Exception;
 	public void clickOnManagerButton() throws Exception;
-	public void verifyAllShiftsAssigned() throws Exception;
+//	public void verifyAllShiftsAssigned() throws Exception;
 	public void clickProfileIconOfShiftByIndex(int index) throws Exception;
 	public void clickViewStatusBtn() throws Exception;
 	public void verifyListOfOfferNotNull() throws Exception;
@@ -510,7 +510,7 @@ public interface SchedulePage {
 	public List<WebElement> searchShiftOnSchedulePage(String searchText) throws Exception;
 //	public void verifySearchResult (String firstNameOfTM, String lastNameOfTM, String workRole, String jobTitle, List<WebElement> searchResults) throws Exception;
 	public void clickOnCloseSearchBoxButton() throws Exception;
-	public void verifySearchBoxNotDisplayInDayView() throws Exception;
+//	public void verifySearchBoxNotDisplayInDayView() throws Exception;
 	public int getRandomIndexOfShift();
 	public void goToSpecificWeekByDate(String date) throws Exception;
 //	public void clearAllSelectedDays() throws Exception;
@@ -562,7 +562,7 @@ public interface SchedulePage {
 	public void navigateToTheRightestSmartCard() throws Exception;
 //	public boolean isEditMealBreakEnabled() throws Exception;
 	public void verifyTMSchedulePanelDisplay() throws Exception;
-	public  boolean suggestedButtonIsHighlighted() throws Exception;
+//	public  boolean suggestedButtonIsHighlighted() throws Exception;
 	public boolean verifyWFSFunction();
 	public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception;
 //	public void clickNextBtnOnCreateScheduleWindow() throws Exception;
@@ -628,7 +628,7 @@ public interface SchedulePage {
 	public String getTooltipOfPublishButton() throws Exception;
 	public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception;
 	public boolean isDragAndDropConfirmPageLoaded() throws Exception;
-	public void verifyUngenerateButtonIsRemoved() throws Exception;
+//	public void verifyUngenerateButtonIsRemoved() throws Exception;
 	public List<String> getYearsFromCalendarMonthYearText() throws Exception;
 	public boolean isDeleteScheduleButtonLoaded() throws Exception;
 	public void verifyClickOnDeleteScheduleButton() throws Exception;
