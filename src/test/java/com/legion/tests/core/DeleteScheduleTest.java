@@ -260,7 +260,7 @@ public class DeleteScheduleTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Verify Store Manager cannot see the Delete button when schedule is not published
-            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is published!", !schedulePage.isDeleteScheduleButtonLoaded(), false);
+            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is not published!", !schedulePage.isDeleteScheduleButtonLoaded(), false);
             loginPage.logOut();
 
             // Login as Internal admin, add the permission back
