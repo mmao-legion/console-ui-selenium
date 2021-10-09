@@ -89,4 +89,8 @@ public interface ForecastPage<pubic> {
 	public void verifyTheFunctionalityOfCancelButtonOnWarningDialog(int index, String value) throws Exception;
 	public void verifyTheFunctionalityOfRefreshanywayButtonOnWarningDialog(int index, String value) throws Exception;
 	public void verifyLaborForecastCanLoad() throws Exception;
+	public void verifyThereAreDayPartsItemsInTheFilter() throws Exception;
+	public void selectFilterOptionsByText(String option) throws Exception;
+	public void clickOnFilterButtonUnderDefinedTab() throws Exception;
+	public void clickOnDayPartsFilterButtonUnderLaborTab() throws Exception;
 }
