@@ -6381,36 +6381,36 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             return false;
         }
     }
-
-    @Override
-    public void verifyUngenerateButtonIsRemoved() throws Exception {
-        String unGenerateScheduleOptionText = "Ungenerate Schedule";
-        boolean isRemoved = true;
-        try {
-            if (isElementLoaded(scheduleAdminDropDownBtn, 5)) {
-                click(scheduleAdminDropDownBtn);
-                if (scheduleAdminDropDownOptions.size() > 0) {
-                    for (WebElement scheduleAdminDropDownOption : scheduleAdminDropDownOptions) {
-                        if (scheduleAdminDropDownOption.getText().toLowerCase().contains(unGenerateScheduleOptionText.toLowerCase())) {
-                            isRemoved = false;
-                            break;
-                        }
-                    }
-                } else {
-                    isRemoved = false;
-                }
-            } else {
-                isRemoved = false;
-            }
-            if (isRemoved) {
-                SimpleUtils.pass("Schedule page: Ungenerate Schedule option is removed!");
-            } else {
-                SimpleUtils.fail("Schedule page: Ungenerate Schedule option still shows!", false);
-            }
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
+//
+//    @Override
+//    public void verifyUngenerateButtonIsRemoved() throws Exception {
+//        String unGenerateScheduleOptionText = "Ungenerate Schedule";
+//        boolean isRemoved = true;
+//        try {
+//            if (isElementLoaded(scheduleAdminDropDownBtn, 5)) {
+//                click(scheduleAdminDropDownBtn);
+//                if (scheduleAdminDropDownOptions.size() > 0) {
+//                    for (WebElement scheduleAdminDropDownOption : scheduleAdminDropDownOptions) {
+//                        if (scheduleAdminDropDownOption.getText().toLowerCase().contains(unGenerateScheduleOptionText.toLowerCase())) {
+//                            isRemoved = false;
+//                            break;
+//                        }
+//                    }
+//                } else {
+//                    isRemoved = false;
+//                }
+//            } else {
+//                isRemoved = false;
+//            }
+//            if (isRemoved) {
+//                SimpleUtils.pass("Schedule page: Ungenerate Schedule option is removed!");
+//            } else {
+//                SimpleUtils.fail("Schedule page: Ungenerate Schedule option still shows!", false);
+//            }
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
+//    }
 
     @Override
     public boolean isLocationGroup() {
@@ -7153,22 +7153,22 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //        }
 //    }
 
-    @Override
-    public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception {
-        if (previousTeamCount.size() == currentTeamCount.size()) {
-            for (int i = 0; i < currentTeamCount.size(); i++) {
-                String currentCount = currentTeamCount.get(i);
-                String previousCount = previousTeamCount.get(i);
-                if (Integer.parseInt(currentCount) == Integer.parseInt(previousCount) + 1) {
-                    SimpleUtils.pass("Current Team Count is greater than Previous Team Count");
-                } else {
-                    SimpleUtils.fail("Current Team Count is not greater than Previous Team Count", true);
-                }
-            }
-        } else {
-            SimpleUtils.fail("Size of Current Team Count should be equal to Previous Team Count", false);
-        }
-    }
+//    @Override
+//    public void verifyTeamCount(List<String> previousTeamCount, List<String> currentTeamCount) throws Exception {
+//        if (previousTeamCount.size() == currentTeamCount.size()) {
+//            for (int i = 0; i < currentTeamCount.size(); i++) {
+//                String currentCount = currentTeamCount.get(i);
+//                String previousCount = previousTeamCount.get(i);
+//                if (Integer.parseInt(currentCount) == Integer.parseInt(previousCount) + 1) {
+//                    SimpleUtils.pass("Current Team Count is greater than Previous Team Count");
+//                } else {
+//                    SimpleUtils.fail("Current Team Count is not greater than Previous Team Count", true);
+//                }
+//            }
+//        } else {
+//            SimpleUtils.fail("Size of Current Team Count should be equal to Previous Team Count", false);
+//        }
+//    }
 
 //    @Override
 //    public void printButtonIsClickable() throws Exception {
@@ -8139,12 +8139,12 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     }
 
 
-    @Override
-    public void verifyShiftSwapCoverRequestedIsDisplayInTo() {
-//        if () {
-//
-//        }
-    }
+//    @Override
+//    public void verifyShiftSwapCoverRequestedIsDisplayInTo() {
+////        if () {
+////
+////        }
+//    }
 
 //    @Override
 //    public void verifyAnalyzeBtnFunctionAndScheduleHistoryScroll() throws Exception {
@@ -8366,17 +8366,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    @FindBy(css = "button.sch-publish-cancel-btn")
-    WebElement cancelPublish;
-    @Override
-    public void clickOnCancelPublishBtn() throws Exception {
-        if (isElementLoaded(cancelPublish,10)){
-            clickTheElement(cancelPublish);
-            SimpleUtils.pass("cancel publish button clicked");
-        } else {
-            SimpleUtils.fail("Didn't find cancel button.", false);
-        }
-    }
+//    @FindBy(css = "button.sch-publish-cancel-btn")
+//    WebElement cancelPublish;
+//    @Override
+//    public void clickOnCancelPublishBtn() throws Exception {
+//        if (isElementLoaded(cancelPublish,10)){
+//            clickTheElement(cancelPublish);
+//            SimpleUtils.pass("cancel publish button clicked");
+//        } else {
+//            SimpleUtils.fail("Didn't find cancel button.", false);
+//        }
+//    }
 
 //    @Override
 //    public void verifyClickAcceptSwapButton() throws Exception {
@@ -9081,25 +9081,25 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //        }
 //    }
 
-    @Override
-    public void verifyClickCancelBtnOnClaimShiftOffer() throws Exception {
-        if (isElementLoaded(declineBtn, 5)) {
-            clickTheElement(declineBtn);
-            if (isElementLoaded(popUpModal, 10) && popUpModal.getText().contains("Open Shift Declined")) {
-                SimpleUtils.pass("Click on Decline Claim Button Successfully!");
-                if (isElementLoaded(agreeClaimBtn, 5) && agreeClaimBtn.getText().equalsIgnoreCase("OK")) {
-                    clickTheElement(agreeClaimBtn);
-                    SimpleUtils.report("Click on OK button successfully on \"Open Shift Declined\" pop up!");
-                } else {
-                    SimpleUtils.fail("OK button failed to load on \"Open Shift Declined\" pop up", false);
-                }
-            }else {
-                SimpleUtils.fail("Click on Cancel Claim Button failed!", false);
-            }
-        }else {
-            SimpleUtils.fail("Cancel Claim Button not loaded Successfully!", false);
-        }
-    }
+//    @Override
+//    public void verifyClickCancelBtnOnClaimShiftOffer() throws Exception {
+//        if (isElementLoaded(declineBtn, 5)) {
+//            clickTheElement(declineBtn);
+//            if (isElementLoaded(popUpModal, 10) && popUpModal.getText().contains("Open Shift Declined")) {
+//                SimpleUtils.pass("Click on Decline Claim Button Successfully!");
+//                if (isElementLoaded(agreeClaimBtn, 5) && agreeClaimBtn.getText().equalsIgnoreCase("OK")) {
+//                    clickTheElement(agreeClaimBtn);
+//                    SimpleUtils.report("Click on OK button successfully on \"Open Shift Declined\" pop up!");
+//                } else {
+//                    SimpleUtils.fail("OK button failed to load on \"Open Shift Declined\" pop up", false);
+//                }
+//            }else {
+//                SimpleUtils.fail("Click on Cancel Claim Button failed!", false);
+//            }
+//        }else {
+//            SimpleUtils.fail("Cancel Claim Button not loaded Successfully!", false);
+//        }
+//    }
 
 //    @Override
 //    public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception {
@@ -9939,15 +9939,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //        }else
 //            generateOrUpdateAndGenerateSchedule(); */
 //    }
-
-    @Override
-    public void clickOnOpenShitIcon() {
-        if (areListElementVisible(openShiftIcon,5) ) {
-            click(openShiftIcon.get(0));
-            SimpleUtils.pass("open shift is clickable");
-        }else
-            SimpleUtils.fail("there is no open shift",true);
-    }
+//
+//    @Override
+//    public void clickOnOpenShitIcon() {
+//        if (areListElementVisible(openShiftIcon,5) ) {
+//            click(openShiftIcon.get(0));
+//            SimpleUtils.pass("open shift is clickable");
+//        }else
+//            SimpleUtils.fail("there is no open shift",true);
+//    }
 
 //    @Override
 //    public void verifyEditButtonFuntionality() throws Exception {
@@ -10802,16 +10802,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //            SimpleUtils.fail("Edit Shift Time container load failed", false);
 //        }
 //    }
-
-    public String getShiftTime() {
-        String shiftTime = null;
-        if (isElementEnabled(shiftStartAndEndTimeContainer, 5) && isElementEnabled(shiftTimeInEditShiftWindow,  5)) {
-            shiftTime = shiftTimeInEditShiftWindow.getText();
-        } else {
-            SimpleUtils.fail("Edit Shift Time load failed", true);
-        }
-        return shiftTime;
-    }
+//
+//    public String getShiftTime() {
+//        String shiftTime = null;
+//        if (isElementEnabled(shiftStartAndEndTimeContainer, 5) && isElementEnabled(shiftTimeInEditShiftWindow,  5)) {
+//            shiftTime = shiftTimeInEditShiftWindow.getText();
+//        } else {
+//            SimpleUtils.fail("Edit Shift Time load failed", true);
+//        }
+//        return shiftTime;
+//    }
 
 //    @Override
 //    public void clickOnCancelEditShiftTimeButton() throws Exception{
@@ -10861,17 +10861,17 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //    }
 
 
-    @Override
-    public boolean isConvertToOpenEnable() throws Exception {
-        if(isElementEnabled(convertOpen,5)){
-            SimpleUtils.pass("Convert To Open option is available on Pop Over Style!");
-            return true;
-        }
-        else{
-            SimpleUtils.fail("Convert To Open option is not enable/available on Pop Over Style ",true);
-            return false;
-        }
-    }
+//    @Override
+//    public boolean isConvertToOpenEnable() throws Exception {
+//        if(isElementEnabled(convertOpen,5)){
+//            SimpleUtils.pass("Convert To Open option is available on Pop Over Style!");
+//            return true;
+//        }
+//        else{
+//            SimpleUtils.fail("Convert To Open option is not enable/available on Pop Over Style ",true);
+//            return false;
+//        }
+//    }
 
     @Override
     public boolean isOfferTMOptionVisible() throws Exception {
@@ -11723,20 +11723,20 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         return weekScheduleShiftTimeListOfWeekView;
     }
 
-    public List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception {
-        if (areListElementVisible(weekScheduleShiftsTimeOfMySchedule, 20)) {
-            if (weekScheduleShiftsTimeOfMySchedule.size() > 0) {
-                for (int i = 0; i < weekScheduleShiftsTimeOfMySchedule.size(); i++) {
-                    weekScheduleShiftTimeListOfMySchedule.add(weekScheduleShiftsTimeOfMySchedule.get(i).getText().trim().replace(":00", ""));
-                }
-            } else if (weekScheduleShiftsTimeOfMySchedule.size() == 0)
-                SimpleUtils.report("My Schedule Page: No shift hours in the schedule table");
-        } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
-            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
-        } else
-            SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
-        return weekScheduleShiftTimeListOfMySchedule;
-    }
+//    public List<String> getWeekScheduleShiftTimeListOfMySchedule() throws Exception {
+//        if (areListElementVisible(weekScheduleShiftsTimeOfMySchedule, 20)) {
+//            if (weekScheduleShiftsTimeOfMySchedule.size() > 0) {
+//                for (int i = 0; i < weekScheduleShiftsTimeOfMySchedule.size(); i++) {
+//                    weekScheduleShiftTimeListOfMySchedule.add(weekScheduleShiftsTimeOfMySchedule.get(i).getText().trim().replace(":00", ""));
+//                }
+//            } else if (weekScheduleShiftsTimeOfMySchedule.size() == 0)
+//                SimpleUtils.report("My Schedule Page: No shift hours in the schedule table");
+//        } else if (isElementLoaded(myScheduleNoSchedule, 10)) {
+//            SimpleUtils.report("My Schedule Page: Schedule has not been generated.");
+//        } else
+//            SimpleUtils.fail("My Schedule Page: Failed to load shifts", true);
+//        return weekScheduleShiftTimeListOfMySchedule;
+//    }
 
     @Override
     public void validateTheAvailabilityOfScheduleTable(String userName) throws Exception {
@@ -13148,15 +13148,15 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
             SimpleUtils.fail("There is no Manager button!",true);
         }
     }
-
-    @Override
-    public void verifyAllShiftsAssigned() throws Exception {
-        if (areListElementVisible(blueIconsOfOpenShift,20)){
-            SimpleUtils.fail("There are shifts not assigned!",false);
-        } else {
-            SimpleUtils.pass("All shifts are assigned!");
-        }
-    }
+//
+//    @Override
+//    public void verifyAllShiftsAssigned() throws Exception {
+//        if (areListElementVisible(blueIconsOfOpenShift,20)){
+//            SimpleUtils.fail("There are shifts not assigned!",false);
+//        } else {
+//            SimpleUtils.pass("All shifts are assigned!");
+//        }
+//    }
 
     @Override
     public void clickProfileIconOfShiftByIndex(int index) throws Exception {
@@ -13420,16 +13420,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //        return shiftInfo;
 //    }
 
-    public void verifySearchBoxNotDisplayInDayView() throws Exception {
-        if (!switchDayViewAndWeeKViewButton.getAttribute("class").contains("hide")) {
-            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
-            scheduleCommonPage.clickOnDayView();
-            if (!isElementEnabled(openSearchBoxButton, 5) || !isElementEnabled(searchBox, 5)) {
-                SimpleUtils.pass("Search box is not display in Day View");
-            } else
-                SimpleUtils.fail("Search box should not display in Day View", true);
-        }
-    }
+//    public void verifySearchBoxNotDisplayInDayView() throws Exception {
+//        if (!switchDayViewAndWeeKViewButton.getAttribute("class").contains("hide")) {
+//            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+//            scheduleCommonPage.clickOnDayView();
+//            if (!isElementEnabled(openSearchBoxButton, 5) || !isElementEnabled(searchBox, 5)) {
+//                SimpleUtils.pass("Search box is not display in Day View");
+//            } else
+//                SimpleUtils.fail("Search box should not display in Day View", true);
+//        }
+//    }
 
     public int getRandomIndexOfShift() {
         int randomIndex = 0;
@@ -14431,16 +14431,16 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         }
     }
 
-    @Override
-    public boolean suggestedButtonIsHighlighted() throws Exception {
-        if (isElementLoaded(scheduleTypeSystem, 5) && scheduleTypeSystem.getAttribute("class").contains("g-button-group-selected") ){
-            SimpleUtils.pass("The suggest button is high lighted");
-            return true;
-        }else {
-            SimpleUtils.fail("The suggest button load failed",true);
-        }
-        return false;
-    }
+//    @Override
+//    public boolean suggestedButtonIsHighlighted() throws Exception {
+//        if (isElementLoaded(scheduleTypeSystem, 5) && scheduleTypeSystem.getAttribute("class").contains("g-button-group-selected") ){
+//            SimpleUtils.pass("The suggest button is high lighted");
+//            return true;
+//        }else {
+//            SimpleUtils.fail("The suggest button load failed",true);
+//        }
+//        return false;
+//    }
 
     @Override
     public boolean verifyWFSFunction() {

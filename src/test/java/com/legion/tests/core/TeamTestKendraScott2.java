@@ -1153,7 +1153,6 @@ public class TeamTestKendraScott2 extends TestBase{
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 
 			//Grant Invite Employee permission for DM SM and TL
 			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
