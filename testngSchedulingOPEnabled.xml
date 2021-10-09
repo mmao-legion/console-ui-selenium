@@ -75,10 +75,10 @@
                 <methods>
                     <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
 <!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />-->
-                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
+<!--                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5369/>-->
                     <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
-                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
+<!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
                     <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />
                 </methods>
             </class>
