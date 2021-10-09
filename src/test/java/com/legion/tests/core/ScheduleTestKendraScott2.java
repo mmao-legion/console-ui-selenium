@@ -3782,7 +3782,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
 					scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-
+			schedulePage.navigateToNextWeek();
 			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (isWeekGenerated) {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -3801,10 +3801,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Get the info of a random shift
 			List<String> shiftInfo = new ArrayList<>();
 			String firstNameOfTM = "";
-			while (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned")) {
+			int i = 0;
+			while (i < 10 && (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned"))) {
 				shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(schedulePage.getRandomIndexOfShift());
 				//Search shift by TM names: first name and last name
 				firstNameOfTM = shiftInfo.get(0);
+				i++;
 			}
 			List<WebElement> searchResultOfFirstName = schedulePage.searchShiftOnSchedulePage(firstNameOfTM);
 			scheduleShiftTablePage.verifySearchResult(firstNameOfTM, null, null, null, searchResultOfFirstName);

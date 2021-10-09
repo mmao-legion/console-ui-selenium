@@ -2639,7 +2639,9 @@ public class UpperfieldTest extends TestBase {
             int totalLocationWithViolation = 0;
 
             for (int i = 0; i < extraHours.size(); i++){
-                if (extraHours.get(i) > 0 || publishStatus.get(i).equals("No")){
+                if (
+//                        extraHours.get(i) > 0 ||
+                                publishStatus.get(i).equals("No")){
                     totalLocationWithViolation ++;
                 }
             }
@@ -2686,7 +2688,9 @@ public class UpperfieldTest extends TestBase {
             int totalLocationWithViolation = 0;
 
             for (int i = 0; i < extraHours.size(); i++){
-                if (extraHours.get(i) > 0 || publishStatus.get(i).equals("No")){
+                if (
+//                        extraHours.get(i) > 0 ||
+                        publishStatus.get(i).equals("No")){
                     totalLocationWithViolation ++;
                 }
             }

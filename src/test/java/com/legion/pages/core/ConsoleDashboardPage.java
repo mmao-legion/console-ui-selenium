@@ -2781,7 +2781,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(xpath = "//div[4]/div/div[1]/div/div/h3")
 	private WebElement orgSummaryWidgetTitle;
 
-	@FindBy(css = ".sc-hLGenU.doVxdr")
+	@FindBy(css = "div.sc-ekbpNA.bnaKOt")
 	private List<WebElement> scheduledHoursTitles;
 
 	@FindBy(css = "[data-testid$=\"-hours\"]")
