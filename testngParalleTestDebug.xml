@@ -59,6 +59,10 @@
                 <methods>
                     <include name="verifyEditForecastInDayViewViewAsInternalAdmin"/>
                     <include name="verifyEditForecastInWeekViewViewAsInternalAdmin"/>
+                    <include name="validateDayPartsAvailableInDefinedTabOfWeekViewAsInternalAdmin"/>
+                    <include name="validateDayPartsAvailableInLablorTabOfWeekViewAsInternalAdmin"/>
+                    <include name="validateDayPartsAvailableInDefinedTabOfDayViewAsInternalAdmin"/>
+                    <include name="validateDayPartsAvailableInLablorTabOfDayViewAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>

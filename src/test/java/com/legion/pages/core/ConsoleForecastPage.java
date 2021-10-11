@@ -879,10 +879,14 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 					else if(peakShopperDay.toLowerCase().contains("peak time"))
 					{
 						if (peakShopperDay.split(" ").length>=3){
-							insightData.put("peakTime", Float.valueOf(peakShopperDay.split(" ")[2].replace(":",".")));
+							smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2].replace("am","").replace("pm","").replace(":","."),
+									"peakTime");
+							//insightData.put("peakTime", Float.valueOf(peakShopperDay.split(" ")[2].replace("am","").replace("pm","").replace(":",".")));
 						}
 						if (peakShopperDay.split(" ").length>=4){
-							insightData.put("editedPeakTime", Float.valueOf(peakShopperDay.split(" ")[3].replace(":",".")));
+							smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3].replace("am","").replace("pm","").replace(":","."),
+									"editedPeakTime");
+							//insightData.put("editedPeakTime", Float.valueOf(peakShopperDay.split(" ")[3].replace("am","").replace("pm","").replace(":",".")));
 						}
 					}
 					else if(peakShopperDay.toLowerCase().contains("total items"))
