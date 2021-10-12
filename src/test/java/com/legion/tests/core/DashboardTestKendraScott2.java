@@ -186,7 +186,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.selectWorkRole(workRole);
-			newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchTeamMemberByName(nickName);
 //		if (schedulePageAdmin.displayAlertPopUp())
@@ -202,7 +202,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 			SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.navigateToNextWeek();
-			SimpleUtils.assertOnFail("My Schedule page failed to load!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+			SimpleUtils.assertOnFail("My Schedule page failed to load!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
 			List<String> scheduleListTM = new ArrayList<>();
 			if (mySchedulePage.getShiftHoursFromInfoLayout().size() > 0) {
@@ -283,8 +283,8 @@ public class DashboardTestKendraScott2 extends TestBase {
 
 		// Make sure schedule is published
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-		scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 		boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 		if (isActiveWeekGenerated) {
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -299,7 +299,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 
 		schedulePage = dashboardPage.goToTodayForNewUI();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(
-				ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+				ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 		// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
 		scheduleCommonPage.isScheduleForCurrentDayInDayView(dateFromDashboard);
 		HashMap<String, String> hoursOnSchedule = smartCardPage.getHoursFromSchedulePage();
@@ -327,7 +327,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		dashboardPage.verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(startingSoonLoaded, hours.get("Scheduled"));
 		// Verify starting soon section
 		schedulePage = dashboardPage.goToTodayForNewUI();
-		scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+		scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 		if (!createSchedulePage.isPublishButtonLoaded()) {
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
 		}
@@ -339,7 +339,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		if (startingSoonLoaded) {
 			upComingShifts = dashboardPage.getUpComingShifts();
 			schedulePage = dashboardPage.goToTodayForNewUI();
-			scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			fourShifts = scheduleShiftTablePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
 			scheduleShiftTablePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
 		} else {
@@ -476,7 +476,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		if (userRole.contains("TeamLead") || userRole.contains("TeamMember")) {
 			scheduleCommonPage.verifyTMSchedulePanelDisplay();
 		} else {
-			SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
+			SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
 		}
 		dashboardPage.verifyHeaderNavigationMessage("Schedule");
 

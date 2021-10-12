@@ -2,7 +2,7 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.NewShiftPage;
-import com.legion.tests.core.ScheduleNewUITest;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -10,7 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import com.legion.tests.core.ScheduleNewUITest.staffingOption;
+import com.legion.tests.core.ScheduleTestKendraScott2.staffingOption;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -410,7 +410,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         if (isElementLoaded(createNewShiftWeekView)) {
             click(createNewShiftWeekView);
             selectWorkRole(workRole);
-            clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+            clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
             clickOnCreateOrNextBtn();
             Thread.sleep(2000);
         } else
@@ -426,8 +426,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
             if (isLocationLoaded())
                 selectLocation(location);
-            moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME_3"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME_3"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+            moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME_3"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME_3"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             clickOnCreateOrNextBtn();
             if (ifWarningModeDisplay() && isElementLoaded(okBtnInWarningMode,5))
                 click(okBtnInWarningMode);
@@ -504,7 +504,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (areListElementVisible(weekDays, 5) && weekDays.size() > 0) {
                 clickTheElement(weekDays.get(0));
             }
-            clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+            clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
             clickOnCreateOrNextBtn();
         } else
             SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" +
@@ -583,8 +583,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if(areListElementVisible(listLocationGroup, 10)){
                 List<String> locations = getAllLocationGroupLocationsFromCreateShiftWindow();
                 selectChildLocInCreateShiftWindow(locations.get((new Random()).nextInt(locations.size()-1)+1));
-                moveSliderAtSomePoint("40", 0, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-                moveSliderAtSomePoint("20", 0, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+                moveSliderAtSomePoint("40", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                moveSliderAtSomePoint("20", 0, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
                 selectWorkRole(workRole);
             } else
                 selectWorkRole(workRole);
@@ -594,7 +594,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             }else {
                 selectDaysByIndex(1, 3, 5);
             }
-            clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
+            clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             clickOnCreateOrNextBtn();
             if(isElementLoaded(btnAssignAnyway,5))
                 click(btnAssignAnyway);
@@ -902,7 +902,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         if (isElementLoaded(createNewShiftWeekView,5)) {
             click(createNewShiftWeekView);
             selectWorkRole(workRole);
-            clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.OpenShift.getValue());
+            clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
             clearAllSelectedDays();
             if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
                 if (!weekDays.get(6).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
@@ -924,7 +924,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             selectWorkRole(workRole);
             if (weekDays.get(0).getAttribute("class").contains("week-day-multi-picker-day-selected"))
                 click(weekDays.get(0));
-            clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+            clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
             if (weekDays.size() == 7) {
                 for (int i = weekDays.size() - 1; i >= 0; i--) {
                     if (weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-disabled"))
@@ -1000,8 +1000,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                 click(openOrCloseWeekDayButton);
                                 SimpleUtils.report("Week day: "+weekDay.getText()+" been opened successfully!");
                             }
-                            moveSliderAtCertainPoint(endTime, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-                            moveSliderAtCertainPoint(startTime, ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+                            moveSliderAtCertainPoint(endTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                            moveSliderAtCertainPoint(startTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
                             clickTheElement(editOperatingHourSaveButton);
                             waitForSeconds(2);
                             // If operating hours is consistent with the values wanted to change, then Save button is disabled

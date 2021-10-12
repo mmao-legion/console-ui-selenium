@@ -366,7 +366,7 @@ public class DMViewTest extends TestBase {
                 String notStartedLocation = scheduleDMViewPage.getLocationsWithNotStartedSchedules().get(0);
                 scheduleDMViewPage.clickOnLocationNameInDMView(notStartedLocation);
                 SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
                 boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                 if (!isWeekGenerated) {
                     createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -380,7 +380,7 @@ public class DMViewTest extends TestBase {
                     SimpleUtils.fail("Schedule Page: After the first refreshing, it isn't \"In Progress\" status", false);
                 scheduleDMViewPage.clickOnLocationNameInDMView(notStartedLocation);
                 SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
                 createSchedulePage.publishActiveSchedule();
                 locationSelectorPage.reSelectDistrict(districtName);
                 scheduleDMViewPage.clickOnRefreshButton();
@@ -446,8 +446,8 @@ public class DMViewTest extends TestBase {
             if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
                 timeSheetPage.navigateToSchedule();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-                scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
                 boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                 if (!isWeekGenerated) {
                     createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -543,8 +543,8 @@ public class DMViewTest extends TestBase {
         if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
             timeSheetPage.navigateToSchedule();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -923,10 +923,10 @@ public class DMViewTest extends TestBase {
             // Create open shift in schedule so that we can verify the content on Open_Shifts Widget
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
 
             if (createSchedulePage.isWeekGenerated() && !createSchedulePage.isWeekPublished()){
                 createSchedulePage.publishActiveSchedule();
@@ -937,10 +937,10 @@ public class DMViewTest extends TestBase {
             locationSelectorPage.changeLocation("NY CENTRAL");
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
             if (createSchedulePage.isWeekGenerated() && !createSchedulePage.isWeekPublished()){
                 createSchedulePage.publishActiveSchedule();
             }
@@ -1062,7 +1062,7 @@ public class DMViewTest extends TestBase {
             //Click on a location name and go to the schedule page.
             scheduleDMViewPage.clickOnLocationNameInDMView(location);
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             //Validate go back from one location---function changed: cannot go back to DM View in schedule page
             //locationSelectorPage.reSelectDistrictInDMView(districtName);
             //SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
@@ -1075,7 +1075,7 @@ public class DMViewTest extends TestBase {
             String weekInfo = scheduleCommonPage.getActiveWeekText();
             scheduleDMViewPage.clickOnLocationNameInDMView(location);
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             SimpleUtils.assertOnFail("Didn't go to the right week!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
         } catch (Exception e) {

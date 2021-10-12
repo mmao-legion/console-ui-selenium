@@ -3,6 +3,7 @@ package com.legion.pages.core;
 import com.legion.pages.BasePage;
 import com.legion.pages.ForecastPage;
 import com.legion.pages.SmartCardPage;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -567,7 +568,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				if (areListElementVisible(weatherTemperatures, 8)) {
 					String weatherWeekTest = getWeatherDayOfWeek();
 					SimpleUtils.report("Weather smart card is displayed for a week from mon to sun" + weatherWeekTest);
-					for (ConsoleScheduleNewUIPage.DayOfWeek e : ConsoleScheduleNewUIPage.DayOfWeek.values()) {
+					for (ScheduleTestKendraScott2.DayOfWeek e : ScheduleTestKendraScott2.DayOfWeek.values()) {
 						if (weatherWeekTest.contains(e.toString())) {
 							SimpleUtils.pass("Weather smartcard include one week weather");
 						} else {

@@ -1363,7 +1363,7 @@ public class UpperfieldTest extends TestBase {
                     for (String notStartedLocation: notStartedLocations) {
                         scheduleDMViewPage.clickOnLocationNameInDMView(notStartedLocation);
                         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                                scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
                         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                         if (!isWeekGenerated) {
                             createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -1387,7 +1387,7 @@ public class UpperfieldTest extends TestBase {
                     for (String inProgressLocation: inProgressLocations) {
                         scheduleDMViewPage.clickOnLocationNameInDMView(inProgressLocation);
                         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                                scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
                         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                         if (!isWeekGenerated) {
                             createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -1477,7 +1477,7 @@ public class UpperfieldTest extends TestBase {
                 for (String notStartedLocation: notStartedLocations) {
                     scheduleDMViewPage.clickOnLocationNameInDMView(notStartedLocation);
                     SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                            scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                            scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
                     boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                     if (!isWeekGenerated) {
                         createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -1496,7 +1496,7 @@ public class UpperfieldTest extends TestBase {
                 for (String inProgressLocation: inProgressLocations) {
                     scheduleDMViewPage.clickOnLocationNameInDMView(inProgressLocation);
                     SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                            scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                            scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
                     boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                     if (!isWeekGenerated) {
                         createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -3270,8 +3270,8 @@ public class UpperfieldTest extends TestBase {
             if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
                 timeSheetPage.navigateToSchedule();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-                scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
                 boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                 if (!isWeekGenerated) {
                     createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -3353,8 +3353,8 @@ public class UpperfieldTest extends TestBase {
             if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
                 timeSheetPage.navigateToSchedule();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-                scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
                 boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                 if (!isWeekGenerated) {
                     createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -3855,7 +3855,7 @@ public class UpperfieldTest extends TestBase {
         }
         SimpleUtils.assertOnFail("The Published hrs display inconsistent on BU and Region reivew! It is "+ Float.parseFloat(regionInfoOnBUView.get("publishedHours"))
                         + " on BU view, and is "+ publishedHrsOnReviewView + "on Region view",
-                Float.parseFloat(regionInfoOnBUView.get("publishedHours")) == publishedHrsOnReviewView, false);
+                Float.parseFloat(regionInfoOnBUView.get("publishedHours")) == (float)(Math.round(publishedHrsOnReviewView*100))/100, false);
 
         //Check Budget Variance on BU and region view
         index = scheduleDMViewPage.getIndexOfColInDMViewTable("Budget Variance");

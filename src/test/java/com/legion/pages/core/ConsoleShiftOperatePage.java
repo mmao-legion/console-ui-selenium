@@ -1,7 +1,7 @@
 package com.legion.pages.core;
 
 import com.legion.pages.*;
-import com.legion.tests.core.ScheduleNewUITest;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -61,7 +61,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
         ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
         CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
-        if (scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue())) {
+        if (scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue())) {
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             for (WebElement unAssignedShift : scheduleShiftTablePage.getUnAssignedShifts()) {

@@ -1,7 +1,7 @@
 package com.legion.pages.core;
 
 import com.legion.pages.*;
-import com.legion.tests.core.ScheduleNewUITest;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
@@ -68,9 +68,9 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     public void validateTheDataAccordingToTheSelectedWeek() throws Exception {
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         if (isElementLoaded(calendarNavigationPreviousWeekArrow, 10)) {
-            scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
+            scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleTestKendraScott2.weekViewType.Previous.getValue(), ScheduleTestKendraScott2.weekCount.Two.getValue());
         } else if (isElementLoaded(calendarNavigationNextWeekArrow, 10)) {
-            scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Two.getValue());
+            scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.Two.getValue());
         } else
             SimpleUtils.fail("My Schedule Page: Forward and backward button failed to load to view previous or upcoming week", true);
         verifySelectOtherWeeks();

@@ -70,7 +70,7 @@ public class TrafficForecastTest extends TestBase{
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()),false);
+        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()),false);
         TrafficForecastPage trafficForecastPage = pageFactory.createTrafficForecastPage(); 
         trafficForecastPage.navigateToSalesForecastTab();
         SimpleUtils.assertOnFail( "Projected Sales Tab not Active!",trafficForecastPage.isSalesForecastTabActive() ,false);
