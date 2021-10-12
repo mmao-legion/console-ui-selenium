@@ -4059,7 +4059,7 @@ public class UpperfieldTest extends TestBase {
     @Owner(owner = "Mary")
     @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify REGION SUMMARY on Schedule in Region View")
+    @TestName(description = "Verify DISTRICT SUMMARY on Schedule in Region View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
