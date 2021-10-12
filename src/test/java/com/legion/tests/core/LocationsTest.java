@@ -761,11 +761,11 @@ public class LocationsTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -779,7 +779,7 @@ public class LocationsTest extends TestBase {
                 newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 newShiftPage.clickOnCreateOrNextBtn();
                 newShiftPage.searchTeamMemberByName("aglae");
-                if (!schedulePage.verifyWFSFunction()) {
+                if (!shiftOperatePage.verifyWFSFunction()) {
                     //to check WFS group exist or not
                     LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                     locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
@@ -830,7 +830,7 @@ public class LocationsTest extends TestBase {
                 newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 newShiftPage.clickOnCreateOrNextBtn();
                 newShiftPage.searchTeamMemberByName("Aglae");
-                if (!schedulePage.verifyWFSFunction()) {
+                if (!shiftOperatePage.verifyWFSFunction()) {
                     SimpleUtils.fail("Workforce sharing function work failed",false);
                 }else
                     SimpleUtils.pass("Workforce sharing function work well");
@@ -864,11 +864,11 @@ public class LocationsTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -882,7 +882,7 @@ public class LocationsTest extends TestBase {
                 newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 newShiftPage.clickOnCreateOrNextBtn();
                 newShiftPage.searchTeamMemberByName("Alysha");
-                if (!schedulePage.verifyWFSFunction()) {
+                if (!shiftOperatePage.verifyWFSFunction()) {
                     //to check WFS group exist or not
                     LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                     locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
@@ -933,7 +933,7 @@ public class LocationsTest extends TestBase {
                 newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 newShiftPage.clickOnCreateOrNextBtn();
                 newShiftPage.searchTeamMemberByName("Alysha");
-                if (!schedulePage.verifyWFSFunction()) {
+                if (!shiftOperatePage.verifyWFSFunction()) {
                     SimpleUtils.fail("Workforce sharing function work failed",false);
                 }else
                     SimpleUtils.pass("Workforce sharing function work well");

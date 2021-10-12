@@ -58,7 +58,7 @@ public class MealAndRestBreakTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Create schedule if it is not created
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -66,22 +66,22 @@ public class MealAndRestBreakTest extends TestBase {
 
             // Verify Breaks option is enabled in non-Edit mode week view
             shiftOperatePage.clickOnProfileIcon();
-            schedulePage.verifySpecificOptionEnabledOnShiftMenu(breakOption);
+            shiftOperatePage.verifySpecificOptionEnabledOnShiftMenu(breakOption);
 
             // Verify Breaks option is enabled in non-Edit mode day view
             scheduleCommonPage.clickOnDayView();
             shiftOperatePage.clickOnProfileIcon();
-            schedulePage.verifySpecificOptionEnabledOnShiftMenu(breakOption);
+            shiftOperatePage.verifySpecificOptionEnabledOnShiftMenu(breakOption);
 
             // Verify Edit Breaks is enabled in edit mode day view
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.clickOnProfileIcon();
-            schedulePage.verifySpecificOptionEnabledOnShiftMenu(editBreakOption);
+            shiftOperatePage.verifySpecificOptionEnabledOnShiftMenu(editBreakOption);
 
             // Verify Edit Breaks is enabled in edit mode week view
             scheduleCommonPage.clickOnWeekView();
             shiftOperatePage.clickOnProfileIcon();
-            schedulePage.verifySpecificOptionEnabledOnShiftMenu(editBreakOption);
+            shiftOperatePage.verifySpecificOptionEnabledOnShiftMenu(editBreakOption);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -99,6 +99,7 @@ public class MealAndRestBreakTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Schedule page, Schedule tab
@@ -112,7 +113,7 @@ public class MealAndRestBreakTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Create schedule if it is not created
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -124,22 +125,22 @@ public class MealAndRestBreakTest extends TestBase {
             String firstNameOfTM = "";
             int index = 0;
             while (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned")) {
-                index = schedulePage.getRandomIndexOfShift();
+                index = scheduleShiftTablePage.getRandomIndexOfShift();
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
                 //Search shift by TM names: first name and last name
                 firstNameOfTM = shiftInfo.get(0);
             }
-            schedulePage.clickOnShiftByIndex(index);
+            mySchedulePage.clickOnShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();
 
             // Verify Edit breaks dialog should pop up
             SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
 
             // Verify the shift info is correct
-            schedulePage.verifyShiftInfoIsCorrectOnMealBreakPopUp(shiftInfo);
+            shiftOperatePage.verifyShiftInfoIsCorrectOnMealBreakPopUp(shiftInfo);
 
             // Verify meal break and rest break are placed in the correct time
-            schedulePage.verifyMealBreakAndRestBreakArePlacedCorrectly();
+            shiftOperatePage.verifyMealBreakAndRestBreakArePlacedCorrectly();
 
             // Verify can change the length of meal break and rest break
             // Verify can move the place of meal break and rest break
@@ -150,11 +151,11 @@ public class MealAndRestBreakTest extends TestBase {
             List<String> breakTimes = shiftOperatePage.verifyEditBreaks();
             shiftOperatePage.clickOnUpdateEditShiftTimeButton();
             // Verify the shift should have edit icon
-            schedulePage.verifySpecificShiftHaveEditIcon(index);
+            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
             // Verify the changed meal break and rest break should be updated
-            schedulePage.clickOnShiftByIndex(index);
+            mySchedulePage.clickOnShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();
-            schedulePage.verifyBreakTimesAreUpdated(breakTimes);
+            shiftOperatePage.verifyBreakTimesAreUpdated(breakTimes);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

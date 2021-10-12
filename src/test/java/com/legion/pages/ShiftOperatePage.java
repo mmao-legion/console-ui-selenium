@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import org.openqa.selenium.WebElement;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ShiftOperatePage {
@@ -57,4 +58,46 @@ public interface ShiftOperatePage {
     public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception;
     public String convertToOpenShiftAndOfferToSpecificTMs() throws Exception;
     public boolean isEditMealBreakEnabled() throws Exception;
+    public boolean validateVariousWorkRolePrompt() throws Exception;
+    public void verifyRecommendedAndSearchTMEnabled() throws Exception;
+    public void verifyPersonalDetailsDisplayed() throws Exception;
+    public void verifyWorkPreferenceDisplayed() throws Exception;
+    public void verifyAvailabilityDisplayed() throws Exception;
+    public void closeViewProfileContainer() throws Exception;
+    public void verifyChangeRoleFunctionality() throws Exception;
+    public void deleteTMShiftInWeekView(String teamMemberName) throws Exception;
+    public boolean verifyConvertToOpenPopUpDisplay(String firstNameOfTM) throws Exception;
+    void convertToOpenShiftDirectly();
+    public void verifyMessageIsExpected(String messageExpected) throws Exception;
+    public String getAllTheWarningMessageOfTMWhenAssign() throws Exception;
+    public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception;
+    public void verifyInactiveMessageNWarning(String username, String date) throws Exception;
+    public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
+    public void switchSearchTMAndRecommendedTMsTab() throws Exception;
+    public void verifyEditShiftTimePopUpDisplay() throws Exception;
+    public void verifyListOfOfferNotNull() throws Exception;
+    public String getTheMessageOfTMScheduledStatus() throws Exception;
+    public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception;
+    public void verifyTMNotSelected() throws Exception;
+    public void verifyAlertMessageIsExpected(String messageExpected) throws Exception;
+    public void clickOnRadioButtonOfSearchedTeamMemberByName(String name) throws Exception;
+    public void clickOnAssignAnywayButton() throws Exception;
+    public boolean verifyWFSFunction();
+    public void deleteAllShiftsInWeekView() throws Exception;
+
+    public void clickOnOfferTMOption() throws Exception;
+    public void verifyRecommendedTableHasTM() throws Exception;
+    public void verifyTMInTheOfferList(String firstName, String expectedStatus) throws Exception;
+    public String getViewStatusShiftsInfo() throws Exception;
+    public List<String> getStartAndEndOperatingHrsOnEditShiftPage() throws Exception;
+    public HashMap<String, String> getMealAndRestBreaksTime() throws Exception;
+    public void verifySpecificOptionEnabledOnShiftMenu(String optionName) throws Exception;
+    public void verifyShiftInfoIsCorrectOnMealBreakPopUp(List<String> expectedShiftInfo) throws Exception;
+    public void verifyMealBreakAndRestBreakArePlacedCorrectly() throws Exception;
+    public void verifySpecificShiftHaveEditIcon(int index) throws Exception;
+    public void verifyBreakTimesAreUpdated(List<String> expectedBreakTimes) throws Exception;
+    public void verifyShiftNotesContent(String shiftNotes) throws Exception;
+    public void addShiftNotesToTextarea(String notes) throws Exception;
+    public String getShiftInfoInEditShiftDialog() throws Exception;
+    public void clickOnEditShiftNotesOption() throws Exception;
 }

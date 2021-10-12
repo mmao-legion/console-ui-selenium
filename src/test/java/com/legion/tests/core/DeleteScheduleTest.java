@@ -42,6 +42,7 @@ public class DeleteScheduleTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -60,37 +61,37 @@ public class DeleteScheduleTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 
-            String deleteForWeekText = schedulePage.getDeleteScheduleForWhichWeekText();
+            String deleteForWeekText = scheduleMainPage.getDeleteScheduleForWhichWeekText();
             String unPublishedMessage = "This action can’t be undone.";
             // Verify the visibility of Delete button
-            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", schedulePage.isDeleteScheduleButtonLoaded(), false);
+            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", scheduleMainPage.isDeleteScheduleButtonLoaded(), false);
             // Verify the functionality of Delete button
-            schedulePage.verifyClickOnDeleteScheduleButton();
+            scheduleMainPage.verifyClickOnDeleteScheduleButton();
             // Verify the content on Delete Schedule confirm window
-            schedulePage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
+            scheduleMainPage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
             // Verify the Delete button is disabled by default
-            schedulePage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
+            scheduleMainPage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
             // Verify the Delete button is enabled when clicking the check box
-            schedulePage.verifyDeleteButtonEnabledWhenClickingCheckbox();
+            scheduleMainPage.verifyDeleteButtonEnabledWhenClickingCheckbox();
             // Verify the functionality of Cancel button
-            schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
+            scheduleMainPage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
 
             // Delete the Unassigned shifts to unblock publishing
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
+            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
 
             createSchedulePage.publishActiveSchedule();
             String publishedDeleteMessage = "This action can’t be undone. The schedule has been published, it will be withdrawn from team members";
-            schedulePage.verifyClickOnDeleteScheduleButton();
+            scheduleMainPage.verifyClickOnDeleteScheduleButton();
             // Verify the content of Delete Schedule window when schedule is published
-            schedulePage.verifyTheContentOnDeleteScheduleDialog(publishedDeleteMessage, deleteForWeekText);
+            scheduleMainPage.verifyTheContentOnDeleteScheduleDialog(publishedDeleteMessage, deleteForWeekText);
             // Verify the Delete button is disabled by default when schedule is published
-            schedulePage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
+            scheduleMainPage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
             // Verify the Delete button is enabled when clicking the check box when schedule is published
-            schedulePage.verifyDeleteButtonEnabledWhenClickingCheckbox();
+            scheduleMainPage.verifyDeleteButtonEnabledWhenClickingCheckbox();
             // Verify the functionality of Cancel button when schedule is published
-            schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
+            scheduleMainPage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
             // Verify the functionality of Delete button when schedule is published
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         } catch (Exception e){
@@ -108,8 +109,8 @@ public class DeleteScheduleTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
@@ -137,21 +138,21 @@ public class DeleteScheduleTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 
-            String deleteForWeekText = schedulePage.getDeleteScheduleForWhichWeekText();
+            String deleteForWeekText = scheduleMainPage.getDeleteScheduleForWhichWeekText();
             String unPublishedMessage = "This action can’t be undone.";
 
             // Verify the visibility of Delete button
-            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", schedulePage.isDeleteScheduleButtonLoaded(), false);
+            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", scheduleMainPage.isDeleteScheduleButtonLoaded(), false);
             // Verify the functionality of Delete button
-            schedulePage.verifyClickOnDeleteScheduleButton();
+            scheduleMainPage.verifyClickOnDeleteScheduleButton();
             // Verify the content on Delete Schedule confirm window
-            schedulePage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
+            scheduleMainPage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
             // Verify the Delete button is disabled by default
-            schedulePage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
+            scheduleMainPage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
             // Verify the Delete button is enabled when clicking the check box
-            schedulePage.verifyDeleteButtonEnabledWhenClickingCheckbox();
+            scheduleMainPage.verifyDeleteButtonEnabledWhenClickingCheckbox();
             // Verify the functionality of Cancel button
-            schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
+            scheduleMainPage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
             // Verify the functionality of Delete button when schedule is unpublished
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         } catch (Exception e){
@@ -169,7 +170,7 @@ public class DeleteScheduleTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -179,7 +180,7 @@ public class DeleteScheduleTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -191,7 +192,7 @@ public class DeleteScheduleTest extends TestBase {
             }
 
             // Verify Store Manger cannot see the Delete button if schedule is published
-            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is published!", !schedulePage.isDeleteScheduleButtonLoaded(), false);
+            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is published!", !scheduleMainPage.isDeleteScheduleButtonLoaded(), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -206,6 +207,7 @@ public class DeleteScheduleTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Verify SM doesn't have "Schedule: Manage Schedule" permission
@@ -260,7 +262,7 @@ public class DeleteScheduleTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Verify Store Manager cannot see the Delete button when schedule is not published
-            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is not published!", !schedulePage.isDeleteScheduleButtonLoaded(), false);
+            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is not published!", !scheduleMainPage.isDeleteScheduleButtonLoaded(), false);
             loginPage.logOut();
 
             // Login as Internal admin, add the permission back

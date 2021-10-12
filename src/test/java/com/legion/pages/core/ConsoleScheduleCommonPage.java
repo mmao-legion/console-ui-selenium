@@ -13,10 +13,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -571,5 +568,260 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
             SimpleUtils.fail("Schedule Day view: Failed to get the index of CurrentDay", false);
         }
         return index;
+    }
+
+    @FindBy(css = "div.lg-modal")
+    private WebElement popUpWindow;
+    @FindBy(className = "lg-modal__title-icon")
+    private WebElement popUpWindowTitle;
+    @FindBy(css = "[label=\"Cancel\"]")
+    private WebElement cancelButton;
+    @Override
+    public void clickCancelButtonOnPopupWindow() throws Exception {
+        if (isElementLoaded(cancelButton, 5)) {
+            click(cancelButton);
+            if (!isElementLoaded(popUpWindow, 5)) {
+                SimpleUtils.pass("Pop up window get closed after clicking cancel button!");
+            }else {
+                SimpleUtils.fail("Pop up window still shows after clicking cancel button!", false);
+            }
+        }else {
+            SimpleUtils.fail("Cancel Button not loaded Successfully on pop up window!", false);
+        }
+    }
+
+
+    @FindBy (css = "div.console-navigation-item-label.Schedule")
+    private WebElement consoleSchedulePageTabElement;
+    @Override
+    public void goToConsoleScheduleAndScheduleSubMenu() throws Exception {
+        if (isElementLoaded(consoleSchedulePageTabElement, 5)) {
+            clickTheElement(consoleSchedulePageTabElement);
+            clickTheElement(ScheduleSubMenu);
+            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+            if (scheduleCommonPage.verifyActivatedSubTab("Schedule"))
+                SimpleUtils.pass("Schedule Page: 'Schedule' tab loaded Successfully!");
+            else
+                SimpleUtils.fail("Schedule Page: 'Schedule' tab not loaded", false);
+        }
+    }
+
+
+    // Added by Nora: for Team Member View
+    @FindBy (css = ".day-week-picker-period-week")
+    private List<WebElement> currentWeeks;
+    @FindBy(className = "sch-day-view-shift-worker-detail")
+    private List<WebElement> tmIcons;
+    @FindBy(className = "sch-worker-popover")
+    private WebElement popOverLayout;
+    @FindBy(css = "span.sch-worker-action-label")
+    private List<WebElement> shiftRequests;
+    @FindBy(css = "[label=\"Submit\"]")
+    private WebElement submitButton;
+    @FindBy(css = "[label=\"Back\"]")
+    private WebElement backButton;
+    @FindBy(css = "textarea[placeholder]")
+    private WebElement messageText;
+    @FindBy(className = "lgn-alert-modal")
+    private WebElement confirmWindow;
+    @FindBy(className = "lgn-action-button-success")
+    private WebElement okBtnOnConfirm;
+    @FindBy(css = "[ng-repeat*=\"shift in results\"]")
+    private List<WebElement> comparableShifts;
+    @FindBy(css = "[label=\"Next\"]")
+    private WebElement nextButton;
+    @FindBy(css = "[label=\"Cancel Cover Request\"]")
+    private WebElement cancelCoverBtn;
+    @FindBy(css = "[label=\"Cancel Swap Request\"]")
+    private WebElement cancelSwapBtn;
+    @FindBy(css = ".shift-swap-modal-table th.ng-binding")
+    private WebElement resultCount;
+    @FindBy(css = "td.shift-swap-modal-shift-table-select>div")
+    private List<WebElement> selectBtns;
+    @FindBy(css = ".modal-content .sch-day-view-shift-outer")
+    private List<WebElement> swapRequestShifts;
+    @FindBy(css = "[label=\"Accept\"] button")
+    private List<WebElement> acceptButtons;
+    @FindBy(css = "[label=\"I agree\"]")
+    private WebElement agreeButton;
+    @FindBy(css = "lg-close.dismiss")
+    private WebElement closeDialogBtn;
+    @FindBy(className = "shift-swap-offer-time")
+    private WebElement shiftOfferTime;
+    @FindBy(className = "shift-swap-modal-table-shift-status")
+    private List<WebElement> shiftStatus;
+
+    @Override
+    public void navigateToNextWeek() throws Exception {
+        int currentWeekIndex = -1;
+        if (areListElementVisible(currentWeeks, 10)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                String className = currentWeeks.get(i).getAttribute("class");
+                if (className.contains("day-week-picker-period-active")) {
+                    currentWeekIndex = i;
+                }
+            }
+            if (currentWeekIndex == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                clickTheElement(calendarNavigationNextWeekArrow);
+                if (areListElementVisible(currentWeeks, 5)) {
+                    clickTheElement(currentWeeks.get(0));
+                    SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
+                }
+            }else {
+                clickTheElement(currentWeeks.get(currentWeekIndex + 1));
+                SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(currentWeekIndex + 1).getText() + "' Successfully!");
+            }
+        }else {
+            SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void navigateToPreviousWeek() throws Exception {
+        int currentWeekIndex = -1;
+        if (areListElementVisible(currentWeeks, 10)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                String className = currentWeeks.get(i).getAttribute("class");
+                if (className.contains("day-week-picker-period-active")) {
+                    currentWeekIndex = i;
+                }
+            }
+            if (currentWeekIndex == 0 && isElementLoaded(calendarNavigationPreviousWeekArrow, 5)) {
+                clickTheElement(calendarNavigationPreviousWeekArrow);
+                if (areListElementVisible(currentWeeks, 5)) {
+                    clickTheElement(currentWeeks.get(currentWeeks.size()-1));
+                    SimpleUtils.pass("Navigate to previous week: '" + currentWeeks.get(currentWeeks.size()-1).getText() + "' Successfully!");
+                }
+            }else {
+                clickTheElement(currentWeeks.get(currentWeekIndex - 1));
+                SimpleUtils.pass("Navigate to previous week: '" + currentWeeks.get(currentWeekIndex - 1).getText() + "' Successfully!");
+            }
+        }else {
+            SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void goToSpecificWeekByDate(String date) throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
+        Date switchDate = dateFormat.parse(date);
+        if (areListElementVisible(currentWeeks, 10)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                clickTheElement(currentWeeks.get(i));
+                List<String> years = getYearsFromCalendarMonthYearText();
+                String activeWeek = getActiveWeekText();
+                String[] items = activeWeek.split(" ");
+                String weekStartText = years.get(0) + " " + items[3] + " " + items[4];
+                String weekEndText = (years.size() == 2 ? years.get(1) : years.get(0)) + " " + items[6] + " " + items[7];
+                Date weekStartDate = dateFormat.parse(weekStartText);
+                Date weekEndDate = dateFormat.parse(weekEndText);
+                boolean isBetween = SimpleUtils.isDateInTimeDuration(switchDate, weekStartDate, weekEndDate);
+                if (isBetween) {
+                    SimpleUtils.report("Schedule Page: Navigate to week: " + activeWeek + ", it contains the day: " + date);
+                    break;
+                } else {
+                    if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                        click(calendarNavigationNextWeekArrow);
+                        goToSpecificWeekByDate(date);
+                    }
+                }
+            }
+        }
+    }
+
+    @FindBy (className = "day-week-picker-date")
+    private WebElement calMonthYear;
+    public List<String> getYearsFromCalendarMonthYearText() throws Exception {
+        List<String> years = new ArrayList<>();
+        if (isElementLoaded(calMonthYear, 5)) {
+            if (calMonthYear.getText().contains("-")) {
+                String[] monthAndYear = calMonthYear.getText().split("-");
+                if (monthAndYear.length == 2) {
+                    if (monthAndYear[0].trim().length() > 4)
+                        years.add(monthAndYear[0].trim().substring(monthAndYear[0].trim().length() - 4));
+                    if (monthAndYear[1].trim().length() > 4)
+                        years.add(monthAndYear[1].trim().substring(monthAndYear[1].trim().length() - 4));
+                }
+            }else {
+                years.add(calMonthYear.getText().trim().substring(calMonthYear.getText().trim().length() - 4));
+            }
+        }else {
+            SimpleUtils.fail("Calendar month and year not loaded successfully!", false);
+        }
+        return years;
+    }
+
+    @FindBy(css = "[ng-class=\"{'schedule-view-small-padding': controlPanel.isGenerateSchedleView}\"]")
+    private WebElement tmSchedulePanel;
+    @Override
+    public void verifyTMSchedulePanelDisplay() throws Exception {
+        try{
+            if(isElementLoaded(tmSchedulePanel, 5)){
+                SimpleUtils.pass("TM schedule panel is loaded successfully! ");
+            } else
+                SimpleUtils.fail("TM schedule panel not loaded successfully! ", false);
+        }catch(Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public String convertDateStringFormat(String dateString) throws Exception{
+        String result = dateString;
+        // dateString format: JAN 2 - JAN 9, will convert 2 to 02, 9 to 09, return JAN 02 - JAN 09
+        String[] items = dateString.split(" ");
+        if (items.length==5 && SimpleUtils.isNumeric(items[1]) && SimpleUtils.isNumeric(items[4])){
+            if (Integer.parseInt(items[1])<10 ){
+                items[1] = Integer.toString(Integer.parseInt(items[1]));
+                result = items[0] + " 0" + items[1] + " " + items[2] + " " + items[3];
+            } else {
+                result = items[0] + " " + items[1] + " " + items[2] + " " + items[3];
+            }
+            if (Integer.parseInt(items[4])<10){
+                items[4] = Integer.toString(Integer.parseInt(items[4]));
+                result = result + " 0" + items[4];
+            } else {
+                result = result + " " + items[4];
+            }
+        } else {
+            SimpleUtils.fail("week day info format is not expected! Split String: " + dateString + " failed!", false);
+        }
+        return result;
+    }
+
+
+    public Map<String, String> getActiveDayInfo() throws Exception{
+
+        Map<String, String> dayInfo = new HashMap<>();
+        WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+        String[] activeDay = activeWeek.getText().replace("\n", " ").split(" ");
+
+        dayInfo.put("weekDay", activeDay[0].substring(0, 3));
+        dayInfo.put("month", activeDay[1]);
+        dayInfo.put("day", activeDay[2]);
+        dayInfo.put("year", getYearsFromCalendarMonthYearText().get(0));
+
+        return dayInfo;
+    }
+
+
+    @FindBy (className = "header-navigation-label")
+    private WebElement headerLabel;
+
+    @Override
+    public String getHeaderOnSchedule() throws Exception {
+        String header = "";
+        if (isElementLoaded(headerLabel,5))
+            header = headerLabel.getText();
+        return header;
+    }
+
+    @Override
+    public void verifyHeaderOnSchedule() throws Exception {
+        String header = getHeaderOnSchedule();
+        if (header.equals("Schedule"))
+            SimpleUtils.pass("Schedule Page: Header is \"Schedule\" as expected");
+        else
+            SimpleUtils.fail("Dashboard Page: Header isn't \"Schedule\"",true);
     }
 }

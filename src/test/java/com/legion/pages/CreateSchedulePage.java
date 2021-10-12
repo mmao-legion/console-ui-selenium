@@ -41,5 +41,17 @@ public interface CreateSchedulePage {
     public void unGenerateActiveScheduleFromCurrentWeekOnward(int loopCount) throws Exception;
     public boolean isPublishButtonLoadedOnSchedulePage() throws Exception;
     public boolean isRepublishButtonLoadedOnSchedulePage() throws Exception;
+    public boolean isPartialCopyOptionLoaded() throws Exception;
+    public void clickBackBtnAndExitCreateScheduleWindow() throws Exception;
+    public void clickExitBtnToExitCreateScheduleWindow() throws Exception;
+    public void verifyLabelOfPublishBtn(String labelExpected) throws  Exception;
+    public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception;
+    public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception;
+    public void verifyDifferentOperatingHours(String weekInfo) throws Exception;
+    public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception;
+    public void selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(String locationName) throws Exception;
+    public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception;
+    public void chooseLocationInCreateSchedulePopupWindow(String location) throws Exception;
+    public boolean isCopyScheduleWindow() throws Exception;
 
 }

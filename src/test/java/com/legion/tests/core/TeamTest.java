@@ -131,6 +131,7 @@ public class TeamTest extends TestBase{
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			dashboardPage.isDashboardPageLoaded();
 			String currentDay = dashboardPage.getCurrentDateFromDashboard();
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -173,7 +174,7 @@ public class TeamTest extends TestBase{
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-			schedulePage.selectDaysFromCurrentDay(currentDay);
+			newShiftPage.selectDaysFromCurrentDay(currentDay);
 			newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
@@ -181,7 +182,7 @@ public class TeamTest extends TestBase{
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleCommonPage.clickOnWeekView();
 			// Verify Shifts will go to Auto Scheduling  after Activating any TM
-			schedulePage.verifyNewShiftsAreShownOnSchedule(firstName);
+			scheduleShiftTablePage.verifyNewShiftsAreShownOnSchedule(firstName);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
@@ -247,16 +248,16 @@ public class TeamTest extends TestBase{
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-			schedulePage.selectDaysFromCurrentDay(currentDay);
+			newShiftPage.selectDaysFromCurrentDay(currentDay);
 			newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchTeamMemberByName(firstName);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleCommonPage.clickOnWeekView();
-			schedulePage.verifyNewShiftsAreShownOnSchedule(firstName);
+			scheduleShiftTablePage.verifyNewShiftsAreShownOnSchedule(firstName);
 			scheduleMainPage.clickSaveBtn();
-			List<Integer> indexes = schedulePage.getAddedShiftIndexes(firstName);
+			List<Integer> indexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
 			teamPage.goToTeam();
 			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 			teamPage.searchAndSelectTeamMemberByName(firstName);

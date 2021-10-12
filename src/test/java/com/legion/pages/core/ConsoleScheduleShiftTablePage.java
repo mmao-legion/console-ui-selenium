@@ -1,9 +1,11 @@
 package com.legion.pages.core;
 
 import com.legion.pages.*;
+import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -17,7 +19,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         PageFactory.initElements(getDriver(), this);
     }
 
-
+    private static HashMap<String, String> propertySearchTeamMember = JsonUtil.getPropertiesFromJsonFile("src/test/resources/SearchTeamMember.json");
 
     @FindBy(css = ".sch-day-view-shift")
     private List<WebElement> dayViewAvailableShifts;
@@ -1083,4 +1085,1620 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
         return shiftInfo;
     }
+
+
+    @Override
+    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception {
+        if (scheduleShifts.entrySet().containsAll(dashboardShifts.entrySet())) {
+            SimpleUtils.pass("Up coming shifts from dashboard is consistent with the shifts in schedule!");
+        }else {
+            SimpleUtils.fail("Up coming shifts from dashboard isn't consistent with the shifts in schedule!", true);
+        }
+    }
+
+    @FindBy(css = "img[src*=\"added-shift\"]")
+    private List<WebElement> addedShiftIcons;
+    @Override
+    public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception {
+        boolean isFound = false;
+        if (areListElementVisible(addedShiftIcons, 5)) {
+            for (WebElement addedShiftIcon : addedShiftIcons) {
+                WebElement parent = addedShiftIcon.findElement(By.xpath("./../../../.."));
+                if (parent != null) {
+                    WebElement teamMemberName = parent.findElement(By.className("week-schedule-worker-name"));
+                    if (teamMemberName != null && teamMemberName.getText().contains(name)) {
+                        isFound = true;
+                        SimpleUtils.pass("Added a New shift for: " + name + " is successful!");
+                    }
+                }else {
+                    SimpleUtils.fail("Failed to find the parent element for adding icon!", false);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Failed to find the new added shift icons!", false);
+        }
+        if (!isFound) {
+            SimpleUtils.fail("Cannot find the new shift for team member: " + name, true);
+        }
+    }
+
+
+    @Override
+    public List<Integer> getAddedShiftIndexes(String name) throws Exception {
+        // Wait for the shifts to be loaded
+        waitForSeconds(5);
+        List<Integer> indexes = new ArrayList<>();
+        if (areListElementVisible(shiftsWeekView, 5)) {
+            for (int i = 0; i < shiftsWeekView.size(); i++) {
+                WebElement workerName = shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name"));
+                if (workerName != null) {
+                    if (workerName.getText().contains(name)) {
+                        indexes.add(i);
+                        SimpleUtils.pass("Get the index: " + i + " successfully!");
+                    }
+                }
+            }
+        }
+        if (indexes.size() == 0) {
+            SimpleUtils.fail("Failed to get the index of the newly added shifts!", false);
+        }
+        return indexes;
+    }
+
+    @Override
+    public boolean areShiftsPresent() throws Exception {
+        boolean arePresent = false;
+        if (areListElementVisible(dayViewAvailableShifts, 5)) {
+            arePresent = true;
+        }
+        return arePresent;
+    }
+
+    @FindBy (css = ".week-schedule-shift .week-schedule-shift-wrapper")
+    private List<WebElement> wholeWeekShifts;
+    @Override
+    public int getShiftsCount() throws Exception {
+        int count = 0;
+        if (areListElementVisible(wholeWeekShifts, 5)) {
+            count = wholeWeekShifts.size();
+        } else if (areListElementVisible(dayViewAvailableShifts, 5)){
+            count = dayViewAvailableShifts.size();
+        }
+        return count;
+    }
+
+    @Override
+    public boolean isProfileIconsClickable() throws Exception {
+        if(areListElementVisible(profileIcons,10)){
+            int randomIndex = (new Random()).nextInt(profileIcons.size());
+            try{
+                click(profileIcons.get(randomIndex));
+                return true;
+            } catch (Exception e){
+                //
+            }
+        } else {
+            SimpleUtils.fail("Profile Icon is not present for selected Employee", false);
+        }
+        return false;
+    }
+
+
+    @FindBy(css = ".sch-day-view-shift-overtime-icon")
+    private List<WebElement> oTFlag;
+
+    @FindBy(css = ".ot-hours-text")
+    private List<WebElement> oTHoursText;
+
+    @Override
+    public int getOTShiftCount() {
+        int count =0;
+        if (areListElementVisible(oTFlag,5) && areListElementVisible(oTHoursText,5)) {
+            count = oTHoursText.size();
+        }
+        return count;
+    }
+
+
+    @FindBy(css = "div.sch-day-view-shift-delete")
+    private WebElement btnDelete ;
+
+    @FindBy(css = "div[ng-repeat=\"shift in filteredShifts\"]")
+    private List<WebElement> shiftsInDayViewNew;
+
+    @FindBy(css = ".sch-day-view-shift")
+    private List<WebElement> shiftsInDayView;
+
+    @FindBy(css = "div.sch-shift-container")
+    private List<WebElement> scheduleShiftsRows;
+
+    //update by haya
+    public void validateXButtonForEachShift() throws Exception{
+        ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+        String deletedInfo = "Deleted";
+        int shiftCount = 0;
+        if (areListElementVisible(shiftsInDayViewNew, 5)) {
+            shiftCount = shiftsInDayViewNew.size();
+            for (int i = 0; i < shiftsInDayViewNew.size(); i++) {
+                List<WebElement> tempShifts = getDriver().findElements(By.cssSelector("div[ng-repeat=\"shift in filteredShifts\"]"));
+                click(tempShifts.get(i));
+                if (isElementEnabled(btnDelete, 5)) {
+                    SimpleUtils.pass(": X button is present for selected Shift");
+                    clickTheElement(btnDelete);
+                    // To avoid stale element issue
+                    tempShifts = getDriver().findElements(By.cssSelector("div[ng-repeat=\"shift in filteredShifts\"]"));
+                    String deletedShiftInfo = tempShifts.get(i).findElement(By.cssSelector("div.sch-day-view-right-gutter-text")).getText();
+                    if (deletedShiftInfo.contains(deletedInfo)) {
+                        SimpleUtils.pass("can delete shift by X button");
+                        break;
+                    } else {
+                        SimpleUtils.fail("delete shift failed by X button, no deleted guter text!", true);
+                    }
+                    break;
+                } else SimpleUtils.fail("X button is not present for ", true);
+            }
+        } else if (areListElementVisible(shiftsInDayView, 5)) {
+            shiftCount = shiftsInDayView.size();
+            for (int i = 0; i < shiftsInDayView.size(); i++) {
+                List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift"));
+                moveToElementAndClick(tempShifts.get(i));
+                if (isElementEnabled(btnDelete, 5)) {
+                    SimpleUtils.pass(": X button is present for selected Shift");
+                    clickTheElement(btnDelete);
+                    // To avoid stale element issue
+                    String deletedShiftInfo = getDriver().findElements(By.cssSelector("div.sch-day-view-right-gutter-text")).get(i).getText();
+                    if (deletedShiftInfo.contains(deletedInfo)) {
+                        SimpleUtils.pass("can delete shift by X button");
+                        break;
+                    } else {
+                        SimpleUtils.fail("delete shift failed by X button, no deleted guter text!", true);
+                    }
+                    break;
+                } else SimpleUtils.fail("X button is not present for ", true);
+            }
+        } else {
+            SimpleUtils.fail("There is no shifts in day view!", false);
+        }
+        scheduleMainPage.saveSchedule();
+        int shiftCountAftDelete =  scheduleShiftsRows.size();
+        if (shiftCountAftDelete < shiftCount) {
+            SimpleUtils.pass("delete shift successfully by X button");
+
+        }else
+            SimpleUtils.fail("delete shift failed by X button",false);
+    }
+
+
+    @FindBy(xpath = "//div/shift-hover/div/div[5]/div[1]")
+    private WebElement totalHoursInWeekFromPopUp;
+
+    @FindBy(css = "div.sch-worker-display-name")
+    private List<WebElement> workerName;
+
+    @FindBy(css = "div.week-schedule-worker-name.ng-binding")
+    private List<WebElement> workerNameList;
+
+    @FindBy(css = ".week-view-shift-info-icon")
+    private List<WebElement> scheduleInfoIcon;
+    @Override
+    public float getShiftHoursByTMInWeekView(String teamMember) {
+        Float timeDurationForTMInWeek = 0.0f;
+        waitForSeconds(5);
+        if (areListElementVisible(workerNameList,5) ) {
+            for (int i = 0; i <workerNameList.size() ; i++) {
+                if ( workerNameList.get(i).getText().trim().toLowerCase().contains(teamMember.toLowerCase())) {
+                    click(scheduleInfoIcon.get(i));
+                    String[] timeDurationForTMContext = totalHoursInWeekFromPopUp.getText().split(" ");
+                    timeDurationForTMInWeek = Float.valueOf(timeDurationForTMContext[3].trim());
+                    break;
+                }
+            }
+        }else
+            timeDurationForTMInWeek = 0.0f;
+        return timeDurationForTMInWeek;
+    }
+
+
+    @FindBy (css = "[ng-repeat=\"message in getComplianceMessages()\"]")
+    private List<WebElement> otFlagandOThoursInWeekForTM;
+    @Override
+    public void verifyWeeklyOverTimeAndFlag(String teamMemberName) throws Exception {
+        boolean flag = false;
+        if (areListElementVisible(otFlagandOThoursInWeekForTM,10)){
+            for (WebElement e : otFlagandOThoursInWeekForTM){
+                if (e.getText().contains("week overtime")){
+                    flag = true;
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Flag is not present for team member " + propertySearchTeamMember.get("TeamMember"), false);
+        }
+        if (flag) {
+            SimpleUtils.pass("week overtime shifts created successfully");
+        } else {
+            SimpleUtils.fail("weekly overtime Flag is not present for team member " + propertySearchTeamMember.get("TeamMember"), false);
+        }
+    }
+
+
+    @FindBy(css = ".sch-worker-h-view")
+    private WebElement workerInfoFromShift;
+    @Override
+    public Map<String, String> getHomeLocationInfo() throws Exception {
+        Map<String, String> resultInfo = new HashMap<String, String>();
+        if (isElementLoaded(workerInfoFromShift.findElement(By.cssSelector(".sch-worker-h-view-display-name")), 10)){
+            resultInfo.put("worker name", workerInfoFromShift.findElement(By.cssSelector(".sch-worker-h-view-display-name")).getText().replace("\n", ""));
+
+        } else {
+            SimpleUtils.fail("Worker name info fail to load!", false);
+        }
+        if (isElementLoaded(workerInfoFromShift.findElement(By.cssSelector(".sch-worker-role")), 10)){
+            if (workerInfoFromShift.findElement(By.cssSelector(".sch-worker-role")).getText().split("\n").length == 2){
+                resultInfo.put("job title", workerInfoFromShift.findElement(By.cssSelector(".sch-worker-role")).getText().split("\n")[0]);
+                resultInfo.put("PTorFT", workerInfoFromShift.findElement(By.cssSelector(".sch-worker-role")).getText().split("\n")[1]);
+            } else {
+                SimpleUtils.fail("Work role and PT or FT info are not expected!", false);
+            }
+        } else {
+            SimpleUtils.fail("Work role info fail to load!", false);
+        }
+        if (isElementLoaded(workerInfoFromShift.findElement(By.cssSelector(".sch-worker-h-view-role-name")), 10)){
+            resultInfo.put("homeLocation", workerInfoFromShift.findElement(By.cssSelector(".sch-worker-h-view-role-name")).getText());
+        } else {
+            SimpleUtils.fail("Home location info fail to load!", false);
+        }
+        if (areListElementVisible(workerInfoFromShift.findElements(By.cssSelector(".one-badge")), 10)){
+            resultInfo.put("badgeSum", String.valueOf(workerInfoFromShift.findElements(By.cssSelector(".one-badge")).size()));
+            String badgeInfo = "";
+            for (WebElement element: workerInfoFromShift.findElements(By.cssSelector(".one-badge"))){
+                badgeInfo = badgeInfo + " " + element.getAttribute("data-original-title");
+            }
+            resultInfo.put("badgeInfo", badgeInfo);
+        } else {
+            resultInfo.put("badgeSum", "0");
+        }
+        return resultInfo;
+    }
+
+
+
+    //Added by Julie
+    @FindBy(css = "div.rows")
+    private List<WebElement> weekScheduleShiftsOfWeekView;
+
+    @FindBy(css = ".sch-day-view-shift-time")
+    private List<WebElement> weekScheduleShiftsTimeOfMySchedule;
+
+    @FindBy(css = ".my-schedule-no-schedule")
+    private WebElement myScheduleNoSchedule;
+
+    @FindBy(className = "sch-grid-container")
+    private WebElement scheduleTable;
+
+    @FindBy(css = "div.lg-picker-input")
+    private WebElement currentLocationOnSchedulePage;
+
+    @FindBy(css = ".sub-navigation-view-link")
+    private List<WebElement> subMenusOnSchedulePage;
+
+    @FindBy(css = "[ng-repeat=\"opt in opts\"] input-field")
+    private List<WebElement> shiftTypes;
+
+    @FindBy(css = "div[ng-attr-class^=\"sch-date-title\"]")
+    private List<WebElement> weekScheduleShiftsDateOfMySchedule;
+
+    @FindBy(css = "div.sch-day-view-grid-header span")
+    private List<WebElement> scheduleShiftTimeOnHeader;
+
+    @FindBy(css = ".day-view-shift-hover-info-icon")
+    private List<WebElement> hoverIcons;
+
+    @FindBy(css = ".card-carousel-card-default")
+    private WebElement openShiftCard;
+
+    @FindBy(className = "card-carousel-link")
+    private WebElement viewShiftsBtn;
+
+    @FindBy(css = "h1[ng-if=\"weeklyScheduleData.hasSchedule !== 'FALSE'\"]")
+    private WebElement openShiftData;
+
+    @FindBy(css = "img[src*=\"openShift\"]")
+    private List<WebElement> blueIconsOfOpenShift;
+
+    @FindBy(css = "[ng-if=\"isGenerateOverview()\"] h1")
+    private WebElement weekInfoBeforeCreateSchedule;
+
+    @FindBy (css = ".modal-instance-header-title")
+    private WebElement headerWhileCreateSchedule;
+
+    @FindBy (css = ".generate-modal-location")
+    private WebElement locationWhileCreateSchedule;
+
+    @FindBy (css = ".text-right[ng-if=\"hasBudget\"]")
+    private List<WebElement> budgetedHoursOnSTAFF;
+
+    @FindBy (xpath = "//div[contains(text(), \"Weekly Budget\")]/following-sibling::h1[1]")
+    private WebElement budgetHoursOnWeeklyBudget;
+
+    @FindBy (css = "[x=\"25\"]")
+    private List<WebElement> budgetHrsOnGraph;
+
+    @FindBy (xpath = "//p[contains(text(),\"Target Budget: \")]/span")
+    private WebElement targetBudget;
+
+    @FindBy (css = ".generate-modal-week-container.selected text[x=\"85\"]")
+    private WebElement scheduledHrsOnGraph;
+
+    @FindBy (xpath = "//div[contains(text(), \"Action Required\")]/following-sibling::h1[1]")
+    private WebElement changesOnActionRequired;
+
+    @FindBy(css = "img[ng-if=\"unpublishedDeleted && isOneAndOnlyShiftTypeSelected('Edited')\"]")
+    private WebElement tooltipIconOfUnpublishedDeleted;
+
+    @FindBy (className = "sch-calendar-day")
+    private List<WebElement> scheduleCalendarDays;
+
+    @FindBy (className = "tma-header-text")
+    private WebElement titleInSelectTeamMemberWindow;
+
+    @FindBy (className = "worker-edit-availability-status")
+    private WebElement messageInSelectTeamMemberWindow;
+
+    @FindBy (css = "[ng-repeat=\"worker in searchResults\"] .tma-staffing-option-outer-circle")
+    private WebElement optionCircle;
+
+    @FindBy (css = "[ng-click=\"cancelAction()\"]")
+    private WebElement closeButtonOnCustomize;
+
+    List<String> weekScheduleShiftTimeListOfWeekView = new ArrayList<String>();
+    List<String> weekScheduleShiftTimeListOfMySchedule = new ArrayList<String>();
+
+    @Override
+    public List<String> getWeekScheduleShiftTimeListOfWeekView(String teamMemberName) throws Exception {
+        //clickOnWeekView();
+        if (areListElementVisible(weekScheduleShiftsOfWeekView, 10) && weekScheduleShiftsOfWeekView.size() != 0) {
+            for (int i = 0; i < weekScheduleShiftsOfWeekView.size(); i++) {
+                if (weekScheduleShiftsOfWeekView.get(i).findElement(By.cssSelector(".week-schedule-worker-name")).getText().contains(teamMemberName)) {
+                    weekScheduleShiftTimeListOfWeekView.add(weekScheduleShiftsOfWeekView.get(i).findElement(By.cssSelector(".week-schedule-shift-time")).getText().replace(" ", "").toLowerCase());
+                }
+            }
+        } else if (weekScheduleShiftsOfWeekView.size() == 0) {
+            SimpleUtils.report("Schedule Week View Page: No shift available");
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Failed to load shifts", true);
+        }
+        return weekScheduleShiftTimeListOfWeekView;
+    }
+
+    @FindBy (className = "sch-calendar-day-dimension")
+    private List<WebElement> weekDayDimensions;
+    @Override
+    public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception {
+        HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
+            for (WebElement weekDayDimension : weekDayDimensions) {
+                WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
+                WebElement hoursNCount = weekDayDimension.findElement(By.className("sch-calendar-day-summary"));
+                if (weekDay != null && hoursNCount != null) {
+                    hoursNTeamMembersCount.put(weekDay.getText(), hoursNCount.getText());
+                    SimpleUtils.report("Schedule Week View Page: Get the week day: " + weekDay.getText() + " and the count of hours" +
+                            ", TMs are: " + hoursNCount.getText());
+                } else {
+                    SimpleUtils.fail("Schedule Week View Page: week day, hours and TMs are not loaded Successfully!", false);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Each week day dimension not loaded Successfully!", false);
+        }
+        return hoursNTeamMembersCount;
+    }
+
+
+    @Override
+    public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception {
+        HashMap<String, List<String>> shiftsForEachDay = new HashMap<>();
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
+            for (WebElement weekDayDimension : weekDayDimensions) {
+                WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
+                List<WebElement> weekShiftWrappers = weekDayDimension.findElements(By.className("week-schedule-shift-wrapper"));
+                List<String> infos = new ArrayList<>();
+                if (weekShiftWrappers != null && weekShiftWrappers.size() > 0) {
+                    for (WebElement weekShiftWrapper : weekShiftWrappers) {
+                        WebElement shiftTime = weekShiftWrapper.findElement(By.className("week-schedule-shift-time"));
+                        WebElement workerName = weekShiftWrapper.findElement(By.className("week-schedule-worker-name"));
+                        WebElement jobTitle = weekShiftWrapper.findElement(By.className("week-schedule-role-name"));
+                        if (weekDay != null && shiftTime != null && workerName != null && jobTitle != null) {
+                            infos.add(shiftTime.getText() + "\n" + workerName.getText() + "\n" + jobTitle.getText());
+                        } else {
+                            SimpleUtils.fail("Schedule Week View Page: Failed to find the week day, shift time, worker name and job title elements!", false);
+                        }
+                    }
+                }
+                shiftsForEachDay.put(weekDay.getText(), infos);
+                SimpleUtils.report("Schedule Week View Page: Get the shifts for week day: " + weekDay.getText() + ", the shifts are: " + infos.toString());
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Each week day dimension not loaded Successfully!", false);
+        }
+        return shiftsForEachDay;
+    }
+
+
+    @FindBy (css = ".sch-calendar-day-dimension")
+    private List<WebElement> scheduleDays;
+    @Override
+    public void verifyDayHasShifts(String day) throws Exception {
+        if (areListElementVisible(scheduleDays,10)){
+            if (day.toLowerCase().contains("sunday")) {
+                for (WebElement e : scheduleDays) {
+                    if (e.getAttribute("class").contains("0")) {
+                        String data = e.getAttribute("data-day");
+                        if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")), 10))
+                            SimpleUtils.pass("On Sunday there are shifts!");
+                        else
+                            SimpleUtils.fail("There are no shifts on Sunday!", false);
+                        break;
+                    }
+                }
+            } else if (day.toLowerCase().contains("monday")){
+                for (WebElement e : scheduleDays){
+                    if (e.getAttribute("class").contains("1")){
+                        String data = e.getAttribute("data-day");
+                        if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                            SimpleUtils.pass("On Sunday there are shifts!");
+                        else
+                            SimpleUtils.fail("There are no shifts on Sunday!",false);
+                        break;
+                    }
+                }
+            } else if (day.toLowerCase().contains("tuesday")){
+                for (WebElement e : scheduleDays){
+                    if (e.getAttribute("class").contains("2")){
+                        String data = e.getAttribute("data-day");
+                        if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                            SimpleUtils.pass("On Sunday there are shifts!");
+                        else
+                            SimpleUtils.fail("There are no shifts on Sunday!",false);
+                        break;
+                    }
+                }
+            }
+        } else if (day.toLowerCase().contains("wednesday")){
+            for (WebElement e : scheduleDays){
+                if (e.getAttribute("class").contains("3")){
+                    String data = e.getAttribute("data-day");
+                    if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                        SimpleUtils.pass("On Sunday there are shifts!");
+                    else
+                        SimpleUtils.fail("There are no shifts on Sunday!",false);
+                    break;
+                }
+            }
+        } else if (day.toLowerCase().contains("thursday")){
+            for (WebElement e : scheduleDays){
+                if (e.getAttribute("class").contains("4")){
+                    String data = e.getAttribute("data-day");
+                    if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                        SimpleUtils.pass("On Sunday there are shifts!");
+                    else
+                        SimpleUtils.fail("There are no shifts on Sunday!",false);
+                    break;
+                }
+            }
+        } else if (day.toLowerCase().contains("friday")){
+            for (WebElement e : scheduleDays){
+                if (e.getAttribute("class").contains("5")){
+                    String data = e.getAttribute("data-day");
+                    if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                        SimpleUtils.pass("On Sunday there are shifts!");
+                    else
+                        SimpleUtils.fail("There are no shifts on Sunday!",false);
+                    break;
+                }
+            }
+        } else if (day.toLowerCase().contains("saturday")){
+            for (WebElement e : scheduleDays){
+                if (e.getAttribute("class").contains("6")){
+                    String data = e.getAttribute("data-day");
+                    if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")),10))
+                        SimpleUtils.pass("On Sunday there are shifts!");
+                    else
+                        SimpleUtils.fail("There are no shifts on Sunday!",false);
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("No schedule day loaded in schedule page!",false);
+        }
+    }
+
+
+    @Override
+    public List<String> getDayShifts(String index) throws Exception {
+        List<String> result = new ArrayList<>();
+        if (areListElementVisible(scheduleDays,10)){
+            for (WebElement e : scheduleDays) {
+                if (e.getAttribute("class").contains(index)) {
+                    String data = e.getAttribute("data-day");
+                    if (areListElementVisible(MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift")), 10)){
+                        List<WebElement> shifts = MyThreadLocal.getDriver().findElements(By.cssSelector("div[data-day=\"" + data + "\"].week-schedule-shift"));
+                        for (WebElement shift : shifts){
+                            result.add(shift.getText());
+                        }
+                        SimpleUtils.pass("On Sunday there are shifts!");
+                    }
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("No schedule day loaded in schedule page!",false);
+        }
+        return result;
+    }
+
+
+    @Override
+    public void verifyNoShiftsForSpecificWeekDay(List<String> weekDaysToClose) throws Exception {
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
+            for (WebElement weekDayDimension : weekDayDimensions) {
+                WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
+                // Judge if the week day is in the list, if it is, this day is closed, there should be no shifts
+                if (weekDay != null && weekDaysToClose.contains(SimpleUtils.getFullWeekDayName(weekDay.getText()))) {
+                    List<WebElement> weekShiftWrappers = weekDayDimension.findElements(By.className("week-schedule-shift-wrapper"));
+                    if (weekShiftWrappers != null) {
+                        if (weekShiftWrappers.size() == 0) {
+                            SimpleUtils.pass("Verified for Week Day: " + weekDay.getText() + ", there are no shifts Loaded!");
+                        } else {
+                            SimpleUtils.fail("Verified for Week Day: " + weekDay.getText() + " failed, this day is closed, but there still have shifts!", false);
+                        }
+                    } else {
+                        SimpleUtils.pass("Verified for Week Day: " + weekDay.getText() + ", there are no shifts Loaded!");
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Each week day dimension not loaded Successfully!", false);
+        }
+    }
+
+
+    @FindBy (css = "div.day-week-picker-period")
+    private List<WebElement> dayPickerAllDaysInDayView;
+
+    @FindBy (css = "img.holiday-logo-image")
+    private WebElement storeClosed;
+
+    @FindBy (css = ".holiday-text")
+    private WebElement storeClosedText;
+    @Override
+    public void verifyStoreIsClosedForSpecificWeekDay(List<String> weekDaysToClose) throws Exception {
+        if (weekDaysToClose != null && weekDaysToClose.size() > 0) {
+            for (String weekDayToClose : weekDaysToClose) {
+                if (areListElementVisible(dayPickerAllDaysInDayView, 5)) {
+                    for (WebElement dayPicker : dayPickerAllDaysInDayView) {
+                        if (dayPicker.getText().toLowerCase().contains(weekDayToClose.substring(0, 3).toLowerCase())) {
+                            clickTheElement(dayPicker);
+                            if (isElementLoaded(storeClosed, 10) && isElementLoaded(storeClosedText, 10) &&
+                                    storeClosedText.getText().equals("Store is closed.")) {
+                                SimpleUtils.pass("Verified 'Store is closed.' for week day:" + weekDayToClose);
+                            } else {
+                                SimpleUtils.fail("Verified 'Store is not closed.' for week day:" + weekDayToClose, false);
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    SimpleUtils.fail("Schedule Day View: Day pickers not loaded Successfully!", false);
+                }
+            }
+        }else {
+            SimpleUtils.report("There are no week days that need to close!");
+        }
+    }
+
+
+    // Added by Nora: for day view overtime
+    @Override
+    public void dragOneShiftToMakeItOverTime() throws Exception {
+        if (areListElementVisible(scheduleShiftsRows, 10) && scheduleShiftsRows.size() > 0) {
+            SimpleUtils.report("Schedule Day View: shifts loaded Successfully!");
+            int index = 0;
+            WebElement leftPinch = scheduleShiftsRows.get(index).findElement(By.cssSelector(".sch-day-view-shift-pinch.left"));
+            WebElement rightPinch = scheduleShiftsRows.get(index).findElement(By.cssSelector(".sch-day-view-shift-pinch.right"));
+            List<WebElement> gridCells = scheduleShiftsRows.get(index).findElements(By.cssSelector(".sch-day-view-grid-cell"));
+            if (leftPinch != null && rightPinch != null && gridCells != null && gridCells.size() > 0) {
+                WebElement firstCell = gridCells.get(0);
+                WebElement lastCell = gridCells.get(gridCells.size() - 1);
+                mouseHoverDragandDrop(leftPinch, firstCell);
+                waitForSeconds(2);
+                mouseHoverDragandDrop(rightPinch, lastCell);
+                waitForSeconds(2);
+                WebElement flag = scheduleShiftsRows.get(index).findElement(By.cssSelector(".sch-day-view-shift-overtime-icon"));
+                if (flag != null) {
+                    SimpleUtils.pass("Schedule Day View: day overtime icon shows correctly!");
+                } else {
+                    SimpleUtils.fail("Schedule Day View: day overtime icon failed to show!", false);
+                }
+            } else {
+                SimpleUtils.fail("Schedule Day View: Failed to find the left pinch, right pinch and grid cells elements!", false);
+            }
+        } else {
+            SimpleUtils.report("Schedule Day View: There is no shift for this day!");
+        }
+    }
+
+    @Override
+    public void clickProfileIconOfShiftByIndex(int index) throws Exception {
+        if(areListElementVisible(weekShifts, 15) && index < weekShifts.size()){
+            clickTheElement(weekShifts.get(index).findElement(By.cssSelector(".worker-image-optimized img")));
+            SimpleUtils.pass("clicked shift icon!");
+        } else {
+            SimpleUtils.fail("There is no shift you want",false);
+        }
+    }
+
+
+    @FindBy(xpath = "//span[text()=\"View Status\"]")
+    private WebElement viewStatusBtn;
+    @Override
+    public void clickViewStatusBtn() throws Exception {
+        if(isElementLoaded(viewStatusBtn,15)){
+            click(viewStatusBtn);
+            SimpleUtils.pass("clicked view status button!");
+        } else {
+            SimpleUtils.fail("view status button is not loaded!",false);
+        }
+    }
+
+
+    public int getRandomIndexOfShift() {
+        int randomIndex = 0;
+        if (areListElementVisible(weekShifts, 5) && weekShifts.size() >0 ){
+            randomIndex = (new Random()).nextInt(weekShifts.size());
+        } else if (areListElementVisible(shiftsInDayView, 5) && shiftsInDayView.size() >0) {
+            randomIndex = (new Random()).nextInt(shiftsInDayView.size());
+        } else
+            SimpleUtils.fail("There is no shift display on schedule page", true);
+        return randomIndex;
+    }
+
+
+    @Override
+    public void dragOneAvatarToAnother(int startIndex, String firstName, int endIndex) throws Exception {
+        boolean isDragged = false;
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
+            for (WebElement start : startElements) {
+                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                WebElement startAvatar = start.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                if (startName != null && startAvatar != null && startName.getText().equalsIgnoreCase(firstName)) {
+                    for (WebElement end : endElements) {
+                        WebElement endAvatar = end.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                        WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
+                        if (endAvatar != null && endName != null && !endName.getText().equalsIgnoreCase(firstName) &&
+                                !endName.getText().equalsIgnoreCase("Open")) {
+                            mouseHoverDragandDrop(startAvatar, endAvatar);
+                            SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + endName.getText() + " Successfully!");
+                            verifyConfirmStoreOpenCloseHours();
+                            isDragged = true;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (!isDragged) {
+                SimpleUtils.fail("Failed to drag the user: " + firstName + " to another Successfully!", false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
+        }
+    }
+
+
+    @FindBy(css=".modal-dialog.modal-lgn-md")
+    private WebElement moveAnywayDialog;
+
+    @Override
+    public void verifyConfirmStoreOpenCloseHours() throws Exception {
+        try {
+            if (ifMoveAnywayDialogDisplay()) {
+                if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")), 10)) {
+                    if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().equals("OK")) {
+                        clickTheElement(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
+                        SimpleUtils.pass("CONFIRM button clicked!");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
+    }
+
+    @Override
+    public boolean ifMoveAnywayDialogDisplay() throws Exception {
+        if (isElementLoaded(moveAnywayDialog,10)){
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public int getTheIndexOfTheDayInWeekView(String date) throws Exception {
+        int index = -1;
+        if (areListElementVisible(schCalendarDateLabel, 10)) {
+            for (int i = 0; i < schCalendarDateLabel.size(); i++) {
+                if (Integer.parseInt(schCalendarDateLabel.get(i).getText().trim()) == Integer.parseInt(date.trim())) {
+                    index = i;
+                    SimpleUtils.pass("Get the index of Date" + date + ", the index is: " + i);
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View: Week day labels are failed to load!", false);
+        }
+        if (index == -1) {
+            SimpleUtils.fail("Failed to get the index of the day: " + date, false);
+        }
+        return index;
+    }
+
+
+    @Override
+    public HashMap<String,Integer> dragOneAvatarToAnotherSpecificAvatar(int startIndexOfTheDay, String user1, int endIndexOfTheDay, String user2) throws Exception {
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndexOfTheDay + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndexOfTheDay + "\"] .week-schedule-shift-wrapper"));
+        HashMap<String,Integer> shiftsSwaped =  new HashMap<String, Integer>();
+        WebElement startAvatar = null;
+        WebElement endAvatar = null;
+        int i = 0;
+        int j = 0;
+        waitForSeconds(5);
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
+            for (WebElement start : startElements) {
+                i++;
+                WebElement name1 = start.findElement(By.className("week-schedule-worker-name"));
+                if (name1 != null && name1.getText().equalsIgnoreCase(user1)) {
+                    startAvatar = start.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                    shiftsSwaped.put(user1,i);
+                }
+            }
+            for (WebElement end : endElements) {
+                j++;
+                WebElement name2 = end.findElement(By.className("week-schedule-worker-name"));
+                if (name2 != null  && name2.getText().equalsIgnoreCase(user2)) {
+                    endAvatar = end.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
+                    shiftsSwaped.put(user2,j);
+
+                }
+            }
+            if (endAvatar != null && startAvatar != null) {
+                mouseHoverDragandDrop(startAvatar, endAvatar);
+            }
+        } else {
+            SimpleUtils.fail("No shifts on the day",false);
+        }
+        return shiftsSwaped;
+    }
+
+
+    @FindBy(css = "div[ng-repeat=\"error in swapError\"]")
+    private List<WebElement> errorMessagesInSwap;
+    @FindBy(css = "div[ng-repeat=\"error in assignError\"]")
+    private List<WebElement> errorMessagesInAssign;
+    //========
+    @FindBy(css = "div[ng-repeat=\"error in assignError\"]")
+    private WebElement errorMessageInAssign;
+    @FindBy(css = ".swap-modal-error")
+    private List<WebElement> copyMoveErrorMesgs;
+
+    @Override
+    public void verifyMessageInConfirmPage(String expectedMassageInSwap, String expectedMassageInAssign) throws Exception {
+        String errorMessageForSwap = null;
+        String errorMessageInAssign = null;
+        if (areListElementVisible(errorMessagesInSwap,15) && areListElementVisible(errorMessagesInAssign,15)){
+            for (WebElement element: errorMessagesInSwap){
+                errorMessageForSwap = errorMessageForSwap+element.getText();
+            }
+            for (WebElement element: errorMessagesInAssign){
+                errorMessageInAssign = errorMessageInAssign+element.getText();
+            }
+            if (errorMessageForSwap.contains(expectedMassageInSwap) && errorMessageInAssign.contains(expectedMassageInAssign)){
+                SimpleUtils.pass("errorMessageInSwap: "+errorMessageForSwap+"\nerrorMessageInAssign: "+errorMessageInAssign);
+            }else{
+                SimpleUtils.fail("warning message for overtime when drag and drop is not expected!",false);
+            }
+
+        } else {
+            SimpleUtils.fail("No warning message for overtime when drag and drop",false);
+        }
+    }
+
+    @Override
+    public void verifyMessageOnCopyMoveConfirmPage(String expectedMsgInCopy, String expectedMsgInMove) throws Exception {
+        int count = 0;
+        if (areListElementVisible(copyMoveErrorMesgs,15) && copyMoveErrorMesgs.size() > 0){
+            for (WebElement message : copyMoveErrorMesgs) {
+                if (message.getText().equalsIgnoreCase(expectedMsgInCopy) || message.getText().equalsIgnoreCase(expectedMsgInMove)) {
+                    count = count + 1;
+                }
+            }
+            if (count == 2) {
+                SimpleUtils.pass(expectedMsgInCopy + " shows correctly!");
+            } else {
+                SimpleUtils.fail("\"" + expectedMsgInCopy + "\"" + " is not show!", false);
+            }
+        } else {
+            SimpleUtils.fail("No warning message when drag and drop",false);
+        }
+    }
+
+    @Override
+    public void verifyConfirmBtnIsDisabledForSpecificOption(String optionName) throws Exception {
+        try {
+            selectCopyOrMoveByOptionName(optionName);
+            if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage, 5) && confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")) {
+                SimpleUtils.pass("CONFIRM button is disabled!");
+            } else {
+                SimpleUtils.fail("CONFIRM button is mot loaded or is not disabled!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public void selectCopyOrMoveByOptionName(String optionName) throws Exception {
+        try {
+            if (areListElementVisible(swapAndAssignOptions,15)&&swapAndAssignOptions.size()==2){
+                if (optionName.equalsIgnoreCase("Copy")){
+                    click(swapAndAssignOptions.get(0));
+                    waitForSeconds(1);
+                    if (!swapAndAssignOptions.get(0).findElement(By.cssSelector(".tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")){
+                        SimpleUtils.pass("Copy option selected successfully!");
+                    } else {
+                        SimpleUtils.fail("Copy option is not selected", false);
+                    }
+                }
+                if (optionName.equalsIgnoreCase("Move")){
+                    click(swapAndAssignOptions.get(1));
+                    if (!swapAndAssignOptions.get(1).findElement(By.cssSelector(".tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")){
+                        SimpleUtils.pass("Move option selected successfully!");
+                    } else {
+                        SimpleUtils.fail("Move option is not selected", false);
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Copy and move options fail to load!",false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @FindBy(css = ".tma-staffing-option-outer-circle")
+    private List<WebElement> swapAndAssignOptions;
+    @Override
+    public void selectSwapOrAssignOption(String action) throws Exception {
+        if (areListElementVisible(swapAndAssignOptions,15)&&swapAndAssignOptions.size()==2){
+            if (action.equalsIgnoreCase("swap")){
+                click(swapAndAssignOptions.get(0));
+                waitForSeconds(1);
+                if (!swapAndAssignOptions.get(0).findElement(By.cssSelector(".tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")){
+                    SimpleUtils.pass("swap option selected successfully!");
+                } else {
+                    SimpleUtils.fail("swap option is not selected", false);
+                }
+            }
+            if (action.equalsIgnoreCase("assign")){
+                click(swapAndAssignOptions.get(1));
+                if (!swapAndAssignOptions.get(1).findElement(By.cssSelector(".tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")){
+                    SimpleUtils.pass("assign option selected successfully!");
+                } else {
+                    SimpleUtils.fail("assign option is not selected", false);
+                }
+            }
+        } else {
+            SimpleUtils.fail("swap and assign options fail to load!",false);
+        }
+    }
+
+    @FindBy(css = ".modal-instance-button.confirm.ng-binding")
+    private WebElement confirmBtnOnDragAndDropConfirmPage;
+    @Override
+    public void clickConfirmBtnOnDragAndDropConfirmPage() throws Exception {
+        waitForSeconds(3);
+        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage,15) && !confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")){
+            click(confirmBtnOnDragAndDropConfirmPage);
+            SimpleUtils.pass("confirm button is clicked successfully!");
+        } else {
+            SimpleUtils.fail("confirm button is disabled!",false);
+        }
+    }
+
+
+    @FindBy(css=".swap-modal-shifts.swap-modal-shifts-swap")
+    private WebElement swapSectionInfo;
+    @FindBy(css=".swap-modal-shifts.swap-modal-shifts-assign")
+    private WebElement assignSectionInfo;
+    @Override
+    public List<String> getShiftSwapDataFromConfirmPage(String action) throws Exception {
+        List<String> swapData = new ArrayList<>();
+        List<WebElement> swapResults = new ArrayList<>();
+        if (isElementLoaded(swapSectionInfo, 5) && isElementLoaded(assignSectionInfo, 5)) {
+            if (action.equalsIgnoreCase("swap")){
+                swapResults = swapSectionInfo.findElements(By.cssSelector("swap-modal-shift"));
+            }
+            if (action.equalsIgnoreCase("assign")){
+                swapResults = assignSectionInfo.findElements(By.cssSelector("swap-modal-shift"));
+            }
+
+            if (swapResults != null && swapResults.size() > 0) {
+                for(WebElement swapResult : swapResults) {
+                    WebElement date = swapResult.findElement(By.className("swap-modal-shift-time"));
+                    WebElement nameAndTitle = swapResult.findElement(By.className("swap-modal-shift-person"));
+                    if (date != null && nameAndTitle != null) {
+                        List <String> temp1 = Arrays.asList(nameAndTitle.getText().split("\n"));
+                        List <String> temp2 = Arrays.asList(date.getText().replace(",", "").replace("\n", "").split("-"));
+                        swapData.add(temp1.get(0)+"\n"+ temp1.get(1) + "\n"+ temp2.get(0) + "\n"+ temp2.get(1)+" - "+temp2.get(1) );
+                        SimpleUtils.report("Get the swap date: " + date.getText() + " and swap name title: " + nameAndTitle.getText() + " Successfully!");
+                    }else {
+                        SimpleUtils.fail("Failed to find the date and name elements!", false);
+                    }
+                }
+            }else {
+                SimpleUtils.fail("Failed to find the swap elements!", false);
+            }
+        }
+        if (swapData.size() != 2) {
+            SimpleUtils.fail("Failed to get the swap data!", false);
+        }
+        return swapData;
+    }
+
+    @Override
+    public int verifyDayHasShiftByName(int indexOfDay, String name) throws Exception {
+        int count = 0;
+        List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
+        if (shifts != null && shifts.size() > 0) {
+            for (WebElement shift : shifts) {
+                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
+                if (name1 != null && name1.getText().equalsIgnoreCase(name)) {
+                    SimpleUtils.pass("shift exists on this day!");
+                    count++;
+                }
+            }
+        } else {
+            SimpleUtils.fail("No shifts on the day",false);
+        }
+        return count;
+    }
+
+    @FindBy(className = "sch-calendar-day-label")
+    private List<WebElement> weekDayLabels;
+    @Override
+    public String getWeekDayTextByIndex(int index) throws Exception {
+        String weekDayText = null;
+        if (index < 0 || index > 6) {
+            SimpleUtils.fail("The parameter index: " + index + " is out of range!", false);
+        }
+        if (areListElementVisible(weekDayLabels, 10)) {
+            weekDayText = weekDayLabels.get(index).getText();
+        } else {
+            SimpleUtils.fail("Schedule Week View: week day labels failed to load!", false);
+        }
+        return weekDayText;
+    }
+
+
+    @FindBy(css = "div[ng-repeat=\"error in swapError\"]")
+    private List<WebElement> warningMessagesInSwap;
+    @FindBy(css = "div[ng-repeat=\"error in assignError\"]")
+    private List<WebElement> warningMessagesInAssign;
+
+    @Override
+    public boolean verifySwapAndAssignWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception {
+        boolean canFindTheExpectedMessage = false;
+        if (action.equalsIgnoreCase("swap")) {
+            if (areListElementVisible(warningMessagesInSwap, 15) && warningMessagesInSwap.size() > 0) {
+                for (int i = 0; i < warningMessagesInSwap.size(); i++) {
+                    if (warningMessagesInSwap.get(i).getText().contains(expectedMessage)) {
+                        canFindTheExpectedMessage = true;
+                        SimpleUtils.pass("The expected message can be find successfully");
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.report("There is no warning message in swap section");
+            }
+        } else if (action.equalsIgnoreCase("assign")) {
+            if (areListElementVisible(warningMessagesInAssign, 15) && warningMessagesInAssign.size() > 0) {
+                for (int i = 0; i < warningMessagesInAssign.size(); i++) {
+                    if (warningMessagesInAssign.get(i).getText().contains(expectedMessage)) {
+                        canFindTheExpectedMessage = true;
+                        SimpleUtils.pass("The expected message can be find successfully");
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.report("There is no warning message in assign section");
+            }
+        } else
+            SimpleUtils.fail("No this action on drag&drop confirm page", true);
+
+        return canFindTheExpectedMessage;
+    }
+
+    @FindBy(css = "div.modal-instance-button")
+    private WebElement cancelBtnOnDragAndDropConfirmPage;
+    @Override
+    public void clickCancelBtnOnDragAndDropConfirmPage() throws Exception {
+        if (isElementLoaded(cancelBtnOnDragAndDropConfirmPage,15) ){
+            click(cancelBtnOnDragAndDropConfirmPage);
+            SimpleUtils.pass("cancel button is clicked successfully!");
+        } else {
+            SimpleUtils.fail("cancel button is disabled!",false);
+        }
+    }
+
+    @Override
+    public List<WebElement> getOneDayShiftByName(int indexOfDay, String name) throws Exception {
+        int count = 0;
+        List<WebElement> shiftsOfOneTM = new ArrayList<>();;
+        List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
+        if (areListElementVisible(shifts, 5) && shifts != null && shifts.size() > 0) {
+            for (WebElement shift : shifts) {
+                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
+                if (name1 != null && name1.getText().equalsIgnoreCase(name)) {
+                    shiftsOfOneTM.add(shift);
+                    SimpleUtils.pass("shift exists on this day!");
+                    count++;
+                }
+            }
+            if(count==0){
+                SimpleUtils.report("No shifts on the day for the TM: " + name);
+            }
+        } else {
+            SimpleUtils.fail("No shifts on the day",false);
+        }
+        return shiftsOfOneTM;
+    }
+
+
+    @Override
+    public List<String> getOpenShiftInfoByIndex(int index) throws Exception {
+        List<String> openShiftInfo = new ArrayList<>();
+        if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
+            String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
+            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
+            clickTheElement(infoIcon);
+            String workRole = shiftJobTitleAsWorkRole.getText().trim();
+            if (isElementLoaded(shiftDuration, 10)) {
+                String shiftTime = shiftDuration.getText();
+                openShiftInfo.add(shiftTime);
+                openShiftInfo.add(workRole);
+                openShiftInfo.add(shiftTimeWeekView);
+            }
+            //To close the info popup
+            moveToElementAndClick(weekShifts.get(index));
+        } else {
+            SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
+        }
+        if (openShiftInfo.size() != 3) {
+            SimpleUtils.fail("Failed to get open shift info!", false);
+        }
+        return openShiftInfo;
+    }
+
+
+    @Override
+    public void dragOneShiftToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        waitForSeconds(3);
+        boolean isDragged = false;
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"]"));
+        WebElement weekDay = getDriver().findElement(By.cssSelector("[data-day-index=\""+endIndex+"\"] .sch-calendar-day-label"));
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0 && weekDay!=null) {
+            for (WebElement start : startElements) {
+                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                if (startName != null && startName.getText().equalsIgnoreCase(firstName)) {
+                    mouseHoverDragandDrop(start, endElements.get(0));
+                    SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + weekDay.getText() + " days Successfully!");
+                    //verifyConfirmStoreOpenCloseHours();
+                    isDragged = true;
+                    break;
+                }
+            }
+            if (!isDragged) {
+                SimpleUtils.fail("Failed to drag the user: " + firstName + " to another Successfully!", false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
+        }
+    }
+
+    @Override
+    public String getNameOfTheFirstShiftInADay(int dayIndex) throws Exception {
+        List<WebElement> elements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + dayIndex + "\"] .week-schedule-shift-wrapper"));
+        if (areListElementVisible(elements, 10)){
+            return elements.get(0).findElement(By.className("week-schedule-worker-name")).getText();
+        }
+        return null;
+    }
+
+    @FindBy(css = "div.lgn-alert-modal")
+    private WebElement warningMode;
+
+
+    @FindBy(css = "span.lgn-alert-message")
+    private List<WebElement> warningMessagesInWarningMode;
+
+    @FindBy(className = "lgn-action-button-success")
+    private WebElement okBtnInWarningMode;
+
+    @FindBy(className = "lgn-action-button-success")
+    private WebElement okBtnOnConfirm;
+
+    @Override
+    public String getWarningMessageInDragShiftWarningMode() throws Exception {
+        String warningMessage = "";
+        if(areListElementVisible(warningMessagesInWarningMode, 5) && warningMessagesInWarningMode.size()>0) {
+            for (WebElement warningMessageInWarningMode: warningMessagesInWarningMode){
+                warningMessage = warningMessage + warningMessageInWarningMode.getText()+"\n";
+            }
+        } else {
+            SimpleUtils.fail("Warning message fail to load", false);
+        }
+        return warningMessage;
+    }
+
+    @Override
+    public void clickOnOkButtonInWarningMode() throws Exception {
+        if(isElementLoaded(okBtnInWarningMode, 5)) {
+            click(okBtnOnConfirm);
+            SimpleUtils.pass("Click on Ok button on warning successfully");
+        } else {
+            SimpleUtils.fail("Ok button fail to load", false);
+        }
+    }
+
+
+    @Override
+    public void moveAnywayWhenChangeShift() throws Exception {
+        if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")),10)){
+            if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().equals("MOVE ANYWAY")) {
+                click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
+                SimpleUtils.pass("move anyway button clicked!");
+            } else {
+                SimpleUtils.fail("move anyway button fail to load!",false);
+            }
+        } else {
+            SimpleUtils.fail("move anyway button fail to load!",false);
+        }
+    }
+
+
+    @Override
+    public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        boolean isMoved = false;
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
+            for (WebElement start : startElements) {
+                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                if (startName != null) {
+                    if (startName.getText().equalsIgnoreCase(firstName)) {
+                        SimpleUtils.fail("Still can find the TM:" + firstName + " on " + startIndex, false);
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the worker name elements!", false);
+                }
+            }
+            for (WebElement end : endElements) {
+                WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
+                if (endName != null) {
+                    if (endName.getText().equalsIgnoreCase(firstName)) {
+                        isMoved = true;
+                        break;
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the worker name elements!", false);
+                }
+            }
+            if (!isMoved) {
+                SimpleUtils.fail(firstName + " isn't moved to the day, which index is: " + endIndex, false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
+        }
+    }
+
+    @Override
+    public void verifyShiftIsCopiedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
+        boolean isCopied = false;
+        boolean isExisted = false;
+        List<WebElement> startElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + startIndex + "\"] .week-schedule-shift-wrapper"));
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
+            for (WebElement start : startElements) {
+                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                if (startName != null) {
+                    if (startName.getText().equalsIgnoreCase(firstName)) {
+                        SimpleUtils.pass("Can find the TM:" + firstName + " on " + startIndex);
+                        isCopied = true;
+                        break;
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the worker name elements!", false);
+                }
+            }
+            for (WebElement end : endElements) {
+                WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
+                if (endName != null) {
+                    if (endName.getText().equalsIgnoreCase(firstName)) {
+                        isCopied = true;
+                        break;
+                    }
+                } else {
+                    SimpleUtils.fail("Failed to find the worker name elements!", false);
+                }
+            }
+            if (!isCopied && !isExisted) {
+                SimpleUtils.fail(firstName + " isn't copied to the day correctly, which index is: " + endIndex, false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);
+        }
+    }
+
+
+
+
+    @Override
+    public WebElement getTheShiftByIndex(int index) throws Exception {
+        WebElement shift = null;
+        if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
+            shift = weekShifts.get(index);
+        } else if (areListElementVisible(shiftsInDayView, 20) && index < shiftsInDayView.size()) {
+            shift = shiftsInDayView.get(index);
+        } else
+            SimpleUtils.fail("Schedule Page: week or day shifts not loaded successfully!", false);
+        return shift;
+    }
+
+
+    @Override
+    public int getTheIndexOfEditedShift() throws Exception {
+        int index = -1;
+        if (areListElementVisible(weekShifts, 10)) {
+            for (int i = 0; i < weekShifts.size(); i++) {
+                try {
+                    WebElement editedShift = weekShifts.get(i).findElement(By.cssSelector("[src*=\"edited-shift-week.png\"]"));
+                    index = i;
+                    SimpleUtils.pass("Schedule Week View: Get the index of the edited shift successfully: " + i);
+                    break;
+                } catch (org.openqa.selenium.NoSuchElementException e) {
+                    continue;
+                }
+            }
+        } else if (areListElementVisible(shiftsInDayView,10)) {
+            for (int i = 0; i < shiftsInDayView.size(); i++) {
+                try {
+                    WebElement editedShift = shiftsInDayView.get(i).findElement(By.xpath("./../../preceding-sibling::div[1][@ng-if=\"isShiftBeingEdited(shift)\"]"));
+                    index = i;
+                    SimpleUtils.pass("Schedule Day View: Get the index of the edited shift successfully: " + i);
+                    break;
+                } catch (NoSuchElementException e) {
+                    continue;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: There are no shifts loaded!", false);
+        }
+        return index;
+    }
+
+
+    @Override
+    public int getShiftsNumberByName(String name) throws Exception {
+        int result = 0;
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            if (name == null && name.equals("")){
+                result = shiftsWeekView.size();
+            } else {
+                for (WebElement shiftWeekView : shiftsWeekView) {
+                    WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                    if (workerName != null) {
+                        if (workerName.getText().toLowerCase().contains(name.toLowerCase())) {
+                            result++;
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+
+    @FindBy(css = ".swap-modal.modal-instance")
+    private WebElement dragAndDropConfirmPage;
+    @Override
+    public boolean isDragAndDropConfirmPageLoaded() throws Exception {
+        boolean isConfirmPageDisplay = false;
+        if (isElementLoaded(dragAndDropConfirmPage,15) ){
+            isConfirmPageDisplay = true;
+            SimpleUtils.report("Drag and Drop confirm page is display!");
+        } else {
+            SimpleUtils.report("Drag and Drop confirm page is not display!");
+        }
+        return isConfirmPageDisplay;
+    }
+
+    @Override
+    public List<WebElement> getShiftsByNameOnDayView(String name) throws Exception {
+        int count = 0;
+        List<WebElement> shiftsOfOneTM = new ArrayList<>();
+        if (areListElementVisible(dayViewAvailableShifts, 5) && dayViewAvailableShifts != null && dayViewAvailableShifts.size() > 0) {
+            for (WebElement shift : dayViewAvailableShifts) {
+                WebElement name1 = shift.findElement(By.className("sch-day-view-shift-worker-name"));
+                if (name1 != null && name1.getText().contains(name)) {
+                    shiftsOfOneTM.add(shift);
+                    SimpleUtils.pass("shift exists on this day!");
+                    count++;
+                }
+            }
+            if(count==0){
+                SimpleUtils.report("No shifts on the day for the TM: " + name);
+            }
+        } else {
+            SimpleUtils.fail("No shifts on the day",false);
+        }
+        return shiftsOfOneTM;
+    }
+
+
+    @FindBy (className = "week-schedule-shift-title")
+    private List<WebElement> weekScheduleShiftTitles;
+
+    @FindBy (className = "sch-group-label")
+    private List<WebElement> dayScheduleGroupLabels;
+
+    @FindBy(css = "[src=\"img/legion/edit/deleted-shift-week.png\"]")
+    private List<WebElement> deleteShiftImgsInWeekView;
+
+    @FindBy(css = "img[ng-src=\"img/legion/edit/deleted-shift-day@2x.png\"]")
+    private List<WebElement> deleteShiftImgsInDayView;
+
+    @Override
+    public List<String> getWeekScheduleShiftTitles() throws Exception {
+        List<String> weekShiftTitles = new ArrayList<>();
+        if (areListElementVisible(weekScheduleShiftTitles, 10)) {
+            for (WebElement title: weekScheduleShiftTitles) {
+                weekShiftTitles.add(title.getText());
+            }
+        }
+        return weekShiftTitles;
+    }
+
+    @Override
+    public List<String> getDayScheduleGroupLabels() throws Exception {
+        List<String> dayGroupLabels = new ArrayList<>();
+        if (areListElementVisible(dayScheduleGroupLabels, 10)) {
+            for (WebElement label: dayScheduleGroupLabels) {
+                dayGroupLabels.add(label.getText());
+            }
+        }
+        return dayGroupLabels;
+    }
+
+    @Override
+    public boolean isShiftInDayPartOrNotInWeekView(int shiftIndex, String dayPart) throws Exception {
+        boolean isIn = false;
+        int index1 = -1;
+        int index2 = -1;
+        for (int i = 0; i < weekScheduleShiftTitles.size(); i++) {
+            if (weekScheduleShiftTitles.get(i).getText().equals(dayPart)) {
+                for (int k = 7; k < 13; k++) {
+                    try {
+                        WebElement nextShift = weekScheduleShiftTitles.get(i).findElement(By.xpath("./../../following-sibling::div[" + k + "]/div"));
+                        if (isElementLoaded(nextShift,10)) {
+                            index1 = getTheIndexOfShift(nextShift);
+                            break;
+                        }
+                    } catch (NoSuchElementException e) {
+                        continue;
+                    }
+                }
+                if (i != weekScheduleShiftTitles.size() - 1) {
+                    for (int j = 7; j < 13; j++) {
+                        try {
+                            WebElement nextShift = weekScheduleShiftTitles.get(i + 1).findElement(By.xpath("./../../following-sibling::div[" + j + "]/div"));
+                            if (isElementLoaded(nextShift,10)) {
+                                index2 = getTheIndexOfShift(nextShift);
+                                break;
+                            }
+                        } catch (NoSuchElementException e) {
+                            continue;
+                        }
+                    }
+                } else
+                    index2 = weekShifts.size() - 1;
+                if (shiftIndex >= index1 && shiftIndex <= index2) {
+                    isIn = true;
+                }
+                break;
+            }
+        }
+        return isIn;
+    }
+
+    @Override
+    public boolean isShiftInDayPartOrNotInDayView(int shiftIndex, String dayPart) throws Exception {
+        boolean isIn = false;
+        int index2 = -1;
+        for (int i = 0; i < dayScheduleGroupLabels.size(); i++) {
+            if (dayScheduleGroupLabels.get(i).getText().equals(dayPart)) {
+                int index1 = getTheIndexOfShift(dayScheduleGroupLabels.get(i).findElement(By.xpath("./../../following-sibling::div[1]//worker-shift/div")));
+                if (i != dayScheduleGroupLabels.size() - 1)
+                    index2 = getTheIndexOfShift(dayScheduleGroupLabels.get(i+1).findElement(By.xpath("./../../following-sibling::div[1]//worker-shift/div")));
+                else
+                    index2 = shiftsInDayView.size() - 1;
+                if (shiftIndex >= index1 && shiftIndex <= index2) {
+                    isIn = true;
+                    break;
+                }
+            }
+        }
+        return isIn;
+    }
+
+    @Override
+    public int getTheIndexOfShift(WebElement shift) throws Exception {
+        int index = -1;
+        if (areListElementVisible(weekShifts, 10)) {
+            for (int i = 0; i < weekShifts.size(); i++) {
+                try {
+                    if (weekShifts.get(i).equals(shift)) {
+                        index = i;
+                        SimpleUtils.pass("Schedule Week View: Get the index of the shift successfully: " + i);
+                        break;
+                    }
+
+                } catch (NoSuchElementException e) {
+                    continue;
+                }
+            }
+        } else if (areListElementVisible(shiftsInDayView, 10)) {
+            for (int i = 0; i < shiftsInDayView.size(); i++) {
+                try {
+                    if (shiftsInDayView.get(i).equals(shift)) {
+                        index = i;
+                        SimpleUtils.pass("Schedule Day View: Get the index of the shift successfully: " + i);
+                        break;
+                    }
+
+                } catch (NoSuchElementException e) {
+                    continue;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View: There are no shifts loaded!", false);
+        }
+        return index;
+    }
+
+
+    // added by Fiona
+    public List<String> verifyDaysHasShifts() throws Exception {
+        List<String> dayHasShifts = new ArrayList<String>();
+        if (areListElementVisible(scheduleDays, 10)) {
+            for(WebElement scheduleDay:scheduleDays){
+                String dayAbbr = scheduleDay.findElement(By.cssSelector("div.sch-calendar-day-label")).getText().trim();
+                String totalCalendarDaySummary = scheduleDay.findElement(By.cssSelector("div.sch-calendar-day-summary span")).getText().trim().split(" ")[0];
+                if(! totalCalendarDaySummary.equals("0")){
+                    dayHasShifts.add(dayAbbr);
+                    SimpleUtils.pass(dayAbbr + " has shifts!");
+                }
+            }
+        }
+        return dayHasShifts;
+    }
+
+    @FindBy(css=".ReactVirtualized__Grid__innerScrollContainer")
+    private WebElement shiftsTable;
+
+    @Override
+    public void verifyShiftTimeInReadMode(String index,String shiftTime) throws Exception{
+        String shiftTimeInShiftTable = null;
+        if (isElementEnabled(shiftsTable,5)) {
+            List<WebElement> shiftsTableList = shiftsTable.findElements(By.cssSelector("div[data-day-index=\"" + index + "\"].week-schedule-shift"));
+            for(WebElement shiftTable:shiftsTableList){
+                shiftTimeInShiftTable = shiftTable.findElement(By.cssSelector(".week-schedule-shift-time")).getText().trim();
+                if(shiftTimeInShiftTable.equals(shiftTime)){
+                    SimpleUtils.pass("The shift time on data-day-index: " + index + " is aligned with advance staffing rule");
+                }else {
+                    SimpleUtils.fail("The shift time is NOT aligned with advance staffing rule",false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("There is no shifts generated.",false);
+        }
+    }
+
+    @Override
+    public List<String> getIndexOfDaysHaveShifts() throws Exception {
+        List<String> index = new ArrayList<String>();
+        String dataDayIndex = null;
+        if (areListElementVisible(scheduleDays, 10)) {
+            for(WebElement scheduleDay:scheduleDays){
+                String totalCalendarDaySummary = scheduleDay.findElement(By.cssSelector("div.sch-calendar-day-summary span")).getText().trim().split(" ")[0];
+                if(! totalCalendarDaySummary.equals("0")){
+                    dataDayIndex = scheduleDay.getAttribute("data-day-index").trim();
+                    index.add(dataDayIndex);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Table header fail to load!", false);
+        }
+        return index;
+    }
+
+    @FindBy(css = ".week-schedule-shift .shift-container .rows .worker-image-optimized")
+    private List<WebElement> profileIconsRingsInWeekView;
+    @FindBy(css = ".sch-day-view-shift-outer .allow-pointer-events")
+    private List<WebElement> profileIconsRingsInDayView;
+    @Override
+    public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception {
+        if (areListElementVisible(profileIconsRingsInDayView, 15)){
+            for (WebElement element: profileIconsRingsInDayView){
+                SimpleUtils.assertOnFail("No colered ring representing minors", element.getAttribute("class").contains(minorsType), false);
+            }
+        } else if (areListElementVisible(profileIconsRingsInWeekView, 15)){
+            for (WebElement element: profileIconsRingsInWeekView){
+                SimpleUtils.assertOnFail("No colered ring representing minors", element.getAttribute("class").contains(minorsType), false);
+            }
+        } else {
+            SimpleUtils.fail("No profile icons!", false);
+        }
+    }
+
+
+    @FindBy(css = ".week-schedule-ribbon-group-toggle")
+    private List<WebElement> groupTitleList;
+    @Override
+    public void verifyGroupCanbeCollapsedNExpanded() throws Exception {
+        if (areListElementVisible(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")),10)){
+            for (int i=0; i< getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).size(); i++){
+                clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                    clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("open")){
+                        SimpleUtils.pass("Group can be expanded!!");
+                    } else {
+                        SimpleUtils.fail("Group is not expanded!", false);
+                    }
+                    clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                        SimpleUtils.pass("Group can be collapsed!");
+                    } else {
+                        SimpleUtils.fail("Group is not collapsed!", false);
+                    }
+                }
+                if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("open")){
+                    clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                        SimpleUtils.pass("Group can be collapsed!");
+                    } else {
+                        SimpleUtils.fail("Group is not collapsed!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+    }
+
 }

@@ -1,5 +1,8 @@
 package com.legion.pages;
 
+import java.util.List;
+import java.util.Map;
+
 public interface ScheduleCommonPage {
     public void clickOnScheduleConsoleMenuItem();
     public void goToSchedulePage() throws Exception;
@@ -31,4 +34,15 @@ public interface ScheduleCommonPage {
     public int getMinutesFromTime(String time);
     public int getTheIndexOfCurrentDayInDayView() throws Exception;
     public String getActiveWeekText() throws Exception;
+    public void clickCancelButtonOnPopupWindow() throws Exception;
+    void goToConsoleScheduleAndScheduleSubMenu() throws Exception;
+    void navigateToNextWeek() throws Exception;
+    public void navigateToPreviousWeek() throws Exception;
+    public void goToSpecificWeekByDate(String date) throws Exception;
+    public void verifyTMSchedulePanelDisplay() throws Exception;
+    public String convertDateStringFormat(String dateString) throws Exception;
+    public Map<String, String> getActiveDayInfo() throws Exception;
+    public String getHeaderOnSchedule() throws Exception;
+    public void verifyHeaderOnSchedule() throws Exception;
+    public List<String> getYearsFromCalendarMonthYearText() throws Exception;
 }

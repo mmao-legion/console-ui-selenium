@@ -36,4 +36,6 @@ public interface ScheduleOverviewPage {
 	public boolean isCurrentWeekDarkBlueColor() throws Exception;
 
 	public List<String> getScheduleActivityInfo();
+	public List<String> getOverviewData() throws Exception;
+	public int getDaysBetweenFinalizeDateAndScheduleStartDate(String finalizeByDate, String scheduleStartDate) throws Exception;
 }

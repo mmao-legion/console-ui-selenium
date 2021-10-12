@@ -4,6 +4,7 @@ import com.legion.pages.AnalyzePage;
 import com.legion.pages.BasePage;
 import com.legion.pages.ScheduleMainPage;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -93,4 +94,59 @@ public class ConsoleAnalyzePage extends BasePage implements AnalyzePage {
         }
         return false;
     }
+
+    @FindBy(css = "lg-button[label=\"Analyze\"]")
+    private WebElement analyzeBtn;
+    @FindBy(css="div[ng-click=\"selectedTab = 'history'\"]")
+    private WebElement schedulelHistoryTab;
+    @Override
+    public void clickOnAnalyzeBtn() throws Exception {
+        if (isElementLoaded(analyzeBtn,15)){
+            click(analyzeBtn);
+            SimpleUtils.pass("Clicked analyze button!");
+            if (isElementLoaded(schedulelHistoryTab,15)){
+                click(schedulelHistoryTab);
+                SimpleUtils.pass("Clicked schedulelHistoryTab!");
+            } else {
+                SimpleUtils.fail("There is no schedulelHistoryTab!", false);
+            }
+        } else {
+            SimpleUtils.fail("There is no Analyze button!", false);
+        }
+    }
+
+
+
+    @FindBy(css = ".sch-schedule-analyze__grey tr")
+    private List<WebElement> scheduleVersionInfo;
+
+    @Override
+    public void verifyScheduleVersion(String version) throws Exception {
+        if (areListElementVisible(scheduleVersionInfo,15) && areListElementVisible(scheduleVersionInfo.get(scheduleVersionInfo.size()-1).findElements(By.tagName("td")),15)){
+            String versionText = scheduleVersionInfo.get(scheduleVersionInfo.size()-1).findElements(By.tagName("td")).get(0).getText().split("\n")[0];
+            if ("".equals(versionText)){
+                versionText = scheduleVersionInfo.get(scheduleVersionInfo.size()-1).findElements(By.tagName("td")).get(1).getText().split("\n")[0];
+            }
+            if(version.equalsIgnoreCase(versionText)){
+                SimpleUtils.pass("version info is correct!");
+            }else {
+                SimpleUtils.fail("There is schedule HistoryTab!", false);
+            }
+        } else {
+            SimpleUtils.fail("There is no schedule version info!", false);
+        }
+    }
+
+    @FindBy(css = "lg-close.dismiss")
+    private WebElement closeAnalyzeBtn;
+    @Override
+    public void closeAnalyzeWindow() throws Exception {
+        if (isElementLoaded(closeAnalyzeBtn,15)){
+            click(closeAnalyzeBtn);
+            SimpleUtils.pass("Clicked close button!");
+        } else {
+            SimpleUtils.fail("There is no close button!", false);
+        }
+    }
+
 }

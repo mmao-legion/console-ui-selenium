@@ -1186,4 +1186,181 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }
         return flag;
     }
+
+
+    @Override
+    public void selectDaysFromCurrentDay(String currentDay) throws Exception {
+        int index = 7;
+        String[] items = currentDay.split(" ");
+        if (items.length == 3) {
+            currentDay = items[0].substring(0, 3) + items[1].substring(0, 3) + (items[2].length() == 1 ? "0"+items[2] : items[2]);
+        }
+        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            for (int i = 0; i < weekDays.size(); i++) {
+                String weekDay = weekDays.get(i).getText().replaceAll("\\s*", "");
+                if (weekDay.equalsIgnoreCase(currentDay)) {
+                    index = i;
+                }
+                if (i >= index) {
+                    if (!weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                        click(weekDays.get(i));
+                        SimpleUtils.pass("Select the day: " + weekDays.get(i).getText() + " successfully!");
+                    }
+                }
+            }
+        }else{
+            SimpleUtils.fail("Weeks Days failed to load!", true);
+        }
+    }
+
+
+    @FindBy(css = "div.tma-time-interval.fl-right.ng-binding")
+    private WebElement timeDurationWhenCreateNewShift;
+
+    @Override
+    public String getTimeDurationWhenCreateNewShift() throws Exception {
+        if (isElementLoaded(timeDurationWhenCreateNewShift,5)) {
+            String timeDuration = timeDurationWhenCreateNewShift.getText();
+            return timeDuration;
+        }else
+            SimpleUtils.fail("time duration load failed",true);
+        return null;
+    }
+
+
+    @Override
+    public void selectSpecificWorkDay(int dayCountInOneWeek) {
+        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            for (int i = 0; i < dayCountInOneWeek; i++) {
+                if (!weekDays.get(i).getAttribute("class").contains("selected")) {
+                    click(weekDays.get(i));
+                }
+            }
+        }else
+            SimpleUtils.fail("week days load failed",true);
+    }
+
+    @Override
+    public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception {
+        List<Integer> indexes = new ArrayList<>();
+        int selectedCount = 0;
+        if (count > 7) {
+            SimpleUtils.fail("Create New Shift: There are total 7 days, the count: " + count + " is larger than 7", false);
+        }
+        if (areListElementVisible(weekDays, 15) && weekDays.size() == 7) {
+            for (int i = 0; i < 7; i++) {
+                if (weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-disabled")) {
+                    SimpleUtils.report("Day: " + weekDays.get(i).getText() + " is disabled!");
+                } else {
+                    if (cannotSelectedDate == null || cannotSelectedDate == "") {
+                        if (!weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                            click(weekDays.get(i));
+                            SimpleUtils.report("Select day: " + weekDays.get(i).getText() + " Successfully!");
+                        }
+                        selectedCount++;
+                        indexes.add(i);
+                    } else {
+                        int date = Integer.parseInt(weekDays.get(i).getText().substring(weekDays.get(i).getText().length() - 2).trim());
+                        int cannotDate = Integer.parseInt(cannotSelectedDate.substring(cannotSelectedDate.length() - 2).trim());
+                        if (date != cannotDate) {
+                            if (!weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                                click(weekDays.get(i));
+                                SimpleUtils.report("Select day: " + weekDays.get(i).getText() + " Successfully!");
+                            }
+                            selectedCount++;
+                            indexes.add(i);
+                        }
+                    }
+                    if (selectedCount == count) {
+                        SimpleUtils.pass("Create New Shift: Select " + count + " days Successfully!");
+                        break;
+                    }
+                }
+            }
+            if (selectedCount != count) {
+                SimpleUtils.fail("Create New Shift: Failed to select " + count + " days! Actual is: " + selectedCount + " days!", false);
+            }
+        }else{
+            SimpleUtils.fail("Weeks Days failed to load!", false);
+        }
+        return indexes;
+    }
+
+
+    @Override
+    public void selectWeekDaysByDayName(String dayName) throws Exception {
+        boolean isDayNameExist = false;
+        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            for(int i=0; i< weekDays.size(); i++){
+                String weekDayName = weekDays.get(i).getText().split("\n")[0];
+                if (weekDayName.equalsIgnoreCase(dayName)){
+                    click(weekDays.get(i));
+                    SimpleUtils.report("Select day: " + weekDays.get(i).getText() + " Successfully!");
+                    isDayNameExist = true;
+                    break;
+                }
+            }
+            if (!isDayNameExist) {
+                SimpleUtils.fail("This is a wrong day name: "+ dayName+ "The correct day names should be: Mon, TUE, WED, THU, FRI, SAT, SUN", true);
+            }
+        }else{
+            SimpleUtils.fail("Weeks Days failed to load!", true);
+        }
+    }
+
+    @Override
+    public List<String> getAllOperatingHrsOnCreateShiftPage() throws Exception {
+        List<String> allOperatingHrs = new ArrayList<>();
+        if (areListElementVisible(scheduleOperatingHrsOnEditPage, 15)) {
+            for (WebElement operatingHour : scheduleOperatingHrsOnEditPage) {
+                if (operatingHour.getAttribute("class").contains("am")) {
+                    allOperatingHrs.add(operatingHour.getText() + "am");
+                } else {
+                    allOperatingHrs.add(operatingHour.getText() + "pm");
+                }
+            }
+        } else
+            SimpleUtils.fail("The operating hours on create shift page fail to load! ", false);
+        return allOperatingHrs;
+    }
+
+    @FindBy (css = "[ng-click=\"cancelAction()\"]")
+    private WebElement closeButtonOnCustomize;
+    @Override
+    public void clickOnCloseButtonOnCustomizeShiftPage() throws Exception {
+        if (isElementLoaded(closeButtonOnCustomize, 5)) {
+            click(closeButtonOnCustomize);
+        } else
+            SimpleUtils.fail("The close button on custimize shift page fail to load! ", false);
+    }
+
+
+
+    @FindBy(css = "div.week-day-multi-picker-day-selected")
+    private List<WebElement> selectedDaysOnCreateShiftPage;
+
+    @Override
+    public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception {
+        List<String> selectedDates = new ArrayList<>();
+        if (areListElementVisible(selectedDaysOnCreateShiftPage, 5) && selectedDaysOnCreateShiftPage.size()>0) {
+            for (WebElement selectedDate: selectedDaysOnCreateShiftPage){
+                selectedDates.add(selectedDate.getText());
+            }
+            SimpleUtils.pass("Get selected days info successfully");
+        }else
+            SimpleUtils.fail("Select days load failed",true);
+        return selectedDates;
+    }
+
+    @FindBy(css = ".tma-dismiss-button")
+    private WebElement closeSelectTMWindowBtn;
+    @Override
+    public void closeCustomizeNewShiftWindow() throws Exception {
+        if (isElementLoaded(closeSelectTMWindowBtn, 10)){
+            clickTheElement(closeSelectTMWindowBtn);
+            waitUntilElementIsInVisible(closeSelectTMWindowBtn);
+        } else {
+            SimpleUtils.fail("Customize New Shift window: Close button not loaded Successfully!", false);
+        }
+    }
 }

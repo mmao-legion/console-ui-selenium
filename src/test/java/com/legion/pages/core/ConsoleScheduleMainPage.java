@@ -1,6 +1,7 @@
 package com.legion.pages.core;
 
 import com.legion.pages.*;
+import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -9,10 +10,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -1228,4 +1226,733 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             click(filterButton);
     }
 
+
+    @FindBy (css = "[src*=\"print.svg\"]")
+    private WebElement printIcon;
+    @Override
+    public void verifyThePrintFunction() throws Exception {
+        try {
+            if (isPrintIconLoaded()) {
+                clickTheElement(printIcon);
+                // Wait for the schedule to be downloaded
+                if (isElementLoaded(printButtonInPrintLayout, 5)) {
+                    click(printButtonInPrintLayout);
+                }
+                waitForSeconds(10);
+                String downloadPath = SimpleUtils.fileDownloadPath;
+                SimpleUtils.assertOnFail("Failed to download the team schedule", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), false);
+            } else {
+                SimpleUtils.fail("Print icon not loaded Successfully on Schedule page!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(), false);
+        }
+    }
+
+    @Override
+    public boolean isPrintIconLoaded() throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(printIcon, 5)) {
+            isLoaded = true;
+            SimpleUtils.pass("Print Icon loaded Successfully!");
+        }
+        return isLoaded;
+    }
+
+
+    @FindBy(css = ".group-by-select-box select")
+    private WebElement groupBySelector;
+
+    // Options of group by selectors
+
+    @FindBy(xpath = "//option[contains(@value,'string:All')]")
+    private WebElement groupByAll;
+
+    @FindBy(xpath = "//option[contains(@value,'string:WorkRole')]")
+    private WebElement groupByWorkRole;
+
+    @FindBy(xpath = "//option[contains(@value,'string:TM')]")
+    private WebElement groupByTM;
+
+    @FindBy(xpath = "//option[contains(@value,'string:JobTitle')]")
+    private WebElement groupByJobTitle;
+
+    @FindBy(xpath = "//option[contains(@value,'string:Location')]")
+    private WebElement groupByLocation;
+    @Override
+    public void validateGroupBySelectorSchedulePage(boolean isLocationGroup) throws Exception {
+        waitForSeconds(3);
+        if(isElementLoaded(groupBySelector,10))
+        {
+            click( groupBySelector);
+            // Validate the each button on dropdown
+            if(isElementEnabled(groupByAll,3)
+                    && isElementEnabled(groupByWorkRole,3)
+                    && isElementEnabled(groupByTM,3)
+                    && isElementLoaded(groupByJobTitle,3)
+                    && (isLocationGroup? isElementLoaded(groupByLocation, 5):true))
+                if(isLocationGroup){
+                    SimpleUtils.pass("In Week view: 'Group by All' filter have 5 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title 5 Group by location");
+                } else
+                    SimpleUtils.pass("In Week view: 'Group by All' filter have 4 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title");
+            else SimpleUtils.fail("Group by All filter does not have 4 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title",true);
+        }
+        else SimpleUtils.fail("Group By Selector is not available on screen ", false);
+
+    }
+
+    @FindBy (css = ".day-week-picker-period-week")
+    private List<WebElement> currentWeeks;
+    @FindBy (className = "period-name")
+    private WebElement weekPeriod;
+    @FindBy (className = "card-carousel-card")
+    private List<WebElement> smartCards;
+    @FindBy (className = "card-carousel-link")
+    private List<WebElement> cardLinks;
+    @FindBy (css = "[src*=\"No-Schedule\"]")
+    private WebElement noSchedule;
+    @FindBy(css = ".accept-shift")
+    private WebElement claimShiftWindow;
+    @FindBy(css = ".redesigned-button-ok")
+    private WebElement agreeClaimBtn;
+    @FindBy(css = ".redesigned-button-cancel-outline")
+    private WebElement declineBtn;
+    @FindBy(css = ".redesigned-modal")
+    private WebElement popUpModal;
+    @FindBy(css = "img[src*='shift-info']")
+    private List<WebElement> infoIcons;
+    @FindBy(css = ".sch-shift-hover div:nth-child(3)>div.ng-binding")
+    private WebElement shiftDuration;
+    @FindBy(css = ".shift-hover-subheading.ng-binding:not([ng-if])")
+    private WebElement shiftJobTitleAsWorkRole;
+    @FindBy(className = "accept-shift-shift-info")
+    private WebElement shiftDetail;
+    private WebElement yesButton;
+    @FindBy(css = "[label=\"No\"]")
+    private WebElement noButton;
+    @FindBy(className = "day-week-picker-arrow-right")
+    private WebElement calendarNavigationNextWeekArrow;
+    @Override
+    public void verifySelectedFilterPersistsWhenSelectingOtherWeeks(String selectedFilter) throws Exception {
+        if (areListElementVisible(currentWeeks, 10)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                click(currentWeeks.get(i));
+                if (isElementLoaded(filterButton, 15)) {
+                    String selectedValue = filterButton.findElement(By.cssSelector("input-field[placeholder=\"None\"] input")).getAttribute("value");
+                    if (selectedFilter.contains(selectedValue)) {
+                        SimpleUtils.pass("Selected Filter is persist on Week: " + currentWeeks.get(i).getText());
+                    }else {
+                        SimpleUtils.fail("Selected filter is changed on Week: " + currentWeeks.get(i).getText()
+                                + ", expected filter is: " + selectedFilter + ", but actual selected filter is: " + selectedValue, false);
+                    }
+                }else {
+                    SimpleUtils.fail("Filter Button not loaded Successfully!", false);
+                }
+                if (i == (currentWeeks.size() - 1) && isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                    click(calendarNavigationNextWeekArrow);
+                    verifySelectedFilterPersistsWhenSelectingOtherWeeks(selectedFilter);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Current weeks' elements not loaded Successfully!", false);
+        }
+    }
+
+
+    //added by Haya
+    @FindBy (css = "button.dropdown-toggle")
+    private WebElement dropdownToggle;
+    @FindBy (css = ".lg-dropdown-menu__option")
+    private List<WebElement> dropdownMenuFormDropdownToggle;
+    @Override
+    public void goToToggleSummaryView() throws Exception {
+        waitForSeconds(2);
+        if (isElementLoaded(dropdownToggle,10)){
+            click(dropdownToggle);
+            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==3 ){
+                waitForSeconds(3);
+                click(dropdownMenuFormDropdownToggle.get(2));
+                SimpleUtils.pass("Toggle Summary View has been clicked!");
+            } else {
+                SimpleUtils.fail("After clicking dropdown toggle button, no menu drop down", false);
+            }
+        } else {
+            SimpleUtils.fail("There is no toggle drop down button in schedule page!", false);
+        }
+    }
+
+    @Override
+    public void clickToggleSummaryViewButton() throws Exception {
+        if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==3 ){
+            click(dropdownMenuFormDropdownToggle.get(2));
+            SimpleUtils.pass("Toggle Summary View has been clicked!");
+        } else {
+            if (isElementLoaded(dropdownToggle,10)){
+                click(dropdownToggle);
+            } else {
+                SimpleUtils.fail("There is no toggle drop down button in schedule page!", false);
+            }
+        }
+    }
+
+
+    @FindBy(css = "[class=\"week-schedule-shift-color\"]")
+    private List<WebElement> workRoleIcons;
+
+    @FindBy(css = ".week-schedule-right-strip")
+    private WebElement tMHourAndAverageShiftLengthColumn;
+
+    @FindBy(css = "div.week-schedule-ribbon-location-toggle")
+    private List<WebElement> groupByLocationToggles;
+    @Override
+    public void validateScheduleTableWhenSelectAnyOfGroupByOptions(boolean isLocationGroup) throws Exception {
+        if(isElementLoaded(groupBySelector,5)) {
+            //validate the schedule table when group by Work Role
+            selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            if (areListElementVisible(workRoleIcons, 10) && workRoleIcons.size() > 0) {
+                SimpleUtils.pass("In Week view: Shifts in schedule table are grouped by work role");
+            } else {
+                SimpleUtils.fail("In Week view: Shifts in schedule table are failed group by work role ", true);
+            }
+
+            //validate the schedule table when group by TM
+            selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyTM.getValue());
+            if (isElementEnabled(tMHourAndAverageShiftLengthColumn, 10)) {
+                SimpleUtils.pass("In Week view: Shifts in schedule table are grouped by TM ");
+            } else {
+                SimpleUtils.fail("In Week view: Shifts in schedule table are failed group by TM ", true);
+            }
+
+            //validate the schedule table when group by Job Title
+            selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
+            if (areListElementVisible(scheduleShiftTitles, 10) && scheduleShiftTitles.size() > 0) {
+                SimpleUtils.pass("In Week view: Shifts in schedule table are grouped by job title");
+            } else {
+                SimpleUtils.fail("In Week view: Shifts in schedule table are failed group by job title ", false);
+            }
+
+            //validate the schedule table when group by Location
+            if(isLocationGroup){
+                selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+                if (areListElementVisible(scheduleShiftTitles, 10) && scheduleShiftTitles.size() > 0
+                        && areListElementVisible(groupByLocationToggles, 10) && groupByLocationToggles.size()> 0
+                        && groupByLocationToggles.size() == scheduleShiftTitles.size()) {
+                    SimpleUtils.pass("In Week view: Shifts in schedule table are grouped by Location");
+
+                    // Check the sub-location display in alphabetical order
+                    List<String>  locationsNamesInSchedule = new ArrayList<>();
+                    for(int i = 0; i< scheduleShiftTitles.size(); i++){
+                        locationsNamesInSchedule.add(scheduleShiftTitles.get(i).getText());
+                    }
+                    List<String>  locationsNamesBySorted = new ArrayList<>();
+                    locationsNamesBySorted.addAll(locationsNamesInSchedule);
+                    locationsNamesInSchedule.sort(null);
+
+                    if(locationsNamesBySorted.equals(locationsNamesInSchedule)){
+                        SimpleUtils.pass("In Week view: Sub-location display in alphabetical order when grouped by Location");
+                    } else
+                        SimpleUtils.fail("In Week view: Sub-location are not display in alphabetical order when grouped by Location", false);
+
+                    //Check the first location will be opened
+                    if(groupByLocationToggles.get(0).getAttribute("class").contains("open")){
+                        SimpleUtils.pass("In Week view: The first location is opened ");
+                    } else
+                        SimpleUtils.fail("In Week view: The first location is not opened ", false);
+
+                    //Check all locations can be expanded and closed
+                    int randomIndex = (new Random()).nextInt(groupByLocationToggles.size()-1)+1;
+
+                    if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("close")){
+                        scheduleShiftTitles.get(randomIndex).click();
+                        if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("open")){
+                            SimpleUtils.pass("In Week view: Location can be expanded ");
+                        } else
+                            SimpleUtils.fail("In Week view: Location cannot be expanded ", false);
+
+                        scheduleShiftTitles.get(randomIndex).click();
+                        if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("close")){
+                            SimpleUtils.pass("In Week view: Location can be closed ");
+                        } else
+                            SimpleUtils.fail("In Week view: Location cannot be closed ", false);
+                    } else if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("open")){
+                        scheduleShiftTitles.get(randomIndex).click();
+                        if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("close")){
+                            SimpleUtils.pass("In Week view: Location can be closed ");
+                        } else
+                            SimpleUtils.fail("In Week view: Location cannot be closed ", false);
+                    }
+                } else {
+                    SimpleUtils.fail("In Week view: Shifts in schedule table are failed group by Location ", false);
+                }
+            }
+
+            //change back to Group by All
+            selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyAll.getValue());
+        }
+        else SimpleUtils.fail("Group By Selector is not available on screen ", true);
+    }
+
+
+    @FindBy(css = ".save-schedule-confirm-message2")
+    private WebElement saveMessage;
+    @Override
+    public void verifyVersionInSaveMessage(String version) throws Exception {
+        if (isElementEnabled(scheduleSaveBtn)) {
+            clickTheElement(scheduleSaveBtn);
+        } else {
+            SimpleUtils.fail("Schedule save button not found", false);
+        }
+        waitForSeconds(3);
+        String a= saveMessage.getText();
+        if (isElementLoaded(saveMessage,15) && a.contains(version)){
+            SimpleUtils.pass("version info is correct!");
+        } else {
+            SimpleUtils.fail("There is no save message or the version is incorrect!", false);
+        }
+        if (isElementEnabled(saveOnSaveConfirmationPopup)) {
+            clickTheElement(saveOnSaveConfirmationPopup);
+            if (isElementLoaded(msgOnTop, 30) && msgOnTop.getText().contains("Success")) {
+                SimpleUtils.pass("Save the Schedule Successfully!");
+            } else {
+                SimpleUtils.fail("Save Schedule Failed!", false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule save button not found", false);
+        }
+    }
+
+
+    @FindBy(xpath = "//span[text()=\"Manager\"]")
+    private WebElement managerTab;
+    @Override
+    public void clickOnManagerButton() throws Exception {
+        if (isElementEnabled(managerTab, 5)) {
+            click(managerTab);
+            SimpleUtils.pass("Manager button is clickable");
+        }else {
+            SimpleUtils.fail("There is no Manager button!",true);
+        }
+    }
+
+
+    @FindBy(css = "[ng-click=\"openSearchBox()\"]")
+    private WebElement openSearchBoxButton;
+
+    @FindBy(css = "[ng-click=\"closeSearchBox()\"]")
+    private WebElement closeSearchBoxButton;
+
+    @FindBy(css = "input[placeholder*=\"Search by Employee Name, Work Role")
+    private WebElement searchBox;
+
+    @FindBy(css = "div[ng-show=\"!forbidModeChange\"]")
+    private WebElement switchDayViewAndWeeKViewButton;
+
+
+
+    public void verifyGhostTextInSearchBox () throws Exception{
+        if (isElementEnabled(searchBox, 5)) {
+            String ghostText = "Search by Employee Name, Work Role or Title";
+            if (searchBox.getAttribute("placeholder").equals(ghostText)) {
+                SimpleUtils.pass("The ghost text in search box display correctly");
+            } else
+                SimpleUtils.fail("The ghost text in search box display incorrectly",true);
+
+        } else {
+            SimpleUtils.fail("Search box on schedule page load fail!",false);
+        }
+    }
+
+    public void clickOnOpenSearchBoxButton() throws Exception {
+        if (isElementEnabled(openSearchBoxButton, 5)) {
+            click(openSearchBoxButton);
+            if (isElementLoaded(searchBox, 15)) {
+                SimpleUtils.pass("Search box is opened successfully");
+            } else {
+                SimpleUtils.fail("Search box is not opened successfully", false);
+            }
+
+        }else {
+            SimpleUtils.fail("There is no Open search box button!",false);
+        }
+    }
+
+    public void clickOnCloseSearchBoxButton() throws Exception {
+        if (isElementEnabled(closeSearchBoxButton, 5)) {
+            click(closeSearchBoxButton);
+            if (!isElementEnabled(searchBox, 5)) {
+                SimpleUtils.pass("Search box is closed successfully");
+            } else {
+                SimpleUtils.fail("Search box is not closed successfully", true);
+            }
+        }else {
+            SimpleUtils.fail("There is no Close search box button!",true);
+        }
+    }
+
+
+    @FindBy(className = "week-schedule-shift")
+    private List<WebElement> weekShifts;
+    public List<WebElement> searchShiftOnSchedulePage(String searchText) throws Exception {
+        List<WebElement> searchResult = null;
+        if (isElementEnabled(searchBox, 5)) {
+            searchBox.clear();
+            waitForSeconds(3);
+            searchBox.sendKeys(searchText);
+            waitForSeconds(5);
+            if (areListElementVisible(weekShifts, 5) && weekShifts.size() >0) {
+                searchResult = weekShifts;
+            } else if (areListElementVisible(dayViewAvailableShifts, 5) && dayViewAvailableShifts.size() >0) {
+                searchResult = dayViewAvailableShifts;
+            } else
+                SimpleUtils.report("Cannot search on schedule page!");
+        } else {
+            SimpleUtils.fail("Search box on schedule page load fail!",false);
+        }
+        return searchResult;
+    }
+
+
+    @FindBy (className = "lg-filter__category-label")
+    private List<WebElement> filterLabels;
+
+    @Override
+    public void verifyFilterDropdownList(boolean isLG) throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+            if (!availableFilters.get("location").isEmpty()) {
+                if (isLG)
+                    SimpleUtils.pass("Schedule Page: 'LOCATION' is one label when current env is LG");
+                else
+                    SimpleUtils.fail("Schedule Page: 'LOCATION' should not be one label when current env isn't LG", false);
+            } else
+                SimpleUtils.report("Schedule Page: 'LOCATION' isn't one label currently");
+            if (availableFilters.get("shifttype").size() == 7 && availableFilters.get("jobtitle").size() > 1 && availableFilters.get("workrole").size() > 1)
+                SimpleUtils.pass("Schedule Page: 'SHIFT TYPE'/'JOB TITLE/'WORK ROLE' display as expected");
+            else
+                SimpleUtils.fail("Schedule Page: 'SHIFT TYPE'/'JOB TITLE/'WORK ROLE' display unexpectedly", false);
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up", false);
+    }
+
+    @FindBy (css = ".lg-filter__clear")
+    private WebElement clearFilterOnFilterDropdownPopup;
+    public void clickOnClearFilterOnFilterDropdownPopup() throws Exception {
+        if(isElementLoaded(clearFilterOnFilterDropdownPopup, 5)){
+            if(clearFilterOnFilterDropdownPopup.getAttribute("class").contains("active")){
+                scrollToElement(clearFilterOnFilterDropdownPopup);
+                click(clearFilterOnFilterDropdownPopup);
+                SimpleUtils.pass("Click Clear Filter button on Filter dropdown popup successfully! ");
+            } else
+                SimpleUtils.report("Clear filter button is disabled because there is no filters been selected! ");
+        } else
+            SimpleUtils.fail("Clear Filter button loaded fail! ", false);
+    }
+
+
+    @FindBy(css = "lg-button[label*=\"ublish\"]")
+    private WebElement publishSheduleButton;
+    @Override
+    public String getTooltipOfPublishButton() throws Exception {
+        String tooltip = "";
+        if (isElementLoaded(publishSheduleButton, 5)) {
+            tooltip = publishSheduleButton.getAttribute("data-tootik");
+        } else
+            SimpleUtils.fail("Publish schedule button fail to load! ", false);
+        return tooltip;
+    }
+
+
+    // Added by Nora
+    @FindBy (css = "lg-button-group[buttons*=\"custom\"] div.lg-button-group-first")
+    private WebElement scheduleDayViewButton;
+    @FindBy (className = "period-name")
+    private WebElement periodName;
+    @FindBy (className = "card-carousel-container")
+    private WebElement cardCarousel;
+    @FindBy(css = "table tr:nth-child(1)")
+    private WebElement scheduleTableTitle;
+    @FindBy(css = "table tr:nth-child(2)")
+    private WebElement scheduleTableHours;
+    @FindBy(className = "week-day-multi-picker-day")
+    private List<WebElement> weekDays;
+    @FindBy(css = "[ng-show=\"hasSearchResults()\"] [ng-repeat=\"worker in searchResults\"]")
+    private List<WebElement> searchResults;
+    @FindBy(className = "week-schedule-shift-wrapper")
+    private List<WebElement> shiftsWeekView;
+    @FindBy(css = "div.popover div:nth-child(3)>div.ng-binding")
+    private WebElement timeDuration;
+    @FindBy(className = "sch-calendar-day-label")
+    private List<WebElement> weekDayLabels;
+    //    @FindBy(css = ".schedule-summary-search-dropdown [icon*=\"search.svg'\"]")
+//    private WebElement searchLocationBtn;
+    @FindBy(css = ".redesigned-modal-icon")
+    private WebElement deleteScheduleIcon;
+    @FindBy(css = ".redesigned-modal-title")
+    private WebElement deleteScheduleTitle;
+    @FindBy(css = ".redesigned-modal-text")
+    private WebElement deleteScheduleText;
+    @FindBy(css = "[label*=\"Delete Schedule\"]")
+    private WebElement deleteScheduleWeek;
+
+
+    @FindBy (css = "lg-button[ng-click=\"deleteSchedule()\"]")
+    private WebElement deleteScheduleButton;
+
+    @FindBy (css = "div.redesigned-modal")
+    private WebElement deleteSchedulePopup;
+
+    @FindBy (css = ".redesigned-modal input")
+    private WebElement deleteScheduleCheckBox;
+
+    @FindBy (css = ".redesigned-button-ok")
+    private WebElement deleteButtonOnDeleteSchedulePopup;
+
+    @FindBy (css = ".redesigned-button-cancel-gray")
+    private WebElement cancelButtonOnDeleteSchedulePopup;
+
+    @FindBy (className = "day-week-picker-date")
+    private WebElement calMonthYear;
+
+    @Override
+    public void verifyClickOnCancelBtnOnDeleteScheduleDialog() throws Exception {
+        try {
+            if (isElementLoaded(cancelButtonOnDeleteSchedulePopup, 5)) {
+                clickTheElement(cancelButtonOnDeleteSchedulePopup);
+                waitForSeconds(2);
+                if (!isElementLoaded(deleteSchedulePopup, 5)) {
+                    SimpleUtils.pass("Delete Schedule Dialog: Click on Cancel button successfully!");
+                } else {
+                    SimpleUtils.fail("Delete Schedule Dialog: Click on Cancel button failed!", false);
+                }
+            } else {
+                SimpleUtils.fail("Delete Schedule Dialog: Cancel button is not loaded successfully!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public void verifyDeleteBtnDisabledOnDeleteScheduleDialog() throws Exception {
+        try {
+            if (isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5) &&
+                    deleteButtonOnDeleteSchedulePopup.getAttribute("disabled").equalsIgnoreCase("true")) {
+                SimpleUtils.pass("Delete Schedule Dialog: Delete button is disabled by default!");
+            } else {
+                SimpleUtils.fail("Delete Schedule Dialog: Delete button is not disabled by default!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public void verifyDeleteButtonEnabledWhenClickingCheckbox() throws Exception {
+        try {
+            if (isElementLoaded(deleteScheduleCheckBox, 5)) {
+                clickTheElement(deleteScheduleCheckBox);
+                if (isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5) && deleteButtonOnDeleteSchedulePopup.getAttribute("disabled") == null) {
+                    SimpleUtils.pass("Delete Schedule Dialog: Delete Button is enabled when clicking the checkbox!");
+                } else {
+                    SimpleUtils.fail("Delete Schedule Dialog: Delete Button is not enabled when clicking the checkbox!", false);
+                }
+            } else {
+                SimpleUtils.fail("Delete Schedule Dialog: Check box is not loaded successfully!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public String getDeleteScheduleForWhichWeekText() throws Exception {
+        String scheduleWeekText = "";
+        if (isElementLoaded(weekPeriod, 5) && isElementLoaded(calMonthYear, 5)) {
+            String year = calMonthYear.getText().trim().substring(calMonthYear.getText().trim().length() - 4);
+            String [] items = weekPeriod.getText().split(" ");
+            if (items.length == 7) {
+                scheduleWeekText = "Delete " + items[0] + " " + items[1] + " " + items[2].substring(0, 3) + " " + (items[3].length() == 2 ? items[3] : ("0" + items[3]))
+                        + " " + items[4] + " " + items[5].substring(0, 3) + " " + (items[6].length() == 2 ? items[6] : ("0" + items[6])) + ", " + year;
+                SimpleUtils.report("Delete Schedule For Which Weeek Text: " + scheduleWeekText);
+            }
+        }
+        if (scheduleWeekText == "") {
+            SimpleUtils.fail("Failed to get the delete schedule for which week Text", false);
+        }
+        return scheduleWeekText;
+    }
+
+    @Override
+    public void verifyTheContentOnDeleteScheduleDialog(String confirmMessage, String week) throws Exception {
+        if (isElementLoaded(deleteSchedulePopup, 20)) {
+            if (isElementLoaded(deleteScheduleIcon, 5) && isElementLoaded(deleteScheduleTitle, 5)
+                    && deleteScheduleTitle.getText().equalsIgnoreCase("Delete Schedule") && isElementLoaded(deleteScheduleTitle, 5)
+                    && deleteScheduleText.getText().equalsIgnoreCase(confirmMessage) && isElementLoaded(deleteScheduleWeek, 5)
+                    && deleteScheduleWeek.getText().toLowerCase().contains(week.toLowerCase()) && isElementLoaded(cancelButtonOnDeleteSchedulePopup, 5)
+                    && isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5) && isElementLoaded(deleteScheduleCheckBox, 5)) {
+                SimpleUtils.pass("Delete Schedule Dialog: Verified the content is correct!");
+            } else {
+                SimpleUtils.fail("Delete Schedule Dialog: The content is unexpected!", false);
+            }
+        } else {
+            SimpleUtils.fail("Delete Schedule Dialog failed to pop up!", false);
+        }
+    }
+
+    @Override
+    public void verifyClickOnDeleteScheduleButton() throws Exception {
+        try {
+            if (isElementLoaded(deleteScheduleButton, 10)) {
+                clickTheElement(deleteScheduleButton);
+                SimpleUtils.pass("Schedule: Click on Delete Schedule button Successfully!");
+            } else {
+                SimpleUtils.fail("Schedule: Delete Schedule button is not loaded Successfully!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public boolean isDeleteScheduleButtonLoaded() throws Exception {
+        try {
+            if (isElementLoaded(deleteScheduleButton, 5)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void verifyLocationFilterInLeft(boolean isLG) throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            if (isLG) {
+                if (filterLabels.size() == 4 && filterLabels.get(0).getText().equals("LOCATION"))
+                    SimpleUtils.pass("Schedule Page: 'LOCATION' displays in left when current env is LG");
+                else
+                    SimpleUtils.fail("Schedule Page: 'LOCATION' is not in the left when current env is LG",false);
+            } else {
+                if (filterLabels.size() == 3 && !filterLabels.get(0).getText().equals("LOCATION"))
+                    SimpleUtils.pass("Schedule Page: 'LOCATION' doesn't display when current env isn't LG");
+                else
+                    SimpleUtils.fail("Schedule Page: Filter displays unexpectedly when current env isn't LG", false);
+            }
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+    }
+
+    @Override
+    public String selectRandomChildLocationToFilter() throws Exception {
+        String randomLocation = "";
+        int randomIndex = 0;
+        if (isElementLoaded(filterPopup,5)) {
+            HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
+            if (!availableFilters.get("location").isEmpty()) {
+                randomIndex = (new Random()).nextInt(availableFilters.get("location").size());
+                randomLocation = availableFilters.get("location").get(randomIndex).getText();
+                randomLocation = randomLocation.contains(" ")? randomLocation.split(" ")[0]: "";
+            } else
+                SimpleUtils.report("Schedule Page: 'LOCATION' isn't one label currently");
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up", false);
+        return randomLocation;
+    }
+
+
+    @Override
+    public void verifyShiftTypeInLeft(boolean isLG) throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            if (isLG) {
+                if (isElementLoaded(filterPopup,5)) {
+                    if (filterLabels.size() == 4 && filterLabels.get(1).getText().equals("SHIFT TYPE"))
+                        SimpleUtils.pass("Schedule Page: 'SHIFT TYPE' displays in left expect Location");
+                    else
+                        SimpleUtils.fail("Schedule Page: 'SHIFT TYPE' is not in the left expect Location",false);
+                } else
+                    SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+            } else {
+                if (isElementLoaded(filterPopup,5)) {
+                    if (filterLabels.size() == 3 && filterLabels.get(0).getText().equals("SHIFT TYPE"))
+                        SimpleUtils.pass("Schedule Page: 'SHIFT TYPE' displays in left");
+                    else
+                        SimpleUtils.fail("Schedule Page: 'SHIFT TYPE' is not in the left",false);
+                } else
+                    SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+            }
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+    }
+
+    @Override
+    public void verifyShiftTypeFilters() throws Exception {
+        if (isElementLoaded(filterPopup,5)) {
+            String shiftTypeFilterKey = "shifttype";
+            ArrayList<WebElement> shiftTypeFilters = getAvailableFilters().get(shiftTypeFilterKey);
+            if (shiftTypeFilters.size() >= 7) {
+                if (shiftTypeFilters.get(0).getText().contains("Action Required")
+                        && shiftTypeFilters.get(1).getText().contains("Assigned")
+                        && shiftTypeFilters.get(2).getText().contains("Compliance Review")
+                        && shiftTypeFilters.get(3).getText().contains("Open")
+                        && shiftTypeFilters.get(4).getText().contains("Unavailable")
+                        && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
+                        && shiftTypeFilters.get(6).getText().contains("Unpublished changes")
+//                        && shiftTypeFilters.get(7).getText().contains("New or Borrowed TM")
+//                        && (shiftTypeFilters.size()> 7? (shiftTypeFilters.get(7).getText().contains("Minor (14-15)") ||
+//                        shiftTypeFilters.get(7).getText().contains("Minor (16-17)")): true)
+                ){
+                    SimpleUtils.pass("The shift types display correctly in Filter dropdown list! ");
+                } else
+                    SimpleUtils.fail("The shift types display incorrectly in Filter dropdown list! ", false);
+            } else
+                SimpleUtils.fail("The shift types count display incorrectly in Filter dropdown list! ", false);
+        } else
+            SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
+    }
+
+
+    @FindBy(css = "label.input-label.ng-binding")
+    private List<WebElement> allFilterText;
+
+    public int getSpecificFiltersCount (String filterText) throws Exception {
+        int count = 0;
+        if (areListElementVisible(allFilterText, 10) && allFilterText.size()>0){
+            for (WebElement filter: allFilterText){
+                String [] fullText= filter.getText().split("\\(");
+                String filterName = fullText[0].trim();
+                String filterCount = fullText[1].replace(")", "");
+                if (filterName.equalsIgnoreCase(filterText)) {
+                    count = Integer.parseInt(filterCount);
+                }
+            }
+        } else
+            SimpleUtils.fail("Filter text in schedule filter dropdown list fail to load! ", false);
+        return count;
+    }
+
+
+    @Override
+    public boolean isGroupByDayPartsLoaded() throws Exception {
+        Select groupBySelectElement = new Select(scheduleGroupByButton);
+        List<WebElement> scheduleGroupByButtonOptions = groupBySelectElement.getOptions();
+        for (WebElement scheduleGroupByButtonOption: scheduleGroupByButtonOptions) {
+            if (scheduleGroupByButtonOption.getText().contains("Group by Day Parts"))
+                return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public void clickOnFilterBtn() throws Exception {
+        waitForSeconds(10);
+        if (isElementLoaded(filterButton,30)) {
+            click(filterButton);
+            SimpleUtils.pass("filter button is clickable");
+        } else {
+            SimpleUtils.fail("filter button is not Loaded Successfully!", true);
+        }
+    }
 }

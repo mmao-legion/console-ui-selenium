@@ -308,7 +308,7 @@ public class ForecastTest extends TestBase{
 			SimpleUtils.assertOnFail("Edited value is not saved!",tooltipInfo.contains(value),false);
 			forecastPage.verifyAndClickEditBtn();
 			forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
-			schedulePage.navigateToNextWeek();
+			scheduleCommonPage.navigateToNextWeek();
 			forecastPage.verifyWarningEditingForecast();
 			forecastPage.verifyAndClickSaveBtn();
 

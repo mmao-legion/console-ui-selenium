@@ -1605,4 +1605,875 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("Shift time elements failed to load!", false);
         }
     }
+
+    public boolean validateVariousWorkRolePrompt() throws Exception{
+        if(isElementEnabled(schWorkerInfoPrompt,5)){
+            SimpleUtils.pass("Various Work Role Prompt is displayed ");
+            if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >0) {
+                if (shiftRoleList.size() < 10){
+                    for (WebElement shiftRole : shiftRoleList) {
+                        click(shiftRole);
+                        SimpleUtils.pass("Role '"+ shiftRole.findElement(By.
+                                cssSelector("span.sch-worker-change-role-name")).getText() +"' is selected!");
+                    }
+                } else {
+                    for (int i =0; i< 9;i++) {
+                        click(shiftRoleList.get(i));
+                        SimpleUtils.pass("Role '"+ shiftRoleList.get(i).findElement(By.
+                                cssSelector("span.sch-worker-change-role-name")).getText() +"' is selected!");
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Work roles are doesn't show well ", true);
+            }
+
+            if (isElementEnabled(applyButtonChangeRole, 5) && isElementEnabled(cancelButtonChangeRole, 5)) {
+                SimpleUtils.pass("Apply and Cancel buttons are enabled");
+                scrollToTop();
+                click(applyButtonChangeRole);
+                if (isElementEnabled(roleViolationAlter, 5)) {
+                    click(roleViolationAlterOkButton);
+                }
+            } else {
+                SimpleUtils.fail("Apply and Cancel buttons are doesn't show well ", false);
+            }
+            return true;
+        } else
+            return false;
+    }
+
+
+    @FindBy(css="div.modal-content")
+    private WebElement popupSelectTM;
+
+    @FindBy (css="div.tab.ng-scope")
+    private List<WebElement> subtabsSelectTeamMember;
+
+    @FindBy(css = "div.tab.ng-scope:nth-child(1)")
+    private WebElement tabSearchTM;
+    @FindBy(css = "div.tab.ng-scope:nth-child(2)")
+    private WebElement tabRecommendedTM;
+    @FindBy(css = "[ng-click=\"cancelAction()\"]")
+    private WebElement closeBtnInSeletedTM;
+    @FindBy(css = "div.break-container")
+    private WebElement profileInfoInSeletedTM;
+
+    @Override
+    public void verifyRecommendedAndSearchTMEnabled() throws Exception
+    {
+        if (isElementLoaded(profileInfoInSeletedTM,3) && isElementLoaded(tabSearchTM,5) && isElementLoaded(tabRecommendedTM,5) && isElementEnabled(closeBtnInSeletedTM, 5)) {
+            SimpleUtils.pass("Select TMs window is opened");
+            for (int i = 0; i <btnSearchteamMember.size() ; i++) {
+                click(btnSearchteamMember.get(i));
+                SimpleUtils.pass(btnSearchteamMember.get(i).getText() +" is enable");
+            }
+        }else
+            SimpleUtils.fail("Select TMs window load failed",true);
+        click(closeBtnInSeletedTM);
+        waitForSeconds(3);
+    }
+
+
+    @FindBy(css = "div.tm-address-container")
+    private WebElement personalDetailsContainer;
+
+    @FindBy(css = "div.tm-phone")
+    private WebElement personalDetailsPhone;
+
+    @FindBy(css = "div.tm-email")
+    private WebElement personalDetailsEmailAddress;
+
+    @Override
+    public void verifyPersonalDetailsDisplayed() throws Exception {
+        if(isElementEnabled(personalDetailsContainer,5))
+        {
+            SimpleUtils.pass("Personal Details Container is Loaded in popup!");
+        }
+        else
+        {
+            SimpleUtils.fail("Personal Details Container is not Loaded in Popup!",false);
+        }
+        //
+        if(isElementLoaded(personalDetailsName,5))
+        {
+            SimpleUtils.pass("Personal Details Name is Loaded in popup!");
+        }
+        else
+        {
+            SimpleUtils.fail("Personal Details Name is not Loaded in Popup!",false);
+        }
+
+        if(isElementLoaded(personalDetailsPhone,8) || isElementLoaded(personalDetailsEmailAddress,5))
+        {
+            SimpleUtils.pass("Phone/Email details are Loaded in popup!");
+        }
+        else
+        {
+            SimpleUtils.report("Phone/Email details are not Loaded in Popup!");
+        }
+    }
+
+    //WorkDetails
+
+    @FindBy(css = "div[class=\"staffing-details-container\"]")
+    private WebElement workPreferenceContainer;
+    @FindBy(css = "div[class=\"tm-prefs-container\"]")
+    private WebElement workPrefValues;
+    @FindBy(css = "div[class=\"tm-additional-locations-container tm-details\"]")
+    private WebElement workPrefAdditionalDetails;
+
+
+    @Override
+    public void verifyWorkPreferenceDisplayed() throws Exception {
+
+        if(isElementLoaded(workPreferenceContainer,5)){
+            SimpleUtils.pass("Work Preference Details are displayed");
+        }else{
+            SimpleUtils.fail("Work Preference Details are not displayed", true);
+        }
+        if(isElementLoaded(workPrefValues,5)){
+            SimpleUtils.pass("Work Preference Values are displayed");
+        }else {
+            SimpleUtils.fail("Work Preference Values are not displayed", true);
+        }
+        if(isElementLoaded(workPrefAdditionalDetails,5)){
+            SimpleUtils.pass("Work Additional Detail are displayed");
+        }else{
+            SimpleUtils.fail("Work Additional Detail are not displayed", true);
+        }
+
+    }
+
+    @FindBy(css = "div.availability-container")
+    private WebElement availabilityText;
+
+    @FindBy(css = "availability.ng-isolate-scope")
+    private WebElement availabilityWeeklyView;
+
+    @FindBy(css = "[ng-click=\"getLastWeekData()\"]")
+    private WebElement getLastWeekArrow;
+
+    @FindBy(css = "[ng-click=\"getNextWeekData()\"]")
+    private WebElement getNextWeekArrow;
+
+
+
+    @Override
+    public void closeViewProfileContainer() throws Exception{
+        if(isElementEnabled(closeViewProfileContainer,5)){
+            click(closeViewProfileContainer);
+            SimpleUtils.pass("Close button is available and clicked");
+        }
+        else
+        { SimpleUtils.fail("Close Button is not enabled ", true); }
+
+    }
+
+
+    @Override
+    public void verifyAvailabilityDisplayed() throws Exception {
+        if(isElementLoaded(availabilityText,5)){
+            SimpleUtils.pass("AvailabilityText is displayed");
+        }else {
+            SimpleUtils.fail("AvailabilityText is not displayed", true);
+        }
+        if(isElementLoaded(availabilityWeeklyView,5)){
+            SimpleUtils.pass("Availability Weekly View is displayed");
+        }else{
+            SimpleUtils.fail("Availability Weekly View ise not displayed", true);
+        }
+        if(isElementEnabled(getLastWeekArrow, 5) && isElementEnabled(getNextWeekArrow, 5)) {
+            click(getLastWeekArrow);
+            click(getNextWeekArrow);
+            SimpleUtils.pass("Go to last week and next week arrow buttons are clickable ");
+        }else{
+            SimpleUtils.fail("Go to last week and next week arrow buttons are not clickable ", true);
+        }
+
+    }
+
+
+    @Override
+    public void verifyChangeRoleFunctionality() throws Exception {
+
+        if (validateVariousWorkRolePrompt()) {
+            SimpleUtils.pass("various work role any one of them can be selected");
+        }else
+            SimpleUtils.fail("various work load failed",true);
+    }
+
+
+    @Override
+    public void deleteTMShiftInWeekView(String teamMemberName) throws Exception {
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            for (WebElement shiftWeekView : shiftsWeekView) {
+                try {
+                    WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                    if (workerName != null) {
+                        if (workerName.getText().toLowerCase().trim().contains(teamMemberName.toLowerCase().trim())) {
+                            WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
+                            //WebElement image = shiftWeekView.findElement(By.cssSelector(".sch-day-view-shift-worker-detail"));
+                            clickTheElement(image);
+                            waitForSeconds(3);
+                            if (isElementLoaded(deleteShift, 10)) {
+                                clickTheElement(deleteShift);
+                                waitForSeconds(4);
+                                if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
+                                    clickTheElement(deleteBtnInDeleteWindows);
+                                    SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
+                                    waitForSeconds(1);
+                                } else
+                                    SimpleUtils.fail("delete confirm button load failed", false);
+                            } else
+                                SimpleUtils.fail("delete item for this TM load failed", false);
+                        }
+                    }
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        }else
+            SimpleUtils.report("Schedule Week View: shifts load failed or there is no shift in this week");
+    }
+
+
+    @FindBy(css = "tr.table-row.ng-scope:nth-child(1)")
+    private WebElement firstTableRow;
+
+    @FindBy(css = "tr.table-row.ng-scope:nth-child(1) > td > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)")
+    private WebElement firstnameOfTM;
+    @FindBy(css = "tr.table-row.ng-scope:nth-child(1) > td > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)")
+    private WebElement lastInitialOfTM;
+
+    private String strNameOfTM ;//= firstnameOfTM+" "+lastInitialOfTM;
+
+    @FindBy(css = "tr.table-row.ng-scope:nth-child(1) > td:nth-child(4)>div")
+    private WebElement rdBtnFirstInList;
+
+    @FindBy(css = "span.sch-worker-h-view-last-initial")
+    private WebElement nameLastIntial;
+
+    @FindBy(css = "span.sch-worker-h-view-display-name")
+    private WebElement nameDisplayName;
+
+    @FindBy(css = "input.form-control.tma-search-field-input-text")
+    private   WebElement textInputBoxOnAssignTM;
+
+    @FindBy(xpath ="//button[contains(@ng-class,'assignActionClass()')]")
+    private WebElement btnAssign;
+    @FindBy(xpath ="//i[contains(@ng-click,'searchAction()')]")
+    private WebElement btnSearch;
+
+    @FindBy(css = "div.lgn-modal-small-title")
+    private WebElement titleOfConvertToOpenShiftPopup;
+
+    @FindBy(css = "div.lgn-modal-small-description")
+    private WebElement descriptionOfConvertToOpenShiftPopup;
+
+    @FindBy(css = "button.sch-action.sch-cancel")
+    private WebElement btnCancelOpenSchedule;
+
+    @FindBy(css ="div.tma-open-shift-manual.ml-10")
+    private WebElement textOfManualOpenShift;
+
+    public boolean verifyConvertToOpenPopUpDisplay(String firstNameOfTM) throws Exception {
+
+        String textOnConvertToOpenPopUp = "Are you sure you want to make this an Open Shift?\n" +
+                firstNameOfTM + " will be losing this shift. Legion will automatically offer the shift to matching team members.\n" +
+                "I want to offer to specific team members";
+        if (isElementLoaded(titleOfConvertToOpenShiftPopup,10) && isElementLoaded(radioBtnManualOpenShift,10)
+                && isElementLoaded(btnCancelOpenSchedule,10) && isElementLoaded(btnYesOpenSchedule,10)
+                && textOnConvertToOpenPopUp.contains(titleOfConvertToOpenShiftPopup.getText().trim())
+                && textOnConvertToOpenPopUp.contains(descriptionOfConvertToOpenShiftPopup.getText().trim())
+                && textOnConvertToOpenPopUp.contains(textOfManualOpenShift.getText().trim())) {
+            SimpleUtils.pass("checkbox is available to offer the shift to any specific TM[optional] Cancel /yes");
+            return true;
+        }else {
+            SimpleUtils.fail("Convert To Open PopUp windows load failed", false);
+        }
+        return false;
+    }
+
+    public void convertToOpenShiftDirectly(){
+        clickTheElement(btnYesOpenSchedule);
+        waitForSeconds(3);
+        SimpleUtils.pass("can convert to open shift by yes button directly");
+
+    }
+
+
+    @FindBy(css = ".worker-edit-availability-status")
+    private WebElement messageForSelectTM;
+    @Override
+    public void verifyMessageIsExpected(String messageExpected) throws Exception {
+        if (isElementLoaded(messageForSelectTM,5)){
+            if (messageForSelectTM.getText()!=null && !messageForSelectTM.getText().equals("") && messageForSelectTM.getText().toLowerCase().contains(messageExpected)){
+                SimpleUtils.pass("There is a message you want to see: "+messageExpected);
+            } else {
+                SimpleUtils.fail("No message you expected! Actual message is "+ messageForSelectTM.getText(), false );
+            }
+        } else {
+            SimpleUtils.fail("message for select TM is not loaded!", false);
+        }
+    }
+
+    @Override
+    public String getAllTheWarningMessageOfTMWhenAssign() throws Exception {
+        String messageOfTMScheduledStatus = "";
+        if (isElementLoaded(messageForSelectTM,5)){
+            messageOfTMScheduledStatus = messageForSelectTM.getText();
+        }
+        return messageOfTMScheduledStatus;
+    }
+
+
+    @FindBy(css = ".modal-dialog.modal-lgn-md")
+    private WebElement dialogWarningModel;
+    @FindBy(css = ".tma-dismiss-button")
+    private WebElement closeSelectTMWindowBtn;
+    @FindBy(css = ".lgn-action-button-success")
+    private WebElement okButton;
+    @FindBy(css = "div.lgn-alert-message")
+    private WebElement alertMessage;
+
+
+    @Override
+    public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
+        String expectedMessageOnWarningModel1 = nickName.toLowerCase()+" is approved for time off";
+        String expectedMessageOnWarningModel2 = "please cancel the approved time off before assigning";
+        waitForSeconds(1);
+        if (isElementLoaded(alertMessage,15)) {
+            String s = alertMessage.getText();
+            if (s.toLowerCase().contains(expectedMessageOnWarningModel1) && s.toLowerCase().contains(expectedMessageOnWarningModel2)
+                    && isElementLoaded(okButton,5) && okButton.getText().equalsIgnoreCase("OK")){
+                waitForSeconds(1);
+                clickTheElement(okButton);
+                SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
+                if (isElementLoaded(closeSelectTMWindowBtn,5)){
+                    click(closeSelectTMWindowBtn);
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no warning model and warning message!", false);
+        }
+    }
+
+    @FindBy (className = "worker-edit-availability-status")
+    private WebElement messageInSelectTeamMemberWindow;
+
+    @FindBy (css = "[ng-repeat=\"worker in searchResults\"] .tma-staffing-option-outer-circle")
+    private WebElement optionCircle;
+
+    @FindBy (css = "[ng-click=\"cancelAction()\"]")
+    private WebElement closeButtonOnCustomize;
+
+    @FindBy(css = "[label=\"Cancel\"]")
+    private WebElement scheduleEditModeCancelButton;
+    @Override
+    public void verifyInactiveMessageNWarning(String username, String date) throws Exception {
+        if (messageInSelectTeamMemberWindow.getText().contains("TM is inactive from " + date)) {
+            SimpleUtils.pass("Assign Team Member: 'Inactive' message shows successfully");
+        } else
+            SimpleUtils.fail("Assign Team Member: 'Inactive' message failed to show",false);
+        if (isElementLoaded(optionCircle, 5)) {
+            click(optionCircle);
+            if (isElementLoaded(alertMessage,5)) {
+                if (alertMessage.getText().trim().equals(username + " is inactive starting " + date + ". Please activate the team member before assigning.")) {
+                    SimpleUtils.pass("Assign Team Member: Warning shows correctly");
+                    click(okBtnOnConfirm);
+                    if (optionCircle.findElement(By.className("tma-staffing-option-inner-circle")).getAttribute("class").contains("ng-hide")) {
+                        SimpleUtils.pass("Assign Team Member: Click OK in warning window and nothing changes as expected");
+                        if (isElementLoaded(closeButtonOnCustomize, 5)) {
+                            click(closeButtonOnCustomize);
+                            if (isElementLoaded(scheduleEditModeCancelButton, 10)) {
+                                click(scheduleEditModeCancelButton);
+                            }
+                        }
+                    } else {
+                        SimpleUtils.fail("Assign Team Member: Click OK in warning window, the inactive TM is selected unexpectedly", false);
+                    }
+                } else {
+                    SimpleUtils.fail("Assign Team Member: Warning shows incorrectly", false);
+                }
+            } else {
+                SimpleUtils.fail("Assign Team Member: No warning when assign an inactive TM", false);
+            }
+        }
+    }
+
+    @FindBy(css = "[ng-show=\"hasSearchResults()\"] [ng-repeat=\"worker in searchResults\"]")
+    private List<WebElement> searchResults;
+    @Override
+    public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception {
+        String scheduled = "Scheduled";
+        boolean isWarningShown = false;
+        if (isElementLoaded(textSearch, 15) && isElementLoaded(searchIcon, 15)) {
+            textSearch.sendKeys(userName);
+            clickTheElement(searchIcon);
+            if (areListElementVisible(searchResults, 15)) {
+                for (WebElement searchResult : searchResults) {
+                    WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
+                    WebElement status = searchResult.findElement(By.className("worker-edit-availability-status"));
+                    if (workerName != null && optionCircle != null && workerName.getText().toLowerCase().trim().contains(userName.trim().toLowerCase())) {
+                        if (status.getText().contains(scheduled) && status.getText().contains(shiftTime)) {
+                            SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
+                            isWarningShown = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (!isWarningShown) {
+            SimpleUtils.fail("Assign TM Warning: Expected warning \"" + scheduled + " " + shiftTime + "\" not show!", false);
+        }
+    }
+
+
+    @FindBy(css = "div.tab.ng-scope")
+    private List<WebElement> selectTeamMembersOption;
+    public void switchSearchTMAndRecommendedTMsTab() {
+        if (areListElementVisible(selectTeamMembersOption, 10)) {
+            if (selectTeamMembersOption.get(0).getAttribute("class").contains("select")) {
+                click(selectTeamMembersOption.get(1));
+                SimpleUtils.pass("Recommended TMs tab been selected");
+            } else {
+                click(selectTeamMembersOption.get(0));
+                SimpleUtils.pass("Search Team Members tab been selected");
+            }
+        } else {
+            SimpleUtils.fail("Select Team Member options are not available", false);
+        }
+    }
+
+
+    public void verifyEditShiftTimePopUpDisplay() throws Exception {
+        if (isElementEnabled(editShiftTimePopUp, 5)) {
+            if (isElementEnabled(shiftInfoContainer, 5) && isElementEnabled(shiftStartAndEndTimeContainer, 5)
+                    && isElementEnabled(cancelButtonInEditShiftTimeWindow, 5) && isElementEnabled(updateButtonInEditShiftTimeWindow, 5)) {
+                SimpleUtils.pass("Edit Shift Time PopUp window load successfully");
+            } else {
+                SimpleUtils.fail("Items in Edit Shift Time PopUp window load failed", false);
+            }
+        } else {
+            SimpleUtils.fail("Edit Shift Time PopUp window load failed", false);
+        }
+    }
+
+
+    @FindBy(css = "div.tma-scroll-table tr")
+    private List<WebElement> numberOfOffersMade;
+    @Override
+    public void verifyListOfOfferNotNull() throws Exception {
+        if (areListElementVisible(numberOfOffersMade,20)){
+            SimpleUtils.pass("There is a offer list which is not null!");
+        } else {
+            SimpleUtils.fail("The offer list is null!",false);
+        }
+    }
+
+
+    @FindBy(css = "[search-results=\"workerSearchResult\"] [ng-class=\"swapStatusClass(worker)\"]")
+    private WebElement tmScheduledStatus;
+
+    @Override
+    public String getTheMessageOfTMScheduledStatus() throws Exception {
+        String messageOfTMScheduledStatus = "";
+        if (isElementLoaded(tmScheduledStatus,5)){
+            if (tmScheduledStatus.getText()!=null && !tmScheduledStatus.getText().equals("")){
+                messageOfTMScheduledStatus = tmScheduledStatus.getText();
+                SimpleUtils.pass("TM scheduled status display as : "+ messageOfTMScheduledStatus);
+            } else {
+                SimpleUtils.fail("TM scheduled status message is empty ", false );
+            }
+        } else {
+            SimpleUtils.fail("TM scheduled status is not loaded!", false);
+        }
+        return messageOfTMScheduledStatus;
+    }
+
+
+    @Override
+    public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception {
+        String expectedMessageOnWarningModel = "cannot be assigned because the schedule has not been published yet at the home location";
+        if (isElementLoaded(alertMessage,15)) {
+            String s = alertMessage.getText();
+            if (s.toLowerCase().contains(expectedMessageOnWarningModel)
+                    && isElementLoaded(okButton,5)){
+                click(okButton);
+                SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
+                if (isElementLoaded(closeSelectTMWindowBtn,5)){
+                    click(closeSelectTMWindowBtn);
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no warning model and warning message!", false);
+        }
+    }
+
+    @FindBy(css=".tma-table")
+    private WebElement TMResultsTable;
+    @Override
+    public void verifyTMNotSelected() throws Exception {
+        if (isElementLoaded(TMResultsTable,10)){
+            if (TMResultsTable.findElements(By.cssSelector(".tma-staffing-option-inner-circle")).size()>0
+                    && TMResultsTable.findElements(By.cssSelector(".tma-staffing-option-inner-circle")).get(0).getAttribute("class").contains("ng-hide")){
+                SimpleUtils.pass("TM is not selected!");
+            } else {
+                SimpleUtils.fail("TM is selected!",false);
+            }
+        }
+    }
+
+    @Override
+    public void clickOnRadioButtonOfSearchedTeamMemberByName(String name) throws Exception {
+        if (areListElementVisible(searchResults, 15)) {
+            for (WebElement searchResult : searchResults) {
+                WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
+                WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
+                if (workerName != null && optionCircle != null) {
+                    if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.trim().toLowerCase())) {
+                        click(optionCircle);
+                        SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                    }
+                }else {
+                    SimpleUtils.fail("Worker name or option circle not loaded Successfully!", false);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Failed to find the team member!", false);
+        }
+
+
+    }
+
+
+    @FindBy(css = "button.lgn-action-button-success")
+    private WebElement btnAssignAnyway;
+    @Override
+    public void clickOnAssignAnywayButton() throws Exception {
+        waitForSeconds(2);
+        if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().equalsIgnoreCase("ASSIGN ANYWAY")) {
+            click(btnAssignAnyway);
+            SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+        } else{
+            SimpleUtils.fail("Assign Team Member: 'ASSIGN ANYWAY' button fail to load!", false);
+        }
+    }
+
+
+    @Override
+    public void verifyAlertMessageIsExpected(String messageExpected) throws Exception {
+        if (isElementLoaded(alertMessage,5)){
+            if (alertMessage.getText() != null && !alertMessage.getText().equals("") && alertMessage.getText().contains(messageExpected)){
+                SimpleUtils.pass("There is the message you want to see: " + messageExpected);
+            } else {
+                SimpleUtils.fail("No message you expected! Actual message is " + alertMessage.getText(), false );
+            }
+        } else {
+            SimpleUtils.fail("The alert message for selecting TM failed to loaded", false);
+        }
+    }
+
+
+    @Override
+    public boolean verifyWFSFunction() {
+        if (searchResults.size()!=0) {
+            SimpleUtils.pass("Can search team members in Workforce sharing group");
+            return true;
+        }else
+            SimpleUtils.fail("Workforce Sharing function work wrong",false);
+        return false;
+    }
+
+    @Override
+    public void deleteAllShiftsInWeekView() throws Exception {
+
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            for (WebElement shiftWeekView : shiftsWeekView) {
+                WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
+                clickTheElement(image);
+                waitForSeconds(3);
+                if (isElementLoaded(deleteShift, 5)) {
+                    clickTheElement(deleteShift);
+                    if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
+                        click(deleteBtnInDeleteWindows);
+                        SimpleUtils.pass("Schedule Week View: OOOH shift been deleted successfully");
+                    } else
+                        SimpleUtils.fail("delete confirm button load failed", false);
+                } else
+                    SimpleUtils.fail("delete item for this OOOH shift load failed", false);
+            }
+        }else
+            SimpleUtils.report("Schedule Week View: there is no shifts or Action Required smart card in this week");
+    }
+
+    @Override
+    public void clickOnOfferTMOption() throws Exception{
+        if(isElementLoaded(OfferTMS,5)) {
+            clickTheElement(OfferTMS);
+            SimpleUtils.pass("Clicked on Offer Team Members ");
+        } else {
+            SimpleUtils.fail("Offer Team Members is disabled or not available to Click ", false);
+        }
+    }
+
+
+    @FindBy(css = "div.tma-scroll-table tr")
+    private List<WebElement> recommendedScrollTable;
+    @Override
+    public void verifyRecommendedTableHasTM() throws Exception{
+        if (areListElementVisible(recommendedScrollTable, 15)){
+            SimpleUtils.pass("There is a recommended list!");
+        } else {
+            SimpleUtils.fail("No recommended team members!", false);
+        }
+    }
+
+    @Override
+    public void verifyTMInTheOfferList(String firstName, String expectedStatus) throws Exception{
+        boolean flag = false;
+        if (areListElementVisible(numberOfOffersMade,20)){
+            for (WebElement element: numberOfOffersMade){
+                if (element.getText().toLowerCase().contains(firstName.toLowerCase()) && element.getText().toLowerCase().contains(expectedStatus.toLowerCase())){
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag){
+                SimpleUtils.pass(firstName + " is in the offered list!");
+            } else {
+                SimpleUtils.fail(firstName + " is not in the offered list!", false);
+            }
+        } else {
+            SimpleUtils.fail("The offer list is null!",false);
+        }
+    }
+
+
+    @FindBy(css = ".modal-dialog .sch-day-view-shift-outer")
+    private WebElement shiftInViewStatusWindow;
+    @Override
+    public String getViewStatusShiftsInfo() throws Exception {
+        String result = "";
+        if (isElementLoaded(shiftInViewStatusWindow, 5)) {
+            result = shiftInViewStatusWindow.getAttribute("innerText");
+        }
+        return result;
+    }
+
+    @FindBy(css = "div.noUi-value-large")
+    private List<WebElement> startAndEndTimeOnEditShiftPage;
+
+    @Override
+    public List<String> getStartAndEndOperatingHrsOnEditShiftPage() throws Exception {
+        List<String> startAndEndOperatingHrs = new ArrayList<>();
+        if (areListElementVisible(startAndEndTimeOnEditShiftPage, 15)) {
+            for (WebElement operatingHour : startAndEndTimeOnEditShiftPage) {
+                startAndEndOperatingHrs.add(operatingHour.getText());
+            }
+        } else
+            SimpleUtils.fail("The operating hours on edit shift page fail to load! ", false);
+        return startAndEndOperatingHrs;
+    }
+
+
+    @Override
+    public HashMap<String, String> getMealAndRestBreaksTime() throws Exception {
+        HashMap<String, String> mealAndRestBreaksTime = new HashMap<String, String>();
+        if (isElementEnabled(editMealBreakTitle,5)) {
+            for (WebElement mealBreakTime:mealBreakTimes){
+                String mealTime = mealBreakTime.getText().trim();
+                mealAndRestBreaksTime.put("Meal Break",mealTime);
+            }
+            for (WebElement restBreakTime:restBreakTimes){
+                String restTime = restBreakTime.getText().trim();
+                mealAndRestBreaksTime.put("Rest Break",restTime);
+            }
+        }else
+            SimpleUtils.report("Breaks edit page don't display");
+        return mealAndRestBreaksTime;
+    }
+
+
+    // Added by Nora
+    @FindBy (css = ".sch-worker-action")
+    private List<WebElement> shiftOptions;
+
+    /***
+     * Verify specific option is enabled on shift menu when clicking the avatar of the shift
+     * @param optionName - The name of the option
+     * @throws Exception
+     */
+    @Override
+    public void verifySpecificOptionEnabledOnShiftMenu(String optionName) throws Exception {
+        try {
+            boolean isEnabled = false;
+            if (areListElementVisible(shiftOptions, 15) && shiftOptions.size() > 0) {
+                for (WebElement option : shiftOptions) {
+                    if (option.getText().equalsIgnoreCase(optionName) && !option.getAttribute("class").contains("graded-out")) {
+                        isEnabled = true;
+                    }
+                }
+            }
+            SimpleUtils.assertOnFail("Shift option: " + optionName + " isn't enabled!", isEnabled,false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public void verifyShiftInfoIsCorrectOnMealBreakPopUp(List<String> expectedShiftInfo) throws Exception {
+        try {
+            if (isElementLoaded(shiftInfoContainer, 10)) {
+                String actualShiftInfo = shiftInfoContainer.getText();
+                if (actualShiftInfo.contains(expectedShiftInfo.get(0)) && actualShiftInfo.contains(expectedShiftInfo.get(3)) &&
+                        actualShiftInfo.contains(expectedShiftInfo.get(4)) && actualShiftInfo.contains(expectedShiftInfo.get(2))) {
+                    SimpleUtils.pass("Shift info on the Meal Break pop up is correct!");
+                } else {
+                    SimpleUtils.fail("Shift info on the Meal Break pop up is correct!", false);
+                }
+            } else {
+                SimpleUtils.fail("Shift container failed to load on meal break pop up!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Override
+    public void verifyMealBreakAndRestBreakArePlacedCorrectly() throws Exception {
+        try {
+            if (areListElementVisible(restBreakTimes, 5)) {
+                if (areListElementVisible(restBreakDurations, 5) && restBreakDurations.size() == restBreakTimes.size()) {
+                    SimpleUtils.pass("Rest breaks are shown!");
+                } else {
+                    SimpleUtils.fail("Rest breaks show incorrectly!", false);
+                }
+            }
+            if (areListElementVisible(mealBreakTimes, 5)) {
+                if (areListElementVisible(mealBreakDurations, 5) && mealBreakDurations.size() == mealBreakTimes.size()) {
+                    SimpleUtils.pass("Meal breaks are shown!");
+                } else {
+                    SimpleUtils.fail("Meal breaks show incorrectly!", false);
+                }
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
+    }
+
+    @Override
+    public void verifySpecificShiftHaveEditIcon(int index) throws Exception {
+        if (areListElementVisible(shiftsWeekView, 5) && shiftsWeekView.size() > index) {
+            try {
+                if (isElementLoaded(shiftsWeekView.get(index).findElement(By.cssSelector("[src*=edited-shift-week]")))) {
+                    SimpleUtils.pass("The shift with index: " + index + " has edited - pencil icon!");
+                } else {
+                    SimpleUtils.fail("The shift with index: " + index + " doesn't have edited - pencil icon!", false);
+                }
+            } catch (Exception e) {
+                SimpleUtils.fail("The shift with index: " + index + " doesn't have edited - pencil icon!", false);
+            }
+        } else {
+            SimpleUtils.fail("Week view shifts failed to load!", false);
+        }
+    }
+
+
+    @Override
+    public void verifyBreakTimesAreUpdated(List<String> expectedBreakTimes) throws Exception {
+        int count = 0;
+        if (areListElementVisible(mealBreakTimes, 5) && areListElementVisible(restBreakTimes, 5)) {
+            for (WebElement meal : mealBreakTimes) {
+                if (expectedBreakTimes.contains(meal.getText())) {
+                    count = count + 1;
+                }
+            }
+            for (WebElement rest : restBreakTimes) {
+                if (expectedBreakTimes.contains(rest.getText())) {
+                    count = count + 1;
+                }
+            }
+            if (count == expectedBreakTimes.size()) {
+                SimpleUtils.pass("Meal and rest break times are updated successfully!");
+            } else {
+                SimpleUtils.fail("Meal and rest break times are not updated successfully!", false);
+            }
+        } else {
+            SimpleUtils.fail("Meal and rest break times are not updated successfully!", false);
+        }
+    }
+
+
+    @FindBy(css = "div.modal-dialog div.edit-shift-notes")
+    private WebElement EditShiftNotesDialog;
+
+    @Override
+    public void verifyShiftNotesContent(String shiftNotes){
+        if (isElementEnabled(EditShiftNotesDialog, 10)){
+            //verify dialog title.
+            if (EditShiftNotesDialog.findElement(By.cssSelector("div.modal-instance-header-title")).getText().equalsIgnoreCase("Edit Shift Notes")){
+                SimpleUtils.pass("Edit shift notes dialog title is correct!");
+            } else {
+                SimpleUtils.fail("Edit shift notes dialog title is incorrect!", false);
+            }
+            //verify placeholder.
+            if (EditShiftNotesDialog.findElement(By.cssSelector("textarea")).getAttribute("placeholder").equalsIgnoreCase("Add note (Optional)")){
+                SimpleUtils.pass("Shift notes placeholder is expected!");
+            } else {
+                SimpleUtils.fail("Shift notes placeholder is incorrect!", false);
+            }
+            //verify shift notes content.
+            if (EditShiftNotesDialog.findElement(By.cssSelector("textarea")).getAttribute("value").equalsIgnoreCase(shiftNotes)){
+                SimpleUtils.pass("Shift notes is not expected!");
+            } else {
+                SimpleUtils.fail("Shift notes is not expected!", false);
+            }
+        } else {
+            SimpleUtils.fail("Edit shift notes dialog is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void addShiftNotesToTextarea(String notes){
+        if (isElementEnabled(EditShiftNotesDialog.findElement(By.cssSelector("textarea")), 10)){
+            EditShiftNotesDialog.findElement(By.cssSelector("textarea")).clear();
+            EditShiftNotesDialog.findElement(By.cssSelector("textarea")).sendKeys(notes);
+            clickOnSaveBtnOnEditShiftNotesDialog();
+        } else {
+            SimpleUtils.fail("Edit shift notes dialog is not loaded!", false);
+        }
+    }
+
+    public void clickOnSaveBtnOnEditShiftNotesDialog(){
+        if (isElementEnabled(EditShiftNotesDialog.findElement(By.cssSelector("div.confirm")), 10)){
+            clickTheElement(EditShiftNotesDialog.findElement(By.cssSelector("div.confirm")));
+            SimpleUtils.pass("Update button is clicked!");
+        } else {
+            SimpleUtils.fail("Edit shift notes dialog is not loaded!", false);
+        }
+    }
+
+    @Override
+    public String getShiftInfoInEditShiftDialog() throws Exception {
+        if (isElementEnabled(EditShiftNotesDialog.findElement(By.cssSelector(".sch-day-view-shift-outer")), 10)){
+            return EditShiftNotesDialog.findElement(By.cssSelector(".sch-day-view-shift-outer .left-shift-box")).getText()+EditShiftNotesDialog.findElement(By.cssSelector(".sch-day-view-shift-outer .right-shift-box")).getText();
+        }
+        return null;
+    }
+
+    @FindBy(css = "div[ng-class*='EditShiftNotes']")
+    private WebElement EditShiftNotes;
+    @Override
+    public void clickOnEditShiftNotesOption() throws Exception {
+        if(isElementLoaded(EditShiftNotes,5)) {
+            clickTheElement(EditShiftNotes);
+            SimpleUtils.pass("Clicked on EditShiftNotes option ");
+        } else {
+            SimpleUtils.fail("EditShiftNotes is disabled or not available to Click ", false);
+        }
+    }
 }
+

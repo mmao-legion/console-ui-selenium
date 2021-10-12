@@ -3,10 +3,12 @@ package com.legion.pages.core;
 import com.legion.pages.BasePage;
 import com.legion.pages.ToggleSummaryPage;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -136,9 +138,6 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
                     + getActiveWeekText() + "'.", false);
     }
 
-
-
-
     @FindBy(css = "div[ng-if=\"showSummaryView\"]")
     private WebElement summaryViewDiv;
 
@@ -147,5 +146,160 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
         if (isElementLoaded(summaryViewDiv))
             return true;
         return false;
+    }
+
+    // Added by Nora: For non dg flow create schedule
+    @FindBy (className = "generate-modal-subheader-title")
+    private WebElement generateModalTitle;
+    @FindBy (css = "[ng-click=\"next()\"]")
+    private WebElement nextButtonOnCreateSchedule;
+    @FindBy (className = "generate-modal-week-container")
+    private List<WebElement> availableCopyWeeks;
+    @FindBy (css = "generate-modal-operating-hours-step [label=\"Edit\"]")
+    private WebElement operatingHoursEditBtn;
+    @FindBy (css = ".operating-hours-day-list-item.ng-scope")
+    private List<WebElement> operatingHoursDayLists;
+    @FindBy (css = "generate-modal-budget-step [label=\"Edit\"]")
+    private WebElement editBudgetBtn;
+    @FindBy (css = "generate-modal-budget-step [ng-repeat=\"r in summary.staffingGuidance.roleHours\"]")
+    private List<WebElement> roleHoursRows;
+    @FindBy (className = "sch-calendar-day-dimension")
+    private List<WebElement> weekDayDimensions;
+    @FindBy (css = "tbody tr")
+    private List<WebElement> smartCardRows;
+    @FindBy (css = ".generate-modal-week")
+    private List<WebElement> createModalWeeks;
+    @FindBy (css = ".holiday-text")
+    private WebElement storeClosedText;
+    @FindBy (css = "[ng-repeat*=\"summary.workingHours\"]")
+    private List<WebElement> summaryWorkingHoursRows;
+    @FindBy (css = "span.loading-icon.ng-scope")
+    private WebElement loadingIcon;
+    @FindBy (css = ".operating-hours-day-list-item.ng-scope")
+    private List<WebElement> currentOperatingHours;
+
+
+    @Override
+    public void verifyClosedDaysInToggleSummaryView(List<String> weekDaysToClose) throws Exception {
+        if (areListElementVisible(summaryWorkingHoursRows, 15) && summaryWorkingHoursRows.size() == 7) {
+            for (WebElement row : summaryWorkingHoursRows) {
+                List<WebElement> tds = row.findElements(By.tagName("td"));
+                if (tds != null && tds.size() == 2) {
+                    if (weekDaysToClose.contains(tds.get(0).getText())) {
+                        if (tds.get(1).getText().equals("Closed")) {
+                            SimpleUtils.pass("Verfied " + tds.get(0).getText() + " is \"Closed\"");
+                        } else {
+                            SimpleUtils.fail("Verified " + tds.get(0).getText() + " is not \"Closed\"", false);
+                        }
+                    }
+                } else {
+                    SimpleUtils.fail("Summary Operating Hours: Failed to find two td elements!", false);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Summary Operating Hours rows not loaded Successfully!", false);
+        }
+    }
+
+    @FindBy(css = "[ng-if=\"isGenerateOverview()\"] h1")
+    private WebElement weekInfoBeforeCreateSchedule;
+    @Override
+    public String getWeekInfoBeforeCreateSchedule() throws Exception {
+        String weekInfo = "";
+        if (isElementLoaded(weekInfoBeforeCreateSchedule,10)){
+            weekInfo = weekInfoBeforeCreateSchedule.getText().trim();
+            if (weekInfo.contains("Week")) {
+                weekInfo = weekInfo.substring(weekInfo.indexOf("Week"));
+            }
+        }
+        return weekInfo;
+    }
+
+    @FindBy (css = ".text-right[ng-if=\"hasBudget\"]")
+    private List<WebElement> budgetedHoursOnSTAFF;
+
+    @FindBy (xpath = "//div[contains(text(), \"Weekly Budget\")]/following-sibling::h1[1]")
+    private WebElement budgetHoursOnWeeklyBudget;
+    @Override
+    public List<String> getBudgetedHoursOnSTAFF() throws Exception {
+        List<String> budgetedHours = new ArrayList<>();
+        if (areListElementVisible(budgetedHoursOnSTAFF,10)) {
+            for (WebElement e : budgetedHoursOnSTAFF) {
+                budgetedHours.add(e.getText().trim());
+            }
+        } else
+            SimpleUtils.fail("Budgeted Hours On STAFF failed to load",true);
+        return budgetedHours;
+    }
+
+    @Override
+    public String getBudgetOnWeeklyBudget() throws Exception {
+        String budgetOnWeeklyBudget = "";
+        if (budgetHoursOnWeeklyBudget.getText().contains(" ")) {
+            budgetOnWeeklyBudget = budgetHoursOnWeeklyBudget.getText().split(" ")[0];
+        }
+        return budgetOnWeeklyBudget;
+    }
+
+
+    @FindBy(css = ".generate-schedule-staffing tr:not([ng-repeat]) th[class=\"text-right ng-binding\"]")
+    private WebElement staffingGuidanceHrs;
+    @Override
+    public float getStaffingGuidanceHrs() throws Exception {
+        float staffingGuidanceHours = 0;
+        if (isElementLoaded(staffingGuidanceHrs,20) && SimpleUtils.isNumeric(staffingGuidanceHrs.getText().replace("\n",""))){
+            staffingGuidanceHours = Float.parseFloat(staffingGuidanceHrs.getText().replace("\n",""));
+        } else {
+            SimpleUtils.fail("There is no Staffing guidance hours!", false);
+        }
+        return staffingGuidanceHours;
+    }
+
+
+    @FindBy(css = ".schedule-summary-search-dropdown [icon*=\"search.svg'\"]")
+    private WebElement searchLocationBtn;
+    @Override
+    public boolean isLocationGroup() {
+        try {
+            if (isElementLoaded(searchLocationBtn, 10)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    //added by Haya
+    @FindBy (css = "div.generate-schedule-stats")
+    private WebElement scheduleSummary;
+    @Override
+    public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception {
+        if (isElementLoaded(scheduleSummary) && isElementLoaded(scheduleSummary.findElement(By.cssSelector("div[ng-class=\"hideItem('projected.sales')\"] table")))){
+            List<WebElement> dayInSummary = scheduleSummary.findElements(By.cssSelector("div[ng-class=\"hideItem('projected.sales')\"] tr[ng-repeat=\"day in summary.workingHours\"]"));
+            for (WebElement e : dayInSummary){
+                if (e.getText().contains(day) && e.getText().contains(getTimeFormat(startTime)) && e.getText().contains(getTimeFormat(endTime))){
+                    SimpleUtils.pass("Operating Hours is consistent with setting!");
+                }
+            }
+        } else {
+            SimpleUtils.fail("schedule summary fail to load!", false);
+        }
+    }
+
+
+    //added by Haya. 09:00AM-->9am
+    private String getTimeFormat(String time) throws Exception{
+        String result = time.substring(0,2);
+        if (time.contains("AM") | time.contains("am")){
+            result = result.concat("am");
+        } else {
+            result = result.concat("pm");
+        }
+        if (result.indexOf("0")==0){
+            result = result.substring(1);
+        }
+        return result;
     }
 }
