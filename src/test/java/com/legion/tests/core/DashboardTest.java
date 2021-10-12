@@ -132,7 +132,7 @@ public class DashboardTest extends TestBase{
 				schedulePage = dashboardPage.goToTodayForNewUI();
 				scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 				fourShifts = scheduleShiftTablePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
-				schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
+				scheduleShiftTablePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
 			} else {
 				SimpleUtils.fail("Shifts failed to load on Dashboard when the schedule is published!", true);
 			}

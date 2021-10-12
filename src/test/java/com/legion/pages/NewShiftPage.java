@@ -38,4 +38,13 @@ public interface NewShiftPage {
     public void selectTeamMembersOptionForSchedule() throws Exception;
     public void selectTeamMembersOptionForOverlappingSchedule() throws Exception;
     public boolean displayAlertPopUp() throws Exception;
+    public void selectDaysFromCurrentDay(String currentDay) throws Exception;
+    public String getTimeDurationWhenCreateNewShift() throws Exception;
+    public void selectSpecificWorkDay(int dayCountInOneWeek);
+    public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
+    public void selectWeekDaysByDayName(String dayName) throws Exception;
+    public List<String> getAllOperatingHrsOnCreateShiftPage() throws Exception;
+    public void clickOnCloseButtonOnCustomizeShiftPage() throws Exception;
+    public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception;
+    public void closeCustomizeNewShiftWindow() throws Exception;
 }

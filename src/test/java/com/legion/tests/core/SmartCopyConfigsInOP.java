@@ -123,7 +123,7 @@ public class SmartCopyConfigsInOP extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
 
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
@@ -132,8 +132,8 @@ public class SmartCopyConfigsInOP extends TestBase {
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.clickNextBtnOnCreateScheduleWindow();
             createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
-            //SimpleUtils.assertOnFail("Partial copy option should not load!", !schedulePage.isPartialCopyOptionLoaded(), false);
-            schedulePage.clickBackBtnAndExitCreateScheduleWindow();
+            //SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isPartialCopyOptionLoaded(), false);
+            createSchedulePage.clickBackBtnAndExitCreateScheduleWindow();
 
             //Go to OP to turn on partial copy.
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -163,7 +163,7 @@ public class SmartCopyConfigsInOP extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -171,8 +171,8 @@ public class SmartCopyConfigsInOP extends TestBase {
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.clickNextBtnOnCreateScheduleWindow();
             createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
-            SimpleUtils.assertOnFail("Partial copy option should load!", schedulePage.isPartialCopyOptionLoaded(), false);
-            schedulePage.clickBackBtnAndExitCreateScheduleWindow();
+            SimpleUtils.assertOnFail("Partial copy option should load!", createSchedulePage.isPartialCopyOptionLoaded(), false);
+            createSchedulePage.clickBackBtnAndExitCreateScheduleWindow();
 
             //Go to OP to turn off Full copy and Partial copy.
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -203,7 +203,7 @@ public class SmartCopyConfigsInOP extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -211,8 +211,8 @@ public class SmartCopyConfigsInOP extends TestBase {
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.clickNextBtnOnCreateScheduleWindow();
             createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
-            SimpleUtils.assertOnFail("Partial copy option should not load!", !schedulePage.isCopyScheduleWindow(), false);
-            schedulePage.clickBackBtnAndExitCreateScheduleWindow();
+            SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isCopyScheduleWindow(), false);
+            createSchedulePage.clickBackBtnAndExitCreateScheduleWindow();
 
             //Go to OP to turn on Full copy and turn off Partial copy.
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -243,7 +243,7 @@ public class SmartCopyConfigsInOP extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -251,8 +251,8 @@ public class SmartCopyConfigsInOP extends TestBase {
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.clickNextBtnOnCreateScheduleWindow();
             createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
-            SimpleUtils.assertOnFail("Partial copy option should not load!", !schedulePage.isCopyScheduleWindow(), false);
-            schedulePage.clickBackBtnAndExitCreateScheduleWindow();
+            SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isCopyScheduleWindow(), false);
+            createSchedulePage.clickBackBtnAndExitCreateScheduleWindow();
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

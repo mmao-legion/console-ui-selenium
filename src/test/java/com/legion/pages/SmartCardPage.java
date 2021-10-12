@@ -19,4 +19,24 @@ public interface SmartCardPage {
     public boolean isRequiredActionSmartCardLoaded() throws Exception;
     public void clickOnViewShiftsBtnOnRequiredActionSmartCard() throws Exception;
     public void clickOnClearShiftsBtnOnRequiredActionSmartCard() throws Exception;
+    public boolean verifyRedFlagIsVisible() throws Exception;
+    public boolean verifyComplianceShiftsSmartCardShowing() throws Exception;
+    public void verifyComplianceShiftsShowingInGrid() throws Exception;
+    public void verifyClearFilterFunction() throws Exception;
+    public boolean clickViewShift() throws Exception;
+    public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception;
+    public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception;
+    public boolean isSpecificSmartCardLoaded(String cardName) throws Exception;
+    public int getCountFromSmartCardByName(String cardName) throws Exception;
+    public void clickLinkOnSmartCardByName(String linkName) throws Exception;
+    public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception;
+    public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception;
+    public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception;
+    public String getChangesOnActionRequired() throws Exception;
+    public String getTooltipOfUnpublishedDeleted() throws Exception;
+    public List<String> getHolidaysOfCurrentWeek() throws Exception;
+    public void navigateToTheRightestSmartCard() throws Exception;
+    public boolean isScheduleNotPublishedSmartCardLoaded() throws Exception;
+    public String getWholeMessageFromActionRequiredSmartCard() throws Exception;
+    public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception;
 }

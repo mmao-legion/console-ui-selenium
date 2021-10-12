@@ -194,19 +194,20 @@ public class PrepareSettingsTest extends TestBase {
     }
 
     private void createScheduleForThreeWeeks(SchedulePage schedulePage) throws Exception {
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
-        schedulePage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
         isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
-        schedulePage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
         isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();

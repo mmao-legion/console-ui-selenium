@@ -150,6 +150,7 @@ public class LocationNavigationTest extends TestBase {
     public void verifyChangingDistrictOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
             //Get the upperfield info of current location
@@ -180,9 +181,8 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
 
             //Go to Schedule tab -> Schedule page
@@ -197,7 +197,7 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
 
@@ -213,7 +213,7 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
 
@@ -280,6 +280,7 @@ public class LocationNavigationTest extends TestBase {
 
     private void searchDistrictAndCheckTheUpperFields (Map<String, String> upperFields) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields.get(District));
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
 
@@ -291,7 +292,7 @@ public class LocationNavigationTest extends TestBase {
         //Verify the DM page loaded
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                schedulePage.isScheduleDMView(), false);
+                scheduleDMViewPage.isScheduleDMView(), false);
     }
 
 
@@ -303,6 +304,7 @@ public class LocationNavigationTest extends TestBase {
     public void verifyChangingRegionOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             //Get the upperfield info of current region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -333,9 +335,8 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the district listed
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
 
@@ -349,7 +350,7 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the district listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName2);
 
@@ -364,7 +365,7 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
@@ -427,6 +428,7 @@ public class LocationNavigationTest extends TestBase {
 
     private void searchRegionAndCheckTheUpperFields (Map<String, String> upperFields, String locationName) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields.get(Region));
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
         String bUName = upperFields.get(BusinessUnit);
@@ -441,10 +443,9 @@ public class LocationNavigationTest extends TestBase {
         //Verify the Region page loaded
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         SimpleUtils.assertOnFail("Schedule page Region view not loaded Successfully!",
-                schedulePage.isScheduleDMView(), false);
+                scheduleDMViewPage.isScheduleDMView(), false);
 
         //Verify the district listed
-        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
         locationSelectorPage.changeUpperFieldDirect(District, districtName);
@@ -459,6 +460,7 @@ public class LocationNavigationTest extends TestBase {
     public void verifyChangingBusinessUnitOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
             //Get the upperfield info of current location
@@ -492,9 +494,8 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page BU view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the region listed
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields2.get(Region));
 
 
@@ -510,7 +511,7 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the Region listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields1.get(Region));
 
@@ -526,7 +527,7 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the region listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields2.get(Region));
 
@@ -589,6 +590,7 @@ public class LocationNavigationTest extends TestBase {
 
     private void searchBusinessUnitAndCheckTheUpperFields (Map<String, String> upperFields, String locationName) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields.get(BusinessUnit));
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
         String bUName = upperFields.get(BusinessUnit);
@@ -600,12 +602,10 @@ public class LocationNavigationTest extends TestBase {
                 selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(bUName), false);
 
         //Verify the BU page loaded
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         SimpleUtils.assertOnFail("Schedule page BU view not loaded Successfully!",
-                schedulePage.isScheduleDMView(), false);
+                scheduleDMViewPage.isScheduleDMView(), false);
 
         //Verify the region listed
-        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
         locationSelectorPage.changeUpperFieldDirect(Region, regionName);
         locationSelectorPage.changeUpperFieldDirect(District, districtName);

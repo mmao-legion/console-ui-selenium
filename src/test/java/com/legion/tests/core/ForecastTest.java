@@ -308,7 +308,7 @@ public class ForecastTest extends TestBase{
 			SimpleUtils.assertOnFail("Edited value is not saved!",tooltipInfo.contains(value),false);
 			forecastPage.verifyAndClickEditBtn();
 			forecastPage.verifyLegionPeakShopperFromForecastGraphInWeekView();
-			schedulePage.navigateToNextWeek();
+			scheduleCommonPage.navigateToNextWeek();
 			forecastPage.verifyWarningEditingForecast();
 			forecastPage.verifyAndClickSaveBtn();
 
@@ -620,7 +620,70 @@ public class ForecastTest extends TestBase{
 		forecastPage.clickOnDayPartsFilterButtonUnderLaborTab();
 
 		SimpleUtils.assertOnFail("Insight smart card has no changes!", insightDataBefore.entrySet().containsAll(forecastPage.getInsightDataInShopperWeekView().entrySet()), false);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Validate day parts are available in defined tab of day view")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void validateDayPartsAvailableInDefinedTabOfDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()), false);
+		ForecastPage forecastPage = pageFactory.createForecastPage();
+
+		scheduleCommonPage.clickOnDayView();
+		HashMap<String, Float> insightDataBefore = forecastPage.getInsightDataInShopperWeekView();
+		forecastPage.clickOnFilterButtonUnderDefinedTab();
+		forecastPage.verifyThereAreDayPartsItemsInTheFilter();
+		List<String> dayPartsDefined =  Arrays.asList("Retail Afternoon", "Retail Morning");
+		forecastPage.selectFilterOptionsByText(dayPartsDefined.get(0));
+		forecastPage.clickOnFilterButtonUnderDefinedTab();
+		HashMap<String, Float> insightDataAfter = forecastPage.getInsightDataInShopperWeekView();
+		//SimpleUtils.assertOnFail("Insight smart card has no changes!", !insightDataBefore.entrySet().containsAll(insightDataAfter.entrySet()), false);
 
 
+		forecastPage.clickOnFilterButtonUnderDefinedTab();
+		forecastPage.selectFilterOptionsByText(dayPartsDefined.get(0));
+		forecastPage.clickOnFilterButtonUnderDefinedTab();
+
+		SimpleUtils.assertOnFail("Insight smart card has no changes!", insightDataBefore.entrySet().containsAll(forecastPage.getInsightDataInShopperWeekView().entrySet()), false);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Validate day parts are available in Labor tab of day view")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void validateDayPartsAvailableInLablorTabOfDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()), false);
+		ForecastPage forecastPage = pageFactory.createForecastPage();
+		forecastPage.clickOnLabor();
+		forecastPage.verifyLaborForecastCanLoad();
+
+		scheduleCommonPage.clickOnDayView();
+		HashMap<String, Float> insightDataBefore = forecastPage.getInsightDataInShopperWeekView();
+		forecastPage.clickOnDayPartsFilterButtonUnderLaborTab();
+		List<String> dayPartsDefined =  Arrays.asList("Retail Afternoon", "Retail Morning");
+		forecastPage.selectFilterOptionsByText(dayPartsDefined.get(0));
+		forecastPage.clickOnDayPartsFilterButtonUnderLaborTab();
+		HashMap<String, Float> insightDataAfter = forecastPage.getInsightDataInShopperWeekView();
+		SimpleUtils.assertOnFail("Insight smart card has no changes!", !insightDataBefore.entrySet().containsAll(insightDataAfter.entrySet()), false);
+
+
+		forecastPage.clickOnDayPartsFilterButtonUnderLaborTab();
+		forecastPage.selectFilterOptionsByText(dayPartsDefined.get(0));
+		forecastPage.clickOnDayPartsFilterButtonUnderLaborTab();
+
+		SimpleUtils.assertOnFail("Insight smart card has no changes!", insightDataBefore.entrySet().containsAll(forecastPage.getInsightDataInShopperWeekView().entrySet()), false);
 	}
 }

@@ -140,14 +140,14 @@ public class CinemarkMinorTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated){
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             scheduleCommonPage.navigateDayViewWithDayName("Sat");
-            Map<String, String> dayInfo = schedulePage.getActiveDayInfo();
+            Map<String, String> dayInfo = scheduleCommonPage.getActiveDayInfo();
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -357,6 +357,8 @@ public class CinemarkMinorTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            AnalyzePage analyzePage = pageFactory.createAnalyzePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -383,18 +385,18 @@ public class CinemarkMinorTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
 
             // Get the current holiday information if have
             String holidaySmartCard = "HOLIDAYS";
             List<String> holidays = null;
-            if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)) {
-                schedulePage.navigateToTheRightestSmartCard();
-                schedulePage.clickLinkOnSmartCardByName("View All");
-                holidays = schedulePage.getHolidaysOfCurrentWeek();
+            if (smartCardPage.isSpecificSmartCardLoaded(holidaySmartCard)) {
+                smartCardPage.navigateToTheRightestSmartCard();
+                smartCardPage.clickLinkOnSmartCardByName("View All");
+                holidays = smartCardPage.getHolidaysOfCurrentWeek();
                 // Close popup window
-                schedulePage.closeAnalyzeWindow();
+                analyzePage.closeAnalyzeWindow();
             }
 
             // Ungenerate the schedule if it is created or published
@@ -407,19 +409,19 @@ public class CinemarkMinorTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = shiftOperatePage.getRandomWorkRole();
-            schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
+            shiftOperatePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
-            schedulePage.selectSpecificWorkDay(7);
+            newShiftPage.selectSpecificWorkDay(7);
             newShiftPage.moveSliderAtCertainPoint("10pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("6am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
-            schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(cinemarkMinors.get("Minor14"));
-            schedulePage.clickOnAssignAnywayButton();
+            shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(cinemarkMinors.get("Minor14"));
+            shiftOperatePage.clickOnAssignAnywayButton();
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
 
@@ -429,7 +431,7 @@ public class CinemarkMinorTest extends TestBase {
             if (holidays!= null) {
                 for (int index = 0; index < 5; index ++) {
                     for (String s: holidays) {
-                        if (s.contains(schedulePage.getWeekDayTextByIndex(index)))
+                        if (s.contains(scheduleShiftTablePage.getWeekDayTextByIndex(index)))
                             holidayIndexes.add(index);
                         else
                             weekdayIndexes.add(index);
@@ -439,14 +441,14 @@ public class CinemarkMinorTest extends TestBase {
                 weekdayIndexes.add(0);
 
             // Validate weekday should apply the settings of school day
-            WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(weekdayIndexes.get(0)));
+            WebElement newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(weekdayIndexes.get(0)));
             if (newAddedShift != null && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
                 SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
             else
                 SimpleUtils.fail("Get new added shift failed", false);
 
             // Validate weekend should apply the settings of non school day
-            newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(5));
+            newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(5));
             if (newAddedShift != null && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
                 SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
             else
@@ -455,7 +457,7 @@ public class CinemarkMinorTest extends TestBase {
 
             // Validate holiday should apply the settings of non school day
             if (holidays != null) {
-                newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(holidayIndexes.get(0)));
+                newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(holidayIndexes.get(0)));
                 if (newAddedShift != null) {
                     if (holidayIndexes.size() == 5 && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + nonSchoolWeekMaxScheduleHrs + " hrs"))
                         SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
@@ -760,8 +762,8 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
             // Navigate to a week
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             // create the schedule if not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated){
@@ -769,7 +771,7 @@ public class CinemarkMinorTest extends TestBase {
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = shiftOperatePage.getRandomWorkRole();
-            schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
+            shiftOperatePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(0,0,0);
@@ -778,7 +780,7 @@ public class CinemarkMinorTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchText(cinemarkMinors.get("Minor17"));
-            SimpleUtils.assertOnFail("Minor warning should not work when setting is empty", !schedulePage.getAllTheWarningMessageOfTMWhenAssign().contains("Minor"), false);
+            SimpleUtils.assertOnFail("Minor warning should not work when setting is empty", !shiftOperatePage.getAllTheWarningMessageOfTMWhenAssign().contains("Minor"), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1182,10 +1184,10 @@ public class CinemarkMinorTest extends TestBase {
         scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-        schedulePage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
         if (isSummerWeek){
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
         }
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -1197,7 +1199,7 @@ public class CinemarkMinorTest extends TestBase {
         createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
         scheduleMainPage.saveSchedule();
         if(smartCardPage.isRequiredActionSmartCardLoaded()){
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
@@ -1217,7 +1219,7 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint(shiftTime1.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
         if(!isSummerWeek){
             newShiftPage.clearAllSelectedDays();
-            schedulePage.selectWeekDaysByDayName(selectWeekDayName);
+            newShiftPage.selectWeekDaysByDayName(selectWeekDayName);
         }
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
@@ -1228,42 +1230,42 @@ public class CinemarkMinorTest extends TestBase {
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1+" should be scheduled from "+ scheduleFromToTime;
             String warningMessage2 = "Please confirm that you want to make this change.";
-            String messageInWarningMode = schedulePage.getWarningMessageInDragShiftWarningMode();
+            String messageInWarningMode = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
             if (messageInWarningMode.contains(warningMessage1)&& messageInWarningMode.contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly!");
             } else
                 SimpleUtils.fail("The message in warning mode display incorrectly!  The expected message is :"+
                         warningMessage1 + warningMessage2+" The actual message is : " + messageInWarningMode, false);
-            schedulePage.clickOnAssignAnywayButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
-                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
 
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
 
         //check the compliance smart card
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
-                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
-        schedulePage.clickViewShift();
+                smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
+        smartCardPage.clickViewShift();
         //check the violation in i icon popup of new create shift
-        WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        WebElement newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor hrs "+ scheduleFromToTime), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 
-        schedulePage.clickOnFilterBtn();
-        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-        schedulePage.clickOnFilterBtn();
+        scheduleMainPage.clickOnFilterBtn();
+        scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+        scheduleMainPage.clickOnFilterBtn();
         //Create new shift with shift hours is more than minor setting for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1275,7 +1277,7 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint(shiftTime2.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
         if(!isSummerWeek){
             newShiftPage.clearAllSelectedDays();
-            schedulePage.selectWeekDaysByDayName(selectWeekDayName);
+            newShiftPage.selectWeekDaysByDayName(selectWeekDayName);
         }
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
@@ -1286,39 +1288,39 @@ public class CinemarkMinorTest extends TestBase {
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s daily schedule should not exceed "+ scheduleMaxHours +" hours";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else
                 SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
-            schedulePage.clickOnAssignAnywayButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor daily max "+scheduleMaxHours+" hrs! ",
-                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
 
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
         //check the compliance smart card
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
-                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
-        schedulePage.clickViewShift();
+                smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
+        smartCardPage.clickViewShift();
         //check the violation in i icon popup of new create shift
-        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
         } else
             SimpleUtils.fail("Get new added shift failed", false);
 
-        schedulePage.clickOnFilterBtn();
-        schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-        schedulePage.clickOnFilterBtn();
+        scheduleMainPage.clickOnFilterBtn();
+        scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+        scheduleMainPage.clickOnFilterBtn();
         //Create new shift that not avoid the minor settings for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1330,22 +1332,22 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint(shiftTime3.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
         if(!isSummerWeek){
             newShiftPage.clearAllSelectedDays();
-            schedulePage.selectWeekDaysByDayName(selectWeekDayName);
+            newShiftPage.selectWeekDaysByDayName(selectWeekDayName);
         }
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchText(firstNameOfTM1);
         SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
-                !schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
-        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
+                !shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
+        shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+            String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
             if (!warningMessage.contains("Minor ")){
                 SimpleUtils.pass("There is no minor warning message display on the warning mode when shift is not avoid the minor setting! ");
             } else
                 SimpleUtils.fail("There should no minor warning message display warning mode when shift is not avoid the minor setting! ", false);
-            schedulePage.clickOnAssignAnywayButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.pass("There is no minor warning message display on search TM page shift is not avoid the minor setting! ");
 
@@ -1353,7 +1355,7 @@ public class CinemarkMinorTest extends TestBase {
         scheduleMainPage.saveSchedule();
 
         //check the violation in i icon popup of new create shift
-        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("There should no minor warning message display on the i icon when shift is not avoid the minor setting! ",
                     !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
@@ -1511,6 +1513,8 @@ public class CinemarkMinorTest extends TestBase {
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
         NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1522,14 +1526,14 @@ public class CinemarkMinorTest extends TestBase {
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
         if (isSchoolWeek){
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
         } else if (isNonSchoolWeek){
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
         } else {
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
         }
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -1541,7 +1545,7 @@ public class CinemarkMinorTest extends TestBase {
         createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
         scheduleMainPage.saveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
@@ -1553,7 +1557,7 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint(shiftTime1.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
         newShiftPage.moveSliderAtCertainPoint(shiftTime1.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.clearAllSelectedDays();
-        schedulePage.selectSpecificWorkDay(needCreateShiftsNumber1);
+        newShiftPage.selectSpecificWorkDay(needCreateShiftsNumber1);
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
@@ -1576,28 +1580,28 @@ public class CinemarkMinorTest extends TestBase {
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s weekly schedule should not exceed "+ maxOfDays +" days";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else
                 SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
-            schedulePage.clickOnAssignAnywayButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor weekly max "+maxOfDays+"days! ",
-                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor weekly max "+ maxOfDays+ " days"), false);
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor weekly max "+ maxOfDays+ " days"), false);
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
 
         //check the compliance smart card
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
-                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
-        schedulePage.clickViewShift();
+                smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
+        smartCardPage.clickViewShift();
         //check the violation in i icon popup of new create shift
-        WebElement newAddedShift = schedulePage.getOneDayShiftByName(needCreateShiftsNumber1, firstNameOfTM1).get(0);
+        WebElement newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(needCreateShiftsNumber1, firstNameOfTM1).get(0);
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max "+ maxOfDays+ " days"), false);
@@ -1606,10 +1610,10 @@ public class CinemarkMinorTest extends TestBase {
 
         //to close the i icon popup
         createSchedulePage.publishActiveSchedule();
-        schedulePage.verifyClearFilterFunction();
+        smartCardPage.verifyClearFilterFunction();
         //Create new shift with shift hours is more than minor setting for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1618,7 +1622,7 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint(shiftTime2.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
         newShiftPage.moveSliderAtCertainPoint(shiftTime2.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.clearAllSelectedDays();
-        schedulePage.selectSpecificWorkDay(needCreateShiftsNumber2);
+        newShiftPage.selectSpecificWorkDay(needCreateShiftsNumber2);
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
@@ -1643,27 +1647,27 @@ public class CinemarkMinorTest extends TestBase {
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s weekly schedule should not exceed "+ maxOfScheduleHours +" hours";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else
                 SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
-            schedulePage.clickOnAssignAnywayButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor weekly max "+maxOfScheduleHours+" hrs! ",
-                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor weekly max "+maxOfScheduleHours+" hrs"), false);
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor weekly max "+maxOfScheduleHours+" hrs"), false);
 
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
 
         //check the violation in i icon popup of new create shift
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
-                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
-        schedulePage.clickViewShift();
-        newAddedShift = schedulePage.getOneDayShiftByName(needCreateShiftsNumber2, firstNameOfTM1).get(0);
+                smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
+        smartCardPage.clickViewShift();
+        newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(needCreateShiftsNumber2, firstNameOfTM1).get(0);
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max "+maxOfScheduleHours+" hrs"), false);

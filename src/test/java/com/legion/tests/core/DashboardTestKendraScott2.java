@@ -139,6 +139,9 @@ public class DashboardTestKendraScott2 extends TestBase {
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			String nickName = profileNewUIPage.getNickNameFromProfile();
 
 			//T1838579 Validate the TM accessible tabs.
@@ -170,16 +173,16 @@ public class DashboardTestKendraScott2 extends TestBase {
 			profileNewUIPage.rejectAllTimeOff();
 
 			SchedulePage schedulePageAdmin = pageFactory.createConsoleScheduleNewUIPage();
-			schedulePageAdmin.goToConsoleScheduleAndScheduleSubMenu();
-			schedulePageAdmin.navigateToNextWeek();
+			scheduleCommonPage.goToConsoleScheduleAndScheduleSubMenu();
+			scheduleCommonPage.navigateToNextWeek();
 			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (!isWeekGenerated) {
 				createSchedulePage.createScheduleForNonDGFlowNewUI();
 			}
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			String workRole = shiftOperatePage.getRandomWorkRole();
-			schedulePageAdmin.deleteTMShiftInWeekView(nickName);
-			schedulePageAdmin.deleteTMShiftInWeekView("Unassigned");
+			shiftOperatePage.deleteTMShiftInWeekView(nickName);
+			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.selectWorkRole(workRole);
@@ -191,20 +194,19 @@ public class DashboardTestKendraScott2 extends TestBase {
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
 			createSchedulePage.publishActiveSchedule();
-			List<String> scheduleListAdmin = schedulePageAdmin.getWeekScheduleShiftTimeListOfWeekView(nickName);
+			List<String> scheduleListAdmin = scheduleShiftTablePage.getWeekScheduleShiftTimeListOfWeekView(nickName);
 			loginPage.logOut();
 
 			loginToLegionAndVerifyIsLoginDone(username, password, location);
 			dashboardPage.validateDateAndTimeAfterSelectingDifferentLocation();
 			SchedulePage schedulePageTM = pageFactory.createConsoleScheduleNewUIPage();
-			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-			schedulePageTM.navigateToNextWeek();
+			scheduleCommonPage.navigateToNextWeek();
 			SimpleUtils.assertOnFail("My Schedule page failed to load!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
 			List<String> scheduleListTM = new ArrayList<>();
-			if (schedulePageTM.getShiftHoursFromInfoLayout().size() > 0) {
-				for (String tmShiftTime : schedulePageTM.getShiftHoursFromInfoLayout()) {
+			if (mySchedulePage.getShiftHoursFromInfoLayout().size() > 0) {
+				for (String tmShiftTime : mySchedulePage.getShiftHoursFromInfoLayout()) {
 					tmShiftTime = tmShiftTime.replaceAll(":00", "");
 					scheduleListTM.add(tmShiftTime);
 				}
@@ -339,7 +341,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 			schedulePage = dashboardPage.goToTodayForNewUI();
 			scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 			fourShifts = scheduleShiftTablePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
-			schedulePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
+			scheduleShiftTablePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
 		} else {
 			SimpleUtils.fail("Shifts failed to load on Dashboard when the schedule is published!", false);
 		}
@@ -472,7 +474,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		//Check Schedule overview page is display after click Schedule tab
 		if (userRole.contains("TeamLead") || userRole.contains("TeamMember")) {
-			schedulePage.verifyTMSchedulePanelDisplay();
+			scheduleCommonPage.verifyTMSchedulePanelDisplay();
 		} else {
 			SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
 		}

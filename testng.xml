@@ -152,6 +152,10 @@
                         <include name="verifyFunctionalityOfRefreshAsInternalAdmin"/>
                         <include name="verifyFunctionalityOfRefreshAsStoreManager"/>
                         <include name="validateP2PLaborForecastCanLoadAsInternalAdmin"/>
+                        <include name="validateDayPartsAvailableInDefinedTabOfWeekViewAsInternalAdmin"/>
+                        <include name="validateDayPartsAvailableInLablorTabOfWeekViewAsInternalAdmin"/>
+                        <include name="validateDayPartsAvailableInDefinedTabOfDayViewAsInternalAdmin"/>
+                        <include name="validateDayPartsAvailableInLablorTabOfDayViewAsInternalAdmin"/>
                     </methods>
                 </class>
             </classes>

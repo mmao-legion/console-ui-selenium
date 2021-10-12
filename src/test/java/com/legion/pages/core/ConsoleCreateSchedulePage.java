@@ -5,6 +5,7 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -1273,5 +1274,256 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         } else
             SimpleUtils.report("Republish button loaded fail on schedule page! ");
         return isRepublishButtonLoaded;
+    }
+
+
+    @FindBy(css = "[ng-class=\"{'active': config.partialSchedule}\"]")
+    WebElement partialCopyOption;
+    @Override
+    public boolean isPartialCopyOptionLoaded() throws Exception {
+        if (isElementLoaded(partialCopyOption, 10)){
+            return true;
+        }
+        return false;
+    }
+
+
+    @FindBy(css = "div[ng-click=\"back()\"]")
+    private WebElement backBtnOnCreateScheduleWindow;
+    @Override
+    public void clickBackBtnAndExitCreateScheduleWindow() throws Exception {
+        if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
+            click(backBtnOnCreateScheduleWindow);
+            click(backBtnOnCreateScheduleWindow);
+            if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
+                click(backBtnOnCreateScheduleWindow);
+            }
+        }else {
+            SimpleUtils.fail("Back button on create schedule popup window is not loaded Successfully!", false);
+        }
+    }
+
+    @Override
+    public void clickExitBtnToExitCreateScheduleWindow() throws Exception {
+        if (isElementEnabled(backBtnOnCreateScheduleWindow,10)) {
+            click(backBtnOnCreateScheduleWindow);
+        }else {
+            SimpleUtils.fail("Exit button on create schedule popup window is not loaded Successfully!", false);
+        }
+    }
+
+
+    @FindBy(css = "lg-button[label*=\"ublish\"] span span")
+    private WebElement txtPublishSheduleButton;
+    @Override
+    public void verifyLabelOfPublishBtn(String labelExpected) throws Exception {
+        if (isElementLoaded(txtPublishSheduleButton,5)){
+            if (txtPublishSheduleButton.getText().equals(labelExpected)){
+                SimpleUtils.pass("Label on publish button is correct!");
+            } else {
+                SimpleUtils.fail("Label on publish button is incorrect!",false);
+            }
+        } else {
+            SimpleUtils.fail("publish button fail to load!",false);
+        }
+    }
+
+
+    @FindBy(css = "div[ng-repeat=\"schedule in previousWeeksSchedules\"] div")
+    private List<WebElement> previousWeeks;
+    @FindBy(css = ".schedule-disabled-tooltip")
+    private WebElement scheduleDisabledTooltip;
+    @Override
+    public void verifyPreviousWeekWhenCreateAndCopySchedule(String weekInfo, boolean shouldBeSelected) throws Exception {
+        //Need to prepare 2 previous week to check.
+        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
+            for (WebElement element: previousWeeks){
+                String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
+                if (weekInfo.equalsIgnoreCase(weekDayInfo)){
+                    if (!element.getAttribute("class").contains("disabled")) {
+                        if (shouldBeSelected == !element.findElement(By.cssSelector(".generate-modal-week")).getAttribute("class").contains("disabled")){
+                            SimpleUtils.pass("Should the week:"+weekInfo+" be selected is correct!");
+                        } else {
+                            SimpleUtils.fail("Should the week:"+weekInfo+" be selected is not the expected!", false);
+                        }
+                    } else
+                        SimpleUtils.fail("This week is disbled and cannot be selected! ", false);
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no previous week to copy", false);
+        }
+    }
+
+    @Override
+    public void verifyTooltipForCopyScheduleWeek(String weekInfo) throws Exception {
+        //Need to prepare 2 previous week to check.
+        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
+            for (WebElement element: previousWeeks){
+                String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
+                if (weekInfo.equalsIgnoreCase(weekDayInfo)){
+                    mouseHover(element);
+                    String tooltipText = "Policy: Max. 2 violations and 0% over budget";
+                    if (scheduleDisabledTooltip.getAttribute("style").contains("visible") && tooltipText.equalsIgnoreCase(scheduleDisabledTooltip.getText())){
+                        SimpleUtils.pass("Tooltip is expected!");
+                    } else {
+                        SimpleUtils.fail("Tooltip should display when mouse hover the week!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no previous week to copy", false);
+        }
+    }
+
+
+    @FindBy(css = ".generate-modal-week-violations-different-hours")
+    private WebElement differrentOperatingHoursInfo;
+    @Override
+    public void verifyDifferentOperatingHours(String weekInfo) throws Exception {
+        if (areListElementVisible(previousWeeks, 10) && previousWeeks.size()>=2){
+            for (WebElement element: previousWeeks){
+                String weekDayInfo = element.findElement(By.cssSelector(".generate-modal-week-name")).getText().split("\n")[1];
+                if (weekInfo.equalsIgnoreCase(weekDayInfo)){
+                    String differentOperatingHrsInfo = "*Different operating hours";
+                    if (isElementLoaded(differrentOperatingHoursInfo,5) && differrentOperatingHoursInfo.getText().contains(differentOperatingHrsInfo)){
+                        SimpleUtils.pass("Differrent Operating Hours info is expected!");
+                    } else {
+                        SimpleUtils.fail("Differrent Operating Hours info is not loaded!", false);
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no previous week to copy", false);
+        }
+    }
+
+    public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception {
+        boolean isCreateScheduleBtnLoaded = false;
+        if (isElementLoaded(generateSheduleButton, 4)) {
+            isCreateScheduleBtnLoaded = true;
+            SimpleUtils.report("Create Schedule button loaded successfully on schedule page! ");
+        } else
+            SimpleUtils.report("Create Schedule button loaded fail on schedule page! ");
+        return isCreateScheduleBtnLoaded;
+    }
+
+
+    @FindBy (css = "[ng-click=\"openSearchDropDown()\"]")
+    private WebElement openSearchLocationBoxButton;
+
+    @FindBy (css = "[ng-click=\"closeSearchDropDown()\"]")
+    private WebElement closeSearchLocationBoxButton;
+
+    @FindBy (css = "input[placeholder=\"Search Locations\"]")
+    private WebElement searchLocationOnUngenerateSchedulePage;
+
+    @FindBy (css = "div[class=\"lg-picker-input__wrapper lg-ng-animate\"] .lg-search-options__option-wrapper")
+    private List<WebElement> locationsInLocationSelectorOnUngenerateSchedulePage;
+
+    @FindBy (css = "div.schedule-summary-location-picker span")
+    private WebElement selectedLocationOnUngenerateSchedulePage;
+
+    public void selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(String specificLocationName) throws Exception {
+        if (isElementLoaded(openSearchLocationBoxButton, 60)||(isElementLoaded(closeSearchLocationBoxButton, 60))){
+            if(isElementLoaded(openSearchLocationBoxButton, 5)){
+                click(openSearchLocationBoxButton);
+            }
+            if(isElementLoaded(searchLocationOnUngenerateSchedulePage, 5)){
+                click(searchLocationOnUngenerateSchedulePage);
+            } else
+                SimpleUtils.fail("Ungenerate schedule page: Search locations box fail to open! ", false);
+
+            if(areListElementVisible(locationsInLocationSelectorOnUngenerateSchedulePage, 5)
+                    && locationsInLocationSelectorOnUngenerateSchedulePage.size() >0){
+                String locationName = specificLocationName;
+                if (locationName == null){
+                    int randomLocations = (new Random()).nextInt(locationsInLocationSelectorOnUngenerateSchedulePage.size());
+                    locationName = locationsInLocationSelectorOnUngenerateSchedulePage.get(randomLocations).getText();
+                }
+
+                if(isElementLoaded(searchLocationOnUngenerateSchedulePage, 5)){
+                    searchLocationOnUngenerateSchedulePage.sendKeys(locationName);
+                }
+                waitForSeconds(3);
+                click(locationsInLocationSelectorOnUngenerateSchedulePage.get(0));
+//                if(areListElementVisible(locationsInLocationSelectorOnUngenerateSchedulePage)){
+//
+//                    click(locationsInLocationSelectorOnUngenerateSchedulePage.get(randomLocations));
+//                }
+
+                if(selectedLocationOnUngenerateSchedulePage.getText().equals(locationName)){
+                    SimpleUtils.pass("Ungenerate schedule page: Select locations on Edit Operating hours successfully! ");
+                } else
+                    SimpleUtils.fail("Ungenerate schedule page: Select locations on Edit Operating hours failed! ", false);
+
+            } else
+                SimpleUtils.fail("Ungenerate schedule page: Locations fail to list! ", false);
+        } else
+            SimpleUtils.fail("Ungenerate schedule page: Search location buttons fail to load! ", false);
+    }
+
+
+
+    @FindBy(css = "span[ng-if=\"canEditWorkingHours\"]")
+    private List<WebElement> editOperatingHousButtonOnUngenerateSchedulePage;
+
+    public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception {
+        boolean areEditButtonShown = false;
+        if(areListElementVisible(editOperatingHousButtonOnUngenerateSchedulePage, 10)){
+            areEditButtonShown = true;
+            SimpleUtils.report("Edit operating hours buttons are shown on ungenerate schedule page! ");
+        } else if(isElementLoaded(operatingHoursEditBtn, 5)){
+            areEditButtonShown = true;
+            SimpleUtils.report("Edit operating hours button are shown on create schedule page! ");
+        } else
+            SimpleUtils.report("Edit operating hours buttons are not shown! ");
+        return areEditButtonShown;
+    }
+
+
+    @FindBy(css = ".modal-dialog .lg-picker-input")
+    private WebElement locationInput;
+    @FindBy(css = ".modal-dialog input[placeholder=\"Search Location\"]")
+    private WebElement searchInputForLocationInPopupWindow;
+    @FindBy (css = ".modal-dialog .lg-picker-input__wrapper.lg-ng-animate.ng-hide .input-faked")
+    private WebElement selectedLocationOnCreateScheduleWindow;
+    @Override
+    public void chooseLocationInCreateSchedulePopupWindow(String location) throws Exception{
+        if (isElementLoaded(locationInput, 60)){
+            click(locationInput);
+            if(areListElementVisible(locationsInLocationSelectorOnUngenerateSchedulePage, 5)
+                    && locationsInLocationSelectorOnUngenerateSchedulePage.size() >0){
+                if (location == null){
+                    int randomLocations = (new Random()).nextInt(locationsInLocationSelectorOnUngenerateSchedulePage.size());
+                    location = locationsInLocationSelectorOnUngenerateSchedulePage.get(randomLocations).getText();
+                }
+
+                if(isElementLoaded(searchInputForLocationInPopupWindow, 5)){
+                    searchInputForLocationInPopupWindow.sendKeys(location);
+                }
+                waitForSeconds(3);
+                click(locationsInLocationSelectorOnUngenerateSchedulePage.get(0));
+                Actions actions = new Actions(getDriver());
+                actions.moveByOffset(0, 0).click().build().perform();
+                if(selectedLocationOnCreateScheduleWindow.getAttribute("innerHTML").replace("\n","").trim().equalsIgnoreCase(location)){
+                    SimpleUtils.pass("Create schedule window: Select locations on Edit Operating hours successfully! ");
+                } else
+                    SimpleUtils.fail("Create schedule window: Select locations on Edit Operating hours failed! ", false);
+
+            } else {
+                SimpleUtils.fail("Create schedule window: Locations fail to list! ", false);
+            }
+        } else
+            SimpleUtils.fail("location input in popup window fail to load! ", false);
+    }
+
+
+    @Override
+    public boolean isCopyScheduleWindow() throws Exception {
+        if (areListElementVisible(createModalWeeks,10)){
+            return true;
+        }
+        return false;
     }
 }

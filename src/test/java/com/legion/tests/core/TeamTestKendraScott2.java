@@ -16,6 +16,7 @@ import java.util.Map;
 import com.legion.pages.core.ConsoleGmailPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.OpsPortalLocationsPage;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.formula.ptg.ControlPtg;
 import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.WebElement;
@@ -357,10 +358,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			// Check whether the location is location group or not
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
@@ -370,7 +371,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			if(isActiveWeekGenerated){
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-			boolean isLocationGroup = schedulePage.isLocationGroup();
+			boolean isLocationGroup = toggleSummaryPage.isLocationGroup();
 
 			// Verify TM Count is correct from roster
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -696,8 +697,9 @@ public class TeamTestKendraScott2 extends TestBase{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		// Create schedule and publish it.
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -712,7 +714,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		}
 		createSchedulePage.createScheduleForNonDGFlowNewUI();
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.deleteTMShiftInWeekView("unassigned");
+		shiftOperatePage.deleteTMShiftInWeekView("unassigned");
 		scheduleMainPage.saveSchedule();
 		createSchedulePage.publishActiveSchedule();
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -725,7 +727,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		dashboardPage.clickOnSwitchToEmployeeView();
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		scheduleCommonPage.clickOnScheduleSubTab("Team Schedule");
-		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
+		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !scheduleShiftTablePage.isProfileIconsClickable(), false);
 		loginPage.logOut();
 
 
@@ -733,7 +735,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		scheduleCommonPage.clickOnScheduleSubTab("Team Schedule");
-		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
+		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !scheduleShiftTablePage.isProfileIconsClickable(), false);
 	}
 
 	@Automated(automated ="Automated")

@@ -404,4 +404,362 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
             SimpleUtils.fail("The required action smard card or the view shifts button on it loaded fail! ", false);
     }
 
+    @FindBy(css = ".fa-flag.sch-red")
+    private WebElement redFlagInCompliance;
+
+    @FindBy(css = "[src=\"img/legion/schedule/shift-info-danger.png\"]")
+    private List<WebElement> complianceShitShowIcon;
+
+    @FindBy(css = "card-carousel-card[ng-if*='compliance'] span")
+    private WebElement viewShift;
+
+    @FindBy(css = "[ng-click=\"$ctrl.openFilter()\"]")
+    private WebElement filterButton;
+    @Override
+    public boolean verifyRedFlagIsVisible() throws Exception {
+        if (isElementLoaded(redFlagInCompliance, 20)) {
+            SimpleUtils.report("red flag is visible ");
+            return true;
+        }
+        return false;
+    }
+
+    @FindBy(css = "[ng-if=\"scheduleSmartCard.complianceViolations\"] div.card-carousel-card")
+    private WebElement complianceSmartcardHeader;
+    @Override
+    public boolean verifyComplianceShiftsSmartCardShowing() throws Exception {
+        if (isElementLoaded(complianceSmartcardHeader,15)) {
+            SimpleUtils.pass("Compliance smartcard is visible ");
+            return true;
+        } else {
+            SimpleUtils.report("there is no compliance smartcard this week");
+            return false;
+        }
+    }
+
+    @Override
+    public void verifyComplianceShiftsShowingInGrid() throws Exception {
+        if (isElementLoaded(complianceSmartcardHeader,15)) {
+            if (complianceShitShowIcon.size() > 0) {
+                SimpleUtils.pass("Compliance shift is showing in grid");
+            }else {
+                SimpleUtils.fail("compliance shifts display failed",false);
+            }
+        }else {
+            SimpleUtils.report("there is no compliance smartcard in current week");
+        }
+
+    }
+
+    @Override
+    public void verifyClearFilterFunction() throws Exception {
+        String clearFilterBtnTextDefault = "Clear Filter";
+
+        if (isElementLoaded(complianceSmartcardHeader,10) ) {
+            String clearFilterTxt =viewShift.getText();
+            SimpleUtils.report("clear filter is" + clearFilterTxt);
+            if (clearFilterBtnTextDefault.equals(clearFilterTxt)) {
+                click(viewShift);
+                SimpleUtils.pass("clear filter button is clickable");
+                String filterText = getDriver().findElement(By.cssSelector("lg-filter > div > input-field > ng-form > div")).getText();
+                if (filterText.equals("")) {
+                    SimpleUtils.pass("filter 'Compliance shifts' will be unselected after clicking clear filter");
+                }
+            }else
+                SimpleUtils.fail("clear filter  button can't clickable",true);
+        }else
+            SimpleUtils.report("there is no compliance shift this week");
+
+    }
+
+
+    @FindBy(css = "[ng-click=\"smartCardShiftFilter('Compliance Review')\"]")
+    private WebElement viewShiftBtn;
+    @Override
+    public boolean clickViewShift() throws Exception {
+        if (isElementLoaded(viewShiftBtn, 15)) {
+            click(viewShiftBtn);
+            SimpleUtils.report("View shift button is visible ");
+            return true;
+        }else
+            SimpleUtils.report("No view shift button");
+        return false;
+    }
+
+    @Override
+    public void verifyComplianceFilterIsSelectedAftClickingViewShift() throws Exception {
+        String filterTextDefault =" Compliance Review\n" +
+                "    ";
+        if (clickViewShift() == true) {
+            String filterText = getDriver().findElement(By.cssSelector("lg-filter > div > input-field > ng-form > div")).getText();
+            if (filterText.equals(filterTextDefault)) {
+                SimpleUtils.report("Compliance filter is selected after clicking view shift button");
+            }
+        }else {
+            SimpleUtils.report("there is no compliance");
+        }
+    }
+
+    @FindBy(xpath = "//table[@class=\"ng-scope\"]")
+    private WebElement scheduleSmartCard;
+    @Override
+    public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception {
+            /*
+            wait schedule smart card data load
+            */
+        waitForSeconds(10);
+        if (isElementLoaded(scheduleSmartCard,20) ){
+            SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+            HashMap<String, Float> hoursWagesText = smartCardPage.getScheduleLabelHoursAndWages();
+            return hoursWagesText;
+        }
+        return null;
+    }
+
+    @FindBy (className = "card-carousel-card")
+    private List<WebElement> smartCards;
+    @FindBy (className = "card-carousel-link")
+    private List<WebElement> cardLinks;
+    @Override
+    public void clickLinkOnSmartCardByName(String linkName) throws Exception {
+        if (areListElementVisible(cardLinks, 5)) {
+            for (WebElement cardLink : cardLinks) {
+                if (cardLink.getText().equalsIgnoreCase(linkName)) {
+                    clickTheElement(cardLink);
+                    SimpleUtils.pass("Click the link: " + linkName + " Successfully!");
+                    break;
+                }
+            }
+        }else {
+            SimpleUtils.report("There are no smart card links!");
+        }
+    }
+
+    @Override
+    public int getCountFromSmartCardByName(String cardName) throws Exception {
+        int count = -1;
+        if (areListElementVisible(smartCards, 5)) {
+            for (WebElement smartCard : smartCards) {
+                WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
+                if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
+                    WebElement h1 = smartCard.findElement(By.tagName("h1"));
+                    String h1Title = h1 == null ? "" : h1.getText();
+                    if (h1Title.contains(" ")) {
+                        String[] items = h1Title.split(" ");
+                        for (String item : items) {
+                            if (SimpleUtils.isNumeric(item)) {
+                                count = Integer.parseInt(item);
+                                SimpleUtils.report("Get " + cardName + " count is: " + count);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (count == -1) {
+            SimpleUtils.fail("Failed to get the count from " + cardName + " card!", false);
+        }
+        return count;
+    }
+
+    @Override
+    public boolean isSpecificSmartCardLoaded(String cardName) throws Exception {
+        boolean isLoaded = false;
+        waitForSeconds(15);
+        if (areListElementVisible(smartCards, 15)) {
+            for (WebElement smartCard : smartCards) {
+                WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
+                if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
+                    isLoaded = true;
+                    break;
+                }
+            }
+        }
+        return isLoaded;
+    }
+
+    @FindBy (css = "tbody tr")
+    private List<WebElement> smartCardRows;
+    @Override
+    public HashMap<String, String> getBudgetNScheduledHoursFromSmartCard() throws Exception {
+        HashMap<String, String> budgetNScheduledHours = new HashMap<>();
+        if (areListElementVisible(smartCardRows, 5) && smartCardRows.size() != 0) {
+            List<WebElement> ths = smartCardRows.get(0).findElements(By.tagName("th"));
+            List<WebElement> tds = smartCardRows.get(1).findElements(By.tagName("td"));
+            if (ths != null && tds != null && ths.size() == 4 && tds.size() == 4) {
+                budgetNScheduledHours.put(ths.get(1).getText(), tds.get(1).getText());
+                budgetNScheduledHours.put(ths.get(2).getText(), tds.get(2).getText());
+                SimpleUtils.report("Smart Card: Get the hour: " + tds.get(1).getText() + " for: " + ths.get(1).getText());
+                SimpleUtils.report("Smart Card: Get the hour: " + tds.get(2).getText() + " for: " + ths.get(2).getText());
+            } else {
+                SimpleUtils.fail("Schedule Week View Page: The format of the budget and Scheduled hours' smart card is incorrect!", false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Budget and Scheduled smart card not loaded Successfully!", false);
+        }
+        return budgetNScheduledHours;
+    }
+
+
+    @Override
+    public int getComplianceShiftCountFromSmartCard(String cardName) throws Exception {
+        int count = 0;
+        if (areListElementVisible(smartCards, 5)) {
+            for (WebElement smartCard : smartCards) {
+                WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
+                if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
+                    WebElement header = smartCard.findElement(By.tagName("h1"));
+                    if (header != null && !header.getText().isEmpty()) {
+                        count = Integer.parseInt(header.getText().trim().substring(0, 1));
+                        SimpleUtils.report("Compliance Card: Get: " + count + " compliance shift(s).");
+                        break;
+                    }
+                }
+            }
+        }
+        if (count == 0) {
+            SimpleUtils.fail("Compliance Card: Failed to get the count of the shift(s)!", false);
+        }
+        return count;
+    }
+
+
+    @Override
+    public void verifyChangesNotPublishSmartCard(int changesNotPublished) throws Exception {
+        boolean flag = false;
+        if (areListElementVisible(smartCards,15)){
+            for (WebElement e: smartCards) {
+                //findElement(By.cssSelector(".card-carousel-card-title"))
+                String s = e.getText();
+                if (changesNotPublished == 0) {
+                    if (e.getText().toLowerCase().contains("action required") && e.getText().toLowerCase().contains("schedule not") && e.getText().toLowerCase().contains("published")) {
+                        SimpleUtils.pass("Changes not published smart card loads successfully!");
+                        flag = true;
+                        break;
+                    }
+                } else {
+                    if (e.getText().toLowerCase().contains("action required") && e.getText().toLowerCase().contains(changesNotPublished + " change") && e.getText().toLowerCase().contains("not published")) {
+                        SimpleUtils.pass("Changes not published smart card with number of changes loads successfully!");
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            if (!flag){
+                SimpleUtils.fail("There is no expected smart card",false);
+            }
+        } else {
+            SimpleUtils.fail("No smart cards!", false);
+        }
+    }
+
+    @FindBy (xpath = "//div[contains(text(), \"Action Required\")]/following-sibling::h1[1]")
+    private WebElement changesOnActionRequired;
+    @Override
+    public String getChangesOnActionRequired() throws Exception {
+        String changes = "";
+        if (isElementLoaded(changesOnActionRequired, 10)) {
+            changes = changesOnActionRequired.getText().replaceAll("\"","").trim();
+        }
+        return changes;
+    }
+
+
+    @FindBy(css = "img[ng-if=\"unpublishedDeleted && isOneAndOnlyShiftTypeSelected('Edited')\"]")
+    private WebElement tooltipIconOfUnpublishedDeleted;
+    @Override
+    public String getTooltipOfUnpublishedDeleted() throws Exception {
+        String tooltipOfUnpublishedDeleted = "";
+        if (isElementLoaded(tooltipIconOfUnpublishedDeleted,10)) {
+            mouseHover(tooltipIconOfUnpublishedDeleted);
+            tooltipOfUnpublishedDeleted = changesOnActionRequired.getAttribute("data-tootik");
+        }
+        return tooltipOfUnpublishedDeleted;
+    }
+
+
+    @FindBy(css = ".modal-dialog")
+    private WebElement holidaySmartCardWindow;
+    @Override
+    public List<String> getHolidaysOfCurrentWeek() throws Exception {
+        List<String> holidays = new ArrayList<String>();
+        if (isElementLoaded(holidaySmartCardWindow,5) && holidaySmartCardWindow.findElements(By.cssSelector(".event-card span")).size()>0){
+            List<WebElement> holidayList = holidaySmartCardWindow.findElements(By.cssSelector(".event-card span"));
+            for (WebElement element: holidayList){
+                holidays.add(element.getText().replace("\n",""));
+            }
+        } else {
+            SimpleUtils.fail("Holiday popup window fail to load!", false);
+        }
+        return holidays;
+    }
+
+
+
+    @FindBy(css = ".card-carousel-arrow-right.available")
+    private WebElement arrowRightAvailable;
+
+    @Override
+    public void navigateToTheRightestSmartCard() throws Exception {
+        while (isElementLoaded(arrowRightAvailable, 5)) {
+            click(arrowRightAvailable);
+        }
+    }
+
+    @FindBy(css = "[ng-if=\"controlPanel.editMode !== 'edit' || controlPanel.isPublished\"] .card-carousel-card-smart-card-required")
+    private WebElement scheduleNotPublishedSmartCard;
+
+    @Override
+    public boolean isScheduleNotPublishedSmartCardLoaded() throws Exception {
+        if (isElementLoaded(scheduleNotPublishedSmartCard,15)) {
+            SimpleUtils.pass("Schedule Not Published SmartCard is show ");
+            return true;
+        } else {
+            SimpleUtils.report("There is no Schedule Not Published SmartCard this week");
+            return false;
+        }
+
+    }
+
+
+    @Override
+    public String getWholeMessageFromActionRequiredSmartCard() throws Exception {
+        String message = "";
+        if (isElementLoaded(requiredActionSmartCard, 5)) {
+            message = requiredActionSmartCard.getText();
+        } else
+            SimpleUtils.fail("Required Action smart card fail to load! ", false);
+        return message;
+    }
+
+
+    @FindBy (css = "[ng-if=\"scheduleSmartCard.unassignedShifts && scheduleSmartCard.outsideOperatingHoursShifts\"] .col-fx-1")
+    private List<WebElement> unassignedAndOOOHMessageOnActionRequiredSmartCard;
+
+    @FindBy (css = "[ng-if=\"!scheduleSmartCard.outsideOperatingHoursShifts\"]")
+    private WebElement unassignedMessageOnActionRequiredSmartCard;
+
+    @FindBy (css = "[ng-if=\"!scheduleSmartCard.unassignedShifts\"]")
+    private WebElement oOOHMessageOnActionRequiredSmartCard;
+
+    @Override
+    public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception {
+        HashMap<String, String> unassignedAndOOOHMessage = new HashMap<String, String>();
+        if (isElementLoaded(requiredActionSmartCard, 5)) {
+            if (areListElementVisible(unassignedAndOOOHMessageOnActionRequiredSmartCard, 5)) {
+                unassignedAndOOOHMessage.put("unassigned", unassignedAndOOOHMessageOnActionRequiredSmartCard.get(0).getText());
+                unassignedAndOOOHMessage.put("OOOH", unassignedAndOOOHMessageOnActionRequiredSmartCard.get(1).getText());
+            } else if (isElementLoaded(unassignedMessageOnActionRequiredSmartCard, 5)) {
+                unassignedAndOOOHMessage.put("unassigned", unassignedMessageOnActionRequiredSmartCard.getText());
+                unassignedAndOOOHMessage.put("OOOH", "");
+            } else if (isElementLoaded(oOOHMessageOnActionRequiredSmartCard, 5)) {
+                unassignedAndOOOHMessage.put("OOOH", oOOHMessageOnActionRequiredSmartCard.getText());
+                unassignedAndOOOHMessage.put("unassigned", "");
+            } else
+                SimpleUtils.fail("No available message display on Action Required smart card! ", false);
+        } else
+            SimpleUtils.fail("Required Action smart card fail to load! ", false);
+        return unassignedAndOOOHMessage;
+    }
 }
