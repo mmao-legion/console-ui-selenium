@@ -3,6 +3,7 @@ package com.legion.pages.core.OpsPortal;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -1166,7 +1167,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 
-	@FindBy(css = "lg-button[label=\"Ok\"]")
+	@FindBy(css = "lg-button[label=\"OK\"]")
 	private WebElement okBtnInLocationGroupConfirmPage;
 
 	@Override
@@ -1625,8 +1626,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public String updateUpperfield(String upperfieldsName, String upperfieldsId, String searchChara, int index) throws Exception {
-		SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-		String currentTime = dfs.format(new Date()).trim();
+
+		String currentTime =  TestBase.getCurrentTime().substring(4);
+
 		searchUpperFields(upperfieldsName);
 		if (upperfieldRows.size() > 0) {
 			List<WebElement> districtDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
@@ -1657,7 +1659,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			scrollToBottom();
 			click(saveBtnInUpdateLocationPage);
 			if (isElementEnabled(selectDistrictPopUpWins, 15)) {
-				searchDistrictInputInSelectDistrictPopUpWins.sendKeys("No touch no delete");
+				searchDistrictInputInSelectDistrictPopUpWins.sendKeys("reg");
 				searchDistrictInputInSelectDistrictPopUpWins.sendKeys(Keys.ENTER);
 				waitForSeconds(5);
 				if (locationRowsInSelectLocation.size() > 0) {
@@ -1684,7 +1686,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			upperfieldsSearchInputBox.clear();
 			upperfieldsSearchInputBox.sendKeys(searchChara);
 			upperfieldsSearchInputBox.sendKeys(Keys.ENTER);
-			waitForSeconds(5);
+			waitForSeconds(35);
 			if (upperfieldRows.size() > 0) {
 				for (WebElement upperfield : upperfieldRows) {
 					HashMap<String, String> upperfieldInfoInEachRow = new HashMap<>();
