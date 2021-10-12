@@ -61,7 +61,7 @@ public class SalesForecastTestKendraScott2 extends TestBase{
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()),false);
+        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()),false);
         SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();  
         salesForecastPage.navigateToSalesForecastTab();
         SimpleUtils.assertOnFail( "Projected Sales Tab not Active!",salesForecastPage.isSalesForecastTabActive() ,false);

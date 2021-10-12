@@ -1,9 +1,10 @@
 package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
+import com.legion.pages.CreateSchedulePage;
 import com.legion.pages.ScheduleCommonPage;
 import com.legion.pages.ScheduleMainPage;
-import com.legion.tests.core.ScheduleNewUITest;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -257,8 +258,8 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
             String currentDay = activeWeek.get(i).getText().replace("\n", " ").substring(0,3);
             if(currentDay.equalsIgnoreCase(activeDay)){
                 if(i== activeWeek.size()-1){
-                    navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(),
-                            ScheduleNewUITest.weekCount.One.getValue());
+                    navigateWeekViewOrDayViewToPastOrFuture(ScheduleTestKendraScott2.weekViewType.Previous.getValue(),
+                            ScheduleTestKendraScott2.weekCount.One.getValue());
                     waitForSeconds(3);
                 }else{
                     click(activeWeek.get(i));
@@ -274,8 +275,8 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
             String currentDay = activeWeek.get(i).getText().replace("\n", " ").substring(0,3);
             if(currentDay.equalsIgnoreCase(activeDay)){
                 if(i== activeWeek.size()-1){
-                    navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(),
-                            ScheduleNewUITest.weekCount.One.getValue());
+                    navigateWeekViewOrDayViewToPastOrFuture(ScheduleTestKendraScott2.weekViewType.Next.getValue(),
+                            ScheduleTestKendraScott2.weekCount.One.getValue());
                     waitForSeconds(3);
                 }else{
                     click(activeWeek.get(i+1));
@@ -290,8 +291,8 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         String activeWeekText = getActiveWeekText();
         if (isElementLoaded(calendarNavigationNextWeekArrow, 10)) {
             try {
-                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
-                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
+                navigateWeekViewOrDayViewToPastOrFuture(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.Three.getValue());
+                navigateWeekViewOrDayViewToPastOrFuture(ScheduleTestKendraScott2.weekViewType.Previous.getValue(), ScheduleTestKendraScott2.weekCount.Three.getValue());
                 if (activeWeekText.equals(getActiveWeekText()))
                     SimpleUtils.pass("My Schedule Page: Forward and backward button to view previous or upcoming week is clickable successfully");
             } catch (Exception e) {
@@ -299,8 +300,8 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
             }
         } else if (isElementLoaded(calendarNavigationPreviousWeekArrow, 10)) {
             try {
-                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Previous.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
-                navigateWeekViewOrDayViewToPastOrFuture(ScheduleNewUITest.weekViewType.Next.getValue(), ScheduleNewUITest.weekCount.Three.getValue());
+                navigateWeekViewOrDayViewToPastOrFuture(ScheduleTestKendraScott2.weekViewType.Previous.getValue(), ScheduleTestKendraScott2.weekCount.Three.getValue());
+                navigateWeekViewOrDayViewToPastOrFuture(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.Three.getValue());
                 if (activeWeekText.equals(getActiveWeekText()))
                     SimpleUtils.pass("My Schedule Page: Forward and backward button to view previous or upcoming week is clickable successfully");
             } catch (Exception e) {
@@ -823,5 +824,36 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
             SimpleUtils.pass("Schedule Page: Header is \"Schedule\" as expected");
         else
             SimpleUtils.fail("Dashboard Page: Header isn't \"Schedule\"",true);
+    }
+
+
+    @FindBy(xpath = "//div[contains(@class,'sub-navigation-view')]//span[contains(text(),'Schedule')]")
+    private WebElement goToScheduleTab;
+
+    @FindBy(css = "lg-button[label=\"Analyze\"]")
+    private WebElement analyze;
+
+    @FindBy(css = "lg-button[label=\"Edit\"]")
+    private WebElement edit;
+    @Override
+    public void goToSchedule() throws Exception {
+
+        checkElementVisibility(goToScheduleTab);
+        activeConsoleName = analyticsConsoleName.getText();
+        click(goToScheduleTab);
+        SimpleUtils.pass("Schedule Page Loading..!");
+        CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
+        if (createSchedulePage.isWeekGenerated()) {
+            if (isElementLoaded(analyze)) {
+                SimpleUtils.pass("Analyze is Displayed on Schdule page");
+            } else {
+                SimpleUtils.fail("Analyze not Displayed on Schedule page", true);
+            }
+            if (isElementLoaded(edit)) {
+                SimpleUtils.pass("Edit is Displayed on Schedule page");
+            } else {
+                SimpleUtils.fail("Edit not Displayed on Schedule page", true);
+            }
+        }
     }
 }

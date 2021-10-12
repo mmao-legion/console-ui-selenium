@@ -185,9 +185,9 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         //to generate schedule  if current week is not generated
         scheduleCommonPage.navigateToNextWeek();
         boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
@@ -202,13 +202,13 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         newShiftPage.clickOnDayViewAddNewShiftButton();
         newShiftPage.customizeNewShiftPage();
-        newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        newShiftPage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         if (isOP)
             newShiftPage.selectWorkRole(opWorkRole);
         else
             newShiftPage.selectWorkRole(controlWorkRole);
-        newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchTeamMemberByName(teamMemberName);
         newShiftPage.clickOnOfferOrAssignBtn();
@@ -221,7 +221,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         dashboardPage.goToTodayForNewUI();
         scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         String cardName = "WANT MORE HOURS?";
         SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
         String linkName = "View Shifts";
@@ -283,9 +283,9 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         // 2.admin create one manual open shift and assign to specific TM
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         //Go to TM's home location, to generate and publish schedule if current week is not generated
         scheduleCommonPage.navigateToNextWeek();
         boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
@@ -300,9 +300,9 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(nonHomeLocation);
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         //Go to TM's home location, to generate and publish schedule if current week is not generated
         scheduleCommonPage.navigateToNextWeek();
         isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
@@ -319,10 +319,10 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         newShiftPage.customizeNewShiftPage();
         newShiftPage.clearAllSelectedDays();
         newShiftPage.selectSpecificWorkDay(1);
-        newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        newShiftPage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.selectWorkRole(workRole);
-        newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchTeamMemberByName(teamMemberName);
         newShiftPage.clickOnOfferOrAssignBtn();
@@ -335,7 +335,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         dashboardPage.goToTodayForNewUI();
         scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         String cardName = "WANT MORE HOURS?";
         SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
         String linkName = "View Shifts";
@@ -361,9 +361,9 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
 
         //Go to schedule and check the shift
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         scheduleCommonPage.navigateToNextWeek();
 
         //Check the shift is not assigned TM
@@ -383,9 +383,9 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
 
         //Go to schedule and check the shift
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         scheduleCommonPage.navigateToNextWeek();
 
         //Check the shift is assigned TM
@@ -438,9 +438,9 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         //to generate schedule  if current week is not generated
         scheduleCommonPage.navigateToNextWeek();
         boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
@@ -456,13 +456,13 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         newShiftPage.clickOnDayViewAddNewShiftButton();
         newShiftPage.customizeNewShiftPage();
-        newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        newShiftPage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         if (isOP)
             newShiftPage.selectWorkRole(opWorkRole);
         else
             newShiftPage.selectWorkRole(controlWorkRole);
-        newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchTeamMemberByName(teamMemberName);
         newShiftPage.clickOnOfferOrAssignBtn();
@@ -475,7 +475,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         dashboardPage.goToTodayForNewUI();
         scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         String cardName = "WANT MORE HOURS?";
         SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
         String linkName = "View Shifts";
@@ -559,9 +559,9 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         scheduleCommonPage.navigateToNextWeek();
         boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
         if(!isActiveWeekGenerated){
@@ -576,9 +576,9 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         // Admin create one manual open shift and assign to the TM from other location
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(nonHomeLocationName);
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         scheduleCommonPage.navigateToNextWeek();
         isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
         if(isActiveWeekGenerated){
@@ -594,13 +594,13 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         newShiftPage.customizeNewShiftPage();
         newShiftPage.clearAllSelectedDays();
         newShiftPage.selectSpecificWorkDay(1);
-        newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        newShiftPage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         if (isOP)
             newShiftPage.selectWorkRole(opWorkRole);
         else
             newShiftPage.selectWorkRole(controlWorkRole);
-        newShiftPage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchTeamMemberByName(teamMemberName);
         newShiftPage.clickOnOfferOrAssignBtn();
@@ -614,7 +614,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         dashboardPage.goToTodayForNewUI();
         scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         String cardName = "WANT MORE HOURS?";
         SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
         String linkName = "View Shifts";
@@ -640,9 +640,9 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
 
         //Go to schedule and check the shift
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         scheduleCommonPage.navigateToNextWeek();
         //Check the shift is not assigned TM
         Thread.sleep(5000);
@@ -661,9 +661,9 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         activityPage.verifyClickOnActivityCloseButton();
         //Go to schedule and check the shift
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), true);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         scheduleCommonPage.navigateToNextWeek();
 
         //Check the shift is assigned TM

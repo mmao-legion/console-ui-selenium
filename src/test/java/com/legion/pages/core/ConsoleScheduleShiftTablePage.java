@@ -749,7 +749,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
             String firstName = dayViewAvailableShifts.get(index).
                     findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
-            if (!firstName.equalsIgnoreCase("Open")) {
+            if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned") ) {
                 String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(dayViewAvailableShifts.get(index)).split(" ")[1].trim();
                 String shiftTimeWeekView = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-time")).getText();
                 WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
@@ -2701,4 +2701,27 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
     }
 
+
+    @FindBy(css = "div.holiday-logo-container")
+    private WebElement holidayLogoContainer;
+
+    @FindBy(css = "tr[ng-repeat=\"day in summary.workingHours\"]")
+    private List<WebElement> guidanceWeekOperatingHours;
+    @Override
+    public boolean inActiveWeekDayClosed(int dayIndex) throws Exception {
+        CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
+        if (createSchedulePage.isWeekGenerated()) {
+            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+            scheduleCommonPage.navigateDayViewWithIndex(dayIndex);
+            if (isElementLoaded(holidayLogoContainer))
+                return true;
+        } else {
+            if (guidanceWeekOperatingHours.size() != 0) {
+                if (guidanceWeekOperatingHours.get(dayIndex).getText().contains("Closed"))
+                    return true;
+            }
+        }
+        return false;
+
+    }
 }

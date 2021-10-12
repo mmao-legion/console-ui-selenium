@@ -45,7 +45,7 @@ public class StaffingGuidanceTestKendraScott2 extends TestBase{
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()),false);
+        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()),false);
         StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
         staffingGuidancePage.navigateToStaffingGuidanceTab();
         SimpleUtils.assertOnFail( "Staffing Guidance tab not loaded successfully!", staffingGuidancePage.isStaffingGuidanceTabActive(),false);

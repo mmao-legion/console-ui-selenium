@@ -53,5 +53,7 @@ public interface CreateSchedulePage {
     public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception;
     public void chooseLocationInCreateSchedulePopupWindow(String location) throws Exception;
     public boolean isCopyScheduleWindow() throws Exception;
+    public void clickOnSchedulePublishButton() throws Exception;
+    public void clickConfirmBtnOnPublishConfirmModal() throws Exception;
 
 }

@@ -1526,4 +1526,58 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         }
         return false;
     }
+
+
+    @Override
+    public void clickOnSchedulePublishButton() throws Exception {
+        // TODO Auto-generated method stub
+        if(isElementEnabled(publishSheduleButton)){
+            click(publishSheduleButton);
+            if(isElementEnabled(publishConfirmBtn))
+            {
+//                WebElement switchIframe = getDriver().findElement(By.xpath("//iframe[@id='walkme-proxy-iframe']"));
+//			    getDriver().switchTo().frame(switchIframe);
+//			    if(isElementEnabled(closeLegionPopUp)){
+//			        click(closeLegionPopUp);
+//                }
+//                getDriver().switchTo().defaultContent();
+                click(publishConfirmBtn);
+//			    if(isElementLoaded(closeLegionPopUp)){
+//			        click(closeLegionPopUp);
+//                }
+                SimpleUtils.pass("Schedule published successfully for week: '"+ getActiveWeekText() +"'");
+                // It will pop up a window: Welcome to Legion!
+                if (isElementLoaded(closeButton, 5)) {
+                    click(closeButton);
+                }
+                if(isElementEnabled(successfulPublishOkBtn))
+                {
+                    click(successfulPublishOkBtn);
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void clickConfirmBtnOnPublishConfirmModal() throws Exception {
+        if (isElementLoaded(publishConfirmBtn)) {
+            clickTheElement(publishConfirmBtn);
+            SimpleUtils.pass("Schedule published successfully for week: '" + getActiveWeekText() + "'");
+            // It will pop up a window: Welcome to Legion!
+            if (isElementLoaded(closeButton, 5)) {
+                clickTheElement(closeButton);
+            }
+            if (isElementLoaded(successfulPublishOkBtn)) {
+                clickTheElement(successfulPublishOkBtn);
+            }
+            if (isElementLoaded(publishSheduleButton, 5)) {
+                // Wait for the Publish button to disappear.
+                waitForSeconds(10);
+            }
+        } else {
+            SimpleUtils.fail("Comfirm button is not loaded successfully!", false);
+        }
+    }
+
 }

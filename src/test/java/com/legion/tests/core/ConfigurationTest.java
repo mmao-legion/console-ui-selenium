@@ -602,7 +602,7 @@ public class ConfigurationTest extends TestBase {
             locationSelectorPage.changeLocation(locationName);
             //go to schedule function
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
@@ -661,7 +661,7 @@ public class ConfigurationTest extends TestBase {
             locationSelectorPage.changeLocation(locationName);
             //go to schedule function
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
@@ -724,7 +724,7 @@ public class ConfigurationTest extends TestBase {
             locationSelectorPage.changeLocation(locationName);
             //go to schedule function
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
@@ -771,7 +771,7 @@ public class ConfigurationTest extends TestBase {
             locationSelectorPage.changeLocation(locationName);
             //go to schedule function
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();

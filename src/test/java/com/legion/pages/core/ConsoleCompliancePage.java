@@ -357,7 +357,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         boolean isLocationFound = false;
         if (areListElementVisible(rowsInAnalyticsTable,10)) {
             for (WebElement row: rowsInAnalyticsTable) {
-                if (row.findElement(By.xpath("./div[1]/span/img/following-sibling::span")).getText().equals(location)) {
+                if (row.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_UNTOUCHED\"]")).getText().equals(location)) {
                     isLocationFound = true;
                     List<WebElement> dataElements = row.findElements(By.cssSelector(".ng-scope.col-fx-1"));
                     for (WebElement dataElement: dataElements) {
@@ -468,7 +468,9 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
                 SimpleUtils.fail("Info on Locations With Violation Card is not expected!", false);
             }
         } else {
-            SimpleUtils.fail("Locations With Violation Card fail to load!", false);
+            result.put("UpperFieldsWithViolations" ,0);
+            result.put("TotalUpperFields", 0);
+            SimpleUtils.report("Locations With Violation Card fail to load!");
         }
         return result;
     }
