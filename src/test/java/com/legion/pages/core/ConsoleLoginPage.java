@@ -95,7 +95,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     {
     	WebDriverWait tempWait = new WebDriverWait(getDriver(), 20); 
     	try {
-    	    tempWait.until(ExpectedConditions.visibilityOf(legionDashboardSection)); 
+    	    tempWait.until(ExpectedConditions.visibilityOf(legionHeaderIcon));
     	    return true;
     	}
     	catch (TimeoutException te) {
