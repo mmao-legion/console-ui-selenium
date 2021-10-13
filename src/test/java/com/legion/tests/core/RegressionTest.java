@@ -272,7 +272,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -321,7 +321,7 @@
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 //				scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
@@ -385,7 +385,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 //				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
@@ -499,7 +499,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -541,7 +541,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -586,7 +586,7 @@
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -648,7 +648,7 @@
 //		controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
 //		controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
 //		Thread.sleep(1000);
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -699,7 +699,7 @@
 //	public void scheduleSubTabNavigationStoreManager(String username, String password, String browser, String location, ITestContext context) throws Exception {
 //		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //		scheduleOverviewPage.loadScheduleOverview();
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		schedulePage.navigateScheduleDayWeekView(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.Two.getValue());
 //	}
 //
@@ -721,7 +721,7 @@
 ////		salesForecastPage.loadSalesForecast();
 ////		StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
 ////		staffingGuidancePage.loadStaffingGuidance();
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		schedulePage.loadSchedule();
 //		AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
 //		analyticsPage.loadAnalyticsTab();
@@ -759,7 +759,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 //				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
@@ -788,7 +788,7 @@
 //			throws Exception {
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 //				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
@@ -818,7 +818,7 @@
 //			totalOtherHours = totalOtherHours + locationHours.get("Other");
 //		}
 //
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -868,7 +868,7 @@
 //		if (locationSelectorPage.isLocationSelected(bayAreaLocation))
 //			locationSelectorPage.changeLocation(austinDowntownLocation);
 //
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 //				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
@@ -935,7 +935,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -992,7 +992,7 @@
 //		{
 //			float demandForecast = todaysForcastData.get("demandForecast");
 //			float guidanceHours = todaysForcastData.get("guidanceHours");
-//			SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			boolean isStoreClosedToday = scheduleCommonPage.isStoreClosedForActiveWeek();
 //			if(! isStoreClosedToday && (demandForecast <= 0))
@@ -1018,7 +1018,7 @@
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnWeekView();
 //		if(!createSchedulePage.isWeekGenerated())
@@ -1057,7 +1057,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -1090,7 +1090,7 @@
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -1130,7 +1130,7 @@
 //		int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
 //		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
@@ -1187,7 +1187,7 @@
 ////	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -1281,7 +1281,7 @@
 //		boolean enableBudgetSmartcard = true;
 //		controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
 //
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
@@ -1384,7 +1384,7 @@
 //		controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
 //		controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
 //		Thread.sleep(1000);
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -1441,7 +1441,7 @@
 ////		boolean enableBudgetSmartcard = true;
 ////		controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
 ////
-////		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+////
 ////		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 ////		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 ////		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , true);
@@ -2229,7 +2229,7 @@
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
@@ -2267,7 +2267,7 @@
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -2317,7 +2317,7 @@
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -2364,7 +2364,7 @@
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 //		//SimpleUtils.fail("Test Failed", false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , true);
 //
@@ -2392,7 +2392,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , true);
 //
@@ -2419,7 +2419,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , true);
 //
@@ -2454,7 +2454,7 @@
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -2511,7 +2511,7 @@
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());

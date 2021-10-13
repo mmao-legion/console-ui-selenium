@@ -199,7 +199,7 @@ public class LiquidDashboardTest extends TestBase {
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -252,7 +252,7 @@ public class LiquidDashboardTest extends TestBase {
             if (dashboardPage.isSwitchToEmployeeViewPresent()) {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
-            SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
@@ -338,7 +338,7 @@ public class LiquidDashboardTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -741,7 +741,7 @@ public class LiquidDashboardTest extends TestBase {
             liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(widgetType.Schedules.getValue(),linkNames.View_Schedules.getValue());
 
             //verify value on widget
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             List<String> resultListInOverview = scheduleOverviewPage.getOverviewData();
             if (resultListOnWidget.size() == 4){
@@ -1084,7 +1084,7 @@ public class LiquidDashboardTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             int[] unclaimed1 = new int[2];
             int[] claimed1 = new int[2];
             int[] unclaimed2 = new int[2];
@@ -1202,7 +1202,7 @@ public class LiquidDashboardTest extends TestBase {
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded() , false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             if (!liquidDashboardPage.isSpecificWidgetLoaded(widgetType.Open_Shifts.getValue())) {
                 // Verify Edit mode Dashboard loaded
@@ -1244,7 +1244,7 @@ public class LiquidDashboardTest extends TestBase {
             // Claim shift as team member
             loginToLegionAndVerifyIsLoginDone(username, password, location);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded() , false);
-            schedulePage = dashboardPage.goToTodayForNewUI();
+
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             String cardName = "WANT MORE HOURS?";
             SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
@@ -1305,7 +1305,7 @@ public class LiquidDashboardTest extends TestBase {
             //get the values on widget: violations, total hrs, locations.
             List<String> resultListOnWidget = liquidDashboardPage.getDataOnComplianceViolationWidget();
             //verify week info on widget
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             //gp to schedule, get week info of current week, last week and next week.
             liquidDashboardPage.clickFirstWeekOnSchedulesGoToSchedule();
             String startDayOfLastWeek = "";

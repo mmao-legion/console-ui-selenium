@@ -248,7 +248,7 @@ public class ScheduleTest extends TestBase{
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-	        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 	        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 	        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -310,7 +310,7 @@ public class ScheduleTest extends TestBase{
 //		@TestName(description = "FOR-596:Budget modal header should display the week instead of UNDEFINED")
 //	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 //	    public void enterBudgetPopUpHeaderStoreManager(String username, String password, String browser, String location) throws Throwable {
-//	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //	    	scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -325,7 +325,7 @@ public class ScheduleTest extends TestBase{
 //		@TestName(description = "TP-100: FOR-620: Budget smartcard shows budget hrs when no budget was entered ,if navigate from a week with budget")
 //	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 //	    public void noBudgetHourDisplayWhenBudgetNotEnteredStoreManager(String username, String password, String browser, String location) throws Throwable {
-//	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //	    	scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -339,7 +339,7 @@ public class ScheduleTest extends TestBase{
 //  		@TestName(description = "Validate calculation of budget values for budget and schedule smartcard when budget is by hours or wages")
 //  	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 //  	    public void budgetInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
-//  	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //  	    	scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -354,7 +354,7 @@ public class ScheduleTest extends TestBase{
 //	@TestName(description = "TP-102: LEG 5500 : Budget Hours shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
 //	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 //	public void budgetIntScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -370,7 +370,7 @@ public class ScheduleTest extends TestBase{
 ////	@TestName(description = "Validate the budget calculation when budget is modified for any schedule week")
 ////	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 ////	public void updateBudgetInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
-////		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+////
 ////		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 ////		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 ////		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
@@ -383,7 +383,7 @@ public class ScheduleTest extends TestBase{
 ////	@TestName(description = "TP-102: LEG 5500 : Budget Wages shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
 ////	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 ////	public void budgetWagesInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
-////		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+////
 ////		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 ////		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 ////		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
@@ -685,7 +685,7 @@ public class ScheduleTest extends TestBase{
 //			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 //			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 //			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -749,7 +749,7 @@ public class ScheduleTest extends TestBase{
 //			// Verify View my Schedule button should be present and clickable
 //			dashboardPage.isViewMySchedulePresentAndClickable();
 //			// Verify After click on the View My Schedule, page should navigate to My Schedule page
-//			SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 //			scheduleCommonPage.navigateToNextWeek();
@@ -806,7 +806,7 @@ public class ScheduleTest extends TestBase{
 //			// Verify View my Schedule button should be present and clickable
 //			dashboardPage.isViewMySchedulePresentAndClickable();
 //			// Verify After click on the View My Schedule, page should navigate to My Schedule page
-//			SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 //			scheduleCommonPage.navigateToNextWeek();
@@ -964,7 +964,7 @@ public class ScheduleTest extends TestBase{
 //			if (dashboardPage.isSwitchToEmployeeViewPresent()) {
 //				dashboardPage.clickOnSwitchToEmployeeView();
 //			}
-//			SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 //			scheduleCommonPage.navigateToNextWeek();
@@ -1128,7 +1128,7 @@ public class ScheduleTest extends TestBase{
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1213,7 +1213,7 @@ public class ScheduleTest extends TestBase{
 //			SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
 //			controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
 //
-//			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
@@ -1246,7 +1246,7 @@ public class ScheduleTest extends TestBase{
 //
 //			loginToLegionAndVerifyIsLoginDone(username, password, location);
 //			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//			schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 //			scheduleCommonPage.navigateToNextWeek();
 //
@@ -1299,7 +1299,7 @@ public class ScheduleTest extends TestBase{
 //	}
 //
 //	public void createTheSwapRequest(int index) throws Exception {
-//	  	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 //		mySchedulePage.clickOnShiftByIndex(index);
 //		String request = "Request to Swap Shift";

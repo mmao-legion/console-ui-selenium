@@ -135,6 +135,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		TimeAttendance("Time & Attendance"),
 		Compliance("Compliance"),
 		SchedulingRules("Scheduling Rules"),
+		SchedulingPolicyGroups("Scheduling Policy Groups"),
 		Communications("Communications"),
 		MinorsRules("Minors Rules"),
 		MealAndRest("Meal and Rest"),

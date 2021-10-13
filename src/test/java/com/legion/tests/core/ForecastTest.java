@@ -150,7 +150,7 @@ public class ForecastTest extends TestBase{
 	public void validateWeatherSmartCardOnForecastPageAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
@@ -245,7 +245,7 @@ public class ForecastTest extends TestBase{
 		@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyScheduleLaborForeCastFunctionalityAsInternalAdmin(String username, String password, String browser, String location)
 				throws Exception {
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -279,7 +279,7 @@ public class ForecastTest extends TestBase{
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			ForecastPage forecastPage  = pageFactory.createForecastPage();
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -332,7 +332,7 @@ public class ForecastTest extends TestBase{
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			ForecastPage forecastPage  = pageFactory.createForecastPage();
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -445,7 +445,7 @@ public class ForecastTest extends TestBase{
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			ForecastPage forecastPage = pageFactory.createForecastPage();
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -493,7 +493,7 @@ public class ForecastTest extends TestBase{
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			ForecastPage forecastPage = pageFactory.createForecastPage();
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -542,7 +542,7 @@ public class ForecastTest extends TestBase{
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 			locationSelectorPage.changeDistrict("Bay Area District");
 			locationSelectorPage.changeLocation("LocGroup2");
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());

@@ -293,7 +293,7 @@ public class JobTest extends TestBase {
 //            locationSelectorPage.changeDistrict("OMDistrict1");
 //            locationSelectorPage.changeLocation(searchText);
 //
-//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
 //            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);

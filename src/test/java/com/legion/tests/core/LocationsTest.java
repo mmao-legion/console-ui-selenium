@@ -110,7 +110,7 @@ public class LocationsTest extends TestBase {
 //            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 //            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
 //            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
-//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
 //            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
@@ -159,7 +159,7 @@ public class LocationsTest extends TestBase {
 ////            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 ////            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
 ////            locationSelectorPage.changeLocation(locationName+"-MOCK");
-////           SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+////
 ////           scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 ////           scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
 ////           SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);

@@ -262,7 +262,7 @@
 //            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 //            locationSelectorPage.reSelectDistrict(districtName);
 //
-//            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //            List<Float> totalHoursFromSchTbl = schedulePage.validateScheduleAndBudgetedHours();
@@ -290,7 +290,7 @@
 //            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 //            locationSelectorPage.reSelectDistrict(districtName);
 //
-//            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //            SimpleUtils.pass("Comments added Successfully in Test Rail");
@@ -323,7 +323,7 @@
 //            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 //            locationSelectorPage.reSelectDistrict(districtName);
 //
-//            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //            dashboardPage.navigateToDashboard();
 //            String DateOnDashboard = schedulePage.getDateFromDashboard();
@@ -356,7 +356,7 @@
 //            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 //            locationSelectorPage.reSelectDistrict(districtName);
 //
-//            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //            BasePage basePage = new BasePage();
 //            String DateOnDashboard = schedulePage.getDateFromDashboard();
 //            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
@@ -388,7 +388,7 @@
 //        try {
 //            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //            BasePage basePage = new BasePage();
 //
 //            String districtName = dashboardPage.getCurrentDistrict();
@@ -452,7 +452,7 @@
 //            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 //            locationSelectorPage.reSelectDistrict(districtName);
 //
-//            schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //            dashboardPage.navigateToDashboard();
 //            String DateOnDashboard = schedulePage.getDateFromDashboard();
 //            schedulePage.clickOnViewScheduleLocationSummaryDMViewDashboard();

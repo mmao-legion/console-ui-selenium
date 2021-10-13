@@ -117,7 +117,7 @@ public class PrepareSettingsTest extends TestBase {
             String afterBufferCount = schedulingPoliciesData.get("Additional_Schedule_Hours_After");
             controlsNewUIPage.updateScheduleBufferHoursBefore(beforeBufferCount);
             controlsNewUIPage.updateScheduleBufferHoursAfter(afterBufferCount);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

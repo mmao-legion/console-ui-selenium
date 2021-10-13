@@ -55,7 +55,7 @@ public class LocationNavigationTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -104,7 +104,7 @@ public class LocationNavigationTest extends TestBase {
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -165,7 +165,7 @@ public class LocationNavigationTest extends TestBase {
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             //Go to Schedule tab -> Overview page
@@ -245,7 +245,7 @@ public class LocationNavigationTest extends TestBase {
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
@@ -290,7 +290,7 @@ public class LocationNavigationTest extends TestBase {
                 selectedUpperFields.get(District).equalsIgnoreCase(upperFields.get(District))
                         && selectedUpperFields.get(Region).equalsIgnoreCase(upperFields.get(Region)), false);
         //Verify the DM page loaded
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
                 scheduleDMViewPage.isScheduleDMView(), false);
     }
@@ -322,7 +322,7 @@ public class LocationNavigationTest extends TestBase {
 
             //Go back the the default location
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             //Go to Schedule tab -> Overview page
@@ -402,7 +402,7 @@ public class LocationNavigationTest extends TestBase {
             upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
@@ -441,7 +441,7 @@ public class LocationNavigationTest extends TestBase {
                         && selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(bUName), false);
 
         //Verify the Region page loaded
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         SimpleUtils.assertOnFail("Schedule page Region view not loaded Successfully!",
                 scheduleDMViewPage.isScheduleDMView(), false);
 
@@ -480,7 +480,7 @@ public class LocationNavigationTest extends TestBase {
             upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
@@ -564,7 +564,7 @@ public class LocationNavigationTest extends TestBase {
             upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
@@ -774,7 +774,7 @@ public class LocationNavigationTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 

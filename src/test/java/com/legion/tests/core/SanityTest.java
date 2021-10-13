@@ -264,7 +264,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -332,7 +332,7 @@
 //			}
 //			System.out.println("totalDaysStaffingGuidanceHours: "+totalDaysStaffingGuidanceHours);
 //			System.out.println("totalDaysProjectedSalesHours: "+totalDaysProjectedSalesHours);
-//			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //			SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()),false);
@@ -383,7 +383,7 @@
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 //				scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , false);
@@ -448,7 +448,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
 //				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
@@ -561,7 +561,7 @@
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -603,7 +603,7 @@
 //			throws Exception {
 //		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -642,7 +642,7 @@
 //		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 //		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -703,7 +703,7 @@
 //		controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
 //		controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(ControlsNewUITest.schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
 //		Thread.sleep(1000);
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -756,7 +756,7 @@
 //		scheduleOverviewPage.loadScheduleOverview();
 ////		int testRailId = (Integer) context.getAttribute("TestRailId");
 ////		System.out.println("In Test1, Value stored in context is: "+testRailId);
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		schedulePage.navigateScheduleDayWeekView(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.One.getValue());
 //	}
 //
@@ -800,7 +800,7 @@
 //	public void consoleAndMobileIntegrationForShiftOffers(String username, String password, String browser, String location) throws Exception {
 ////		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 ////		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-////		schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+////
 ////		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 ////		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 ////		List<String> overviewPageScheduledWeekStatus = scheduleOverviewPage.getScheduleWeeksStatus();
@@ -879,7 +879,7 @@
 //		salesForecastPage.loadSalesForecast();
 //		StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
 //		staffingGuidancePage.loadStaffingGuidance();
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		schedulePage.loadSchedule();
 //		AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
 //		analyticsPage.loadAnalyticsTab();

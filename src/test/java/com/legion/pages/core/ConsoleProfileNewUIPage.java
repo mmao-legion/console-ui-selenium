@@ -3782,8 +3782,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 
 	public void clickAvailabilityEditButton() throws Exception{
+		scrollToBottom();
 		if (isElementLoaded(editBtn,10)){
-			scrollToBottom();
 			moveToElementAndClick(editBtn);
 		}else{
 			SimpleUtils.fail("Edit button is not loaded!", false);
