@@ -30,6 +30,8 @@ public interface ScheduleShiftTablePage {
     public ArrayList<String> getAvailableJobTitleListInDayView();
     public WebElement clickOnProfileOfUnassignedShift() throws Exception;
     public List<String> getTheShiftInfoByIndex(int index) throws Exception;
+    public List<String> getTheGreyedShiftInfoByIndex(int index) throws Exception;
+    public String getTotalHrsFromRightStripCellByIndex(int index) throws Exception;
     public List<String> getTheShiftInfoInDayViewByIndex(int index) throws Exception;
     public String getIIconTextInfo(WebElement shift) throws Exception;
     public int getShiftIndexById(String id) throws Exception;

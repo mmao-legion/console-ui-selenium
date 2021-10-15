@@ -671,10 +671,14 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @FindBy(className = "week-schedule-shift")
     private List<WebElement> weekShifts;
+    @FindBy(css = ".week-schedule-shift.week-schedule-shift-another-location")
+    private List<WebElement> weekShiftsFromAnotherLocation;
     @FindBy(css = ".sch-shift-hover div:nth-child(3)>div.ng-binding")
     private WebElement shiftDuration;
     @FindBy(css = ".shift-hover-subheading.ng-binding:not([ng-if])")
     private WebElement shiftJobTitleAsWorkRole;
+    @FindBy(css = ".sch-shift-hover div:nth-child(5)>div.ng-binding")
+    private WebElement shiftTotalHrs;
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
@@ -691,8 +695,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
                 clickTheElement(infoIcon);
                 String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
-                if (isElementLoaded(shiftDuration, 10)) {
+                if (isElementLoaded(shiftDuration, 10) && isElementLoaded(shiftTotalHrs, 10)) {
                     String shiftTime = shiftDuration.getText();
+                    String totalHrs = shiftTotalHrs.getText().split("\\|")[1];
                     shiftInfo.add(firstName);
                     shiftInfo.add(dayIndex);
                     shiftInfo.add(shiftTime);
@@ -700,6 +705,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     shiftInfo.add(workRole);
                     shiftInfo.add(lastName);
                     shiftInfo.add(shiftTimeWeekView);
+                    shiftInfo.add(totalHrs);
                 }
                 //To close the info popup
                 clickTheElement(weekShifts.get(index));
@@ -734,12 +740,61 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
-        if (shiftInfo.size() != 7) {
+        if (shiftInfo.size() <= 7) {
             SimpleUtils.fail("Failed to get the shift info!", false);
         }
         return shiftInfo;
     }
 
+    @Override
+    public List<String> getTheGreyedShiftInfoByIndex(int index) throws Exception {
+        ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
+        waitForSeconds(3);
+        List<String> shiftInfo = new ArrayList<>();
+        if (areListElementVisible(weekShiftsFromAnotherLocation, 20) && index < weekShiftsFromAnotherLocation.size()) {
+            String firstName = weekShiftsFromAnotherLocation.get(index).findElement(By.className("week-schedule-worker-name")).getText();
+            String dayIndex = weekShiftsFromAnotherLocation.get(index).getAttribute("data-day-index");
+            String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(weekShiftsFromAnotherLocation.get(index)).split(" ")[1].trim();
+            waitForSeconds(2);
+            String jobTitle = weekShiftsFromAnotherLocation.get(index).findElement(By.cssSelector(".rows .week-schedule-role-name")).getText();
+            String shiftTimeWeekView = weekShiftsFromAnotherLocation.get(index).findElement(By.className("week-schedule-shift-time")).getText();
+            WebElement infoIcon = weekShiftsFromAnotherLocation.get(index).findElement(By.className("week-schedule-shit-open-popover"));
+            clickTheElement(infoIcon);
+            String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
+            if (isElementLoaded(shiftDuration, 10) && isElementLoaded(shiftTotalHrs, 10)) {
+                String shiftTime = shiftDuration.getText();
+                String totalHrs = shiftTotalHrs.getText().split("\\|")[1];
+                shiftInfo.add(firstName);
+                shiftInfo.add(dayIndex);
+                shiftInfo.add(shiftTime);
+                shiftInfo.add(jobTitle);
+                shiftInfo.add(workRole);
+                shiftInfo.add(lastName);
+                shiftInfo.add(shiftTimeWeekView);
+                shiftInfo.add(totalHrs);
+            }
+            //To close the info popup
+            clickTheElement(weekShiftsFromAnotherLocation.get(index));
+        } else {
+            SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
+        }
+        if (shiftInfo.size() <= 7) {
+            SimpleUtils.fail("Failed to get the shift info!", false);
+        }
+        return shiftInfo;
+    }
+
+    @FindBy(css = ".week-schedule-right-strip-cell div div:nth-child(1)")
+    private List<WebElement> totalHrsStripCells;
+    @Override
+    public String getTotalHrsFromRightStripCellByIndex(int index) throws Exception {
+        if (areListElementVisible(totalHrsStripCells, 10)){
+            return totalHrsStripCells.get(0).getText();
+        } else {
+            SimpleUtils.fail("There is no total hours info on the right strip", false);
+        }
+        return null;
+    }
 
     @Override
     public List<String> getTheShiftInfoInDayViewByIndex(int index) throws Exception {
