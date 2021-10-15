@@ -231,16 +231,7 @@ public class DragAndDropTest extends TestBase {
             String userName = teamPage.selectATeamMemberToViewProfile();
             String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
 
-            // Go to Dashboard page
-            dashboardPage.navigateToDashboard();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-            // Change the location to the original location
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             // Go to Schedule page, Schedule tab
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -252,6 +243,29 @@ public class DragAndDropTest extends TestBase {
             // Create schedule if it is not created
             scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+
+            // Go to Dashboard page
+            dashboardPage.navigateToDashboard();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Change the location to the original location
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            // Create schedule if it is not created
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }

@@ -73,7 +73,7 @@
         <classes>
             <class name="com.legion.tests.core.ActivityTest">
                 <methods>
-                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
+<!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" Blocked by queue/>-->
 <!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />-->
 <!--                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5369/>-->
                     <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
@@ -153,7 +153,7 @@
                     <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
                     <include name="verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager" />
 <!--                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" If it fails, it will affect other cases/>-->
-                    <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" />
+<!--                    <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" If it fails, it will affect other cases/>-->
                 </methods>
             </class>
         </classes>
