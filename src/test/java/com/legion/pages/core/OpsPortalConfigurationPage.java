@@ -1745,7 +1745,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void deleteNewCreatedTemplate(String templateName) throws Exception{
 		if(templateName.equals(newTemplateName)){
 			clickTheElement(templateNameList.get(0));
-			waitForSeconds(5);		String newTemplateName = templateNameList.get(0).getText().trim();
+			waitForSeconds(5);
+			String newTemplateName = templateNameList.get(0).getText().trim();
 
 			if(isElementEnabled(deleteTemplateButton,3)){
 				clickTheElement(deleteTemplateButton);
@@ -2546,5 +2547,96 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		} else
 			SimpleUtils.fail(action+" template dialog pop up window load failed.",false);
 
+	}
+
+	@FindBy(css ="question-input[question-title=\"Move existing shifts to Open when transfers occur within the Workforce Sharing Group.\"] > div > div.lg-question-input__wrapper > ng-transclude > yes-no > ng-form > lg-button-group >div>div")
+	private List<WebElement> yesNoForMoveExistingShiftsToOpenWhenTransfer;
+	@Override
+	public void setMoveExistingShiftWhenTransfer(String yesOrNo) throws Exception {
+		if (areListElementVisible(yesNoForMoveExistingShiftsToOpenWhenTransfer,5)) {
+			for (WebElement option : yesNoForMoveExistingShiftsToOpenWhenTransfer) {
+				if (option.getText().equalsIgnoreCase(yesOrNo)) {
+					click(option);
+					break;
+				}
+			}
+			SimpleUtils.pass("Set 'Move existing shifts to Open when transfers occur within the Workforce Sharing Group' to "+ yesOrNo + " successfully! ");
+		}else
+			SimpleUtils.fail("Set 'Move existing shifts to Open when transfers occur within the Workforce Sharing Group' setting fail to load!  ",false);
+	}
+
+	@Override
+	public boolean isMoveExistingShiftWhenTransferSettingEnabled() throws Exception {
+		boolean isMoveExistingShiftWhenTransferSettingEnabled = false;
+		if (areListElementVisible(yesNoForMoveExistingShiftsToOpenWhenTransfer, 5)) {
+			if (yesNoForMoveExistingShiftsToOpenWhenTransfer.get(0).getAttribute("class").contains("selected")){
+				isMoveExistingShiftWhenTransferSettingEnabled = true;
+			}
+		}
+		return isMoveExistingShiftWhenTransferSettingEnabled;
+	}
+
+	@Override
+	public void deleteTemplate(String templateName) throws Exception {
+		clearSearchTemplateBox();
+		if(isTemplateListPageShow()){
+			searchTemplate(templateName);
+			for(int i=0;i<templateNameList.size();i++){
+				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
+					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					if(classValue!=null && classValue.contains("hasChildren")){
+						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
+						waitForSeconds(3);
+						clickTheElement(templatesList.get(i).findElement(By.cssSelector("tr.child-row.ng-scope button")));
+						waitForSeconds(15);
+						if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
+								&&isElementEnabled(templateDetailsPageForm)){
+							SimpleUtils.pass("User can open " + templateName + " template succseefully");
+						}else{
+							SimpleUtils.fail("User open " + templateName + " template failed",false);
+						}
+					}else{
+						clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
+						waitForSeconds(15);
+						if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
+								&&isElementEnabled(templateDetailsPageForm)){
+							SimpleUtils.pass("User can open " + templateName + " template succseefully");
+						}else{
+							SimpleUtils.fail("User open " + templateName + " template failed",false);
+						}
+					}
+					break;
+				}else if(i==templateNameList.size()-1){
+					SimpleUtils.fail("Can't find the specify template",false);
+				}
+
+				if(isElementEnabled(deleteTemplateButton,3)){
+					clickTheElement(deleteTemplateButton);
+					if(isElementEnabled(deleteTemplateDialog,3)){
+						clickTheElement(okButtonOnDeleteTemplateDialog);
+						waitForSeconds(5);
+						String firstTemplateName = templateNameList.get(0).getText().trim();
+						if(!firstTemplateName.equals(templateName)){
+							SimpleUtils.pass("User has deleted new created template successfully!");
+						}else {
+							SimpleUtils.fail("User failed to delete new created template!",false);
+						}
+					}
+				}else {
+					SimpleUtils.fail("Clicking the template failed.",false);
+				}
+			}
+		}else{
+			SimpleUtils.fail("There is No template now",false);
+		}
+	}
+
+	@Override
+	public void clearSearchTemplateBox() throws Exception {
+		if(isElementEnabled(searchTemplateInputBox,5)){
+			clickTheElement(searchTemplateInputBox);
+			searchTemplateInputBox.clear();
+			waitForSeconds(2);
+		}
 	}
 }

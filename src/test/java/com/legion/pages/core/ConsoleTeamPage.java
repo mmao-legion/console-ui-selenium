@@ -520,7 +520,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement currentMonthYear;
 	@FindBy (css = "div.is-today")
 	private WebElement todayHighlighted;
-	@FindBy (css = "lgn-action-button.change-location-button button")
+	@FindBy (css = "[label=\"Transfer\"]")
 	private WebElement transferButton;
 	@FindBy (className = "location-card-image-name-container")
 	private List<WebElement> locationCards;
@@ -1107,17 +1107,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void isCancelTransferButtonLoadedAndClick() throws Exception {
-		String cancelTransfer = "CANCEL TRANSFER";
-		if (isElementLoaded(transferButton, 5)) {
-			if (cancelTransfer.equals(transferButton.getText())) {
-				SimpleUtils.pass("CANCEL TRANSFER button loaded successfully!");
-				waitForSeconds(3);
-				moveToElementAndClick(transferButton);
-			} else {
-				SimpleUtils.fail("This button isn't CANCEL TRANSFER, it is: " + transferButton.getText(), false);
-			}
+		if (isElementLoaded(cancelTransferButton, 5)) {
+			SimpleUtils.pass("CANCEL TRANSFER button loaded successfully!");
+			waitForSeconds(3);
+			moveToElementAndClick(cancelTransferButton);
 		} else {
-			SimpleUtils.fail("TRANSFER/CANCEL TRANSFER button failed to load!", true);
+			SimpleUtils.fail("The cancel transfer button fail to load! ", false);
 		}
 	}
 
@@ -1192,19 +1187,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	private boolean isCancelTransferSuccess() throws Exception {
 		boolean isSuccess = false;
-		String cancelTransfer = "CANCEL TRANSFER";
-		String transfer = "TRANSFER";
-		if (isElementLoaded(transferButton, 5) && transferButton.getText().equals(cancelTransfer)) {
-			click(transferButton);
+		if (isElementLoaded(cancelTransferButton, 5)) {
+			click(cancelTransferButton);
 			if (isElementLoaded(confirmButton, 10)) {
 				click(confirmButton);
 				if (isElementLoaded(transferButton, 10)){
-					if (transferButton.getText().equals(transfer)) {
-						isSuccess = true;
-						SimpleUtils.pass("Cancel Transfer Successfully!");
-					}else {
-						SimpleUtils.fail("CANCEL TRANSFER button doesn't change to TRANSFER", true);
-					}
+					isSuccess = true;
+					SimpleUtils.pass("Cancel Transfer Successfully!");
 				}else {
 					SimpleUtils.fail("Cancel Transfer failed!", true);
 				}
@@ -4804,5 +4793,112 @@ private List<WebElement> locationColumn;
 		} else {
 			SimpleUtils.fail("The school days fail to load! ", false);
 		}
+	}
+
+	@FindBy (css = "[label=\"Cancel Transfer\"]")
+	private WebElement cancelTransferButton;
+
+	public void cancelTransfer() throws Exception {
+		if (isElementLoaded(cancelTransferButton, 5)) {
+			clickTheElement(cancelTransferButton);
+			String expectedMessage = "Are you sure you want to cancel the transfer to the new location?";
+			String actualMessage = null;
+			if (isElementLoaded(confirmPopupWindow, 5) && isElementLoaded(popupMessage, 5)) {
+				actualMessage = popupMessage.findElement(By.tagName("span")).getText();
+				if (expectedMessage.trim().equals(actualMessage.trim())){
+					SimpleUtils.pass("Cancel Transfer window pops up!");
+				}else {
+					SimpleUtils.fail("The Message on Cancel Transfer window is incorrect!", true);
+				}
+			} else {
+				SimpleUtils.fail("Cancel Transfer pop-up window doesn't show!", true);
+			}
+		} else
+			SimpleUtils.report("The cancel transfer button is not loaded! ");
+	}
+
+	@FindBy (className = "modal-content")
+	private WebElement transferTMWindow;
+
+	@FindBy (css = "div.location-carousel-next")
+	private WebElement locationCarouselNext;
+	public void transferTheTeamMemberOnSpecificDay(String transferLocation, String transferFromDate) throws Exception {
+		if (isElementLoaded(transferButton, 5)) {
+			clickTheElement(transferButton);
+			boolean isTransferLocationExists = false;
+			if (isElementLoaded(transferTMWindow, 5)) {
+				String transferMsg = "Successfully transferred the Team Member";
+				String actualMsg = "";
+				if (areListElementVisible(locationCards, 5)) {
+					while (!isTransferLocationExists) {
+						for (WebElement locationCard: locationCards) {
+							if (locationCard.findElement(By.cssSelector("div.location-card-name-text")).
+									getText().equalsIgnoreCase(transferLocation)) {
+								isTransferLocationExists = true;
+								clickTheElement(locationCard);
+							}
+						}
+						if (!isTransferLocationExists && isElementLoaded(locationCarouselNext, 5)) {
+							clickTheElement(locationCarouselNext);
+						}
+					}
+
+				}
+				if (isElementLoaded(monthHeader, 5)
+						&& isElementLoaded(nextMonthArrow, 5)
+						&& areListElementVisible(daysOnCalendar, 5)) {
+					String[] dates = transferFromDate.split(" ");
+					String year = dates[0];
+					String month = dates[1];
+					String day = dates[2];
+
+					String monthInCalendar = monthHeader.getText().split(" ")[0].substring(0, 3);
+					String yearInCalendar = monthHeader.getText().split(" ")[1];
+
+					int i =0;
+					while (i<10 && (!year.equalsIgnoreCase(yearInCalendar) || !month.equalsIgnoreCase(monthInCalendar))){
+						click(nextMonthArrow);
+						i ++;
+						monthInCalendar = monthHeader.getText().split(" ")[0].substring(0, 3);
+					}
+					boolean isCurrentWeek = false;
+					for (WebElement dayOnCalendar: daysOnCalendar){
+						if(!isCurrentWeek) {
+							if (dayOnCalendar.getText().equalsIgnoreCase("1")){
+								isCurrentWeek = true;
+								if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
+									click (dayOnCalendar);
+									break;
+								}
+							}
+						} else {
+							if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
+								click (dayOnCalendar);
+								break;
+							}
+						}
+					}
+					click(applyButton);
+					if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+						click(confirmButton);
+						if (isElementLoaded(popupMessage, 15))
+						{
+							actualMsg = popupMessage.getText();
+							if (transferMsg.equals(actualMsg)) {
+								SimpleUtils.pass("Transfer the team member successfully!");
+							}else {
+								SimpleUtils.fail("The pop up message is incorrect!", false);
+							}
+						}
+					} else {
+						SimpleUtils.fail("Confirm window doesn't show!", false);
+					}
+				} else
+					SimpleUtils.fail("The items on calendar loaded fail!", false);
+			} else
+				SimpleUtils.fail("The transfer TM window fail to load! ", false);
+
+		} else
+			SimpleUtils.fail("The transfer button is fail to loaded! ", false);
 	}
 }

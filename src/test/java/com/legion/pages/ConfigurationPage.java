@@ -90,4 +90,8 @@ public interface ConfigurationPage {
     public void publishNewTemplate(String templateName,String dynamicGroupName) throws Exception;
     public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
     public void archivePublishedOrDeleteDraftTemplate(String templateName, String action);
+    public void setMoveExistingShiftWhenTransfer(String yesOrNo) throws Exception;
+    public boolean isMoveExistingShiftWhenTransferSettingEnabled() throws Exception;
+    public void deleteTemplate(String templateName) throws Exception;
+    public void clearSearchTemplateBox() throws Exception;
 }

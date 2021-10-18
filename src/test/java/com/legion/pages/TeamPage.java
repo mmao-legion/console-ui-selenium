@@ -182,4 +182,6 @@ public interface TeamPage {
 	public void clickOnCancelSchoolSessionCalendarBtn() throws Exception;
 	public List<String> getAllCalendarMonthNames();
 	public void setNonSchoolDaysForNonSchoolWeek();
+	public void cancelTransfer() throws Exception;
+	public void transferTheTeamMemberOnSpecificDay(String transferLocation, String transferFromDate) throws Exception;
 }

@@ -274,7 +274,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             String expectedTextInOperatingHoursSection= "Select Days to be Included in Good Faith Estimate"
                     + "Click on any Day & Scheduling Window to select and deselect working days."
                     + "Note that edits in the good faith estimate will not change the Legion suggested schedule.";
-            String expectedTextOfVSL = "Team members will be informed regarding opting in to the Volntary Standby List.";
+            String expectedTextOfVSL = "Team members will be informed regarding opting in to the Voluntary Standby List.";
 
             if (messageInCreateGFETemplate != null){
                 if (messageInCreateGFETemplate.getAttribute("value").equals(expectedTextInMessageSection)){

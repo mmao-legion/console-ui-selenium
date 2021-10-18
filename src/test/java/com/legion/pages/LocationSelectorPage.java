@@ -66,4 +66,5 @@ public interface LocationSelectorPage {
 	public List<String> getOrgList() throws Exception;
 	public void verifyClickChangeRegionButton() throws Exception;
 	public String changeAnotherLocation() throws Exception;
+	public String getOneRandomNameFromUpperFieldDropdownList(String upperFieldType) throws Exception;
 }
