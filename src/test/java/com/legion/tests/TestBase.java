@@ -519,7 +519,7 @@ public abstract class TestBase {
         }
     }
 
-    protected static String getCurrentTime() {
+    public static String getCurrentTime() {
         SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
         String currentTime =  dfs.format(new Date());
         return currentTime;
