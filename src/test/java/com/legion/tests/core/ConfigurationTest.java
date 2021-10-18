@@ -714,7 +714,7 @@ public class ConfigurationTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             //back to console mode
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -761,7 +761,7 @@ public class ConfigurationTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             //back to console mode
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();

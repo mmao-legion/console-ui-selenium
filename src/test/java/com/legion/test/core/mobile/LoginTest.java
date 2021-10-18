@@ -89,7 +89,7 @@
 //	   DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //	   CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 //       SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//       schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //       ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //	   ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 //	   NewShiftPage newShiftPage = pageFactory.createNewShiftPage();

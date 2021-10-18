@@ -682,7 +682,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     @Override
     public List<String> getAllUpperFieldNamesOnAnalyticsTable() throws Exception {
         List<String> upperFieldNames = new ArrayList<>();
-        if (areListElementVisible(upperFieldNamesOnAnalyticsTable, 10)) {
+        if (areListElementVisible(upperFieldNamesOnAnalyticsTable, 20)) {
             for (WebElement upperFieldName: upperFieldNamesOnAnalyticsTable){
                 upperFieldNames.add(upperFieldName.getText());
                 SimpleUtils.pass("Add upper field name: "+ upperFieldName.getText() +" successfully! ");

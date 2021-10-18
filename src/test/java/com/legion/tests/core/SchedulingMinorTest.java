@@ -58,7 +58,7 @@ public class SchedulingMinorTest extends TestBase {
                 locationSelectorPage.changeDistrict("Demo District");
                 locationSelectorPage.changeLocation("Santana Row");
             }
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -213,7 +213,7 @@ public class SchedulingMinorTest extends TestBase {
                 locationSelectorPage.changeDistrict("Demo District");
                 locationSelectorPage.changeLocation("Santana Row");
             }
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -360,7 +360,7 @@ public class SchedulingMinorTest extends TestBase {
                 locationSelectorPage.changeDistrict("Demo District");
                 locationSelectorPage.changeLocation("Santana Row");
             }
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -525,7 +525,7 @@ public class SchedulingMinorTest extends TestBase {
         String firstNameOfMinor16 = "Minor16";
 
         //Go to the schedule page to create shifts for minors and check the filter.
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -627,7 +627,7 @@ public class SchedulingMinorTest extends TestBase {
         String firstNameOfMinor16 = "Minor16";
 
         //Go to the schedule page to create shifts for minors and check the filter.
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -731,7 +731,7 @@ public class SchedulingMinorTest extends TestBase {
                 locationSelectorPage.changeDistrict("Demo District");
                 locationSelectorPage.changeLocation("Santana Row");
             }
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -864,7 +864,7 @@ public class SchedulingMinorTest extends TestBase {
                 locationSelectorPage.changeDistrict("Demo District");
                 locationSelectorPage.changeLocation("Santana Row");
             }
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1033,7 +1033,7 @@ public class SchedulingMinorTest extends TestBase {
                 locationSelectorPage.changeDistrict("Demo District");
                 locationSelectorPage.changeLocation("Santana Row");
             }
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1202,7 +1202,7 @@ public class SchedulingMinorTest extends TestBase {
                 locationSelectorPage.changeDistrict("Demo District");
                 locationSelectorPage.changeLocation("Santana Row");
             }
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

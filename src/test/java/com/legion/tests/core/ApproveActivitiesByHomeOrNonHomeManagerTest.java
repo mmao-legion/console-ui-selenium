@@ -182,7 +182,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         }
 
         // 2.admin create one manual open shift and assign to specific TM
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -435,7 +435,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         }
 
         // 2.admin create one manual open shift and assign to specific TM
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -556,7 +556,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         dashboardPage.clickOnDashboardConsoleMenu();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());

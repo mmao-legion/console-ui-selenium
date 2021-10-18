@@ -121,9 +121,9 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                     }
                 }
                 //return to edit dashboard
-                if (isElementLoaded(editDashboardBtn,5)){
+                if (isElementLoaded(editDashboardBtn,10)){
                     click(editDashboardBtn);
-                    SimpleUtils.assertOnFail(widget+" widget is not loaded!",verifyIfSpecificWidgetDisplayed(widget), true);
+                    SimpleUtils.assertOnFail(widget+" widget is not loaded!",verifyIfSpecificWidgetDisplayed(widget), false);
                 } else {
                     SimpleUtils.fail("Edit Dashboard button fail to load!",true);
                 }
@@ -177,28 +177,26 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     //parameter option: helpful links and so on
     private boolean verifyIfSpecificWidgetDisplayed(String widgetTitle) {
         waitForSeconds(10);
-        if (areListElementVisible(widgetsInDashboardPage,20)){
+        boolean result = false;
+        if (areListElementVisible(widgetsInDashboardPage,30)){
             for (WebElement widgetTemp : widgetsInDashboardPage){
-                try {
-                    if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))) {
-                        if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")) {
-                            if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")) {
-                                return false;
-                            } else {
-                                return true;
-                            }
+                if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))) {
+                    if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")) {
+                        if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")) {
+                            result =  false;
                         } else {
-                            return true;
+                            result =  true;
                         }
+                    } else {
+                        result =  true;
                     }
-                } catch (Exception e) {
-                    // Do nothing
+                    break;
                 }
             }
         } else {
             SimpleUtils.fail("Widgets in Dashboard page fail to load!",false);
         }
-        return false;
+        return result;
     }
 
     @Override
@@ -329,7 +327,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
 
 
     //get widget name in edit page
-    private String widgetsNameWrapper(String widgetTitleInManagePage) throws Exception {
+    private String widgetsNameWrapper(String widgetTitleInManagePage) {
         if (widgetTitleInManagePage.contains("starting soon")){
             return "starting";
         } else if (widgetTitleInManagePage.contains("timesheet approval rate")){

@@ -1,316 +1,316 @@
-//package com.legion.tests.core;
-//
-//import java.lang.reflect.Method;
-//import java.nio.channels.MulticastChannel;
-//import java.util.*;
-//
-//import com.legion.pages.*;
-//import com.legion.pages.core.ConsoleScheduleCommonPage;
-//import org.openqa.selenium.WebElement;
-//
-//import org.testng.annotations.BeforeMethod;
-//import org.testng.annotations.Test;
-//
-//import com.aventstack.extentreports.Status;
-//import com.legion.tests.TestBase;
-//import com.legion.tests.annotations.Automated;
-//import com.legion.tests.annotations.Enterprise;
-//import com.legion.tests.annotations.Owner;
-//import com.legion.tests.annotations.TestName;
-//import com.legion.tests.data.CredentialDataProviderSource;
-//import com.legion.tests.testframework.ExtentTestManager;
-//import com.legion.utils.JsonUtil;
-//import com.legion.utils.SimpleUtils;
-//
-//public class ScheduleTest extends TestBase{
-//	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
-//	  private static HashMap<String, String> propertyBudgetValue = JsonUtil.getPropertiesFromJsonFile("src/test/resources/Budget.json");
-//	  private HashMap<String, Object[][]> swapCoverCredentials = null;
-//	  private List<String> swapCoverNames = null;
-//	  private String workRoleName = "";
-//
-//	  @Override
-//	  @BeforeMethod()
-//	  public void firstTest(Method testMethod, Object[] params) throws Exception{
-//	  	try {
-//			this.createDriver((String) params[0], "69", "Window");
-//			visitPage(testMethod);
-//			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
-//		} catch (Exception e){
-//			SimpleUtils.fail(e.getMessage(), false);
-//		}
-//	  }
-//	  public enum weekCount{
-//			Zero(0),
-//			One(1),
-//			Two(2),
-//			Three(3),
-//			Four(4),
-//			Five(5),
-//			Six(6);
-//			private final int value;
-//			weekCount(final int newValue) {
-//	            value = newValue;
-//	        }
-//	        public int getValue() { return value; }
-//		}
-//
-//	  public enum overviewWeeksStatus{
-//		  NotAvailable("Not Available"),
-//		  Draft("Draft"),
-//		  Guidance("Guidance"),
-//		  Finalized("Finalized"),
-//		  Published("Published");
-//
-//		  private final String value;
-//		  overviewWeeksStatus(final String newValue) {
-//            value = newValue;
-//          }
-//        public String getValue() { return value; }
-//		}
-//
-//
-//	  public enum SchedulePageSubTabText{
-//		  Overview("OVERVIEW"),
-//		  ProjectedSales("PROJECTED SALES"),
-//		  StaffingGuidance("STAFFING GUIDANCE"),
-//		  Schedule("SCHEDULE");
-//			private final String value;
-//			SchedulePageSubTabText(final String newValue) {
-//	            value = newValue;
-//	        }
-//	        public String getValue() { return value; }
-//		}
-//
-//	  public enum weekViewType{
-//		  Next("Next"),
-//		  Previous("Previous");
-//			private final String value;
-//			weekViewType(final String newValue) {
-//	            value = newValue;
-//	        }
-//	        public String getValue() { return value; }
-//		}
-//
-//	  public enum scheduleHoursAndWagesData{
-//		  scheduledHours("scheduledHours"),
-//		  budgetedHours("budgetedHours"),
-//		  otherHours("otherHours"),
-//		  wagesBudgetedCount("wagesBudgetedCount"),
-//		  wagesScheduledCount("wagesScheduledCount");
-//			private final String value;
-//			scheduleHoursAndWagesData(final String newValue) {
-//	            value = newValue;
-//	        }
-//	        public String getValue() { return value; }
-//		}
-//
-//
-//		@Automated(automated = "Automated")
-//		@Owner(owner = "Naval")
-//		@Enterprise(name = "Coffee2_Enterprise")
-//	    @TestName(description = "TP-33: Hours and Wage calculation on Console-UI")
-//	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-//	    public void hoursAndWagesCalculationOnSchedulePage(String username, String password, String browser, String location)
-//	    		throws Exception {
-////	        loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
-//	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//	        SchedulePage schedulePage = dashboardPage.goToToday();
-//			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-//			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-//	        SimpleUtils.assertOnFail("Today's Schedule not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
-//	        //get Week view Hours & Wages
-//			scheduleCommonPage.clickOnWeekView();
-//	        HashMap<String, Float> scheduleWeekViewLabelData = smartCardPage.getScheduleLabelHoursAndWages();
-//	        Float scheduleWeekScheduledHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.scheduledHours.getValue());
-//	        Float scheduleWeekBudgetedHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.budgetedHours.getValue());
-//	        Float scheduleWeekOtherHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.otherHours.getValue());
-//	        Float scheduleWeekWagesBudgetedCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
-//	        Float scheduleWeekWagesScheduledCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
-//
-//	        //get days hours & Wages for current week
-//			scheduleCommonPage.clickOnDayView();
-//	        List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = smartCardPage.getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek();
-//	        Float scheduleDaysScheduledHoursTotal = (float) 0;
-//	        Float scheduleDaysBudgetedHoursTotal = (float) 0;
-//	        Float scheduleDaysOtherHoursTotal = (float) 0;
-//	        Float scheduleDaysWagesBudgetedCountTotal = (float) 0;
-//	        Float scheduleDaysWagesScheduledCountTotal = (float) 0;
-//	        for(HashMap<String, Float> scheduleDaysViewLabelDataForWeekDay : scheduleDaysViewLabelDataForWeekDays)
-//	        {
-//	        	scheduleDaysScheduledHoursTotal = scheduleDaysScheduledHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.scheduledHours.getValue());
-//	        	scheduleDaysBudgetedHoursTotal = scheduleDaysBudgetedHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.budgetedHours.getValue());
-//	        	scheduleDaysOtherHoursTotal = scheduleDaysOtherHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.otherHours.getValue());
-//	        	scheduleDaysWagesBudgetedCountTotal = scheduleDaysWagesBudgetedCountTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
-//	        	scheduleDaysWagesScheduledCountTotal = scheduleDaysWagesScheduledCountTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
-//	        }
-//
-//	        // Week Summary = Sum of Day Summary
-//
-//	        // Comparing Week Scheduled Hours and Sum of Days Scheduled Hours
-//
-//
-//	       /* if(scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal)) {
-//	        	SimpleUtils.pass("Week Scheduled Hours are matched with Sum of Days Scheduled Hours ("+scheduleWeekScheduledHours+"/"
-//	        			+scheduleDaysScheduledHoursTotal+")");
-//	        }
-//	        else {
-//		        SimpleUtils.assertOnFail("Week Scheduled Hours not matched with Sum of Days Scheduled Hours (" +scheduleWeekScheduledHours+"/"
-//		        		+scheduleDaysScheduledHoursTotal+ ")", scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal), true);
-//	        }
-//
-//	        if(scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal)) {
-//	        	SimpleUtils.pass("Week Scheduled Hours are matched with Sum of Days Scheduled Hours ("+scheduleWeekBudgetedHours+"/"
-//	        			+scheduleDaysBudgetedHoursTotal);
-//	        }
-//	        else {
-//		        SimpleUtils.assertOnFail("Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekScheduledHours+ "/"
-//		        		+ scheduleDaysBudgetedHoursTotal + ")", scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal), true);
-//	        }*/
-//
-//	        if(scheduleWeekScheduledHours != null && scheduleDaysScheduledHoursTotal != null)
-//	           {
-//	        	   if(scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal)) {
-//	   	        	SimpleUtils.pass("Schedule Page: Week Scheduled Hours matched with Sum of Days Scheduled Hours ("+scheduleWeekScheduledHours+"/"
-//	   	        			+scheduleDaysScheduledHoursTotal+")");
-//	        	   }
-//	        	   else {
-//	   		        SimpleUtils.assertOnFail("Schedule Page: Week Scheduled Hours not matched with Sum of Days Scheduled Hours (" +scheduleWeekScheduledHours+"/"
-//	   		        		+scheduleDaysScheduledHoursTotal+ ")", scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal), true);
-//	        	   }
-//	           }
-//
-//	           if(scheduleWeekBudgetedHours != null && scheduleDaysBudgetedHoursTotal != null)
-//	           {
-//	        	   if(scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal)) {
-//	   	        	SimpleUtils.pass("Schedule Page: Week Budgeted Hours matched with Sum of Days Budgeted Hours ("+scheduleWeekBudgetedHours+"/"
-//	   	        			+scheduleDaysBudgetedHoursTotal);
-//		   	        }
-//		   	        else {
-////		   		        SimpleUtils.assertOnFail("Schedule Page: Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekBudgetedHours+ "/"
-////		   		        		+ scheduleDaysBudgetedHoursTotal + ")", scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal), true);
-//		   		        SimpleUtils.report("Schedule Page: Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekBudgetedHours+ "/"
-//		   		        		+ scheduleDaysBudgetedHoursTotal + ")");
-//		   	        }
-//	           }
-//
-//	           if(scheduleWeekOtherHours != null && scheduleDaysOtherHoursTotal != null)
-//	           {
-//	        	   if(scheduleWeekOtherHours.equals(scheduleDaysOtherHoursTotal)) {
-//	   	        	SimpleUtils.pass("Schedule Page: Week Other Hours matched with Sum of Days Other Hours ("+scheduleWeekOtherHours+"/"
-//	   	        			+scheduleDaysOtherHoursTotal+")");
-//	        	   }
-//	        	   else {
-//	   		        SimpleUtils.assertOnFail("Schedule Page: Week Other Hours not matched with Sum of Days Other Hours (" +scheduleWeekOtherHours+"/"
-//	   		        		+scheduleDaysOtherHoursTotal+ ")", scheduleWeekOtherHours.equals(scheduleDaysOtherHoursTotal), true);
-//	        	   }
-//	           }
-//
-//	           if(scheduleWeekWagesBudgetedCount != null && scheduleDaysWagesBudgetedCountTotal != null)
-//	           {
-//	        	   if(scheduleWeekWagesBudgetedCount.equals(scheduleDaysWagesBudgetedCountTotal)) {
-//	   	        	SimpleUtils.pass("Schedule Page: Week Budgeted Wages matched with Sum of Days Budgeted Wages ("+scheduleWeekWagesBudgetedCount+"/"
-//	   	        			+scheduleDaysWagesBudgetedCountTotal);
-//		   	        }
-//		   	        else {
-////		   		        SimpleUtils.assertOnFail("Schedule Page: Week Budgeted Wages not matched with Sum of Days Budgeted Wages (" +scheduleWeekWagesBudgetedCount+ "/"
-////		   		        		+ scheduleDaysWagesBudgetedCountTotal + ")", scheduleWeekWagesBudgetedCount.equals(scheduleDaysWagesBudgetedCountTotal), true);
-//		   		        SimpleUtils.report("Schedule Page: Week Budgeted Wages not matched with Sum of Days Budgeted Wages (" +scheduleWeekWagesBudgetedCount+ "/"
-//		   		        		+ scheduleDaysWagesBudgetedCountTotal + ")");
-//		   	        }
-//	           }
-//
-//	           if(scheduleWeekWagesScheduledCount != null && scheduleDaysWagesScheduledCountTotal != null)
-//	           {
-//	        	   if(scheduleWeekWagesScheduledCount.equals(scheduleDaysWagesScheduledCountTotal)) {
-//	   	        	SimpleUtils.pass("Schedule Page: Week Scheduled Wages matched with Sum of Days Scheduled Wages ("+scheduleWeekWagesScheduledCount+"/"
-//	   	        			+scheduleDaysWagesScheduledCountTotal);
-//		   	        }
-//		   	        else {
-//		   		        SimpleUtils.assertOnFail("Schedule Page: Week Scheduled Wages not matched with Sum of Days Scheduled Wages (" +scheduleWeekWagesScheduledCount+ "/"
-//		   		        		+ scheduleDaysWagesScheduledCountTotal + ")", scheduleWeekWagesScheduledCount.equals(scheduleDaysWagesScheduledCountTotal), true);
-//		   	        }
-//	           }
-//
-//	  }
-//
-//	    @Automated(automated =  "Automated")
-//		@Owner(owner = "Naval")
-//	    @Enterprise(name = "Coffee2_Enterprise")
-//	    @TestName(description = "LEG-2424: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
-//	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-//	    public void reviewPastGenerateCurrentAndFutureWeekSchedule(String username, String password, String browser, String location)
-//	    		throws Exception {
-//	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
-////	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
-//	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-//			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-//	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-//	        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-//			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-//	        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-//	        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-//	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
-//	        //Schedule overview should show 5 week's schedule
-//	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-//	        List<String> scheduleOverviewWeeksStatus = scheduleOverviewPage.getScheduleWeeksStatus();
-//	        int overviewWeeksStatusCount = scheduleOverviewWeeksStatus.size();
-//	        SimpleUtils.assertOnFail("Schedule overview Page not displaying upcoming 5 weeks",(overviewWeeksStatusCount == overviewTotalWeekCount) , true);
-//	        System.out.println("overviewWeeksStatusCount: "+overviewWeeksStatusCount);
-//	        for(String overviewWeeksStatusText: scheduleOverviewWeeksStatus)
-//	        {
-//	        	int index = scheduleOverviewWeeksStatus.indexOf(overviewWeeksStatusText);
-////		        SimpleUtils.assertOnFail("Schedule overview Page upcoming week on index '"+index+"' is 'Not Available'",(! overviewWeeksStatusText.contains(overviewWeeksStatus.NotAvailable.getValue())) , true);
-//		        SimpleUtils.report("Schedule overview Page upcoming week on index '"+index+"' is 'Not Available'");
-//
-//	        	System.out.println("overviewWeeksStatus: "+overviewWeeksStatusText);
-//	        }
-//
-//
-//	        //Must have at least "Past Week" schedule published
-//	        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-//			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
-//	        SimpleUtils.assertOnFail("Schedule Page: Past week not generated!",createSchedulePage.isWeekGenerated() , true);
-//	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",createSchedulePage.isWeekPublished() , true);
-//
-//	        //The schedules that are already published should remain unchanged
-//			scheduleCommonPage.clickOnDayView();
-//	        scheduleMainPage.clickOnEditButton();
-//	        SimpleUtils.assertOnFail("User can add new shift for past week", (! scheduleMainPage.isAddNewDayViewShiftButtonLoaded()) , true);
-//	        scheduleMainPage.clickOnCancelButtonOnEditMode();
-//
-//	        // No generate button for Past Week
-//	        SimpleUtils.assertOnFail("Generate Button displaying for Past week", (! createSchedulePage.isGenerateButtonLoaded()) , true);
-//
-//
-//	        //there are at least one week in the future where schedule has not yet been published
-//			scheduleCommonPage.clickOnWeekView();
-//	        scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
-//
-//	        // to do -
-//	        for(int index = 1; index < weekCount.values().length; index++)
-//	        {
-//	        	scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
-//	        	if(! createSchedulePage.isWeekGenerated()){
-//        			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+ scheduleCommonPage.getScheduleWeekStartDayMonthDate()+"' not Generated!");
-//	        	}
-//	        	else {
-//	        		if(! createSchedulePage.isWeekPublished()){
-//	        			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+ scheduleCommonPage.getScheduleWeekStartDayMonthDate()+"' not Published!");
-//	        		}
-//	        	}
-//	        }
-//	    }
-//
+package com.legion.tests.core;
+
+import java.lang.reflect.Method;
+import java.nio.channels.MulticastChannel;
+import java.util.*;
+
+import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleCommonPage;
+import org.openqa.selenium.WebElement;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import com.aventstack.extentreports.Status;
+import com.legion.tests.TestBase;
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Enterprise;
+import com.legion.tests.annotations.Owner;
+import com.legion.tests.annotations.TestName;
+import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.utils.JsonUtil;
+import com.legion.utils.SimpleUtils;
+
+public class ScheduleTest extends TestBase{
+	  private static HashMap<String, String> propertyMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	  private static HashMap<String, String> propertyBudgetValue = JsonUtil.getPropertiesFromJsonFile("src/test/resources/Budget.json");
+	  private HashMap<String, Object[][]> swapCoverCredentials = null;
+	  private List<String> swapCoverNames = null;
+	  private String workRoleName = "";
+
+	  @Override
+	  @BeforeMethod()
+	  public void firstTest(Method testMethod, Object[] params) throws Exception{
+	  	try {
+			this.createDriver((String) params[0], "69", "Window");
+			visitPage(testMethod);
+			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	  }
+	  public enum weekCount{
+			Zero(0),
+			One(1),
+			Two(2),
+			Three(3),
+			Four(4),
+			Five(5),
+			Six(6);
+			private final int value;
+			weekCount(final int newValue) {
+	            value = newValue;
+	        }
+	        public int getValue() { return value; }
+		}
+
+	  public enum overviewWeeksStatus{
+		  NotAvailable("Not Available"),
+		  Draft("Draft"),
+		  Guidance("Guidance"),
+		  Finalized("Finalized"),
+		  Published("Published");
+
+		  private final String value;
+		  overviewWeeksStatus(final String newValue) {
+            value = newValue;
+          }
+        public String getValue() { return value; }
+		}
+
+
+	  public enum SchedulePageSubTabText{
+		  Overview("OVERVIEW"),
+		  ProjectedSales("PROJECTED SALES"),
+		  StaffingGuidance("STAFFING GUIDANCE"),
+		  Schedule("SCHEDULE");
+			private final String value;
+			SchedulePageSubTabText(final String newValue) {
+	            value = newValue;
+	        }
+	        public String getValue() { return value; }
+		}
+
+	  public enum weekViewType{
+		  Next("Next"),
+		  Previous("Previous");
+			private final String value;
+			weekViewType(final String newValue) {
+	            value = newValue;
+	        }
+	        public String getValue() { return value; }
+		}
+
+	  public enum scheduleHoursAndWagesData{
+		  scheduledHours("scheduledHours"),
+		  budgetedHours("budgetedHours"),
+		  otherHours("otherHours"),
+		  wagesBudgetedCount("wagesBudgetedCount"),
+		  wagesScheduledCount("wagesScheduledCount");
+			private final String value;
+			scheduleHoursAndWagesData(final String newValue) {
+	            value = newValue;
+	        }
+	        public String getValue() { return value; }
+		}
+
+
+		@Automated(automated = "Automated")
+		@Owner(owner = "Naval")
+		@Enterprise(name = "Coffee2_Enterprise")
+	    @TestName(description = "TP-33: Hours and Wage calculation on Console-UI")
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void hoursAndWagesCalculationOnSchedulePage(String username, String password, String browser, String location)
+	    		throws Exception {
+//	        loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+	        SchedulePage schedulePage = dashboardPage.goToToday();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+	        SimpleUtils.assertOnFail("Today's Schedule not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+	        //get Week view Hours & Wages
+			scheduleCommonPage.clickOnWeekView();
+	        HashMap<String, Float> scheduleWeekViewLabelData = smartCardPage.getScheduleLabelHoursAndWages();
+	        Float scheduleWeekScheduledHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.scheduledHours.getValue());
+	        Float scheduleWeekBudgetedHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.budgetedHours.getValue());
+	        Float scheduleWeekOtherHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.otherHours.getValue());
+	        Float scheduleWeekWagesBudgetedCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
+	        Float scheduleWeekWagesScheduledCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
+
+	        //get days hours & Wages for current week
+			scheduleCommonPage.clickOnDayView();
+	        List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = smartCardPage.getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek();
+	        Float scheduleDaysScheduledHoursTotal = (float) 0;
+	        Float scheduleDaysBudgetedHoursTotal = (float) 0;
+	        Float scheduleDaysOtherHoursTotal = (float) 0;
+	        Float scheduleDaysWagesBudgetedCountTotal = (float) 0;
+	        Float scheduleDaysWagesScheduledCountTotal = (float) 0;
+	        for(HashMap<String, Float> scheduleDaysViewLabelDataForWeekDay : scheduleDaysViewLabelDataForWeekDays)
+	        {
+	        	scheduleDaysScheduledHoursTotal = scheduleDaysScheduledHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.scheduledHours.getValue());
+	        	scheduleDaysBudgetedHoursTotal = scheduleDaysBudgetedHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.budgetedHours.getValue());
+	        	scheduleDaysOtherHoursTotal = scheduleDaysOtherHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.otherHours.getValue());
+	        	scheduleDaysWagesBudgetedCountTotal = scheduleDaysWagesBudgetedCountTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
+	        	scheduleDaysWagesScheduledCountTotal = scheduleDaysWagesScheduledCountTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
+	        }
+
+	        // Week Summary = Sum of Day Summary
+
+	        // Comparing Week Scheduled Hours and Sum of Days Scheduled Hours
+
+
+	       /* if(scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal)) {
+	        	SimpleUtils.pass("Week Scheduled Hours are matched with Sum of Days Scheduled Hours ("+scheduleWeekScheduledHours+"/"
+	        			+scheduleDaysScheduledHoursTotal+")");
+	        }
+	        else {
+		        SimpleUtils.assertOnFail("Week Scheduled Hours not matched with Sum of Days Scheduled Hours (" +scheduleWeekScheduledHours+"/"
+		        		+scheduleDaysScheduledHoursTotal+ ")", scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal), true);
+	        }
+
+	        if(scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal)) {
+	        	SimpleUtils.pass("Week Scheduled Hours are matched with Sum of Days Scheduled Hours ("+scheduleWeekBudgetedHours+"/"
+	        			+scheduleDaysBudgetedHoursTotal);
+	        }
+	        else {
+		        SimpleUtils.assertOnFail("Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekScheduledHours+ "/"
+		        		+ scheduleDaysBudgetedHoursTotal + ")", scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal), true);
+	        }*/
+
+	        if(scheduleWeekScheduledHours != null && scheduleDaysScheduledHoursTotal != null)
+	           {
+	        	   if(scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal)) {
+	   	        	SimpleUtils.pass("Schedule Page: Week Scheduled Hours matched with Sum of Days Scheduled Hours ("+scheduleWeekScheduledHours+"/"
+	   	        			+scheduleDaysScheduledHoursTotal+")");
+	        	   }
+	        	   else {
+	   		        SimpleUtils.assertOnFail("Schedule Page: Week Scheduled Hours not matched with Sum of Days Scheduled Hours (" +scheduleWeekScheduledHours+"/"
+	   		        		+scheduleDaysScheduledHoursTotal+ ")", scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal), true);
+	        	   }
+	           }
+
+	           if(scheduleWeekBudgetedHours != null && scheduleDaysBudgetedHoursTotal != null)
+	           {
+	        	   if(scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal)) {
+	   	        	SimpleUtils.pass("Schedule Page: Week Budgeted Hours matched with Sum of Days Budgeted Hours ("+scheduleWeekBudgetedHours+"/"
+	   	        			+scheduleDaysBudgetedHoursTotal);
+		   	        }
+		   	        else {
+//		   		        SimpleUtils.assertOnFail("Schedule Page: Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekBudgetedHours+ "/"
+//		   		        		+ scheduleDaysBudgetedHoursTotal + ")", scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal), true);
+		   		        SimpleUtils.report("Schedule Page: Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekBudgetedHours+ "/"
+		   		        		+ scheduleDaysBudgetedHoursTotal + ")");
+		   	        }
+	           }
+
+	           if(scheduleWeekOtherHours != null && scheduleDaysOtherHoursTotal != null)
+	           {
+	        	   if(scheduleWeekOtherHours.equals(scheduleDaysOtherHoursTotal)) {
+	   	        	SimpleUtils.pass("Schedule Page: Week Other Hours matched with Sum of Days Other Hours ("+scheduleWeekOtherHours+"/"
+	   	        			+scheduleDaysOtherHoursTotal+")");
+	        	   }
+	        	   else {
+	   		        SimpleUtils.assertOnFail("Schedule Page: Week Other Hours not matched with Sum of Days Other Hours (" +scheduleWeekOtherHours+"/"
+	   		        		+scheduleDaysOtherHoursTotal+ ")", scheduleWeekOtherHours.equals(scheduleDaysOtherHoursTotal), true);
+	        	   }
+	           }
+
+	           if(scheduleWeekWagesBudgetedCount != null && scheduleDaysWagesBudgetedCountTotal != null)
+	           {
+	        	   if(scheduleWeekWagesBudgetedCount.equals(scheduleDaysWagesBudgetedCountTotal)) {
+	   	        	SimpleUtils.pass("Schedule Page: Week Budgeted Wages matched with Sum of Days Budgeted Wages ("+scheduleWeekWagesBudgetedCount+"/"
+	   	        			+scheduleDaysWagesBudgetedCountTotal);
+		   	        }
+		   	        else {
+//		   		        SimpleUtils.assertOnFail("Schedule Page: Week Budgeted Wages not matched with Sum of Days Budgeted Wages (" +scheduleWeekWagesBudgetedCount+ "/"
+//		   		        		+ scheduleDaysWagesBudgetedCountTotal + ")", scheduleWeekWagesBudgetedCount.equals(scheduleDaysWagesBudgetedCountTotal), true);
+		   		        SimpleUtils.report("Schedule Page: Week Budgeted Wages not matched with Sum of Days Budgeted Wages (" +scheduleWeekWagesBudgetedCount+ "/"
+		   		        		+ scheduleDaysWagesBudgetedCountTotal + ")");
+		   	        }
+	           }
+
+	           if(scheduleWeekWagesScheduledCount != null && scheduleDaysWagesScheduledCountTotal != null)
+	           {
+	        	   if(scheduleWeekWagesScheduledCount.equals(scheduleDaysWagesScheduledCountTotal)) {
+	   	        	SimpleUtils.pass("Schedule Page: Week Scheduled Wages matched with Sum of Days Scheduled Wages ("+scheduleWeekWagesScheduledCount+"/"
+	   	        			+scheduleDaysWagesScheduledCountTotal);
+		   	        }
+		   	        else {
+		   		        SimpleUtils.assertOnFail("Schedule Page: Week Scheduled Wages not matched with Sum of Days Scheduled Wages (" +scheduleWeekWagesScheduledCount+ "/"
+		   		        		+ scheduleDaysWagesScheduledCountTotal + ")", scheduleWeekWagesScheduledCount.equals(scheduleDaysWagesScheduledCountTotal), true);
+		   	        }
+	           }
+
+	  }
+
+	    @Automated(automated =  "Automated")
+		@Owner(owner = "Naval")
+	    @Enterprise(name = "Coffee2_Enterprise")
+	    @TestName(description = "LEG-2424: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
+	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	    public void reviewPastGenerateCurrentAndFutureWeekSchedule(String username, String password, String browser, String location)
+	    		throws Exception {
+	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+	        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+	        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+	        //Schedule overview should show 5 week's schedule
+	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+	        List<String> scheduleOverviewWeeksStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+	        int overviewWeeksStatusCount = scheduleOverviewWeeksStatus.size();
+	        SimpleUtils.assertOnFail("Schedule overview Page not displaying upcoming 5 weeks",(overviewWeeksStatusCount == overviewTotalWeekCount) , true);
+	        System.out.println("overviewWeeksStatusCount: "+overviewWeeksStatusCount);
+	        for(String overviewWeeksStatusText: scheduleOverviewWeeksStatus)
+	        {
+	        	int index = scheduleOverviewWeeksStatus.indexOf(overviewWeeksStatusText);
+//		        SimpleUtils.assertOnFail("Schedule overview Page upcoming week on index '"+index+"' is 'Not Available'",(! overviewWeeksStatusText.contains(overviewWeeksStatus.NotAvailable.getValue())) , true);
+		        SimpleUtils.report("Schedule overview Page upcoming week on index '"+index+"' is 'Not Available'");
+
+	        	System.out.println("overviewWeeksStatus: "+overviewWeeksStatusText);
+	        }
+
+
+	        //Must have at least "Past Week" schedule published
+	        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+	        SimpleUtils.assertOnFail("Schedule Page: Past week not generated!",createSchedulePage.isWeekGenerated() , true);
+	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",createSchedulePage.isWeekPublished() , true);
+
+	        //The schedules that are already published should remain unchanged
+			scheduleCommonPage.clickOnDayView();
+	        scheduleMainPage.clickOnEditButton();
+	        SimpleUtils.assertOnFail("User can add new shift for past week", (! scheduleMainPage.isAddNewDayViewShiftButtonLoaded()) , true);
+	        scheduleMainPage.clickOnCancelButtonOnEditMode();
+
+	        // No generate button for Past Week
+	        SimpleUtils.assertOnFail("Generate Button displaying for Past week", (! createSchedulePage.isGenerateButtonLoaded()) , true);
+
+
+	        //there are at least one week in the future where schedule has not yet been published
+			scheduleCommonPage.clickOnWeekView();
+	        scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+
+	        // to do -
+	        for(int index = 1; index < weekCount.values().length; index++)
+	        {
+	        	scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+	        	if(! createSchedulePage.isWeekGenerated()){
+        			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+ scheduleCommonPage.getScheduleWeekStartDayMonthDate()+"' not Generated!");
+	        	}
+	        	else {
+	        		if(! createSchedulePage.isWeekPublished()){
+	        			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+ scheduleCommonPage.getScheduleWeekStartDayMonthDate()+"' not Published!");
+	        		}
+	        	}
+	        }
+	    }
+
 //	    @Automated(automated ="Automated")
 //		@Owner(owner = "Gunjan")
 //		@Enterprise(name = "KendraScott2_Enterprise")
 //		@TestName(description = "FOR-596:Budget modal header should display the week instead of UNDEFINED")
 //	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 //	    public void enterBudgetPopUpHeaderStoreManager(String username, String password, String browser, String location) throws Throwable {
-//	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //	    	scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -325,7 +325,7 @@
 //		@TestName(description = "TP-100: FOR-620: Budget smartcard shows budget hrs when no budget was entered ,if navigate from a week with budget")
 //	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 //	    public void noBudgetHourDisplayWhenBudgetNotEnteredStoreManager(String username, String password, String browser, String location) throws Throwable {
-//	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //	    	scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -339,7 +339,7 @@
 //  		@TestName(description = "Validate calculation of budget values for budget and schedule smartcard when budget is by hours or wages")
 //  	    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 //  	    public void budgetInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
-//  	    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //  	    	scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -354,7 +354,7 @@
 //	@TestName(description = "TP-102: LEG 5500 : Budget Hours shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
 //	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 //	public void budgetIntScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -370,7 +370,7 @@
 ////	@TestName(description = "Validate the budget calculation when budget is modified for any schedule week")
 ////	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 ////	public void updateBudgetInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
-////		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+////
 ////		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 ////		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 ////		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
@@ -383,7 +383,7 @@
 ////	@TestName(description = "TP-102: LEG 5500 : Budget Wages shown in budget modal 715 hrs does not match the budgeted hours shown in schedule 1287 hrs")
 ////	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 ////	public void budgetWagesInScheduleNBudgetSmartCardStoreManager(String username, String password, String browser, String location) throws Throwable {
-////		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+////
 ////		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 ////		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 ////		List<WebElement> overviewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
@@ -685,7 +685,7 @@
 //			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 //			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 //			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -749,7 +749,7 @@
 //			// Verify View my Schedule button should be present and clickable
 //			dashboardPage.isViewMySchedulePresentAndClickable();
 //			// Verify After click on the View My Schedule, page should navigate to My Schedule page
-//			SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 //			scheduleCommonPage.navigateToNextWeek();
@@ -806,7 +806,7 @@
 //			// Verify View my Schedule button should be present and clickable
 //			dashboardPage.isViewMySchedulePresentAndClickable();
 //			// Verify After click on the View My Schedule, page should navigate to My Schedule page
-//			SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 //			scheduleCommonPage.navigateToNextWeek();
@@ -964,7 +964,7 @@
 //			if (dashboardPage.isSwitchToEmployeeViewPresent()) {
 //				dashboardPage.clickOnSwitchToEmployeeView();
 //			}
-//			SchedulePage schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 //			scheduleCommonPage.navigateToNextWeek();
@@ -1112,72 +1112,72 @@
 //			SimpleUtils.fail(e.getMessage(), false);
 //		}
 //	}
-//
-//	@Automated(automated = "Automated")
-//	@Owner(owner = "Nora")
-//	@Enterprise(name = "KendraScott2_Enterprise")
-//	@TestName(description = "Validate the feature of filter")
-//	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-//	public void verifyTheFeatureOfFilterAsInternalAdmin(String browser, String username, String password, String location)
-//			throws Exception {
-//	  	try {
-//			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-//			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-//			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-//			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-//			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-//			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
-//			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-//			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-//			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-//			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-//					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
-//			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-//			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-//					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-//
-//			scheduleCommonPage.navigateToNextWeek();
-//			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-//			if (isWeekGenerated) {
-//				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-//			}
-//			createSchedulePage.createScheduleForNonDGFlowNewUI();
-//			String workRole = shiftOperatePage.getRandomWorkRole();
-//			// Deleting the existing shifts for swap team members
-//			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-//			newShiftPage.addOpenShiftWithLastDay(workRole);
-//			scheduleMainPage.saveSchedule();
-//			createSchedulePage.publishActiveSchedule();
-//
-//			LoginPage loginPage = pageFactory.createConsoleLoginPage();
-//			loginPage.logOut();
-//
-//			// Login as Team Member
-//			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-//
-//			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//			myscheduleCommonPage.goToSchedulePageAsTeamMember();
-//			scheduleCommonPage.navigateToNextWeek();
-//			String subTitle = "Team Schedule";
-//			myscheduleCommonPage.goToScheduleSubTabByText(subTitle);
-//			// Validate the feature of filter
-//			mySchedulePage.verifyScheduledNOpenFilterLoaded();
-//			// Validate the filter - Schedule and Open
-//			scheduleMainPage.checkAndUnCheckTheFilters();
-//			// Validate the filter results by applying scheduled filter
-//			// Validate the filter results by applying Open filter
-//			scheduleMainPage.filterScheduleByShiftTypeAsTeamMember(true);
-//			// Validate the filter results by applying both filters and none of them
-//			scheduleMainPage.filterScheduleByBothAndNone();
-//			// Validate the filter value by moving to other weeks
-//			String selectedFilter = scheduleMainPage.selectOneFilter();
-//			scheduleMainPage.verifySelectedFilterPersistsWhenSelectingOtherWeeks(selectedFilter);
-//		} catch (Exception e){
-//			SimpleUtils.fail(e.getMessage(), false);
-//		}
-//	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the feature of filter")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheFeatureOfFilterAsInternalAdmin(String browser, String username, String password, String location)
+			throws Exception {
+	  	try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+			String workRole = shiftOperatePage.getRandomWorkRole();
+			// Deleting the existing shifts for swap team members
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+			newShiftPage.addOpenShiftWithLastDay(workRole);
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			// Login as Team Member
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			mySchedulePage.goToSchedulePageAsTeamMember();
+			scheduleCommonPage.navigateToNextWeek();
+			String subTitle = "Team Schedule";
+			mySchedulePage.gotoScheduleSubTabByText(subTitle);
+			// Validate the feature of filter
+			mySchedulePage.verifyScheduledNOpenFilterLoaded();
+			// Validate the filter - Schedule and Open
+			scheduleMainPage.checkAndUnCheckTheFilters();
+			// Validate the filter results by applying scheduled filter
+			// Validate the filter results by applying Open filter
+			scheduleMainPage.filterScheduleByShiftTypeAsTeamMember(true);
+			// Validate the filter results by applying both filters and none of them
+			scheduleMainPage.filterScheduleByBothAndNone();
+			// Validate the filter value by moving to other weeks
+			String selectedFilter = scheduleMainPage.selectOneFilter();
+			scheduleMainPage.verifySelectedFilterPersistsWhenSelectingOtherWeeks(selectedFilter);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 //
 //	@Automated(automated = "Automated")
 //	@Owner(owner = "Nora")
@@ -1213,7 +1213,7 @@
 //			SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
 //			controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
 //
-//			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
@@ -1246,7 +1246,7 @@
 //
 //			loginToLegionAndVerifyIsLoginDone(username, password, location);
 //			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-//			schedulePage = dashboardPage.goToTodayForNewUI();
+//
 //			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 //			scheduleCommonPage.navigateToNextWeek();
 //
@@ -1299,7 +1299,7 @@
 //	}
 //
 //	public void createTheSwapRequest(int index) throws Exception {
-//	  	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 //		mySchedulePage.clickOnShiftByIndex(index);
 //		String request = "Request to Swap Shift";
@@ -1312,4 +1312,4 @@
 //		SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), false);
 //		mySchedulePage.verifyClickOnSubmitButton();
 //	}
-//}
+}

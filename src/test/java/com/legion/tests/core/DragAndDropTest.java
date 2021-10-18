@@ -66,7 +66,7 @@ public class DragAndDropTest extends TestBase {
             String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
 
             // Go to Schedule page, Schedule tab
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -348,7 +348,7 @@ public class DragAndDropTest extends TestBase {
             String timeOffDate = profileNewUIPage.selectStartAndEndDateAtSameDay();
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -446,7 +446,7 @@ public class DragAndDropTest extends TestBase {
             String userName2 = teamPage.selectATeamMemberToViewProfile();
             String TM2 = userName2.contains(" ") ? userName2.split(" ")[0] : userName2;
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -595,7 +595,7 @@ public class DragAndDropTest extends TestBase {
             String firstName = userName.contains(" ") ? userName.split(" ")[0] : userName;
 
             // Go to Schedule page, Schedule tab, navigate to next week
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -702,7 +702,7 @@ public class DragAndDropTest extends TestBase {
             controlsNewUIPage.selectClopeningHours(12);
 
             // Go to Schedule page, Schedule tab
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -911,7 +911,7 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Schedule page, Schedule tab
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1031,7 +1031,7 @@ public class DragAndDropTest extends TestBase {
             //controlsNewUIPage.clickOnGlobalLocationButton();
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1165,7 +1165,7 @@ public class DragAndDropTest extends TestBase {
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.enableOverRideAssignmentRuleAsNo();
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1261,7 +1261,7 @@ public class DragAndDropTest extends TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1314,7 +1314,7 @@ public class DragAndDropTest extends TestBase {
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1372,7 +1372,7 @@ public class DragAndDropTest extends TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1426,7 +1426,7 @@ public class DragAndDropTest extends TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1484,7 +1484,7 @@ public class DragAndDropTest extends TestBase {
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1533,7 +1533,7 @@ public class DragAndDropTest extends TestBase {
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1586,7 +1586,7 @@ public class DragAndDropTest extends TestBase {
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1635,7 +1635,7 @@ public class DragAndDropTest extends TestBase {
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1688,7 +1688,7 @@ public class DragAndDropTest extends TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1737,7 +1737,7 @@ public class DragAndDropTest extends TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1790,7 +1790,7 @@ public class DragAndDropTest extends TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1839,7 +1839,7 @@ public class DragAndDropTest extends TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1892,7 +1892,7 @@ public class DragAndDropTest extends TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1966,7 +1966,7 @@ public class DragAndDropTest extends TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

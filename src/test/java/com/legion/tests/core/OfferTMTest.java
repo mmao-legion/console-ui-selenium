@@ -48,7 +48,7 @@ public class OfferTMTest extends TestBase {
         CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
@@ -190,7 +190,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -282,7 +282,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -469,7 +469,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -564,7 +564,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -649,7 +649,7 @@ public class OfferTMTest extends TestBase {
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1005,7 +1005,7 @@ public class OfferTMTest extends TestBase {
             SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
             //===================================
             controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1134,7 +1134,7 @@ public class OfferTMTest extends TestBase {
             SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
             controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
             //===================================
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1259,7 +1259,7 @@ public class OfferTMTest extends TestBase {
         SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
         controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
         //===================================
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

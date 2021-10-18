@@ -347,7 +347,6 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
     public Map<String, Integer> getThreeWeeksScheduleStatusFromScheduleDMViewPage() throws Exception {
         Map<String, Integer> scheduleStatusFromScheduleDMViewPage = new HashMap<>();
-        SchedulePage schedulePage = new ConsoleScheduleNewUIPage();
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         for (int j=1; j<=3; j++){
             int notStartedScheduleAccount = 0;
@@ -683,7 +682,6 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
              */
 
             //Select specific location schedule to test, because that not all schedules are available
-            SchedulePage schedulePage = new ConsoleScheduleNewUIPage();
             ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
             CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
             ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();

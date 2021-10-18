@@ -324,7 +324,7 @@ public class DMViewTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
@@ -412,7 +412,7 @@ public class DMViewTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
@@ -500,7 +500,7 @@ public class DMViewTest extends TestBase {
 
         CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         compliancePage.clickOnComplianceConsoleMenu();
         SimpleUtils.assertOnFail("Compliance page not loaded successfully", compliancePage.isCompliancePageLoaded(), false);
@@ -793,7 +793,7 @@ public class DMViewTest extends TestBase {
             Thread.sleep(2000);
             controlsNewUIPage.updateDaysInAdvancePublishSchedulesInSchedulingPolicies("7");
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
@@ -918,7 +918,7 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             // Create open shift in schedule so that we can verify the content on Open_Shifts Widget
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1004,7 +1004,7 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
@@ -1051,7 +1051,7 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
@@ -1143,7 +1143,7 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
@@ -1241,7 +1241,7 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
@@ -1358,7 +1358,7 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
@@ -1411,7 +1411,7 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
@@ -1454,7 +1454,7 @@ public class DMViewTest extends TestBase {
 
         String districtName = dashboardPage.getCurrentDistrict();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
         CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
         ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
@@ -1554,7 +1554,7 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1617,7 +1617,7 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
@@ -1793,7 +1793,7 @@ public class DMViewTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 

@@ -195,7 +195,7 @@ public class ScheduleRoleBasedNewUITest extends TestBase {
     }
 
     public void navigateToSchedulePage() throws Exception {
-        schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.value);

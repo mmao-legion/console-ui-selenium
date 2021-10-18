@@ -191,7 +191,7 @@ public class ScheduleRoleBasedTest extends TestBase {
     }
 
     public void navigateToSchedulePage() throws Exception {
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.value);
@@ -220,7 +220,6 @@ public class ScheduleRoleBasedTest extends TestBase {
 
     public synchronized List<HashMap<String, Float>> getDaysDataofCurrentWeek() throws Exception {
         List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays = new ArrayList<HashMap<String, Float>>();
-        SchedulePage schedulePage= pageFactory.createConsoleScheduleNewUIPage();
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
         scheduleCommonPage.clickOnDayView();

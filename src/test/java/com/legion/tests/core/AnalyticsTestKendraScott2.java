@@ -155,7 +155,7 @@
 //		   }
 //		   System.out.println("totalDaysStaffingGuidanceHours: "+totalDaysStaffingGuidanceHours);
 //		   System.out.println("totalDaysProjectedSalesHours: "+totalDaysProjectedSalesHours);
-//		   SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		   ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		   scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		   SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()),false);

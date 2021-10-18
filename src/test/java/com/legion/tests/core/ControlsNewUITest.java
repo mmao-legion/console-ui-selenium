@@ -190,7 +190,7 @@
 //      boolean enableBudgetSmartcard = true;
 //      controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
 //
-//      SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //	  ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //  	  scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //  	  scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
@@ -236,7 +236,7 @@
 //		boolean enableBudgetSmartcard = true;
 //		controlsNewUIPage.enableDisableBudgetSmartcard(enableBudgetSmartcard);
 //
-//		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //		scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
@@ -297,7 +297,7 @@
 //      controlsNewUIPage.updateAdvanceScheduleWeekCountToCreate(scheduleWeekCoundToCreate);
 //      HashMap<String, Integer> schedulePoliciesBufferHours = controlsNewUIPage.getScheduleBufferHours();
 //      // Verify Schedule week can be created in advance
-//      SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //	  ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //  	  scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //  	  scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -416,7 +416,7 @@
 //      controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
 //      controlsNewUIPage.selectSchedulingPoliciesShiftIntervalByLabel(schedulingPoliciesShiftIntervalTime.ThirtyMinutes.getValue());
 //      Thread.sleep(1000);
-//      SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //	  ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //      scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //  	  scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -484,7 +484,7 @@
 //      SimpleUtils.report("Scheduling Policies : Advance Schedule can be 'Finalize' upto upcoming '"+advanceFinalizeScheduleDaysCount+"' Days.");
 //      Thread.sleep(1000);
 //
-//      SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //	  ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 //      scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //  	  scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());

@@ -86,7 +86,7 @@
 //       salesForecastPage.loadSalesForecast();
 //       StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
 //       staffingGuidancePage.loadStaffingGuidance();
-//       SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //       schedulePage.loadSchedule();
 //       AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
 //       analyticsPage.loadAnalyticsTab();
@@ -103,7 +103,7 @@
 //    public void scheduleSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
 //        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
 //        scheduleOverviewPage.loadScheduleOverview();
-//        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+//
 //        schedulePage.navigateScheduleDayWeekView(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.Three.getValue());
 //
 //    }

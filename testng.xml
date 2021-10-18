@@ -398,6 +398,10 @@
                     <include name="verifyEditNotesOptionIsAvailableForOpenShiftsAsInternalAdmin" />
                     <include name="verifyUpdateShiftNotesForAssignedShiftsAsInternalAdmin" />
                     <include name="verifyUpdateEditNotesForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyEmployeesScheduledInOtherLocationShowUpInGroupByTMAsInternalAdmin" />
+                    <include name="verifyEmployeesFromOtherLocationShowUpInGroupByTMAsInternalAdmin" />
+                    <include name="verifyEmployeesLocationInfoFromOtherLocationAsInternalAdmin" />
+                    <include name="verifyTheTotalHrsOfEmployeesScheduledInOtherLocationAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

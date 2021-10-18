@@ -256,7 +256,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
     private void validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSetting(boolean isCopySchedule, String option, boolean ifVerifyOOOHShifts) throws Exception {
 
 
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -845,7 +845,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 //                disableCopyRestriction();
 //            }
             //Go to schedule page and create new schedule
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1000,7 +1000,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Go to schedule page and create new schedule
             Thread.sleep(2000);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1164,7 +1164,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 SimpleUtils.fail("The team member '"+ firstNameOfTM +"' is not exists! ", false);
 
             //Go to schedule page and create new schedule
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             String userName = "";
             Thread.sleep(2000);
@@ -1423,7 +1423,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(tm2);
 
             Thread.sleep(2000);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1701,7 +1701,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Busy");
             profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1859,7 +1859,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 //            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
 //                disableCopyRestriction();
 //            }
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

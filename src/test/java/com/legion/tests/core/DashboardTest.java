@@ -88,7 +88,7 @@ public class DashboardTest extends TestBase{
 			HashMap<String, String> hoursOnDashboard = dashboardPage.getHoursFromDashboardPage();
 			String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
 			String timeFromDashboard = dashboardPage.getCurrentTimeFromDashboard();
-			schedulePage = dashboardPage.goToTodayForNewUI();
+
 			SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(
 					ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
 			// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
@@ -117,7 +117,7 @@ public class DashboardTest extends TestBase{
 			// TODO: following check will fail since LEG-8474
 			dashboardPage.verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(startingSoonLoaded, hours.get("Scheduled"));
 			// Verify starting soon section
-			schedulePage = dashboardPage.goToTodayForNewUI();
+
 			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			if (!createSchedulePage.isPublishButtonLoaded()) {
 				createSchedulePage.generateOrUpdateAndGenerateSchedule();
@@ -129,7 +129,7 @@ public class DashboardTest extends TestBase{
 			boolean isStartingTomorrow = dashboardPage.isStartingTomorrow();
 			if (startingSoonLoaded) {
 				upComingShifts = dashboardPage.getUpComingShifts();
-				schedulePage = dashboardPage.goToTodayForNewUI();
+
 				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 				fourShifts = scheduleShiftTablePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
 				scheduleShiftTablePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);

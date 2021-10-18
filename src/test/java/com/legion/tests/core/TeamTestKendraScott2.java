@@ -1218,6 +1218,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as SM
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);

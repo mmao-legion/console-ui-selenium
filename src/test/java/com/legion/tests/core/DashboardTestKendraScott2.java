@@ -268,7 +268,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		HashMap<String, String> upComingShifts = new HashMap<>();
 		HashMap<String, String> fourShifts = new HashMap<>();
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
@@ -297,7 +297,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
 		String timeFromDashboard = dashboardPage.getCurrentTimeFromDashboard();
 
-		schedulePage = dashboardPage.goToTodayForNewUI();
+
 		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(
 				ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 		// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
@@ -326,7 +326,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		// TODO: following check will fail since LEG-8474
 		dashboardPage.verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(startingSoonLoaded, hours.get("Scheduled"));
 		// Verify starting soon section
-		schedulePage = dashboardPage.goToTodayForNewUI();
+
 		scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 		if (!createSchedulePage.isPublishButtonLoaded()) {
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -338,7 +338,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 		boolean isStartingTomorrow = dashboardPage.isStartingTomorrow();
 		if (startingSoonLoaded) {
 			upComingShifts = dashboardPage.getUpComingShifts();
-			schedulePage = dashboardPage.goToTodayForNewUI();
+
 			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			fourShifts = scheduleShiftTablePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
 			scheduleShiftTablePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
@@ -469,7 +469,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 
 		//Check Schedule console menu is display
 		SimpleUtils.assertOnFail("Schedule console menu not loaded Successfully!", dashboardPage.isScheduleConsoleMenuDisplay(), false);
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		//Check Schedule overview page is display after click Schedule tab

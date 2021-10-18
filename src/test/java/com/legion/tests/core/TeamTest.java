@@ -158,7 +158,7 @@ public class TeamTest extends TestBase{
 			//teamPage.isOnBoardedDateUpdated(onBoardedDate);
 			// Verify Status will change into Activate status according to date
 			teamPage.verifyTheStatusOfTeamMember(active);
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.goToSchedulePage();
 			scheduleCommonPage.isSchedulePage();
@@ -231,7 +231,7 @@ public class TeamTest extends TestBase{
 			teamPage.isActivateWindowLoaded();
 			teamPage.selectADateOnCalendarAndActivate();
 			teamPage.verifyTheStatusOfTeamMember(active);
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			// Go to schedule page, assign shift to the new team member
 			scheduleCommonPage.goToSchedulePage();
