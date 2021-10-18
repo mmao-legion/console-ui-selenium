@@ -740,7 +740,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
-        if (shiftInfo.size() <= 7) {
+        if (shiftInfo.size() < 7) {
             SimpleUtils.fail("Failed to get the shift info!", false);
         }
         return shiftInfo;

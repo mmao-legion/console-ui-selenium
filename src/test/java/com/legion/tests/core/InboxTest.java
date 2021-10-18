@@ -658,7 +658,7 @@ public class InboxTest extends TestBase {
     //Added by Haya
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify the content of GFE is consistent between SM and TM")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyContentOfGFEAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -725,11 +725,6 @@ public class InboxTest extends TestBase {
         inboxPage.clickOnInboxConsoleMenuItem();
         inboxPage.clickFirstGFEInList();
         inboxPage.verifyComment(commentFromTM, nickNameOfTM);
-        try {
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
     }
 
     @Automated(automated ="Automated")
