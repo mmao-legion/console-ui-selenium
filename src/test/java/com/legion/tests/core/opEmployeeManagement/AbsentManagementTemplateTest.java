@@ -11,8 +11,8 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.SimpleUtils;
 import org.testng.Assert;
-import org.testng.Reporter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -40,7 +40,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
         navigationPage.navigateToEmployeeManagement();
-        Reporter.log("EmployeeManagement Module is enabled!");
+        SimpleUtils.pass("EmployeeManagement Module is enabled!");
         //verify the absent management dashboard card content
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
         String dashboardText = panelPage.getDashboardCardContent();
@@ -48,7 +48,7 @@ public class AbsentManagementTemplateTest extends TestBase {
                 "Configure Time Offs\n" +
                 "Time Off Reasons\n" +
                 "Time Off Accrual Rules", "Invalid content on dashboard card!");
-        Reporter.log("Succeeded in validating Absent Management dashboard card content!");
+        SimpleUtils.pass("Succeeded in validating Absent Management dashboard card content!");
     }
 
 
@@ -66,40 +66,41 @@ public class AbsentManagementTemplateTest extends TestBase {
         AbsentManagePage absentManagePage = new AbsentManagePage();
         Assert.assertTrue(absentManagePage.isTemplateTabDisplayed(), "Template tab on absent manage page didn't show!");
         Assert.assertTrue(absentManagePage.isSettingsTabDisplayed(), "Settings tab on absent manage page didn't show!");
-        Reporter.log("Template tab and settings tab can be displayed normally!");
+        SimpleUtils.pass("Template tab and settings tab can be displayed normally!");
+
         //Verify there is a new template button
         Assert.assertTrue(absentManagePage.isNewTemplateButtonDisplayedAndEnabled(), "New template button didn't show or it is disabled!");
-        Reporter.log("Succeeded in validating new template button shown!");
+        SimpleUtils.pass("Succeeded in validating new template button shown!");
 
         //verify cancel creating template
         absentManagePage.createANewTemplate("CancelCreating", "for test");
         absentManagePage.cancel();
-        Reporter.log("Succeeded in canceling creation!");
+        SimpleUtils.pass("Succeeded in canceling creation!");
 
         //verify new template works well
         absentManagePage.createANewTemplate("AutoTest01", "for test");
         absentManagePage.submit();
         absentManagePage.saveTemplateAs("Save as draft");
-        Reporter.log("Succeeded in creating a template!");
+        SimpleUtils.pass("Succeeded in creating a template!");
 
         //verify search template UI
         Assert.assertEquals(absentManagePage.getTemplateSearchBoxPlaceHolder(), "You can search by template name, status and creator.", "Wrong place holder in template search box!");
-        Reporter.log("Succeeded in validating place holder in template search box is correct!");
+        SimpleUtils.pass("Succeeded in validating place holder in template search box is correct!");
         //Verify search function
         //no match
         absentManagePage.search("CancelCreating");
         Assert.assertEquals(absentManagePage.noMatch(), "No matching Templates found.", "The template canceled should not be searched out!");
-        Reporter.log("Succeeded in validating no match!");
+        SimpleUtils.pass("Succeeded in validating no match!");
 
         //Fuzzy matching
         absentManagePage.search("test");
         Assert.assertTrue(absentManagePage.isRelated("test"), "Failed to search out related items!");
-        Reporter.log("Succeeded in validating Fuzzy matching!");
+        SimpleUtils.pass("Succeeded in validating Fuzzy matching!");
 
         //exactly matching
         absentManagePage.search("AutoTest01");
         Assert.assertEquals(absentManagePage.getResult(), "AutoTest01", "Failed to search out the template just created!");
-        Reporter.log("Succeeded in searching template by name!");
+        SimpleUtils.pass("Succeeded in searching template by name!");
 
         //verify edit template
         absentManagePage.clickInDetails();
@@ -113,27 +114,26 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.saveTemplateAs("SaveAsDraft");
         absentManagePage.search("Auto-SaveEditing");
         Assert.assertEquals(absentManagePage.getResult(), "Auto-SaveEditing", "Failed to search out the template just created!");
-        Reporter.log("Succeeded in editing template!");
+        SimpleUtils.pass("Succeeded in editing template!");
 
         //verify delete a template
         absentManagePage.clickInDetails();
         String mes = absentManagePage.deleteTheTemplate();
         Assert.assertTrue(mes.contains("You will no longer recover this template."), "Failed to get delete confirm message in modal!");//Are you sure you want to Delete?
 
-
-        Reporter.log("Succeeded in opening delete template modal!");
+        SimpleUtils.pass("Succeeded in opening delete template modal!");
         absentManagePage.okToActionInModal(true);
-        Reporter.log("Succeeded in deleting template!");
+        SimpleUtils.pass("Succeeded in deleting template!");
 
         absentManagePage.search("Auto-SaveEditing");
         Assert.assertEquals(absentManagePage.noMatch(), "No matching Templates found.", "The template canceled should not be searched out!");
 
         absentManagePage.search("");
         Assert.assertEquals(absentManagePage.getTemplateTableHeaders(), templateColumns(), "Incorrect template table headers!");
-        Reporter.log("Succeeded in template table column validation!");
+        SimpleUtils.pass("Succeeded in template table column validation!");
 
         Assert.assertTrue(absentManagePage.smartCardFilter(), "It doesn't filter correctly!");
-        Reporter.log("Succeeded in smart card filter validation!");
+        SimpleUtils.pass("Succeeded in smart card filter validation!");
     }
 
     @Automated(automated = "Automated")
@@ -151,55 +151,57 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.switchToSettings();
         //reason name is required when creating a new time off
         Assert.assertFalse(absentManagePage.isOKButtonEnabled(), "OK button should not be enabled while missing reason name!");
-        Reporter.log("Succeeded in reason name required validation!");
+        SimpleUtils.pass("Succeeded in reason name required validation!");
         absentManagePage.cancelCreatingTimeOff();
         //add new reason not unique!
         absentManagePage.addTimeOff("Sick");
         absentManagePage.okCreatingTimeOff();
         Assert.assertEquals(absentManagePage.getErrorMessage(), "Time off reason name should be unique.", "Failed to add for Using an existing time off reason name!!!");
-        Reporter.log("Succeeded in reason name unique validation!");
+        SimpleUtils.pass("Succeeded in reason name unique validation!");
         absentManagePage.cancelCreatingTimeOff();
         //cancel adding new time off
         String timeOffName = "ZZ-vacation";
         absentManagePage.addTimeOff(timeOffName);
         absentManagePage.cancelCreatingTimeOff();
         Assert.assertFalse(absentManagePage.isTimeOffReasonDisplayed(timeOffName), "Failed to cancel adding!");
-        Reporter.log("Succeeded in canceling new time off!");
+        SimpleUtils.pass("Succeeded in canceling new time off!");
 
         //add new time off
         absentManagePage.addTimeOff(timeOffName);
         absentManagePage.okCreatingTimeOff();
         Assert.assertTrue(absentManagePage.isTimeOffReasonDisplayed(timeOffName), "Failed to add new time off!");
-        Reporter.log("Succeeded in creating new time off!");
+        SimpleUtils.pass("Succeeded in creating new time off!");
 
         //cancel editing time off
         String editName = "ZZ-vacation-editing";
         absentManagePage.editTimeOffReason(editName);
         absentManagePage.okToActionInModal(false);
         Assert.assertFalse(absentManagePage.isTimeOffReasonDisplayed(editName), "Failed to cancel editing!");
-        Reporter.log("Succeeded in canceling edit action!");
+        SimpleUtils.pass("Succeeded in canceling edit action!");
+
 
         //edit time off
         absentManagePage.editTimeOffReason(editName);
         absentManagePage.okToActionInModal(true);
         Assert.assertTrue(absentManagePage.isTimeOffReasonDisplayed(editName), "Failed to edit an existing time off!");
-        Reporter.log("Succeeded in updating a time off reason!");
+        SimpleUtils.pass("Succeeded in updating a time off reason!");
+
 
         //cancel removing
         Assert.assertEquals(absentManagePage.removeTimeOffInSettings(), "Are you sure you want to remove this time off reason?", "Failed to get confirm message in remove modal!");
         absentManagePage.okToActionInModal(false);
         Assert.assertTrue(absentManagePage.isTimeOffReasonDisplayed(editName), "Failed to cancel remove!");
-        Reporter.log("Succeeded in canceling remove action!");
+        SimpleUtils.pass("Succeeded in canceling remove action!");
 
         //remove
         Assert.assertEquals(absentManagePage.removeTimeOffInSettings(), "Are you sure you want to remove this time off reason?", "Failed to get confirm message in remove modal!");
         absentManagePage.okToActionInModal(true);
         Assert.assertFalse(absentManagePage.isTimeOffReasonDisplayed(editName), "Failed to remove!");
-        Reporter.log("Succeeded in removing time off!");
+        SimpleUtils.pass("Succeeded in removing time off!");
 
         //settings
         Assert.assertEquals(absentManagePage.getQuestionTitle(), "Do time off reasons use accruals?", "Failed to Switch to settings page!");
-        Reporter.log("Succeeded in switching to settings!");
+        SimpleUtils.pass("Succeeded in switching to settings!");
 
 
         //set accrual toggle as false
@@ -209,7 +211,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.configureTimeOffRules("Sick");
         TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
         Assert.assertFalse(configurationPage.isAccrualDistributionLabelDisplayed(), "The accrual distribution label should not be displayed as accrual toggle is off!");
-        Reporter.log("Succeeded in turning off accrual toggle!");
+        SimpleUtils.pass("Succeeded in turning off accrual toggle!");
 
         absentManagePage.back();
         absentManagePage.back();
@@ -221,7 +223,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.configureTemplate("Accrual-usedForAutomation");
         absentManagePage.configureTimeOffRules("Sick");
         Assert.assertTrue(configurationPage.isAccrualDistributionLabelDisplayed(), "The accrual distribution label should be displayed as accrual toggle is on!");
-        Reporter.log("Succeeded in turning on accrual toggle!");
+        SimpleUtils.pass("Succeeded in turning on accrual toggle!");
 
     }
 
@@ -243,7 +245,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.submit();
         absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
-        Reporter.log("Succeeded in creating template: " + tempName + " !");
+        SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
         absentManagePage.search(tempName);
         //click in details--update a template info--save draft base on draft mode
@@ -251,19 +253,19 @@ public class AbsentManagementTemplateTest extends TestBase {
 
         //template name
         Assert.assertTrue(absentManagePage.getTemplateTitle().contains(tempName), "History button should be displayed!");
-        Reporter.log("Succeeded in validating template name displayed well!");
+        SimpleUtils.pass("Succeeded in validating template name displayed well!");
         //buttons
         Assert.assertTrue(absentManagePage.isHistoryButtonDisplayed(), "History button should be displayed!");
         Assert.assertTrue(absentManagePage.isDeleteButtonDisplayed(), "History button should be displayed!");
         Assert.assertTrue(absentManagePage.isEditButtonDisplayed(), "History button should be displayed!");
-        Reporter.log("Succeeded in validating buttons displayed well!");
+        SimpleUtils.pass("Succeeded in validating buttons displayed well!");
 
         //switch between details and associations
         absentManagePage.switchToAssociation();
         Assert.assertEquals(absentManagePage.getTemplateAssociationTitle(), "Dynamic Groups", "Failed to switch to association page!");
         absentManagePage.switchToDetails();
         Assert.assertEquals(absentManagePage.getCanEmployeeRequestLabel(), "Can employees request time off ?", "Failed to switch to details page!");
-        Reporter.log("Succeeded in validating switch between details and association");
+        SimpleUtils.pass("Succeeded in validating switch between details and association!");
 
         //open template history
         absentManagePage.openTemplateHistory();
@@ -288,40 +290,40 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.saveTemplateAs("Save as draft");
         absentManagePage.search(tempName);
         Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Draft"), "Failed to save the template as draft!");
-        Reporter.log("Succeeded in saving as draft");
+        SimpleUtils.pass("Succeeded in saving as draft!");
 
         //validate the toggle setting and weekly limit setting
         absentManagePage.clickInDetails();
         Assert.assertTrue(absentManagePage.isToggleAsSetted(true), "Failed to turn on the template lever--can employee request! ");
         //validate weekly limits
         /*Assert.assertEquals(absentManagePage.getWeeklyLimitHrs(), "40", "Failed to validate the number as set before!");*/
-        Reporter.log("Succeeded in validating template lever--can employee request toggle!");
+        SimpleUtils.pass("Succeeded in validating template lever--can employee request toggle!");
         absentManagePage.back();
 
         //publish later after associating
         absentManagePage.configureTemplate(tempName);
         absentManagePage.associateTemplate();
-        Reporter.log("Succeeded in associating the template!");
+        SimpleUtils.pass("Succeeded in associating the template!");
         absentManagePage.switchToDetails();
         absentManagePage.saveTemplateAs("Publish later");
 
         absentManagePage.search(tempName);
         Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Pending"), "Failed to save the template as publish later!");
-        Reporter.log("Succeeded in saving as publish later!");
+        SimpleUtils.pass("Succeeded in saving as publish later!");
 
         //publish now
         absentManagePage.configureTemplate(tempName);
         absentManagePage.saveTemplateAs("Publish now");
         absentManagePage.search(tempName);
         Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Published"), "Failed to save the template as publish now!");
-        Reporter.log("Succeeded in saving as publish now!");
+        SimpleUtils.pass("Succeeded in saving as publish now!");
 
         //validate there are 2 versions
         absentManagePage.configureTemplate(tempName);
         absentManagePage.saveTemplateAs("Save as draft");
         absentManagePage.search(tempName);
         Assert.assertTrue(absentManagePage.getTemplateStatus().size() == 2 && absentManagePage.getTemplateStatus().get(0).equals("Published") && absentManagePage.getTemplateStatus().get(1).equals("Draft"));
-        Reporter.log("Succeeded in saving as draft on a published version!");
+        SimpleUtils.pass("Succeeded in saving as draft on a published version!");
 
         //delete a draft template
         absentManagePage.clickInDetails();
@@ -329,7 +331,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.okToActionInModal(true);
         absentManagePage.search(tempName);
         Assert.assertTrue(absentManagePage.getTemplateStatus().size() == 1 && absentManagePage.getTemplateStatus().get(0).equals("Published"));
-        Reporter.log("Succeeded in deleting a draft template!");
+        SimpleUtils.pass("Succeeded in deleting a draft template!");
 
 
         //Mark template as default (published)
@@ -338,20 +340,20 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.back();
         absentManagePage.search(tempName);
         Assert.assertEquals(absentManagePage.getDefaultLabel(), "Default", "Failed to mark as default template! ");
-        Reporter.log("Succeeded in marking as default template!");
+        SimpleUtils.pass("Succeeded in marking as default template!");
 
         //archive
         absentManagePage.search(tempName);
         absentManagePage.clickInDetails();
         //verify archive button displays well!
         Assert.assertTrue(absentManagePage.isArchiveButtonDisplayed(), "Archive button should display here!");
-        Reporter.log("Succeeded in validating archive button!");
+        SimpleUtils.pass("Succeeded in validating archive button!");
         //archive published template
         absentManagePage.archivePublishedTemplate();
         absentManagePage.okToActionInModal(true);
         absentManagePage.search(tempName);
         Assert.assertEquals(absentManagePage.noMatch(), "No matching Templates found.", "Failed to archive the template");
-        Reporter.log("Succeeded in archiving published template!");
+        SimpleUtils.pass("Succeeded in archiving published template!");
 
     }
 
@@ -374,7 +376,8 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.submit();
         absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
-        Reporter.log("Succeeded in creating template: " + tempName + " !");
+        SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
+
 
         absentManagePage.configureTemplate(tempName);
         //configure
@@ -384,18 +387,18 @@ public class AbsentManagementTemplateTest extends TestBase {
 
         //verify accrual started options
         Assert.assertTrue(configurationPage.getAccrualStartOptions().equals(accrualStarted()), "Failed to assert accrual started as expected!");
-        Reporter.log("Succeeded in validating accrual started as expected!");
+        SimpleUtils.pass("Succeeded in validating accrual started as expected!");
 
         //verify accrual end option
         Assert.assertTrue(configurationPage.getAccrualEndOptions().equals(accrualEnd()), "Failed to assert accrual end as expected!");
-        Reporter.log("Succeeded in validating accrual end as expected!");
+        SimpleUtils.pass("Succeeded in validating accrual end as expected!");
 
         //set the reinstatement months
         configurationPage.setReinstatementMonth("6");
 
         //verify distribution method options
         Assert.assertTrue(configurationPage.getDistributionOptions().equals(distributionMethod()), "Failed to assert Distribution methhods as expected!");
-        Reporter.log("Succeeded in validating distribution method options!");
+        SimpleUtils.pass("Succeeded in validating distribution method options!");
 
         //add service lever
         configurationPage.addServiceLever();
@@ -403,7 +406,7 @@ public class AbsentManagementTemplateTest extends TestBase {
 
         configurationPage.saveTimeOffConfiguration(true);
 
-        Reporter.log("Succeeded in validating configure button is clickable, adding service lever, and configure function works well!");
+        SimpleUtils.pass("Succeeded in validating configure button is clickable, adding service lever, and configure function works well!");
 
         //edit
         absentManagePage.configureTimeOffRules(timeOffReason);
@@ -411,7 +414,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         //
         configurationPage.removeServiceLever();
         configurationPage.saveTimeOffConfiguration(true);
-        Reporter.log("Succeeded in validating edit button is clickable, remove service lever, and edit function works well!");
+        SimpleUtils.pass("Succeeded in validating edit button is clickable, remove service lever, and edit function works well!");
         absentManagePage.saveTemplateAs("Save As Draft");
 
 
@@ -421,9 +424,9 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.viewTimeOffConfigure(timeOffReason);
         Assert.assertEquals(configurationPage.getTimeOffReasonName(), timeOffReason, "Failed to open time off reason configuration page!");
         Assert.assertTrue(configurationPage.isTimeOffConfigurationReadOnly(), "Failed to assert it is read-only in view mode!");
-        Reporter.log("Succeeded in validating it is read-only in view mode!");
+        SimpleUtils.pass("Succeeded in validating it is read-only in view mode!");
         Assert.assertEquals(configurationPage.getServiceLeverNum(), 1, "Failed to remove one of the service lever!");
-        Reporter.log("Succeeded in validating remove service lever!");
+        SimpleUtils.pass("Succeeded in validating remove service lever!");
 
         configurationPage.back();
         absentManagePage.back();
@@ -434,7 +437,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.search(tempName);
         absentManagePage.clickInDetails();
         Assert.assertEquals(absentManagePage.getNotConfigured(), "Not Configured", "Failed to remove time off reason rules!");
-        Reporter.log("Succeeded in validating removing time off rules works well!");
+        SimpleUtils.pass("Succeeded in validating removing time off rules works well!");
 
         absentManagePage.deleteTheTemplate();
         absentManagePage.okToActionInModal(true);
@@ -459,7 +462,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.submit();
         absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
-        Reporter.log("Succeeded in creating template: " + tempName + " !");
+        SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
         absentManagePage.configureTemplate(tempName);
         //configure
@@ -469,10 +472,10 @@ public class AbsentManagementTemplateTest extends TestBase {
 
         //verify request rules labels
         Assert.assertTrue(configurationPage.getRequestRuleLabels().equals(requestRules()), "Failed to assert request rules is shown as expected!");
-        Reporter.log("Succeeded in validating all request rules!");
+        SimpleUtils.pass("Succeeded in validating all request rules!");
         //
         Assert.assertTrue(configurationPage.getProbationPeriodUnitOptions().equals(probationUnit()), "Failed to probation unit is shown as expected!");
-        Reporter.log("Succeeded in validating probation options!");
+        SimpleUtils.pass("Succeeded in validating probation options!");
 
         //set all rule toggles as yes
         //set value for rules
@@ -512,7 +515,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         Assert.assertEquals(configurationPage.getNumSetForTimeOffRequestRules("Max hours in advance of what you earn"), "8");
         Assert.assertEquals(configurationPage.getNumSetForTimeOffRequestRules("Probation Period"), "3");
         Assert.assertEquals(configurationPage.getNumSetForTimeOffRequestRules("Annual Use Limit"), "5");
-        Reporter.log("Succeeded in setting all request rules!");
+        SimpleUtils.pass("Succeeded in setting all request rules!");
         //set all rule toggles as no
         configurationPage.setTimeOffRequestRuleAs("Employee can request ?", false);
         configurationPage.setTimeOffRequestRuleAs("Employee can request partial day ?", false);
@@ -535,7 +538,7 @@ public class AbsentManagementTemplateTest extends TestBase {
 
         //verify cancel button is clickable
         configurationPage.saveTimeOffConfiguration(false);
-        Reporter.log("Succeeded in validating cancel button in time-off rules configuration page is clickable!");
+        SimpleUtils.pass("Succeeded in validating cancel button in time-off rules configuration page is clickable!");
         absentManagePage.saveTemplateAs("Save as draft");
         //clear test data
         absentManagePage.search(tempName);
