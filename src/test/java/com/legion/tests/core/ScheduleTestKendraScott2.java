@@ -3828,7 +3828,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//create an open shifts.
 		newShiftPage.clickOnDayViewAddNewShiftButton();
 		newShiftPage.customizeNewShiftPage();
-		//newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 		newShiftPage.moveSliderAtCertainPoint("8","8");
 		newShiftPage.selectWorkRole(workRole);
 		newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
@@ -3858,6 +3857,301 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Validate the those employees scheduled in other locations show up when group by TM")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyEmployeesScheduledInOtherLocationShowUpInGroupByTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		String nyLocation = getCrendentialInfo("NearByLocationInfo");
+		locationSelectorPage.changeLocation(nyLocation);
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//edit schedule
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.selectShiftTypeFilterByText("Action Required");
+		shiftOperatePage.deleteTMShiftInWeekView("");
+		scheduleMainPage.saveSchedule();
+		createSchedulePage.publishActiveSchedule();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+		List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+		String employeeName = shiftInfo.get(0);
+
+		//change location back.
+		locationSelectorPage.changeLocation(location);
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//edit schedule
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.selectShiftTypeFilterByText("Action Required");
+		shiftOperatePage.deleteTMShiftInWeekView("");
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+		shiftOperatePage.deleteTMShiftInWeekView(employeeName);
+		String workRole = shiftOperatePage.getRandomWorkRole();
+		newShiftPage.clickOnDayViewAddNewShiftButton();
+		newShiftPage.customizeNewShiftPage();
+		newShiftPage.moveSliderAtCertainPoint("8","8");
+		newShiftPage.selectWorkRole(workRole);
+		newShiftPage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
+		newShiftPage.clickOnCreateOrNextBtn();
+		newShiftPage.searchTeamMemberByNameNLocation(employeeName, nyLocation);
+		newShiftPage.clickOnOfferOrAssignBtn();
+		scheduleMainPage.saveSchedule();
+		scheduleMainPage.clickOnOpenSearchBoxButton();
+		scheduleMainPage.searchShiftOnSchedulePage(employeeName);
+		List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+
+		//change to nearby location.
+		locationSelectorPage.changeLocation(nyLocation);
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
+		scheduleMainPage.clickOnOpenSearchBoxButton();
+		scheduleMainPage.searchShiftOnSchedulePage(employeeName);
+		List<String> shiftInfo3 = scheduleShiftTablePage.getTheGreyedShiftInfoByIndex(0);
+		shiftInfo2.remove(7);
+		shiftInfo3.remove(7);
+		shiftInfo2.remove(4);
+		shiftInfo3.remove(4);
+		SimpleUtils.assertOnFail("ShiftInfo should be consistent!", shiftInfo2.containsAll(shiftInfo3), false);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Validate the those employees scheduled come from other locations show up when group by TM")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyEmployeesFromOtherLocationShowUpInGroupByTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		String nyLocation = getCrendentialInfo("NearByLocationInfo");
+		locationSelectorPage.changeLocation(nyLocation);
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//edit schedule
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.selectShiftTypeFilterByText("Action Required");
+		shiftOperatePage.deleteTMShiftInWeekView("");
+		scheduleMainPage.saveSchedule();
+		createSchedulePage.publishActiveSchedule();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+		List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+		String employeeName = shiftInfo.get(0);
+
+		//change location back.
+		locationSelectorPage.changeLocation(location);
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//edit schedule
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.selectShiftTypeFilterByText("Action Required");
+		shiftOperatePage.deleteTMShiftInWeekView("");
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+		shiftOperatePage.deleteTMShiftInWeekView(employeeName);
+		String workRole = shiftOperatePage.getRandomWorkRole();
+		newShiftPage.clickOnDayViewAddNewShiftButton();
+		newShiftPage.customizeNewShiftPage();
+		newShiftPage.moveSliderAtCertainPoint("8","8");
+		newShiftPage.selectWorkRole(workRole);
+		newShiftPage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
+		newShiftPage.clickOnCreateOrNextBtn();
+		//newShiftPage.searchTeamMemberByName(employeeName);
+		newShiftPage.searchTeamMemberByNameNLocation(employeeName, nyLocation);
+		newShiftPage.clickOnOfferOrAssignBtn();
+		scheduleMainPage.saveSchedule();
+		scheduleMainPage.clickOnOpenSearchBoxButton();
+		scheduleMainPage.searchShiftOnSchedulePage(employeeName);
+		List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
+		List<String> shiftInfo3 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+		SimpleUtils.assertOnFail("Total hrs info should be consistent!", shiftInfo3.get(shiftInfo3.size()-1).contains(scheduleShiftTablePage.getTotalHrsFromRightStripCellByIndex(0)), false);
+		SimpleUtils.assertOnFail("ShiftInfo should be consistent!", shiftInfo2.containsAll(shiftInfo3), false);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Validate location info in the profile popup for those shifts that are assigned to employees from other location")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyEmployeesLocationInfoFromOtherLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		String nyLocation = getCrendentialInfo("NearByLocationInfo");
+		locationSelectorPage.changeLocation(nyLocation);
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//edit schedule
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.selectShiftTypeFilterByText("Action Required");
+		shiftOperatePage.deleteTMShiftInWeekView("");
+		scheduleMainPage.saveSchedule();
+		createSchedulePage.publishActiveSchedule();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+		List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+		String employeeName = shiftInfo.get(0);
+
+		//change location back.
+		locationSelectorPage.changeLocation(location);
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//edit schedule
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.selectShiftTypeFilterByText("Action Required");
+		shiftOperatePage.deleteTMShiftInWeekView("");
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+		shiftOperatePage.deleteTMShiftInWeekView(employeeName);
+		String workRole = shiftOperatePage.getRandomWorkRole();
+		//create an open shifts.
+		newShiftPage.clickOnDayViewAddNewShiftButton();
+		newShiftPage.customizeNewShiftPage();
+		//newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtCertainPoint("8","8");
+		newShiftPage.selectWorkRole(workRole);
+		newShiftPage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
+		newShiftPage.clickOnCreateOrNextBtn();
+		//newShiftPage.searchTeamMemberByName(employeeName);
+		newShiftPage.searchTeamMemberByNameNLocation(employeeName, nyLocation);
+		newShiftPage.clickOnOfferOrAssignBtn();
+		scheduleMainPage.saveSchedule();
+		scheduleMainPage.clickOnOpenSearchBoxButton();
+		scheduleMainPage.searchShiftOnSchedulePage(employeeName);
+
+		shiftOperatePage.clickOnProfileIcon();
+		Map <String, String> locationInfo = scheduleShiftTablePage.getHomeLocationInfo();
+		SimpleUtils.assertOnFail("Home location info is incorrect!", nyLocation.contains(locationInfo.get("homeLocation").replace("...", "")), false);
+
+		//change to nearby location.
+		locationSelectorPage.changeLocation(nyLocation);
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		scheduleCommonPage.navigateToNextWeek();
+		isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
+		scheduleMainPage.clickOnOpenSearchBoxButton();
+		scheduleMainPage.searchShiftOnSchedulePage(employeeName);
+		List<String> shiftInfo3 = scheduleShiftTablePage.getTheGreyedShiftInfoByIndex(0);
+		SimpleUtils.assertOnFail("Work location info is incorrect!", shiftInfo3.get(4).contains(location), false);
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Validate the total hours in the 'information' popup")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheTotalHrsOfEmployeesScheduledInOtherLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
 		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		String nyLocation = getCrendentialInfo("NearByLocationInfo");
 		locationSelectorPage.changeLocation(nyLocation);
@@ -3953,98 +4247,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.searchShiftOnSchedulePage(employeeName);
 		List<String> shiftInfo3 = scheduleShiftTablePage.getTheGreyedShiftInfoByIndex(0);
 		SimpleUtils.assertOnFail("Total hrs info should be consistent!", shiftInfo3.get(shiftInfo3.size()-1).contains(scheduleShiftTablePage.getTotalHrsFromRightStripCellByIndex(0)), false);
-		shiftInfo2.remove(7);
-		shiftInfo3.remove(7);
-		shiftInfo2.remove(4);
-		shiftInfo3.remove(4);
-		SimpleUtils.assertOnFail("ShiftInfo should be consistent!", shiftInfo2.containsAll(shiftInfo3), false);
-	}
-
-	@Automated(automated = "Automated")
-	@Owner(owner = "Haya")
-	@Enterprise(name = "Vailqacn_Enterprise")
-	@TestName(description = "Validate the those employees scheduled come from other locations show up when group by TM")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyEmployeesFromOtherLocationShowUpInGroupByTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-		String nyLocation = getCrendentialInfo("NearByLocationInfo");
-		locationSelectorPage.changeLocation(nyLocation);
-		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
-		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-
-		scheduleCommonPage.navigateToNextWeek();
-		scheduleCommonPage.navigateToNextWeek();
-		scheduleCommonPage.navigateToNextWeek();
-		boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-		if (!isWeekGenerated) {
-			createSchedulePage.createScheduleForNonDGFlowNewUI();
-		}
-		//edit schedule
-		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		scheduleMainPage.clickOnFilterBtn();
-		scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-		shiftOperatePage.deleteTMShiftInWeekView("");
-		scheduleMainPage.saveSchedule();
-		createSchedulePage.publishActiveSchedule();
-		scheduleMainPage.clickOnFilterBtn();
-		scheduleMainPage.selectShiftTypeFilterByText("Assigned");
-		List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
-		String employeeName = shiftInfo.get(0);
-
-		//change location back.
-		locationSelectorPage.changeLocation(location);
-		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
-		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-		scheduleCommonPage.navigateToNextWeek();
-		scheduleCommonPage.navigateToNextWeek();
-		scheduleCommonPage.navigateToNextWeek();
-		isWeekGenerated = createSchedulePage.isWeekGenerated();
-		if (!isWeekGenerated) {
-			createSchedulePage.createScheduleForNonDGFlowNewUI();
-		}
-		//edit schedule
-		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		scheduleMainPage.clickOnFilterBtn();
-		scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-		shiftOperatePage.deleteTMShiftInWeekView("");
-		scheduleMainPage.clickOnFilterBtn();
-		scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
-		shiftOperatePage.deleteTMShiftInWeekView(employeeName);
-		String workRole = shiftOperatePage.getRandomWorkRole();
-		//create an open shifts.
-		newShiftPage.clickOnDayViewAddNewShiftButton();
-		newShiftPage.customizeNewShiftPage();
-		//newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-		newShiftPage.moveSliderAtCertainPoint("8","8");
-		newShiftPage.selectWorkRole(workRole);
-		newShiftPage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
-		newShiftPage.clickOnCreateOrNextBtn();
-		//newShiftPage.searchTeamMemberByName(employeeName);
-		newShiftPage.searchTeamMemberByNameNLocation(employeeName, nyLocation);
-		newShiftPage.clickOnOfferOrAssignBtn();
-		scheduleMainPage.saveSchedule();
-		scheduleMainPage.clickOnOpenSearchBoxButton();
-		scheduleMainPage.searchShiftOnSchedulePage(employeeName);
-		List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
-
-		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
-		List<String> shiftInfo3 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
-		SimpleUtils.assertOnFail("Total hrs info should be consistent!", shiftInfo3.get(shiftInfo3.size()-1).contains(scheduleShiftTablePage.getTotalHrsFromRightStripCellByIndex(0)), false);
-		SimpleUtils.assertOnFail("ShiftInfo should be consistent!", shiftInfo2.containsAll(shiftInfo3), false);
 	}
 
 	@Automated(automated = "Automated")

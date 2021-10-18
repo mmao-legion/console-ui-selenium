@@ -140,6 +140,8 @@
                     <include name="verifyUpdateEditNotesForOpenShiftsAsInternalAdmin" />
                     <include name="verifyEmployeesScheduledInOtherLocationShowUpInGroupByTMAsInternalAdmin" />
                     <include name="verifyEmployeesFromOtherLocationShowUpInGroupByTMAsInternalAdmin" />
+                    <include name="verifyEmployeesLocationInfoFromOtherLocationAsInternalAdmin" />
+                    <include name="verifyTheTotalHrsOfEmployeesScheduledInOtherLocationAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
