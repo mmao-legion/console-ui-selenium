@@ -2105,7 +2105,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void selectSchdulingPolicyGroupsTabByLabel(String tabLabel) throws Exception {
 		boolean isTabSelected = false;
-		if (schedulingPolicyGroupsTabs.size() > 0) {
+		if (areListElementVisible(schedulingPolicyGroupsTabs, 10) && schedulingPolicyGroupsTabs.size() > 0) {
 			for (WebElement schedulingPolicyGroupsTab : schedulingPolicyGroupsTabs) {
 				if (schedulingPolicyGroupsTab.getText().replace("Non Exempt", "Nonexempt").toLowerCase().contains(tabLabel.toLowerCase())) {
 					click(schedulingPolicyGroupsTab);
@@ -5268,12 +5268,11 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = ".lg-user-locations-new__item-name")
 	private List<WebElement> userLocation;
 
-	@FindBy(css = "[ng-if=\"tm.engagement.engagementGroup\"]")
+	@FindBy(xpath = "//ng-transclude/div[1][@class='legion-information ng-scope']//div[2]/span")
 	private WebElement schedulingPolicyGroup;
 
 	@FindBy(css = "[form-title=\"Scheduling Policy Groups\"] lg-tabs lg-tab")
 	private List<WebElement> schedulingPolicyGroupsTabContent;
-
 
 	@FindBy(css = "[label=\"Cancel Deactivate\"] button")
 	private WebElement cancelDeactivateBtn;
@@ -5311,7 +5310,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(className = "selected-day")
 	private WebElement selectedDayInCalendar;
 
-	@FindBy(xpath = "//span[contains(text(),\"HOME STORE\")]/../../following-sibling::div[1]/div[2]")
+	@FindBy(xpath = "//span[contains(text(),\"HOME STORE\")]/../following-sibling::div[1]")
 	private WebElement homeStoreLocation;
 
 	@Override
@@ -5319,7 +5318,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		HashMap<String, List<String>> userNLocationNSchedulingPolicyGroup = new HashMap<>();
 		if (areListElementVisible(usersAndRolesAllUsersRows, 10)) {
 			int index = (new Random()).nextInt(usersAndRolesAllUsersRows.size());
-			WebElement userName = usersAndRolesAllUsersRows.get(index).findElement(By.cssSelector("lg-button button span span"));
+			WebElement userName = usersAndRolesAllUsersRows.get(index).findElement(By.cssSelector("lg-button[list] button span span"));
 			String userNameText = userName.getText();
 			click(userName);
 			if (isElementLoaded(homeStoreLocation, 5) && isElementLoaded(schedulingPolicyGroup, 5)) {

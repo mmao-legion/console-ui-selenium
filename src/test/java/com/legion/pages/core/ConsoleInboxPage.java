@@ -488,7 +488,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         if (isElementLoaded(sendToInput,10)){
             clickTheElement(sendToInput);
             sendToInput.sendKeys(nickName);
-            waitForSeconds(5);
+            waitForSeconds(10);
             if (areListElementVisible(tmOptions, 10)) {
                 for (WebElement tmOption : tmOptions) {
                     if (tmOption.getText().contains(nickName)) {
