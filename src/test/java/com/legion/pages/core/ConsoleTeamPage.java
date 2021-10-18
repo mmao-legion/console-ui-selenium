@@ -3740,7 +3740,7 @@ private List<WebElement> locationColumn;
 
 	@Override
 	public boolean verifyActivatedSubTab(String SubTabText) throws Exception {
-		if (isElementLoaded(activatedSubTabElement,5)) {
+		if (isElementLoaded(activatedSubTabElement,30)) {
 			if (activatedSubTabElement.getText().trim().equalsIgnoreCase(SubTabText)) {
 				return true;
 			}

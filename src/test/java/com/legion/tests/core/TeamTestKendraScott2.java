@@ -16,6 +16,7 @@ import java.util.Map;
 import com.legion.pages.core.ConsoleGmailPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.OpsPortalLocationsPage;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.formula.ptg.ControlPtg;
 import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.WebElement;
@@ -356,19 +357,21 @@ public class TeamTestKendraScott2 extends TestBase{
 	public void verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			// Check whether the location is location group or not
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-			schedulePage.clickOnScheduleConsoleMenuItem();
-			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-			boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if(isActiveWeekGenerated){
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-			boolean isLocationGroup = schedulePage.isLocationGroup();
+			boolean isLocationGroup = toggleSummaryPage.isLocationGroup();
 
 			// Verify TM Count is correct from roster
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -692,25 +695,28 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-		SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		// Create schedule and publish it.
-		schedulePage.clickOnScheduleConsoleMenuItem();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-		schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-				schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
 
-		if (schedulePage.isWeekGenerated()){
-			schedulePage.unGenerateActiveScheduleScheduleWeek();
+		if (createSchedulePage.isWeekGenerated()){
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
-		schedulePage.createScheduleForNonDGFlowNewUI();
-		schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		schedulePage.deleteTMShiftInWeekView("unassigned");
-		schedulePage.saveSchedule();
-		schedulePage.publishActiveSchedule();
+		createSchedulePage.createScheduleForNonDGFlowNewUI();
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		shiftOperatePage.deleteTMShiftInWeekView("unassigned");
+		scheduleMainPage.saveSchedule();
+		createSchedulePage.publishActiveSchedule();
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
 		loginPage.logOut();
 
@@ -719,17 +725,17 @@ public class TeamTestKendraScott2 extends TestBase{
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 		profileNewUIPage.clickOnUserProfileImage();//.getNickNameFromProfile();
 		dashboardPage.clickOnSwitchToEmployeeView();
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.clickOnScheduleSubTab("Team Schedule");
-		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		scheduleCommonPage.clickOnScheduleSubTab("Team Schedule");
+		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !scheduleShiftTablePage.isProfileIconsClickable(), false);
 		loginPage.logOut();
 
 
 		// Login as Team Member
 		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-		schedulePage.clickOnScheduleConsoleMenuItem();
-		schedulePage.clickOnScheduleSubTab("Team Schedule");
-		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		scheduleCommonPage.clickOnScheduleSubTab("Team Schedule");
+		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !scheduleShiftTablePage.isProfileIconsClickable(), false);
 	}
 
 	@Automated(automated ="Automated")
@@ -938,7 +944,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Automated(automated ="Automated")
 	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate cancelled and dated request has no option when clicking the request")
+	@TestName(description = "Validate cancelled/approved/rejected and dated request has no option when clicking the request")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void validateCancelledAvailabilityHasNoOptionRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
 		// Login with Store Manager Credentials
@@ -1149,7 +1155,6 @@ public class TeamTestKendraScott2 extends TestBase{
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 
 			//Grant Invite Employee permission for DM SM and TL
 			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
@@ -1213,6 +1218,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as SM
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);

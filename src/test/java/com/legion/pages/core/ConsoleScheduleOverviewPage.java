@@ -434,7 +434,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			}else{
 				SimpleUtils.fail("Calendar on Schedule Overview Not Loaded Successfully!", false);
 			}
-			if(isElementLoaded(scheduleTable, 15)){
+			if(isElementLoaded(scheduleTable, 60)){
 				flag = true;
 				SimpleUtils.pass("Schedule Table on Schedule Overview Loaded Successfully!");
 			}else{
@@ -610,5 +610,56 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			SimpleUtils.fail("arrow in calendar load faild",true);
 	}
 
+
+	//added by haya.  return a List has 4 week's data including last week
+	@FindBy (css = ".row-fx.schedule-table-row.ng-scope")
+	private List<WebElement> rowDataInOverviewPage;
+	@FindBy (xpath = "//div[contains(@class,\"background-current-week-legend-calendar\")]/preceding-sibling::div[1]")
+	private WebElement lastWeekNavigation;
+	@FindBy (css = "i.fa-angle-left")
+	private WebElement leftAngle;
+	@Override
+	public List<String> getOverviewData() throws Exception {
+		List<String> resultList = new ArrayList<String>();
+		if(isElementLoaded(leftAngle,10)){
+			click(leftAngle);
+			if (isElementLoaded(lastWeekNavigation,10)){
+				click(lastWeekNavigation);// click on last in overview page
+			}
+		}
+		waitForSeconds(3);
+		if (areListElementVisible(rowDataInOverviewPage,10)){
+			for (int i=0;i<rowDataInOverviewPage.size();i++){
+				String[] temp1 = rowDataInOverviewPage.get(i).getText().split("\n");
+				String[] temp2 = Arrays.copyOf(temp1,8);
+				resultList.add(Arrays.toString(temp2));
+			}
+		} else {
+			SimpleUtils.fail("data on schedules widget fail to load!",false);
+		}
+		return resultList;
+	}
+
+	@Override
+	public int getDaysBetweenFinalizeDateAndScheduleStartDate(String finalizeByDate, String scheduleStartDate) throws Exception {
+		int days = 0;
+		String finalizeByMonth = "";
+		String finalizeByDay = "";
+		String scheduleStartMonth = "";
+		String scheduleStartDay = "";
+		if (finalizeByDate.contains(" ") && finalizeByDate.split(" ").length == 4) {
+			finalizeByMonth = finalizeByDate.split(" ")[2];
+			finalizeByDay = finalizeByDate.split(" ")[3];
+		}
+		if (scheduleStartDate.contains(" ") && scheduleStartDate.split(" ").length == 2) {
+			scheduleStartMonth = scheduleStartDate.split(" ")[0];
+			scheduleStartDay = scheduleStartDate.split(" ")[1];
+		}
+		if (finalizeByMonth.toUpperCase().equals(scheduleStartMonth))
+			days = Integer.valueOf(scheduleStartDay) - Integer.valueOf(finalizeByDay);
+		else
+			days = Integer.valueOf(scheduleStartDay) + 31 - Integer.valueOf(finalizeByDay);
+		return days;
+	}
 
 }

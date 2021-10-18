@@ -55,25 +55,26 @@ public class LocationNavigationTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             String anotherLocation = locationSelectorPage.changeAnotherLocation();
 
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             locationSelectorPage.changeLocationDirect(location);
 
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             locationSelectorPage.changeLocationDirect(anotherLocation);
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -103,25 +104,26 @@ public class LocationNavigationTest extends TestBase {
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             searchAndCheckTheUpperFields(upperFields2);
 
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
 
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             searchAndCheckTheUpperFields(upperFields1);
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
 
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             searchAndCheckTheUpperFields(upperFields2);
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -148,6 +150,7 @@ public class LocationNavigationTest extends TestBase {
     public void verifyChangingDistrictOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
             //Get the upperfield info of current location
@@ -162,12 +165,13 @@ public class LocationNavigationTest extends TestBase {
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             //Click on change district button to change the district
             String regionName = upperFields2.get(Region);
             String districtName = upperFields2.get(District);
@@ -177,14 +181,13 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
 
             //Go to Schedule tab -> Schedule page
             locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //Click on change district button to change the district
             regionName = upperFields1.get(Region);
             districtName = upperFields1.get(District);
@@ -194,13 +197,13 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
 
             //Go to Schedule tab -> Forecast page
             locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             //Click on change district button to change the district
             regionName = upperFields2.get(Region);
             districtName = upperFields2.get(District);
@@ -210,7 +213,7 @@ public class LocationNavigationTest extends TestBase {
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
 
@@ -242,13 +245,14 @@ public class LocationNavigationTest extends TestBase {
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
 
             //Click on Search button to search the district and select
             searchDistrictAndCheckTheUpperFields(upperFields2);
@@ -259,13 +263,13 @@ public class LocationNavigationTest extends TestBase {
 
             //Go to Schedule tab -> Forecast page
             locationSelectorPage.changeLocationDirect(upperFields2.get(Location));
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             //Click on Search button to search the district and select
             searchDistrictAndCheckTheUpperFields(upperFields1);
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields1.get(Location));
             //Go to Schedule tab -> Schedule page
             locationSelectorPage.changeLocationDirect(upperFields1.get(Location));
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //Click on Search button to search the district and select
             searchDistrictAndCheckTheUpperFields(upperFields2);
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields2.get(Location));
@@ -276,6 +280,7 @@ public class LocationNavigationTest extends TestBase {
 
     private void searchDistrictAndCheckTheUpperFields (Map<String, String> upperFields) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields.get(District));
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
 
@@ -285,9 +290,9 @@ public class LocationNavigationTest extends TestBase {
                 selectedUpperFields.get(District).equalsIgnoreCase(upperFields.get(District))
                         && selectedUpperFields.get(Region).equalsIgnoreCase(upperFields.get(Region)), false);
         //Verify the DM page loaded
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                schedulePage.isScheduleDMView(), false);
+                scheduleDMViewPage.isScheduleDMView(), false);
     }
 
 
@@ -299,6 +304,7 @@ public class LocationNavigationTest extends TestBase {
     public void verifyChangingRegionOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             //Get the upperfield info of current region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -316,50 +322,50 @@ public class LocationNavigationTest extends TestBase {
 
             //Go back the the default location
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
 
             //Click on change region button to change the region
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the district listed
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
 
             //Go to Schedule tab -> Schedule page
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //Click on change region button to change region to another one
             locationSelectorPage.changeUpperFieldDirect(Region, regionName2);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the district listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName2);
 
             //Go to Schedule tab -> Forecast page
             locationSelectorPage.changeUpperFieldDirect(District, districtName2);
             locationSelectorPage.changeLocationDirect(locationName2);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
 
             //Click on change region button to change back to the default region
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
@@ -396,22 +402,23 @@ public class LocationNavigationTest extends TestBase {
             upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             //Click on change region button to change the region
             searchRegionAndCheckTheUpperFields(upperFields2, location2);
 
             //Go to Schedule tab -> Forecast page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             searchRegionAndCheckTheUpperFields(upperFields1, location);
 
             //Go to Schedule tab -> Schedule page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             searchRegionAndCheckTheUpperFields(upperFields2, location2);
 
         } catch (Exception e){
@@ -421,6 +428,7 @@ public class LocationNavigationTest extends TestBase {
 
     private void searchRegionAndCheckTheUpperFields (Map<String, String> upperFields, String locationName) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields.get(Region));
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
         String bUName = upperFields.get(BusinessUnit);
@@ -433,12 +441,11 @@ public class LocationNavigationTest extends TestBase {
                         && selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(bUName), false);
 
         //Verify the Region page loaded
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         SimpleUtils.assertOnFail("Schedule page Region view not loaded Successfully!",
-                schedulePage.isScheduleDMView(), false);
+                scheduleDMViewPage.isScheduleDMView(), false);
 
         //Verify the district listed
-        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
         locationSelectorPage.changeUpperFieldDirect(District, districtName);
@@ -453,6 +460,7 @@ public class LocationNavigationTest extends TestBase {
     public void verifyChangingBusinessUnitOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
             //Get the upperfield info of current location
@@ -472,22 +480,22 @@ public class LocationNavigationTest extends TestBase {
             upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             //Click on change region button to change the region
             locationSelectorPage.changeUpperFieldDirect(Region, upperFields2.get(Region));
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, upperFields2.get(BusinessUnit));
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page BU view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the region listed
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields2.get(Region));
 
 
@@ -495,15 +503,15 @@ public class LocationNavigationTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(Region, upperFields2.get(Region));
             locationSelectorPage.changeUpperFieldDirect(District, upperFields2.get(District));
             locationSelectorPage.changeLocationDirect(location2);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //Click on change BU button to change the region
             locationSelectorPage.changeUpperFieldDirect(Region, upperFields1.get(Region));
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, upperFields1.get(BusinessUnit));
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the Region listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields1.get(Region));
 
@@ -511,15 +519,15 @@ public class LocationNavigationTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(Region, upperFields1.get(Region));
             locationSelectorPage.changeUpperFieldDirect(District, upperFields1.get(District));
             locationSelectorPage.changeLocationDirect(location);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             //Click on change region button to change the region
             locationSelectorPage.changeUpperFieldDirect(Region, upperFields2.get(Region));
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, upperFields2.get(BusinessUnit));
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the region listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields2.get(Region));
 
@@ -556,22 +564,23 @@ public class LocationNavigationTest extends TestBase {
             upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             //Click on change BU button to change the BU
             searchBusinessUnitAndCheckTheUpperFields(upperFields2, location2);
 
             //Go to Schedule tab -> Forecast page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             searchBusinessUnitAndCheckTheUpperFields(upperFields1, location);
 
             //Go to Schedule tab -> Schedule page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             searchBusinessUnitAndCheckTheUpperFields(upperFields2, location2);
 
         } catch (Exception e){
@@ -581,6 +590,7 @@ public class LocationNavigationTest extends TestBase {
 
     private void searchBusinessUnitAndCheckTheUpperFields (Map<String, String> upperFields, String locationName) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields.get(BusinessUnit));
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
         String bUName = upperFields.get(BusinessUnit);
@@ -592,12 +602,10 @@ public class LocationNavigationTest extends TestBase {
                 selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(bUName), false);
 
         //Verify the BU page loaded
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         SimpleUtils.assertOnFail("Schedule page BU view not loaded Successfully!",
-                schedulePage.isScheduleDMView(), false);
+                scheduleDMViewPage.isScheduleDMView(), false);
 
         //Verify the region listed
-        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
         locationSelectorPage.changeUpperFieldDirect(Region, regionName);
         locationSelectorPage.changeUpperFieldDirect(District, districtName);
@@ -631,8 +639,8 @@ public class LocationNavigationTest extends TestBase {
             upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Click on change HQ button to change the HQ
             String locationName = location2;
@@ -652,7 +660,7 @@ public class LocationNavigationTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Click on change BU button to change the BU
             buName = upperFields1.get(BusinessUnit);
@@ -672,7 +680,7 @@ public class LocationNavigationTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             //Click on change Bu button to change the BU
             buName = upperFields2.get(BusinessUnit);
             regionName = upperFields2.get(Region);
@@ -716,8 +724,8 @@ public class LocationNavigationTest extends TestBase {
             upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
 
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Click on change region button to change the region
             searchHQAndCheckTheUpperFields(upperFields2, location2);
@@ -766,8 +774,9 @@ public class LocationNavigationTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String,String> upperFields = locationSelectorPage.getSelectedUpperFields();
@@ -796,7 +805,7 @@ public class LocationNavigationTest extends TestBase {
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
             locationSelectorPage.changeLocationDirect(locationName);
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
 
 
         } catch (Exception e){

@@ -11,10 +11,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -349,7 +347,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
     public Map<String, Integer> getThreeWeeksScheduleStatusFromScheduleDMViewPage() throws Exception {
         Map<String, Integer> scheduleStatusFromScheduleDMViewPage = new HashMap<>();
-        SchedulePage schedulePage = new ConsoleScheduleNewUIPage();
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         for (int j=1; j<=3; j++){
             int notStartedScheduleAccount = 0;
             int inProgressScheduleAccount = 0;
@@ -374,13 +372,13 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         scheduleStatusFromScheduleDMViewPage.put("notStartedNumberForCurrentWeek", notStartedScheduleAccount);
                         scheduleStatusFromScheduleDMViewPage.put("inProgressForCurrentWeek", inProgressScheduleAccount);
                         scheduleStatusFromScheduleDMViewPage.put("publishedForCurrentWeek", publishedScheduleAccount);
-                        schedulePage.navigateToNextWeek();
+                        scheduleCommonPage.navigateToNextWeek();
                         break;
                     case 2:
                         scheduleStatusFromScheduleDMViewPage.put("notStartedNumberForNextWeek", notStartedScheduleAccount);
                         scheduleStatusFromScheduleDMViewPage.put("inProgressForNextWeek", inProgressScheduleAccount);
                         scheduleStatusFromScheduleDMViewPage.put("publishedForNextWeek", publishedScheduleAccount);
-                        schedulePage.navigateToNextWeek();
+                        scheduleCommonPage.navigateToNextWeek();
                         break;
                     case 3:
                         scheduleStatusFromScheduleDMViewPage.put("notStartedNumberForTheWeekAfterNext", notStartedScheduleAccount);
@@ -671,34 +669,38 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             if(!isScheduleExists){
                 theSelectedScheduleLocationName = schedulesInDMView.get(0).findElement(By.cssSelector("[class=\"ng-binding\"]")).getText();
                 click(schedulesInDMView.get(0).findElement(By.className("ng-binding")));
-                if (schedulePage.isWeekGenerated()){
-                    schedulePage.unGenerateActiveScheduleScheduleWeek();
+                if (createSchedulePage.isWeekGenerated()){
+                    createSchedulePage.unGenerateActiveScheduleScheduleWeek();
                 }
                 if (scheduleStatus.equalsIgnoreCase("Published")){
-                    schedulePage.createScheduleForNonDGFlowNewUI();
-                    schedulePage.publishActiveSchedule();
+                    createSchedulePage.createScheduleForNonDGFlowNewUI();
+                    createSchedulePage.publishActiveSchedule();
                 } else if (scheduleStatus.equalsIgnoreCase("In Progress")){
-                    schedulePage.createScheduleForNonDGFlowNewUI();
+                    createSchedulePage.createScheduleForNonDGFlowNewUI();
                 }
             }
              */
 
             //Select specific location schedule to test, because that not all schedules are available
-            SchedulePage schedulePage = new ConsoleScheduleNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
+            NewShiftPage newShiftPage = new ConsoleNewShiftPage();
+            SmartCardPage smartCardPage = new ConsoleSmartCardPage();
             Map<String,String> scheduleHoursOnScheduleDMView = new HashMap<>();
             List<String> scheduleHoursOnScheduleDetailPage = new ArrayList<>();
             String theSelectedScheduleLocationName = locationName;
             clickSpecificScheduleByLocationName(theSelectedScheduleLocationName);
-            if (schedulePage.isWeekGenerated()){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             if (scheduleStatus.equals("Published")){
                 List<String> toCloseDays = new ArrayList<>();
-                schedulePage.editOperatingHoursOnScheduleOldUIPage("8", "20", toCloseDays);
-                schedulePage.createScheduleForNonDGFlowNewUI();
-                schedulePage.publishActiveSchedule();
+                newShiftPage.editOperatingHoursOnScheduleOldUIPage("8", "20", toCloseDays);
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.publishActiveSchedule();
             } else if (scheduleStatus.equalsIgnoreCase("In Progress")){
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 
             //Check the buttons on schedule page
@@ -707,7 +709,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
             switch (scheduleStatus) {
                 case "Not Started":
-                    if(!schedulePage.isWeekGenerated()){
+                    if(!createSchedulePage.isWeekGenerated()){
                         SimpleUtils.pass("The 'Not Started' schedule status display correctly! ");
                     } else
                         SimpleUtils.fail("The 'Not Started' schedule status display incorrectly! ", false);
@@ -730,17 +732,17 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                     hoursFromScheduleSMOnDGEnv.put("ScheduledOpen","0");
                     break;
                 case "Published":
-                    if(!schedulePage.isPublishButtonLoadedOnSchedulePage()
-                            && !schedulePage.isCreateScheduleBtnLoadedOnSchedulePage()){
+                    if(!createSchedulePage.isPublishButtonLoadedOnSchedulePage()
+                            && !createSchedulePage.isCreateScheduleBtnLoadedOnSchedulePage()){
                         SimpleUtils.pass("The 'Published' schedule status display correctly! ");
-                        if (schedulePage.isRepublishButtonLoadedOnSchedulePage()){
+                        if (createSchedulePage.isRepublishButtonLoadedOnSchedulePage()){
 //                            schedulePage.clickOnRepublishButtonLoadedOnSchedulePage();
-                            schedulePage.publishActiveSchedule();
+                            createSchedulePage.publishActiveSchedule();
                         }
                     } else
                         SimpleUtils.fail("The 'Published' schedule status display incorrectly! ", false);
                     if(isDGEnv){
-                        hoursFromScheduleSMOnDGEnv = schedulePage.getBudgetNScheduledHoursFromSmartCardOnDGEnv();
+                        hoursFromScheduleSMOnDGEnv = getBudgetNScheduledHoursFromSmartCardOnDGEnv();
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("BudgetedTotal"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledTotal"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("BudgetedASM"));
@@ -752,24 +754,24 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledSA"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledOpen"));
                     } else {
-                        Map<String, String> hoursFromScheduleSMOnNonDGEnv = schedulePage.getBudgetNScheduledHoursFromSmartCard();
+                        Map<String, String> hoursFromScheduleSMOnNonDGEnv = smartCardPage.getBudgetNScheduledHoursFromSmartCard();
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Budget"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Scheduled"));
                     }
 
                     break;
                 case "In Progress":
-                    if(schedulePage.isPublishButtonLoadedOnSchedulePage()
-                            && !schedulePage.isCreateScheduleBtnLoadedOnSchedulePage()){
+                    if(createSchedulePage.isPublishButtonLoadedOnSchedulePage()
+                            && !createSchedulePage.isCreateScheduleBtnLoadedOnSchedulePage()){
                         SimpleUtils.pass("The 'In Progress' schedule status display correctly! ");
                     } else
                         SimpleUtils.fail("The 'In Progress' schedule status display incorrectly! ", false);
                     if(isDGEnv){
-                        hoursFromScheduleSMOnDGEnv = schedulePage.getBudgetNScheduledHoursFromSmartCardOnDGEnv();
+                        hoursFromScheduleSMOnDGEnv = getBudgetNScheduledHoursFromSmartCardOnDGEnv();
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("BudgetedTotal"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledTotal"));
                     } else {
-                        Map<String, String> hoursFromScheduleSMOnNonDGEnv = schedulePage.getBudgetNScheduledHoursFromSmartCard();
+                        Map<String, String> hoursFromScheduleSMOnNonDGEnv = smartCardPage.getBudgetNScheduledHoursFromSmartCard();
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Budget"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Scheduled"));
                     }
@@ -779,10 +781,10 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             float projectionOpenShiftsFromScheduleDetailPage = 0;
             switch (specificWeek){
                 case "Current Week":
-                    projectionOpenShiftsFromScheduleDetailPage = schedulePage.getTotalProjectionOpenShiftsHoursForCurrentWeek();
+//                    projectionOpenShiftsFromScheduleDetailPage = schedulePage.getTotalProjectionOpenShiftsHoursForCurrentWeek();
                     break;
                 case "Next Week":
-                    projectionOpenShiftsFromScheduleDetailPage = schedulePage.newCalcTotalScheduledHourForDayInWeekView();
+                    projectionOpenShiftsFromScheduleDetailPage = scheduleShiftTablePage.newCalcTotalScheduledHourForDayInWeekView();
                     break;
             }
             //Only for DG env: get timesheet hours from Time sheet page
@@ -851,16 +853,16 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
             String districtName = dashboardPage.getCurrentDistrict();
             locationSelectorPage.selectCurrentUpperFieldAgain("District");
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             if(isTAEnv){
                 switch(specificWeek){
                     case "Current Week":
                         break;
                     case "Previous Week":
-                        schedulePage.navigateToPreviousWeek();
+                        scheduleCommonPage.navigateToPreviousWeek();
                         break;
                     case "Next Week":
-                        schedulePage.navigateToNextWeek();
+                        scheduleCommonPage.navigateToNextWeek();
                         break;
                 }
             }
@@ -1293,4 +1295,470 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         }
         return allUpperFieldInfo;
     }
+
+    @FindBy(css = "div.card-carousel-card-title")
+    private WebElement locationsSummaryTitleOnSchedule;
+
+    @FindBy(css = "div.published-clocked-cols-summary-title")
+    private List<WebElement> locationsSummarySmartCardOnSchedule;
+    public List<String> getLocationSummaryDataFromSchedulePage() throws Exception{
+        String locationSummaryTitleOnSchedule = null;
+        List<String> ListLocationSummaryOnSchedule = new ArrayList<>();
+        if(isElementLoaded(locationsSummaryTitleOnSchedule, 10)){
+            locationSummaryTitleOnSchedule = locationsSummaryTitleOnSchedule.getText();
+            ListLocationSummaryOnSchedule.add(locationSummaryTitleOnSchedule);
+        }else{
+            SimpleUtils.fail("Location Summary Title not available on Dashboard Page", true);
+        }
+
+        if(areListElementVisible(locationsSummarySmartCardOnSchedule,10) && locationsSummarySmartCardOnSchedule.size()!=0){
+            for(int i =0; i< locationsSummarySmartCardOnSchedule.size();i++){
+                ListLocationSummaryOnSchedule.add(locationsSummarySmartCardOnSchedule.get(i).getText());
+            }
+        }else{
+            SimpleUtils.fail("Location Summary Smart Card not available on Dashboard Page", true);
+        }
+
+        return ListLocationSummaryOnSchedule;
+    }
+
+
+    @FindBy(css = "div[class=\"card-carousel-card card-carousel-card-primary \"]")
+    private WebElement locationSummary;
+    @Override
+    public HashMap<String, Float> getValuesAndVerifyInfoForLocationSummaryInDMView(String upperFieldType, String weekType) throws Exception {
+        HashMap<String, Float> result = new HashMap<String, Float>();
+        if (isElementLoaded(locationSummary,10) && locationSummary.findElements(By.cssSelector("text")).size()>=6){
+            String upperFieldSummaryTitle = locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().toLowerCase();
+            if (upperFieldSummaryTitle.contains(upperFieldType.toLowerCase() + "s summary")
+                    || upperFieldSummaryTitle.contains(upperFieldType.toLowerCase() + " summary")){
+                SimpleUtils.pass("Location Summary smart title displays correctly!");
+                String numOfLocations = locationSummary.findElement(By.cssSelector(".card-carousel-card-title")).getText().split(" ")[0];
+                if (SimpleUtils.isNumeric(numOfLocations)){
+                    result.put("NumOfLocations", Float.valueOf(numOfLocations));
+                } else {
+                    SimpleUtils.fail("Location count in title fail to load!", false);
+                }
+            } else {
+                SimpleUtils.fail("Location Summary smart title diaplays incorrectly!", false);
+            }
+            if (SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(0).getText().replace(",","")) && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(2).getText().replace(",",""))){
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(1).getText(),
+                        Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(0).getText().replace(",","")));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(3).getText(),
+                        Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(2).getText().replace(",","")));
+            } else {
+                SimpleUtils.fail("Budget hours and Published hours display incorrectly!", false);
+            }
+            if (locationSummary.findElements(By.cssSelector("text")).size()==6
+                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",",""))){
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",","")));
+                if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▼")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#50b83c")){
+                        SimpleUtils.pass("The color of the value is correct! -> green");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not green", false);
+                    }
+                } else if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▲")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#ff0000")){
+                        SimpleUtils.pass("The color of the value is correct! -> red");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not red", false);
+                    }
+                }
+            }
+            if (locationSummary.findElements(By.cssSelector("text")).size()==8
+                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",",""))
+                    && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","").replace(",",""))){
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",","")));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(7).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","").replace(",","")));
+
+                if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▼")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#50b83c")){
+                        SimpleUtils.pass("The color of the value is correct! -> green");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not green", false);
+                    }
+                } else if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▲")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#ff0000")){
+                        SimpleUtils.pass("The color of the value is correct! -> red");
+                    } else {
+                        SimpleUtils.fail("The color of the value is incorrect! ->not red", false);
+                    }
+                }
+            }
+            if(weekType.toLowerCase().contains("current") || weekType.contains("previous")){
+                if (isElementLoaded(locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")),10)
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Scheduled Within Budget")
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Scheduled Over Budget")
+                        && getLocationSummaryDataFromSchedulePage().size() == 3){
+                    String numOfProjectedWithin = getLocationSummaryDataFromSchedulePage().get(1).split(" ")[0];
+                    String numOfProjectedOver = getLocationSummaryDataFromSchedulePage().get(2).split(" ")[0];
+                    if (SimpleUtils.isNumeric(numOfProjectedWithin.replace(",","")) && SimpleUtils.isNumeric(numOfProjectedOver.replace(",",""))){
+                        result.put("NumOfProjectedWithin", Float.valueOf(numOfProjectedWithin.replace(",","")));
+                        result.put("NumOfProjectedOver", Float.valueOf(numOfProjectedOver.replace(",","")));
+                    } else {
+                        SimpleUtils.fail("Scheduled Location count in title fail to load!", false);
+                    }
+                    SimpleUtils.pass("Scheduled locations info load successfully!");
+                } else {
+                    SimpleUtils.fail("Scheduled locations info fail to load!", false);
+                }
+            } else {
+                if (isElementLoaded(locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")),10)
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Published Within Budget")
+                        && locationSummary.findElement(By.cssSelector(".published-clocked-cols-summary")).getText().contains("Published Over Budget")
+                        && getLocationSummaryDataFromSchedulePage().size() == 3){
+                    String numOfProjectedWithin = getLocationSummaryDataFromSchedulePage().get(1).split(" ")[0];
+                    String numOfProjectedOver = getLocationSummaryDataFromSchedulePage().get(2).split(" ")[0];
+                    if (SimpleUtils.isNumeric(numOfProjectedWithin.replace(",","")) && SimpleUtils.isNumeric(numOfProjectedOver.replace(",",""))){
+                        result.put("NumOfProjectedWithin", Float.valueOf(numOfProjectedWithin.replace(",","")));
+                        result.put("NumOfProjectedOver", Float.valueOf(numOfProjectedOver.replace(",","")));
+                    } else {
+                        SimpleUtils.fail("Projected Location count in title fail to load!", false);
+                    }
+                    SimpleUtils.pass("Projected locations info load successfully!");
+                } else {
+                    SimpleUtils.fail("Projected locations info fail to load!", false);
+                }
+            }
+
+        } else {
+            SimpleUtils.fail("Location summary smart card fail to load!", false);
+        }
+        return result;
+    }
+
+
+
+    @FindBy(css = "div.analytics-new-table")
+    private WebElement analyticsTableInScheduleDMViewPage;
+    @Override
+    public boolean isScheduleDMView() throws Exception {
+        boolean result = false;
+        if (isElementLoaded(analyticsTableInScheduleDMViewPage, 60)) {
+            result = true;
+        }
+        return result;
+    }
+
+
+
+    @FindBy(css = "div.analytics-new-table-group-row-open")
+    private List<WebElement> locationsInTheList;
+    @Override
+    public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception {
+        waitForSeconds(3);
+        List<String> locations = new ArrayList<String>();
+        if (areListElementVisible(getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")),10)){
+            for (int i=0; i< getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).size(); i++){
+                locations.add(getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).get(i).findElement(By.cssSelector("img.analytics-new-table-location~span")).getText());
+            }
+        }
+        return locations;
+    }
+
+
+
+    @FindBy(css = "div.analytics-new-table-header")
+    private WebElement locationTableHeader;
+    @Override
+    public void verifySortByColForLocationsInDMView(int index) throws Exception {
+        List<String> listString = new ArrayList<String>();
+        List<Float> listFloat = new ArrayList<Float>();
+        if (index > 0 && index <= getNumOfColInDMViewTable()){
+            listString = getListByColInTimesheetDMView(index);
+            if (locationTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).size()==getNumOfColInDMViewTable()){
+                click(locationTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).get(index-1));
+                if (locationTableHeader.findElements(By.cssSelector("i.analytics-new-table-header-sorter")).get(index-1).getAttribute("class").contains("sorter-up")){
+                    if (transferStringToFloat(listString).size()==listString.size()){
+                        listFloat = transferStringToFloat(listString).stream().sorted(Float::compareTo).collect(Collectors.toList());
+                        if (Math.abs(transferStringToFloat(getListByColInTimesheetDMView(index)).get(listFloat.size()-1)-listFloat.get(listFloat.size()-1)) == 0){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    } else {
+                        listString = listString.stream().sorted(String::compareTo).collect(Collectors.toList());
+                        if (getListByColInTimesheetDMView(index).get(0).equals(listString.get(0))){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    }
+                } else {
+                    if (transferStringToFloat(listString).size()==listString.size()){
+                        listFloat = transferStringToFloat(listString).stream().sorted(Float::compareTo).collect(Collectors.toList());
+                        if (Math.abs(transferStringToFloat(getListByColInTimesheetDMView(index)).get(0)-listFloat.get(listFloat.size()-1)) == 0){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    } else {
+                        listString = listString.stream().sorted(String::compareTo).collect(Collectors.toList());
+                        if (getListByColInTimesheetDMView(index).get(0).equals(listString.get(listString.size()-1))){
+                            SimpleUtils.pass("Sort result is correct!");
+                        } else {
+                            SimpleUtils.fail("Sort result is incorrect!", false);
+                        }
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Columns are not loaded correctly!", false);
+            }
+        } else {
+            SimpleUtils.fail("Index beyond range.", false);
+        }
+    }
+
+    @Override
+    public List<Float> transferStringToFloat(List<String> listString) throws Exception{
+        List<Float> result = new ArrayList<Float>();
+        boolean flag = true;
+        for (String s : listString){
+            if (!SimpleUtils.isNumeric(s)){
+                flag = false;
+                break;
+            }
+        }
+        if (flag){
+            for (String s : listString){
+                result.add(Float.parseFloat(s));
+            }
+        }
+        return result;
+    }
+
+
+    @Override
+    public List<String> getListByColInTimesheetDMView(int index) throws Exception{
+        List<String> list = new ArrayList<String>();
+        for (int i = 0; i < getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).size(); i++){
+            List<WebElement> columns = getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")).get(i).findElements(By.cssSelector(".ng-scope.col-fx-1"));
+            if (index > 0 && index <= getNumOfColInDMViewTable() && columns.size()>=getNumOfColInDMViewTable()-1){
+                if (index == 1){
+                    list = getLocationsInScheduleDMViewLocationsTable();
+                } else {
+                    if (areListElementVisible(getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")),10)){
+                        list.add(columns.get(index-2).getText().replace("%","").replace(",",""));
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Index beyond range.", false);
+            }
+        }
+        return list;
+    }
+
+    private int getNumOfColInDMViewTable() throws Exception {
+        int num = 0;
+        if (isElementLoaded(locationTableHeader, 10)){
+            num = locationTableHeader.getText().split("\n").length;
+        } else {
+            SimpleUtils.fail("Table header fail to load!", false);
+        }
+        return num;
+    }
+
+    @Override
+    public void verifyClockedOrProjectedInDMViewTable(String expected) throws Exception {
+        if (isElementLoaded(locationTableHeader, 10)){
+            if (locationTableHeader.getText().toLowerCase().contains(expected.toLowerCase())){
+                SimpleUtils.pass(expected + " displays!");
+            } else {
+                SimpleUtils.fail(expected + " doesn't display!", false);
+            }
+        } else {
+            SimpleUtils.fail("Table header fail to load!", false);
+        }
+    }
+
+
+    @Override
+    public void verifySearchLocationInScheduleDMView(String location) throws Exception {
+        boolean flag = true;
+        waitForSeconds(5);
+        if (isElementLoaded(analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")),60)){
+            analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
+            analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(location);
+            for (String s: getLocationsInScheduleDMViewLocationsTable()){
+                flag = flag && s.contains(location);
+            }
+            if (flag){
+                SimpleUtils.pass("Search result is correct!");
+            } else {
+                SimpleUtils.fail("Search result is incorrect!", false);
+            }
+        } else {
+            SimpleUtils.fail("Search box is not loaded!", false);
+        }
+    }
+
+
+    @Override
+    public void clickOnLocationNameInDMView(String location) throws Exception {
+        boolean flag = false;
+        if (areListElementVisible(locationsInTheList, 15)) {
+            for (WebElement element : locationsInTheList) {
+                if (element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText().contains(location)) {
+                    flag = true;
+                    click(element.findElement(By.cssSelector("img.analytics-new-table-location~span")));
+                    SimpleUtils.pass(location + "clicked!");
+                    break;
+                }
+            }
+            if (!flag) {
+                SimpleUtils.fail("No this location: " + location, false);
+            }
+        } else {
+            SimpleUtils.fail("No location displayed!", false);
+        }
+    }
+
+
+
+    @Override
+    public int getIndexOfColInDMViewTable(String colName) throws Exception {
+        int index = 0;
+        boolean colExist = false;
+        if (isElementLoaded(locationTableHeader, 10)){
+            for (String s: locationTableHeader.getText().replace("\n(Hrs)","").split("\n")){
+                ++index;
+                if (s.toLowerCase().contains(colName.toLowerCase())){
+                    colExist = true;
+                    break;
+                }
+            }
+            if (!colExist) {
+                index = 0;
+            }
+        } else {
+            SimpleUtils.fail("Table header fail to load!", false);
+        }
+        return index;
+    }
+
+
+    @FindBy(css = "div.card-carousel-container")
+    private WebElement cardContainerInDMView;
+    @Override
+    public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception {
+        HashMap<String, Integer> result = new HashMap<String, Integer>();
+        if (isElementLoaded(cardContainerInDMView,10) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div[class*=\"card-carousel-card-analytics-card-color-\"]")),10)){
+            List<String> strList = Arrays.asList(cardContainerInDMView.findElement(By.cssSelector("div[class*=\"card-carousel-card-analytics-card-color-\"]")).getText().split("\n"));
+            if (strList.size()==4 && strList.get(1).toLowerCase().contains("unplanned") && strList.get(2).toLowerCase().contains("clocks") && SimpleUtils.isNumeric(strList.get(0)) && SimpleUtils.isNumeric(strList.get(3).replace(" total timesheets", ""))){
+                result.put("unplanned clocks", Integer.parseInt(strList.get(0)));
+                result.put("total timesheets", Integer.parseInt(strList.get(3).replace(" total timesheets", "")));
+                SimpleUtils.pass("All info on Unplanned Clocks Summary Card is expected!");
+            } else {
+                SimpleUtils.fail("Info on Unplanned Clocks Summary Card is not expected!", false);
+            }
+        } else {
+            SimpleUtils.fail("Unplanned clocks card fail to load!", false);
+        }
+        return result;
+    }
+
+
+
+    @Override
+    public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception {
+        HashMap<String, Integer> result = new HashMap<String, Integer>();
+        if (isElementLoaded(cardContainerInDMView,10) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div.card-carousel-card-card-carousel-card-yellow-top")),10)){
+            String info = cardContainerInDMView.findElement(By.cssSelector("div.card-carousel-card-card-carousel-card-yellow-top")).getText();
+            List<String> strList = Arrays.asList(info.split("\n"));
+            if (strList.size()==13 && strList.get(0).contains("UNPLANNED CLOCKS") && strList.get(2).contains("Early Clocks")&& strList.get(4).contains("Late Clocks")&& strList.get(6).contains("Incomplete Clocks")
+                    && strList.get(8).contains("Missed Meal")&& strList.get(10).contains("No Show")&& strList.get(12).contains("Unscheduled")){
+                SimpleUtils.pass("Title and info on Unplanned Clocks Smart Card are expected!");
+                if (SimpleUtils.isNumeric(strList.get(1).replace(",", ""))
+                        && SimpleUtils.isNumeric(strList.get(3).replace(",", ""))
+                        && SimpleUtils.isNumeric(strList.get(5).replace(",", ""))
+                        && SimpleUtils.isNumeric(strList.get(7).replace(",", ""))
+                        && SimpleUtils.isNumeric(strList.get(9).replace(",", ""))
+                        && SimpleUtils.isNumeric(strList.get(11).replace(",", ""))){
+                    result.put(strList.get(2), Integer.parseInt(strList.get(1).replace(",", "")));
+                    result.put(strList.get(4), Integer.parseInt(strList.get(3).replace(",", "")));
+                    result.put(strList.get(6), Integer.parseInt(strList.get(5).replace(",", "")));
+                    result.put(strList.get(8), Integer.parseInt(strList.get(7).replace(",", "")));
+                    result.put(strList.get(10), Integer.parseInt(strList.get(9).replace(",", "")));
+                    result.put(strList.get(12), Integer.parseInt(strList.get(11).replace(",", "")));
+                } else {
+                    SimpleUtils.fail("Datas on UNPLANNED CLOCKS smart card aren't numeric!", false);
+                }
+            } else {
+                SimpleUtils.fail("Info on Unplanned Clocks smart Card is not expected!", false);
+            }
+        } else {
+            SimpleUtils.fail("Unplanned clocks card fail to load!", false);
+        }
+        return result;
+    }
+
+    @Override
+    public void clickSpecificLocationInDMViewAnalyticTable(String location) throws Exception {
+        waitForSeconds(3);
+        if (areListElementVisible(locationsInTheList,10)){
+            for (WebElement element: locationsInTheList){
+                if (location.equalsIgnoreCase(element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText())){
+                    click(element);
+                    SimpleUtils.pass(location + " is clicked!");
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no location in the list!", false);
+        }
+    }
+
+    @FindBy (css = ".day-week-picker-period-week")
+    private List<WebElement> currentWeeks;
+
+    @FindBy(className = "day-week-picker-arrow-right")
+    private WebElement calendarNavigationNextWeekArrow;
+    @Override
+    public boolean hasNextWeek() throws Exception {
+        int currentWeekIndex = -1;
+        if (areListElementVisible(currentWeeks, 10)) {
+            for (int i = 0; i < currentWeeks.size(); i++) {
+                String className = currentWeeks.get(i).getAttribute("class");
+                if (className.contains("day-week-picker-period-active")) {
+                    currentWeekIndex = i;
+                }
+            }
+            if (currentWeekIndex == (currentWeeks.size() - 1) && !isElementLoaded(calendarNavigationNextWeekArrow, 5)) {
+                return false;
+            }else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @FindBy (css = "tbody tr")
+    private List<WebElement> smartCardRows;
+
+    @Override
+    public HashMap<String, String> getBudgetNScheduledHoursFromSmartCardOnDGEnv() throws Exception {
+        HashMap<String, String> budgetNScheduledHours = new HashMap<>();
+        if (areListElementVisible(smartCardRows, 5) && smartCardRows.size() != 0) {
+            List<WebElement> ths = smartCardRows.get(0).findElements(By.tagName("th"));
+            List<WebElement> tds = smartCardRows.get(1).findElements(By.tagName("td"));
+            List<WebElement> td2s = smartCardRows.get(2).findElements(By.tagName("td"));
+            if (ths != null && tds != null && ths.size() == 6 && tds.size() == 6) {
+                for (int i =1 ;i< ths.size(); i++){
+                    budgetNScheduledHours.put(tds.get(0).getText() + ths.get(i).getText(), tds.get(i).getText());
+                    SimpleUtils.report("Smart Card: Get the hour: " + tds.get(0) + ths.get(i).getText() + " for: " + tds.get(i).getText());
+                    budgetNScheduledHours.put(td2s.get(0).getText() + ths.get(i).getText(), td2s.get(i).getText());
+                    SimpleUtils.report("Smart Card: Get the hour: " + td2s.get(0) + ths.get(i).getText() + " for: " + td2s.get(i).getText());
+                }
+            } else {
+                SimpleUtils.fail("Schedule Week View Page: The format of the budget and Scheduled hours' smart card is incorrect!", false);
+            }
+        } else {
+            SimpleUtils.fail("Schedule Week View Page: Budget and Scheduled smart card not loaded Successfully!", false);
+        }
+        return budgetNScheduledHours;
+    }
+
 }

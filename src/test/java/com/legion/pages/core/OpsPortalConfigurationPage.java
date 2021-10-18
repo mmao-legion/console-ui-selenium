@@ -135,7 +135,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		TimeAttendance("Time & Attendance"),
 		Compliance("Compliance"),
 		SchedulingRules("Scheduling Rules"),
+		SchedulingPolicyGroups("Scheduling Policy Groups"),
 		Communications("Communications"),
+		MinorsRules("Minors Rules"),
+		MealAndRest("Meal and Rest"),
 		AdditionalPayRules("Additional Pay Rules");
 		private final String value;
 
@@ -216,7 +219,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					SimpleUtils.fail("Configuration template cards are loaded incorrect",false);
 				}
 			}
-		} else if(configurationCardsList.size()==8){
+		} else if(configurationCardsList.size()==10){
 			for(WebElement configurationCard:configurationCardsList) {
 				if(configurationCard.getText().equals(configurationLandingPageTemplateCards.OperatingHours.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.OperatingHours.getValue() + " card is showing.");
@@ -238,6 +241,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.Communications.getValue() + " card is showing.");
+					continue;
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.MinorsRules.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.MinorsRules.getValue() + " card is showing.");
+					continue;
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.MealAndRest.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.MealAndRest.getValue() + " card is showing.");
 					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.AdditionalPayRules.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.AdditionalPayRules.getValue() + " card is showing.");

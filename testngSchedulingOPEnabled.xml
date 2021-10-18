@@ -25,19 +25,19 @@
 <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
 <!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
 <!--                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" Blocked by Bug/>-->
-                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
-                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
-  <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
+<!--                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />   Blocked by SCH-5311-->
+<!--                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />   Blocked by SCH-5311-->
+                      <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
                     <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
-                    <include name="verifyScheduleFunctionalityScheduleSmartCard" />
+                    <include name="verifyScheduleFunctionalityScheduleSmartCardAsStoreManager" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
  <!--                   <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView" />
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView" />-->
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekView" />
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsStoreManager" />
  <!--                   <include name="verifySchedulesWidgetsAsStoreManager" />-->
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
-                    <include name="verifyScheduleFunctionalityForecast" />
-                    <include name="verifyScheduleLaborForeCastFunctionality" />
+                    <include name="verifyScheduleFunctionalityForecastAsStoreManager" />
+                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin" />
                     <include name="validateWeatherSmartCardOnForecastPage" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
  <!--                   <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />-->
@@ -49,16 +49,6 @@
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyAccessControlsOnActivitiesPage" />
                     <include name="verifyTheContentOnActivityAsStoreManager" />
- <!--                   <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
-                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
-                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
-                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
-                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
-                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
-                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin" />
-                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />-->
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
     <!--                <include name="verifyDashboardFunctionalityAsTeamMember" />-->
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
@@ -79,42 +69,58 @@
         </classes>
     </test>
 
-    <test name="Cinemark Minor Test">
+    <test name="Activity Test">
         <classes>
-            <class name="com.legion.tests.core.CinemarkMinorTest">
+            <class name="com.legion.tests.core.ActivityTest">
                 <methods>
-                    <include name="verifyTurnOnAndSetMinorRuleAsInternalAdmin" />
-                    <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
-                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
-                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
-                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
-                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
-                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
-                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
-                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
-                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
-                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
-                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
-                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
-                    <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
-                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
-                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
-                    <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
-                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
-                    <include name="verifySMCanSelectACalendarForMinorAsInternalAdmin" />
-                    <!--                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" Debug/>-->
-                    <include name="verifySchoolCalendarListAsInternalAdmin" />
-                    <include name="verifyCreateCalendarAsInternalAdmin" />
-                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />
-                    <!-- blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" />-->
-                    <!--                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>-->
-                    <!-- blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" />-->
-                    <include name="verifySchoolCalendarDefaultMonthAsInternalAdmin" />
-                    <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" Blocked by queue/>-->
+<!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />-->
+<!--                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5369/>-->
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
+<!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
+<!--                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />Blocked by SCH-5419/>-->
+                    </methods>
+                </class>
+            </classes>
+        </test>
+
+    <!--    <test name="Cinemark Minor Test"> Due to new template
+            <classes>
+                <class name="com.legion.tests.core.CinemarkMinorTest">
+                    <methods>
+                        <include name="verifyTurnOnAndSetMinorRuleAsInternalAdmin" />
+                        <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
+                        <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                        <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                        <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                        <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                        <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                        <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                        <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                        <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                        <include name="verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                        <include name="verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                        <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                        <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                        <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
+                        <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                        <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                        <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                        <include name="verifySMCanSelectACalendarForMinorAsInternalAdmin" />
+                        &lt;!&ndash;                    <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" Debug/>&ndash;&gt;
+                        <include name="verifySchoolCalendarListAsInternalAdmin" />
+                        <include name="verifyCreateCalendarAsInternalAdmin" />
+                        <include name="verifyAddDatesForBreaksAsInternalAdmin" />
+                        &lt;!&ndash; blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" />&ndash;&gt;
+                        &lt;!&ndash;                    <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/>&ndash;&gt;
+                        &lt;!&ndash; blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" />&ndash;&gt;
+                        <include name="verifySchoolCalendarDefaultMonthAsInternalAdmin" />
+                        <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
+                    </methods>
+                </class>
+            </classes>
+        </test>-->
 <!--
     <test name="Schedule Copy Improvement Test">
         <classes>
@@ -146,8 +152,8 @@
                     <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
                     <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
                     <include name="verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager" />
-                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />
-                    <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" />
+<!--                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" If it fails, it will affect other cases/>-->
+<!--                    <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" If it fails, it will affect other cases/>-->
                 </methods>
             </class>
         </classes>

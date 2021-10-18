@@ -128,6 +128,10 @@ public class TeamTest extends TestBase{
 			String onBoarded = "Onboarded";
 			String active = "Active";
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			dashboardPage.isDashboardPageLoaded();
 			String currentDay = dashboardPage.getCurrentDateFromDashboard();
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -154,31 +158,31 @@ public class TeamTest extends TestBase{
 			//teamPage.isOnBoardedDateUpdated(onBoardedDate);
 			// Verify Status will change into Activate status according to date
 			teamPage.verifyTheStatusOfTeamMember(active);
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-			schedulePage.goToSchedulePage();
-			schedulePage.isSchedulePage();
-			schedulePage.goToSchedule();
-			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-			if (!schedulePage.isWeekGenerated()) {
-				schedulePage.generateOrUpdateAndGenerateSchedule();
-			}
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.goToSchedulePage();
+			scheduleCommonPage.isSchedulePage();
+			scheduleCommonPage.goToSchedule();
+			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			if (!createSchedulePage.isWeekGenerated()) {
+				createSchedulePage.generateOrUpdateAndGenerateSchedule();
+			}
 			scheduleCommonPage.clickOnDayView();
-			schedulePage.clickOnEditButton();
-			schedulePage.isAddNewDayViewShiftButtonLoaded();
-			schedulePage.clickNewDayViewShiftButtonLoaded();
-			schedulePage.customizeNewShiftPage();
-			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-			schedulePage.selectDaysFromCurrentDay(currentDay);
-			schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-			schedulePage.clickOnCreateOrNextBtn();
-			schedulePage.searchTeamMemberByName(firstName);
-			schedulePage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.clickOnEditButton();
+			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.selectDaysFromCurrentDay(currentDay);
+			newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(firstName);
+			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleCommonPage.clickOnWeekView();
 			// Verify Shifts will go to Auto Scheduling  after Activating any TM
-			schedulePage.verifyNewShiftsAreShownOnSchedule(firstName);
+			scheduleShiftTablePage.verifyNewShiftsAreShownOnSchedule(firstName);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
@@ -194,6 +198,10 @@ public class TeamTest extends TestBase{
 			String timeZone = "";
 			String active = "Active";
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			dashboardPage.isDashboardPageLoaded();
 			String currentDay = dashboardPage.getCurrentDateFromDashboard();
 			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
@@ -223,33 +231,33 @@ public class TeamTest extends TestBase{
 			teamPage.isActivateWindowLoaded();
 			teamPage.selectADateOnCalendarAndActivate();
 			teamPage.verifyTheStatusOfTeamMember(active);
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-			// Go to schedule page, assign shift to the new team member
-			schedulePage.goToSchedulePage();
-			schedulePage.isSchedulePage();
-			schedulePage.goToSchedule();
-			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-			if (!schedulePage.isWeekGenerated()) {
-				schedulePage.generateOrUpdateAndGenerateSchedule();
-			}
+
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			// Go to schedule page, assign shift to the new team member
+			scheduleCommonPage.goToSchedulePage();
+			scheduleCommonPage.isSchedulePage();
+			scheduleCommonPage.goToSchedule();
+			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			if (!createSchedulePage.isWeekGenerated()) {
+				createSchedulePage.generateOrUpdateAndGenerateSchedule();
+			}
 			scheduleCommonPage.clickOnDayView();
-			schedulePage.clickOnEditButton();
-			schedulePage.isAddNewDayViewShiftButtonLoaded();
-			schedulePage.clickNewDayViewShiftButtonLoaded();
-			schedulePage.customizeNewShiftPage();
-			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-			schedulePage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleNewUITest.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-			schedulePage.selectDaysFromCurrentDay(currentDay);
-			schedulePage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
-			schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-			schedulePage.clickOnCreateOrNextBtn();
-			schedulePage.searchTeamMemberByName(firstName);
-			schedulePage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.clickOnEditButton();
+			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.selectDaysFromCurrentDay(currentDay);
+			newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(firstName);
+			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleCommonPage.clickOnWeekView();
-			schedulePage.verifyNewShiftsAreShownOnSchedule(firstName);
-			schedulePage.clickSaveBtn();
-			List<Integer> indexes = schedulePage.getAddedShiftIndexes(firstName);
+			scheduleShiftTablePage.verifyNewShiftsAreShownOnSchedule(firstName);
+			scheduleMainPage.clickSaveBtn();
+			List<Integer> indexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
 			teamPage.goToTeam();
 			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 			teamPage.searchAndSelectTeamMemberByName(firstName);
@@ -275,11 +283,11 @@ public class TeamTest extends TestBase{
 			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 			teamPage.searchTheTeamMemberByEmployeeIDFromRoster(employeeID, true);
 			// Verify TM's assigned shift is converting to open shift
-			schedulePage.goToSchedulePage();
-			schedulePage.isSchedulePage();
-			schedulePage.goToSchedule();
-			schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-			schedulePage.verifyShiftsChangeToOpenAfterTerminating(indexes, firstName, currentTime);
+			scheduleCommonPage.goToSchedulePage();
+			scheduleCommonPage.isSchedulePage();
+			scheduleCommonPage.goToSchedule();
+			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleShiftTablePage.verifyShiftsChangeToOpenAfterTerminating(indexes, firstName, currentTime);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}

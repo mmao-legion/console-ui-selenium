@@ -2671,6 +2671,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	public void verifyTheContentOnScheduleVsGuidanceByDayWidget() throws Exception {
+		waitForSeconds(8);
 		WebElement viewSchedulesLink = widgetsOnUpperFieldDashboard.get(1).findElement(By.xpath("//div[contains(text(),\"View Schedules\")]"));
 		WebElement guidanceLegend = widgetsOnUpperFieldDashboard.get(1).findElement(By.xpath("//div[contains(text(),\"Guidance\")]"));
 		WebElement scheduledLegend = widgetsOnUpperFieldDashboard.get(1).findElement(By.xpath("//div[contains(text(),\"Scheduled\")]"));
@@ -2740,7 +2741,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		} else {
 			if (
 //					isElementLoaded(budgetHoursCaret, 5)&&
-							!isElementLoaded(budgetHoursMessageSpan)){
+							isElementLoaded(budgetHoursMessageSpan) && !budgetHoursMessageSpan.getText().contains("Budget")){
 				SimpleUtils.pass("Budget hrs caret display correctly and no message display because the budget hour and schedule hours are consistent! ");
 			} else
 				SimpleUtils.fail("Budget hrs caret and message display incorrectly when the budget hour and schedule hours are inconsistent!!", false);
@@ -2780,7 +2781,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(xpath = "//div[4]/div/div[1]/div/div/h3")
 	private WebElement orgSummaryWidgetTitle;
 
-	@FindBy(css = ".sc-hLGenU.doVxdr")
+	@FindBy(css = "div.sc-ekbpNA.bnaKOt")
 	private List<WebElement> scheduledHoursTitles;
 
 	@FindBy(css = "[data-testid$=\"-hours\"]")

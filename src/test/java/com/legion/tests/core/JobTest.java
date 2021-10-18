@@ -293,14 +293,14 @@ public class JobTest extends TestBase {
 //            locationSelectorPage.changeDistrict("OMDistrict1");
 //            locationSelectorPage.changeLocation(searchText);
 //
-//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-//            schedulePage.clickOnScheduleConsoleMenuItem();
-//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
 //
-//            if (schedulePage.isWeekGenerated()){
-//                schedulePage.unGenerateActiveScheduleScheduleWeek();
+//            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+//
+//            if (createSchedulePage.isWeekGenerated()){
+//                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 //            }else {
 //                SimpleUtils.pass("Current week schedule is not  Generated!");
 //                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -330,12 +330,12 @@ public class JobTest extends TestBase {
 //            locationSelectorPage.changeLocation(searchText);
 //
 //
-//            schedulePage.clickOnScheduleConsoleMenuItem();
-//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+//            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 //
-//            if(!schedulePage.isWeekGenerated()&& schedulePage.suggestedButtonIsHighlighted()){
+//            if(!createSchedulePage.isWeekGenerated()&& schedulePage.suggestedButtonIsHighlighted()){
 //                SimpleUtils.pass("Created schedule job doesn't generated the manager schedule");
 //
 //            }else

@@ -59,6 +59,10 @@
                 <methods>
                     <include name="verifyEditForecastInDayViewViewAsInternalAdmin"/>
                     <include name="verifyEditForecastInWeekViewViewAsInternalAdmin"/>
+                    <include name="validateDayPartsAvailableInDefinedTabOfWeekViewAsInternalAdmin"/>
+                    <include name="validateDayPartsAvailableInLablorTabOfWeekViewAsInternalAdmin"/>
+                    <include name="validateDayPartsAvailableInDefinedTabOfDayViewAsInternalAdmin"/>
+                    <include name="validateDayPartsAvailableInLablorTabOfDayViewAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
@@ -132,6 +136,12 @@
                     <include name="verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin" />
                     <include name="verifyEditNotesOptionIsAvailableAsInternalAdmin" />
                     <include name="verifyEditNotesOptionIsAvailableForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyUpdateShiftNotesForAssignedShiftsAsInternalAdmin" />
+                    <include name="verifyUpdateEditNotesForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyEmployeesScheduledInOtherLocationShowUpInGroupByTMAsInternalAdmin" />
+                    <include name="verifyEmployeesFromOtherLocationShowUpInGroupByTMAsInternalAdmin" />
+                    <include name="verifyEmployeesLocationInfoFromOtherLocationAsInternalAdmin" />
+                    <include name="verifyTheTotalHrsOfEmployeesScheduledInOtherLocationAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

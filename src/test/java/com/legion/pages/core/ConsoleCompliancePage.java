@@ -357,7 +357,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         boolean isLocationFound = false;
         if (areListElementVisible(rowsInAnalyticsTable,10)) {
             for (WebElement row: rowsInAnalyticsTable) {
-                if (row.findElement(By.xpath("./div[1]/span/img/following-sibling::span")).getText().equals(location)) {
+                if (row.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_UNTOUCHED\"]")).getText().equals(location)) {
                     isLocationFound = true;
                     List<WebElement> dataElements = row.findElements(By.cssSelector(".ng-scope.col-fx-1"));
                     for (WebElement dataElement: dataElements) {
@@ -468,7 +468,9 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
                 SimpleUtils.fail("Info on Locations With Violation Card is not expected!", false);
             }
         } else {
-            SimpleUtils.fail("Locations With Violation Card fail to load!", false);
+            result.put("UpperFieldsWithViolations" ,0);
+            result.put("TotalUpperFields", 0);
+            SimpleUtils.report("Locations With Violation Card fail to load!");
         }
         return result;
     }
@@ -526,7 +528,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         - Doubletime (Hrs)
         - Late Schedule?*/
         boolean isMatched = false;
-        List<String> fieldNamesExpected = Arrays.asList(new String[]{upperFieldType, "Extra Hours", "Overtime", "Clopening", "Missed Meal", "Schedule Changed Premium", "Double Time", "Schedule Published On Time"});
+        List<String> fieldNamesExpected = Arrays.asList(new String[]{upperFieldType, "Extra Hours", "Overtime", "Clopening", "Missed Meal", "Schedule Changed Premium", "Double Time", "Late Schedule"});
         if (isElementLoaded(analyticsTableHeader,10)) {
             List<WebElement> fields = analyticsTableHeader.findElements(By.xpath("./div"));
             for (WebElement field: fields) {
@@ -680,7 +682,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     @Override
     public List<String> getAllUpperFieldNamesOnAnalyticsTable() throws Exception {
         List<String> upperFieldNames = new ArrayList<>();
-        if (areListElementVisible(upperFieldNamesOnAnalyticsTable, 10)) {
+        if (areListElementVisible(upperFieldNamesOnAnalyticsTable, 20)) {
             for (WebElement upperFieldName: upperFieldNamesOnAnalyticsTable){
                 upperFieldNames.add(upperFieldName.getText());
                 SimpleUtils.pass("Add upper field name: "+ upperFieldName.getText() +" successfully! ");

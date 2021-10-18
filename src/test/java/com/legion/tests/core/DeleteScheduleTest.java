@@ -40,56 +40,60 @@ public class DeleteScheduleTest extends TestBase {
     public void verifyDeletePublishedScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             } else {
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 
-            String deleteForWeekText = schedulePage.getDeleteScheduleForWhichWeekText();
+            String deleteForWeekText = scheduleMainPage.getDeleteScheduleForWhichWeekText();
             String unPublishedMessage = "This action can’t be undone.";
             // Verify the visibility of Delete button
-            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", schedulePage.isDeleteScheduleButtonLoaded(), false);
+            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", scheduleMainPage.isDeleteScheduleButtonLoaded(), false);
             // Verify the functionality of Delete button
-            schedulePage.verifyClickOnDeleteScheduleButton();
+            scheduleMainPage.verifyClickOnDeleteScheduleButton();
             // Verify the content on Delete Schedule confirm window
-            schedulePage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
+            scheduleMainPage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
             // Verify the Delete button is disabled by default
-            schedulePage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
+            scheduleMainPage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
             // Verify the Delete button is enabled when clicking the check box
-            schedulePage.verifyDeleteButtonEnabledWhenClickingCheckbox();
+            scheduleMainPage.verifyDeleteButtonEnabledWhenClickingCheckbox();
             // Verify the functionality of Cancel button
-            schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
+            scheduleMainPage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
 
             // Delete the Unassigned shifts to unblock publishing
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView("Unassigned");
-            schedulePage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleMainPage.saveSchedule();
 
-            schedulePage.publishActiveSchedule();
+            createSchedulePage.publishActiveSchedule();
             String publishedDeleteMessage = "This action can’t be undone. The schedule has been published, it will be withdrawn from team members";
-            schedulePage.verifyClickOnDeleteScheduleButton();
+            scheduleMainPage.verifyClickOnDeleteScheduleButton();
             // Verify the content of Delete Schedule window when schedule is published
-            schedulePage.verifyTheContentOnDeleteScheduleDialog(publishedDeleteMessage, deleteForWeekText);
+            scheduleMainPage.verifyTheContentOnDeleteScheduleDialog(publishedDeleteMessage, deleteForWeekText);
             // Verify the Delete button is disabled by default when schedule is published
-            schedulePage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
+            scheduleMainPage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
             // Verify the Delete button is enabled when clicking the check box when schedule is published
-            schedulePage.verifyDeleteButtonEnabledWhenClickingCheckbox();
+            scheduleMainPage.verifyDeleteButtonEnabledWhenClickingCheckbox();
             // Verify the functionality of Cancel button when schedule is published
-            schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
+            scheduleMainPage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
             // Verify the functionality of Delete button when schedule is published
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -103,21 +107,23 @@ public class DeleteScheduleTest extends TestBase {
     public void verifyDeleteUnPublishedScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             } else {
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -127,28 +133,28 @@ public class DeleteScheduleTest extends TestBase {
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 
-            String deleteForWeekText = schedulePage.getDeleteScheduleForWhichWeekText();
+            String deleteForWeekText = scheduleMainPage.getDeleteScheduleForWhichWeekText();
             String unPublishedMessage = "This action can’t be undone.";
 
             // Verify the visibility of Delete button
-            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", schedulePage.isDeleteScheduleButtonLoaded(), false);
+            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", scheduleMainPage.isDeleteScheduleButtonLoaded(), false);
             // Verify the functionality of Delete button
-            schedulePage.verifyClickOnDeleteScheduleButton();
+            scheduleMainPage.verifyClickOnDeleteScheduleButton();
             // Verify the content on Delete Schedule confirm window
-            schedulePage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
+            scheduleMainPage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
             // Verify the Delete button is disabled by default
-            schedulePage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
+            scheduleMainPage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
             // Verify the Delete button is enabled when clicking the check box
-            schedulePage.verifyDeleteButtonEnabledWhenClickingCheckbox();
+            scheduleMainPage.verifyDeleteButtonEnabledWhenClickingCheckbox();
             // Verify the functionality of Cancel button
-            schedulePage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
+            scheduleMainPage.verifyClickOnCancelBtnOnDeleteScheduleDialog();
             // Verify the functionality of Delete button when schedule is unpublished
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -162,28 +168,31 @@ public class DeleteScheduleTest extends TestBase {
     public void verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            schedulePage.navigateToNextWeek();
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            boolean isSchedulePublished = schedulePage.isCurrentScheduleWeekPublished();
+            boolean isSchedulePublished = createSchedulePage.isCurrentScheduleWeekPublished();
             if (!isSchedulePublished) {
-                schedulePage.convertAllUnAssignedShiftToOpenShift();
-                schedulePage.publishActiveSchedule();
+                shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+                createSchedulePage.publishActiveSchedule();
             }
 
             // Verify Store Manger cannot see the Delete button if schedule is published
-            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is published!", !schedulePage.isDeleteScheduleButtonLoaded(), false);
+            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is published!", !scheduleMainPage.isDeleteScheduleButtonLoaded(), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -197,6 +206,8 @@ public class DeleteScheduleTest extends TestBase {
     public void verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Verify SM doesn't have "Schedule: Manage Schedule" permission
@@ -220,19 +231,20 @@ public class DeleteScheduleTest extends TestBase {
             controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission, actionOff);
             cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            boolean isScheduleCreated = schedulePage.isWeekGenerated();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            boolean isScheduleCreated = createSchedulePage.isWeekGenerated();
             if (isScheduleCreated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
@@ -242,15 +254,15 @@ public class DeleteScheduleTest extends TestBase {
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Verify Store Manager cannot see the Delete button when schedule is not published
-            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is published!", !schedulePage.isDeleteScheduleButtonLoaded(), false);
+            SimpleUtils.assertOnFail("Schedule page: Delete button should not show when the schedule is not published!", !scheduleMainPage.isDeleteScheduleButtonLoaded(), false);
             loginPage.logOut();
 
             // Login as Internal admin, add the permission back
@@ -276,6 +288,7 @@ public class DeleteScheduleTest extends TestBase {
     public void verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Verify SM doesn't have "Schedule: Manage Schedule" permission
@@ -300,23 +313,24 @@ public class DeleteScheduleTest extends TestBase {
             controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection, permission2, actionOn);
             cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            boolean isScheduleCreated = schedulePage.isWeekGenerated();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            boolean isScheduleCreated = createSchedulePage.isWeekGenerated();
             if (!isScheduleCreated) {
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 
-            boolean isSchedulePublished = schedulePage.isCurrentScheduleWeekPublished();
+            boolean isSchedulePublished = createSchedulePage.isCurrentScheduleWeekPublished();
             if (isSchedulePublished) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -327,15 +341,15 @@ public class DeleteScheduleTest extends TestBase {
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Verify Store Manger can publish schedule if schedule is not published
-            schedulePage.publishActiveSchedule();
+            createSchedulePage.publishActiveSchedule();
             loginPage.logOut();
 
             // Login as Internal admin, add the permission back
