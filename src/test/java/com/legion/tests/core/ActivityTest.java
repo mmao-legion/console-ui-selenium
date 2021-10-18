@@ -168,6 +168,7 @@ public class ActivityTest extends TestBase {
         }
 
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         scheduleCommonPage.navigateToNextWeek();
         scheduleCommonPage.navigateToNextWeek();

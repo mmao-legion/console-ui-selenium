@@ -3049,7 +3049,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	public void verifyUserProfileSectionIsLoaded() throws Exception {
-		if(isElementLoaded(userProfileSection, 5)){
+		if(isElementLoaded(userProfileSection, 10)){
 			SimpleUtils.pass("User Profile page: User Profile section loaded successfully! ");
 		} else {
 			SimpleUtils.fail("User Profile page: User Profile section fail to load!", false);

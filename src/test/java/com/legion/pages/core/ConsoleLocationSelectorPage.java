@@ -1631,4 +1631,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         return  locationName;
     }
 
+
+    public String getOneRandomNameFromUpperFieldDropdownList(String upperFieldType) throws Exception {
+        String upperFieldName = "";
+        List<String> allUpperFieldNames = getAllUpperFieldNamesInUpperFieldDropdownList(upperFieldType);
+        upperFieldName = allUpperFieldNames.get((new Random()).nextInt(allUpperFieldNames.size()));
+        return upperFieldName;
+    }
 }

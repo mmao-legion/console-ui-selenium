@@ -619,7 +619,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}
 	}
 
-	private boolean isItMultipVersion(int i) {
+	public boolean isItMultipVersion(int i) {
 		String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
 		if (classValue != null && classValue.contains("hasChildren")) {
 			return true;
@@ -627,7 +627,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 			return false;
 	}
 
-	private void expandTemplate(int i) {
+	public void expandTemplate(int i) {
 		clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 		waitForSeconds(3);
 	}
