@@ -153,8 +153,9 @@ public class ForecastTest extends TestBase{
 
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!",
-				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
 
 		String WeatherCardText = "WEATHER";
 		ForecastPage forecastPage = pageFactory.createForecastPage();
