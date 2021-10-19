@@ -16,10 +16,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 public class UserManagementTest extends TestBase {
@@ -176,13 +173,15 @@ public class UserManagementTest extends TestBase {
             //add a new work role and save it
             workRolesPage.addNewWorkRole();
             WorkRoleDetailsPage workRoleDetailsPage = new WorkRoleDetailsPage();
-            workRoleDetailsPage.editWorkRoleDetails("autoWorkRole001", 3, "Deployed", "3");
+            Random random = new Random();
+            String workRoleName="autoWorkRole" + random.nextInt(1000);
+            workRoleDetailsPage.editWorkRoleDetails(workRoleName, 3, "Deployed", "3");
             workRoleDetailsPage.addAssignmentRule("3","2","2098");
             workRoleDetailsPage.saveAssignRule();
             workRoleDetailsPage.submit();
             workRolesPage.save();
-            workRolesPage.searchByWorkRole("autoWorkRole001");
-            Assert.assertEquals(workRolesPage.getTheFirstWorkRoleInTheList(), "autoWorkRole001", "Failed to add new work role!");
+            workRolesPage.searchByWorkRole(workRoleName);
+            Assert.assertEquals(workRolesPage.getTheFirstWorkRoleInTheList(), workRoleName, "Failed to add new work role!");
 
             //search by work role
             //testcase1: exact matching
@@ -209,31 +208,31 @@ public class UserManagementTest extends TestBase {
             Assert.assertTrue(workRolesPage.getNoResultNotice().contains("A Work Role defines a category of work that needs to be scheduled."));
 
             //edit an existing work role and save the editing
-            workRolesPage.editAnExistingWorkRole("autoWorkRole001");
-            workRoleDetailsPage.editWorkRoleDetails("autoWorkRole001-edit", 2, "Deployed", "1.5");
+            workRolesPage.editAnExistingWorkRole(workRoleName);
+            workRoleDetailsPage.editWorkRoleDetails(workRoleName+"-edit", 2, "Deployed", "1.5");
             workRoleDetailsPage.submit();
             workRolesPage.save();
-            workRolesPage.searchByWorkRole("autoWorkRole001-edit");
-            Assert.assertEquals(workRolesPage.getTheFirstWorkRoleInTheList(), "autoWorkRole001-edit", "Failed to Edit new work role!");
+            workRolesPage.searchByWorkRole(workRoleName+"-edit");
+            Assert.assertEquals(workRolesPage.getTheFirstWorkRoleInTheList(), workRoleName+"-edit", "Failed to Edit new work role!");
 
             //edit an existing work role and cancel the editing
-            workRolesPage.editAnExistingWorkRole("autoWorkRole001-edit");
-            workRoleDetailsPage.editWorkRoleDetails("autoWorkRole-cancelEdit", 9, "Deployed", "2");
+            workRolesPage.editAnExistingWorkRole(workRoleName+"-edit");
+            workRoleDetailsPage.editWorkRoleDetails(workRoleName+"-cancelEdit", 9, "Deployed", "2");
             workRoleDetailsPage.submit();
             workRolesPage.cancel();
             Assert.assertEquals(workRolesPage.getCancelDialogTitle(), "Cancel Editing?", "Cancel Dialog is not displayed");
             workRolesPage.cancelEditing();
-            workRolesPage.searchByWorkRole("autoWorkRole-cancelEdit");
+            workRolesPage.searchByWorkRole(workRoleName+"-cancelEdit");
             Assert.assertTrue(workRolesPage.getNoResultNotice().contains("A Work Role defines a category of work that needs to be scheduled."));
-            workRolesPage.searchByWorkRole("autoWorkRole001-edit");
-            Assert.assertEquals(workRolesPage.getTheFirstWorkRoleInTheList(), "autoWorkRole001-edit", "Failed to cancel the editing!");
+            workRolesPage.searchByWorkRole(workRoleName+"-edit");
+            Assert.assertEquals(workRolesPage.getTheFirstWorkRoleInTheList(), workRoleName+"-edit", "Failed to cancel the editing!");
 
             //disable the work role added and it can't be searched out
-            workRolesPage.disableAWorkRole("autoWorkRole001-edit");
+            workRolesPage.disableAWorkRole(workRoleName+"-edit");
             Assert.assertEquals(workRolesPage.getDisableDialogTitle(), "Disable Work Role", "The disable work role dialog is not displayed.");
             workRolesPage.okToDisableAction();
             workRolesPage.save();
-            workRolesPage.searchByWorkRole("autoWorkRole001-edit");
+            workRolesPage.searchByWorkRole(workRoleName+"-edit");
             Assert.assertTrue(workRolesPage.getNoResultNotice().contains("A Work Role defines a category of work that needs to be scheduled."));
 
         } catch (Exception e) {
