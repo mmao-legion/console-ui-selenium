@@ -2345,7 +2345,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//verify version number in analyze page
 
-			analyzePage.clickOnAnalyzeBtn();
+			analyzePage.clickOnAnalyzeBtn("history");
 			String version0 = "Suggested Schedule";
 			String version1 = "0.1";
 			String version2 = "1.1";
@@ -2366,15 +2366,87 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Changes not publish smart card is loaded in suggested page!",!smartCardPage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
 			scheduleMainPage.clickOnManagerButton();
 			SimpleUtils.assertOnFail("Changes not publish smart card is not loaded in Manager page!",smartCardPage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
-			analyzePage.clickOnAnalyzeBtn();
+			analyzePage.clickOnAnalyzeBtn("history");
 			analyzePage.verifyScheduleVersion(version1);
 			analyzePage.closeAnalyzeWindow();
 			createSchedulePage.publishActiveSchedule();
-			analyzePage.clickOnAnalyzeBtn();
+			analyzePage.clickOnAnalyzeBtn("history");
 			analyzePage.verifyScheduleVersion(version2);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Verify the schedule version and work role shows correctly")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyScheduleVersionAndWorkRoleShowsCorrectlyAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+		AnalyzePage analyzePage = pageFactory.createAnalyzePage();
+		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		scheduleCommonPage.navigateToNextWeek();
+		boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (isWeekGenerated){
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+		//verify version number in analyze page
+
+		HashMap<String, String> valuesOnTheSmartCard = smartCardPage.getBudgetNScheduledHoursFromSmartCard();
+		analyzePage.clickOnAnalyzeBtn("labor");
+		String resultTotalHrs = analyzePage.getPieChartTotalHrsFromLaborGuidanceTab();
+		SimpleUtils.assertOnFail("Budget hours are inconsistent!", resultTotalHrs.contains(valuesOnTheSmartCard.get("Budget")), false);
+		analyzePage.closeAnalyzeWindow();
+		analyzePage.clickOnAnalyzeBtn("history");
+		String versionInfo = analyzePage.getPieChartHeadersFromHistoryTab("schedule");
+		String version0 = "0.0";
+		SimpleUtils.assertOnFail("Version info is inconsistent!", versionInfo.contains(version0), false);
+		SimpleUtils.assertOnFail("Labor guidance is inconsistent!", resultTotalHrs.equalsIgnoreCase(analyzePage.getPieChartTotalHrsFromHistoryTab("guidance")), false);
+		analyzePage.closeAnalyzeWindow();
+
+		String version1 = "0.1";
+		String version2 = "1.0";
+		//make edits and save
+		String workRole = shiftOperatePage.getRandomWorkRole();
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		newShiftPage.clickOnDayViewAddNewShiftButton();
+		newShiftPage.customizeNewShiftPage();
+		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.selectWorkRole(workRole);
+		newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
+		newShiftPage.clickOnCreateOrNextBtn();
+		scheduleMainPage.saveSchedule();
+
+		analyzePage.clickOnAnalyzeBtn("history");
+		versionInfo = analyzePage.getPieChartHeadersFromHistoryTab("schedule");
+		SimpleUtils.assertOnFail("Version info is inconsistent!", versionInfo.contains(version1), false);
+		SimpleUtils.assertOnFail("Labor guidance is inconsistent!", resultTotalHrs.equalsIgnoreCase(analyzePage.getPieChartTotalHrsFromHistoryTab("guidance")), false);
+		analyzePage.closeAnalyzeWindow();
+
+		createSchedulePage.publishActiveSchedule();
+		analyzePage.clickOnAnalyzeBtn("history");
+		versionInfo = analyzePage.getPieChartHeadersFromHistoryTab("schedule");
+		SimpleUtils.assertOnFail("Version info is inconsistent!", versionInfo.contains(version2), false);
+		SimpleUtils.assertOnFail("Labor guidance is inconsistent!", resultTotalHrs.equalsIgnoreCase(analyzePage.getPieChartTotalHrsFromHistoryTab("guidance")), false);
+
 	}
 
 	@Automated(automated = "Automated")

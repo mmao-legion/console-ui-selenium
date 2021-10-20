@@ -162,7 +162,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                     if (!verifyIfSpecificWidgetDisplayed(widget)){
                         flag = true;
                     }
-                    SimpleUtils.assertOnFail(widget+"widget is loaded which is not expected!",flag, true);
+                    SimpleUtils.assertOnFail(widget+"widget is loaded which is not expected!",flag, false);
                 } else {
                     SimpleUtils.fail("Edit Dashboard button fail to load!",true);
                 }
@@ -180,11 +180,10 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         boolean result = false;
         if (areListElementVisible(widgetsInDashboardPage,30)){
             for (WebElement widgetTemp : widgetsInDashboardPage){
+                String s = widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText();
                 if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))) {
                     if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")) {
-                        if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")) {
-                            result =  false;
-                        } else {
+                        if (!widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")) {
                             result =  true;
                         }
                     } else {
@@ -334,8 +333,6 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             return "timesheet approval";
         } else if (widgetTitleInManagePage.contains("compliance violation")){
             return "compliance violation";
-        } else if (widgetTitleInManagePage.contains("today")){
-            return "today";
         }
         return widgetTitleInManagePage;
     }
