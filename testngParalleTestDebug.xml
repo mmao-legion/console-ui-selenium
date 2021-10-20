@@ -142,6 +142,7 @@
                     <include name="verifyEmployeesFromOtherLocationShowUpInGroupByTMAsInternalAdmin" />
                     <include name="verifyEmployeesLocationInfoFromOtherLocationAsInternalAdmin" />
                     <include name="verifyTheTotalHrsOfEmployeesScheduledInOtherLocationAsInternalAdmin" />
+                    <include name="verifyScheduleVersionAndWorkRoleShowsCorrectlyAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

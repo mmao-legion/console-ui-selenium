@@ -98,17 +98,30 @@ public class ConsoleAnalyzePage extends BasePage implements AnalyzePage {
     @FindBy(css = "lg-button[label=\"Analyze\"]")
     private WebElement analyzeBtn;
     @FindBy(css="div[ng-click=\"selectedTab = 'history'\"]")
-    private WebElement schedulelHistoryTab;
+    private WebElement scheduleHistoryTab;
+    @FindBy(css="div[ng-click=\"selectedTab = 'labor'\"]")
+    private WebElement laborGuidanceTab;
     @Override
-    public void clickOnAnalyzeBtn() throws Exception {
+    public void clickOnAnalyzeBtn(String tab) throws Exception {
         if (isElementLoaded(analyzeBtn,15)){
             click(analyzeBtn);
             SimpleUtils.pass("Clicked analyze button!");
-            if (isElementLoaded(schedulelHistoryTab,15)){
-                click(schedulelHistoryTab);
-                SimpleUtils.pass("Clicked schedulelHistoryTab!");
+            if (tab.toLowerCase().contains("history")){
+                if (isElementLoaded(scheduleHistoryTab,15)){
+                    click(scheduleHistoryTab);
+                    SimpleUtils.pass("Clicked schedule HistoryTab!");
+                } else {
+                    SimpleUtils.fail("There is no schedule History Tab!", false);
+                }
+            } else if (tab.toLowerCase().contains("labor")){
+                if (isElementLoaded(laborGuidanceTab,15)){
+                    click(laborGuidanceTab);
+                    SimpleUtils.pass("Clicked labor guidance Tab!");
+                } else {
+                    SimpleUtils.fail("There is no labor guidance Tab!", false);
+                }
             } else {
-                SimpleUtils.fail("There is no schedulelHistoryTab!", false);
+                SimpleUtils.fail("No this tab:"+ tab, false);
             }
         } else {
             SimpleUtils.fail("There is no Analyze button!", false);
@@ -149,4 +162,72 @@ public class ConsoleAnalyzePage extends BasePage implements AnalyzePage {
         }
     }
 
+    @FindBy(css = ".sch-schedule-analyze__content pie-chart")
+    private WebElement pirChartUnderLaborGuidanceTab;
+    @FindBy(css = ".sch-schedule-analyze__content .sch-schedule-analyze__total-hours")
+    private WebElement totalHrsUnderLaborGuidanceTab;
+    @Override
+    public String getPieChartTotalHrsFromLaborGuidanceTab() throws Exception {
+        float result = 0;
+        if (isElementLoaded(pirChartUnderLaborGuidanceTab, 10)){
+            SimpleUtils.pass("Pie chart load successfully!");
+            List<WebElement> textsOnPieChart = pirChartUnderLaborGuidanceTab.findElements(By.cssSelector("text"));
+            if (areListElementVisible(textsOnPieChart, 10)){
+                for (WebElement element: textsOnPieChart){
+                    if (SimpleUtils.isNumeric(element.getText().toLowerCase().replace(",", "").replace("hrs",""))){
+                        result = result + Float.parseFloat(element.getText().toLowerCase().replace(",", "").replace("hrs",""));
+                    } else {
+                        SimpleUtils.fail("The text is not a number!", false);
+                    }
+                }
+            } else {
+                SimpleUtils.fail("There is no text on the pie chart!", false);
+            }
+        } else {
+            SimpleUtils.fail("There is no pie chart!", false);
+        }
+        if (isElementLoaded(totalHrsUnderLaborGuidanceTab, 10)){
+            if (totalHrsUnderLaborGuidanceTab.getText().replace(",","").contains(String.valueOf(result).replace(".0", ""))){
+                SimpleUtils.pass("Total hours is consistent!");
+                return totalHrsUnderLaborGuidanceTab.getText().replace(",","");
+            } else {
+                SimpleUtils.fail("Total hours is inconsistent!", false);
+            }
+        }  else {
+            SimpleUtils.fail("There is no total value for the pie chart!", false);
+        }
+        return null;
+    }
+
+    @FindBy(css = ".sch-schedule-analyze__total-hours")
+    private List<WebElement> textsForPieChartsInAnalyzeHistoryTab;
+    @FindBy(css = ".sch-schedule-analyze__graph-header")
+    private List<WebElement> pieChartHeadersInAnalyzeHistoryTab;
+
+    @Override
+    public String getPieChartTotalHrsFromHistoryTab(String scheduledOrGuidance) throws Exception{
+        if (areListElementVisible(textsForPieChartsInAnalyzeHistoryTab, 10) && textsForPieChartsInAnalyzeHistoryTab.size()==2){
+            if (scheduledOrGuidance.toLowerCase().contains("schedule")){
+                return textsForPieChartsInAnalyzeHistoryTab.get(0).getText();
+            }
+            if (scheduledOrGuidance.toLowerCase().contains("guidance")){
+                return textsForPieChartsInAnalyzeHistoryTab.get(1).getText();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String getPieChartHeadersFromHistoryTab(String scheduledOrGuidance) throws Exception{
+        waitForSeconds(3);
+        if (areListElementVisible(pieChartHeadersInAnalyzeHistoryTab, 10) && pieChartHeadersInAnalyzeHistoryTab.size()==2){
+            if (scheduledOrGuidance.toLowerCase().contains("schedule")){
+                return pieChartHeadersInAnalyzeHistoryTab.get(0).getText();
+            }
+            if (scheduledOrGuidance.toLowerCase().contains("guidance")){
+                return pieChartHeadersInAnalyzeHistoryTab.get(1).getText();
+            }
+        }
+        return null;
+    }
 }
