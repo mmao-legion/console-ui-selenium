@@ -486,7 +486,7 @@ public class SchedulingMinorTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate Minor info in the Profile page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMinorInfoOnProfilePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -500,12 +500,12 @@ public class SchedulingMinorTest extends TestBase {
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
         teamPage.searchAndSelectTeamMemberByName(firstNameOfMinor14);
         Map hrProfileInfo = profileNewUIPage.getHRProfileInfo();
-        SimpleUtils.assertOnFail("Minors info is correct!",String.valueOf(hrProfileInfo.get("MINOR")).contains("Yes"), false);
+        SimpleUtils.assertOnFail("Minors info is correct!",String.valueOf(hrProfileInfo.get("MINOR")).contains("14-15"), false);
         teamPage.goToTeam();
         teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
         teamPage.searchAndSelectTeamMemberByName(firstNameOfMinor16);
         hrProfileInfo = profileNewUIPage.getHRProfileInfo();
-        SimpleUtils.assertOnFail("Minors info is correct!",String.valueOf(hrProfileInfo.get("MINOR")).contains("Yes"), false);
+        SimpleUtils.assertOnFail("Minors info is correct!",String.valueOf(hrProfileInfo.get("MINOR")).contains("16-17"), false);
     }
 
     @Automated(automated = "Automated")

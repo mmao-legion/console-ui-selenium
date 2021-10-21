@@ -1196,6 +1196,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			loginPage.logOut();
 
 			//Login as DM
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1229,7 +1230,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			teamPage.searchAndSelectTeamMemberByName(tm);
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.TeamLead.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1241,6 +1242,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as admin
+			Thread.sleep(3000);
 			loginToLegionAndVerifyIsLoginDone(username, password, location);
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1257,6 +1259,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			loginPage.logOut();
 
 			//Login as DM
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1268,6 +1271,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", !profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as SM
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -1279,6 +1283,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", !profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as TL
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.TeamLead.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);

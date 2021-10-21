@@ -171,7 +171,7 @@ public class PrepareSettingsTest extends TestBase {
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
             configurationPage.publishNowTheTemplate();
 
-            String wfsName = "Atlantic Central Region";
+            String wfsName = "Lone Star Region";
             cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.setWFS("Yes");

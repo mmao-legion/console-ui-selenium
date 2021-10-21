@@ -1540,7 +1540,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                     list = getLocationsInScheduleDMViewLocationsTable();
                 } else {
                     if (areListElementVisible(getDriver().findElements(By.cssSelector("div.analytics-new-table-group-row-open")),10)){
-                        list.add(columns.get(index-2).getText().replace("%","").replace(",",""));
+                        list.add(columns.get(index-2).getText().replace("%","").replace(",","").replace("N/A","0"));
                     }
                 }
             } else {
