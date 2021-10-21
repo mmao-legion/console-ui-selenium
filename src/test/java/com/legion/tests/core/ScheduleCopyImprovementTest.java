@@ -1,5 +1,7 @@
 package com.legion.tests.core;
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.OpsPortalLocationsPage;
@@ -50,6 +52,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            ToggleAPI.disableToggle(Toggles.UseLegionAccrual.getValue(), "stoneman@legion.co", "admin11.a");
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
