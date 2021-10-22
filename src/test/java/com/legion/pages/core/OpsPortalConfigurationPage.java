@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.Select;
 import java.util.*;
 
 import static com.legion.tests.TestBase.*;
-import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.*;
 
 
 public class OpsPortalConfigurationPage extends BasePage implements ConfigurationPage {
@@ -1506,6 +1506,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				 ) {
 				if (yesNoOption.getText().equalsIgnoreCase(wfsMode)) {
 					click(yesNoOption);
+					if (wfsMode.equalsIgnoreCase("yes")) {
+						setWFSStatus(true);
+					} else
+						setWFSStatus(false);
 					break;
 				}
 			}
@@ -1513,6 +1517,20 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}else
 			SimpleUtils.fail("Workforce sharing group ",false);
 	}
+
+	@Override
+	public boolean isWFSEnabled() {
+		boolean isWFSEnabled = false;
+		if (areListElementVisible(yesNoForWFS,5)) {
+			if (yesNoForWFS.get(0).getAttribute("class").contains("selected")) {
+				isWFSEnabled = true;
+			}
+		}else
+			SimpleUtils.fail("Workforce sharing group settings fail to load! ",false);
+		setWFSStatus(true);
+		return isWFSEnabled;
+	}
+
 	@FindBy(css = "input-field[options=\"$ctrl.groupOptions\"]>ng-form>div:nth-child(3)>select")
 	private WebElement wfsSelector;
 	@Override
@@ -2639,4 +2657,25 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			waitForSeconds(2);
 		}
 	}
+
+
+	@FindBy(css ="textarea[placeholder=\"http://...\"]")
+	private WebElement companyMobilePolicyURL;
+
+	@Override
+	public boolean hasCompanyMobilePolicyURLOrNotOnOP () throws Exception {
+		boolean hasCompanyMobilePolicyURL = false;
+		waitForSeconds(10);
+		if (isElementLoaded(companyMobilePolicyURL, 5)){
+			String url = companyMobilePolicyURL.getAttribute("value");
+			if (!url.equals("") && !url.equals("http://...")){
+				hasCompanyMobilePolicyURL = true;
+			} else
+				SimpleUtils.report("The company mobile policy URL is empty");
+		} else
+			SimpleUtils.fail("The company mobile policy fail to load! ", false);
+		setCompanyPolicy(hasCompanyMobilePolicyURL);
+		return hasCompanyMobilePolicyURL;
+	}
+
 }
