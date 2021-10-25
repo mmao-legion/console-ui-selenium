@@ -2623,7 +2623,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 							SimpleUtils.fail("User open " + templateName + " template failed",false);
 						}
 					}
-					break;
 				}else if(i==templateNameList.size()-1){
 					SimpleUtils.fail("Can't find the specify template",false);
 				}
@@ -2636,6 +2635,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						String firstTemplateName = templateNameList.get(0).getText().trim();
 						if(!firstTemplateName.equals(templateName)){
 							SimpleUtils.pass("User has deleted new created template successfully!");
+							break;
 						}else {
 							SimpleUtils.fail("User failed to delete new created template!",false);
 						}

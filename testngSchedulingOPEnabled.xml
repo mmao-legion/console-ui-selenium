@@ -277,4 +277,17 @@
             </class>
         </classes>
     </test>
+
+    <test name="">
+        <classes>
+            <class name="com.legion.tests.core.DeactivateTerminateOrTransferTMTest">
+                <methods>
+                    <include name="verifyTheExistingShiftsWhenTransferSettingIsAvailableAsInternalAdmin" />
+                    <include name="verifyShiftsAreConvertedToOpenWhenMoveShiftsSettingIsYesAsInternalAdmin" />
+                    <include name="verifyShiftsAreConvertedToOpenWhenMoveShiftsSettingIsNoAsInternalAdmin" />
+                    <include name="verifyShiftsAreKeepingAssignedWhenMoveShiftsSettingIsNoAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->
