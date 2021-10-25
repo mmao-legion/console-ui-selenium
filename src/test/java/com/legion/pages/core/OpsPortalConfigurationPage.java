@@ -219,7 +219,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					SimpleUtils.fail("Configuration template cards are loaded incorrect",false);
 				}
 			}
-		} else if(configurationCardsList.size()==10){
+		} else if(configurationCardsList.size()==11){
 			for(WebElement configurationCard:configurationCardsList) {
 				if(configurationCard.getText().equals(configurationLandingPageTemplateCards.OperatingHours.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.OperatingHours.getValue() + " card is showing.");
@@ -241,6 +241,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.Communications.getValue() + " card is showing.");
+					continue;
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingPolicyGroups.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingPolicyGroups.getValue() + " card is showing.");
 					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.MinorsRules.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.MinorsRules.getValue() + " card is showing.");

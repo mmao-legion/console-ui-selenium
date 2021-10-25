@@ -1387,6 +1387,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			} else {
 				List<WebElement> applyLaborBudgetToSchedulesBtns = applyLaborBudgetToSchedules.findElements(
 						By.cssSelector("div[ng-click=\"!button.disabled && $ctrl.change(button.value)\"]"));
+				waitForSeconds(5);
 				if (applyLaborBudgetToSchedulesBtns.size() > 0) {
 					for (WebElement applyLaborBudgetToSchedulesBtn : applyLaborBudgetToSchedulesBtns) {
 						if (applyLaborBudgetToSchedulesBtn.getText().toLowerCase().contains(isLaborBudgetToApply.toLowerCase())) {
