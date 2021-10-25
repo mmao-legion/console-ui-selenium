@@ -1218,7 +1218,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 									if(preferenceOptionsTextLine.toLowerCase().contains("other preferred locations")) {
 										String[] otherPreferredLocationsOptionText = preferenceOptionsTextLine.split(":");
 										if(otherPreferredLocationsOptionText.length > 1) {
-											shiftPreferenceData.put("otherPreferredLocations",otherPreferredLocationsOptionText[1]);
+											shiftPreferenceData.put("otherPreferredLocations",otherPreferredLocationsOptionText[1].split(" ")[1]);
 										}
 										else 
 											SimpleUtils.fail("Profile Page: 'Other preferred locations' not loaded under ' My Shift Preferences' Section.", true);	
