@@ -388,7 +388,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             Thread.sleep(5000);
             //Go to Schedule page, check this TM's shifts, This TM's shifts are converted to open start from the transfer date
-            SimpleUtils.assertOnFail("The transfered TM's shifts not been conver to open successfully! ",
+            SimpleUtils.assertOnFail("The transfered TM: "+ firstNameOfTM1+"'s shifts not been conver to open successfully! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstNameOfTM1) > 0, false);
 
             teamPage.goToTeam();
