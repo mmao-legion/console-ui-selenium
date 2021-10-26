@@ -278,7 +278,7 @@
         </classes>
     </test>
 
-    <test name="">
+    <test name="Roster Actions Test">
         <classes>
             <class name="com.legion.tests.core.DeactivateTerminateOrTransferTMTest">
                 <methods>
