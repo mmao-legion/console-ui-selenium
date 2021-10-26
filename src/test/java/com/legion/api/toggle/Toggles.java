@@ -1,7 +1,9 @@
 package com.legion.api.toggle;
 
 public enum Toggles {
-    UseLegionAccrual("UseLegionAccrual");
+
+    UseLegionAccrual("UseLegionAccrual"),
+    MinorRulesTemplate("MinorRulesTemplate");
 
     private final String value;
 
