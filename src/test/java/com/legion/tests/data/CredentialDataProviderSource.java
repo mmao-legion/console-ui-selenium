@@ -19,7 +19,12 @@ public class CredentialDataProviderSource {
     public static Object[][] firstCredentialsByEnterprise(Method testMethod) {
         String fileName = "UsersCredentials.json";
         if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
-            fileName = System.getProperty("enterprise")+fileName;
+            //for release.
+            if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("rel")){
+                fileName = "Release"+System.getProperty("enterprise")+fileName;
+            } else {
+                fileName = System.getProperty("enterprise")+fileName;
+            }
         }else {
             fileName = SimpleUtils.getEnterprise(testMethod) + fileName;
         }
@@ -43,7 +48,12 @@ public class CredentialDataProviderSource {
      public static Object[][] credentialsByRoles (Method testMethod) {
          String fileName = "UsersCredentials.json";
          if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
-             fileName = System.getProperty("enterprise")+fileName;
+             //for release.
+             if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("rel")){
+                 fileName = "Release"+System.getProperty("enterprise")+fileName;
+             } else {
+                 fileName = System.getProperty("enterprise")+fileName;
+             }
          }else {
              fileName = SimpleUtils.getEnterprise(testMethod) + fileName;
          }
