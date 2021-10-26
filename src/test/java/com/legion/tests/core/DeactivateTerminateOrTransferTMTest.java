@@ -74,6 +74,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             configurationPage.clearSearchTemplateBox();
             Thread.sleep(3000);
 
+            //Verify the default value of setting "Move existing shifts to Open when transfers occur within the Workforce Sharing Group." is Yes for new template
             configurationPage.createNewTemplate(newTemplateName);
             configurationPage.clickOnSpecifyTemplateName(newTemplateName, "edit");
             SimpleUtils.assertOnFail("The 'Move existing shifts to Open when transfers occur within the Workforce Sharing Group' settings not been setted successfully! ",
@@ -92,33 +93,33 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
     @TestName(description = "Verify shifts are converted to Open when 'Move Shifts When tranfer' setting is Yes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyShiftsAreConvertedToOpenWhenMoveShiftsSettingIsYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             //Click on Configuration tab -> Schedule collaboration tile
-//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-//            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-//            locationsPage.clickOnLocationsTab();
-//            locationsPage.goToSubLocationsInLocationsPage();
-//            locationsPage.searchLocation(location);               ;
-//            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
-//            locationsPage.clickOnLocationInLocationResult(location);
-//            locationsPage.clickOnConfigurationTabOfLocation();
-//            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-//            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-//            configurationPage.goToConfigurationPage();
-//            configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
-//
-//            //Click on the template which is associated to the location to view
-//            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
-//            //Edit the template
-//            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-//            //Click on Yes besides the setting "Move existing shifts to Open when transfers occur within the Workforce Sharing Group"
-//            configurationPage.setMoveExistingShiftWhenTransfer("Yes");
-//
-//            //Publish the template, click on the template again to check the setting
-//            configurationPage.publishNowTheTemplate();
-//            Thread.sleep(3000);
-//            switchToConsoleWindow();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+
+            //Click on the template which is associated to the location to view
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
+            //Edit the template
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            //Click on Yes besides the setting "Move existing shifts to Open when transfers occur within the Workforce Sharing Group"
+            configurationPage.setMoveExistingShiftWhenTransfer("Yes");
+
+            //Publish the template, click on the template again to check the setting
+            configurationPage.publishNowTheTemplate();
+            Thread.sleep(3000);
+            switchToConsoleWindow();
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -184,9 +185,9 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             teamPage.goToTeam();
             teamPage.searchAndSelectTeamMemberByName(firstNameOfTM1);
             teamPage.cancelTransfer();
-//        } catch (Exception e){
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -387,7 +388,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             Thread.sleep(5000);
             //Go to Schedule page, check this TM's shifts, This TM's shifts are converted to open start from the transfer date
-            SimpleUtils.assertOnFail("The transfered TM's shifts not been conver to open successfully! ",
+            SimpleUtils.assertOnFail("The transfered TM: "+ firstNameOfTM1+"'s shifts not been conver to open successfully! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstNameOfTM1) > 0, false);
 
             teamPage.goToTeam();

@@ -418,12 +418,12 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
              List<String> strList = Arrays.asList(totalViolationCardInDMView.findElement(By.cssSelector("div.card-carousel-card-primary-small")).getText().split("\n"));
             if (strList.size()==5 && strList.get(0).contains("TOTAL VIOLATION HRS")
                     && strList.get(strList.size()-1).contains("Last Week")
-                    && SimpleUtils.isNumeric(strList.get(1).replace("Hrs",""))
-                    && SimpleUtils.isNumeric(strList.get(2).replace("Hrs",""))
-                    && SimpleUtils.isNumeric(strList.get(4).replace("Hrs Last Week",""))){
-                result.put("vioHrsCurrentWeek",Float.parseFloat(strList.get(1).replace("Hrs","")));
-                result.put("diffHrs", Float.parseFloat(strList.get(2).replace("Hrs","")));
-                result.put("vioHrsPastWeek",Float.parseFloat(strList.get(4).replace("Hrs Last Week","")));
+                    && SimpleUtils.isNumeric(strList.get(1).replace("Hrs","").replace("Hr",""))
+                    && SimpleUtils.isNumeric(strList.get(2).replace("Hrs","").replace("Hr",""))
+                    && SimpleUtils.isNumeric(strList.get(4).replace("Hrs Last Week","").replace("Hr Last Week",""))){
+                result.put("vioHrsCurrentWeek",Float.parseFloat(strList.get(1).replace("Hrs","").replace("Hr","")));
+                result.put("diffHrs", Float.parseFloat(strList.get(2).replace("Hrs","").replace("Hr","")));
+                result.put("vioHrsPastWeek",Float.parseFloat(strList.get(4).replace("Hrs Last Week","").replace("Hr Last Week","")));
                 SimpleUtils.pass("All info on total violation smart card is displayed!");
             } else {
                 SimpleUtils.fail("Info on total violation smart card is not expected!", false);

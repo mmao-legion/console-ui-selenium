@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.Select;
 import java.util.*;
 
 import static com.legion.tests.TestBase.*;
-import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.*;
 
 
 public class OpsPortalConfigurationPage extends BasePage implements ConfigurationPage {
@@ -219,7 +219,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					SimpleUtils.fail("Configuration template cards are loaded incorrect",false);
 				}
 			}
-		} else if(configurationCardsList.size()==10){
+		} else if(configurationCardsList.size()==11){
 			for(WebElement configurationCard:configurationCardsList) {
 				if(configurationCard.getText().equals(configurationLandingPageTemplateCards.OperatingHours.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.OperatingHours.getValue() + " card is showing.");
@@ -241,6 +241,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.Communications.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.Communications.getValue() + " card is showing.");
+					continue;
+				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.SchedulingPolicyGroups.getValue())){
+					SimpleUtils.pass(configurationLandingPageTemplateCards.SchedulingPolicyGroups.getValue() + " card is showing.");
 					continue;
 				}else if(configurationCard.getText().equals(configurationLandingPageTemplateCards.MinorsRules.getValue())){
 					SimpleUtils.pass(configurationLandingPageTemplateCards.MinorsRules.getValue() + " card is showing.");
@@ -1506,6 +1509,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				 ) {
 				if (yesNoOption.getText().equalsIgnoreCase(wfsMode)) {
 					click(yesNoOption);
+					if (wfsMode.equalsIgnoreCase("yes")) {
+						setWFSStatus(true);
+					} else
+						setWFSStatus(false);
 					break;
 				}
 			}
@@ -1513,6 +1520,20 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}else
 			SimpleUtils.fail("Workforce sharing group ",false);
 	}
+
+	@Override
+	public boolean isWFSEnabled() {
+		boolean isWFSEnabled = false;
+		if (areListElementVisible(yesNoForWFS,5)) {
+			if (yesNoForWFS.get(0).getAttribute("class").contains("selected")) {
+				isWFSEnabled = true;
+			}
+		}else
+			SimpleUtils.fail("Workforce sharing group settings fail to load! ",false);
+		setWFSStatus(true);
+		return isWFSEnabled;
+	}
+
 	@FindBy(css = "input-field[options=\"$ctrl.groupOptions\"]>ng-form>div:nth-child(3)>select")
 	private WebElement wfsSelector;
 	@Override
@@ -2605,7 +2626,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 							SimpleUtils.fail("User open " + templateName + " template failed",false);
 						}
 					}
-					break;
 				}else if(i==templateNameList.size()-1){
 					SimpleUtils.fail("Can't find the specify template",false);
 				}
@@ -2618,6 +2638,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						String firstTemplateName = templateNameList.get(0).getText().trim();
 						if(!firstTemplateName.equals(templateName)){
 							SimpleUtils.pass("User has deleted new created template successfully!");
+							break;
 						}else {
 							SimpleUtils.fail("User failed to delete new created template!",false);
 						}
@@ -2639,4 +2660,25 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			waitForSeconds(2);
 		}
 	}
+
+
+	@FindBy(css ="textarea[placeholder=\"http://...\"]")
+	private WebElement companyMobilePolicyURL;
+
+	@Override
+	public boolean hasCompanyMobilePolicyURLOrNotOnOP () throws Exception {
+		boolean hasCompanyMobilePolicyURL = false;
+		waitForSeconds(10);
+		if (isElementLoaded(companyMobilePolicyURL, 5)){
+			String url = companyMobilePolicyURL.getAttribute("value");
+			if (!url.equals("") && !url.equals("http://...")){
+				hasCompanyMobilePolicyURL = true;
+			} else
+				SimpleUtils.report("The company mobile policy URL is empty");
+		} else
+			SimpleUtils.fail("The company mobile policy fail to load! ", false);
+		setCompanyPolicy(hasCompanyMobilePolicyURL);
+		return hasCompanyMobilePolicyURL;
+	}
+
 }

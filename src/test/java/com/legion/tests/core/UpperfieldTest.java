@@ -2128,6 +2128,7 @@ public class UpperfieldTest extends TestBase {
 
             // Validate the field names in analytics table
             compliancePage.verifyFieldNamesInAnalyticsTable(District);
+            compliancePage.clickOnRefreshButton();
 
             // Validate the field columns can be ordered
             compliancePage.verifySortByColForLocationsInDMView(1);
@@ -3814,9 +3815,10 @@ public class UpperfieldTest extends TestBase {
     private void verifyAnalyticsTableOnBUView(String regionName) throws Exception {
 
         ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+        scheduleDMViewPage.clickOnRefreshButton();
         Map<String, String> regionInfoOnBUView = scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
         scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(regionName);
-
+        scheduleDMViewPage.clickOnRefreshButton();
         //Check publish status on BU and region view
         int index = scheduleDMViewPage.getIndexOfColInDMViewTable("Published Status");
         List<String> publishedStatus = scheduleDMViewPage.getListByColInTimesheetDMView(index);
@@ -3908,7 +3910,7 @@ public class UpperfieldTest extends TestBase {
             //Validate the field columns can be ordered.
             scheduleDMViewPage.verifySortByColForLocationsInDMView(1);
             scheduleDMViewPage.verifySortByColForLocationsInDMView(2);
-            scheduleDMViewPage.verifySortByColForLocationsInDMView(3);
+//            scheduleDMViewPage.verifySortByColForLocationsInDMView(3);
             scheduleDMViewPage.verifySortByColForLocationsInDMView(4);
 
             //Validate the data of analytics table for current week.

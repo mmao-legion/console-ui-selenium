@@ -199,7 +199,7 @@
             <class name="com.legion.tests.core.ConsolidatingFiltersTest">
                 <methods>
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
-                    <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" />
+<!--                    <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5503 -->
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
@@ -273,6 +273,19 @@
             <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
                 <methods>
                    <include name="verifyManagerCannotEditTheAvailabilityWhenTMHasPendingRequestAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="">
+        <classes>
+            <class name="com.legion.tests.core.DeactivateTerminateOrTransferTMTest">
+                <methods>
+                    <include name="verifyTheExistingShiftsWhenTransferSettingIsAvailableAsInternalAdmin" />
+                    <include name="verifyShiftsAreConvertedToOpenWhenMoveShiftsSettingIsYesAsInternalAdmin" />
+                    <include name="verifyShiftsAreConvertedToOpenWhenMoveShiftsSettingIsNoAsInternalAdmin" />
+                    <include name="verifyShiftsAreKeepingAssignedWhenMoveShiftsSettingIsNoAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

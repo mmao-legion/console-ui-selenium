@@ -4802,7 +4802,7 @@ private List<WebElement> locationColumn;
 		if (isElementLoaded(cancelTransferButton, 5)) {
 			clickTheElement(cancelTransferButton);
 			String expectedMessage = "Are you sure you want to cancel the transfer to the new location?";
-			String actualMessage = null;
+			String actualMessage = "";
 			if (isElementLoaded(confirmPopupWindow, 5) && isElementLoaded(popupMessage, 5)) {
 				actualMessage = popupMessage.findElement(By.tagName("span")).getText();
 				if (expectedMessage.trim().equals(actualMessage.trim())){
@@ -4810,6 +4810,12 @@ private List<WebElement> locationColumn;
 				}else {
 					SimpleUtils.fail("The Message on Cancel Transfer window is incorrect!", true);
 				}
+				clickTheElement(confirmButton);
+				if (isElementLoaded(transferButton, 15)) {
+					SimpleUtils.pass("Cancelled Transfer successfully!");
+				}else {
+				SimpleUtils.fail("Failed to cancel the Transfer!", false);
+			 	}
 			} else {
 				SimpleUtils.fail("Cancel Transfer pop-up window doesn't show!", true);
 			}
@@ -4864,7 +4870,9 @@ private List<WebElement> locationColumn;
 					boolean isCurrentWeek = false;
 					for (WebElement dayOnCalendar: daysOnCalendar){
 						if(!isCurrentWeek) {
-							if (dayOnCalendar.getText().equalsIgnoreCase("1")){
+							//There may be have several days from last month in this calendar, like: 26, 27, 28 , 29 , 30
+							//So need to get the first day of this month, if the day is < 20th, the day must belong to the current month
+							if (Integer.parseInt(dayOnCalendar.getText())< 20){
 								isCurrentWeek = true;
 								if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
 									click (dayOnCalendar);

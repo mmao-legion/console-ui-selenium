@@ -94,4 +94,6 @@ public interface ConfigurationPage {
     public boolean isMoveExistingShiftWhenTransferSettingEnabled() throws Exception;
     public void deleteTemplate(String templateName) throws Exception;
     public void clearSearchTemplateBox() throws Exception;
+    public boolean isWFSEnabled();
+    public boolean hasCompanyMobilePolicyURLOrNotOnOP () throws Exception;
 }
