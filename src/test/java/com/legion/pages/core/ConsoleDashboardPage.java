@@ -951,7 +951,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(xpath = "//*[contains(text(),'Refresh')]")
 	private WebElement refreshButton;
 
-	@FindBy(xpath = "//div[@class='react-dm-dashboard ng-scope']/dm-dashboard/div/div/div/div/div/p")
+	@FindBy(xpath = "//i[contains(@class,'fa fa-clock-o ng-scope')]/following-sibling::span")
 	private WebElement lastUpdatedIcon;
 
 

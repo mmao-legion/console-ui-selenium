@@ -31,7 +31,7 @@
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
 <!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
-                                       <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />
+<!--                                       <include name="verifyActivityOfClaimOpenShiftAsTeamLead" Blocked by SCH-5458/>-->
                     <!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" /> SCH-4720-->
                     <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
                     <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
