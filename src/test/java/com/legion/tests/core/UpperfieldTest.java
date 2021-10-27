@@ -4002,11 +4002,10 @@ public class UpperfieldTest extends TestBase {
             }
             if ((budgetHourOnSummaryCard- projectedHours)>0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
-            }
-            if ((budgetHourOnSummaryCard - projectedHours)<0){
+                        (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (float)(Math.round((budgetHourOnSummaryCard - projectedHours)*100))/100) == 0, false);
+            } else if ((budgetHourOnSummaryCard - projectedHours)<0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (float)(Math.round((budgetHourOnSummaryCard - projectedHours)*100))/100) == 0, false);
             }
 
             //Verify current week Projected Hours displays.
@@ -4136,11 +4135,11 @@ public class UpperfieldTest extends TestBase {
             }
             if ((budgetHourOnSummaryCard - projectedHours)>0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (float)(Math.round((budgetHourOnSummaryCard - projectedHours)*100))/100) == 0, false);
             }
             if ((budgetHourOnSummaryCard - projectedHours)<0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (float)(Math.round((budgetHourOnSummaryCard - projectedHours)*100))/100) == 0, false);
             }
 
             //Verify current week Projected Hours displays.

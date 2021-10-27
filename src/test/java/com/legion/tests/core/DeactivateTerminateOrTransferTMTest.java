@@ -38,6 +38,8 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheExistingShiftsWhenTransferSettingIsAvailableAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            String districtName = locationSelectorPage.getSelectedUpperFields().get("District");
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             //Click on Configuration tab -> Schedule collaboration tile
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -57,6 +59,8 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
 
             //Observe the setting under Open Shifts section is available
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.setWFS("Yes");
+            configurationPage.selectWFSGroup(districtName);
             configurationPage.setMoveExistingShiftWhenTransfer("Yes");
             configurationPage.publishNowTheTemplate();
             Thread.sleep(3000);
@@ -322,7 +326,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
             //Edit the template
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            //Click on Yes besides the setting "Move existing shifts to Open when transfers occur within the Workforce Sharing Group"
+            //Click on No besides the setting "Move existing shifts to Open when transfers occur within the Workforce Sharing Group"
             configurationPage.setMoveExistingShiftWhenTransfer("No");
 
             //Publish the template, click on the template again to check the setting
@@ -388,7 +392,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             Thread.sleep(5000);
             //Go to Schedule page, check this TM's shifts, This TM's shifts are converted to open start from the transfer date
-            SimpleUtils.assertOnFail("The transfered TM: "+ firstNameOfTM1+"'s shifts not been conver to open successfully! ",
+            SimpleUtils.assertOnFail("The transfered TM: "+ firstNameOfTM1+"'s shifts should not been converted to open successfully! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstNameOfTM1) > 0, false);
 
             teamPage.goToTeam();
