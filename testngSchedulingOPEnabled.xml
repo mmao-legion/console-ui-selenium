@@ -227,8 +227,8 @@
                     <include name="verifyBUViewNavigationAsInternalAdmin" />
                     <include name="verifyControlsInBUViewAsInternalAdmin" />
                     <include name="verifyControlsInRegionViewAsInternalAdmin" />
-                    <!--                         <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525 -->
-                    <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
+                    <!--                         <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-5518 -->
+<!--                     <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518 -->
                     <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
                     <!--                        <include name="verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin" />
@@ -255,8 +255,8 @@
                     <include name="verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" />
-                    <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" />
-                    <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" />
+                    <!--                    <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
+                    <!--                    <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
                     <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
                     <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
                     <include name="verifyScheduleStatusOnScheduleInBUViewAsInternalAdmin" />

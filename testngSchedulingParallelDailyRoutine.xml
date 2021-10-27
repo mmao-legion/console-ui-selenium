@@ -365,16 +365,16 @@
                     <include name="verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" />
-                    <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" />
-                    <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" />
-                    <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
-                    <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
-                    <include name="verifyScheduleStatusOnScheduleInBUViewAsInternalAdmin" />
-                    <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
-                    <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInBUViewAsInternalAdmin" />
-                    <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInRegionViewAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-</suite> <!-- Suite -->
+<!--                    <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
+<!--                    <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
+                                        <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
+                                        <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
+                                        <include name="verifyScheduleStatusOnScheduleInBUViewAsInternalAdmin" />
+                                        <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
+                                        <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInBUViewAsInternalAdmin" />
+                                        <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInRegionViewAsInternalAdmin" />
+                                    </methods>
+                                </class>
+                            </classes>
+                        </test>
+                    </suite> <!-- Suite -->
