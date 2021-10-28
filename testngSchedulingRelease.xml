@@ -54,12 +54,9 @@
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
-                    <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
                     <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
                     <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
-                    <include name="verifyComplianceViolationWhenScheduleHasPublishedAsInternalAdmin" />
                     <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
-                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
