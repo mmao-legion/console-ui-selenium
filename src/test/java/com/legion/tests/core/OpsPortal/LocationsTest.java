@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.*;
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 
 public class LocationsTest extends TestBase {
@@ -1832,4 +1833,97 @@ public class LocationsTest extends TestBase {
             }
         }
     }
-}
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "NSOLocation_Enhancements")
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyNSOLocationEnhancementsCheck(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            String currentTime = dfs.format(new Date());
+            String locationName = "ENH_NSO_AutoTestLocation";
+            setLocationName(locationName);
+            int index = 0;
+            String searchCharactor = "No touch";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-locations tab
+            locationsPage.goToSubLocationsInLocationsPage();
+            //add new NSO location
+//            locationsPage.addNewNSOLocation(locationName, searchCharactor,index);
+            //check the location created successfully
+            if (locationsPage.searchNewLocation(getLocationName())) {
+                SimpleUtils.pass("Create new NSO location successfully");
+            }else
+                SimpleUtils.fail("Create new location failed or can't search created location",true);
+            //go to console to and navigate to NSO to verify internal admin can see the location
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            //verify customer admin user can see created status location
+            LoginPage loginPage=pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            /// Login as customer admin user
+            String fileName = "UsersCredentials.json";
+            fileName = SimpleUtils.getEnterprise("Op_Enterprise") + fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            Object[][] internalCustomerAdminCredentials = userCredentials.get("InternalCustomerAdmin");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(internalCustomerAdminCredentials[0][0]), String.valueOf(internalCustomerAdminCredentials[0][1])
+                    , String.valueOf(internalCustomerAdminCredentials[0][2]));
+            String consoleWindow1 = getDriver().getWindowHandle();
+            //check customer admin user can see the NSO created location
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            //check customer admin user can see Created status NSO location in locations function.
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-locations tab
+            locationsPage.goToSubLocationsInLocationsPage();
+            if (locationsPage.searchNewLocation(getLocationName())) {
+                SimpleUtils.pass("Internal Customer Admin can see the NSO location successfully");
+            }else
+                SimpleUtils.fail("Internal Customer Admin can not see the NSO location",true);
+
+            loginPage.switchToOriginalWindow(consoleWindow1);
+            //verify  DM user can not see the NSO location at navigator, but can see Created status NSO location in locations function.
+            loginPage.logOut();
+            Object[][] districtManagerCredentials = userCredentials.get("DistrictManager");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(districtManagerCredentials[0][0]), String.valueOf(districtManagerCredentials[0][1])
+                    , String.valueOf(districtManagerCredentials[0][2]));
+            //check DM user can see the NSO created location--as DM and TM can not naviagte to OPs, so ignore the cases
+            if (!locationSelectorPage.findLocationByMagnifyGlassIcon(locationName)) {
+                SimpleUtils.pass("District Manager can not see the NSO location successfully");
+            }else
+                SimpleUtils.fail("District Manager can see the NSO location",true);
+            //check SM user can't see Created status NSO location in navigation,can't see Created status NSO location in locations function.
+            loginPage.logOut();
+            Object[][] TMCredentials = userCredentials.get("TeamMember");
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
+                    , String.valueOf(TMCredentials[0][2]));
+            //check DM user can see the NSO created location
+            if (!locationSelectorPage.findLocationByMagnifyGlassIcon(locationName)) {
+                SimpleUtils.pass("SM user can not see the NSO location successfully");
+            }else
+                SimpleUtils.fail("SM user can see the NSO location",true);
+
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+    }
