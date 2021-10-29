@@ -73,15 +73,15 @@
         </classes>
     </test>
 
-    <test name="Offer TM Test">
+    <test name="TeamTab Test KendraScott2">
         <classes>
-            <class name="com.legion.tests.core.OfferTMTest">
+            <class name="com.legion.tests.core.TeamTestKendraScott2">
                 <methods>
-                    <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
-                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
-                    <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
+                    <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
+                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin" />
+                    <!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5458-->
+                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
                 </methods>
             </class>
         </classes>
