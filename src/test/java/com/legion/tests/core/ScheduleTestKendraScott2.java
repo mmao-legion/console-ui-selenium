@@ -1120,41 +1120,36 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Verification of My Schedule Page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verificationOfMySchedulePageAsTeamMember(String browser, String username, String password, String location) throws Exception {
-		try {
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
-			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		//T1838603 Validate the availability of schedule table.
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String nickName = profileNewUIPage.getNickNameFromProfile();
+		mySchedulePage.validateTheAvailabilityOfScheduleTable(nickName);
 
-			//T1838603 Validate the availability of schedule table.
-			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-			String nickName = profileNewUIPage.getNickNameFromProfile();
-			mySchedulePage.validateTheAvailabilityOfScheduleTable(nickName);
+		//T1838604 Validate the disability of location selector on Schedule page.
+		mySchedulePage.validateTheDisabilityOfLocationSelectorOnSchedulePage();
 
-			//T1838604 Validate the disability of location selector on Schedule page.
-			mySchedulePage.validateTheDisabilityOfLocationSelectorOnSchedulePage();
+		//T1838605 Validate the availability of profile menu.
+		mySchedulePage.validateTheAvailabilityOfScheduleMenu();
 
-			//T1838605 Validate the availability of profile menu.
-			mySchedulePage.validateTheAvailabilityOfScheduleMenu();
+		//T1838606 Validate the focus of schedule.
+		mySchedulePage.validateTheFocusOfSchedule();
 
-			//T1838606 Validate the focus of schedule.
-			mySchedulePage.validateTheFocusOfSchedule();
+		//T1838607 Validate the default filter is selected as Scheduled.
+		mySchedulePage.validateTheDefaultFilterIsSelectedAsScheduled();
 
-			//T1838607 Validate the default filter is selected as Scheduled.
-			mySchedulePage.validateTheDefaultFilterIsSelectedAsScheduled();
+		//T1838608 Validate the focus of week.
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		dashboardPage.navigateToDashboard();
+		String currentDate = dashboardPage.getCurrentDateFromDashboard();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		mySchedulePage.validateTheFocusOfWeek(currentDate);
 
-			//T1838608 Validate the focus of week.
-			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-			dashboardPage.navigateToDashboard();
-			String currentDate = dashboardPage.getCurrentDateFromDashboard();
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-			mySchedulePage.validateTheFocusOfWeek(currentDate);
-
-			//T1838609 Validate the selection of previous and upcoming week.
-			mySchedulePage.verifySelectOtherWeeks();
-		} catch (Exception e) {
-			SimpleUtils.fail(e.getMessage(),false);
-		}
+		//T1838609 Validate the selection of previous and upcoming week.
+		mySchedulePage.verifySelectOtherWeeks();
 	}
 
 	@Automated(automated = "Automated")

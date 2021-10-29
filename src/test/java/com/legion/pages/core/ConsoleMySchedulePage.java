@@ -1355,7 +1355,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @Override
     public void validateTheAvailabilityOfScheduleMenu() throws Exception {
         if (areListElementVisible(subMenusOnSchedulePage, 10)) {
-            if (subMenusOnSchedulePage.size() > 2) {
+            if (subMenusOnSchedulePage.size() >=2) {
                 SimpleUtils.pass("Schedule Page: It has at least two sub menus successfully");
             } else {
                 SimpleUtils.fail("Schedule Page: It doesn't have two sub menus", false);

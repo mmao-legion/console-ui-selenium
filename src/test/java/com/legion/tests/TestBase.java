@@ -449,7 +449,11 @@ public abstract class TestBase {
             StackTraceElement[] stacks = (new Throwable()).getStackTrace();
             String simpleClassName = stacks[1].getFileName().replace(".java", "");
             String fileName = "UsersCredentials.json";
-            fileName = MyThreadLocal.getEnterprise() + fileName;
+            if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("rel")){
+                fileName = "Release"+MyThreadLocal.getEnterprise()+fileName;
+            } else {
+                fileName = MyThreadLocal.getEnterprise() + fileName;
+            }
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             if (userCredentials.containsKey(roleName + "Of" + simpleClassName)) {
                 credentials = userCredentials.get(roleName + "Of" + simpleClassName);

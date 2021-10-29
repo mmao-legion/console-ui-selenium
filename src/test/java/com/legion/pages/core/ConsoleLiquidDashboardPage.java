@@ -115,7 +115,8 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                         } else {
                             scrollToElement(widgets.get(i));
                             click(widgets.get(i).findElement(By.cssSelector(".slider")));
-                            SimpleUtils.pass(widget+" widget's already switched on!");
+                            SimpleUtils.pass(widget+" widget's switched on!");
+                            waitForSeconds(2);
                         }
                         break;
                     }
@@ -151,7 +152,8 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                         } else {
                             scrollToElement(widgets.get(i));
                             clickTheElement(widgets.get(i).findElement(By.cssSelector(".slider")));
-                            SimpleUtils.pass(widget+" widget's already switched off!");
+                            SimpleUtils.pass(widget+" widget's switched off!");
+                            waitForSeconds(2);
                         }
                         break;
                     }

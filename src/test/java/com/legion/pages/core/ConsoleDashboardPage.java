@@ -102,7 +102,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = ".sc-lgWdIC.cRRXke")
 	private List<WebElement> districtTimeOnDashboard;
 
-	@FindBy(css = ".sc-eYKchh.iHrcjg")
+	@FindBy(css = ".sc-ksPmiX.erKuMX")
 	private List<WebElement> dateTimeOnTMDashboard;
 
     @FindBy(css = ".sc-jNjAJB.fKEYND")
