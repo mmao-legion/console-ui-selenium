@@ -4091,4 +4091,19 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return message;
 	}
+
+
+	@FindBy(css = "[ng-if=\"minorRuleTemplate\"] p.contentText")
+	private WebElement minorRuleTemplateName;
+	@Override
+	public String getMinorRuleTemplateName () throws Exception{
+		String message = "";
+		if (isElementLoaded(minorRuleTemplateName,10)){
+			message = minorRuleTemplateName.getText();
+			SimpleUtils.pass("Get minor rule template name successfully!");
+		} else {
+			SimpleUtils.fail("Get minor rule template name fail to load!",false);
+		}
+		return message;
+	}
 }

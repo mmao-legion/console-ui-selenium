@@ -23,9 +23,9 @@ public class ToggleAPI {
 
         List<HashMap> rules = new ArrayList<>();
         HashMap<String, Object> rulesValue = new HashMap<>();
-        rulesValue.put("enterpriseName", EnterpriseId.valueOf(System.getProperty("enterprise").toLowerCase()).getValue());
+        rulesValue.put("enterpriseName", EnterpriseId.valueOf(System.getProperty("enterprise").toLowerCase().replace("-", "")).getValue());
         List<String> businesses = new ArrayList<>();
-        businesses.add(EnterpriseId.valueOf(System.getProperty("enterprise").toLowerCase()).getValue());
+        businesses.add(EnterpriseId.valueOf(System.getProperty("enterprise").toLowerCase().replace("-", "")).getValue());
         rulesValue.put("businessName", businesses);
         rules.add(rulesValue);
 

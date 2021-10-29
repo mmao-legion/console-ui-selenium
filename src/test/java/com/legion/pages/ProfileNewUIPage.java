@@ -290,4 +290,5 @@ public interface ProfileNewUIPage {
 	public boolean isAlertDialogLoaded() throws Exception;
 
 	public String getMessageFromAlertDialog () throws Exception;
+	public String getMinorRuleTemplateName () throws Exception;
 }

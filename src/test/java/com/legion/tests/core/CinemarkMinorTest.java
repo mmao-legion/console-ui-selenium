@@ -1,12 +1,17 @@
 package com.legion.tests.core;
 
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.SchedulePage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleCommonPage;
+import com.legion.pages.core.OpsPortalConfigurationPage;
+import com.legion.pages.core.OpsPortalLaborModelPage;
+import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
@@ -16,6 +21,8 @@ import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.security.auth.login.Configuration;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -735,14 +742,14 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
 
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),"","");
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),"","");
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),"","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), "","","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), "","","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), "","","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), "","","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), "","","");
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),"","");
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),"","");
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),"","");
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), "","","");
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), "","","");
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), "","","");
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), "","","");
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), "","","");
 
             cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
@@ -891,23 +898,23 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
 
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
-            cinemarkMinorPage.minorRuleToggle("yes","16N17");
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
+//            cinemarkMinorPage.minorRuleToggle("yes","16N17");
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
 
             cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
@@ -1795,4 +1802,215 @@ public class CinemarkMinorTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Minor profile page when minors has been assigned minor rule template-OP")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), "stoneman@legion.co", "admin11.a");
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //SM or admin log in, go OP side
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToUserManagementPage();
+            configurationPage.goToDynamicEmployeeGroupPage();
+            //delete all dynamic employee group
+            configurationPage.deleteAllDynamicEmployeeGroupsInList();
+            //create a User Group for 13 year old minors
+            List<String> groupCriteriaList = new ArrayList<>();
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.LessThan14.getValue());
+            String minor13GroupTitle = "Minor13Group-ForAuto";
+            String minor13GroupDescription = "Minor13-Description-ForAuto";
+            configurationPage.createNewDynamicEmployeeGroup(minor13GroupTitle, minor13GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+            String minor14GroupTitle = "Minor14Group-ForAuto";
+            String minor14GroupDescription = "Minor14-Description-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals14.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(minor14GroupTitle, minor14GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+            String minor15GroupTitle = "Minor15Group-ForAuto";
+            String minor15GroupDescription = "Minor15-Description-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals15.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(minor15GroupTitle, minor15GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+            String minor16GroupTitle = "Minor16Group-ForAuto";
+            String minor16GroupDescription = "Minor16-Description-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals16.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(minor16GroupTitle, minor16GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+            String minor17GroupTitle = "Minor17Group-ForAuto";
+            String minor17GroupDescription = "Minor17-Description-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals17.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(minor17GroupTitle, minor17GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
+            configurationPage.archiveOrDeleteAllTemplates();
+            String minor13TemplateName = "Minor13Template-ForAuto";
+            createMinor13N14N15TemplateAndSetMinorSettings(minor13TemplateName, minor13GroupTitle);
+            String minor14TemplateName = "Minor14Template-ForAuto";
+            createMinor13N14N15TemplateAndSetMinorSettings(minor14TemplateName, minor14GroupTitle);
+            String minor15TemplateName = "Minor15Template-ForAuto";
+            createMinor13N14N15TemplateAndSetMinorSettings(minor15TemplateName, minor15GroupTitle);
+            String minor16TemplateName = "Minor16Template-ForAuto";
+            createMinor16N17TemplateAndSetMinorSettings(minor16TemplateName, minor16GroupTitle);
+            String minor17TemplateName = "Minor17Template-ForAuto";
+            createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
+            switchToConsoleWindow();
+            //wait for 5 mins for catch
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            for (int i = 0; i< 5; i++) {
+                teamPage.goToTeam();
+                teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+                Thread.sleep(60000);
+            }
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String minor13Name = "Minor13 Cinemark13";
+            String minor14Name = "Minor14 Cinemark14";
+            String minor15Name = "Minor15 Cinemark15";
+            String minor16Name = "Minor16 Cinemark16";
+            String minor17Name = "Minor17 Cinemark17";
+
+            verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
+//            teamPage.searchAndSelectTeamMemberByName(minor13Name);
+//            SimpleUtils.assertOnFail("The minor rule template name of Minor 13 display incorrectly! ",
+//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor13TemplateName), false);
+            verifyTemplateNameOnProfilePage(minor14Name, minor14TemplateName);
+//            teamPage.goToTeam();
+//            teamPage.searchAndSelectTeamMemberByName(minor14Name);
+//            SimpleUtils.assertOnFail("The minor rule template name of Minor 14 display incorrectly! ",
+//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor14TemplateName), false);
+            verifyTemplateNameOnProfilePage(minor15Name, minor15TemplateName);
+//            teamPage.goToTeam();
+//            teamPage.searchAndSelectTeamMemberByName(minor15Name);
+//            SimpleUtils.assertOnFail("The minor rule template name of Minor 15 display incorrectly! ",
+//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor15TemplateName), false);
+            verifyTemplateNameOnProfilePage(minor16Name, minor16TemplateName);
+//            teamPage.goToTeam();
+//            teamPage.searchAndSelectTeamMemberByName(minor16Name);
+//            SimpleUtils.assertOnFail("The minor rule template name of Minor 16 display incorrectly! ",
+//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor16TemplateName), false);
+            verifyTemplateNameOnProfilePage(minor17Name, minor17TemplateName);
+//            teamPage.goToTeam();
+//            teamPage.searchAndSelectTeamMemberByName(minor17Name);
+//            SimpleUtils.assertOnFail("The minor rule template name of Minor 17 display incorrectly! ",
+//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor17TemplateName), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    private void createMinor13N14N15TemplateAndSetMinorSettings (String templateName, String dynamicGroup) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.Summer_Day.getValue(), cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
+        configurationPage.selectOneDynamicGroup(dynamicGroup);
+        configurationPage.clickOnTemplateDetailTab();
+        cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
+        Thread.sleep(3000);
+    }
+
+    private void createMinor16N17TemplateAndSetMinorSettings (String templateName, String dynamicGroup) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.Summer_Day.getValue(), cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
+        configurationPage.selectOneDynamicGroup(dynamicGroup);
+        configurationPage.clickOnTemplateDetailTab();
+        cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
+        Thread.sleep(3000);
+    }
+
+
+    private void verifyTemplateNameOnProfilePage (String minorName, String templateName) throws Exception {
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        int i = 0;
+        String name = "None";
+        while (i< 20 && name.equals("None")) {
+            Thread.sleep(60000);
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(minorName);
+            name = profileNewUIPage.getMinorRuleTemplateName();
+            i++;
+        }
+        SimpleUtils.assertOnFail("The minor rule template name of "+templateName+" display incorrectly! ",
+                name.equalsIgnoreCase(templateName), false);
+
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Minor profile page when the TM does not have minor rule template associated")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), "stoneman@legion.co", "admin11.a");
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //SM or admin log in, go OP side
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
+            String minor13TemplateName = "Minor13Template-ForAuto";
+            configurationPage.archiveOrDeleteTemplate(minor13TemplateName);
+            switchToConsoleWindow();
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String minor13Name = "Minor13 Cinemark13";
+            teamPage.searchAndSelectTeamMemberByName(minor13Name);
+            SimpleUtils.assertOnFail("The minor rule template name of Minor 13 display incorrectly! ",
+                    profileNewUIPage.getMinorRuleTemplateName().equals("None"), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
 }

@@ -606,7 +606,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 					if (isItMultipVersion(i)) {
 						expandTemplate(i);
 					}
-					configurationPage.archivePublishedOrDeleteDraftTemplate(templateName,action);
+					configurationPage.archiveOrDeleteTemplate(templateName);
 					break;
 
 				}
