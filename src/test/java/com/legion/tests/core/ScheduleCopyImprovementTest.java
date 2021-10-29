@@ -1042,6 +1042,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             shiftOperatePage.deleteAllOOOHShiftInWeekView();
             scheduleMainPage.saveSchedule();
 

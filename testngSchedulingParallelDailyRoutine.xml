@@ -338,7 +338,7 @@
                     <include name="verifyControlsInBUViewAsInternalAdmin" />
                     <include name="verifyControlsInRegionViewAsInternalAdmin" />
                     <!--                         <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525 -->
-                    <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
+<!--                    <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
                     <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
                     <!--                        <include name="verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin" />

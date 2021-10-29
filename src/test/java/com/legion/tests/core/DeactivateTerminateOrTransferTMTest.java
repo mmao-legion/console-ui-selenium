@@ -127,6 +127,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(300000);
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
@@ -183,7 +184,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
 
             //Go to Schedule page, check this TM's shifts, This TM's shifts are converted to open start from the transfer date
-            SimpleUtils.assertOnFail("The transfered TM's shifts not been conver to open successfully! ",
+            SimpleUtils.assertOnFail("The transfered TM: "+ firstNameOfTM1+"'s shifts not been conver to open successfully! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstNameOfTM1) == 0, false);
             Thread.sleep(5000);
             teamPage.goToTeam();
@@ -231,6 +232,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(300000);
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
@@ -289,7 +291,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             Thread.sleep(5000);
             //Go to Schedule page, check this TM's shifts, This TM's shifts are converted to open start from the transfer date
-            SimpleUtils.assertOnFail("The transfered TM's shifts not been conver to open successfully! ",
+            SimpleUtils.assertOnFail("The transfered TM: "+firstNameOfTM1 + "'s shifts should been convert to open successfully! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstNameOfTM1) == 0, false);
 
             teamPage.goToTeam();
