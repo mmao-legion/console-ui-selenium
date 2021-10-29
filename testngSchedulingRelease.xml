@@ -41,28 +41,33 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
-                    <include name="verifyScheduleLegionFunctionality" />
                     <include name="verifyComplianceSmartCardFunctionality" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
                     <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
-                    <include name="verifyScheduleFunctionalityDayViewAsInternalAdmin"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>
-                    <include name="verificationOfMySchedulePageAsTeamMember" />
                     <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
                     <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
-                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
-                    <include name="verifyComplianceViolationWhenScheduleIsNotPublishedAsInternalAdmin" />
-                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
-                    <include name="verifySearchBarOnSchedulePageAsInternalAdmin" />
                     <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
-                    <include name="verifyComplianceWarningInPublishConfirmModalAsInternalAdmin" />
-                    <include name="verifyCanSeeEmployeeHomeLocationAsInternalAdmin" />
-                    <include name="verifyCanSeeEmployeeHomeLocationAsStoreManager" />
+                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
+                    <include name="verifyTMFullNameDisplayOnSearchTMRecommendedAndViewProfilePageAsInternalAdmin" />
+                    <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
+                    <include name="verifyGroupByDayPartsCanBeCollapsedNExpandedAsStoreManager" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Forecast Test">
+        <classes>
+            <class name="com.legion.tests.core.ForecastTest">
+                <methods>
+                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin"/>
+                    <include name="validateWeatherSmartCardOnForecastPageAsInternalAdmin"/>
+                    <include name="verifyScheduleFunctionalityForecastAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
@@ -74,12 +79,8 @@
                 <methods>
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
                     <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
-                    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
                     <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
@@ -114,21 +115,13 @@
         <classes>
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
-                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" />
-                    <include name="verifyRefreshFeatureOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
-                    <include name="verifyComplianceViolationsWidgetOnDashboardInDMViewAsInternalAdmin" />
-                    <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
-                    <include name="verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin" />
-                    <include name="verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin" />
-                    <include name="verifyLocationSummaryInScheduleDMViewAsInternalAdmin" />
                     <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
-                    <include name="verifyTotalViolationHrsInComplianceDMViewAsInternalAdmin" />
-                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
-                    <include name="verifyDMViewNavigationAsInternalAdmin" />
+                    <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
