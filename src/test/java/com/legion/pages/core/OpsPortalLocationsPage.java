@@ -1823,7 +1823,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement criteriaSelect;
 	@FindBy(css = "lg-button[label=\"Add More\"]")
 	private WebElement addMoreBtn;
-
 	@FindBy(css = "i.deleteRule")
 	private List<WebElement> deleteRuleIcon;
 	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
@@ -1992,7 +1991,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return null;
 	}
 
-	private boolean isRemoveDynamicGroupPopUpShowing() {
+	public boolean isRemoveDynamicGroupPopUpShowing() {
 		if (isElementEnabled(removeDGPopup, 5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic group?")
 				&& isElementEnabled(removeBtnInRemovDGPopup, 5)) {
 			SimpleUtils.pass("Remove dynamic group page show well");

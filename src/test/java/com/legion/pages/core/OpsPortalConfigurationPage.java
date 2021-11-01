@@ -107,7 +107,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="sub-content-box[box-title=\"Days of Week\"]")
 	private WebElement daysOfWeekSection;
 
-	@FindBy(css="sub-content-box[box-title=\"Dynamic Group\"]")
+	@FindBy(css="lg-dashboard-card[title=\"Dynamic Groups\"] .lg-dashboard-card")
 	private WebElement dynamicGroupSection;
 
 	@FindBy(css="sub-content-box[box-title=\"Time of Day\"]")
@@ -151,6 +151,67 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+
+	public enum DynamicEmployeeGroupLabels {
+
+		MinorRule("Minor Rule"),
+		DifferentialPay("Differential Pay");
+
+		private final String value;
+
+		DynamicEmployeeGroupLabels(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
+	public enum DynamicEmployeeGroupCriteria {
+
+		WorkRole("Work Role"),
+		JobTitle("Job Title"),
+		Country("Country"),
+		State("State"),
+		City("City"),
+		EmploymentType("Employment Type"),
+		EmploymentStatus("Employment Status"),
+		Exempt("Exempt"),
+		Minor("Minor"),
+		Badge("Badge"),
+		Custom("Custom");
+
+		private final String value;
+
+		DynamicEmployeeGroupCriteria(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
+	public enum DynamicEmployeeGroupMinorCriteria {
+
+		LessThan14("<14"),
+		Equals14("14"),
+		Equals15("15"),
+		Equals16("16"),
+		Equals17("17"),
+		OlderOrEqualTo18(">=18");
+
+		private final String value;
+
+		DynamicEmployeeGroupMinorCriteria(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
 	@Override
 	public void goToConfigurationPage() throws Exception {
 		if (isElementEnabled(configurationTab,15)) {
@@ -1748,10 +1809,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void createNewTemplate(String templateName) throws Exception{
-		if(isTemplateListPageShow()){
+		if(isElementLoaded(newTemplateBTN, 10)){
 			clickTheElement(newTemplateBTN);
 			waitForSeconds(1);
-			if(isElementEnabled(createNewTemplatePopupWindow)){
+			if(isElementEnabled(createNewTemplatePopupWindow, 10)){
 				SimpleUtils.pass("User can click new template button successfully!");
 				clickTheElement(newTemplateName);
 				newTemplateName.sendKeys(templateName);
@@ -1759,15 +1820,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				newTemplateDescription.sendKeys(templateName);
 				clickTheElement(continueBTN);
 				waitForSeconds(5);
-				if(isElementEnabled(welcomeCloseButton)){
+				if(isElementEnabled(welcomeCloseButton, 5)){
 					clickTheElement(welcomeCloseButton);
 				}
-				if(isElementEnabled(taTemplateSpecialField)){
+				if(isElementEnabled(taTemplateSpecialField, 5)){
 					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
 					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
 					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 				}
-				if(isElementEnabled(saveAsDraftButton)){
+				if(isElementEnabled(saveAsDraftButton, 5)){
 					SimpleUtils.pass("User can click continue button successfully!");
 					clickTheElement(saveAsDraftButton);
 					waitForSeconds(5);
@@ -2437,8 +2498,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement templateAssociationBTN;
 
 	public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception{
-		if(isElementEnabled(templateAssociationBTN,5)){
-			clickTheElement(templateAssociationBTN);
+		if(isElementEnabled(templateExternalAttributesBTN,10)){
+			scrollToElement(templateExternalAttributesBTN);
+			clickTheElement(templateExternalAttributesBTN);
 			if(isElementEnabled(searchAssociateFiled,2)){
 				SimpleUtils.pass("Click Association Tab successfully!");
 			}else {
@@ -2581,29 +2643,51 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) {
+	public void archiveOrDeleteTemplate(String templateName) throws Exception {
+		if (areListElementVisible(templateNameList, 20)
+				&& areListElementVisible(templatesList, 20)
+				&& templateNameList.size() == templatesList.size()
+				&& templateNameList.size()>0) {
+			for (int i = 0; i< templateNameList.size(); i++) {
+				if (templateNameList.get(i).getText().equalsIgnoreCase(templateName)) {
+					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					if(classValue!=null && classValue.contains("hasChildren")){
+						clickTheElement(templateToggleButton);
+						waitForSeconds(3);
+						clickTheElement(templatesList.get(i).findElements(By.cssSelector("button")).get(0));
+						if (isElementLoaded(templateDetailsBTN, 20)) {
+							SimpleUtils.pass("Go to template detail page successfully! ");
+						} else
+							SimpleUtils.fail("Go to template detail page fail! ", false);
+					}else{
+						clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
+						if (isElementLoaded(templateDetailsBTN, 20)) {
+							SimpleUtils.pass("Go to template detail page successfully! ");
+						} else
+							SimpleUtils.fail("Go to template detail page fail! ", false);
+					}
+					if (isElementLoaded(archiveBtn, 10)) {
+						clickTheElement(archiveBtn);
+						if(isElementEnabled(archiveTemplateDialog,10)){
+							clickTheElement(okButton);
+							displaySuccessMessage();
+						} else
+							SimpleUtils.fail("Archive template dialog pop up window load failed.",false);
+					} else if (isElementLoaded(deleteTemplateButton, 10)) {
+						clickTheElement(deleteTemplateButton);
+						if (isElementEnabled(deleteTemplateDialog,10)){
+							clickTheElement(okButton);
+							displaySuccessMessage();
+						} else
+							SimpleUtils.fail("Delete template dialog pop up window load failed.",false);
+					} else
+						SimpleUtils.fail("Archive and delete button fail to load! ", false);
+					break;
+				}
+			}
 
-		clickTheElement(templateNameList.get(0));
-		waitForSeconds(5);
-		List<WebElement> deleteArchiveBtn = getDriver().findElements(By.cssSelector("button[type=\"button\"]"));
-		for (WebElement e: deleteArchiveBtn) {
-			if (e.getText().equalsIgnoreCase(action)) {
-				click(e);
-				break;
-			}
-		}
-		if(isElementEnabled(archiveTemplateDialog,3)){
-			clickTheElement(okButtonOnDeleteTemplateDialog);
-			waitForSeconds(5);
-			String firstTemplateName = templateNameList.get(0).getText().trim();
-			if(!firstTemplateName.equals(templateName)){
-				SimpleUtils.pass("User has " + action + "  template successfully!");
-			}else {
-				SimpleUtils.fail("User has " + action + "  template failed!",false);
-			}
 		} else
-			SimpleUtils.fail(action+" template dialog pop up window load failed.",false);
-
+			SimpleUtils.report("There is no template in the list! ");
 	}
 
 	@FindBy(css ="question-input[question-title=\"Move existing shifts to Open when transfers occur within the Workforce Sharing Group.\"] > div > div.lg-question-input__wrapper > ng-transclude > yes-no > ng-form > lg-button-group >div>div")
@@ -2717,4 +2801,185 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		return hasCompanyMobilePolicyURL;
 	}
 
+	@FindBy(css ="lg-global-dynamic-group-table[dynamic-groups=\"newsFeedDg\"]")
+	private WebElement dynamicEmployeeGroup;
+	@Override
+	public void goToDynamicEmployeeGroupPage() {
+		if (isElementEnabled(dynamicGroupSection, 20)) {
+			clickTheElement(dynamicGroupSection);
+			if (isElementEnabled(dynamicEmployeeGroup, 20)) {
+				SimpleUtils.pass("Can go to dynamic group page successfully");
+			} else
+				SimpleUtils.fail("Go to dynamic group page failed", false);
+		} else
+			SimpleUtils.fail("The dynamic group section fail to load! ", false);
+	}
+
+	@FindBy(css = "[ng-click=\"$ctrl.removeDynamicGroup(group.id,'remove')\"]")
+	private List<WebElement> deleteIconsDynamicEmployeeGroupList;
+
+	@FindBy(css = "[ng-repeat=\"group in filterdynamicGroups\"]")
+	private List<WebElement> groupRowsInDynamicEmployeeGroupList;
+
+	@FindBy(css = "lg-button[label=\"Remove\"]")
+	private WebElement removeBtnInRemoveDGPopup;
+
+	@Override
+	public void deleteAllDynamicEmployeeGroupsInList() throws Exception {
+		OpsPortalLocationsPage opsPortalLocationsPage = new OpsPortalLocationsPage();
+		if (areListElementVisible(groupRowsInDynamicEmployeeGroupList, 20)&&groupRowsInDynamicEmployeeGroupList.size() > 0) {
+			if (areListElementVisible(deleteIconsDynamicEmployeeGroupList, 30)) {
+				int i = 0;
+				while (deleteIconsDynamicEmployeeGroupList.size()>0 && i< 50) {
+					click(deleteIconsDynamicEmployeeGroupList.get(0));
+					if (opsPortalLocationsPage.isRemoveDynamicGroupPopUpShowing()) {
+						click(removeBtnInRemoveDGPopup);
+						displaySuccessMessage();
+					} else
+						SimpleUtils.fail("loRemove dynamic group page load failed ", false);
+				}
+			} else
+				SimpleUtils.report("There is not dynamic group yet");
+		} else
+			SimpleUtils.report("There is no groups which selected");
+
+
+	}
+
+
+	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
+	private WebElement addDynamicGroupBtn;
+	@FindBy(css = "[label=\"Labels\"] .lg-picker-input ng-form [placeholder=\"Select...\"]")
+	private WebElement labelsSelector;
+	@FindBy(css = ".item.ng-scope")
+	private List<WebElement> labelsItems;
+	@FindBy(css = "[value=\"group.values\"] input[placeholder=\"Select...\"]")
+	private List<WebElement> subCriteriaSelector;
+	@FindBy(css = "[value=\"group.values\"] .item.ng-scope input-field")
+	private List<WebElement> subCriteriaSelectorItems;
+	@FindBy(css = "input[placeholder=\"Search Label\"]")
+	private WebElement searchLabelBox;
+	@FindBy(css = "div.new-label")
+	private WebElement newLabel;
+
+	@Override
+	public void createNewDynamicEmployeeGroup(String groupTitle, String description, String groupLabels, List<String> groupCriteria) throws Exception {
+		if (isElementLoaded(addDynamicGroupBtn, 15)) {
+			clickTheElement(addDynamicGroupBtn);
+			if (isManagerDGpopShowWell()) {
+				//Send the group title
+				groupNameInput.sendKeys(groupTitle);
+				//Send the group description
+				groupDescriptionInput.sendKeys(description);
+				//Select the label
+				clickTheElement(labelsSelector);
+				waitForSeconds(3);
+				if (isElementLoaded(searchLabelBox, 10)) {
+					searchLabelBox.clear();
+					searchLabelBox.sendKeys(groupLabels);
+				} else
+					SimpleUtils.fail("Search label box fail to load! ", false);
+
+				if (isElementLoaded(newLabel, 5)) {
+					clickTheElement(newLabel);
+				} else {
+					for (WebElement item: labelsItems) {
+						if (item.getText().equalsIgnoreCase(groupLabels)) {
+							clickTheElement(item.findElement(By.tagName("input")));
+							break;
+						}
+					}
+				}
+				//Add more criteria if criteria more than 1
+				if (groupCriteria.size()>1) {
+					for (int i=0; i< groupCriteria.size()-2; i++) {
+						clickTheElement(addMoreBtn);
+					}
+				}
+				//Select criteria and sub-criteria
+				if (criteriaSelectors.size() == groupCriteria.size()) {
+					for (int i = 0; i< groupCriteria.size(); i++) {
+						String criteria = groupCriteria.get(i).split("-")[0];
+						String subCriteria = groupCriteria.get(i).split("-")[1];
+						//Select criteria
+						selectByVisibleText(criteriaSelectors.get(i), criteria);
+						waitForSeconds(3);
+						//Select sub-criteria
+						clickTheElement(subCriteriaSelector.get(i));
+						for (WebElement item: subCriteriaSelectorItems) {
+							if (item.getText().equalsIgnoreCase(subCriteria)) {
+								clickTheElement(item.findElement(By.tagName("input")));
+								break;
+							}
+						}
+					}
+				}
+
+				//Click on OK button
+				clickTheElement(okButton);
+				displaySuccessMessage();
+			} else
+				SimpleUtils.fail("Manage Dynamic Group window load failed", false);
+		} else
+			SimpleUtils.fail("Add dynamic group button load failed", false);
+	}
+
+
+	@FindBy(css = "modal[modal-title=\"Manage Dynamic Group\"]>div")
+	private WebElement managerDGpop;
+	@FindBy(css = "input[aria-label=\"Group Name\"]")
+	private WebElement groupNameInput;
+	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
+	private WebElement groupDescriptionInput;
+
+	@FindBy(css = "select.ng-pristine.ng-empty.ng-valid.ng-valid-required")
+	private List<WebElement> criteriaSelectors;
+
+	@FindBy(css = "lg-button[label=\"Test\"]")
+	private WebElement testBtn;
+
+	@FindBy(css = "lg-button[label=\"Add More\"]")
+	private WebElement addMoreBtn;
+
+	private boolean isManagerDGpopShowWell() throws Exception {
+		if (isElementEnabled(managerDGpop, 15) && isElementEnabled(groupNameInput, 15) &&
+				isElementEnabled(groupDescriptionInput, 15)
+				&& isElementLoaded(labelsSelector, 15)
+				&& areListElementVisible(criteriaSelectors, 15)
+				&& isElementEnabled(testBtn, 15) && isElementEnabled(addMoreBtn, 15)) {
+			SimpleUtils.pass("Manager Dynamic Group win show well");
+			return true;
+		} else
+			return false;
+	}
+
+	@FindBy(css = "lg-button[label=\"Archive\"]")
+	private WebElement archiveBtn;
+	@Override
+	public void archiveOrDeleteAllTemplates() throws Exception {
+		if(isTemplateListPageShow()){
+			SimpleUtils.pass("Labor model template list is showing now");
+			if (areListElementVisible(templateNameList, 20) && templatesList.size()>0) {
+				int j = 0;
+				while (templateNameList.size() > 0 && j <10) {
+					String templateName = templateNameList.get(0).getText();
+					archiveOrDeleteTemplate(templateName);
+					j++;
+				}
+
+			}else
+				SimpleUtils.fail("There are no template in the list",false);
+		}else {
+			SimpleUtils.fail("Labor model template list is not loaded well",false);
+		}
+	}
+
+	@Override
+	public void clickOnTemplateDetailTab() throws Exception {
+		if (isElementLoaded(templateDetailsBTN, 10)) {
+			clickTheElement(templateDetailsBTN);
+			waitForSeconds(3);
+		} else
+			SimpleUtils.fail("The template detail tab fail to load! ", false);
+	}
 }

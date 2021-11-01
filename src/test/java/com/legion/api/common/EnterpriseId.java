@@ -15,7 +15,7 @@ public enum EnterpriseId {
     opauto("aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95"),
     panda2("ff0ebe2d-2fc1-465e-a58e-73e2e6f4a9f6"),
     rt("ccf4508d-d38b-4e06-b8bb-e72d55ceab5a"),
-    cinemark_wkdy("781c5d8f-fd6d-47a5-888a-abd1d3a6961c");
+    cinemarkwkdy("781c5d8f-fd6d-47a5-888a-abd1d3a6961c");
     private final String value;
     EnterpriseId(final String newValue){
         value = newValue;
