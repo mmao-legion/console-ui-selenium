@@ -19,7 +19,6 @@
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
-                    <include name="verifyTheNotificationOfBusinessProfileAsTeamMember" />
                     <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
                 </methods>
             </class>
@@ -30,7 +29,7 @@
         <classes>
             <class name="com.legion.tests.core.DragAndDropTest">
                 <methods>
-                    <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>
+               <!--     <include name="verifyWarningModelForTimeOffAsInternalAdmin"/>   -->
                     <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
                 </methods>
             </class>
@@ -80,7 +79,6 @@
                     <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
                     <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                     <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin" />
-                    <!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5458-->
                     <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
                 </methods>
             </class>
@@ -116,12 +114,10 @@
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
                     <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
-                    <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
-                    <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
