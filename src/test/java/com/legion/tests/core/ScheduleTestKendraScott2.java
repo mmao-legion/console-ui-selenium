@@ -716,7 +716,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
 		scheduleMainPage.saveSchedule();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.selectShiftTypeFilterByText("assigned");
 		String workRole = shiftOperatePage.getRandomWorkRole();
+		scheduleMainPage.clickOnFilterBtn();
+		scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+
 		createSchedulePage.publishActiveSchedule();
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , shiftOperatePage.verifyContextOfTMDisplay(), false);
