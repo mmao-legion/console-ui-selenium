@@ -242,8 +242,8 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             profileNewUIPage.verifyFieldsInHRProfileInformationSection();
             //Verify the fields in Legion Information Section are display correctly
             profileNewUIPage.verifyFieldsInLegionInformationSection();
-            //Verify the contents in Actions Section are display correctly
-            profileNewUIPage.verifyContentsInActionsSectionInTMView();
+//            //Verify the contents in Actions Section are display correctly
+//            profileNewUIPage.verifyContentsInActionsSectionInTMView();
             //Verify Edit button is display correctly
             profileNewUIPage.verifyEditUserProfileButtonIsLoaded();
 

@@ -1160,7 +1160,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			String accessRoleTab = "Access Roles";
-			String rolePermissionForDM = "District Manager";
+			String rolePermissionForDM = "Area Manager";
 			String rolePermissionForSM = "Store Manager";
 			String rolePermissionForTL = "Team Lead";
 			String section = "Team";

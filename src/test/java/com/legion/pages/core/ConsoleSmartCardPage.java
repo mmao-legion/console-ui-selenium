@@ -632,7 +632,6 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         if (areListElementVisible(smartCards,15)){
             for (WebElement e: smartCards) {
                 //findElement(By.cssSelector(".card-carousel-card-title"))
-                String s = e.getText();
                 if (changesNotPublished == 0) {
                     if (e.getText().toLowerCase().contains("action required") && e.getText().toLowerCase().contains("schedule not") && e.getText().toLowerCase().contains("published")) {
                         SimpleUtils.pass("Changes not published smart card loads successfully!");
@@ -640,7 +639,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
                         break;
                     }
                 } else {
-                    if (e.getText().toLowerCase().contains("action required") && e.getText().toLowerCase().contains(changesNotPublished + " change") && e.getText().toLowerCase().contains("not published")) {
+                    if (e.getText().toLowerCase().contains("unpublished changes") && e.getText().toLowerCase().contains(changesNotPublished + " change") && e.getText().toLowerCase().contains("not published")) {
                         SimpleUtils.pass("Changes not published smart card with number of changes loads successfully!");
                         flag = true;
                         break;
