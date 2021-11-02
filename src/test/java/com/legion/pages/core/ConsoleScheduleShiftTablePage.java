@@ -685,7 +685,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         waitForSeconds(3);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
-            String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
+            String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText().split(" ")[0];
             if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned")) {
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
                 String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
@@ -1916,7 +1916,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement start : startElements) {
                 i++;
                 WebElement name1 = start.findElement(By.className("week-schedule-worker-name"));
-                if (name1 != null && name1.getText().equalsIgnoreCase(user1)) {
+                if (name1 != null && name1.getText().split(" ")[0].equalsIgnoreCase(user1)) {
                     startAvatar = start.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
                     shiftsSwaped.put(user1,i);
                 }
@@ -1924,7 +1924,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement end : endElements) {
                 j++;
                 WebElement name2 = end.findElement(By.className("week-schedule-worker-name"));
-                if (name2 != null  && name2.getText().equalsIgnoreCase(user2)) {
+                if (name2 != null  && name2.getText().split(" ")[0].equalsIgnoreCase(user2)) {
                     endAvatar = end.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
                     shiftsSwaped.put(user2,j);
 
@@ -2207,7 +2207,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(shifts, 5) && shifts != null && shifts.size() > 0) {
             for (WebElement shift : shifts) {
                 WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
-                if (name1 != null && name1.getText().equalsIgnoreCase(name)) {
+                if (name1 != null && name1.getText().split(" ")[0].equalsIgnoreCase(name)) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
                     count++;

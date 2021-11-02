@@ -140,6 +140,7 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 				if (postTitles.get(i).getText().equalsIgnoreCase(postTitle)){
 					ifPostExists = true;
 					SimpleUtils.report("The post : "+ postTitle+ " is exists!");
+					break;
 				}
 			}
 		}
