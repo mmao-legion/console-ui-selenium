@@ -1828,11 +1828,11 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement start : startElements) {
                 WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
                 WebElement startAvatar = start.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
-                if (startName != null && startAvatar != null && startName.getText().equalsIgnoreCase(firstName)) {
+                if (startName != null && startAvatar != null && startName.getText().contains(firstName)) {
                     for (WebElement end : endElements) {
                         WebElement endAvatar = end.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
                         WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
-                        if (endAvatar != null && endName != null && !endName.getText().equalsIgnoreCase(firstName) &&
+                        if (endAvatar != null && endName != null && !endName.getText().contains(firstName) &&
                                 !endName.getText().equalsIgnoreCase("Open")) {
                             mouseHoverDragandDrop(startAvatar, endAvatar);
                             SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + endName.getText() + " Successfully!");
