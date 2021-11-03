@@ -51,7 +51,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement enterPriseProfileInLocations;
 	@FindBy(css = "[title='Global Configuration']")
 	private WebElement globalConfigurationInLocations;
-	@FindBy(css = "[title='Locations']")
+	@FindBy(css = "lg-dashboard-card[title='Locations']")
 	private WebElement locationsInLocations;
 	@FindBy(css = "[title='Upperfields']")
 	private WebElement upperfieldsInLocations;
