@@ -78,6 +78,7 @@
                     <include name="verifyGroupByDayPartsCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyActionRequiredSmartCardDisplayCorrectlyWhenScheduleCreatedByCopyPartialAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

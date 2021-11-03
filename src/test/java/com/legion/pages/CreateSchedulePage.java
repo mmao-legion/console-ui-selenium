@@ -55,5 +55,6 @@ public interface CreateSchedulePage {
     public boolean isCopyScheduleWindow() throws Exception;
     public void clickOnSchedulePublishButton() throws Exception;
     public void clickConfirmBtnOnPublishConfirmModal() throws Exception;
+    public void copyAllPartialSchedule () throws Exception;
 
 }

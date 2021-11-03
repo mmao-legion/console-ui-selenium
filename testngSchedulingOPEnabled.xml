@@ -168,6 +168,7 @@
                     <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin"/>
                     <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
                     <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
+                    <include name="verifyActionRequiredSmartCardDisplayCorrectlyWhenScheduleCreatedByCopyPartialAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

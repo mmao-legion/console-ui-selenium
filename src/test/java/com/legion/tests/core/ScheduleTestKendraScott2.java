@@ -4684,4 +4684,63 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Verify Action Required smart card display correctly when the schedule created by copy partial")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyActionRequiredSmartCardDisplayCorrectlyWhenScheduleCreatedByCopyPartialAsInternalAdmin(String browser, String username, String password, String location) throws Exception
+	{
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		scheduleCommonPage.clickOnScheduleSubTab("Schedule");
+		scheduleCommonPage.navigateToNextWeek();
+		if (createSchedulePage.isWeekGenerated()){
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "05:00PM");
+		shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+		createSchedulePage.publishActiveSchedule();
+
+		String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
+		if (firstWeekInfo.length() > 11) {
+			firstWeekInfo = firstWeekInfo.trim().substring(10);
+			if (firstWeekInfo.contains("-")) {
+				String[] temp = firstWeekInfo.split("-");
+				if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
+					firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
+							+ " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
+				}
+			}
+		}
+		scheduleCommonPage.navigateToNextWeek();
+		if (createSchedulePage.isWeekGenerated()){
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		createSchedulePage.clickCreateScheduleBtn();
+		createSchedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "05:00PM");
+		createSchedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "05:00PM");
+		createSchedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "11:00AM", "05:00PM");
+		createSchedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "11:00AM", "05:00PM");
+		createSchedulePage.editOperatingHoursWithGivingPrameters("Thursday", "11:00AM", "05:00PM");
+		createSchedulePage.editOperatingHoursWithGivingPrameters("Friday", "11:00AM", "05:00PM");
+		createSchedulePage.editOperatingHoursWithGivingPrameters("Saturday", "11:00AM", "05:00PM");
+		createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+		createSchedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
+		createSchedulePage.copyAllPartialSchedule();
+		createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
+
+		//Check the Action required smart card is display
+		SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
+				smartCardPage.isRequiredActionSmartCardLoaded(), false);
+	}
 }

@@ -1580,4 +1580,18 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         }
     }
 
+
+    @FindBy (css = "div.generate-modal-assignments-select-all input-field input")
+    private WebElement selectAllShiftAssignment;
+    public void copyAllPartialSchedule () throws Exception {
+        if (isElementLoaded(copyPartialScheduleSwitch, 10)){
+            click(copyPartialScheduleSwitch);
+        } else
+            SimpleUtils.fail("Copy Partial Schedule Switch loaded fail! ", false);
+        clickTheElement(nextButtonOnCreateSchedule);
+        if (isElementLoaded(selectAllShiftAssignment, 10)) {
+            clickTheElement(selectAllShiftAssignment);
+        } else
+            SimpleUtils.fail("Select All Shift Assignment loaded fail! ", false);
+    }
 }
