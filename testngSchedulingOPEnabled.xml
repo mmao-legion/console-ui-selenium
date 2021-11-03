@@ -117,8 +117,8 @@
                          &lt;!&ndash; blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" />&ndash;&gt;
                          <include name="verifySchoolCalendarDefaultMonthAsInternalAdmin" />
                          <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />-->
-                        <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
-                        <include name="verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin" />
+<!--                        <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
+                        <include name="verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5562 -->
                      </methods>
                  </class>
              </classes>
@@ -285,9 +285,9 @@
             <class name="com.legion.tests.core.DeactivateTerminateOrTransferTMTest">
                 <methods>
                     <include name="verifyTheExistingShiftsWhenTransferSettingIsAvailableAsInternalAdmin" />
-                    <include name="verifyShiftsAreConvertedToOpenWhenMoveShiftsSettingIsYesAsInternalAdmin" />
+<!--                    <include name="verifyShiftsAreConvertedToOpenWhenMoveShiftsSettingIsYesAsInternalAdmin" />
                     <include name="verifyShiftsAreConvertedToOpenWhenMoveShiftsSettingIsNoAsInternalAdmin" />
-                    <include name="verifyShiftsAreKeepingAssignedWhenMoveShiftsSettingIsNoAsInternalAdmin" />
+                    <include name="verifyShiftsAreKeepingAssignedWhenMoveShiftsSettingIsNoAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5581-->
                 </methods>
             </class>
         </classes>
