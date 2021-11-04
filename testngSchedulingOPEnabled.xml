@@ -49,7 +49,7 @@
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
                     <include name="verifyAccessControlsOnActivitiesPage" />
                     <include name="verifyTheContentOnActivityAsStoreManager" />
-                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
+<!--                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" Blocked by SCH-5574/>-->
     <!--                <include name="verifyDashboardFunctionalityAsTeamMember" />-->
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verificationOfMySchedulePageAsTeamMember" />
