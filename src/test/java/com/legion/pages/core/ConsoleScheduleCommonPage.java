@@ -365,7 +365,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         WebElement scheduleCalendarActiveWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
         try {
             if (isElementLoaded(scheduleCalendarActiveWeek)) {
-                scheduleWeekStartDuration = scheduleCalendarActiveWeek.getText().replace("\n", "");
+                scheduleWeekStartDuration = scheduleCalendarActiveWeek.getText().replace("\n", " ");
             }
         } catch (Exception e) {
             SimpleUtils.fail("Calender duration bar not loaded successfully", true);

@@ -1,5 +1,7 @@
 package com.legion.pages;
 
+import org.openqa.selenium.WebElement;
+
 import java.util.List;
 
 public interface MySchedulePage {
@@ -65,4 +67,5 @@ public interface MySchedulePage {
     void validateTheAvailabilityOfInfoIcon() throws Exception;
     void validateInfoIconClickable() throws Exception;
     void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
+    public List<WebElement> getAllAvailableShifts();
 }

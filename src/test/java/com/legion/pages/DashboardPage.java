@@ -154,4 +154,5 @@ public interface DashboardPage {
     public HashMap<String, Integer> getTheSumOfValuesOnPayrollProjectionWidget() throws Exception;
     public void validateAsOfTimeUnderProjectedOnOrgSummaryWidget() throws Exception;
     public void clickOnViewSchedulesOnOrgSummaryWidget() throws Exception;
+    public List<HashMap<String, String>> getAllUpComingShiftsInfo() throws Exception;
 }

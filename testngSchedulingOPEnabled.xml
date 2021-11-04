@@ -179,6 +179,7 @@
             <class name="com.legion.tests.core.TeamTestKendraScott2">
                 <methods>
                     <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />
+                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" />
                 </methods>
             </class>
         </classes>

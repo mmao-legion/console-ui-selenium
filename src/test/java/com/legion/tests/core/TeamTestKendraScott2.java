@@ -1299,4 +1299,178 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
+
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Verify upcoming shifts when TM has access to multiple locations")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember (String browser, String username, String password, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			//Get two locations of TM
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			String tmName = profileNewUIPage.getNickNameFromProfile();
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			String location1 = location;
+			String location2 = "";
+			int i = 0;
+			while (i <20 && (location2 == "" || location2.equalsIgnoreCase(location))) {
+				location2 = locationSelectorPage.getOneRandomNameFromUpperFieldDropdownList("Location").split("\n")[0];
+			}
+
+			// Team Member logout
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			// Login as Admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+
+			//Ungenerate the first week schedule
+			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			//Go to next week and create schedule
+			scheduleCommonPage.navigateToNextWeek();
+			isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+
+			//Delete all the shifts of TM
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView(tmName);
+			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+
+			//Create shift for TM on first day
+			String workRole = shiftOperatePage.getRandomWorkRole();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectSpecificWorkDay(1);
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+			scheduleCommonPage.clickOnDayView();
+			scheduleCommonPage.navigateDayViewWithIndex(0);
+			String weekDay1 = scheduleCommonPage.getScheduleWeekStartDayMonthDate();
+
+			//Select another location
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location1);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			//Ungenerate the first week schedule
+			isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			//Go to next week and create schedule
+			scheduleCommonPage.navigateToNextWeek();
+			isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView(tmName);
+			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+
+			//Create shift for TM on second day
+			workRole = shiftOperatePage.getRandomWorkRole();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectDaysByIndex(1, 1, 1);
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+
+			//Get second shift info
+			scheduleCommonPage.clickOnDayView();
+			scheduleCommonPage.navigateDayViewWithIndex(1);
+			String weekDay2 = scheduleCommonPage.getScheduleWeekStartDayMonthDate();
+			scheduleCommonPage.clickOnWeekView();
+
+			// All the shifts that are assigned to this TM should show, if it is created in another location, these shifts should be gray
+			scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyTM.getValue());
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage(tmName);
+			List<WebElement> shifts = scheduleShiftTablePage.getOneDayShiftByName(0, tmName);
+			SimpleUtils.assertOnFail("The shift display correctly on the first day!",
+					shifts.size() == 1 && shifts.get(0).getAttribute("class").contains("no-drag"), false);
+
+			shifts = scheduleShiftTablePage.getOneDayShiftByName(1, tmName);
+			SimpleUtils.assertOnFail("The shift dislay correctly on the first day!",
+					shifts.size() == 1 && !shifts.get(0).getAttribute("class").contains("no-drag"), false);
+			loginPage.logOut();
+
+			//Login as TM, select the first location, observe the upcoming shifts
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			List<HashMap<String, String>> shiftsInfo1= dashboardPage.getAllUpComingShiftsInfo();
+			String shift1Time = "11:00am - 4:00pm";
+			String shift2Time = "10:00am - 3:00pm";
+			//Upcoming shifts are shown
+			SimpleUtils.assertOnFail("The TM's upcoming shifts should equal or more than 2! ", shiftsInfo1.size() > 1, false);
+			//Shift info, shift location should be correct
+			SimpleUtils.assertOnFail("The first upcoming shift's location name should be: "+location2 +" , but actual is: " +shiftsInfo1.get(0).get("locationName"),
+					shiftsInfo1.get(0).get("locationName").equalsIgnoreCase(location2), false);
+			SimpleUtils.assertOnFail("The first upcoming shift's shift info should be: "+weekDay1 + " "+ shift1Time +" , but actual is: " +shiftsInfo1.get(0).get("shiftInfo").replace(",", ""),
+					shiftsInfo1.get(0).get("shiftInfo").replace(",", "").equalsIgnoreCase(weekDay1 + " "+ shift1Time), false);
+			SimpleUtils.assertOnFail("The second upcoming shift's location name should be: "+location1 +" , but actual is: " +shiftsInfo1.get(1).get("locationName"),
+					shiftsInfo1.get(1).get("locationName").equalsIgnoreCase(location1), false);
+			SimpleUtils.assertOnFail("The second upcoming shift's shift info should be: "+weekDay2 + " "+ shift2Time +" , but actual is: " +shiftsInfo1.get(1).get("shiftInfo").replace(",", ""),
+					shiftsInfo1.get(1).get("shiftInfo").replace(",", "").equalsIgnoreCase(weekDay2 + " "+ shift2Time), false);
+			//All the shifts assigned to this TM should show here
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.navigateToNextWeek();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			SimpleUtils.assertOnFail("All the shifts assigned to this TM should show here! ",
+					mySchedulePage.getAllAvailableShifts().size() == 2, false);
+			//select the second location, the upcoming shifts should be consistent with the first location
+			dashboardPage.clickOnDashboardConsoleMenu();
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
+			List<HashMap<String, String>> shiftsInfo2= dashboardPage.getAllUpComingShiftsInfo();
+			SimpleUtils.assertOnFail("", shiftsInfo2.equals(shiftsInfo1), false);
+			//All the shifts assigned to this TM should show here
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.navigateToNextWeek();
+			SimpleUtils.assertOnFail("All the shifts assigned to this TM should show here! ",
+					mySchedulePage.getAllAvailableShifts().size() == 2, false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 }
