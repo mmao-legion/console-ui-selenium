@@ -4,6 +4,7 @@ import com.legion.pages.*;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -1674,5 +1675,15 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         }else {
             SimpleUtils.fail("Week Day Labels not loaded Successfully!", false);
         }
+    }
+
+
+    public List<WebElement> getAllAvailableShifts() {
+        List<WebElement> allAvailableShift = new ArrayList<>();
+        if (areListElementVisible(dayViewAvailableShifts, 10)) {
+            allAvailableShift = dayViewAvailableShifts;
+        } else
+            SimpleUtils.report("The shifts fail to load! ");
+        return allAvailableShift;
     }
 }

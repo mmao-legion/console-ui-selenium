@@ -4788,7 +4788,8 @@ private List<WebElement> locationColumn;
 	public void setNonSchoolDaysForNonSchoolWeek () {
 		if (areListElementVisible(theNonSummerDaysInTheLastSchoolMonth, 10)) {
 			//Click the school days in the last school week to change to non-school day
-			click(theNonSummerDaysInTheLastSchoolMonth.get(theNonSummerDaysInTheLastSchoolMonth.size() - 1));
+			waitForSeconds(3);
+			clickTheElement(theNonSummerDaysInTheLastSchoolMonth.get(theNonSummerDaysInTheLastSchoolMonth.size() - 1));
 			SimpleUtils.pass("Set the non-school week successfully! ");
 		} else {
 			SimpleUtils.fail("The school days fail to load! ", false);

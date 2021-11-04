@@ -78,6 +78,7 @@
                     <include name="verifyGroupByDayPartsCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyActionRequiredSmartCardDisplayCorrectlyWhenScheduleCreatedByCopyPartialAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -131,6 +132,7 @@
                     <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin" />
 <!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5458-->
                     <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
+                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" />
                 </methods>
             </class>
         </classes>
