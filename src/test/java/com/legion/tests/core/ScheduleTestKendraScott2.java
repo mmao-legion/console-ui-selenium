@@ -195,6 +195,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		  groupbyAll("Group by All"),
 		  groupbyWorkRole("Group by Work Role"),
 		  groupbyTM("Group by TM"),
+		  groupbyJobTitle("Group by Job Title"),
 		  groupbyDayParts("Group by Day Parts");
 			private final String value;
 			scheduleGroupByFilterOptions(final String newValue) {
@@ -4322,6 +4323,73 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	}
 
 	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "validate group by XXX results order")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyGroupByResultsOrderedAlphabetilyAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		scheduleCommonPage.navigateToNextWeek();
+		boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//Group by work role and check the results.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+		scheduleShiftTablePage.verifyGroupByTitlesOrder();
+		//Group by job title and check the results.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
+		scheduleShiftTablePage.verifyGroupByTitlesOrder();
+		//Group by TM and check the results.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyTM.getValue());
+		scheduleShiftTablePage.verifyGroupByTMOrderResults();
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "validate group by all and group by day parts results order")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyGroupByAllResultsOrderedByStartTimeAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		scheduleCommonPage.navigateToNextWeek();
+		boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//Group by work role and check the results.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyAll.getValue());
+		scheduleShiftTablePage.verifyShiftsOrderByStartTime();
+		//Group by day parts and check the results.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyDayParts.getValue());
+		scheduleShiftTablePage.expandOnlyOneGroup("UNSPECIFIED");
+		scheduleShiftTablePage.verifyShiftsOrderByStartTime();
+	}
+
+	@Automated(automated = "Automated")
 	@Owner(owner = "Julie")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify assign TM warning: If SM wants to schedule a TM from another location and schedule hasn’t been generated")
@@ -4510,82 +4578,78 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "KendraScott2_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+	//@Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Validate search bar on schedule page in day view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifySearchBarOnSchedulePageInDayViewAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
-		try {
-			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 
-			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
-			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-			scheduleCommonPage.navigateToNextWeek();
-			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (isWeekGenerated) {
-				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-			}
-			createSchedulePage.createScheduleForNonDGFlowNewUI();
-
-			//Go to day view
-			scheduleCommonPage.clickOnDayView();
-
-			//click search button
-			scheduleMainPage.clickOnOpenSearchBoxButton();
-
-			//Check the ghost text inside the Search bar
-			scheduleMainPage.verifyGhostTextInSearchBox();
-
-			//Get the info of a random shift
-			List<String> shiftInfo = new ArrayList<>();
-			String firstNameOfTM = "";
-			int i = 0;
-			while (i < 10 && (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned"))) {
-				shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				//Search shift by TM names: first name and last name
-				firstNameOfTM = shiftInfo.get(0);
-				i++;
-			}
-			List<WebElement> searchResultOfFirstName = scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
-			scheduleShiftTablePage.verifySearchResult(firstNameOfTM, null, null, null, searchResultOfFirstName);
-
-			String lastNameOfTM = shiftInfo.get(5);
-			List<WebElement> searchResultOfLastName = scheduleMainPage.searchShiftOnSchedulePage(lastNameOfTM);
-			scheduleShiftTablePage.verifySearchResult(null, lastNameOfTM, null, null, searchResultOfLastName);
-
-			//Search shift by work role
-			String workRole = shiftInfo.get(4);
-			List<WebElement> searchResultOfWorkRole = scheduleMainPage.searchShiftOnSchedulePage(workRole);
-			scheduleShiftTablePage.verifySearchResult(null, null, workRole, null, searchResultOfWorkRole);
-
-			//Search shift by job title
-			String jobTitle = shiftInfo.get(3);
-			List<WebElement> searchResultOfJobTitle = scheduleMainPage.searchShiftOnSchedulePage(jobTitle);
-			scheduleShiftTablePage.verifySearchResult(null, null, null, jobTitle, searchResultOfJobTitle);
-
-			//Click X button to close search box
-			scheduleMainPage.clickOnCloseSearchBoxButton();
-
-			//Go to edit mode
-			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-
-			//click search button
-			scheduleMainPage.clickOnOpenSearchBoxButton();
-			//Click X button to close search box
-			scheduleMainPage.clickOnCloseSearchBoxButton();
-		} catch (Exception e) {
-			SimpleUtils.fail(e.getMessage(), false);
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+		scheduleCommonPage.navigateToNextWeek();
+		boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (isWeekGenerated) {
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
+		createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+		//Go to day view
+		scheduleCommonPage.clickOnDayView();
+
+		//click search button
+		scheduleMainPage.clickOnOpenSearchBoxButton();
+
+		//Check the ghost text inside the Search bar
+		scheduleMainPage.verifyGhostTextInSearchBox();
+
+		//Get the info of a random shift
+		List<String> shiftInfo = new ArrayList<>();
+		String firstNameOfTM = "";
+		int i = 0;
+		while (i < 10 && (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned"))) {
+			shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			//Search shift by TM names: first name and last name
+			firstNameOfTM = shiftInfo.get(0);
+			i++;
+		}
+		List<WebElement> searchResultOfFirstName = scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
+		scheduleShiftTablePage.verifySearchResult(firstNameOfTM, null, null, null, searchResultOfFirstName);
+
+		String lastNameOfTM = shiftInfo.get(5);
+		List<WebElement> searchResultOfLastName = scheduleMainPage.searchShiftOnSchedulePage(lastNameOfTM);
+		scheduleShiftTablePage.verifySearchResult(null, lastNameOfTM, null, null, searchResultOfLastName);
+
+		//Search shift by work role
+		String workRole = shiftInfo.get(4);
+		List<WebElement> searchResultOfWorkRole = scheduleMainPage.searchShiftOnSchedulePage(workRole);
+		scheduleShiftTablePage.verifySearchResult(null, null, workRole, null, searchResultOfWorkRole);
+
+		//Search shift by job title
+		String jobTitle = shiftInfo.get(3);
+		List<WebElement> searchResultOfJobTitle = scheduleMainPage.searchShiftOnSchedulePage(jobTitle);
+		scheduleShiftTablePage.verifySearchResult(null, null, null, jobTitle, searchResultOfJobTitle);
+
+		//Click X button to close search box
+		scheduleMainPage.clickOnCloseSearchBoxButton();
+
+		//Go to edit mode
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+		//click search button
+		scheduleMainPage.clickOnOpenSearchBoxButton();
+		//Click X button to close search box
+		scheduleMainPage.clickOnCloseSearchBoxButton();
 	}
 
 
