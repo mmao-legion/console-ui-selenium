@@ -83,7 +83,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyGlobalSearchFunctionOnNavigatorAsInternalCustomerAdmin(String browser, String username, String password, String location) throws Exception {
 
-        String[]  upperFieldList = {"HQ","OMLocation16","District-ForAutomation","Region-ForAutomation","BU-ForAutomation"};
+        String[]  upperFieldList = {"HQ","OMLocation16","District-ForAutomation","ENH_NSO_AutoTestLocation","BU-ForAutomation"};
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
