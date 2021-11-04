@@ -1501,10 +1501,13 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         return selectedUpperFields;
     }
 
+
+    @FindBy(css = "[class=\"lg-picker-input__wrapper lg-ng-animate\"]")
+    private WebElement upperFieldPickPopUp;
     public void changeUpperFieldDirect(String upperFieldType, String upperFieldName) throws Exception {
         waitForSeconds(4);
         Boolean isUpperFieldMatched = false;
-        WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));;
+        WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));
         click(upperFieldSelectorButton);
         WebElement upperFieldDropDownButton = getDriver().findElement(By.cssSelector("[search-hint=\"Search " +
                 upperFieldType + "\"] div.lg-search-options"));
@@ -1584,8 +1587,11 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
     public List<String> getAllUpperFieldNamesInUpperFieldDropdownList(String upperFieldType) throws Exception {
         List<String> upperFieldNames = new ArrayList<>();
-        WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));;
-        click(upperFieldSelectorButton);
+        WebElement upperFieldSelectorButton = getDriver().findElement(By.cssSelector("[search-hint='Search " + upperFieldType + "'] div.input-faked"));
+        if (!isElementLoaded(upperFieldPickPopUp, 5)) {
+            clickTheElement(upperFieldSelectorButton);
+            waitForSeconds(2);
+        }
         WebElement upperFieldDropDownButton = getDriver().findElement(By.cssSelector("[search-hint=\"Search " +
                 upperFieldType + "\"] div.lg-search-options"));
         if (isElementLoaded(upperFieldDropDownButton, 5)) {

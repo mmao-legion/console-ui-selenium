@@ -3154,4 +3154,27 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return results;
 	}
 
+
+	@Override
+	public List<HashMap<String, String>> getAllUpComingShiftsInfo() throws Exception {
+		List<HashMap<String, String>> shifts = new ArrayList<>();
+		String name = "";
+		String role = "";
+		String shiftInfo = "";
+		if (areListElementVisible(upComingShifts, 15)) {
+			for (WebElement upComingShift : upComingShifts) {
+				HashMap<String, String> allInfo = new HashMap<>();
+				shiftInfo = upComingShift.getText().split("\n")[0];
+				name = upComingShift.findElement(By.cssSelector("span.name-muted")).getText().toLowerCase();
+				role = upComingShift.findElement(By.cssSelector("span.role-name")).getText().toLowerCase();
+				allInfo.put("shiftInfo", shiftInfo);
+				allInfo.put("locationName", name);
+				allInfo.put("workRole", role);
+				shifts.add(allInfo);
+			}
+		}else {
+			SimpleUtils.report("Up Coming shifts are not loaded!");
+		}
+		return shifts;
+	}
 }
