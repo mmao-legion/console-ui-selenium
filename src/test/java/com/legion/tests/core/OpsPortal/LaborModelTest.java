@@ -246,15 +246,17 @@ public class LaborModelTest extends TestBase {
             repositoryPage.edit();
             repositoryPage.addNewTask();
             TaskDetailsPage taskDetailsPage = new TaskDetailsPage();
-            taskDetailsPage.editTask("autoTask001", "auto", "Labor", "cart", 2);
+            Random random=new Random();
+            String taskName="autoTask"+random.nextInt(1000);
+            taskDetailsPage.editTask(taskName, "auto", "Labor", "cart", 2);
             taskDetailsPage.saveAdding();
             repositoryPage.save();
 
             //search by task name or label name
             //exact matching
             //verify the new task
-            repositoryPage.searchByTaskORLabel("autoTask001");
-            Assert.assertTrue(repositoryPage.getTheSearchedTaskName().equalsIgnoreCase("autoTask001") || repositoryPage.getTheSearchedLabel().equalsIgnoreCase("autoTask001"), "Failed to add new task and search by task name or label!");
+            repositoryPage.searchByTaskORLabel(taskName);
+            Assert.assertTrue(repositoryPage.getTheSearchedTaskName().equalsIgnoreCase(taskName) || repositoryPage.getTheSearchedLabel().equalsIgnoreCase(taskName), "Failed to add new task and search by task name or label!");
             //partial matching 'by label'
             repositoryPage.searchByTaskORLabel("Clear");
             Assert.assertTrue(repositoryPage.getTheSearchedTaskName().contains("Clear") || repositoryPage.getTheSearchedLabel().contains("Clear"), "Failed to search by task name or label!");
@@ -272,14 +274,14 @@ public class LaborModelTest extends TestBase {
             LaborModelTemplateDetailPage templateDetailPage = new LaborModelTemplateDetailPage();
             templateDetailPage.edit();
             templateDetailPage.okInModal();
-            templateDetailPage.selectTasks("autoTask001");
+            templateDetailPage.selectTasks(taskName);
             templateDetailPage.selectWorKRole();
             templateDetailPage.save("Save as draft");
             laborModelPage.back();
             panelPage.goToLaborModelRepositoryPage();
 
             //edit a task and save
-            repositoryPage.editAnExistingTask("autoTask001");
+            repositoryPage.editAnExistingTask(taskName);
             taskDetailsPage.editTask("autoTaskEdit", "testEdit", "Rest", "cart", 1);
             taskDetailsPage.saveEditing();
             repositoryPage.save();
@@ -322,7 +324,7 @@ public class LaborModelTest extends TestBase {
             templateDetailPage.edit();
             templateDetailPage.okInModal();
             templateDetailPage.toSelectATask();
-            templateDetailPage.searchTasksInModal("autoTask001");
+            templateDetailPage.searchTasksInModal(taskName);
             templateDetailPage.searchTasksInModal("autoTaskEdit");
             templateDetailPage.cancelInModal();
             templateDetailPage.cancel();
