@@ -1178,7 +1178,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 
-	@FindBy(css = "lg-button[label=\"OK\"]")
+	@FindBy(css = "lg-button[label='Ok']")
 	private WebElement okBtnInLocationGroupConfirmPage;
 
 	@Override
