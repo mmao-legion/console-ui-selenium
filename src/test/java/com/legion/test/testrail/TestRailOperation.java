@@ -228,10 +228,12 @@ public class TestRailOperation {
 
     public static void addResultForTest() {
         if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
-            if (MyThreadLocal.getTestResultFlag()){
-                addTestResultIntoTestRailN(1, "");
-            } else {
-                addTestResultIntoTestRailN(5, "");
+            if (!MyThreadLocal.getTestSkippedFlag()){
+                if (MyThreadLocal.getTestResultFlag()){
+                    addTestResultIntoTestRailN(1, "");
+                } else {
+                    addTestResultIntoTestRailN(5, "");
+                }
             }
         }
     }
