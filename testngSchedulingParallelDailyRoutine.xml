@@ -322,8 +322,8 @@
                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin" />
                     <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin" />
                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
-<!--                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-5575 -->
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" /> 
                     <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" />
                 </methods>
             </class>
