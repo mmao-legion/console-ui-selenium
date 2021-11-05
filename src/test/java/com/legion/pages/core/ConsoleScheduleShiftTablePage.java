@@ -7,10 +7,12 @@ import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -893,7 +895,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     Map<String, String> shiftInfo= getShiftInfoFromInfoPopUp(searchResults.get(i));
                     String shiftWorkRole = shiftInfo.get("WorkRole");
                     String shiftJobTitle = shiftInfo.get("JobTitle");
-                    if (workRole.equals(shiftWorkRole)|| workRole.equals(shiftJobTitle)) {
+                    if (shiftWorkRole.contains(workRole)|| shiftJobTitle.contains(workRole)) {
                         SimpleUtils.pass("The search result display correctly when search by Work Role");
                     } else if(workRoleWords.length>1) {
                         for (int j=0; j< workRoleWords.length; j++){
@@ -944,6 +946,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         Map<String, String> shiftInfo = new HashMap<String, String>();
         if (shift != null) {
+            //click blank area to close the i icon opened before.
+            Actions actions = new Actions(getDriver());
+            actions.moveByOffset(0, 0).click().build().perform();
             if(scheduleCommonPage.isScheduleDayViewActive()){
                 click(shift.findElement(By.className("day-view-shift-hover-info-icon")));
                 waitForSeconds(2);
@@ -2756,6 +2761,86 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
     }
 
+    @Override
+    public void expandOnlyOneGroup(String groupName) throws Exception {
+        if (areListElementVisible(groupTitleList,10)){
+            for (int i=0; i< groupTitleList.size(); i++){
+                if (!groupTitleList.get(i).getText().equalsIgnoreCase(groupName)){
+                    clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                        SimpleUtils.pass("Group is collapsed!");
+                    } else {
+                        clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                        if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                            SimpleUtils.pass("Group is collapsed!");
+                        } else {
+                            SimpleUtils.fail("Group is not able to be collapsed!", false);
+                        }
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+    }
+
+    //used by Group by work role and job title.
+    @Override
+    public void verifyGroupByTitlesOrder() throws Exception{
+        List<String> results = new ArrayList<>();
+        if (areListElementVisible(groupTitleList, 10)){
+            for (WebElement element: groupTitleList){
+                results.add(element.getText().trim());
+            }
+            SimpleUtils.assertOnFail("Order results is incorrect!", results.stream().sorted().collect(Collectors.toList()).containsAll(results), false);
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+    }
+
+    @FindBy(css = ".week-schedule-shift[data-day=\"1\"] .week-schedule-worker-name")
+    private List<WebElement> workerNamesOnTheShiftsOfTheFirstDay;
+    @Override
+    public void verifyGroupByTMOrderResults() throws Exception{
+        List<String> results = new ArrayList<>();
+        if (areListElementVisible(workerNamesOnTheShiftsOfTheFirstDay, 10)){
+            for (WebElement element: workerNamesOnTheShiftsOfTheFirstDay){
+                results.add(element.getText().trim());
+            }
+            SimpleUtils.assertOnFail("Order results is incorrect!", results.stream().sorted().collect(Collectors.toList()).equals(results), false);
+        } else {
+            SimpleUtils.fail("No shifts on the first day of the week!", false);
+        }
+    }
+
+    @FindBy(css = ".week-schedule-shift[data-day=\"1\"] .week-schedule-shift-time")
+    private List<WebElement> shiftTimesOnTheShiftsOfTheFirstDay;
+    @Override
+    public void verifyShiftsOrderByStartTime() throws Exception {
+        List<String> results = new ArrayList<>();
+        if (areListElementVisible(shiftTimesOnTheShiftsOfTheFirstDay, 10)){
+            for (WebElement element: shiftTimesOnTheShiftsOfTheFirstDay){
+                results.add(element.getText().split("-")[0].trim());
+            }
+            boolean flag = false;
+            String first = results.get(0);
+            String last = results.get(results.size()-1);
+            if ((first.contains("am") && last.contains("am")) || (first.contains("pm") && last.contains("pm"))){
+                if (SimpleUtils.isNumeric(first.replace("am","").replace("pm","")) && SimpleUtils.isNumeric(last.replace("pm","").replace("pm",""))){
+                    if (Float.valueOf(first.replace("am","").replace("pm","")) <= Float.valueOf(first.replace("am","").replace("pm",""))){
+                        flag = true;
+                    }
+                }
+            } else {
+                if (first.contains("am")){
+                    flag = true;
+                }
+            }
+            SimpleUtils.assertOnFail("Order results is incorrect!", flag, false);
+        } else {
+            SimpleUtils.fail("No shifts on the first day of the week!", false);
+        }
+    }
 
     @FindBy(css = "div.holiday-logo-container")
     private WebElement holidayLogoContainer;

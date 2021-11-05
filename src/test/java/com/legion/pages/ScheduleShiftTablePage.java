@@ -104,5 +104,9 @@ public interface ScheduleShiftTablePage {
     public List<String> getIndexOfDaysHaveShifts() throws Exception;
     public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception;
     public void verifyGroupCanbeCollapsedNExpanded() throws Exception;
+    public void verifyGroupByTitlesOrder() throws Exception;
+    public void verifyGroupByTMOrderResults() throws Exception;
     public boolean inActiveWeekDayClosed(int dayIndex) throws Exception;
+    public void verifyShiftsOrderByStartTime() throws Exception;
+    public void expandOnlyOneGroup(String groupName) throws Exception;
 }
