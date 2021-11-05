@@ -2781,7 +2781,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(xpath = "//div[4]/div/div[1]/div/div/h3")
 	private WebElement orgSummaryWidgetTitle;
 
-	@FindBy(css = "div.sc-ekbpNA.bnaKOt")
+	@FindBy(css = "//div[4]/div/div[1]/div/div/div/div/div/div[1]")
 	private List<WebElement> scheduledHoursTitles;
 
 	@FindBy(css = "[data-testid$=\"-hours\"]")
@@ -2928,7 +2928,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
 					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
 					&& areListElementVisible(bugetedScheduledProjectedHours, 5)
-					&& bugetedScheduledProjectedHours.size() == 3
+					&& bugetedScheduledProjectedHours.size() == 5
 					&& (isClockEnable? isElementLoaded(projectedHoursAsCurrentTime, 5): true)
 					&& isElementLoaded(projectedWithinBudgetCaret, 5)
 					&& isElementLoaded(projectedOverBudgetCaret, 5)
@@ -2946,7 +2946,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			if (isElementLoaded(orgSummaryWidgetTitle, 5)
 					&& orgSummaryWidgetTitle.getText().contains(org + " Summary")
 					&& areListElementVisible(scheduledHoursTitles, 5)
-					&& scheduledHoursTitles.size() == 3
+					&& scheduledHoursTitles.size() == 5
 					&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Guidance")
 					&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
 					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
