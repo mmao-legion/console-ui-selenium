@@ -67,6 +67,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> testRailRunName = new ThreadLocal<>();
 	public static final ThreadLocal<Boolean> testCaseExistsFlag = new ThreadLocal<>();
 	public static final ThreadLocal<Boolean> testResultFlag = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> testSkippedFlag = new ThreadLocal<>();
 	public static final ThreadLocal<List<Integer>> CurrentTestCaseIDList = new ThreadLocal<>();
 	public static final ThreadLocal<String> testSuiteName = new ThreadLocal<>();
 	public static final ThreadLocal<String> timeDuration = new ThreadLocal<>();
@@ -179,6 +180,10 @@ public class MyThreadLocal {
 	public static void setTestResultFlag(boolean value) { testResultFlag.set(value); }
 
 	public static boolean getTestResultFlag() { return testResultFlag.get(); }
+
+	public static void setTestSkippedFlag(boolean value) { testSkippedFlag.set(value); }
+
+	public static boolean getTestSkippedFlag() { return testSkippedFlag.get(); }
 
 	public static void setCurrentTestCaseIDList(List<Integer> value) { CurrentTestCaseIDList.set(value); }
 

@@ -535,6 +535,7 @@ public class SchedulingMinorTest extends TestBase {
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
         scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -544,7 +545,7 @@ public class SchedulingMinorTest extends TestBase {
         String workRole = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         shiftOperatePage.deleteTMShiftInWeekView(firstNameOfMinor14);
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfMinor14);
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfMinor16);
         scheduleMainPage.saveSchedule();
         //create shifts for minors.
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
