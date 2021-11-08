@@ -10458,6 +10458,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     public void clickOnEditMeaLBreakTime() throws Exception{
         if(isElementLoaded(editMealBreakTime,5))
         {
+            scrollToBottom();
             click(editMealBreakTime);
             SimpleUtils.pass("Clicked on Edit Meal Break Time ");
         }

@@ -937,6 +937,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void addMultipleMealBreaks(List<String> mealBreakValue) throws Exception {
 		int count = mealBreakList.size();
 		for(int i =0;i<=9;i++){
+			scrollToBottom();
 			addNewMealBreak(mealBreakValue);
 		}
 		count = count + 10;
@@ -1006,6 +1007,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void addMultipleRestBreaks(List<String> restBreakValue) throws Exception {
 		int count = restBreakList.size();
 		for(int i =0;i<=9;i++){
+			scrollToBottom();
 			addNewRestBreak(restBreakValue);
 		}
 		count = count + 10;
