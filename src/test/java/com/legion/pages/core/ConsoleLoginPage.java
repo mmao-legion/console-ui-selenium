@@ -69,7 +69,17 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		clickTheElement(loginButton);
 		waitForSeconds(4);
     }
-    
+
+
+	@Override
+	public void switchToOriginalWindow(String handle)  throws Exception {
+		for (String chandle : getDriver().getWindowHandles()) {
+			if (chandle.equals(handle)) {
+				getDriver().switchTo().window(handle);
+				break;
+			}
+		}
+	}
     public boolean isLoginDone() throws Exception
     {
     	WebDriverWait tempWait = new WebDriverWait(getDriver(), 20); 

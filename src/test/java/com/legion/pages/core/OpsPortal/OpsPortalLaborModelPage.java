@@ -26,7 +26,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	// Added by Estelle
 	@FindBy(css="[class='console-navigation-item-label Labor Model']")
 	private WebElement laborModelTab;
-	@FindBy(css="[title='Labor Model']")
+	@FindBy(css="lg-dashboard-card[title='Labor Model']")
 	private WebElement laborModelTile;
 	@FindBy(css="[title='Labor Model Repository']")
 	private WebElement laborModelRepositoryTile;

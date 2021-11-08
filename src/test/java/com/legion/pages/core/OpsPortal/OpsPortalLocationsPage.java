@@ -51,7 +51,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement enterPriseProfileInLocations;
 	@FindBy(css = "[title='Global Configuration']")
 	private WebElement globalConfigurationInLocations;
-	@FindBy(css = "[title='Locations']")
+	@FindBy(css = "lg-dashboard-card[title='Locations']")
 	private WebElement locationsInLocations;
 	@FindBy(css = "[title='Upperfields']")
 	private WebElement upperfieldsInLocations;
@@ -219,6 +219,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			setLatitudeAndLongitude();
 			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 			waitForSeconds(3);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
@@ -285,6 +286,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			setLatitudeAndLongitude();
 			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
@@ -466,6 +468,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			setLatitudeAndLongitude();
 			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
@@ -811,6 +814,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement locationGroupSelect;
 	@FindBy(css = "inline-input:nth-child(2) > ng-transclude > div > input-field > ng-form > div.input-choose.ng-scope > span")
 	private WebElement selectParentLocation;
+	@FindBy(css = "input[aria-label='Latitude']")
+	private WebElement latitude;
+	@FindBy(css = "input[aria-label='Longitude']")
+	private WebElement longitude;
 
 	@Override
 	public void addChildLocation(String locationType, String childlocationName, String locationName, String searchCharactor, int index, String childRelationship) throws Exception {
@@ -826,6 +833,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			setLatitudeAndLongitude();
 			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
@@ -868,6 +876,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			setLatitudeAndLongitude();
 			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
@@ -912,6 +921,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			setLatitudeAndLongitude();
 			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
@@ -972,6 +982,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			setLatitudeAndLongitude();
 			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
@@ -1167,7 +1178,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 
-	@FindBy(css = "lg-button[label=\"OK\"]")
+	@FindBy(css = "lg-button[label='Ok']")
 	private WebElement okBtnInLocationGroupConfirmPage;
 
 	@Override
@@ -3435,6 +3446,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.fail("Export button is not clickable", true);
 		}else
 			SimpleUtils.fail("Export button load failed",false);
+	}
+
+	public void setLatitudeAndLongitude() {
+		latitude.sendKeys("34.3416");
+		longitude.sendKeys("108.9398");
 	}
 }
 

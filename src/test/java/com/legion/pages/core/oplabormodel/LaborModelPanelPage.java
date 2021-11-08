@@ -13,9 +13,9 @@ public class LaborModelPanelPage extends BasePage {
     }
 
     // Added by Sophia
-    @FindBy(css = "[title='Labor Model Repository']")
+    @FindBy(css = "lg-dashboard-card[title='Labor Model Repository']")
     private WebElement laborModelRepository;
-    @FindBy(css = "[title='Labor Model']")
+    @FindBy(css = "lg-dashboard-card[title='Labor Model']")
     private WebElement laborModel;
 
     public void goToLaborModelRepositoryPage() {
