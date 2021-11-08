@@ -3094,7 +3094,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement managerLocationBtn;
 	@FindBy(css = "[modal-title=\"Manage Locations\"]")
 	private WebElement managerLocationPopUpTitle;
-	@FindBy(css = "input[placeholder=\"You can search by location name, city, and state.\"]")
+	@FindBy(css = "input[placeholder=\"You can search by location name, level, city, and state.\"]")
 	private WebElement managerLocationInputFiled;
 	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.filtered\"]")
 	private List<WebElement> locationListRows;
