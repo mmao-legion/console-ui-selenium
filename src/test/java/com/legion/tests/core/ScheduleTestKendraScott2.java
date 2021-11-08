@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import com.gargoylesoftware.htmlunit.html.HtmlListing;
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
@@ -26,6 +28,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import sun.rmi.runtime.Log;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -4742,5 +4745,248 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//Check the Action required smart card is display
 		SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
 				smartCardPage.isRequiredActionSmartCardLoaded(), false);
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Verify the full name on shift in day and week view when enable ScheduleShowFullNames toggle")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember(String username, String password, String browser, String location) throws Exception {
+		try {
+			ToggleAPI.enableToggle(Toggles.ScheduleShowFullNames.getValue(), "stoneman@legion.co", "admin11.a");
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			//Login as admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			//Enable ScheduleShowFullNames toggle
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			//Go to one schedule page week view
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isActiveWeekGenerated) {
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+
+			//Delete all unassigned shifts and tm's shifts
+			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+			shiftOperatePage.deleteTMShiftInWeekView(tmFullName.split(" ")[0]);
+			scheduleMainPage.saveSchedule();
+
+			//Add shifts for TM
+			String workRole = shiftOperatePage.getRandomWorkRole();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectSpecificWorkDay(1);
+			newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmFullName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage(tmFullName);
+
+			//Get employee full name in week view
+			String fullNameInWeekView = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
+			SimpleUtils.assertOnFail("The full name display incorrectly in week view, the expected full name is: "+ tmFullName +" The actual full name is: " + fullNameInWeekView,
+					fullNameInWeekView.equalsIgnoreCase(tmFullName), false);
+
+			//Get employee full name in day view
+			scheduleCommonPage.clickOnDayView();
+			scheduleCommonPage.navigateDayViewWithIndex(0);
+		    String fullNameInDayView = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
+			SimpleUtils.assertOnFail("The full name display incorrectly in day view, the expected full name is: "+ tmFullName +" The actual full name is: " + fullNameInDayView,
+					fullNameInDayView.equalsIgnoreCase(tmFullName), false);
+		    loginPage.logOut();
+		    //Login as TM
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			//Get employee full name on TM schedule view
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.navigateToNextWeek();
+			String fullNameInMySchedulePage = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
+			SimpleUtils.assertOnFail("The full name display incorrectly in my schedule page, the expected full name is: "+ tmFullName +" The actual full name is: " + fullNameInMySchedulePage,
+					fullNameInMySchedulePage.equalsIgnoreCase(tmFullName), false);
+
+			//Try to create swap request for one shift and check the shift on swap page
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			String request = "Request to Swap Shift";
+			String title = "Find Shifts to Swap";
+			mySchedulePage.clickTheShiftRequestByName(request);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
+			String fullNameInFindShiftsToSwapPage = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
+			SimpleUtils.assertOnFail("The full name display incorrectly in swap page, the expected full name is: "+ tmFullName +" The actual full name is: " + fullNameInFindShiftsToSwapPage,
+					fullNameInFindShiftsToSwapPage.equalsIgnoreCase(tmFullName), false);
+
+			//Try to create cover request for one shift and check the shift on cover page
+			request = "Request to Cover Shift";
+			title = "Submit Cover Request";
+			mySchedulePage.clickCloseDialogButton();
+			mySchedulePage.clickTheShiftRequestByName(request);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
+			String fullNameInFindShiftsToCoverPage = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
+			SimpleUtils.assertOnFail("The full name display incorrectly in cover page, the expected full name is: "+ tmFullName +" The actual full name is: " + fullNameInFindShiftsToCoverPage,
+					fullNameInFindShiftsToCoverPage.equalsIgnoreCase(tmFullName), false);
+			mySchedulePage.clickCloseDialogButton();
+
+			String subTitle = "Team Schedule";
+			mySchedulePage.gotoScheduleSubTabByText(subTitle);
+			int indexInWeekView = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName.split(" ")[0]).get(0);
+			//Get employee full name in week
+			fullNameInWeekView = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(indexInWeekView);
+			SimpleUtils.assertOnFail("The full name display incorrectly in team schedule page, the expected full name is: "+ tmFullName +" The actual full name is: " + fullNameInWeekView,
+					fullNameInWeekView.equalsIgnoreCase(tmFullName), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Verify the full name on shift in day and week view when disable ScheduleShowFullNames toggle")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember(String username, String password, String browser, String location) throws Exception {
+		try {
+			ToggleAPI.disableToggle(Toggles.ScheduleShowFullNames.getValue(), "stoneman@legion.co", "admin11.a");
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			String firstAndInitialSecondName = tmFullName.split(" ")[0] + " " + tmFullName.split(" ")[1].substring(0, 1) + ".";
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			//Login as admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			//Enable ScheduleShowFullNames toggle
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			//Go to one schedule page week view
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isActiveWeekGenerated) {
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+
+			//Delete all unassigned shifts and tm's shifts
+			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+			shiftOperatePage.deleteTMShiftInWeekView(tmFullName.split(" ")[0]);
+			scheduleMainPage.saveSchedule();
+
+			//Add shifts for TM
+			String workRole = shiftOperatePage.getRandomWorkRole();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectSpecificWorkDay(1);
+			newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.clickRadioBtnStaffingOption(staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmFullName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage(tmFullName);
+
+			//Get employee full name in week view
+			String fullNameInWeekView = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
+			SimpleUtils.assertOnFail("The full name display incorrectly in week view, the expected full name is: "+ firstAndInitialSecondName +" The actual full name is: " + fullNameInWeekView,
+					fullNameInWeekView.equalsIgnoreCase(firstAndInitialSecondName), false);
+
+			//Get employee full name in day view
+			scheduleCommonPage.clickOnDayView();
+			scheduleCommonPage.navigateDayViewWithIndex(0);
+			String fullNameInDayView = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
+			SimpleUtils.assertOnFail("The full name display incorrectly in day view, the expected full name is: "+ firstAndInitialSecondName +" The actual full name is: " + fullNameInDayView,
+					fullNameInDayView.equalsIgnoreCase(firstAndInitialSecondName), false);
+			loginPage.logOut();
+			//Login as TM
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			//Get employee full name on TM schedule view
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.navigateToNextWeek();
+			String fullNameInMySchedulePage = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
+			SimpleUtils.assertOnFail("The full name display incorrectly in my schedule page, the expected full name is: "+ firstAndInitialSecondName +" The actual full name is: " + fullNameInMySchedulePage,
+					fullNameInMySchedulePage.equalsIgnoreCase(firstAndInitialSecondName), false);
+
+			//Try to create swap request for one shift and check the shift on swap page
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			String request = "Request to Swap Shift";
+			String title = "Find Shifts to Swap";
+			mySchedulePage.clickTheShiftRequestByName(request);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
+			String fullNameInFindShiftsToSwapPage = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
+			SimpleUtils.assertOnFail("The full name display incorrectly in swap page, the expected full name is: "+ firstAndInitialSecondName +" The actual full name is: " + fullNameInFindShiftsToSwapPage,
+					fullNameInFindShiftsToSwapPage.equalsIgnoreCase(firstAndInitialSecondName), false);
+
+			//Try to create cover request for one shift and check the shift on cover page
+			request = "Request to Cover Shift";
+			title = "Submit Cover Request";
+			mySchedulePage.clickCloseDialogButton();
+			mySchedulePage.clickTheShiftRequestByName(request);
+			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
+			String fullNameInFindShiftsToCoverPage = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
+			SimpleUtils.assertOnFail("The full name display incorrectly in cover page, the expected full name is: "+ firstAndInitialSecondName +" The actual full name is: " + fullNameInFindShiftsToCoverPage,
+					fullNameInFindShiftsToCoverPage.equalsIgnoreCase(firstAndInitialSecondName), false);
+			mySchedulePage.clickCloseDialogButton();
+
+			String subTitle = "Team Schedule";
+			mySchedulePage.gotoScheduleSubTabByText(subTitle);
+			int indexInWeekView = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName.split(" ")[0]).get(0);
+			//Get employee full name in week
+			fullNameInWeekView = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(indexInWeekView);
+			SimpleUtils.assertOnFail("The full name display incorrectly in team schedule page, the expected full name is: "+ firstAndInitialSecondName +" The actual full name is: " + fullNameInWeekView,
+					fullNameInWeekView.equalsIgnoreCase(firstAndInitialSecondName), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 }

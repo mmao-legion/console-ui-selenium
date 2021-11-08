@@ -105,4 +105,5 @@ public interface ScheduleShiftTablePage {
     public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception;
     public void verifyGroupCanbeCollapsedNExpanded() throws Exception;
     public boolean inActiveWeekDayClosed(int dayIndex) throws Exception;
+    public String getFullNameOfOneShiftByIndex (int index);
 }

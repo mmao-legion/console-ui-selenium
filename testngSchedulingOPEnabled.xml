@@ -156,6 +156,8 @@
                     <include name="verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager" />
 <!--                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" If it fails, it will affect other cases/>-->
 <!--                    <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" If it fails, it will affect other cases/>-->
+                    <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember" />
+                    <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" />
                 </methods>
             </class>
         </classes>

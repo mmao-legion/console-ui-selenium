@@ -67,5 +67,5 @@ public interface MySchedulePage {
     void validateTheAvailabilityOfInfoIcon() throws Exception;
     void validateInfoIconClickable() throws Exception;
     void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
-    public List<WebElement> getAllAvailableShifts();
+    public void clickCloseDialogButton () throws Exception;
 }

@@ -1177,15 +1177,16 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
     }
 
-
+    @FindBy(className = "week-schedule-shift")
+    private List<WebElement> shiftsInWeekView;
     @Override
     public List<Integer> getAddedShiftIndexes(String name) throws Exception {
         // Wait for the shifts to be loaded
         waitForSeconds(5);
         List<Integer> indexes = new ArrayList<>();
-        if (areListElementVisible(shiftsWeekView, 5)) {
-            for (int i = 0; i < shiftsWeekView.size(); i++) {
-                WebElement workerName = shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name"));
+        if (areListElementVisible(shiftsInWeekView, 5)) {
+            for (int i = 0; i < shiftsInWeekView.size(); i++) {
+                WebElement workerName = shiftsInWeekView.get(i).findElement(By.className("week-schedule-worker-name"));
                 if (workerName != null) {
                     if (workerName.getText().contains(name)) {
                         indexes.add(i);
@@ -2778,5 +2779,29 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
         return false;
 
+    }
+
+
+    public String getFullNameOfOneShiftByIndex (int index) {
+        String fullName = "";
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        List<WebElement> shifts = new ArrayList<>();
+        if(!areListElementVisible(weekShifts, 10)){
+            shifts = dayViewAvailableShifts;
+            if (areListElementVisible(shifts, 20) && index < shifts.size()) {
+                String[] nameAndWorkRole = shifts.get(index).findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ");
+                fullName = nameAndWorkRole[0] + " " + nameAndWorkRole[1];
+            } else {
+                SimpleUtils.fail("Schedule Page: day shifts not loaded successfully!", false);
+            }
+        } else {
+            shifts = weekShifts;
+            if (areListElementVisible(shifts, 20) && index < shifts.size()) {
+                fullName = shifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
+            } else {
+                SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
+            }
+        }
+        return fullName;
     }
 }
