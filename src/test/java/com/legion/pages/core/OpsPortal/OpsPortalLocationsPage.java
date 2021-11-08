@@ -1178,7 +1178,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 
-	@FindBy(css = "lg-button[label='Ok']")
+	@FindBy(css = "lg-button[label='OK']")
 	private WebElement okBtnInLocationGroupConfirmPage;
 
 	@Override
@@ -1613,10 +1613,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchInputInSelectALocation.sendKeys(searchChara);
 			searchInputInSelectALocation.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
-			if (locationRowsInSelectLocation.size() > 0) {
+			if (areListElementVisible(locationRowsInSelectLocation, 15) && locationRowsInSelectLocation.size() > 0) {
 				for (int i = 0; i < index; i++) {
 					WebElement firstRow = locationRowsInSelectLocation.get(i).findElement(By.cssSelector("input[type=\"checkbox\"]"));
-					click(firstRow);
+					clickTheElement(firstRow);
 				}
 				click(okBtnInSelectLocation);
 			} else

@@ -996,7 +996,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can see template value via click template name in location level and compare")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+//    Blocked by OPS-3650
+//    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUserCanSeeEachTypeOfTemViaClickingTemName(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1258,7 +1259,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Overridden Operating Hours template in location level")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+//    Blocked by OPS-3650
+//    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyOverriddenOperatingHoursInLocationLevel(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -1408,7 +1410,8 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "User can view the default location level external attribute")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+//    Blocked by OPS-3649
+//    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefaultValueOfExternalAttributesInLocationLevel(String browser, String username, String password, String location) throws Exception {
 
         try{
