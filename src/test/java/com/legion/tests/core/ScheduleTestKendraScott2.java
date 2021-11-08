@@ -4752,7 +4752,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Mary")
 	@Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
-	@TestName(description = "Verify the full name on shift in day and week view when enable ScheduleShowFullNames toggle")
+	@TestName(description = "Verify the employee name on shift in day and week view when enable ScheduleShowFullNames toggle")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember(String username, String password, String browser, String location) throws Exception {
 		try {
@@ -4836,6 +4836,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Try to create swap request for one shift and check the shift on swap page
 			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			mySchedulePage.verifyClickOnAnyShift();
 			String request = "Request to Swap Shift";
 			String title = "Find Shifts to Swap";
 			mySchedulePage.clickTheShiftRequestByName(request);
@@ -4845,9 +4846,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					fullNameInFindShiftsToSwapPage.equalsIgnoreCase(tmFullName), false);
 
 			//Try to create cover request for one shift and check the shift on cover page
+			mySchedulePage.clickCloseDialogButton();
+			Thread.sleep(3000);
+			mySchedulePage.verifyClickOnAnyShift();
 			request = "Request to Cover Shift";
 			title = "Submit Cover Request";
-			mySchedulePage.clickCloseDialogButton();
 			mySchedulePage.clickTheShiftRequestByName(request);
 			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
 			String fullNameInFindShiftsToCoverPage = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
@@ -4873,7 +4876,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Owner(owner = "Mary")
 	@Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
-	@TestName(description = "Verify the full name on shift in day and week view when disable ScheduleShowFullNames toggle")
+	@TestName(description = "Verify the employee name on shift in day and week view when disable ScheduleShowFullNames toggle")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember(String username, String password, String browser, String location) throws Exception {
 		try {
@@ -4958,6 +4961,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Try to create swap request for one shift and check the shift on swap page
 			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			mySchedulePage.verifyClickOnAnyShift();
 			String request = "Request to Swap Shift";
 			String title = "Find Shifts to Swap";
 			mySchedulePage.clickTheShiftRequestByName(request);
@@ -4967,9 +4971,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					fullNameInFindShiftsToSwapPage.equalsIgnoreCase(firstAndInitialSecondName), false);
 
 			//Try to create cover request for one shift and check the shift on cover page
+			mySchedulePage.clickCloseDialogButton();
+			Thread.sleep(3000);
+			mySchedulePage.verifyClickOnAnyShift();
 			request = "Request to Cover Shift";
 			title = "Submit Cover Request";
-			mySchedulePage.clickCloseDialogButton();
 			mySchedulePage.clickTheShiftRequestByName(request);
 			SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
 			String fullNameInFindShiftsToCoverPage = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
