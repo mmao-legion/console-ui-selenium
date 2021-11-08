@@ -196,6 +196,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		  groupbyWorkRole("Group by Work Role"),
 		  groupbyTM("Group by TM"),
 		  groupbyJobTitle("Group by Job Title"),
+		  groupbyLocation("Group by Location"),
 		  groupbyDayParts("Group by Day Parts");
 			private final String value;
 			scheduleGroupByFilterOptions(final String newValue) {
@@ -4363,13 +4364,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "validate group by all and group by day parts results order")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyGroupByAllResultsOrderedByStartTimeAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
-		LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
 				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -4389,6 +4387,51 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyDayParts.getValue());
 		scheduleShiftTablePage.expandOnlyOneGroup("UNSPECIFIED");
 		scheduleShiftTablePage.verifyShiftsOrderByStartTime();
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Verify automatically expand when clicking group by on regular location")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyAutomaticallyExpandWhenGroupByInRegularLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+		scheduleCommonPage.navigateToNextWeek();
+		boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+		if (!isWeekGenerated) {
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		}
+		//Group by work role and check the group.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+		scheduleShiftTablePage.verifyGroupByTitlesAreExpanded();
+		//Group by job title and check the group.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
+		scheduleShiftTablePage.verifyGroupByTitlesAreExpanded();
+		//Group by day parts and check the group.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyDayParts.getValue());
+		scheduleShiftTablePage.verifyGroupByTitlesAreExpanded();
+
+		//Edit-mode
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		//Group by work role and check the group.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+		scheduleShiftTablePage.verifyGroupByTitlesAreExpanded();
+		//Group by job title and check the group.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyJobTitle.getValue());
+		scheduleShiftTablePage.verifyGroupByTitlesAreExpanded();
+		//Group by day parts and check the group.
+		scheduleMainPage.selectGroupByFilter(scheduleGroupByFilterOptions.groupbyDayParts.getValue());
+		scheduleShiftTablePage.verifyGroupByTitlesAreExpanded();
 	}
 
 	@Automated(automated = "Automated")

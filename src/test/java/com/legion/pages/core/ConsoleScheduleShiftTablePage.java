@@ -2784,6 +2784,21 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
     }
 
+    @Override
+    public void verifyGroupByTitlesAreExpanded() throws Exception {
+        if (areListElementVisible(groupTitleList,10)){
+            for (int i=0; i< getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).size(); i++){
+                if (!getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                    SimpleUtils.pass("Group is expanded!");
+                } else {
+                    SimpleUtils.fail("Group should be expanded by default!", false);
+                }
+            }
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+    }
+
     //used by Group by work role and job title.
     @Override
     public void verifyGroupByTitlesOrder() throws Exception{
