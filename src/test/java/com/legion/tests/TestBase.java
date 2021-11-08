@@ -203,6 +203,7 @@ public abstract class TestBase {
         if(testRailReportingFlag!=null){
             TestRailOperation.addNUpdateTestCaseIntoTestRail(testName,context);
             MyThreadLocal.setTestResultFlag(false);
+            MyThreadLocal.setTestSkippedFlag(false);
         }
         setCurrentMethod(method);
         setBrowserNeeded(true);

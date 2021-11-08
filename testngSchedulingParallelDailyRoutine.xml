@@ -29,7 +29,7 @@
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
-                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
+<!--                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" Blocked by SCH-5574/>-->
 <!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
 <!--                                       <include name="verifyActivityOfClaimOpenShiftAsTeamLead" Blocked by SCH-5458/>-->
                     <!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" /> SCH-4720-->
@@ -197,8 +197,8 @@
                 <methods>
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
                     <include name="verifySchedulesWidgetsAsStoreManager"/>
-                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
-                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
+<!--                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" Blocked by SCH-5474/>-->
+<!--                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" Blocked by SCH-5474/>-->
                 </methods>
             </class>
         </classes>
@@ -324,8 +324,8 @@
                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin" />
                     <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin" />
                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
-<!--                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-5575 -->
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" /> 
                     <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" />
                 </methods>
             </class>

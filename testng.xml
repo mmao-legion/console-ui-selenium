@@ -403,6 +403,9 @@
                     <include name="verifyEmployeesLocationInfoFromOtherLocationAsInternalAdmin" />
                     <include name="verifyTheTotalHrsOfEmployeesScheduledInOtherLocationAsInternalAdmin" />
                     <include name="verifyScheduleVersionAndWorkRoleShowsCorrectlyAsInternalAdmin" />
+                    <include name="verifyGroupByResultsOrderedAlphabetilyAsInternalAdmin" />
+                    <include name="verifyGroupByAllResultsOrderedByStartTimeAsInternalAdmin" />
+                    <include name="verifyAutomaticallyExpandWhenGroupByInRegularLocationAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -482,6 +485,8 @@
                     <include name="validatePrintScheduleAsInternalAdminP2P" />
                     <include name="validateTheFilterOnSchedulePageAsInternalAdminPC" />
                     <include name="validateTheFilterOnSchedulePageAsInternalAdminP2P" />
+                    <include name="verifyAutomaticallyExpandWhenGroupByInPCLGAsInternalAdmin" />
+                    <include name="verifyAutomaticallyExpandWhenGroupByInP2PLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
