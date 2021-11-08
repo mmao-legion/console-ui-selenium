@@ -1458,7 +1458,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleCommonPage.navigateToNextWeek();
 			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			SimpleUtils.assertOnFail("All the shifts assigned to this TM should show here! ",
-					mySchedulePage.getAllAvailableShifts().size() == 2, false);
+					scheduleShiftTablePage.getAvailableShiftsInDayView().size() == 2, false);
 			//select the second location, the upcoming shifts should be consistent with the first location
 			dashboardPage.clickOnDashboardConsoleMenu();
 			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
@@ -1468,7 +1468,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.navigateToNextWeek();
 			SimpleUtils.assertOnFail("All the shifts assigned to this TM should show here! ",
-					mySchedulePage.getAllAvailableShifts().size() == 2, false);
+					scheduleShiftTablePage.getAvailableShiftsInDayView().size() == 2, false);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}

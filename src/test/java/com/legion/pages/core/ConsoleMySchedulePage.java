@@ -315,7 +315,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     public int verifyClickOnAnyShift() throws Exception {
         List<String> expectedRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
         int index = 100;
-        if (areListElementVisible(tmIcons, 15) && tmIcons.size() > 1) {
+        if (areListElementVisible(tmIcons, 15) && tmIcons.size() > 0) {
             for (int i = 0; i < tmIcons.size(); i++) {
                 scrollToElement(tmIcons.get(i));
                 waitForSeconds(1);
@@ -1677,13 +1677,10 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         }
     }
 
-
-    public List<WebElement> getAllAvailableShifts() {
-        List<WebElement> allAvailableShift = new ArrayList<>();
-        if (areListElementVisible(dayViewAvailableShifts, 10)) {
-            allAvailableShift = dayViewAvailableShifts;
+    public void clickCloseDialogButton () throws Exception {
+        if (isElementLoaded(closeDialogBtn, 5)) {
+            clickTheElement(closeDialogBtn);
         } else
-            SimpleUtils.report("The shifts fail to load! ");
-        return allAvailableShift;
+            SimpleUtils.report("Close button fail to load! ");
     }
 }

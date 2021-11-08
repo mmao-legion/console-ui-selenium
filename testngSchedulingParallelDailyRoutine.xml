@@ -79,6 +79,8 @@
                     <include name="verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager" />
                     <include name="verifyActionRequiredSmartCardDisplayCorrectlyWhenScheduleCreatedByCopyPartialAsInternalAdmin" />
+                    <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember" />
+                    <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" />
                 </methods>
             </class>
         </classes>

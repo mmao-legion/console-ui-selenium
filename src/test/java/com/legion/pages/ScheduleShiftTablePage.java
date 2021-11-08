@@ -107,6 +107,7 @@ public interface ScheduleShiftTablePage {
     public void verifyGroupByTitlesOrder() throws Exception;
     public void verifyGroupByTMOrderResults() throws Exception;
     public boolean inActiveWeekDayClosed(int dayIndex) throws Exception;
+    public String getFullNameOfOneShiftByIndex (int index);
     public void verifyShiftsOrderByStartTime() throws Exception;
     public void expandOnlyOneGroup(String groupName) throws Exception;
     public void verifyGroupByTitlesAreExpanded() throws Exception;
