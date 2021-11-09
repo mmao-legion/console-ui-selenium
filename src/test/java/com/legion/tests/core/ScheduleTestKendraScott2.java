@@ -2267,6 +2267,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			controlsPage.gotoControlsPage();
+			SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+			SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+			controlsNewUIPage.clickOnGlobalLocationButton();
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			configurationPage.setWFS("Yes");
+
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
 					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
