@@ -700,6 +700,100 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Controls Page: Compliance Card not Loaded!", false);
 	}
 
+	@FindBy(css = "[form-title=\"Split Shift\"]")
+	private WebElement splitShiftSection;
+	@FindBy(css = "[form-title=\"Split Shift\"] [label=\"Edit\"]")
+	private WebElement splitShiftEditBtn;
+	@FindBy(css = ".modal-dialog")
+	private WebElement splitShiftDialog;
+	@Override
+	public void turnOnOrTurnOffSplitShiftToggle(boolean action) throws Exception {
+		String content = getSplitShiftContent();
+		if (isElementLoaded(splitShiftSection, 10)
+				&&splitShiftSection.findElement(By.cssSelector(".info")).getText().equalsIgnoreCase("Split Shift")
+				&&content.contains("An employee will receive a ")
+				&&content.contains(" hour premium for shifts worked with more than ")
+				&&content.contains(" minutes between last clock out and next clock in.")){
+			if (isElementLoaded(splitShiftSection.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+				if (action && splitShiftSection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+					scrollToElement(splitShiftSection.findElement(By.cssSelector(".lg-question-input__toggle")));
+					clickTheElement(splitShiftSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					SimpleUtils.pass("Toggle is turned on!");
+				} else if (!action){
+					clickTheElement(splitShiftSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					SimpleUtils.pass("Toggle is turned off!");
+					clickTheElement(splitShiftEditBtn);
+					if (isElementLoaded(splitShiftDialog, 5)){
+						SimpleUtils.fail("Edit button should be disabled when toggle off!", false);
+					}
+				} else {
+					SimpleUtils.pass("Toggle status is expected!");
+				}
+			} else {
+				SimpleUtils.fail("Toggle fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Split Shift section fail to load!", false);
+		}
+	}
+
+	public String getSplitShiftContent() throws Exception{
+		if (isElementLoaded(splitShiftSection, 10)){
+			return splitShiftSection.findElement(By.cssSelector(".lg-question-input__text")).getText();
+		}
+		return "";
+	}
+
+	@Override
+	public void editSpreadShiftPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception {
+		if (isElementLoaded(splitShiftEditBtn, 5)){
+			String contentBefore = getSplitShiftContent();
+			clickTheElement(splitShiftEditBtn);
+			if (isElementLoaded(splitShiftDialog, 10)){
+				//check the title.
+				if (splitShiftDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Split Shift Premium")){
+					SimpleUtils.pass("Dialog title is expected!");
+				} else {
+					SimpleUtils.fail("Dialog title is not correct", false);
+				}
+				//Check setting content.
+				if(splitShiftDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("An employee will receive a")
+						&&splitShiftDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("hour premium for shifts worked with more than")
+						&&splitShiftDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("minutes between last clock out and next clock in.")){
+					SimpleUtils.pass("Setting content in the dialog is expected!");
+				} else {
+					SimpleUtils.fail("Setting content is not expected!", false);
+				}
+				//edit the content, input the parameters.
+				if (splitShiftDialog.findElements(By.cssSelector("input")).size() == 2){
+					splitShiftDialog.findElements(By.cssSelector("input")).get(0).clear();
+					splitShiftDialog.findElements(By.cssSelector("input")).get(0).sendKeys(numOfPremiumHrs);
+					splitShiftDialog.findElements(By.cssSelector("input")).get(1).clear();
+					splitShiftDialog.findElements(By.cssSelector("input")).get(1).sendKeys(greaterThan);
+				} else {
+					SimpleUtils.fail("inputs are not shown as expected!", false);
+				}
+				//save or cancel.
+				if (isElementLoaded(splitShiftDialog.findElement(By.cssSelector("[label=\"Cancel\"]")), 5)
+					&&isElementLoaded(splitShiftDialog.findElement(By.cssSelector("[label=\"Save\"]")), 5)){
+					if (saveOrNot){
+						clickTheElement(splitShiftDialog.findElement(By.cssSelector("[label=\"Save\"] button")));
+						SimpleUtils.assertOnFail("Setting is not saved successfully!", getSplitShiftContent().contains(numOfPremiumHrs)&&getSplitShiftContent().contains(greaterThan), false);
+					} else {
+						clickTheElement(splitShiftDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
+						SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getSplitShiftContent()), false);
+					}
+				} else {
+					SimpleUtils.fail("Save or Cancel button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.fail("Split shift dialog fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit split shift button is not loaded!", false);
+		}
+	}
+
 	@Override
 	public boolean isCompliancePageLoaded() throws Exception {
 		if (isElementLoaded(overtimeWeeklyText, 15)) {
