@@ -1,5 +1,6 @@
 package com.legion.tests.core;
 
+import com.legion.pages.ControlsNewUIPage;
 import com.legion.pages.ControlsPage;
 import com.legion.pages.DashboardPage;
 import com.legion.tests.TestBase;
@@ -26,5 +27,19 @@ public class SplitAndSpreadTest extends TestBase {
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify Split Shift can be configured successfully")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySplitShiftCanBeConfiguredAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        controlsNewUIPage.turnOnOrTurnOffSplitShiftToggle(true);
+        controlsNewUIPage.editSplitShiftPremium("2", "30", false);
+        controlsNewUIPage.editSplitShiftPremium("2", "30", true);
     }
 }
