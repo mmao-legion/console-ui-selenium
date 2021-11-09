@@ -51,7 +51,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
 
     public List<WebElement> getAvailableShiftsInDayView() {
-        return dayViewAvailableShifts;
+        if (areListElementVisible(dayViewAvailableShifts, 60)) {
+            return dayViewAvailableShifts;
+        }
+        return null;
     }
 
     @FindBy(css = ".drag-target-place")
