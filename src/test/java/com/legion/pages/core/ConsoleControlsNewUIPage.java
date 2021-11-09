@@ -745,7 +745,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	@Override
-	public void editSpreadShiftPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception {
+	public void editSplitShiftPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception {
 		if (isElementLoaded(splitShiftEditBtn, 5)){
 			String contentBefore = getSplitShiftContent();
 			clickTheElement(splitShiftEditBtn);
