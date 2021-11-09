@@ -54,6 +54,8 @@ public interface ControlsNewUIPage {
 	public void clickOnControlsLocationProfileSection() throws Exception;
 	public void clickOnControlsScheduleCollaborationSection() throws Exception;
 	public void clickOnControlsComplianceSection() throws Exception;
+	public void turnOnOrTurnOffSplitShiftToggle(boolean action) throws Exception;
+	public void editSpreadShiftPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception;
 	public void clickOnControlsUsersAndRolesSection() throws Exception;
 	public void clickOnControlsTasksAndWorkRolesSection() throws Exception;
 	public void clickOnControlsOperatingHoursSection() throws Exception;
