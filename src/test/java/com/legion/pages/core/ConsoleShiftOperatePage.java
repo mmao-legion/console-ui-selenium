@@ -60,7 +60,6 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
         ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
-        CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
         if (scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue())) {
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -84,10 +83,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             if (isElementLoaded(shiftPopover)) {
                 WebElement convertToOpenOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canConvertToOpenShift() && !isTmView()\"]"));
                 if (isElementLoaded(convertToOpenOption)) {
-                    scrollToElement(convertToOpenOption);
-                    click(convertToOpenOption);
+                    clickTheElement(convertToOpenOption);
                     if (isElementLoaded(convertToOpenYesBtn)) {
-                        click(convertToOpenYesBtn);
+                        clickTheElement(convertToOpenYesBtn);
                         Thread.sleep(2000);
                     }
                 }
