@@ -52,8 +52,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify open each type template")
-//    Blocked by OPS-3650
-//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -494,8 +493,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Create all type template")
-//    Blocked by OPS-3650
-//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateAllTypeTemplateAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
         try{
 
