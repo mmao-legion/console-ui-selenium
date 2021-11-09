@@ -28,7 +28,6 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
-import sun.rmi.runtime.Log;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -2268,6 +2267,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			controlsPage.gotoControlsPage();
+			SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+			SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+			controlsNewUIPage.clickOnGlobalLocationButton();
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			configurationPage.setWFS("Yes");
+
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
 					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
