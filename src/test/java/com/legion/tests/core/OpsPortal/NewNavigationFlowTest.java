@@ -8,6 +8,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -317,7 +318,7 @@ public class NewNavigationFlowTest extends TestBase {
 
          //verify navigation function by DM
         String fileName="UsersCredentials.json";
-        fileName=SimpleUtils.getEnterprise("Op_Enterprise")+fileName;
+        fileName= MyThreadLocal.getEnterprise()+fileName;
         HashMap<String,Object[][]>userCredentials=SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][]teamMemberCredentials=userCredentials.get("DistrictManager");
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String.valueOf(teamMemberCredentials[0][0]),String.valueOf(teamMemberCredentials[0][1])
