@@ -1200,8 +1200,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 
-	@FindBy(css = "lg-button[label='OK']")
+	@FindBy(css = "lg-button[label='Ok']")
 	private WebElement okBtnInLocationGroupConfirmPage;
+	@FindBy(css = "lg-button[label='OK']")
+	private WebElement okBtnInUpperfiledConfirmPage;
 
 	@Override
 	public void changeOneLocationToNone(String locationToNone) throws Exception {
@@ -1669,7 +1671,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(editUpperfieldBtn);
 			selectByVisibleText(levelDropDownList, "District");
 			if (isElementEnabled(upperfieldLevelChangeWin, 10)) {
-				click(okBtnInLocationGroupConfirmPage);
+				click(okBtnInUpperfiledConfirmPage);
 				SimpleUtils.pass("Upperfield Level Change done");
 			} else
 				SimpleUtils.fail("Upperfield Level Change window load failed", false);
@@ -1682,7 +1684,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			upperfieldIdInput.clear();
 			waitForSeconds(2);
 			if (isElementEnabled(districtIdChangePopUpWin, 3)) {
-				click(okBtnInLocationGroupConfirmPage);
+				click(okBtnInUpperfiledConfirmPage);
 				upperfieldIdInput.sendKeys("FromRegionToDistrict" + currentTime);
 			} else
 				SimpleUtils.fail("Upperfield id change window not show", true);
