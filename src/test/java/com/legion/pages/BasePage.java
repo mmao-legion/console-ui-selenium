@@ -891,6 +891,13 @@ public class BasePage {
     public void removeHidden(WebElement element){
         ((JavascriptExecutor) getDriver()).executeScript("arguments[0].style.display='block';", element);
     }
+    public ArrayList getWebElementsText(List<WebElement> webElementsList) {
+        ArrayList<String> list = new ArrayList<>();
+        webElementsList.forEach((e) -> {
+            list.add(e.getText());
+        });
+        return list;
+    }
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){

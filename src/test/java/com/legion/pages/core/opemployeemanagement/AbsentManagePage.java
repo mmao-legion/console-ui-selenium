@@ -498,12 +498,12 @@ public class AbsentManagePage extends BasePage {
     }
 
     public boolean isButtonClickable(WebElement button) {
-        Boolean show = null;
+        Boolean shown = null;
         Boolean status = null;
         try {
-            show = button.isDisplayed();
+            shown = button.isDisplayed();
             status = button.isEnabled();
-            return show && status;
+            return shown && status;
         } catch (Exception NoSuchElement) {
             return false;
         }

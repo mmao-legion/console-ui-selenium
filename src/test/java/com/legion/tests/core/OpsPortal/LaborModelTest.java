@@ -7,7 +7,7 @@ import com.legion.pages.core.oplabormodel.LaborModelPanelPage;
 import com.legion.pages.core.oplabormodel.LaborModelRepositoryPage;
 import com.legion.pages.core.oplabormodel.LaborModelTemplateDetailPage;
 import com.legion.pages.core.oplabormodel.TaskDetailsPage;
-import com.legion.pages.core.opusermanagement.OpsPortalNavigationPage;
+import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;

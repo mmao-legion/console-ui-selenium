@@ -2,6 +2,7 @@ package com.legion.tests.core.OpsPortal;
 
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
+import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.opusermanagement.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -342,6 +343,7 @@ public class UserManagementTest extends TestBase {
             dynamicEmployeePage.remove();
             Assert.assertEquals(dynamicEmployeePage.getContentOfRemoveModal(), "Are you sure you want to remove this dynamic group?", "Failed to open the remove modal!");
             dynamicEmployeePage.removeTheGroup();
+            SimpleUtils.pass("Succeeded in removing dynamic group!");
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

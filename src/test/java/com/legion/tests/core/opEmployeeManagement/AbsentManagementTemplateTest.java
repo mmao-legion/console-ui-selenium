@@ -3,8 +3,8 @@ package com.legion.tests.core.opEmployeeManagement;
 import com.legion.pages.core.opemployeemanagement.AbsentManagePage;
 import com.legion.pages.core.opemployeemanagement.EmployeeManagementPanelPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffReasonConfigurationPage;
-import com.legion.pages.core.opusermanagement.ModelSwitchPage;
-import com.legion.pages.core.opusermanagement.OpsPortalNavigationPage;
+import com.legion.pages.core.OpCommons.RightHeaderBarPage;
+import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -27,7 +27,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         this.createDriver((String) params[0], "83", "Window");
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String) params[1], (String) params[2], (String) params[3]);
-        ModelSwitchPage modelSwitchPage = new ModelSwitchPage();
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
         modelSwitchPage.switchToOpsPortal();
     }
 

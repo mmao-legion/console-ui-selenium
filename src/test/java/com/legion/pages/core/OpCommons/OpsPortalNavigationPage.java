@@ -1,4 +1,4 @@
-package com.legion.pages.core.opusermanagement;
+package com.legion.pages.core.OpCommons;
 
 import com.legion.pages.BasePage;
 import org.openqa.selenium.WebElement;

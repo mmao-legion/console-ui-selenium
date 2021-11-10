@@ -393,7 +393,12 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         scrollToElement(addButtonForServiceLever);
         addButtonForServiceLever.click();
         firstServiceLeverInput.get(1).clear();
-        firstServiceLeverInput.get(1).sendKeys("24");
+        firstServiceLeverInput.get(1).sendKeys("120");
+    }
+
+    public void setMaxAvailableHours(String maxAvailableHours){
+        firstServiceLeverInput.get(3).clear();
+        firstServiceLeverInput.get(1).sendKeys(maxAvailableHours);
     }
 
     public void addSecondServiceLever() {
@@ -402,7 +407,7 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         secondServiceLeverInput.get(0).clear();
         secondServiceLeverInput.get(0).sendKeys("5");
         secondServiceLeverInput.get(1).clear();
-        secondServiceLeverInput.get(1).sendKeys("36");
+        secondServiceLeverInput.get(1).sendKeys("240");
     }
 
     public int getServiceLeverNum() {
