@@ -258,22 +258,44 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		boolean existRe=false;
 		waitForSeconds(30);
 		if (isElementEnabled(searchInput, 8)) {
+			int retryTime = 0;
 			searchInput.sendKeys(locationName);
 			searchInput.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
-			for(WebElement es:locationsName) {
-				if (es.getText().trim().equalsIgnoreCase(locationName.trim())) {
-					existRe = true;
+			existRe = canSearchOutLocation(locationName);
+			while (!existRe) {
+				searchInput.sendKeys(Keys.ENTER);
+				retryTime = retryTime + 1;
+				existRe = canSearchOutLocation(locationName);
+				if (retryTime == 5) {
+					SimpleUtils.fail("There are no locations that match your criteria. ", false);
 					break;
 				}
 			}
-				if(existRe)
-					SimpleUtils.pass("the location is searched");
-				else
-					SimpleUtils.fail("There are no locations that match your criteria. ", false);
+			if(existRe)
+				SimpleUtils.pass("the location is searched");
+			else
+				SimpleUtils.fail("There are no locations that match your criteria. ", false);
 		} else
 			SimpleUtils.fail("search filed load failed", false);
 		return existRe;
+	}
+
+	private boolean canSearchOutLocation(String locationName) {
+		boolean isFound = false;
+		try {
+			if (areListElementVisible(locationsName, 30)) {
+				for (WebElement es : locationsName) {
+					if (es.getText().trim().equalsIgnoreCase(locationName.trim())) {
+						isFound = true;
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			isFound = false;
+		}
+		return isFound;
 	}
 
 	@Override
@@ -324,7 +346,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchInputInSelectALocation.sendKeys(searchCharactor);
 			searchInputInSelectALocation.sendKeys(Keys.ENTER);
 			waitForSeconds(10);
-			if (locationRowsInSelectLocation.size() > 0) {
+			if (areListElementVisible(locationRowsInSelectLocation, 30) && locationRowsInSelectLocation.size() > 0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"radio\"]"));
 				click(firstRow);
 				click(okBtnInSelectLocation);
@@ -1178,7 +1200,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 
-	@FindBy(css = "lg-button[label='Ok']")
+	@FindBy(css = "lg-button[label='OK']")
 	private WebElement okBtnInLocationGroupConfirmPage;
 
 	@Override
@@ -1613,10 +1635,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchInputInSelectALocation.sendKeys(searchChara);
 			searchInputInSelectALocation.sendKeys(Keys.ENTER);
 			waitForSeconds(5);
-			if (locationRowsInSelectLocation.size() > 0) {
+			if (areListElementVisible(locationRowsInSelectLocation, 15) && locationRowsInSelectLocation.size() > 0) {
 				for (int i = 0; i < index; i++) {
 					WebElement firstRow = locationRowsInSelectLocation.get(i).findElement(By.cssSelector("input[type=\"checkbox\"]"));
-					click(firstRow);
+					clickTheElement(firstRow);
 				}
 				click(okBtnInSelectLocation);
 			} else

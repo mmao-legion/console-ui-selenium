@@ -49,6 +49,34 @@ public class ConfigurationTest extends TestBase {
 
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Dynamic Group Function->In Template Association")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDynamicGroupFunctionAsAInternalAdminForAssociation(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Operating Hours";
+            String mode = "edit";
+            String templateName = "LizzyUsingDynamicCheckNoDelete";
+            String dynamicGpName = "LZautoTest";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.dynamicGroupDialogUICheck(dynamicGpName);
+            //search the dynamic group to delete
+            configurationPage.deleteOneDynamicGroup(dynamicGpName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify open each type template")

@@ -153,7 +153,9 @@ public class LocationsTest extends TestBase {
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
             //add one mock location，first create one new location and then to mock that -to avoid duplication
-            locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);;
+            locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);
+            // Wait for some seconds so that the newly created location can be searched out
+            locationsPage.searchNewLocation(locationName);
             locationsPage.addNewMockLocationWithAllFields(locationName,index);
             //search created location
             if (locationsPage.searchNewLocation(locationName+"-MOCK")) {
