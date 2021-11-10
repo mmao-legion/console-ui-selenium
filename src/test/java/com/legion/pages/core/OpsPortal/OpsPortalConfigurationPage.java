@@ -5,6 +5,7 @@ import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
@@ -2254,12 +2255,19 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement templateDetailsBTN;
 	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(2)")
 	private WebElement templateExternalAttributesBTN;
-	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(3)")
+//	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(3)")
+	@FindBy(css="nav.lg-tabs__nav>div:nth-last-child(2)")
 	private WebElement templateAssociationBTN;
+	@FindBy(css="lg-button[label=\"Remove\"]")
+	private WebElement dynamicGroupRemoveBTN;
+	@FindBy(css="modal[modal-title=\"Remove Dynamic Group\"] lg-button[label=\"Remove\"]")
+	private WebElement dynamicGroupRemoveBTNOnDialog;
+
 
 	public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception{
 		if(isElementEnabled(templateAssociationBTN,5)){
 			clickTheElement(templateAssociationBTN);
+			waitForSeconds(4);
 			if(isElementEnabled(searchAssociateFiled,2)){
 				SimpleUtils.pass("Click Association Tab successfully!");
 			}else {
@@ -2272,15 +2280,33 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "table.templateAssociation_table tr[ng-repeat=\"group in filterdynamicGroups\"]")
 	private List<WebElement> templateAssociationRows;
 
-	public void searchOneDynamicGroup(String dynamicGroupName) throws Exception{
+	public boolean searchOneDynamicGroup(String dynamicGroupName) throws Exception{
+		boolean dataExist=false;
 		clickOnAssociationTabOnTemplateDetailsPage();
 		searchAssociateFiled.sendKeys(dynamicGroupName);
 		waitForSeconds(5);
-		if(templateAssociationRows.size()!=0){
+		if(templateAssociationRows.size()>0){
+			dataExist=true;
 			SimpleUtils.pass("User can search out association named: " + dynamicGroupName);
 		}else {
-			SimpleUtils.fail("User can NOT search out association named: \" + dynamicGroupName",false);
+			SimpleUtils.fail("User can NOT search out association named: \" + dynamicGroupName",true);
 		}
+		return dataExist;
+	}
+
+    @Override
+	public void deleteOneDynamicGroup(String dyname) throws Exception{
+		searchOneDynamicGroup(dyname);
+		//remove the dynamic group
+		clickTheElement(dynamicGroupRemoveBTN);
+		waitForSeconds(2);
+        clickTheElement(dynamicGroupRemoveBTNOnDialog);
+		waitForSeconds(1);
+        if(!searchOneDynamicGroup(dyname))
+        	SimpleUtils.pass("Dynamic group removed successfully");
+        else
+        	SimpleUtils.fail("Dynamic group removed failed",false);
+
 	}
 
 	@FindBy(css="lg-tab[tab-title=\"Association\"] lg-button[label=\"Save\"] button")
@@ -2306,10 +2332,28 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement manageDynamicGroupPopupTitle;
 	@FindBy(css="input-field[label=\"Group Name\"] input")
 	private WebElement dynamicGroupName;
+	@FindBy(css="i.fa-exclamation-circle")
+	private WebElement dynamicGroupNameRequiredMsg;
 	@FindBy(css="input-field[value=\"$ctrl.dynamicGroup.description\"] input")
 	private WebElement dynamicGroupDescription;
 	@FindBy(css="input-field[type=\"select\"] select")
 	private WebElement dynamicGroupCriteria;
+	@FindBy(css="input-field[value=\"$ctrl.displayValue\"]")
+	private WebElement dynamicGroupCriteriaValue;
+	@FindBy(css="input[placeholder=\"Search \"]")
+	private WebElement dynamicGroupCriteriaSearchInput;
+	@FindBy(css="input-field[type=\"checkbox\"]")
+	private List<WebElement> dynamicGroupCriteriaResults;
+	@FindBy(css="div.add-label-button")
+	private WebElement dynamicGroupCriteriaAddIcon;
+	@FindBy(css="lg-button[label=\"Add More\"]")
+	private WebElement dynamicGroupCriteriaAddMoreLink;
+	@FindBy(css="i.deleteRule")
+	private WebElement dynamicGroupCriteriaAddDelete;
+	@FindBy(css="lg-button[label=\"Test\"]")
+	private WebElement dynamicGroupTestButton;
+	@FindBy(css="span.testInfo")
+	private WebElement dynamicGroupTestInfo;
 	@FindBy(css="div.CodeMirror textarea")
 	private WebElement formulaTextAreaOfDynamicGroup;
 	@FindBy(css="lg-button[label=\"OK\"]")
@@ -2334,6 +2378,100 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("User failed to clicking add DynamicGroup button!",false);
 		}
 	}
+
+    @Override
+	public void dynamicGroupDialogUICheck(String name) throws Exception{
+		clickOnAssociationTabOnTemplateDetailsPage();
+		if(isElementLoaded(addDynamicGroupButton,5)){
+			SimpleUtils.pass("The "+" icon for adding dynamic group button show as expected");
+			clickTheElement(addDynamicGroupButton);
+			if(manageDynamicGroupPopupTitle.getText().trim().equalsIgnoreCase("Manage Dynamic Group")){
+				SimpleUtils.pass("Dynamic group dialog title show as expected");
+				//check the group name is required
+				if(dynamicGroupName.getAttribute("required").equals("true")){
+					SimpleUtils.pass("Group name is required");
+					//input group name
+					dynamicGroupName.sendKeys(name);
+					//clear group name
+					dynamicGroupName.clear();
+					//get the required message
+					if(isElementLoaded(dynamicGroupNameRequiredMsg)&&dynamicGroupNameRequiredMsg.getText().contains("Group Name is required"))
+						SimpleUtils.pass("group name is required message displayed if not input");
+					dynamicGroupName.sendKeys(name);
+					waitForSeconds(5);
+					//check every criteria options is selectable
+					clickTheElement(dynamicGroupCriteria);
+					waitForSeconds(4);
+					String[] criteriaOps={"Config Type","District","Country","State","City","Location Name",
+							"Location Id","Location Type","UpperField","Custom"};
+					for(String ss:criteriaOps){
+						selectByVisibleText(dynamicGroupCriteria,ss);
+						waitForSeconds(3);
+					}
+					//set a criteria
+					selectByVisibleText(dynamicGroupCriteria,"Config Type");
+					waitForSeconds(3);
+					//set up value
+					clickTheElement(dynamicGroupCriteriaValue);
+					waitForSeconds(2);
+					if(areListElementVisible(dynamicGroupCriteriaResults,5)){
+						SimpleUtils.pass("The current selected Criteria has value options");
+						clickTheElement(dynamicGroupCriteriaResults.get(0));
+						waitForSeconds(3);
+						clickTheElement(dynamicGroupCriteriaAddIcon);
+						//Check the delete icon showed
+						if(isElementLoaded(dynamicGroupCriteriaAddDelete)){
+							clickTheElement(dynamicGroupCriteriaAddDelete);
+							waitForSeconds(2);
+							//check no criteria showed after deleted
+							if(isElementLoaded(dynamicGroupCriteriaAddDelete))
+							  SimpleUtils.fail("The criteria still show after it was deleted!",false);
+							//click add more link
+							clickTheElement(dynamicGroupCriteriaAddMoreLink);
+							waitForSeconds(3);
+							//set a criteria
+							selectByVisibleText(dynamicGroupCriteria,"Country");
+							waitForSeconds(3);
+							//set up value
+							clickTheElement(dynamicGroupCriteriaValue);
+							//input search key words
+							dynamicGroupCriteriaSearchInput.sendKeys("United States");
+							waitForSeconds(2);
+							clickTheElement(dynamicGroupCriteriaResults.get(0));
+							waitForSeconds(2);
+							clickTheElement(dynamicGroupCriteriaAddIcon);
+							//click the test button to chek value
+							clickTheElement(dynamicGroupTestButton);
+							waitForSeconds(3);
+							//get the result
+							if(isElementLoaded(dynamicGroupTestInfo)){
+								SimpleUtils.pass("Get results for the dynamic group");
+								String mappedRes=dynamicGroupTestInfo.getText().split("Location")[0].trim();
+								if(Integer.parseInt(mappedRes)>0)
+									SimpleUtils.pass("Get mapped location for the dynamic group");
+							}
+							else
+								SimpleUtils.fail("No result get for the dynamic group",true);
+							//click save
+							clickTheElement(okButtonOnManageDynamicGroupPopup);
+							waitForSeconds(3);
+						}
+						else
+						   SimpleUtils.fail("The delete criteria icon is not displayed!", false);
+					}
+					else
+						SimpleUtils.fail("The current selected Criteria has no options can be selected",true);
+				}
+				else
+					SimpleUtils.fail("Group name is not required on UI",true);
+			}
+			else
+				SimpleUtils.fail("Dynamic group dialog title is not show as designed!", true);
+		}
+		else
+			SimpleUtils.fail("The "+" icon for adding dynamic group missing!",false);
+	}
+
 
 	@Override
 	public void publishNewTemplate(String templateName,String name,String criteria,String formula) throws Exception{

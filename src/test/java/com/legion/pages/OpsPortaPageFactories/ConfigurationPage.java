@@ -86,7 +86,8 @@ public interface ConfigurationPage {
     public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
     public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) throws Exception;
     public void createDynamicGroup(String name,String criteria,String formula) throws Exception;
-
+    public void dynamicGroupDialogUICheck(String name) throws Exception;
+    public void deleteOneDynamicGroup(String name) throws Exception;
     public void archiveIsClickable() throws Exception;
     public void verifyArchivePopUpShowWellOrNot() throws Exception;
     public void cancelArchiveDeleteWorkWell(String templateName) throws Exception;
