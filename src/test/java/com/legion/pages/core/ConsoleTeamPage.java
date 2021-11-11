@@ -4510,14 +4510,14 @@ private List<WebElement> locationColumn;
 			click(cancelActivateButton);
 			if(isElementLoaded(confirmBtn, 5)) {
 				click(confirmBtn);
-				if (isElementLoaded(popupMessage, 10)) {
-					String actualMessage = popupMessage.getText();
-					if (actualMessage.equals("Successfully cancelled deactivation of Team Member.")) {
-						SimpleUtils.pass("Cancel terminate the Team Member successfully!");
-					} else {
-						SimpleUtils.fail("Failed to activate the Team member", false);
-					}
-				}
+//				if (isElementLoaded(popupMessage, 10)) {
+//					String actualMessage = popupMessage.getText();
+//					if (actualMessage.equals("Successfully cancelled deactivation of Team Member.")) {
+//						SimpleUtils.pass("Cancel terminate the Team Member successfully!");
+//					} else {
+//						SimpleUtils.fail("Failed to activate the Team member", false);
+//					}
+//				}
 			}
 			if (isElementLoaded(deactivateButton, 5)) {
 				SimpleUtils.report("Cancel deactivate successfully! ");

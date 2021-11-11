@@ -838,6 +838,10 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             profileNewUIPage.clickAvailabilityEditButton();
             profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
             profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+            String pendingCount = profileNewUIPage.getCountForStatus("pending").trim();
+            SimpleUtils.assertOnFail("There should have 2 pending Availability Change Requests, but it actual has: "+ pendingCount,
+                    pendingCount.equalsIgnoreCase("2"), false);
+
             //Get the editable week info
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -849,6 +853,9 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             teamPage.goToTeam();
             teamPage.searchAndSelectTeamMemberByName(tmName);
             profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
+            pendingCount = profileNewUIPage.getCountForStatus("pending").trim();
+            SimpleUtils.assertOnFail("There should have 2 pending Availability Change Requests, but it actual has: "+ pendingCount,
+                    pendingCount.equalsIgnoreCase("2"), false);
             profileNewUIPage.clickAvailabilityEditButton();
             SimpleUtils.assertOnFail("The availability cannot be edited alert fail to load! ",
                     profileNewUIPage.isAlertDialogLoaded()
