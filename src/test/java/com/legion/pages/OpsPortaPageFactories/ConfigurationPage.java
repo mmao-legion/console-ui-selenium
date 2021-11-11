@@ -65,7 +65,7 @@ public interface ConfigurationPage {
                                                              List<String> days,String shiftsNumber) throws Exception;
     public void deleteAllScheduleRules() throws Exception;
     public void clickOnSaveButtonOnScheduleRulesListPage() throws Exception;
-    public void searchTemplate(String templateName) throws Exception;
+    public boolean searchTemplate(String templateName) throws Exception;
     public void selectOperatingBufferHours(String option) throws Exception;
     public void setOpeningAndClosingBufferHours (int openingBufferHour, int closingBufferHour) throws Exception;
     public void setScheduleCopyRestrictions(String yesOrNo) throws Exception;
@@ -88,7 +88,11 @@ public interface ConfigurationPage {
     public void createDynamicGroup(String name,String criteria,String formula) throws Exception;
     public void dynamicGroupDialogUICheck(String name) throws Exception;
     public void deleteOneDynamicGroup(String name) throws Exception;
+    public void createTmpAndPublishAndArchive(String type, String tpname,String gpname) throws Exception;
     public void archiveIsClickable() throws Exception;
+    public void saveADraftTemplate() throws Exception;
+    public void editADynamicGroup(String name) throws Exception;
+    public void commitTypeCheck() throws Exception;
     public void verifyArchivePopUpShowWellOrNot() throws Exception;
     public void cancelArchiveDeleteWorkWell(String templateName) throws Exception;
 }
