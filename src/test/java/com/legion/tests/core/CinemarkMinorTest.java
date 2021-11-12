@@ -1822,7 +1822,7 @@ public class CinemarkMinorTest extends TestBase {
             configurationPage.goToUserManagementPage();
             configurationPage.goToDynamicEmployeeGroupPage();
             //delete all dynamic employee group
-            configurationPage.deleteAllDynamicEmployeeGroupsInList();
+            configurationPage.deleteSpecifyDynamicEmployeeGroupsInList("Group-ForAuto");
             //create a User Group for 13 year old minors
             List<String> groupCriteriaList = new ArrayList<>();
             groupCriteriaList.clear();
