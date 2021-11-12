@@ -2326,7 +2326,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			dataExist=true;
 			SimpleUtils.pass("User can search out association named: " + dynamicGroupName);
 		}else {
-			SimpleUtils.fail("User can NOT search out association named: \" + dynamicGroupName",true);
+			SimpleUtils.report("User can NOT search out association named: " + dynamicGroupName);
 		}
 		return dataExist;
 	}
