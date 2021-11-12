@@ -70,7 +70,7 @@
                     <include name="verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin" />
                     <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
                     <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
-                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
+<!--                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" Blocked by SCH-5621/>-->
                     <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
                     <include name="verifyTMFullNameDisplayOnSearchTMRecommendedAndViewProfilePageAsInternalAdmin" />
                     <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
