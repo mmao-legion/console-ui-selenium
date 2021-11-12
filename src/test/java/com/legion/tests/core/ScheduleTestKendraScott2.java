@@ -2713,7 +2713,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Get the info of first shift
 			List<String> shiftInfo = new ArrayList<>();
 			String firstNameOfTM = "";
-			while (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned")) {
+			while (firstNameOfTM.equals("") || firstNameOfTM.equalsIgnoreCase("Open")
+					|| firstNameOfTM.equalsIgnoreCase("Unassigned")) {
 				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				//Search shift by TM names: first name and last name
 				firstNameOfTM = shiftInfo.get(0);
@@ -4675,7 +4676,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		List<String> shiftInfo = new ArrayList<>();
 		String firstNameOfTM = "";
 		int i = 0;
-		while (i < 10 && (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned"))) {
+		while (i < 10 && (firstNameOfTM.equals("") || firstNameOfTM.equalsIgnoreCase("Open")
+				|| firstNameOfTM.equalsIgnoreCase("Unassigned"))) {
 			shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			//Search shift by TM names: first name and last name
 			firstNameOfTM = shiftInfo.get(0);
