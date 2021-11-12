@@ -4535,14 +4535,14 @@ private List<WebElement> locationColumn;
 			click(cancelTerminateButton);
 			if(isElementLoaded(confirmBtn, 5)) {
 				click(confirmBtn);
-				if (isElementLoaded(popupMessage, 10)) {
-					String actualMessage = popupMessage.getText();
-					if (actualMessage.equals("Successfully cancelled removal of Team Member from Roster.")) {
-						SimpleUtils.pass("Cancel terminate the Team Member successfully!");
-					} else {
-						SimpleUtils.fail("Failed to activate the Team member", false);
-					}
-				}
+//				if (isElementLoaded(popupMessage, 10)) {
+//					String actualMessage = popupMessage.getText();
+//					if (actualMessage.equals("Successfully cancelled removal of Team Member from Roster.")) {
+//						SimpleUtils.pass("Cancel terminate the Team Member successfully!");
+//					} else {
+//						SimpleUtils.fail("Failed to activate the Team member", false);
+//					}
+//				}
 			}
 			if (isElementLoaded(terminateButton, 5)) {
 				SimpleUtils.report("Cancel terminate successfully! ");

@@ -181,10 +181,10 @@
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
                     <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
-<!--                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />  SCH-5054-->
-<!--                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsTeamMember" />  Blocked by SCH-4753-->
-<!--                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsTeamMember" />  Blocked by SCH-4753-->
-<!--                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" /> Blocked by SCH-5054 -->
+                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
+                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsTeamMember" />
+                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsTeamMember" />
+                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
                     <include name="verifyManagerCannotEditTheAvailabilityWhenTMHasPendingRequestAsTeamMember" />
                 </methods>
             </class>
