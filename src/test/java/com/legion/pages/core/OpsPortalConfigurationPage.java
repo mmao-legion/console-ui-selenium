@@ -2824,6 +2824,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "lg-button[label=\"Remove\"]")
 	private WebElement removeBtnInRemoveDGPopup;
 
+	@FindBy(css = "lg-search input")
+	private WebElement searchDynamicEmployeeGroupsField;
 	@Override
 	public void deleteAllDynamicEmployeeGroupsInList() throws Exception {
 		OpsPortalLocationsPage opsPortalLocationsPage = new OpsPortalLocationsPage();
@@ -2846,6 +2848,30 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	}
 
+
+	@Override
+	public void deleteSpecifyDynamicEmployeeGroupsInList(String groupName) throws Exception {
+		OpsPortalLocationsPage opsPortalLocationsPage = new OpsPortalLocationsPage();
+		if (areListElementVisible(groupRowsInDynamicEmployeeGroupList, 20)&&groupRowsInDynamicEmployeeGroupList.size() > 0) {
+			if (isElementLoaded(searchDynamicEmployeeGroupsField, 5)) {
+				searchDynamicEmployeeGroupsField.clear();
+				searchDynamicEmployeeGroupsField.sendKeys(groupName);
+				int i = 0;
+				while (deleteIconsDynamicEmployeeGroupList.size()>0 && i< 50) {
+					click(deleteIconsDynamicEmployeeGroupList.get(0));
+					if (opsPortalLocationsPage.isRemoveDynamicGroupPopUpShowing()) {
+						click(removeBtnInRemoveDGPopup);
+						displaySuccessMessage();
+					} else
+						SimpleUtils.fail("loRemove dynamic group page load failed ", false);
+					searchDynamicEmployeeGroupsField.clear();
+					searchDynamicEmployeeGroupsField.sendKeys(groupName);
+				}
+			} else
+				SimpleUtils.fail("Search Dynamic Employee Groups Field fail to load! ", false);
+		} else
+			SimpleUtils.report("There is no groups in group list! ");
+	}
 
 	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
 	private WebElement addDynamicGroupBtn;

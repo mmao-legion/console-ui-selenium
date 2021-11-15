@@ -102,4 +102,5 @@ public interface ConfigurationPage {
     public void createNewDynamicEmployeeGroup(String groupTitle, String description, String groupLabels, List<String> groupCriteria) throws Exception;
     public void archiveOrDeleteAllTemplates() throws Exception;
     public void clickOnTemplateDetailTab() throws Exception;
+    public void deleteSpecifyDynamicEmployeeGroupsInList(String groupName) throws Exception;
 }
