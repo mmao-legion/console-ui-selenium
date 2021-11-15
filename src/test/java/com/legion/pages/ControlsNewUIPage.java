@@ -317,4 +317,7 @@ public interface ControlsNewUIPage {
 	public void turnOnOrOffSpecificPermissionForDifferentRole(String rolePermission, String section, String permission, String action) throws Exception;
 	public void setDaypart(String dayPart, String startTime, String endTime) throws Exception;
 	public String getApplyLaborBudgetToSchedulesActiveBtnLabel() throws Exception;
+	public void turnOnOrTurnOffSpreadOfHoursToggle(boolean action) throws Exception;
+	public void editSpreadOfHoursPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception;
+	public void verifyCloseSplitShiftPremiumDialogButton () throws Exception;
 }

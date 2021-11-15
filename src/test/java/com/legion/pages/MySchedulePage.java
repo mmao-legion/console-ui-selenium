@@ -68,4 +68,5 @@ public interface MySchedulePage {
     void validateInfoIconClickable() throws Exception;
     void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
     public void clickCloseDialogButton () throws Exception;
+    public void verifyClickAgreeBtnOnClaimShiftOfferWithMessage(String expectedMessage) throws Exception;
 }

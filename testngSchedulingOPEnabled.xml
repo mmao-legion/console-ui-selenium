@@ -297,4 +297,19 @@
             </class>
         </classes>
     </test>
+
+    <test name="Split And Spread Test">
+        <classes>
+            <class name="com.legion.tests.core.SplitAndSpreadTest">
+                <methods>
+                    <include name="verifySpreadOfHoursCanBeConfiguredAsInternalAdmin" />
+                    <include name="verifySpreadOfHoursViolationWhenSearchTMAsInternalAdmin" />
+                    <include name="verifySpreadOfHoursViolationWhenEditShiftTimeAsInternalAdmin" />
+                    <include name="verifySpreadOfHoursViolationWhenDraggingTheAvatarToChangeTheAssignmentAsInternalAdmin" />
+                    <include name="verifySpreadOfHoursViolationWhenDraggingTheShiftToAnotherDayAsInternalAdmin" />
+                    <include name="verifyOpenShiftWithSpreadOfHoursViolationCannotBeClaimedAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

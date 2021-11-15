@@ -781,8 +781,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
             locationsPage.clickOnLocationInLocationResult(location);
             locationsPage.clickOnConfigurationTabOfLocation();
             HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-            OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-//            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad("Schedule Collaboration");

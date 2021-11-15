@@ -2071,17 +2071,14 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
 
     @FindBy(css = "[search-results=\"workerSearchResult\"] [ng-class=\"swapStatusClass(worker)\"]")
-    private WebElement tmScheduledStatus;
+    private List<WebElement> tmScheduledStatus;
 
     @Override
     public String getTheMessageOfTMScheduledStatus() throws Exception {
         String messageOfTMScheduledStatus = "";
-        if (isElementLoaded(tmScheduledStatus,5)){
-            if (tmScheduledStatus.getText()!=null && !tmScheduledStatus.getText().equals("")){
-                messageOfTMScheduledStatus = tmScheduledStatus.getText();
-                SimpleUtils.pass("TM scheduled status display as : "+ messageOfTMScheduledStatus);
-            } else {
-                SimpleUtils.fail("TM scheduled status message is empty ", false );
+        if (areListElementVisible(tmScheduledStatus,5)){
+            for (WebElement status : tmScheduledStatus) {
+                messageOfTMScheduledStatus = messageOfTMScheduledStatus + status.getText() + "\n";
             }
         } else {
             SimpleUtils.fail("TM scheduled status is not loaded!", false);
@@ -2471,6 +2468,32 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         } else {
             SimpleUtils.fail("EditShiftNotes is disabled or not available to Click ", false);
         }
+    }
+
+    @FindBy(css = "[ng-if=\"hasBestWorkers()\"] [ng-repeat=\"worker in searchResults\"]")
+    private List<WebElement> recommendedTMs;
+
+    public List<WebElement> getAllRecommendedTMs () {
+        List<WebElement> tmsInRecommendedTab = new ArrayList<>();
+        if (areListElementVisible(recommendedTMs, 10)) {
+            tmsInRecommendedTab = recommendedTMs;
+        } else
+            SimpleUtils.report("There is no TMs in recommended tab! ");
+
+        return tmsInRecommendedTab;
+    }
+
+    public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM) {
+        boolean isTMExist = false;
+        for (WebElement tm: getAllRecommendedTMs()) {
+            String tmFullName = tm.findElement(By.cssSelector(".worker-edit-search-worker-display-name")).getText();
+            if (tmFullName.equalsIgnoreCase(fullNameOfTM)) {
+                isTMExist = true;
+                SimpleUtils.pass("TM: "+ fullNameOfTM+" exists in recommended tab! ");
+                break;
+            }
+        }
+        return isTMExist;
     }
 }
 

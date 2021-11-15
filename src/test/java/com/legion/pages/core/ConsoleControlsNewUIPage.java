@@ -6514,4 +6514,132 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		click(allDayCheckBox);
         click(saveBtnWhenEditRegular);
 	}
+
+
+	@FindBy(css = "[form-title=\"Spread of Hours\"]")
+	private WebElement spreadOfHoursSection;
+	@FindBy(css = "[form-title=\"Spread of Hours\"] [label=\"Edit\"]")
+	private WebElement spreadOfHoursEditBtn;
+	@FindBy(css = ".modal-dialog")
+	private WebElement spreadOfHoursDialog;
+	@Override
+	public void turnOnOrTurnOffSpreadOfHoursToggle(boolean action) throws Exception {
+		String content = getSpreadOfHoursContent();
+		if (isElementLoaded(spreadOfHoursSection, 10)
+				&&spreadOfHoursSection.findElement(By.cssSelector(".info")).getText().equalsIgnoreCase("Spread Of Hours")
+				&&content.contains("An employee will receive a ")
+				&&content.contains(" hour premium if the total time from the beginning and end of the work day is greater than ")
+				&&content.contains(" hours.")){
+			if (isElementLoaded(spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+				if (action && spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+					scrollToElement(spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input__toggle")));
+					clickTheElement(spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Toggle is turned on!");
+				} else if (!action && !spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+					clickTheElement(spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Toggle is turned off!");
+				} else {
+					SimpleUtils.pass("Toggle status is expected!");
+				}
+			} else {
+				SimpleUtils.fail("Toggle fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Spread Of Hours section fail to load!", false);
+		}
+	}
+
+	public String getSpreadOfHoursContent() throws Exception{
+		if (isElementLoaded(spreadOfHoursSection, 10)){
+			return spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input__text")).getText();
+		}
+		return "";
+	}
+
+
+	@Override
+	public void editSpreadOfHoursPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception {
+		if (isElementLoaded(spreadOfHoursEditBtn, 5)){
+			String contentBefore = getSpreadOfHoursContent();
+			clickTheElement(spreadOfHoursEditBtn);
+			if (isElementLoaded(spreadOfHoursDialog, 10)){
+				//check the title.
+				if (spreadOfHoursDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Spread Shift Premium")){
+					SimpleUtils.pass("Dialog title is expected!");
+				} else {
+					SimpleUtils.fail("Dialog title is not correct", false);
+				}
+				//Check setting content.
+				if(spreadOfHoursDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("An employee will receive a")
+						&&spreadOfHoursDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("hour premium if the total time from the beginning and end of the work day is greater than")
+						&&spreadOfHoursDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("hours.")){
+					SimpleUtils.pass("Setting content in the dialog is expected!");
+				} else {
+					SimpleUtils.fail("Setting content is not expected!", false);
+				}
+				//edit the content, input the parameters.
+				if (spreadOfHoursDialog.findElements(By.cssSelector("input")).size() == 2){
+					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(0).clear();
+					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(0).sendKeys(numOfPremiumHrs);
+					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(1).clear();
+					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(1).sendKeys(greaterThan);
+				} else {
+					SimpleUtils.fail("inputs are not shown as expected!", false);
+				}
+				//save or cancel.
+				if (isElementLoaded(spreadOfHoursDialog.findElement(By.cssSelector("[label=\"Cancel\"]")), 5)
+						&&isElementLoaded(spreadOfHoursDialog.findElement(By.cssSelector("[label=\"Save\"]")), 5)){
+					if (saveOrNot){
+						clickTheElement(spreadOfHoursDialog.findElement(By.cssSelector("[label=\"Save\"] button")));
+						SimpleUtils.assertOnFail("Setting is not saved successfully!", getSpreadOfHoursContent().contains(numOfPremiumHrs)&&getSpreadOfHoursContent().contains(greaterThan), false);
+					} else {
+						clickTheElement(spreadOfHoursDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
+						SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getSpreadOfHoursContent()), false);
+					}
+				} else {
+					SimpleUtils.fail("Save or Cancel button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.fail("Spread Of Hours dialog fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit Spread Of Hours button is not loaded!", false);
+		}
+	}
+
+
+	@FindBy(css = "lg-close.dismiss")
+	private WebElement closeButtonOnDialog;
+	@Override
+	public void verifyCloseSplitShiftPremiumDialogButton () throws Exception {
+		if (isElementLoaded(spreadOfHoursEditBtn, 5)){
+			String contentBefore = getSpreadOfHoursContent();
+			clickTheElement(spreadOfHoursEditBtn);
+			if (isElementLoaded(spreadOfHoursDialog, 10)){
+
+				//edit the content, input the parameters.
+				if (spreadOfHoursDialog.findElements(By.cssSelector("input")).size() == 2){
+					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(0).clear();
+					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(0).sendKeys("0");
+					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(1).clear();
+					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(1).sendKeys("0");
+				} else {
+					SimpleUtils.fail("inputs are not shown as expected!", false);
+				}
+				//click X button on the dialog
+				if (isElementLoaded(closeButtonOnDialog, 5)){
+					clickTheElement(closeButtonOnDialog);
+					SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getSpreadOfHoursContent()), false);
+				} else {
+					SimpleUtils.fail("Save or Cancel button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.fail("Spread Of Hours dialog fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit Spread Of Hours button is not loaded!", false);
+		}
+	}
 }
