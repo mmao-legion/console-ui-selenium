@@ -11,7 +11,6 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
-import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
@@ -21,6 +20,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SplitAndSpreadTest extends TestBase {
 
@@ -53,8 +54,303 @@ public class SplitAndSpreadTest extends TestBase {
         controlsNewUIPage.clickOnControlsConsoleMenu();
         controlsNewUIPage.clickOnControlsComplianceSection();
         controlsNewUIPage.turnOnOrTurnOffSplitShiftToggle(true);
-        controlsNewUIPage.editSplitShiftPremium("2", "30", false);
-        controlsNewUIPage.editSplitShiftPremium("2", "30", true);
+        controlsNewUIPage.editSplitShiftPremium("1", "60", false);
+        controlsNewUIPage.editSplitShiftPremium("1", "60", true);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify Will trigger Split Shift violation when search TM")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySplitShiftViolationWhenSearchTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+        // Navigate to a week
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        // create the schedule and pick up roles and employee.
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        createSchedulePage.createScheduleForNonDGFlowNewUI();
+        scheduleMainPage.clickOnFilterBtn();
+        scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+        List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+        String firstNameOfTM1 = shiftInfo.get(0);
+        String workRoleOfTM1 = shiftInfo.get(4);
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleMainPage.saveSchedule();
+
+        //add new shift and assign TM.
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.selectWorkRole(workRoleOfTM1);
+        newShiftPage.moveSliderAtCertainPoint("10",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("8",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
+
+
+        //add new one shift and assign TM to check warning message.
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.selectWorkRole(workRoleOfTM1);
+        newShiftPage.moveSliderAtCertainPoint("1",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("12",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+        SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("will trigger split shift"), false);
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
+        //verify split shift violation after saving.
+        scheduleMainPage.clickOnOpenSearchBoxButton();
+        scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
+        List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
+        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
+
+        //verify split shift violation after publishing.
+        complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
+        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify \"Split Shift\" violation will show on the second/third shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySplitShiftViolationWillShowOnTheSecondShiftAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+        // Navigate to a week
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        // create the schedule and pick up roles and employee.
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        createSchedulePage.createScheduleForNonDGFlowNewUI();
+        scheduleMainPage.clickOnFilterBtn();
+        scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+        List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+        String firstNameOfTM1 = shiftInfo.get(0);
+        String workRoleOfTM1 = shiftInfo.get(4);
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleMainPage.saveSchedule();
+
+        //add 2 new shift and assign TM.
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.selectWorkRole(workRoleOfTM1);
+        newShiftPage.moveSliderAtCertainPoint("10",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("8",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.clickOnOfferOrAssignBtn();
+
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.selectWorkRole(workRoleOfTM1);
+        newShiftPage.moveSliderAtCertainPoint("1",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("12",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
+
+
+        //add new one shift and assign TM to check warning message.
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.selectWorkRole(workRoleOfTM1);
+        newShiftPage.moveSliderAtCertainPoint("4",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("3",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+        SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("will trigger split shift"), false);
+        shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
+        if(newShiftPage.ifWarningModeDisplay()){
+            String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+            if (warningMessage.contains("will incur split shifts")){
+                SimpleUtils.pass("Split shifts warning message displays");
+            } else {
+                SimpleUtils.fail("There is no split shifts warning message displaying", false);
+            }
+            shiftOperatePage.clickOnAssignAnywayButton();
+        } else {
+            SimpleUtils.fail("There is no split shifts warning modal displaying!",false);
+        }
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
+        //verify split shift violation on the second and the third shifts after saving.
+        scheduleMainPage.clickOnOpenSearchBoxButton();
+        scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
+        List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
+        SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift"), false);
+        complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
+        SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift"), false);
+        complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(2));
+        SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift"), false);
+
+        //verify split shift on the second and the third shifts violation after publishing.
+        complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
+        SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift"), false);
+        complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
+        SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift"), false);
+        complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(2));
+        SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift"), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify \"This will trigger a split shift\" warning when dragging the avatar to change the assignment")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySplitShiftViolationWhenDragDropToChangeAssignmentAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+        // Navigate to a week
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        // create the schedule and pick up roles and employee.
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (isWeekGenerated){
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        createSchedulePage.createScheduleForNonDGFlowNewUI();
+        scheduleMainPage.clickOnFilterBtn();
+        scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+        List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+        String firstNameOfTM1 = shiftInfo.get(0);
+        String workRoleOfTM1 = shiftInfo.get(4);
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleMainPage.saveSchedule();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+        String firstNameOfTM2 = shiftInfo.get(0);
+        scheduleMainPage.clickOnFilterBtn();
+        scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+        scheduleMainPage.saveSchedule();
+
+        //add 2 new shift which interval time is more than 1 hour.
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        //The first shift.
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.selectWorkRole(workRoleOfTM1);
+        newShiftPage.clearAllSelectedDays();
+        newShiftPage.selectDaysByIndex(0,0,0);
+        newShiftPage.moveSliderAtCertainPoint("10",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("8",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.clickOnOfferOrAssignBtn();
+
+        //The second shift(open shift).
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.selectWorkRole(workRoleOfTM1);
+        newShiftPage.clearAllSelectedDays();
+        newShiftPage.selectDaysByIndex(0,0,0);
+        newShiftPage.moveSliderAtCertainPoint("1",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("12",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchTeamMemberByName(firstNameOfTM2);
+        newShiftPage.clickOnOfferOrAssignBtn();
+
+
+        //add new one shift in another day for the TM.
+        //The third shift.
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.selectWorkRole(workRoleOfTM1);
+        newShiftPage.clearAllSelectedDays();
+        newShiftPage.selectDaysByIndex(1,1,1);
+        newShiftPage.moveSliderAtCertainPoint("11",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("8",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
+
+
+        //Drag the third one and drop it the second one to change assignment.
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(1, firstNameOfTM1, 0, firstNameOfTM2);
+        String expectedViolationMessage ="split shift";
+        SimpleUtils.assertOnFail("violation warning message is not expected!", scheduleShiftTablePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedViolationMessage, "swap"),true);
+        List<String> swapData = scheduleShiftTablePage.getShiftSwapDataFromConfirmPage("swap");
+        scheduleShiftTablePage.selectSwapOrAssignOption("swap");
+        scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+        mySchedulePage.verifyShiftsAreSwapped(swapData);
+
+        //verify split shift violation after saving.
+        scheduleMainPage.saveSchedule();
+        scheduleMainPage.clickOnOpenSearchBoxButton();
+        scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
+        List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
+        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
+
+        //verify split shift violation after publishing.
+        complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
+        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
     }
 
     @Automated(automated = "Automated")
