@@ -100,4 +100,5 @@ public interface ShiftOperatePage {
     public void addShiftNotesToTextarea(String notes) throws Exception;
     public String getShiftInfoInEditShiftDialog() throws Exception;
     public void clickOnEditShiftNotesOption() throws Exception;
+    public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM);
 }

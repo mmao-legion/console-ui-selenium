@@ -656,6 +656,15 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         }
     }
 
+    @Override
+    public void verifyClickAgreeBtnOnClaimShiftOfferWithMessage(String expectedMessage) throws Exception {
+        if (isElementLoaded(agreeClaimBtn, 5)) {
+            click(agreeClaimBtn);
+            verifyThePopupMessageOnTop(expectedMessage);
+        }else {
+            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
+        }
+    }
 
     @Override
     public void verifyTheColorOfCancelClaimRequest(String cancelClaim) throws Exception {
