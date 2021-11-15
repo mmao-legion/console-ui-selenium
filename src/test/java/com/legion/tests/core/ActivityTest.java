@@ -204,7 +204,7 @@ public class ActivityTest extends TestBase {
         if (dashboardPage.isSwitchToEmployeeViewPresent()) {
             dashboardPage.clickOnSwitchToEmployeeView();
         }
-        dashboardPage.goToTodayForNewUI();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         scheduleCommonPage.navigateToNextWeek();
         scheduleCommonPage.navigateToNextWeek();
@@ -532,7 +532,7 @@ public class ActivityTest extends TestBase {
             if (dashboardPage.isSwitchToEmployeeViewPresent()) {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
-            dashboardPage.goToTodayForNewUI();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();

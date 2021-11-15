@@ -33,6 +33,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @FindBy(css = "[ng-click=\"openSchedule()\"]")
     private WebElement goToTodayScheduleButton;
 
+    @FindBy(css = ".sc-hgkClB.hrveTm")
+	private WebElement viewMyScheduleBtn;
+
     @FindBy(css = "[ng-class = 'subNavigationViewLinkActiveClass(view)']")
     private WebElement goToTodayScheduleView;
 
@@ -59,6 +62,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
     @FindBy(className = "home-dashboard")
     private WebElement dashboardSection;
+
+    @FindBy(className = "react-dashboard")
+	private WebElement tmDashboradSection;
 
     @FindBy(className = "console-navigation-item")
     private List<WebElement> consoleNavigationMenuItems; //fiona will using
@@ -195,17 +201,17 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @Override
     public SchedulePage goToTodayForNewUI() throws Exception {
         waitForPageLoaded(getDriver());
-        checkElementVisibility(goToTodayScheduleButton);
+        checkElementVisibility(viewMyScheduleBtn);
         SimpleUtils.pass("Dashboard Page Loaded Successfully!");
         activeConsoleName = scheduleConsoleName.getText();
-        clickTheElement(goToTodayScheduleButton);
+        clickTheElement(viewMyScheduleBtn);
         return new ConsoleScheduleNewUIPage();
     }
     
 
     public Boolean isDashboardPageLoaded() throws Exception
     {
-    	if(isElementLoaded(dashboardSection, 10))
+    	if(isElementLoaded(dashboardSection, 10) || isElementEnabled(tmDashboradSection, 10))
     	{
     		SimpleUtils.pass("Dashboard loaded successfully");
     		return true;
