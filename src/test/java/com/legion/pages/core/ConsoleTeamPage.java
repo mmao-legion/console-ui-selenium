@@ -4792,7 +4792,7 @@ private List<WebElement> locationColumn;
 			clickTheElement(theNonSummerDaysInTheLastSchoolMonth.get(theNonSummerDaysInTheLastSchoolMonth.size() - 1));
 			SimpleUtils.pass("Set the non-school week successfully! ");
 		} else {
-			SimpleUtils.fail("The school days fail to load! ", false);
+			SimpleUtils.report("The school days fail to load! ");
 		}
 	}
 

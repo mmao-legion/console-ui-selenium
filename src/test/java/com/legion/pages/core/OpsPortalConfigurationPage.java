@@ -218,7 +218,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			click(configurationTab);
 			waitForSeconds(20);
 			if(categoryOfTemplateList.size()!=0){
-				checkAllTemplateCards();
+//				checkAllTemplateCards();
 				SimpleUtils.pass("User can click configuration tab successfully");
 				}else{
 				SimpleUtils.fail("User can't click configuration tab",false);
