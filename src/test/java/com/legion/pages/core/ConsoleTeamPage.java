@@ -966,10 +966,15 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		return timeOffDays;
 	}
 
+	@FindBy(className="roster-header")
+	private WebElement rosterHeaderElement;
 	@Override
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
 		waitUntilElementIsInVisible(teamTabLoadingIcon);
-		if(areListElementVisible(teamMembers, 60)){
+		if(isElementLoaded(rosterLoading, 60)
+				&& areListElementVisible(TeamSubTabsElement, 60)
+				&& isElementLoaded(rosterHeaderElement, 60)
+				&& isElementLoaded(rosterBodyElement, 60)){
 			SimpleUtils.pass("Team Page is Loaded Successfully!");
 		}else{
 			SimpleUtils.fail("Team Page isn't Loaded Successfully", false);
