@@ -118,17 +118,19 @@ public class ActivityTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
-            // Deleting the existing shifts for swap team members
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
-            shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
-            scheduleMainPage.saveSchedule();
-            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
-            // Add the new shifts for swap team members
-            Thread.sleep(5000);
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            newShiftPage.addNewShiftsByNames(swapCoverNames, workRoleName);
-            scheduleMainPage.saveSchedule();
+            if (!getEnterprise().equalsIgnoreCase(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                // Deleting the existing shifts for swap team members
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
+                shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
+                scheduleMainPage.saveSchedule();
+                shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+                // Add the new shifts for swap team members
+                Thread.sleep(5000);
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                newShiftPage.addNewShiftsByNames(swapCoverNames, workRoleName);
+                scheduleMainPage.saveSchedule();
+            }
             createSchedulePage.publishActiveSchedule();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
