@@ -29,6 +29,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css = ".sch-day-view-shift")
     private List<WebElement> dayViewAvailableShifts;
 
+    @FindBy(css = "[ng-repeat=\"shift in shiftGroup\"]")
+    private List<WebElement> dayViewShiftGroups;
+
     @FindBy(css = "div.sch-worker-popover")
     private WebElement shiftPopover;
 
@@ -869,6 +872,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if(isElementLoaded(updateButtonInEditShiftTimeWindow,5))
         {
             click(updateButtonInEditShiftTimeWindow);
+            try {
+                if (isElementLoaded(okButton, 10)) {
+                    clickTheElement(okButton);
+                }
+            } catch (Exception e) {
+                // Do nothing
+            }
             SimpleUtils.pass("Clicked on Update Edit Shift Time button");
         }
         else
@@ -2360,18 +2370,35 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @Override
     public void verifySpecificShiftHaveEditIcon(int index) throws Exception {
-        if (areListElementVisible(shiftsWeekView, 5) && shiftsWeekView.size() > index) {
-            try {
-                if (isElementLoaded(shiftsWeekView.get(index).findElement(By.cssSelector("[src*=edited-shift-week]")))) {
-                    SimpleUtils.pass("The shift with index: " + index + " has edited - pencil icon!");
-                } else {
-                    SimpleUtils.fail("The shift with index: " + index + " doesn't have edited - pencil icon!", false);
+        try {
+            boolean isFound = false;
+            if (areListElementVisible(shiftsWeekView, 5) && shiftsWeekView.size() > index) {
+                try {
+                    if (isElementLoaded(shiftsWeekView.get(index).findElement(By.cssSelector("[src*=edited-shift-week]")))) {
+                        isFound = true;
+                        SimpleUtils.pass("The shift with index: " + index + " has edited - pencil icon!");
+                    }
+                } catch (Exception e) {
+                    isFound = false;
                 }
-            } catch (Exception e) {
-                SimpleUtils.fail("The shift with index: " + index + " doesn't have edited - pencil icon!", false);
             }
-        } else {
-            SimpleUtils.fail("Week view shifts failed to load!", false);
+            if (!isFound) {
+                try {
+                    if (areListElementVisible(dayViewShiftGroups, 5) && dayViewShiftGroups.size() > index) {
+                        if (isElementLoaded(dayViewShiftGroups.get(index).findElement(By.cssSelector(".sch-day-view-right-gutter-img.edit")))) {
+                            isFound = true;
+                            SimpleUtils.pass("The shift with index: " + index + " has edited icon in day view!");
+                        }
+                    }
+                } catch (Exception e) {
+                    isFound = false;
+                }
+            }
+            if (!isFound) {
+                SimpleUtils.fail("The shift with index: " + index + " doesn't have edited/pencil icon!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("The shift with index: " + index + " doesn't have edited/pencil icon!", false);
         }
     }
 

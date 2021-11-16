@@ -312,4 +312,17 @@
             </class>
         </classes>
     </test>
+
+    <test name="Meal And Rest Breaks Test">
+        <classes>
+            <class name="com.legion.tests.core.MealAndRestBreakTest">
+                <methods>
+                    <include name="verifyEditBreaksOptionIsAvailableAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfEditBreaksWeekViewAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
 </suite> <!-- Suite -->
