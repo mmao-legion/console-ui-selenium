@@ -168,6 +168,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 	@Override
 	public void addLocationBtnIsClickable() {
+		scrollToElement(addLocationBtn);
 		click(addLocationBtn);
 		if (isElementEnabled(selectALocationTitle,5)) {
 			SimpleUtils.pass("Add location button is clickable and can enter select location page");
@@ -209,6 +210,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	@Override
 	public void iCanSelectLocationsViaDynamicGroupInAddLocation(String searchText) throws Exception {
 		if (isElementEnabled(selectALocationTitle,5)) {
+			scrollToElement(dynamicGroupTabAftClickAddLocationBtn);
 			click(dynamicGroupTabAftClickAddLocationBtn);
 			if (groupRows.size()>0) {
 				for (WebElement eachRow: groupRows) {
@@ -216,6 +218,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 					WebElement checkBoxOfEachGroup = eachRow.findElement(By.cssSelector("td>div>input-field"));
 					if (groupNameInEachRow.getText().equalsIgnoreCase(searchText) ||groupNameInEachRow.getText().contains(searchText)) {
 						click(checkBoxOfEachGroup);
+						scrollToElement(okBtnInCreateNewJobPage);
 						click(okBtnInCreateNewJobPage);
 						break;
 					}else
