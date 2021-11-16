@@ -633,28 +633,28 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         }
     }
 
+//
+//    @Override
+//    public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception {
+//        if (isElementLoaded(agreeClaimBtn, 5)) {
+//            click(agreeClaimBtn);
+//            String expectedMessage = "Your claim request has been received and sent for approval";
+//            verifyThePopupMessageOnTop(expectedMessage);
+//        }else {
+//            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
+//        }
+//    }
 
-    @Override
-    public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception {
-        if (isElementLoaded(agreeClaimBtn, 5)) {
-            click(agreeClaimBtn);
-            String expectedMessage = "Your claim request has been received and sent for approval";
-            verifyThePopupMessageOnTop(expectedMessage);
-        }else {
-            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
-        }
-    }
-
-    @Override
-    public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception {
-        if (isElementLoaded(agreeClaimBtn, 5)) {
-            click(agreeClaimBtn);
-            String expectedMessage = "Success! This shift is yours, and has been added to your schedule.";
-            verifyThePopupMessageOnTop(expectedMessage);
-        }else {
-            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
-        }
-    }
+//    @Override
+//    public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception {
+//        if (isElementLoaded(agreeClaimBtn, 5)) {
+//            click(agreeClaimBtn);
+//            String expectedMessage = "Success! This shift is yours, and has been added to your schedule.";
+//            verifyThePopupMessageOnTop(expectedMessage);
+//        }else {
+//            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
+//        }
+//    }
 
     @Override
     public void verifyClickAgreeBtnOnClaimShiftOfferWithMessage(String expectedMessage) throws Exception {

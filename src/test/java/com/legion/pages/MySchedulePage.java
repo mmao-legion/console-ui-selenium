@@ -24,8 +24,8 @@ public interface MySchedulePage {
     public void verifyTheRedirectionOfBackButton() throws Exception;
     public void verifyBackNSubmitBtnLoaded() throws Exception;
     public void verifyClickAcceptSwapButton() throws Exception;
-    public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception;
-    public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception;
+//    public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception;
+//    public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception;
     public void verifyTheColorOfCancelClaimRequest(String cancelClaim) throws Exception;
     public void validateViewShiftsClickable() throws Exception;
     public void verifyComponentsOnSubmitCoverRequest() throws Exception;

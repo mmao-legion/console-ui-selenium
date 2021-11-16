@@ -7,6 +7,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
@@ -1081,7 +1082,7 @@ public class ActivityTest extends TestBase {
             String requestName = "View Offer";
             mySchedulePage.clickTheShiftRequestToClaimShift(requestName, requestUserName);
             // Validate the clickability of I Agree button
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
 
             loginPage.logOut();
 
@@ -1180,7 +1181,7 @@ public class ActivityTest extends TestBase {
             String requestName = "View Offer";
             mySchedulePage.clickTheShiftRequestToClaimShift(requestName, requestUserName);
             // Validate the clickability of I Agree button
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
 
             loginPage.logOut();
 
@@ -1279,7 +1280,7 @@ public class ActivityTest extends TestBase {
             String requestName = "Claim Shift";
             mySchedulePage.clickTheShiftRequestToClaimShift(requestName, requestUserName);
             // Validate the clickability of I Agree button
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimSuccessMessage);
             loginPage.logOut();
 
             // Login as Store Manager
@@ -1377,7 +1378,7 @@ public class ActivityTest extends TestBase {
             requestName = "Claim Shift";
             mySchedulePage.clickTheShiftRequestToClaimShift(requestName, requestUserName);
             // Validate the clickability of I Agree button
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
             loginPage.logOut();
 
             //log in as the first TM to cancel the request.
@@ -2017,7 +2018,7 @@ public class ActivityTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
 
             loginPage.logOut();
 
@@ -2116,7 +2117,7 @@ public class ActivityTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimSuccessMessage);
             loginPage.logOut();
 
             // 4.Login with SM to check activity

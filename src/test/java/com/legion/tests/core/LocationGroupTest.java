@@ -11,6 +11,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
@@ -1825,7 +1826,7 @@ public class LocationGroupTest extends TestBase {
         List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
         mySchedulePage.selectOneShiftIsClaimShift(claimShift);
         mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
 
         loginPage.logOut();
 
@@ -1944,7 +1945,7 @@ public class LocationGroupTest extends TestBase {
         List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
         mySchedulePage.selectOneShiftIsClaimShift(claimShift);
         mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
 
         loginPage.logOut();
 

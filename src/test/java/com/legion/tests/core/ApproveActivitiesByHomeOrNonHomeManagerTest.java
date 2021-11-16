@@ -8,6 +8,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -230,7 +231,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
         mySchedulePage.selectOneShiftIsClaimShift(claimShift);
         mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
         loginPage.logOut();
 
         // 4.Login with SM to check activity
@@ -344,8 +345,8 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
         mySchedulePage.selectOneShiftIsClaimShift(claimShift);
         mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
-        ;
+        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
+
         SimpleUtils.assertOnFail("", scheduleShiftTablePage.getAvailableShiftsInDayView().size()==0, false);
         loginPage.logOut();
 
@@ -485,7 +486,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         Thread.sleep(5000);
         mySchedulePage.selectOneShiftIsClaimShift(claimShift);
         mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval();
+        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimSuccessMessage);
         loginPage.logOut();
 
         // 4.Login with SM to check activity
@@ -624,7 +625,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
         mySchedulePage.selectOneShiftIsClaimShift(claimShift);
         mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
         loginPage.logOut();
 
         // 4.Login with TM's home location SM to check activity

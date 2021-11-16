@@ -8,6 +8,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
@@ -806,7 +807,7 @@ public class OfferTMTest extends TestBase {
         List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
         mySchedulePage.selectOneShiftIsClaimShift(claimShift);
         mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
         loginPage.logOut();
 
         loginAsDifferentRole(AccessRoles.StoreManager.getValue());
@@ -936,7 +937,7 @@ public class OfferTMTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
@@ -1061,7 +1062,7 @@ public class OfferTMTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
             loginPage.logOut();
 
             //login with TM2 to claim.
@@ -1072,7 +1073,7 @@ public class OfferTMTest extends TestBase {
             claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
             loginPage.logOut();
 
             //log in as SM to check.
@@ -1197,7 +1198,7 @@ public class OfferTMTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimSuccessMessage);
             loginPage.logOut();
 
             //login with TM2 to claim.
@@ -1323,7 +1324,7 @@ public class OfferTMTest extends TestBase {
         List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
         mySchedulePage.selectOneShiftIsClaimShift(claimShift);
         mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval();
+        mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimSuccessMessage);
         loginPage.logOut();
 
         //log in as SM to check the shift

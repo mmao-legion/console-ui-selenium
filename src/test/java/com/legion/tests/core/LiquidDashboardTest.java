@@ -4,6 +4,7 @@ import com.legion.pages.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
@@ -1254,7 +1255,7 @@ public class LiquidDashboardTest extends TestBase {
             int index = mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
             mySchedulePage.clickOnShiftByIndex(index);
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
             loginPage.logOut();
 
             // Log in as store manager to approve the request in activity->shift offer
