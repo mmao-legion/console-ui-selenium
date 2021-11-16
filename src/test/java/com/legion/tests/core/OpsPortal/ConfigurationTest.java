@@ -107,6 +107,31 @@ public class ConfigurationTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Add country field to holidays")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddCountryFieldToHolidayAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String OHtemplate = "Operating Hours";
+            //scheduling rules is not included as some exception, will added later
+            String mode = "edit";
+            String templateName = "LizzyUsingDynamicCheckNoDelete";
+            String customerHolidayName = "LZautoTestHoliday";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OHtemplate);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            //check the Holidays pops up
+            configurationPage.holidaysDataCheckAndSelect(customerHolidayName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify open each type template")
