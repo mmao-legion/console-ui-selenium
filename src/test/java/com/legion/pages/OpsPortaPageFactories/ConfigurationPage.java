@@ -92,6 +92,7 @@ public interface ConfigurationPage {
     public void archiveIsClickable() throws Exception;
     public void saveADraftTemplate() throws Exception;
     public void editADynamicGroup(String name) throws Exception;
+    public void holidaysDataCheckAndSelect(String name) throws Exception;
     public void commitTypeCheck() throws Exception;
     public void verifyArchivePopUpShowWellOrNot() throws Exception;
     public void cancelArchiveDeleteWorkWell(String templateName) throws Exception;

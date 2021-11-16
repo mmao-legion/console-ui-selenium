@@ -1861,6 +1861,147 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css="[value=\"$ctrl.closingBufferHours\"] input")
 	private WebElement closingBufferHours;
+	@FindBy(css="span[ng-if*='getSelectedHolidays']")
+	private WebElement selectHolidayLink;
+	@FindBy(css="modal[modal-title=\"Manage Holidays\"]")
+	private WebElement holidayDialog;
+	@FindBy(css="modal[modal-title=\"Manage Holidays\"] h1 div")
+	private WebElement holidayDialogTitle;
+	@FindBy(css="select[aria-label=\"Country\"]")
+	private WebElement holidayDialogCountrySelection;
+	@FindBy(css="tr[ng-style*='item.selected']")
+	private List<WebElement> holidayItems;
+	@FindBy(css="input[placeholder=\"You can search by holiday name.\"]")
+	private WebElement holidaySearchInput;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] input-field[ng-if=\"item.isEditing\"] input")
+	private List<WebElement> customerHolidayName;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] lg-calendar-input div.lg-picker-input>input-field")
+	private List<WebElement> calendarPicker;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] input[type=\"checkbox\"]")
+	private List<WebElement> customerHolidayCheckbox;
+	@FindBy(css="i.fa.fa-check-circle")
+	private List<WebElement> customerHolidaySaveIcon;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] span[ng-if=\"!item.isEditing\"].edit")
+	private WebElement customerHolidayEdit;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] span[ng-if=\"!item.isEditing\"].remove")
+	private WebElement customerHolidayRemove;
+	@FindBy(css="i.fa.fa-times-circle")
+	private WebElement customerHolidayCacelIcon;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] span[ng-if='!item.isEditing'].fs-14")
+	private WebElement customerHolidayEditedName;
+	@FindBy(css="tr[ng-repeat='holiday in $ctrl.getSelectedHolidays()']")
+	private List<WebElement> selectedHolidaysInTemplate;
+
+
+
+
+	private void createAcustomerHoliday(String holidaName){
+		//set a customer name and save
+		customerHolidayName.get(0).sendKeys(holidaName);
+		waitForSeconds(2);
+		clickTheElement(calendarPicker.get(0));
+		waitForSeconds(2);
+		selectDateForTimesheet(3);
+		clickTheElement(customerHolidayCheckbox.get(0));
+		clickTheElement(customerHolidaySaveIcon.get(0));
+		waitForSeconds(2);
+	}
+
+	public void holidaysDataCheckAndSelect(String custoHolyName)throws Exception{
+		String checkBoxCss="td>div>input-field[type=\"checkbox\"] input";
+		String selectHoliday=null;
+		//click the Select Holidays link
+        clickTheElement(selectHolidayLink);
+        waitForSeconds(2);
+        if(isElementLoaded(holidayDialog)&&getText(holidayDialogTitle).trim().equals("Manage Holidays")){
+        	SimpleUtils.pass("Select holiday dialog pop up successfully");
+			//filter holidays
+			holidaySearchInput.sendKeys("Memorial");
+			waitForSeconds(2);
+			if(areListElementVisible(holidayItems))
+				SimpleUtils.report("Holiday search with resulted");
+			holidaySearchInput.clear();
+			selectByVisibleText(holidayDialogCountrySelection,"United States");
+			waitForSeconds(2);
+			//select a holiday
+			if(areListElementVisible(holidayItems)){
+				SimpleUtils.pass("Holidays options loaded successfully");
+			    //select the first holiday
+			    clickTheElement(holidayItems.get(0).findElement(By.cssSelector(checkBoxCss)));
+			    waitForSeconds(2);
+			    //get the holiday name
+				selectHoliday=holidayItems.get(0).findElement(By.cssSelector("span.fs-14")).getText().trim();
+			}
+			else
+				SimpleUtils.fail("Holidays options loaded fail",false);
+			//create a customer holiday
+			createAcustomerHoliday(custoHolyName);
+			//edit the holiday name to check button works or not
+			clickTheElement(customerHolidayEdit);
+			waitForSeconds(2);
+			//modify the holiday name
+			customerHolidayName.get(0).clear();
+			customerHolidayName.get(0).sendKeys(custoHolyName+" Modified");
+			//save the change
+			clickTheElement(customerHolidaySaveIcon.get(0));
+			waitForSeconds(2);
+			//get the modified holiday name
+			String modifiedName=customerHolidayEditedName.getText().trim();
+			if(modifiedName.equals(custoHolyName+" Modified"))
+				SimpleUtils.pass("Customer holiday name modified successfully");
+			else
+				SimpleUtils.report("Customer holiday name modified Failed");
+			//remove the customer holiday
+			clickTheElement(customerHolidayRemove);
+			//create the customer holiday again
+			createAcustomerHoliday(custoHolyName);
+			//save
+			clickTheElement(saveBtnInManageDayparts);
+			waitForSeconds(2);
+			//check the selected or created customer holiday show on template page or not
+			if(areListElementVisible(selectedHolidaysInTemplate)){
+				SimpleUtils.pass("Selected holidays shows on template detail page");
+				//check the customer selected holiday name
+				for(WebElement es:selectedHolidaysInTemplate) {
+					if (es.findElement(By.cssSelector(" td >span")).getText().trim().equals(custoHolyName + " Modified"))
+						SimpleUtils.pass("The customer holiday show on the page successfully");
+					else if (selectHoliday!=null&&es.findElement(By.cssSelector(" td >span")).getText().trim().equals(selectHoliday))
+						SimpleUtils.pass("The specified selected holiday show on the page successfully");
+				}
+
+			}
+			else
+				SimpleUtils.fail("Selected holidays not show on template detail page",true);
+			//back to customer holiday to remove the customer holiday and unselected specified holiday
+			clickTheElement(selectHolidayLink);
+			waitForSeconds(2);
+			//unselect the specified holiday
+			if(areListElementVisible(holidayItems)) {
+				SimpleUtils.pass("Holidays options loaded successfully");
+				//select the first holiday
+				clickTheElement(holidayItems.get(0).findElement(By.cssSelector(checkBoxCss)));
+			}
+			//remove the customer holiday
+			clickTheElement(customerHolidayRemove);
+			//click save
+			clickTheElement(saveBtnInManageDayparts);
+			waitForSeconds(2);
+			//check if holiday show on template detail or not
+			if(!areListElementVisible(selectedHolidaysInTemplate,20))
+				SimpleUtils.pass("Unselect the specified holiday and remove the customer holiday is successfully!");
+			//save the template as draft again
+			if(isElementEnabled(saveAsDraftButton)) {
+				SimpleUtils.pass("User can click save as draft button!");
+				clickTheElement(saveAsDraftButton);
+				waitForSeconds(3);
+			}
+		}
+        else
+        	SimpleUtils.fail("Select holiday dialog not pop up",false);
+
+
+	}
+
 
 	// Option: None, StartEnd, BufferHour, ContinuousOperation
 	public void selectOperatingBufferHours(String option) throws Exception {
@@ -2678,7 +2819,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void saveADraftTemplate() throws Exception{
-		//click Dtails to back detail tab
+		//click Details to back detail tab
 		clickTheElement(templateDetailsBTN);
 		waitForSeconds(3);
 		if(isElementEnabled(saveAsDraftButton)){
