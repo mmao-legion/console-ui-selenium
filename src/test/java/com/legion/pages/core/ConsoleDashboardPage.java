@@ -395,7 +395,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private WebElement projectedDemand;
 	@FindBy (className = "no-shifts-message")
 	private WebElement noShiftMessage;
-	@FindBy (css = "div.upcoming-shift")
+	@FindBy (xpath = "//div[contains(@class,'MuiBox-root')]/div/div")
 	private List<WebElement> upComingShifts;
 	@FindBy (css = "h4.title-blue.text-left")
 	private WebElement startingSoonTitle;
@@ -3171,8 +3171,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			for (WebElement upComingShift : upComingShifts) {
 				HashMap<String, String> allInfo = new HashMap<>();
 				shiftInfo = upComingShift.getText().split("\n")[0];
-				name = upComingShift.findElement(By.cssSelector("span.name-muted")).getText().toLowerCase();
-				role = upComingShift.findElement(By.cssSelector("span.role-name")).getText().toLowerCase();
+				name = upComingShift.findElement(By.xpath("./div[3]/div[2]/span[1]")).getText().toLowerCase();
+				role = upComingShift.findElement(By.xpath("./div[3]/div[2]/span[2]")).getText().toLowerCase();
 				allInfo.put("shiftInfo", shiftInfo);
 				allInfo.put("locationName", name);
 				allInfo.put("workRole", role);

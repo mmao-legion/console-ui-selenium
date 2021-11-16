@@ -355,8 +355,8 @@ public class SplitAndSpreadTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate Spread Of Hours can be configured")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySpreadOfHoursCanBeConfiguredAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -408,8 +408,8 @@ public class SplitAndSpreadTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify Will trigger Spread of hours violation when search TM")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySpreadOfHoursViolationWhenSearchTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -522,8 +522,8 @@ public class SplitAndSpreadTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate spread of hours violation when edit shift time")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySpreadOfHoursViolationWhenEditShiftTimeAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -603,8 +603,8 @@ public class SplitAndSpreadTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify 'This will trigger spread hours' warning when dragging the avatar to change the assignment")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySpreadOfHoursViolationWhenDraggingTheAvatarToChangeTheAssignmentAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -754,8 +754,8 @@ public class SplitAndSpreadTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify 'This will trigger spread hours' warning when dragging the shift to another day")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySpreadOfHoursViolationWhenDraggingTheShiftToAnotherDayAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -890,8 +890,8 @@ public class SplitAndSpreadTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate open shift with 'Spread Of Hours' cannot be claimed")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyOpenShiftWithSpreadOfHoursViolationCannotBeClaimedAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -1020,6 +1020,7 @@ public class SplitAndSpreadTest extends TestBase {
                     !shiftOperatePage.checkIfTMExistsInRecommendedTab(tmFullName), false);
 
             //Click on the open shift -> Offer Team Members, search the TM, assign it
+            Thread.sleep(5000);
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             newShiftPage.searchTeamMemberByName(tmFullName);
             newShiftPage.clickOnOfferOrAssignBtn();
@@ -1034,7 +1035,9 @@ public class SplitAndSpreadTest extends TestBase {
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             newShiftPage.searchTeamMemberByName(tmFullName);
             newShiftPage.clickOnOfferOrAssignBtn();
-
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             createSchedulePage.publishActiveSchedule();
 
             loginPage.logOut();

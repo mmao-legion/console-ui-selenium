@@ -2842,11 +2842,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.searchTeamMemberByName(firstName);
 			String scheduleStatus = shiftOperatePage.getTheMessageOfTMScheduledStatus();
 			SimpleUtils.assertOnFail("TM scheduled status message display failed",
-					scheduleStatus.equalsIgnoreCase("Schedule not published") ||
-							scheduleStatus.equalsIgnoreCase("Schedule Not Created"), false);
+					scheduleStatus.contains("Schedule not published") ||
+							scheduleStatus.contains("Schedule Not Created"), false);
 
 			newShiftPage.clickOnOfferOrAssignBtn();
-			scheduleShiftTablePage.verifyDayHasShiftByName(0, firstName);
+			scheduleShiftTablePage.verifyDayHasShiftByName(0, firstName.split(" ")[0]);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
