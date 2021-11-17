@@ -103,7 +103,9 @@ public class OpsCommonComponents extends BasePage {
     public void associateWithDynamicGroups(String groupName) {
         searchBox.clear();
         searchBox.sendKeys(groupName);
-        theFirstAssociateGroup.click();
+        if (!theFirstAssociateGroup.isSelected()) {
+            theFirstAssociateGroup.click();
+        }
         scrollToBottom();
         saveAssociate.click();
     }

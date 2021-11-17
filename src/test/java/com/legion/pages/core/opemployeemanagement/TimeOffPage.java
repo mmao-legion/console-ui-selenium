@@ -16,7 +16,7 @@ public class TimeOffPage extends BasePage {
     }
 
     // Added by Sophia
-    @FindBy(css = "span[title=' Dallas Ryan']")
+    @FindBy(css = "span[title=' Allene Mante']")
     private WebElement teamMember;
     @FindBy(css = "timeoff-management div.collapsible-title")
     private WebElement timeOffTab;
@@ -56,12 +56,34 @@ public class TimeOffPage extends BasePage {
     private WebElement endDateFullDayCheckBox;
     @FindBy(css = "all-day-control[options='endOptions'] lgn-check-box[checked='options.partialDay']>div")
     private WebElement endDatePartialDayCheckBox;
+    @FindBy(css = "span.all-day-label")
+    private WebElement dayLabel;
+
 
     @FindBy(css = "div.text-danger.text-invalid-range.ng-binding")
     private WebElement requestErrorMessage;
 
+    //balance board
+    @FindBy(css = "div.balance-wrapper>div>span.count-block-label")
+    private List<WebElement> timeOffTypes;
+
+    //Edit time off balance
+    @FindBy(css = "div.balance-action lg-button[label='Edit']>button")
+    private WebElement editButton;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr:nth-child(2)>td:nth-child(3) input")
+    private WebElement annualLeaveInput;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr:nth-child(3)>td:nth-child(3) input")
+    private WebElement floatingHolidayInput;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr:nth-child(4)>td:nth-child(3) input")
+    private WebElement sickInput;
+
+    //history
+    @FindBy(css = "div.balance-action lg-button[label='History']>button")
+    private WebElement historyButton;
+
     public void goToTeamMemberDetail() {
         teamMember.click();
+        waitForSeconds(5);
     }
 
     public void switchToTimeOffTab() {
@@ -70,21 +92,23 @@ public class TimeOffPage extends BasePage {
 
     public Boolean isTimeOffDisplayedInSelectList(String timeOffReason) {
         Boolean displayed = null;
-        ArrayList<String> reasonOptions = getWebElementsText(timeOffReasonOptions);
+        ArrayList<String> reasonOptions = getTimeOffOptions();
         for (int i = 0; i < reasonOptions.size(); i++) {
             displayed = reasonOptions.get(i).contains(timeOffReason);
+            if (displayed)
+                break;
         }
         return displayed;
     }
 
     public int getTimeOffIndex(String timeOffReason) {
         int i;
-        ArrayList<String> reasonOptions = getWebElementsText(timeOffReasonOptions);
+        ArrayList<String> reasonOptions = getTimeOffOptions();
         for (i = 0; i < reasonOptions.size(); i++) {
             if (reasonOptions.get(i).contains(timeOffReason)) {
-                return i;
+                break;
+
             }
-            ;
         }
         return i;
     }
@@ -96,10 +120,10 @@ public class TimeOffPage extends BasePage {
     public void checkTimeOffSelect() {
         createTimeOff.click();
         timeOffReasonSelect.click();
+        waitForSeconds(3);
     }
 
-
-    public void createTimeOff(String timeOffReason, boolean takePartialDay, String startOrEndOrBothTakePartial, int startDateIndex, int endDateIndex) {
+    public void selectTimeOff(String timeOffReason) {
         checkTimeOffSelect();
         if (isTimeOffDisplayedInSelectList(timeOffReason)) {
             int index = getTimeOffIndex(timeOffReason);
@@ -107,24 +131,61 @@ public class TimeOffPage extends BasePage {
         } else {
             System.out.println("This type of time off can't be request or There is no this type of time off!");
         }
+    }
 
+    public void takePartialDay(int startDateIndex, int endDateIndex) {
         if (isPartialDayEnabled()) {
-            if (takePartialDay && startOrEndOrBothTakePartial.equalsIgnoreCase("start")) {
-                startDatePartialDayCheckBox.click();
-            } else if (takePartialDay && startOrEndOrBothTakePartial.equalsIgnoreCase("end")) {
-                endDatePartialDayCheckBox.click();
-            } else if (takePartialDay && startOrEndOrBothTakePartial.equalsIgnoreCase("both")) {
-                startDatePartialDayCheckBox.click();
-                endDatePartialDayCheckBox.click();
-            }
+            startDatePartialDayCheckBox.click();
+            endDatePartialDayCheckBox.click();
+            daysOnCalendar.get(startDateIndex).click();
+            daysOnCalendar.get(endDateIndex).click();
+            waitForSeconds(5);
+        } else {
+            System.out.println("This type of time off can't request partial day!");
         }
+    }
+
+    public void takeAllDayLeave(int startDateIndex, int endDateIndex) {
         daysOnCalendar.get(startDateIndex).click();
         daysOnCalendar.get(endDateIndex).click();
         waitForSeconds(5);
     }
 
+    public void createTimeOff(String timeOffReason, boolean takePartialDay, int startDateIndex, int endDateIndex) {
+        selectTimeOff(timeOffReason);
+        if (takePartialDay) {
+            takePartialDay(startDateIndex, endDateIndex);
+        } else {
+            takeAllDayLeave(startDateIndex, endDateIndex);
+        }
+    }
+
     public String getRequestErrorMessage() {
         return requestErrorMessage.getText();
     }
+
+    public void editTimeOffBalance(String annualB, String floatingB, String sickB) {
+        editButton.click();
+        annualLeaveInput.click();
+        annualLeaveInput.sendKeys("annualB");
+        floatingHolidayInput.clear();
+        floatingHolidayInput.sendKeys("floatingB");
+        sickInput.clear();
+        sickInput.sendKeys("sickB");
+    }
+
+    public ArrayList<String> getTimeOffTypes() {
+        ArrayList<String> timeOffs = getWebElementsText(timeOffTypes);
+        return timeOffs;
+    }
+
+    public ArrayList<String> getTimeOffOptions() {
+        ArrayList<String> timeOffOpts = new ArrayList<>();
+        timeOffReasonOptions.forEach((e) -> {
+            timeOffOpts.add(e.getAttribute("title"));
+        });
+        return timeOffOpts;
+    }
+
 
 }

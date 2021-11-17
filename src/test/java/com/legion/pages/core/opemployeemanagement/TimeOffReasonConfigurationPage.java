@@ -357,6 +357,17 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         sel.selectByIndex(1);
     }
 
+    public void setProbationUnitAs(String method) {//Days, Months, Hours Worked
+        Select sel = new Select(probationSelect);
+        if (method.equalsIgnoreCase("Days")) {
+            sel.selectByVisibleText("Days");
+        } else if (method.equalsIgnoreCase("Months")) {
+            sel.selectByVisibleText("Months");
+        } else if (method.equalsIgnoreCase("Hours Worked")) {
+            sel.selectByVisibleText("Hours Worked");
+        }
+    }
+
     public boolean isTimeOffConfigurationReadOnly() {
         if (weeklyLimitsInput.isEnabled()) {
             return false;
@@ -398,7 +409,7 @@ public class TimeOffReasonConfigurationPage extends BasePage {
 
     public void setMaxAvailableHours(String maxAvailableHours){
         firstServiceLeverInput.get(3).clear();
-        firstServiceLeverInput.get(1).sendKeys(maxAvailableHours);
+        firstServiceLeverInput.get(3).sendKeys(maxAvailableHours);
     }
 
     public void addSecondServiceLever() {
