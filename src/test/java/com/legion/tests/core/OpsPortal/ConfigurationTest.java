@@ -55,26 +55,81 @@ public class ConfigurationTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDynamicGroupFunctionAsAInternalAdminForAssociation(String browser, String username, String password, String location) throws Exception {
         try{
-            String templateType = "Operating Hours";
+            String OHtemplate = "Operating Hours";
+            //scheduling rules is not included as some exception, will added later
             String mode = "edit";
             String templateName = "LizzyUsingDynamicCheckNoDelete";
             String dynamicGpName = "LZautoTest";
-
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnConfigurationCrad(OHtemplate);
             configurationPage.clickOnSpecifyTemplateName(templateName,mode);
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            //check the default save options
+            configurationPage.commitTypeCheck();
+            //go to Association to check dynamic group dialog UI
             configurationPage.dynamicGroupDialogUICheck(dynamicGpName);
+            //edit the dynamic group
+            configurationPage.editADynamicGroup(dynamicGpName);
             //search the dynamic group to delete
             configurationPage.deleteOneDynamicGroup(dynamicGpName);
+            //save draft template
+            configurationPage.saveADraftTemplate();
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Create Each Template with Dynamic Group Association ")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateEachTemplateWithDynamicGroupAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String OHtemplate = "Operating Hours";
+            //scheduling rules is not included as some exception, will added later
+            String[] tempType={"Operating Hours","Scheduling Policies","Schedule Collaboration","Compliance","Communications","Time & Attendance"};
+            String templateNameVerify = "LizzyUsingToCreateTempTest";
+            String dynamicGpNameTempTest = "LZautoTestDyGpName";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            //create other types of templates
+            for(String type:tempType){
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad(type);
+                configurationPage.createTmpAndPublishAndArchive(type,templateNameVerify,dynamicGpNameTempTest);
+            }
 
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Add country field to holidays")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddCountryFieldToHolidayAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String OHtemplate = "Operating Hours";
+            //scheduling rules is not included as some exception, will added later
+            String mode = "edit";
+            String templateName = "LizzyUsingDynamicCheckNoDelete";
+            String customerHolidayName = "LZautoTestHoliday";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OHtemplate);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            //check the Holidays pops up
+            configurationPage.holidaysDataCheckAndSelect(customerHolidayName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")

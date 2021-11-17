@@ -46,7 +46,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css="[class=\"lg-table ng-scope\"] button span.ng-binding")
 	private List<WebElement> templateNameList;
-
+	@FindBy(css="lg-eg-status[type='Draft']")
+	private List<WebElement> templateDraftStatusList;
 	@FindBy(css="td.toggle i[class=\"fa fa-caret-right\"]")
 	private WebElement templateToggleButton;
 
@@ -196,7 +197,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public boolean isTemplateListPageShow() throws Exception {
 		boolean flag = false;
-			if(areListElementVisible(templatesList, 15) && templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
+			if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
 				SimpleUtils.pass("Template landing page shows well");
 				flag = true;
 			}else{
@@ -267,14 +268,20 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css="input[placeholder=\"You can search by template name, status and creator.\"]")
 	private WebElement searchTemplateInputBox;
-
-	public void searchTemplate(String templateName) throws Exception{
+    @Override
+	public boolean searchTemplate(String templateName) throws Exception{
+		boolean exsiting=false;
 		if(isElementEnabled(searchTemplateInputBox,5)){
 			clickTheElement(searchTemplateInputBox);
+			searchTemplateInputBox.clear();
 			searchTemplateInputBox.sendKeys(templateName);
 			searchTemplateInputBox.sendKeys(Keys.ENTER);
 			waitForSeconds(2);
+			if(templateNameList.size()>0)
+				exsiting=true;
+
 		}
+		return exsiting;
 	}
 
 	//open the specify template to edit or view details
@@ -707,6 +714,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement shiftDuartionMinutesUnit;
 	@FindBy(css="div.dif.end-shift input-field[options=\"$ctrl.timeEventOptions\"] div.input-faked")
 	private WebElement shiftEndTimeEventValue;
+	@FindBy(css="button.saveas-drop")
+	private WebElement templateSaveDrop;
+	@FindBy(css="div.saveas-list h3")
+	private List<WebElement> templateSaveOptions;
 
 	@Override
 	public void selectShiftEndTimeEvent(String endEvent) throws Exception{
@@ -1482,6 +1493,29 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
+	public void commitTypeCheck() throws Exception{
+		String[] supportedType={"Save as draft","Publish now","Publish later"};
+		//scroll to the bottom of page
+		scrollToBottom();
+		clickTheElement(templateSaveDrop);
+		if(areListElementVisible(templateSaveOptions)) {
+			SimpleUtils.pass("Save and publish options loaded successfully");
+			waitForSeconds(2);
+			for (String sp : supportedType) {
+				for(WebElement optionele:templateSaveOptions){
+					if(optionele.getText().trim().equals(sp)) {
+						SimpleUtils.pass("Option"+sp+"showed in save and publish options list");
+						continue;
+					}
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("No save and publish options loaded!",false);
+		scrollToTop();
+	}
+
+	@Override
 	public void publishNowTheTemplate() throws Exception {
 		if (isElementLoaded(dropdownArrowButton,5)) {
 			click(dropdownArrowButton);
@@ -1827,6 +1861,147 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css="[value=\"$ctrl.closingBufferHours\"] input")
 	private WebElement closingBufferHours;
+	@FindBy(css="span[ng-if*='getSelectedHolidays']")
+	private WebElement selectHolidayLink;
+	@FindBy(css="modal[modal-title=\"Manage Holidays\"]")
+	private WebElement holidayDialog;
+	@FindBy(css="modal[modal-title=\"Manage Holidays\"] h1 div")
+	private WebElement holidayDialogTitle;
+	@FindBy(css="select[aria-label=\"Country\"]")
+	private WebElement holidayDialogCountrySelection;
+	@FindBy(css="tr[ng-style*='item.selected']")
+	private List<WebElement> holidayItems;
+	@FindBy(css="input[placeholder=\"You can search by holiday name.\"]")
+	private WebElement holidaySearchInput;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] input-field[ng-if=\"item.isEditing\"] input")
+	private List<WebElement> customerHolidayName;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] lg-calendar-input div.lg-picker-input>input-field")
+	private List<WebElement> calendarPicker;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] input[type=\"checkbox\"]")
+	private List<WebElement> customerHolidayCheckbox;
+	@FindBy(css="i.fa.fa-check-circle")
+	private List<WebElement> customerHolidaySaveIcon;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] span[ng-if=\"!item.isEditing\"].edit")
+	private WebElement customerHolidayEdit;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] span[ng-if=\"!item.isEditing\"].remove")
+	private WebElement customerHolidayRemove;
+	@FindBy(css="i.fa.fa-times-circle")
+	private WebElement customerHolidayCacelIcon;
+	@FindBy(css="tr[ng-repeat*=\"customHolidays\"] span[ng-if='!item.isEditing'].fs-14")
+	private WebElement customerHolidayEditedName;
+	@FindBy(css="tr[ng-repeat='holiday in $ctrl.getSelectedHolidays()']")
+	private List<WebElement> selectedHolidaysInTemplate;
+
+
+
+
+	private void createAcustomerHoliday(String holidaName){
+		//set a customer name and save
+		customerHolidayName.get(0).sendKeys(holidaName);
+		waitForSeconds(2);
+		clickTheElement(calendarPicker.get(0));
+		waitForSeconds(2);
+		selectDateForTimesheet(3);
+		clickTheElement(customerHolidayCheckbox.get(0));
+		clickTheElement(customerHolidaySaveIcon.get(0));
+		waitForSeconds(2);
+	}
+
+	public void holidaysDataCheckAndSelect(String custoHolyName)throws Exception{
+		String checkBoxCss="td>div>input-field[type=\"checkbox\"] input";
+		String selectHoliday=null;
+		//click the Select Holidays link
+        clickTheElement(selectHolidayLink);
+        waitForSeconds(2);
+        if(isElementLoaded(holidayDialog)&&getText(holidayDialogTitle).trim().equals("Manage Holidays")){
+        	SimpleUtils.pass("Select holiday dialog pop up successfully");
+			//filter holidays
+			holidaySearchInput.sendKeys("Memorial");
+			waitForSeconds(2);
+			if(areListElementVisible(holidayItems))
+				SimpleUtils.report("Holiday search with resulted");
+			holidaySearchInput.clear();
+			selectByVisibleText(holidayDialogCountrySelection,"United States");
+			waitForSeconds(2);
+			//select a holiday
+			if(areListElementVisible(holidayItems)){
+				SimpleUtils.pass("Holidays options loaded successfully");
+			    //select the first holiday
+			    clickTheElement(holidayItems.get(0).findElement(By.cssSelector(checkBoxCss)));
+			    waitForSeconds(2);
+			    //get the holiday name
+				selectHoliday=holidayItems.get(0).findElement(By.cssSelector("span.fs-14")).getText().trim();
+			}
+			else
+				SimpleUtils.fail("Holidays options loaded fail",false);
+			//create a customer holiday
+			createAcustomerHoliday(custoHolyName);
+			//edit the holiday name to check button works or not
+			clickTheElement(customerHolidayEdit);
+			waitForSeconds(2);
+			//modify the holiday name
+			customerHolidayName.get(0).clear();
+			customerHolidayName.get(0).sendKeys(custoHolyName+" Modified");
+			//save the change
+			clickTheElement(customerHolidaySaveIcon.get(0));
+			waitForSeconds(2);
+			//get the modified holiday name
+			String modifiedName=customerHolidayEditedName.getText().trim();
+			if(modifiedName.equals(custoHolyName+" Modified"))
+				SimpleUtils.pass("Customer holiday name modified successfully");
+			else
+				SimpleUtils.report("Customer holiday name modified Failed");
+			//remove the customer holiday
+			clickTheElement(customerHolidayRemove);
+			//create the customer holiday again
+			createAcustomerHoliday(custoHolyName);
+			//save
+			clickTheElement(saveBtnInManageDayparts);
+			waitForSeconds(2);
+			//check the selected or created customer holiday show on template page or not
+			if(areListElementVisible(selectedHolidaysInTemplate)){
+				SimpleUtils.pass("Selected holidays shows on template detail page");
+				//check the customer selected holiday name
+				for(WebElement es:selectedHolidaysInTemplate) {
+					if (es.findElement(By.cssSelector(" td >span")).getText().trim().equals(custoHolyName + " Modified"))
+						SimpleUtils.pass("The customer holiday show on the page successfully");
+					else if (selectHoliday!=null&&es.findElement(By.cssSelector(" td >span")).getText().trim().equals(selectHoliday))
+						SimpleUtils.pass("The specified selected holiday show on the page successfully");
+				}
+
+			}
+			else
+				SimpleUtils.fail("Selected holidays not show on template detail page",true);
+			//back to customer holiday to remove the customer holiday and unselected specified holiday
+			clickTheElement(selectHolidayLink);
+			waitForSeconds(2);
+			//unselect the specified holiday
+			if(areListElementVisible(holidayItems)) {
+				SimpleUtils.pass("Holidays options loaded successfully");
+				//select the first holiday
+				clickTheElement(holidayItems.get(0).findElement(By.cssSelector(checkBoxCss)));
+			}
+			//remove the customer holiday
+			clickTheElement(customerHolidayRemove);
+			//click save
+			clickTheElement(saveBtnInManageDayparts);
+			waitForSeconds(2);
+			//check if holiday show on template detail or not
+			if(!areListElementVisible(selectedHolidaysInTemplate,20))
+				SimpleUtils.pass("Unselect the specified holiday and remove the customer holiday is successfully!");
+			//save the template as draft again
+			if(isElementEnabled(saveAsDraftButton)) {
+				SimpleUtils.pass("User can click save as draft button!");
+				clickTheElement(saveAsDraftButton);
+				waitForSeconds(3);
+			}
+		}
+        else
+        	SimpleUtils.fail("Select holiday dialog not pop up",false);
+
+
+	}
+
 
 	// Option: None, StartEnd, BufferHour, ContinuousOperation
 	public void selectOperatingBufferHours(String option) throws Exception {
@@ -2260,6 +2435,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement templateAssociationBTN;
 	@FindBy(css="lg-button[label=\"Remove\"]")
 	private WebElement dynamicGroupRemoveBTN;
+	@FindBy(css="div[ng-if*=showAction] lg-button[label=\"Edit\"]")
+	private WebElement dynamicGroupEditBTN;
 	@FindBy(css="modal[modal-title=\"Remove Dynamic Group\"] lg-button[label=\"Remove\"]")
 	private WebElement dynamicGroupRemoveBTNOnDialog;
 
@@ -2283,29 +2460,48 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public boolean searchOneDynamicGroup(String dynamicGroupName) throws Exception{
 		boolean dataExist=false;
 		clickOnAssociationTabOnTemplateDetailsPage();
+		searchAssociateFiled.clear();
 		searchAssociateFiled.sendKeys(dynamicGroupName);
 		waitForSeconds(5);
 		if(templateAssociationRows.size()>0){
 			dataExist=true;
 			SimpleUtils.pass("User can search out association named: " + dynamicGroupName);
 		}else {
-			SimpleUtils.fail("User can NOT search out association named: \" + dynamicGroupName",true);
+			SimpleUtils.report("User can NOT search out association named: " + dynamicGroupName);
 		}
 		return dataExist;
 	}
 
     @Override
 	public void deleteOneDynamicGroup(String dyname) throws Exception{
-		searchOneDynamicGroup(dyname);
-		//remove the dynamic group
-		clickTheElement(dynamicGroupRemoveBTN);
-		waitForSeconds(2);
-        clickTheElement(dynamicGroupRemoveBTNOnDialog);
-		waitForSeconds(1);
+		if(searchOneDynamicGroup(dyname)) {
+			//remove the dynamic group
+			clickTheElement(dynamicGroupRemoveBTN);
+			waitForSeconds(2);
+			clickTheElement(dynamicGroupRemoveBTNOnDialog);
+			waitForSeconds(1);
+		}
         if(!searchOneDynamicGroup(dyname))
         	SimpleUtils.pass("Dynamic group removed successfully");
         else
         	SimpleUtils.fail("Dynamic group removed failed",false);
+
+	}
+
+	@Override
+	public void editADynamicGroup(String dyname) throws Exception{
+		if(searchOneDynamicGroup(dyname)) {
+			//edit the dynamic group
+			clickTheElement(dynamicGroupEditBTN);
+			waitForSeconds(2);
+			if(isElementLoaded(manageDynamicGroupPopupTitle)){
+				SimpleUtils.pass("The edit dynamic group dialog pop up successfully!");
+				//cancel
+				clickTheElement(okButtonOnManageDynamicGroupPopup.findElement(By.xpath("./preceding-sibling::lg-button/button")));
+			}
+			else
+			   SimpleUtils.fail("The edit dynamic group dialog not pop up!",true);
+		}
 
 	}
 
@@ -2332,6 +2528,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement manageDynamicGroupPopupTitle;
 	@FindBy(css="input-field[label=\"Group Name\"] input")
 	private WebElement dynamicGroupName;
+	@FindBy(css="input-field[label=\"Group Name\"] ng-form")
+	private WebElement manageDynamicGroupPopupEditTitle;
 	@FindBy(css="i.fa-exclamation-circle")
 	private WebElement dynamicGroupNameRequiredMsg;
 	@FindBy(css="input-field[value=\"$ctrl.dynamicGroup.description\"] input")
@@ -2358,7 +2556,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement formulaTextAreaOfDynamicGroup;
 	@FindBy(css="lg-button[label=\"OK\"]")
 	private WebElement okButtonOnManageDynamicGroupPopup;
-
+	@FindBy(css="lg-button[label=\"Cancel\"]")
+	private WebElement cancelButtonOnManageDynamicGroupPopup;
 	@Override
 	public void createDynamicGroup(String name,String criteria,String formula) throws Exception{
 		clickOnAssociationTabOnTemplateDetailsPage();
@@ -2379,9 +2578,25 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@Override
+	public void createTmpAndPublishAndArchive(String tempType, String tempName,String dygpname) throws Exception{
+		//create a new template
+		publishNewTemplate(tempName,dygpname,"Custom","AutoCreatedDynamicTodelete---Foremat Script");
+		//check if created successfully
+		if(searchTemplate(tempName)) {
+				archivePublishedOrDeleteDraftTemplate(tempName,"Archive");
+		}
+		else
+			SimpleUtils.fail("Create and Publish" + tempType + "template failed",true);
+	}
+
+
     @Override
 	public void dynamicGroupDialogUICheck(String name) throws Exception{
 		clickOnAssociationTabOnTemplateDetailsPage();
+		waitForSeconds(3);
+		//check if the dynamic group existing or not
+		deleteOneDynamicGroup(name);
 		if(isElementLoaded(addDynamicGroupButton,5)){
 			SimpleUtils.pass("The "+" icon for adding dynamic group button show as expected");
 			clickTheElement(addDynamicGroupButton);
@@ -2477,6 +2692,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void publishNewTemplate(String templateName,String name,String criteria,String formula) throws Exception{
 		LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
 		if(isTemplateListPageShow()){
+			//check if template existing or not
+			if(searchTemplate(templateName)) {
+				if (templateDraftStatusList.size() > 0)
+					//Delete the temp
+					archivePublishedOrDeleteDraftTemplate(templateName, "Delete");
+				else
+//					archive the temp
+					archivePublishedOrDeleteDraftTemplate(templateName, "Archive");
+			}
 			clickTheElement(newTemplateBTN);
 			waitForSeconds(1);
 			if(isElementEnabled(createNewTemplatePopupWindow)){
@@ -2486,19 +2710,26 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				clickTheElement(newTemplateDescription);
 				newTemplateDescription.sendKeys(templateName);
 				clickTheElement(continueBTN);
-				waitForSeconds(5);
+				waitForSeconds(4);
 				if(isElementEnabled(welcomeCloseButton)){
 					clickTheElement(welcomeCloseButton);
 				}
-				if(isElementEnabled(taTemplateSpecialField)){
+				//change to association tan
+				clickTheElement(templateAssociationBTN);
+				waitForSeconds(3);
+				if(searchOneDynamicGroup(name)){
+					selectOneDynamicGroup(name);
+				}
+				else{
+					createDynamicGroup(name,criteria,formula);
+				    selectOneDynamicGroup(name);}
+				locationSelectorPage.refreshTheBrowser();
+				waitForSeconds(4);
+				if(isElementEnabled(taTemplateSpecialField,20)){
 					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
 					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
 					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 				}
-				createDynamicGroup(name,criteria,formula);
-				selectOneDynamicGroup(name);
-				locationSelectorPage.refreshTheBrowser();
-				waitForSeconds(5);
 				publishNowTemplate();
 			}else {
 				SimpleUtils.fail("User can't click new template button successfully!",false);
@@ -2583,6 +2814,21 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
+
+	}
+
+	@Override
+	public void saveADraftTemplate() throws Exception{
+		//click Details to back detail tab
+		clickTheElement(templateDetailsBTN);
+		waitForSeconds(3);
+		if(isElementEnabled(saveAsDraftButton)){
+			SimpleUtils.pass("User can click save as draft button!");
+			clickTheElement(saveAsDraftButton);
+			waitForSeconds(3);
+		}
+		else
+			SimpleUtils.fail("Not stayed at template detail page!",false);
 
 	}
 
