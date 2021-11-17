@@ -132,7 +132,7 @@
                     <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
                     <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                     <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin" />
-<!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5458-->
+<!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5674-->
                     <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
 <!--                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5657-->
                 </methods>

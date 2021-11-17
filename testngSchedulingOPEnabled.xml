@@ -181,7 +181,7 @@
         <classes>
             <class name="com.legion.tests.core.TeamTestKendraScott2">
                 <methods>
-                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />
+<!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5674-->
 <!--                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5657-->
                 </methods>
             </class>

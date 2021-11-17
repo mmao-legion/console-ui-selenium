@@ -474,7 +474,7 @@ public class SplitAndSpreadTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(tmFirstName);
-            Thread.sleep(3);
+            Thread.sleep(5);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(tmFirstName);
             //check the message in warning mode
             if(newShiftPage.ifWarningModeDisplay()){
