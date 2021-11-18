@@ -1,9 +1,6 @@
 package com.legion.tests.core;
 
-import com.google.inject.internal.cglib.core.$WeakCacheKey;
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleCommonPage;
-import com.legion.pages.core.ConsoleShiftOperatePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -11,7 +8,6 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
-import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
@@ -21,9 +17,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class DragAndDropTest extends TestBase {

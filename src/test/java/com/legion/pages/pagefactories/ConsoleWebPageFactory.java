@@ -2,6 +2,7 @@ package com.legion.pages.pagefactories;
 
 import com.legion.pages.*;
 import com.legion.pages.core.*;
+import com.legion.pages.core.schedule.*;
 import org.testng.Reporter;
 
 /**

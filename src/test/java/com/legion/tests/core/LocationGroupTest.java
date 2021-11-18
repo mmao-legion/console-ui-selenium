@@ -3,7 +3,6 @@ package com.legion.tests.core;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -18,7 +17,6 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.swing.plaf.multi.MultiButtonUI;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.*;
