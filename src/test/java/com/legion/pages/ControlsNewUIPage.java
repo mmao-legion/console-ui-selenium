@@ -320,4 +320,6 @@ public interface ControlsNewUIPage {
 	public void turnOnOrTurnOffSpreadOfHoursToggle(boolean action) throws Exception;
 	public void editSpreadOfHoursPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception;
 	public void verifyCloseSplitShiftPremiumDialogButton () throws Exception;
+	public void turnOnOrTurnOffMealBreakToggle(boolean action) throws Exception;
+	public void editMealBreak(String mealBreakDuration, String paidType, String scheduleHoursLimit, boolean saveOrNot) throws Exception;
 }
