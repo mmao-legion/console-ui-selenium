@@ -57,7 +57,6 @@ import static com.legion.utils.MyThreadLocal.*;
 		@Override
 		public void onTestSkipped(ITestResult result) {
 			// TODO Auto-generated method stub
-			System.out.println("Skipped========");
 			ExtentTestManager.getTest().log(Status.SKIP, "Test skipped");
 			if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
 				MyThreadLocal.setTestSkippedFlag(true);
