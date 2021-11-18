@@ -7,7 +7,7 @@
 //import java.util.List;
 //
 //import com.legion.pages.*;
-//import com.legion.pages.core.ConsoleScheduleCommonPage;
+//import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
 //import com.legion.tests.annotations.*;
 //import org.aspectj.bridge.MessageWriter;
 //import org.openqa.selenium.WebElement;

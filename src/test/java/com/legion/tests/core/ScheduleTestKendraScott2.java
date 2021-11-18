@@ -1,26 +1,20 @@
 package com.legion.tests.core;
 
-import java.awt.print.PrinterGraphics;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.*;
 
-import com.gargoylesoftware.htmlunit.html.HtmlListing;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.OpsPortalConfigurationPage;
 import com.legion.utils.JsonUtil;
-import com.legion.utils.MyThreadLocal;
-import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.aventstack.extentreports.Status;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;

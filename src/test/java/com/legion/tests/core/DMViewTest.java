@@ -6,9 +6,6 @@ import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.TimeSheetPage;
-import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleDMViewPage;
-import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -24,11 +21,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class DMViewTest extends TestBase {
 

@@ -1,10 +1,9 @@
-package com.legion.pages.core;
+package com.legion.pages.core.schedule;
 
 import com.legion.pages.*;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

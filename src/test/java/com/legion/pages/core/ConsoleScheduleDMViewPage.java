@@ -1,6 +1,7 @@
 package com.legion.pages.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.schedule.*;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
