@@ -4,6 +4,10 @@
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Automation - Daily Routine"/>
+    <listeners>
+        <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
+    </listeners>
+
     <test name="Legion Test">
         <classes>
             <class name="com.legion.tests.core.OpsPortal.LocationsTest"/>
