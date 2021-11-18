@@ -2,9 +2,7 @@ package com.legion.tests.core;
 
 import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
-import com.legion.pages.SchedulePage;
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;

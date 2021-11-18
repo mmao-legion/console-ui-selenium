@@ -1,7 +1,7 @@
 //package com.legion.tests.core;
 //
 //import com.legion.pages.*;
-//import com.legion.pages.core.ConsoleScheduleCommonPage;
+//import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
 //import com.legion.pages.mobile.LoginPageAndroid;
 //import com.legion.tests.TestBase;
 //import com.legion.tests.annotations.*;

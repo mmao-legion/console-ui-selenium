@@ -2,13 +2,10 @@ package com.legion.tests.core;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleCommonPage;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

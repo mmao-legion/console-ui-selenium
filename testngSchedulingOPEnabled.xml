@@ -177,16 +177,16 @@
         </classes>
     </test>
 
-    <test name="TeamTab Test KendraScott2">
+<!--    <test name="TeamTab Test KendraScott2">
         <classes>
             <class name="com.legion.tests.core.TeamTestKendraScott2">
                 <methods>
-<!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5674-->
-<!--                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5657-->
+&lt;!&ndash;                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5674&ndash;&gt;
+&lt;!&ndash;                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5657&ndash;&gt;
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
     <test name="Location Navigation Test">
         <classes>
@@ -320,6 +320,8 @@
                     <include name="verifyEditBreaksOptionIsAvailableAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditBreaksWeekViewAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
+                    <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
+                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

@@ -101,4 +101,5 @@ public interface ShiftOperatePage {
     public String getShiftInfoInEditShiftDialog() throws Exception;
     public void clickOnEditShiftNotesOption() throws Exception;
     public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM);
+    public void moveMealAndRestBreaksOnEditBreaksPage(String breakTime, int index, boolean isMealBreak) throws Exception;
 }

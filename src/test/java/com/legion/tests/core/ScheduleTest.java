@@ -1,12 +1,9 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
-import java.nio.channels.MulticastChannel;
 import java.util.*;
 
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleCommonPage;
-import org.openqa.selenium.WebElement;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

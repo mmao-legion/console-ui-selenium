@@ -1,8 +1,9 @@
-package com.legion.pages.core;
+package com.legion.pages.core.schedule;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ScheduleCommonPage;
 import com.legion.pages.SmartCardPage;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;

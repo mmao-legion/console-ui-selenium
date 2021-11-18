@@ -3,6 +3,7 @@ package com.legion.pages.core;
 import com.legion.pages.BasePage;
 import com.legion.pages.ForecastPage;
 import com.legion.pages.SmartCardPage;
+import com.legion.pages.core.schedule.ConsoleSmartCardPage;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
