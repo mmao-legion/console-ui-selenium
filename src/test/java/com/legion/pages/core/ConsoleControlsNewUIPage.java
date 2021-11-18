@@ -320,17 +320,17 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public enum MealBreakDuration {
 
 		Minute5("5 minute"),
-		Minute10("5 minute"),
-		Minute15("5 minute"),
-		Minute20("5 minute"),
-		Minute25("5 minute"),
-		Minute30("5 minute"),
-		Minute35("5 minute"),
-		Minute40("5 minute"),
-		Minute45("5 minute"),
-		Minute50("5 minute"),
-		Minute55("5 minute"),
-		Minute60("5 minute");
+		Minute10("10 minute"),
+		Minute15("15 minute"),
+		Minute20("20 minute"),
+		Minute25("25 minute"),
+		Minute30("30 minute"),
+		Minute35("35 minute"),
+		Minute40("40 minute"),
+		Minute45("45 minute"),
+		Minute50("50 minute"),
+		Minute55("55 minute"),
+		Minute60("60 minute");
 
 		private final String value;
 

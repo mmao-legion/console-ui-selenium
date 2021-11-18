@@ -2,7 +2,6 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleControlsNewUIPage;
-import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
