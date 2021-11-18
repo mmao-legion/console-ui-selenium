@@ -2522,5 +2522,39 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
         return isTMExist;
     }
+
+    @Override
+    public void moveMealAndRestBreaksOnEditBreaksPage(String breakTime, int index, boolean isMealBreak) throws Exception {
+        if (areListElementVisible(mealBreakDurations, 5) || areListElementVisible(restBreakDurations, 5)) {
+            List<WebElement> breaks = null;
+            if (isMealBreak)
+                breaks = mealBreakDurations;
+            else
+                breaks = restBreakDurations;
+            if (areListElementVisible(noUiValues, 10) && noUiValues.size() >0) {
+                //Move break to the start of time line
+                waitForSeconds(3);
+                mouseHoverDragandDrop(breaks.get(index),shiftTimeLarges.get(0));
+                int timeLineLength = noUiValues.size();
+                String mealBreakTimeAfterEdit = "";
+                boolean moveBreakTimeSuccess = false;
+                for (int i = 0; i< timeLineLength; i++) {
+                    moveDayViewCards(mealBreaks.get(index), 10);
+                    mealBreakTimeAfterEdit = mealBreakTimes.get(index).getText().split("-")[0].trim();
+                    if (mealBreakTimeAfterEdit.equalsIgnoreCase(breakTime)) {
+                        SimpleUtils.pass("Move breaks successfully! ");
+                        moveBreakTimeSuccess = true;
+                        break;
+                    }
+                }
+                if (!moveBreakTimeSuccess) {
+                    SimpleUtils.fail("Move breaks fail, cannot found the break time: "+ breakTime, false);
+                }
+
+            } else
+                SimpleUtils.fail("The meal break time line fail to load! ", false);
+        }else
+            SimpleUtils.fail("There is no breaks! ", false);
+    }
 }
 

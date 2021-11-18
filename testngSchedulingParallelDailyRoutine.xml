@@ -404,6 +404,8 @@
                     <include name="verifyEditBreaksOptionIsAvailableAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditBreaksWeekViewAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
+                    <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
+                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

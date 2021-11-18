@@ -316,6 +316,49 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "question-input[question-title=\"Is approval by Manager required when an employee claims an Open Shift?\"]")
 	private WebElement isApprovedByManagerWhileClaimOpenShift;
 
+
+	public enum MealBreakDuration {
+
+		Minute5("5 minute"),
+		Minute10("5 minute"),
+		Minute15("5 minute"),
+		Minute20("5 minute"),
+		Minute25("5 minute"),
+		Minute30("5 minute"),
+		Minute35("5 minute"),
+		Minute40("5 minute"),
+		Minute45("5 minute"),
+		Minute50("5 minute"),
+		Minute55("5 minute"),
+		Minute60("5 minute");
+
+		private final String value;
+
+		MealBreakDuration(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
+	public enum MealBreakPaidType {
+
+		Paid("paid"),
+		Unpaid("unpaid");
+
+		private final String value;
+
+		MealBreakPaidType(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
 	String timeSheetHeaderLabel = "Controls";
 
 	@Override
@@ -6521,7 +6564,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "[form-title=\"Spread of Hours\"] [label=\"Edit\"]")
 	private WebElement spreadOfHoursEditBtn;
 	@FindBy(css = ".modal-dialog")
-	private WebElement spreadOfHoursDialog;
+	private WebElement editDialog;
 	@Override
 	public void turnOnOrTurnOffSpreadOfHoursToggle(boolean action) throws Exception {
 		String content = getSpreadOfHoursContent();
@@ -6564,38 +6607,38 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		if (isElementLoaded(spreadOfHoursEditBtn, 5)){
 			String contentBefore = getSpreadOfHoursContent();
 			clickTheElement(spreadOfHoursEditBtn);
-			if (isElementLoaded(spreadOfHoursDialog, 10)){
+			if (isElementLoaded(editDialog, 10)){
 				//check the title.
-				if (spreadOfHoursDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Spread Shift Premium")){
+				if (editDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Spread Shift Premium")){
 					SimpleUtils.pass("Dialog title is expected!");
 				} else {
 					SimpleUtils.fail("Dialog title is not correct", false);
 				}
 				//Check setting content.
-				if(spreadOfHoursDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("An employee will receive a")
-						&&spreadOfHoursDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("hour premium if the total time from the beginning and end of the work day is greater than")
-						&&spreadOfHoursDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("hours.")){
+				if(editDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("An employee will receive a")
+						&&editDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("hour premium if the total time from the beginning and end of the work day is greater than")
+						&&editDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("hours.")){
 					SimpleUtils.pass("Setting content in the dialog is expected!");
 				} else {
 					SimpleUtils.fail("Setting content is not expected!", false);
 				}
 				//edit the content, input the parameters.
-				if (spreadOfHoursDialog.findElements(By.cssSelector("input")).size() == 2){
-					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(0).clear();
-					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(0).sendKeys(numOfPremiumHrs);
-					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(1).clear();
-					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(1).sendKeys(greaterThan);
+				if (editDialog.findElements(By.cssSelector("input")).size() == 2){
+					editDialog.findElements(By.cssSelector("input")).get(0).clear();
+					editDialog.findElements(By.cssSelector("input")).get(0).sendKeys(numOfPremiumHrs);
+					editDialog.findElements(By.cssSelector("input")).get(1).clear();
+					editDialog.findElements(By.cssSelector("input")).get(1).sendKeys(greaterThan);
 				} else {
 					SimpleUtils.fail("inputs are not shown as expected!", false);
 				}
 				//save or cancel.
-				if (isElementLoaded(spreadOfHoursDialog.findElement(By.cssSelector("[label=\"Cancel\"]")), 5)
-						&&isElementLoaded(spreadOfHoursDialog.findElement(By.cssSelector("[label=\"Save\"]")), 5)){
+				if (isElementLoaded(editDialog.findElement(By.cssSelector("[label=\"Cancel\"]")), 5)
+						&&isElementLoaded(editDialog.findElement(By.cssSelector("[label=\"Save\"]")), 5)){
 					if (saveOrNot){
-						clickTheElement(spreadOfHoursDialog.findElement(By.cssSelector("[label=\"Save\"] button")));
+						clickTheElement(editDialog.findElement(By.cssSelector("[label=\"Save\"] button")));
 						SimpleUtils.assertOnFail("Setting is not saved successfully!", getSpreadOfHoursContent().contains(numOfPremiumHrs)&&getSpreadOfHoursContent().contains(greaterThan), false);
 					} else {
-						clickTheElement(spreadOfHoursDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
+						clickTheElement(editDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
 						SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getSpreadOfHoursContent()), false);
 					}
 				} else {
@@ -6617,14 +6660,14 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		if (isElementLoaded(spreadOfHoursEditBtn, 5)){
 			String contentBefore = getSpreadOfHoursContent();
 			clickTheElement(spreadOfHoursEditBtn);
-			if (isElementLoaded(spreadOfHoursDialog, 10)){
+			if (isElementLoaded(editDialog, 10)){
 
 				//edit the content, input the parameters.
-				if (spreadOfHoursDialog.findElements(By.cssSelector("input")).size() == 2){
-					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(0).clear();
-					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(0).sendKeys("0");
-					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(1).clear();
-					spreadOfHoursDialog.findElements(By.cssSelector("input")).get(1).sendKeys("0");
+				if (editDialog.findElements(By.cssSelector("input")).size() == 2){
+					editDialog.findElements(By.cssSelector("input")).get(0).clear();
+					editDialog.findElements(By.cssSelector("input")).get(0).sendKeys("0");
+					editDialog.findElements(By.cssSelector("input")).get(1).clear();
+					editDialog.findElements(By.cssSelector("input")).get(1).sendKeys("0");
 				} else {
 					SimpleUtils.fail("inputs are not shown as expected!", false);
 				}
@@ -6640,6 +6683,123 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			}
 		} else {
 			SimpleUtils.fail("Edit Spread Of Hours button is not loaded!", false);
+		}
+	}
+
+	@FindBy(css = "[form-title=\"Meal & Rest Breaks\"]")
+	private WebElement mealRestBreaksSection;
+
+	@FindBy(xpath = "//question-input[contains(@question-title, 'Meal Break for every')]/div")
+	private WebElement mealBreakSetting;
+
+	@FindBy(xpath = "//question-input[contains(@question-title, 'Meal Break for every')]/div/div/ng-transclude/lg-button")
+	private WebElement mealBreakEditButton;
+
+	@Override
+	public void turnOnOrTurnOffMealBreakToggle(boolean action) throws Exception {
+		String content = getMealBreakContent();
+		if (isElementLoaded(mealRestBreaksSection, 10)
+				&&mealRestBreaksSection.findElement(By.cssSelector(".info")).getText().equalsIgnoreCase("Meal & Rest Breaks")
+				&&content.contains("An employee should be scheduled for")
+				&&content.contains("Meal Break for every")
+				&&content.contains(" of work.")){
+			if (isElementLoaded(mealBreakSetting.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+				if (action && mealBreakSetting.getAttribute("class").contains("off")){
+					scrollToElement(mealBreakSetting.findElement(By.cssSelector(".lg-question-input__toggle")));
+					clickTheElement(mealBreakSetting.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Toggle is turned on!");
+				} else if (!action && !mealBreakSetting.getAttribute("class").contains("off")){
+					clickTheElement(mealBreakSetting.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Toggle is turned off!");
+				} else {
+					SimpleUtils.pass("Toggle status is expected!");
+				}
+			} else {
+				SimpleUtils.fail("Toggle fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Meal and Rest Breaks section fail to load!", false);
+		}
+	}
+
+
+	public String getMealBreakContent() throws Exception{
+		if (isElementLoaded(mealBreakSetting, 10)){
+			return mealBreakSetting.getText();
+		}
+		return "";
+	}
+
+
+	@FindBy(css = "[options=\"$ctrl.selections.duration\"] select")
+	private WebElement mealBreakDurationSelector;
+
+	@FindBy(css = "[options=\"$ctrl.selections.type\"] select")
+	private WebElement mealBreakPaidTypeSelector;
+
+	@Override
+	public void editMealBreak(String mealBreakDuration, String paidType, String scheduleHoursLimit, boolean saveOrNot) throws Exception {
+		if (isElementLoaded(mealBreakEditButton, 5)){
+			String contentBefore = getMealBreakContent();
+			clickTheElement(mealBreakEditButton);
+			if (isElementLoaded(editDialog, 10)){
+				//check the title.
+				if (editDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Meal & Rest Breaks")){
+					SimpleUtils.pass("Dialog title is expected!");
+				} else {
+					SimpleUtils.fail("Dialog title is not correct", false);
+				}
+				//Check setting content.
+				String settingContent = editDialog.findElement(By.cssSelector(".lg-modal__body")).getText();
+				if(settingContent.contains("Your state compliance laws are the default settings for this section, you can further edit the settings to fit your business.")
+						&& settingContent.contains("An employee should be scheduled for")
+						&& settingContent.contains("Meal Break for every")
+						&&settingContent.contains("hours of work.")){
+					SimpleUtils.pass("Setting content in the dialog is expected!");
+				} else {
+					SimpleUtils.fail("Setting content is not expected!", false);
+				}
+				//edit the content, input the parameters.
+				if (isElementLoaded(mealBreakDurationSelector, 10)
+						&& isElementLoaded(mealBreakPaidTypeSelector, 10)
+						&& isElementLoaded(editDialog.findElement(By.cssSelector("input")))) {
+					//set Meal break duration selector
+					selectByVisibleText(mealBreakDurationSelector,mealBreakDuration);
+
+					//set Meal break paid type selector
+					selectByVisibleText(mealBreakPaidTypeSelector,paidType);
+
+					//set schedule Hours Limit hour
+					editDialog.findElement(By.cssSelector("input")).clear();
+					editDialog.findElement(By.cssSelector("input")).sendKeys(scheduleHoursLimit);
+				} else {
+					SimpleUtils.fail("Parameters are not shown as expected!", false);
+				}
+
+				//save or cancel.
+				if (isElementLoaded(editDialog.findElement(By.cssSelector("[label=\"Cancel\"]")), 5)
+						&&isElementLoaded(editDialog.findElement(By.cssSelector("[ng-if=\"$ctrl.submitLabel\"]")), 5)){
+					if (saveOrNot){
+						clickTheElement(editDialog.findElement(By.cssSelector("[ng-if=\"$ctrl.submitLabel\"] button")));
+						String mealBreakSettingContent = getMealBreakContent();
+						SimpleUtils.assertOnFail("Setting is not saved successfully!",
+								mealBreakSettingContent.contains(mealBreakDuration)
+										&& mealBreakSettingContent.contains(paidType)
+										&& mealBreakSettingContent.contains(scheduleHoursLimit), false);
+					} else {
+						clickTheElement(editDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
+						SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getMealBreakContent()), false);
+					}
+				} else {
+					SimpleUtils.fail("Save or Cancel button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.fail("Meal Break dialog fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit Meal Break button is not loaded!", false);
 		}
 	}
 }

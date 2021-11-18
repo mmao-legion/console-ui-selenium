@@ -159,12 +159,14 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             while (i< 20 && (firstNameOfTM1.equalsIgnoreCase("open") || firstNameOfTM1.equalsIgnoreCase("Unassigned"))) {
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
                 firstNameOfTM1  = shiftInfo.get(0);
+                i++;
             }
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             String transferLocation = "";
             int j = 0;
-            while (j <20 && (transferLocation == "" || transferLocation.equalsIgnoreCase(location))) {
+            while (j <20 && (transferLocation.equals("") || transferLocation.equalsIgnoreCase(location))) {
                 transferLocation = locationSelectorPage.getOneRandomNameFromUpperFieldDropdownList("Location").split("\n")[0];
+                j++;
             }
 
             //Go to Team page, search this TM, click on it to view profile
