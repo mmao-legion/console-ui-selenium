@@ -855,10 +855,10 @@ public class TeamTestKendraScott2 extends TestBase{
 		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 				hours, repeatChanges);
 		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
-		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
+		SimpleUtils.assertOnFail("Pending count should be 1.", "1".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
 		//cancel availability change requests.
 		profileNewUIPage.cancelAllPendingAvailabilityRequest();
-		SimpleUtils.assertOnFail("Pending count should be 1.", "1".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
+		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
 	}
 
 	@Automated(automated ="Automated")
