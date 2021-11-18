@@ -289,7 +289,6 @@ public abstract class TestBase {
     @AfterMethod(alwaysRun = true)
     protected void tearDown(Method method,ITestResult result) throws IOException {
         ExtentTestManager.getTest().info("tearDown started");
-        ExtentTestManager.getTest().info("Skip flag:" + MyThreadLocal.getTestSkippedFlag());
         TestRailOperation.addResultForTest();
         if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {

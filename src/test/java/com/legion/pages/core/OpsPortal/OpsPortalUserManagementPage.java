@@ -834,12 +834,16 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	@Override
 	public void verifyManageItemInUserManagementAccessRoleTab() throws Exception {
 		if (areListElementVisible(accessRolePermissions,5)) {
-			click(accessRolePermissions.get(6));
-			if (templateLocalization.getText().contains("Template Localization")&& createEditTemplates.getText().contains("Create/Edit Templates")
-			&& operationManagement.getText().contains("Operation Management") &&viewTemplate.getText().contains("View Template") ) {
-				SimpleUtils.pass("Template Localization,Create/Edit Templates,Operation Management and View Template load successfully ");
-			}else
-				SimpleUtils.fail("Template Localization,Create/Edit Templates,Operation Management and View Template load failed",false);
+			for (WebElement element: accessRolePermissions){
+				if (element.getText().equalsIgnoreCase("Manage")){
+					clickTheElement(element);
+					if (templateLocalization.getText().contains("Template Localization")&& createEditTemplates.getText().contains("Create/Edit Templates")
+							&& operationManagement.getText().contains("Operation Management") &&viewTemplate.getText().contains("View Template") ) {
+						SimpleUtils.pass("Template Localization,Create/Edit Templates,Operation Management and View Template load successfully ");
+					}else
+						SimpleUtils.fail("Template Localization,Create/Edit Templates,Operation Management and View Template load failed",false);
+				}
+			}
 		}else
 			SimpleUtils.fail("Access Role Permissions items load failed",false);
 	}
