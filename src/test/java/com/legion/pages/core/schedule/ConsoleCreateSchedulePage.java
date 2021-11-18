@@ -1,4 +1,4 @@
-package com.legion.pages.core;
+package com.legion.pages.core.schedule;
 
 import com.legion.pages.*;
 import com.legion.utils.JsonUtil;
@@ -22,7 +22,6 @@ import java.util.Random;
 import java.util.function.Function;
 
 import static com.legion.utils.MyThreadLocal.*;
-import static com.legion.utils.MyThreadLocal.setWorkerLocation;
 
 public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedulePage {
     public ConsoleCreateSchedulePage() {
@@ -1198,7 +1197,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
         if(isElementLoaded(deleteScheduleButton, 60)){
             click(deleteScheduleButton);
-            if(isElementLoaded(deleteSchedulePopup, 15)
+            if(isElementLoaded(deleteSchedulePopup, 25)
                     && isElementLoaded(deleteScheduleCheckBox, 5)
                     && isElementLoaded(deleteButtonOnDeleteSchedulePopup, 5)){
                 click(deleteScheduleCheckBox);

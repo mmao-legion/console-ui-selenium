@@ -1,8 +1,9 @@
-package com.legion.pages.core;
+package com.legion.pages.core.schedule;
 
 import com.legion.pages.AnalyzePage;
 import com.legion.pages.BasePage;
 import com.legion.pages.ScheduleMainPage;
+import com.legion.pages.core.schedule.ConsoleScheduleMainPage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

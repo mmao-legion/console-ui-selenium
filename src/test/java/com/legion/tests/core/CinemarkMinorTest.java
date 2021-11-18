@@ -5,13 +5,9 @@ import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.ProfileNewUIPage;
-import com.legion.pages.SchedulePage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleCommonPage;
 import com.legion.pages.core.OpsPortalConfigurationPage;
-import com.legion.pages.core.OpsPortalLaborModelPage;
-import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.data.CredentialDataProviderSource;
@@ -22,13 +18,8 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.security.auth.login.Configuration;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static com.legion.utils.MyThreadLocal.location;
-import static com.legion.utils.MyThreadLocal.setTestSuiteID;
 
 public class CinemarkMinorTest extends TestBase {
 

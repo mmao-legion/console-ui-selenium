@@ -1,6 +1,7 @@
-package com.legion.pages.core;
+package com.legion.pages.core.schedule;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;

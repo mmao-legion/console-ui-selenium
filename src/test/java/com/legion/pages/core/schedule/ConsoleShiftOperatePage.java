@@ -1,4 +1,4 @@
-package com.legion.pages.core;
+package com.legion.pages.core.schedule;
 
 import com.legion.pages.*;
 import com.legion.tests.core.ScheduleTestKendraScott2;

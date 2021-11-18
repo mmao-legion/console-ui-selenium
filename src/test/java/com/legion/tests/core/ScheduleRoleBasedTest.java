@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleCommonPage;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

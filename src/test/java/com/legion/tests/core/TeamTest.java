@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleCommonPage;
-import cucumber.api.java.ro.Si;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
