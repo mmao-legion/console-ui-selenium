@@ -855,7 +855,7 @@ public class LocationsTest extends TestBase {
                 }
                 schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("Alysha");
+                schedulePage.searchTeamMemberByName("a");
                 if (!schedulePage.verifyWFSFunction()) {
                     //to check WFS group exist or not
                     LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -906,7 +906,7 @@ public class LocationsTest extends TestBase {
                 }
                 schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
                 schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("Alysha");
+                schedulePage.searchTeamMemberByName("a");
                 if (!schedulePage.verifyWFSFunction()) {
                     SimpleUtils.fail("Workforce sharing function work failed",false);
                 }else
