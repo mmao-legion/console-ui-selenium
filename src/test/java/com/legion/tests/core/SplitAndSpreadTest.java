@@ -642,14 +642,20 @@ public class SplitAndSpreadTest extends TestBase {
 
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
             String firstNameOfTM1 = shiftInfo.get(0);
-            while (firstNameOfTM1.equalsIgnoreCase("open")) {
+            int i = 0;
+            while (i < 50 && (firstNameOfTM1.equalsIgnoreCase("open") || firstNameOfTM1.equalsIgnoreCase("unassigned"))) {
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
                 firstNameOfTM1  = shiftInfo.get(0);
+                i++;
             }
             String workRoleOfTM1 = shiftInfo.get(4);
             String lastNameOfTM1 = shiftInfo.get(5);
-            while (shiftInfo.get(0).equalsIgnoreCase(firstNameOfTM1) || shiftInfo.get(0).equalsIgnoreCase("open")) {
+            i = 0;
+            while (i< 50 && (shiftInfo.get(0).equalsIgnoreCase(firstNameOfTM1)
+                    || shiftInfo.get(0).equalsIgnoreCase("open")
+                    || firstNameOfTM1.equalsIgnoreCase("unassigned"))) {
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                i++;
             }
             String firstNameOfTM2 = shiftInfo.get(0);
             String workRoleOfTM2 = shiftInfo.get(4);
@@ -713,7 +719,7 @@ public class SplitAndSpreadTest extends TestBase {
             // Edit the Schedule and try to drag TM1 on Monday to TM2 on Tuesday
             String warningMessage = "This will trigger spread hours.";
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            int i=0;
+            i=0;
             while (!scheduleShiftTablePage.isDragAndDropConfirmPageLoaded() && i<5){
                 scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(1,firstNameOfTM1,0,firstNameOfTM2);
                 i++;

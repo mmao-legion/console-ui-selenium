@@ -325,7 +325,7 @@ public class MealAndRestBreakTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify the meal placement violation show/not show when the start time in the five different points")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheMealPlacementViolationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -408,7 +408,7 @@ public class MealAndRestBreakTest extends TestBase {
             SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
             shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("11:00am",0,true);
             shiftOperatePage.clickOnUpdateEditShiftTimeButton();
-            //Set the meal break time for the third shift to earlier than expected range
+            //Set the meal break time for the third shift to later than expected range
             index = shiftIndexes.get(2);
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();

@@ -1393,10 +1393,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
-	@FindBy (xpath = "//dm-dashboard/div/div/div/div[3]/div[1]")
+	@FindBy (xpath = "//div[contains(@class,'react-dashboard')]/dashboard/div/div/div/div[3]/div[1]")
 	private WebElement upperfieldNameOnDashboard;
 
-	@FindBy (xpath = "//dm-dashboard/div/div/div/div[3]/div[2]")
+	@FindBy (xpath = "//div[contains(@class,'react-dashboard')]/dashboard/div/div/div/div[3]/div[2]")
 	private WebElement upperfieldWeekOnDashboard;
 
 	@Override
@@ -1688,7 +1688,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy (xpath = "//div[contains(text(),'Total Violation Hrs')]")
 	private WebElement totalViolationHrsMessage;
 
-	@FindBy (xpath = "//div[contains(@class,'jss6')]//div[contains(text(),'View Violations')]")
+	@FindBy (xpath = "//div[contains(text(),'View Violations')]")
 	private WebElement viewViolationsLink;
 
 
