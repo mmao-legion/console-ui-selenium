@@ -2806,7 +2806,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     //used by Group by work role and job title.
     @Override
-    public void verifyGroupByTitlesOrder() throws Exception{
+    public List<String> verifyGroupByTitlesOrder() throws Exception{
         List<String> results = new ArrayList<>();
         if (areListElementVisible(groupTitleList, 10)){
             for (WebElement element: groupTitleList){
@@ -2816,6 +2816,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else {
             SimpleUtils.fail("No group title show up!", false);
         }
+        return results;
     }
 
     @FindBy(css = ".week-schedule-shift[data-day=\"1\"] .week-schedule-worker-name")

@@ -392,6 +392,12 @@
                     <include name="verifySpreadOfHoursViolationWhenDraggingTheAvatarToChangeTheAssignmentAsInternalAdmin" />
                     <include name="verifySpreadOfHoursViolationWhenDraggingTheShiftToAnotherDayAsInternalAdmin" />
                     <include name="verifyOpenShiftWithSpreadOfHoursViolationCannotBeClaimedAsTeamMember" />
+                    <include name="verifySplitShiftCanBeConfiguredAsInternalAdmin" />
+                    <include name="verifySplitShiftViolationWhenSearchTMAsInternalAdmin" />
+                    <include name="verifySplitShiftViolationWillShowOnTheSecondShiftAsInternalAdmin" />
+                    <include name="verifySplitShiftViolationWhenDragDropToChangeAssignmentAsInternalAdmin" />
+                    <include name="verifySplitShiftViolationWhenDragDropToAnotherDayAsInternalAdmin" />
+                    <include name="verifySplitShiftViolationOpenShiftCannotBeClaimedAsTeamMember" />
                 </methods>
             </class>
         </classes>
