@@ -616,6 +616,7 @@ public class AbsentManagePage extends BasePage {
     }
 
     public String removeTimeOffInSettings() {
+        scrollToElement(removeButton);
         removeButton.click();
         return removeConfirmMes.getText();
     }

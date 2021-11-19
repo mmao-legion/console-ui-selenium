@@ -3126,7 +3126,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						click(selectAllCheckBoxInManaLocationWin);
 						if (locationCheckBoxs.size()>0) {
 							SimpleUtils.pass("Can search upperfield of region");
-							for (int i = 2; i <5 ; i++) {
+							for (int i = 2; i <5 && i<locationCheckBoxs.size(); i++) {
 								if (isElementLoaded(locationCheckBoxs.get(i)) && !locationCheckBoxs.get(i).getAttribute("class").contains("not-empty")) {
 									click(locationCheckBoxs.get(i));
 								}

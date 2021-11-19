@@ -96,7 +96,6 @@ public class DynamicEmployeePage extends BasePage {
         ArrayList<String> value = new ArrayList<String>();
         for (WebElement val : valueList) {
             value.add(val.getAttribute("label"));
-            System.out.println(val.getAttribute("label"));
         }
         return value;
     }

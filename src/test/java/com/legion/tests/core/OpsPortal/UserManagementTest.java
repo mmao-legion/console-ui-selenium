@@ -299,7 +299,14 @@ public class UserManagementTest extends TestBase {
 
             //Minor No/Yes
             List<String> minor = dynamicEmployeePage.getCriteriaValues("Minor");
-            Assert.assertTrue(minor.size() == status.size() && minor.containsAll(status), "The Minor value validate failed!");
+            ArrayList<String> minorsExpected = new ArrayList<String>();
+            minorsExpected.add(" <14");
+            minorsExpected.add("14");
+            minorsExpected.add("15");
+            minorsExpected.add("16");
+            minorsExpected.add("17");
+            minorsExpected.add(">=18");
+            Assert.assertTrue(minor.containsAll(minorsExpected), "The Minor value validate failed!");
 
             //Badge list
             List<String> badge = dynamicEmployeePage.getCriteriaValues("Badge");

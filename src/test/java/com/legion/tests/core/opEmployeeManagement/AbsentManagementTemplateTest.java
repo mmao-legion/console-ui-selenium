@@ -582,6 +582,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         distribution.add("Weekly");
         distribution.add("Worked Hours");
         distribution.add("Lump Sum");
+        distribution.add("None");
         return distribution;
     }
 
@@ -608,6 +609,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         ArrayList<String> proUnit = new ArrayList<String>();
         proUnit.add("Days");
         proUnit.add("Months");
+        proUnit.add("Hours Worked");
         return proUnit;
     }
 
