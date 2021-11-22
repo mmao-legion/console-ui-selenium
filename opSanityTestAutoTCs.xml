@@ -73,8 +73,8 @@
                     <!--                    <include name="verifyLocationListFunctionInTimesheet" />-->
                     <!--                    <include name="verifyLegionBasicNavigationFunctionIn" />-->
                     <include name="verifyDashboardViewAsInternalAdmin" />
-                    <include name="verifyDashboardViewAsDistrictManager" />
-                    <include name="verifyDashboardViewAsStoreManager" />
+<!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
+<!--                    <include name="verifyDashboardViewAsStoreManager" />-->
                     <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />
                     <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />
                     <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>
@@ -104,6 +104,7 @@
         <classes>
             <class name="com.legion.tests.core.OpsPortal.ConfigurationTest">
                 <methods>
+                    <include name="verifyCreateEachTemplateWithDynamicGroupAsAInternalAdmin"/>
                     <include name="verifyUserCanOpenEachTypeTemplate"/>
                     <include name="verifyNewAdvancedStaffingRulePage"/>
                     <include name="verifyCheckBoxOfDaysOfWeek"/>
