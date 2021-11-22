@@ -1878,7 +1878,7 @@ public class LocationsTest extends TestBase {
             loginPage.logOut();
             /// Login as customer admin user
             String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("Op_Enterprise") + fileName;
+            fileName = System.getProperty("enterprise") + fileName;
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
             Object[][] internalCustomerAdminCredentials = userCredentials.get("InternalCustomerAdmin");
             loginToLegionAndVerifyIsLoginDone(String.valueOf(internalCustomerAdminCredentials[0][0]), String.valueOf(internalCustomerAdminCredentials[0][1])

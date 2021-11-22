@@ -242,9 +242,13 @@ public class AbsentManagePage extends BasePage {
     public void cancel() {
         cancelCreatingTemp.click();
     }
-
-    public void submit() {
+    @FindBy(css = ".walkme-action-destroy-1.wm-close-link")
+    private WebElement closeWakeme;
+    public void submit() throws Exception {
         continueCreatingTemp.click();
+        if (isElementLoaded(closeWakeme,10)){
+            click(closeWakeme);
+        }
     }
 
     public void closeWelcomeModal() {

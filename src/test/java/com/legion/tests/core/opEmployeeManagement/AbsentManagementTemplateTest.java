@@ -57,7 +57,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Templates list page validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditSearchAndDisableTemplateAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyAddEditSearchAndDisableTemplateAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -80,7 +80,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         //verify new template works well
         absentManagePage.createANewTemplate("AutoTest01", "for test");
         absentManagePage.submit();
-        absentManagePage.saveTemplateAs("Save as draft");
+//        absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating a template!");
 
         //verify search template UI
@@ -232,7 +232,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTemplateDetailsAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyTemplateDetailsAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -362,7 +362,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffConfigurationAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyTimeOffConfigurationAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -448,7 +448,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffRequestRulesAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyTimeOffRequestRulesAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
