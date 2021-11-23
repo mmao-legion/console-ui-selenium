@@ -1,10 +1,14 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
+import org.glassfish.grizzly.impl.SafeFutureImpl;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -635,4 +639,20 @@ public class AbsentManagePage extends BasePage {
         waitForSeconds(3);
     }
 
+
+    @FindBy(css = ".time-off-reason-setting tr.ng-scope")
+    private List<WebElement> timeOffReasons;
+    public void removeTimeOffReasons(String timeOffReasonName) {
+        if (areListElementVisible(timeOffReasons, 10) && timeOffReasons.size()>0) {
+            for (WebElement reason: timeOffReasons) {
+                if (reason.findElement(By.cssSelector(".one-line-overflow")).getText().equalsIgnoreCase(timeOffReasonName)){
+                    clickTheElement(reason.findElement(By.cssSelector("[label=\"Remove\"]")));
+                    okCreatingTimeOff();
+                    System.out.println("Delete the time off reason successfull!");
+                    break;
+                }
+            }
+        } else
+            System.out.println("There is no time off reason been listed!");
+    }
 }

@@ -161,6 +161,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.cancelCreatingTimeOff();
         //cancel adding new time off
         String timeOffName = "ZZ-vacation";
+        absentManagePage.removeTimeOffReasons(timeOffName);
         absentManagePage.addTimeOff(timeOffName);
         absentManagePage.cancelCreatingTimeOff();
         Assert.assertFalse(absentManagePage.isTimeOffReasonDisplayed(timeOffName), "Failed to cancel adding!");
@@ -243,7 +244,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         String tempName = "AutoTest_Accrual" + random.nextInt(100);
         absentManagePage.createANewTemplate(tempName, "accrual test");
         absentManagePage.submit();
-        absentManagePage.closeWelcomeModal();
+//        absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
@@ -374,7 +375,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         String tempName = "AutoTest_Accrual" + random.nextInt(1000);
         absentManagePage.createANewTemplate(tempName, "accrual test");
         absentManagePage.submit();
-        absentManagePage.closeWelcomeModal();
+//        absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
@@ -460,7 +461,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         String tempName = "AutoTest_Accrual" + random.nextInt(1000);
         absentManagePage.createANewTemplate(tempName, "accrual test");
         absentManagePage.submit();
-        absentManagePage.closeWelcomeModal();
+//        absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
