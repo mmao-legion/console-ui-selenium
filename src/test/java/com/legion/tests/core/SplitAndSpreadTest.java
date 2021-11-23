@@ -382,7 +382,7 @@ public class SplitAndSpreadTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify \"This will trigger a split shift\" warning when dragging the shift to another day")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySplitShiftViolationWhenDragDropToAnotherDayAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -458,7 +458,9 @@ public class SplitAndSpreadTest extends TestBase {
         //Drag the third one and drop it the second one to change assignment.
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleShiftTablePage.dragOneShiftToAnotherDay(1, firstNameOfTM1, 0);
-        String expectedViolationMessage = firstNameOfTM1 + " is scheduled 8am - 10am on Sunday. This will trigger a split shift.";
+        String weekday = scheduleShiftTablePage.getWeekDayTextByIndex(0);
+        String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
+        String expectedViolationMessage = firstNameOfTM1 + " is scheduled 8am - 10am on "+fullWeekDay+". This will trigger a split shift.";
         scheduleShiftTablePage.verifyMessageOnCopyMoveConfirmPage(expectedViolationMessage,expectedViolationMessage);
         scheduleShiftTablePage.selectCopyOrMoveByOptionName("Move");
         scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
