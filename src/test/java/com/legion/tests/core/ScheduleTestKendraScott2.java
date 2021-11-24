@@ -4669,7 +4669,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		List<String> shiftInfo = new ArrayList<>();
 		String firstNameOfTM = "";
 		int i = 0;
-		while (i < 20 && (firstNameOfTM.equals("") || firstNameOfTM.equalsIgnoreCase("Open")
+		while (i < 50 && (firstNameOfTM.equals("") || firstNameOfTM.equalsIgnoreCase("Open")
 				|| firstNameOfTM.equalsIgnoreCase("Unassigned"))) {
 			shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			//Search shift by TM names: first name and last name

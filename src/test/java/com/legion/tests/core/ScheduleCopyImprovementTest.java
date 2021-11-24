@@ -345,6 +345,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
         if (isCopySchedule){
             // Delete all the shifts that are assigned to the team member
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+            Thread.sleep(3000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
             shiftOperatePage.deleteTMShiftInWeekView("open");
