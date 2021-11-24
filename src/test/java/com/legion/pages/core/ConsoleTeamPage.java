@@ -699,6 +699,29 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> jobTitlesInRoster;
 	@FindBy(css = ".tr .employedStatus")
 	private List<WebElement> employmentStatus;
+	@FindBy(css = "[box-title=\"Actions\"]")
+	private WebElement actionsSection;
+
+	@Override
+	public void verifyTheButtonsInActions(List<String> buttons) throws Exception {
+		if (isElementLoaded(actionsSection, 5)) {
+			List<WebElement> availableButtons = actionsSection.findElements(By.cssSelector(".pull-left.ng-isolate-scope"));
+			List<String> buttonNames = new ArrayList<>();
+			for (WebElement name : availableButtons) {
+				if (!name.getAttribute("class").contains("ng-hide") && !name.getText().isEmpty()) {
+					buttonNames.add(name.getText());
+				}
+			}
+			SimpleUtils.report("Get the buttons from Actions: " + buttonNames.toString());
+			if (buttonNames.size() > 0 && buttons.size() > 0 && buttonNames.containsAll(buttons) && buttons.containsAll(buttonNames)) {
+				SimpleUtils.pass("Buttons are correct: " + buttons.toString());
+			} else {
+				SimpleUtils.fail("Buttons are not expected, expected: " + buttons.toString() + ", But actual: " + buttonNames.toString(), false);
+			}
+		} else {
+			SimpleUtils.fail("Actions section not loaded successfully!", false);
+		}
+	}
 
 	@Override
 	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception {

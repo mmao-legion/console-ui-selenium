@@ -2372,7 +2372,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public void verifySpecificShiftHaveEditIcon(int index) throws Exception {
         try {
             boolean isFound = false;
-            if (areListElementVisible(shiftsWeekView, 5) && shiftsWeekView.size() > index) {
+            if (areListElementVisible(shiftsWeekView, 15) && shiftsWeekView.size() > index) {
                 try {
                     if (isElementLoaded(shiftsWeekView.get(index).findElement(By.cssSelector("[src*=edited-shift-week]")))) {
                         isFound = true;

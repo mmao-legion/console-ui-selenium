@@ -16,6 +16,8 @@ import java.util.Map;
 import com.legion.pages.core.ConsoleGmailPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.OpsPortalLocationsPage;
+import com.legion.utils.Constants;
+import cucumber.api.java.hu.Ha;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.formula.ptg.ControlPtg;
 import org.apache.xpath.operations.Bool;
@@ -1472,5 +1474,107 @@ public class TeamTestKendraScott2 extends TestBase{
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Verify can update the config in integration")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyCanUpdateTheHRConfigInIntegrationAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		dashboardPage.clickOnIntegrationConsoleMenu();
+		dashboardPage.verifyIntegrationPageIsLoaded();
+		IntegrationPage integrationPage = pageFactory.createIntegrationPage();
+		if (integrationPage.checkIsConfigExists(Constants.Ftp, Constants.Hr)) {
+			integrationPage.clickOnEditButtonByChannelAndApplication(Constants.Ftp, Constants.Hr);
+			SimpleUtils.assertOnFail("Edit Config page failed to load!", integrationPage.isEditConfigPageLoaded(), false);
+			HashMap<String, String> disable = new HashMap<>();
+			disable.put("status", Constants.Disabled);
+			integrationPage.editTheConfigByName(disable);
+			dashboardPage.verifyIntegrationPageIsLoaded();
+			SimpleUtils.assertOnFail("FTP HR still enabled!", !integrationPage.checkIsConfigExists(Constants.Ftp, Constants.Hr), false);
+		}
+		if(!integrationPage.checkIsConfigExists(Constants.Custom, Constants.Hr)){
+			Map<String, String> configInfo = new HashMap<>();
+			configInfo.put("channel", Constants.Custom);
+			configInfo.put("applicationType", Constants.Hr);
+			configInfo.put("status", Constants.Enabled);
+			configInfo.put("timeZoneOption", Constants.Utc);
+
+			integrationPage.createConfig(configInfo);
+		}
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Verify the buttons for employee in different status")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheButtonsForEmployeeInDifferentStatusAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+		List<String> expectedButtons = new ArrayList<>();
+
+		// Verify Terminate, Transfer, Manual Onboard buttons should show for new employee
+		teamPage.searchAndSelectTeamMemberByName("New");
+		SimpleUtils.assertOnFail("Profile page not loaded successfully!", teamPage.isProfilePageLoaded(), false);
+		expectedButtons.add(Constants.Terminate);
+		expectedButtons.add(Constants.Transfer);
+		expectedButtons.add(Constants.ManualOnboard);
+		teamPage.verifyTheButtonsInActions(expectedButtons);
+
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+		// Verify Activate, Terminate, Transfer buttons should show in Actions for onboarded employee
+		teamPage.searchAndSelectTeamMemberByName("Onboarded");
+		SimpleUtils.assertOnFail("Profile page not loaded successfully!", teamPage.isProfilePageLoaded(), false);
+		expectedButtons = new ArrayList<>();
+		expectedButtons.add(Constants.Terminate);
+		expectedButtons.add(Constants.Transfer);
+		expectedButtons.add(Constants.Activate);
+		teamPage.verifyTheButtonsInActions(expectedButtons);
+
+		loginPage.logOut();
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		String firstName = profileNewUIPage.getNickNameFromProfile();
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+		SimpleUtils.assertOnFail("Profile page not loaded successfully!", teamPage.isProfilePageLoaded(), false);
+
+		// Verify Change Password button should show in Actions in TM view
+		expectedButtons = new ArrayList<>();
+		expectedButtons.add(Constants.ChangePassword);
+		teamPage.verifyTheButtonsInActions(expectedButtons);
+
+		loginPage.logOut();
+
+		loginToLegionAndVerifyIsLoginDone(username, password, location);
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+		// Verify Deactivate, Terminate, Transfer, Send Username, Reset Password buttons should show in Actions for active employee
+		teamPage.searchAndSelectTeamMemberByName(firstName);
+		SimpleUtils.assertOnFail("Profile page not loaded successfully!", teamPage.isProfilePageLoaded(), false);
+		expectedButtons = new ArrayList<>();
+		expectedButtons.add(Constants.Terminate);
+		expectedButtons.add(Constants.Transfer);
+		expectedButtons.add(Constants.Deactivate);
+		expectedButtons.add(Constants.SendUsername);
+		expectedButtons.add(Constants.ResetPassword);
+		teamPage.verifyTheButtonsInActions(expectedButtons);
 	}
 }
