@@ -307,11 +307,11 @@ public class MealAndRestBreakTest extends TestBase {
 
             //Edit meal break setting and click Cancel
             controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute5.getValue(),
-                    ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "10",false );
+                    ConsoleControlsNewUIPage.MealBreakPaidType.Paid.getValue(), "10",false );
 
             //Edit meal break setting and click Save
             controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
-                    ConsoleControlsNewUIPage.MealBreakPaidType.Paid.getValue(), "6",true );
+                    ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "6",true );
 
             if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();

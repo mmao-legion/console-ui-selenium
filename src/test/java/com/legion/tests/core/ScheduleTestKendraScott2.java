@@ -1164,7 +1164,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verificationOfToAndFroNavigationOfWeekPickerAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		try {
-
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -4670,7 +4669,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		List<String> shiftInfo = new ArrayList<>();
 		String firstNameOfTM = "";
 		int i = 0;
-		while (i < 20 && (firstNameOfTM.equals("") || firstNameOfTM.equalsIgnoreCase("Open")
+		while (i < 50 && (firstNameOfTM.equals("") || firstNameOfTM.equalsIgnoreCase("Open")
 				|| firstNameOfTM.equalsIgnoreCase("Unassigned"))) {
 			shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			//Search shift by TM names: first name and last name
