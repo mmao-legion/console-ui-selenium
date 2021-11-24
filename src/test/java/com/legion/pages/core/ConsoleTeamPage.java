@@ -3801,7 +3801,7 @@ private List<WebElement> locationColumn;
 		String startDate = "";
 		if (areListElementVisible(daysInSessionStart,5)) {
 			int index = (new Random()).nextInt(daysInSessionStart.size());
-			click(daysInSessionStart.get(index));
+			clickTheElement(daysInSessionStart.get(index));
 			if (daysInSessionStart.get(index).getAttribute("class").contains("in-range") && isElementLoaded(startDateInSessionStartEnd,5)) {
 				SimpleUtils.pass("School Calendars Page: Session start random day is selected successfully");
 				startDate = startDateInSessionStartEnd.getText();
@@ -3832,7 +3832,7 @@ private List<WebElement> locationColumn;
 	public void clickOnSaveCalendar() throws Exception {
 		if (isElementLoaded(savePreferButton,5)) {
 			clickTheElement(savePreferButton);
-			if (isElementLoaded(popMessage,60) && popMessage.getText().contains("Success"))
+			if (isElementLoaded(popMessage,120) && popMessage.getText().contains("Success"))
 				SimpleUtils.pass("School Calendars Page: School Calendar is saved successfully");
 			else
 				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",true);
@@ -4194,7 +4194,7 @@ private List<WebElement> locationColumn;
 
 	@Override
 	public void deleteCalendarByName(String calendarName) throws Exception {
-		if (areListElementVisible(calendarTitles, 10)) {
+		if (areListElementVisible(calendarTitles, 20)) {
 			for (WebElement title : calendarTitles) {
 				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
 					clickTheElement(title);

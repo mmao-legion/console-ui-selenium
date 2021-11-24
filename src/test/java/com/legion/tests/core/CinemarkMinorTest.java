@@ -615,6 +615,11 @@ public class CinemarkMinorTest extends TestBase {
 
             // Login as Internal Admin to clean up data
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
             teamPage.deleteCalendarByName("Calendar" + random1);
             teamPage.deleteCalendarByName("Calendar" + random2);
             teamPage.deleteCalendarByName("Calendar" + random3);
