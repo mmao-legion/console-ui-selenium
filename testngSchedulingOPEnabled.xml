@@ -313,7 +313,7 @@
                     <include name="verifySplitShiftViolationWillShowOnTheSecondShiftAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWhenDragDropToChangeAssignmentAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWhenDragDropToAnotherDayAsInternalAdmin" />
-                    <include name="verifySplitShiftViolationOpenShiftCannotBeClaimedAsTeamMember" />
+                    <!--  SCH-5605                  <include name="verifySplitShiftViolationOpenShiftCannotBeClaimedAsTeamMember" />   -->
                 </methods>
             </class>
         </classes>
