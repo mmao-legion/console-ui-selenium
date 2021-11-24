@@ -64,6 +64,8 @@
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
+                    <include name="verifyAutoPublishSettingAsInternalAdmin" />
+                    <include name="verifyAutoPublishSettingCanBeSavedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
