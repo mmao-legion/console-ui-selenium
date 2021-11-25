@@ -590,19 +590,19 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         verifyAvailabilityChangeHourDetail();
         String dateInfo = activityCards.get(0).findElement(By.cssSelector("div[class=\"notification-details-table\"] .date")).getText();
         if (repeatChange.toLowerCase().contains("this week only")){
-            if (dateInfo.toLowerCase().contains(changeDateFormat(weekInfo.split("-")[0]).toLowerCase()) && dateInfo.toLowerCase().contains(changeDateFormat(weekInfo.split("-")[1]).toLowerCase())){
+            if (dateInfo.replace(" - ", "-").contains(weekInfo.replace(" - ", "-"))){
                 SimpleUtils.pass("Week info of availability change is correct! WeekInfo: "+dateInfo);
             } else {
-                SimpleUtils.fail("week info is not correct! expected weekinfo is: "+weekInfo+" actual is: "+dateInfo,true);
+                SimpleUtils.fail("week info is not correct! expected weekinfo is: "+weekInfo+" actual is: "+dateInfo,false);
             }
         } else if (repeatChange.toLowerCase().contains("repeat forward")){
-            if (dateInfo.toLowerCase().contains(changeDateFormat(weekInfo.split("-")[0]).toLowerCase()) && dateInfo.toLowerCase().contains("onward")){
+            if (dateInfo.replace(" - ", "-").contains(weekInfo.replace(" - ", "-"))){
                 SimpleUtils.pass("Week info of availability change is correct! WeekInfo: "+dateInfo);
             } else {
-                SimpleUtils.fail("week info is not correct! actual result is: " + dateInfo, true);
+                SimpleUtils.fail("week info is not correct! actual result is: " + dateInfo, false);
             }
         } else{
-            SimpleUtils.fail("repeatchange label doesn't match anyone", true);
+            SimpleUtils.fail("repeat change label doesn't match anyone", false);
         }
     }
 

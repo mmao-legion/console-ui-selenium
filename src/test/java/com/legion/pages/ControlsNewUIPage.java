@@ -33,6 +33,26 @@ public interface ControlsNewUIPage {
 
 	public void clickOnControlsSchedulingPolicies() throws Exception;
 
+	public void updateAndVerifyAutoPublishSettings(String option) throws Exception;
+
+	public void updateAutoPublishSchedulePublishDayOfWeek(String option) throws Exception;
+
+	public void updateAutoPublishSchedulePublishTimeOfDay(String mins) throws Exception;
+
+	public void updateAutoPublishScheduleRepublishDayOfWeek(String option) throws Exception;
+
+	public void updateAutoPublishScheduleRepublishTimeOfDay(String mins) throws Exception;
+
+	public String getAutoPublishSettings() throws Exception;
+
+	public String getAutoPublishSchedulePublishDayOfWeek() throws Exception;
+
+	public String getAutoPublishSchedulePublishTimeOfDay() throws Exception;
+
+	public String getAutoPublishScheduleRepublishDayOfWeek() throws Exception;
+
+	public String getAutoPublishScheduleRepublishTimeOfDay() throws Exception;
+
 	public void enableOrDisableScheduleCopyRestriction(String yesOrNo) throws Exception;
 
 	public void setCopyConfig(boolean onOrOff, String toggleName) throws Exception;

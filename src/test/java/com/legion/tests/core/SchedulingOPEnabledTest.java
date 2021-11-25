@@ -837,28 +837,165 @@ public class SchedulingOPEnabledTest  extends TestBase {
         }
     }
 
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify auto publish settings are available")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyAutoPublishSettingAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+
+        //Go to OP page
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to Configuration
+        cinemarkMinorPage.clickConfigurationTabInOP();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        String templateName = "test auto publish "+String.valueOf(System.currentTimeMillis());
+        cinemarkMinorPage.newTemplate(templateName);
+        String s = controlsNewUIPage.getDaysInAdvancePublishSchedulesInSchedulingPolicies();
+        SimpleUtils.assertOnFail("Days publish in advance is not loaded!", !("".equals(controlsNewUIPage.getDaysInAdvancePublishSchedulesInSchedulingPolicies())), false);
+        List<String> optionsForAutoPublish = new ArrayList<>();
+        optionsForAutoPublish.add("Auto publish on day after time");
+        optionsForAutoPublish.add("Auto publish after date");
+        optionsForAutoPublish.add("Disabled");
+        controlsNewUIPage.updateAndVerifyAutoPublishSettings(optionsForAutoPublish.get(0));
+        controlsNewUIPage.updateAndVerifyAutoPublishSettings(optionsForAutoPublish.get(1));
+        controlsNewUIPage.updateAndVerifyAutoPublishSettings(optionsForAutoPublish.get(2));
+
+        List<String> optionsForDayOfWeek = new ArrayList<>();
+        optionsForDayOfWeek.add("Mon");
+        optionsForDayOfWeek.add("Tue");
+        optionsForDayOfWeek.add("Wed");
+        optionsForDayOfWeek.add("Thu");
+        optionsForDayOfWeek.add("Fri");
+        optionsForDayOfWeek.add("Sat");
+        optionsForDayOfWeek.add("Sun");
+        optionsForDayOfWeek.add("None");
+
+        controlsNewUIPage.updateAutoPublishSchedulePublishDayOfWeek(optionsForDayOfWeek.get(0));
+        controlsNewUIPage.updateAutoPublishSchedulePublishDayOfWeek(optionsForDayOfWeek.get(1));
+        controlsNewUIPage.updateAutoPublishSchedulePublishDayOfWeek(optionsForDayOfWeek.get(2));
+        controlsNewUIPage.updateAutoPublishSchedulePublishDayOfWeek(optionsForDayOfWeek.get(3));
+        controlsNewUIPage.updateAutoPublishSchedulePublishDayOfWeek(optionsForDayOfWeek.get(4));
+        controlsNewUIPage.updateAutoPublishSchedulePublishDayOfWeek(optionsForDayOfWeek.get(5));
+        controlsNewUIPage.updateAutoPublishSchedulePublishDayOfWeek(optionsForDayOfWeek.get(6));
+        controlsNewUIPage.updateAutoPublishSchedulePublishDayOfWeek(optionsForDayOfWeek.get(7));
+
+        controlsNewUIPage.updateAutoPublishSchedulePublishTimeOfDay("40");
+
+        controlsNewUIPage.updateAutoPublishScheduleRepublishDayOfWeek(optionsForDayOfWeek.get(0));
+        controlsNewUIPage.updateAutoPublishScheduleRepublishDayOfWeek(optionsForDayOfWeek.get(1));
+        controlsNewUIPage.updateAutoPublishScheduleRepublishDayOfWeek(optionsForDayOfWeek.get(2));
+        controlsNewUIPage.updateAutoPublishScheduleRepublishDayOfWeek(optionsForDayOfWeek.get(3));
+        controlsNewUIPage.updateAutoPublishScheduleRepublishDayOfWeek(optionsForDayOfWeek.get(4));
+        controlsNewUIPage.updateAutoPublishScheduleRepublishDayOfWeek(optionsForDayOfWeek.get(5));
+        controlsNewUIPage.updateAutoPublishScheduleRepublishDayOfWeek(optionsForDayOfWeek.get(6));
+        controlsNewUIPage.updateAutoPublishScheduleRepublishDayOfWeek(optionsForDayOfWeek.get(7));
+
+        controlsNewUIPage.updateAutoPublishScheduleRepublishTimeOfDay("30");
+
+        cinemarkMinorPage.saveOrPublishTemplate(CinemarkMinorTest.templateAction.Save_As_Draft.getValue());
+
+        //delete the template.
+        cinemarkMinorPage.findDefaultTemplate(templateName);
+        cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Delete.getValue());
+        cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.OKWhenPublish.getValue());
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify can set and save the settings for auto publish")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyAutoPublishSettingCanBeSavedAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+
+        //Go to OP page
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to Configuration
+        cinemarkMinorPage.clickConfigurationTabInOP();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        String templateName = "test auto publish " + System.currentTimeMillis();
+        cinemarkMinorPage.newTemplate(templateName);
+        String option = "Auto publish after date";
+        controlsNewUIPage.updateAndVerifyAutoPublishSettings(option);
+
+        String dayForPublish = "Wed";
+
+        controlsNewUIPage.updateAutoPublishSchedulePublishDayOfWeek(dayForPublish);
+
+        controlsNewUIPage.updateAutoPublishSchedulePublishTimeOfDay("40");
+
+        String dayForRepublish = "Fri";
+
+        controlsNewUIPage.updateAutoPublishScheduleRepublishDayOfWeek(dayForRepublish);
+
+        controlsNewUIPage.updateAutoPublishScheduleRepublishTimeOfDay("30");
+
+        cinemarkMinorPage.saveOrPublishTemplate(CinemarkMinorTest.templateAction.Save_As_Draft.getValue());
+
+        //Open the template to check if the values saved successfully.
+        cinemarkMinorPage.findDefaultTemplate(templateName);
+        cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+        cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.OKWhenEdit.getValue());
+        SimpleUtils.assertOnFail("Auto publish option was not saved successfully!", option.equalsIgnoreCase(controlsNewUIPage.getAutoPublishSettings()), false);
+        SimpleUtils.assertOnFail("Auto publish day of week was not saved successfully!", dayForPublish.equalsIgnoreCase(controlsNewUIPage.getAutoPublishSchedulePublishDayOfWeek()), false);
+        SimpleUtils.assertOnFail("Auto republish day of week was not saved successfully!", dayForRepublish.equalsIgnoreCase(controlsNewUIPage.getAutoPublishScheduleRepublishDayOfWeek()), false);
+        SimpleUtils.assertOnFail("Auto publish time of day was not saved successfully!", "40".equalsIgnoreCase(controlsNewUIPage.getAutoPublishSchedulePublishTimeOfDay()), false);
+        SimpleUtils.assertOnFail("Auto republish time of day was not saved successfully!", "30".equalsIgnoreCase(controlsNewUIPage.getAutoPublishScheduleRepublishTimeOfDay()), false);
+        cinemarkMinorPage.saveOrPublishTemplate(CinemarkMinorTest.templateAction.Save_As_Draft.getValue());
+
+        //delete the template.
+        cinemarkMinorPage.findDefaultTemplate(templateName);
+        cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Delete.getValue());
+        cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.OKWhenPublish.getValue());
+    }
+
 
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the Schedule functionality > Forecast")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyScheduleFunctionalityForecastAsStoreManager(String username, String password, String browser, String location)
-            throws Exception {
+    public void verifyScheduleFunctionalityForecastAsStoreManager(String username, String password, String browser, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+        LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+        // Verify Edit mode Dashboard loaded
+        liquidDashboardPage.enterEditMode();
+        liquidDashboardPage.switchOnWidget(LiquidDashboardTest.widgetType.Schedules.getValue());
+        liquidDashboardPage.saveAndExitEditMode();
+
+        // Refresh the dashboard to get the value updated
+//            dashboardPage.clickOnRefreshButton();
+
+        //verify view schedules link
+        List<String> resultListOnWidget = liquidDashboardPage.getDataOnSchedulesWidget();
+        liquidDashboardPage.clickOnLinkByWidgetNameAndLinkName(LiquidDashboardTest.widgetType.Schedules.getValue(), LiquidDashboardTest.linkNames.View_Schedules.getValue());
+        //verify value on widget
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-        scheduleOverviewPage.loadScheduleOverview();
-        ForecastPage ForecastPage  = pageFactory.createForecastPage();
-        ForecastPage.clickForecast();
-        boolean isWeekForecastVisibleAndOpen = ForecastPage.verifyIsWeekForecastVisibleAndOpenByDefault();
-        boolean isShopperSelectedByDefaultAndLaborClickable = ForecastPage.verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable();
-        if (isWeekForecastVisibleAndOpen) {
-            if (isShopperSelectedByDefaultAndLaborClickable){
-                SimpleUtils.pass("Forecast Functionality show well");
-            } else {
-                SimpleUtils.report("there is no shopper in this enterprise!");
+        List<String> resultListInOverview = scheduleOverviewPage.getOverviewData();
+        if (resultListOnWidget.size()==resultListInOverview.size()){
+            for (int i=0;i<resultListInOverview.size();i++){
+                boolean flag = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
+                if (flag){
+                    SimpleUtils.pass("Schedules widget: Values on widget are consistent with the one in overview");
+                } else {
+                    SimpleUtils.fail("Schedules widget: Values on widget are not consistent with the one in overview!",false);
+                }
             }
-        }else {
-            SimpleUtils.warn("forecast default functionality work error");
+        } else {
+            SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
         }
     }
 

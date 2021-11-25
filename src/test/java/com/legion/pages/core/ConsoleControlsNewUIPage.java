@@ -824,6 +824,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						SimpleUtils.assertOnFail("Setting is not saved successfully!", getSplitShiftContent().contains(numOfPremiumHrs)&&getSplitShiftContent().contains(greaterThan), false);
 					} else {
 						clickTheElement(splitShiftDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
+						waitForSeconds(2);
 						SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getSplitShiftContent()), false);
 					}
 				} else {
@@ -6179,7 +6180,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	// Added By Julie
-	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.publishDayWindow\"]")
+	@FindBy(css = "[question-title=\"How many days in advance would you typically publish schedules? (this is the Schedule Publish Window).\"] input-field")
 	private WebElement schedulingPoliciesDaysInAdvancePublishSchedules;
 
 	@FindBy(className = "lg-override-popup")
@@ -6195,6 +6196,116 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		} else
 			SimpleUtils.fail("Scheduling Policies: 'How many days in advance would you typically publish schedules?' not loaded", false);
 		return days;
+	}
+
+	@FindBy(css = "question-input[question-title=\"Auto Publish Legion Schedule\"]")
+	private WebElement autoPublishSection;
+	@FindBy(css = "question-input[question-title=\"Schedule Publish Day of Week\"]")
+	private WebElement autoPublishSchedulePublishDayOfWeek;
+	@FindBy(css = "question-input[question-title=\"Schedule Publish Time of Day (in minutes)\"]")
+	private WebElement autoPublishSchedulePublishTimeOfDay;
+	@FindBy(css = "question-input[question-title=\"Schedule Republish Day of Week\"]")
+	private WebElement autoPublishScheduleRepublishDayOfWeek;
+	@FindBy(css = "question-input[question-title=\"Schedule Republish Time of Day (in minutes)\"]")
+	private WebElement autoPublishScheduleRepublishTimeOfDay;
+	@Override
+	public void updateAndVerifyAutoPublishSettings(String option) throws Exception {
+		String expectedTitle = "Auto Publish Legion Schedule";
+		String expectedExplainer = "'Auto publish after date' will account for late schedules that were created after 'Schedule Publish Day of Week'";
+		if (isElementLoaded(autoPublishSection, 10) && isElementLoaded(autoPublishSection.findElement(By.cssSelector(".lg-question-input__text")), 10)){
+			SimpleUtils.assertOnFail("The title is not expected!", autoPublishSection.findElement(By.cssSelector(".lg-question-input__text")).getText().equalsIgnoreCase(expectedTitle), false);
+			SimpleUtils.assertOnFail("The explainer is not expected!", autoPublishSection.getAttribute("explainer").equalsIgnoreCase(expectedExplainer), false);
+			selectByVisibleText(autoPublishSection.findElement(By.tagName("select")), option);
+		} else{
+			SimpleUtils.fail("Fail to find this setting!", false);
+		}
+	}
+
+	@Override
+	public String getAutoPublishSettings() throws Exception {
+		if (isElementLoaded(autoPublishSection.findElement(By.cssSelector("option[selected=\"selected\"]")), 10)){
+			return autoPublishSection.findElement(By.cssSelector("option[selected=\"selected\"]")).getText();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAutoPublishSchedulePublishDayOfWeek(String option) throws Exception {
+		String expectedTitle = "Schedule Publish Day of Week";
+		if (isElementLoaded(autoPublishSchedulePublishDayOfWeek, 10) && isElementLoaded(autoPublishSchedulePublishDayOfWeek.findElement(By.cssSelector(".lg-question-input__text")), 10)){
+			SimpleUtils.assertOnFail("The title is not expected!", autoPublishSchedulePublishDayOfWeek.findElement(By.cssSelector(".lg-question-input__text")).getText().equalsIgnoreCase(expectedTitle), false);
+			selectByVisibleText(autoPublishSchedulePublishDayOfWeek.findElement(By.tagName("select")), option);
+		} else{
+			SimpleUtils.fail("Fail to find this setting: "+ expectedTitle, false);
+		}
+	}
+
+	@Override
+	public String getAutoPublishSchedulePublishDayOfWeek() throws Exception {
+		if (isElementLoaded(autoPublishSchedulePublishDayOfWeek.findElement(By.cssSelector("option[selected=\"selected\"]")), 10)){
+			return autoPublishSchedulePublishDayOfWeek.findElement(By.cssSelector("option[selected=\"selected\"]")).getText();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAutoPublishScheduleRepublishDayOfWeek(String option) throws Exception {
+		String expectedTitle = "Schedule Republish Day of Week";
+		if (isElementLoaded(autoPublishScheduleRepublishDayOfWeek, 10) && isElementLoaded(autoPublishScheduleRepublishDayOfWeek.findElement(By.cssSelector(".lg-question-input__text")), 10)){
+			SimpleUtils.assertOnFail("The title is not expected!", autoPublishScheduleRepublishDayOfWeek.findElement(By.cssSelector(".lg-question-input__text")).getText().equalsIgnoreCase(expectedTitle), false);
+			selectByVisibleText(autoPublishScheduleRepublishDayOfWeek.findElement(By.tagName("select")), option);
+		} else{
+			SimpleUtils.fail("Fail to find this setting: "+ expectedTitle, false);
+		}
+	}
+
+	@Override
+	public String getAutoPublishScheduleRepublishDayOfWeek() throws Exception {
+		if (isElementLoaded(autoPublishScheduleRepublishDayOfWeek.findElement(By.cssSelector("option[selected=\"selected\"]")), 10)){
+			return autoPublishScheduleRepublishDayOfWeek.findElement(By.cssSelector("option[selected=\"selected\"]")).getText();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAutoPublishSchedulePublishTimeOfDay(String mins) throws Exception {
+		String expectedTitle = "Schedule Publish Time of Day (in minutes)";
+		if (isElementLoaded(autoPublishSchedulePublishTimeOfDay, 10) && isElementLoaded(autoPublishSchedulePublishTimeOfDay.findElement(By.cssSelector(".lg-question-input__text")), 10)){
+			SimpleUtils.assertOnFail("The title is not expected!", autoPublishSchedulePublishTimeOfDay.findElement(By.cssSelector(".lg-question-input__text")).getText().equalsIgnoreCase(expectedTitle), false);
+			autoPublishSchedulePublishTimeOfDay.findElement(By.tagName("input")).clear();
+			autoPublishSchedulePublishTimeOfDay.findElement(By.tagName("input")).sendKeys(mins);
+		} else{
+			SimpleUtils.fail("Fail to find this setting: "+ expectedTitle, false);
+		}
+	}
+
+	@Override
+	public String getAutoPublishSchedulePublishTimeOfDay() throws Exception {
+		waitForSeconds(2);
+		if (isElementLoaded(autoPublishSchedulePublishTimeOfDay.findElement(By.cssSelector("input")), 10)){
+			return autoPublishSchedulePublishTimeOfDay.findElement(By.cssSelector("input")).getAttribute("value");
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAutoPublishScheduleRepublishTimeOfDay(String mins) throws Exception {
+		String expectedTitle = "Schedule Republish Time of Day (in minutes)";
+		if (isElementLoaded(autoPublishScheduleRepublishTimeOfDay, 10) && isElementLoaded(autoPublishScheduleRepublishTimeOfDay.findElement(By.cssSelector(".lg-question-input__text")), 10)){
+			SimpleUtils.assertOnFail("The title is not expected!", autoPublishScheduleRepublishTimeOfDay.findElement(By.cssSelector(".lg-question-input__text")).getText().equalsIgnoreCase(expectedTitle), false);
+			autoPublishScheduleRepublishTimeOfDay.findElement(By.tagName("input")).clear();
+			autoPublishScheduleRepublishTimeOfDay.findElement(By.tagName("input")).sendKeys(mins);
+		} else{
+			SimpleUtils.fail("Fail to find this setting: "+ expectedTitle, false);
+		}
+	}
+
+	@Override
+	public String getAutoPublishScheduleRepublishTimeOfDay() throws Exception {
+		if (isElementLoaded(autoPublishScheduleRepublishTimeOfDay.findElement(By.cssSelector("input")), 10)){
+			return autoPublishScheduleRepublishTimeOfDay.findElement(By.cssSelector("input")).getAttribute("value");
+		}
+		return null;
 	}
 
 	@Override
