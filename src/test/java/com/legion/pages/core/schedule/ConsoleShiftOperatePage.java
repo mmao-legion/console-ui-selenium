@@ -766,7 +766,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public void clickOnEditMeaLBreakTime() throws Exception{
         if(isElementLoaded(editMealBreakTime,5))
         {
-            click(editMealBreakTime);
+            clickTheElement(editMealBreakTime);
             SimpleUtils.pass("Clicked on Edit Meal Break Time ");
         }
         else

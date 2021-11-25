@@ -39,6 +39,8 @@ public class BasePage {
 
     public static String activeConsoleName;
 
+    public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
+
     protected T currentPage;
 
     protected Map<String,BasePage> resultList;

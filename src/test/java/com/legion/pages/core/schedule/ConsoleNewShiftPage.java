@@ -3,6 +3,7 @@ package com.legion.pages.core.schedule;
 import com.legion.pages.BasePage;
 import com.legion.pages.NewShiftPage;
 import com.legion.tests.core.ScheduleTestKendraScott2;
+import com.legion.utils.Constants;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -590,9 +591,17 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 selectWorkRole(workRole);
             clearAllSelectedDays();
             if (i == 0) {
-                selectDaysByIndex(2, 4, 6);
+                if (getEnterprise().equalsIgnoreCase(propertyMap.get(Constants.OpEnterprice))) {
+                    selectDaysByIndex(2, 2, 2);
+                } else {
+                    selectDaysByIndex(2, 4, 6);
+                }
             }else {
-                selectDaysByIndex(1, 3, 5);
+                if (getEnterprise().equalsIgnoreCase(propertyMap.get(Constants.OpEnterprice))) {
+                    selectDaysByIndex(1, 1, 1);
+                } else {
+                    selectDaysByIndex(1, 3, 5);
+                }
             }
             clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             clickOnCreateOrNextBtn();

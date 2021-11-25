@@ -18,4 +18,6 @@ public class Constants {
     public static final String ResetPassword = "Reset Password";
     public static final String ChangePassword = "Change Password";
     public static final String ManualOnboard = "Manual Onboard";
+    public static final String ControlEnterprice = "Vailqacn_Enterprise";
+    public static final String OpEnterprice = "CinemarkWkdy_Enterprise";
 }

@@ -8,6 +8,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -23,8 +24,7 @@ public class MealAndRestBreakTest extends TestBase {
 
     private String breakOption = "Breaks";
     private String editBreakOption = "Edit Breaks";
-    private static String controlEnterprice = "Vailqacn_Enterprise";
-    private static String opEnterprice = "CinemarkWkdy_Enterprise";
+
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -200,9 +200,10 @@ public class MealAndRestBreakTest extends TestBase {
             // Create schedule if it is not created
             scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
 
             scheduleCommonPage.clickOnDayView();
 
@@ -215,13 +216,17 @@ public class MealAndRestBreakTest extends TestBase {
                 index = scheduleShiftTablePage.getRandomIndexOfShift();
                 String info = scheduleShiftTablePage.getTheShiftInfoByIndexInDayview(index);
                 String [] temp = info.split("\n");
-                shiftInfo.add(temp[1].split(" ")[0]);
-                shiftInfo.add(temp[0]);
-                shiftInfo.add(temp[3]);
-                shiftInfo.add(temp[2]);
-                shiftInfo.add(temp[1].substring(temp[1].indexOf("("), temp[1].indexOf(")")));
-                //Search shift by TM names: first name and last name
-                firstNameOfTM = shiftInfo.get(0);
+                if (temp.length <= 4) {
+                    firstNameOfTM = temp[0].split(" ")[0];
+                } else {
+                    shiftInfo.add(temp[1].split(" ")[0]);
+                    shiftInfo.add(temp[0]);
+                    shiftInfo.add(temp[3]);
+                    shiftInfo.add(temp[2]);
+                    shiftInfo.add(temp[1].substring(temp[1].indexOf("("), temp[1].indexOf(")")));
+                    //Search shift by TM names: first name and last name
+                    firstNameOfTM = shiftInfo.get(0);
+                }
             }
             mySchedulePage.clickOnShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();
@@ -274,12 +279,12 @@ public class MealAndRestBreakTest extends TestBase {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.ControlEnterprice))){
                 controlsPage.gotoControlsPage();
                 SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
                 controlsNewUIPage.clickOnControlsComplianceSection();
                 SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprice))) {
                 //Go to OP page
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -313,7 +318,7 @@ public class MealAndRestBreakTest extends TestBase {
             controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
                     ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "6",true );
 
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))){
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprice))){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
             }
