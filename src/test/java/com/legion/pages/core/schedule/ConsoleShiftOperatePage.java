@@ -69,6 +69,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             for (WebElement unAssignedShift : scheduleShiftTablePage.getUnAssignedShifts()) {
                 convertUnAssignedShiftToOpenShift(unAssignedShift);
             }
+            waitForSeconds(3);
             scheduleMainPage.saveSchedule();
         } else {
             SimpleUtils.fail("Unable to convert UnAssigned Shift to Open Shift as 'Schedule' tab not active.", false);

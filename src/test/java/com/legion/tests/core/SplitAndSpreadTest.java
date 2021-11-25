@@ -807,6 +807,7 @@ public class SplitAndSpreadTest extends TestBase {
             createSchedulePage.publishActiveSchedule();
 
             //check the violation in i icon popup of new create shift
+            Thread.sleep(5);
             WebElement newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(0, tmFirstName).get(0);
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! ",
