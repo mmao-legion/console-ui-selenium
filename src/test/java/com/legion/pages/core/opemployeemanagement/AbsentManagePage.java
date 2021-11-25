@@ -278,7 +278,10 @@ public class AbsentManagePage extends BasePage {
     }
 
     public String getResult() {
-        String name = templateNameOfSearchResult.get(0).getText();
+        String name = "";
+        if (areListElementVisible(templateNameOfSearchResult, 10)) {
+            name = templateNameOfSearchResult.get(0).getText();
+        }
         return name;
     }
 
@@ -617,10 +620,15 @@ public class AbsentManagePage extends BasePage {
     }
 
 
-    public void editTimeOffReason(String reaName) {
-        editTimeOff.click();
-        reasonName.clear();
-        reasonName.sendKeys(reaName);
+    public void editTimeOffReason(String reaName) throws Exception {
+        if (isElementLoaded(editTimeOff, 10)) {
+            editTimeOff.click();
+            if (isElementLoaded(reasonName, 5)) {
+                reasonName.clear();
+                reasonName.sendKeys(reaName);
+            }
+        } else
+            SimpleUtils.fail("Edit button or reason name input box fail to load! ", false);
     }
 
     public String removeTimeOffInSettings() {

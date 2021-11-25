@@ -78,9 +78,18 @@ public class AbsentManagementTemplateTest extends TestBase {
         SimpleUtils.pass("Succeeded in canceling creation!");
 
         //verify new template works well
+        absentManagePage.search("AutoTest01");
+        if (!absentManagePage.getResult().equalsIgnoreCase("")) {
+            absentManagePage.clickInDetails();
+            SimpleUtils.pass("Succeeded in validating removing time off rules works well!");
+
+            absentManagePage.deleteTheTemplate();
+            absentManagePage.okToActionInModal(true);
+        }
+
         absentManagePage.createANewTemplate("AutoTest01", "for test");
         absentManagePage.submit();
-//        absentManagePage.saveTemplateAs("Save as draft");
+        absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating a template!");
 
         //verify search template UI
@@ -141,7 +150,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Settings page validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyActionsInSettingsTabAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyActionsInSettingsTabAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -240,6 +249,17 @@ public class AbsentManagementTemplateTest extends TestBase {
         panelPage.goToAbsentManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
 
+        absentManagePage.search("AutoTest_Accrual");
+        int i = 0;
+        while (i< 100 && !absentManagePage.getResult().equalsIgnoreCase("")) {
+            absentManagePage.clickInDetails();
+            SimpleUtils.pass("Succeeded in validating removing time off rules works well!");
+
+            absentManagePage.deleteTheTemplate();
+            absentManagePage.okToActionInModal(true);
+            absentManagePage.search("AutoTest_Accrual");
+            i++;
+        }
         Random random = new Random();
         String tempName = "AutoTest_Accrual" + random.nextInt(100);
         absentManagePage.createANewTemplate(tempName, "accrual test");
