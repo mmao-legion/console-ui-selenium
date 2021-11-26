@@ -132,7 +132,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "create a Type MOCK location that based on a ENABLED status regular location ")
-    @Test(enabled = false, dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreateMockLocationAndNavigate(String browser, String username, String password, String location) throws Exception {
        try{
             String currentTime =  TestBase.getCurrentTime().substring(4);
