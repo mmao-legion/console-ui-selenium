@@ -5109,4 +5109,113 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
+
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Verify whole day PTO requests should be recognized in schedule")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyPTORequestInScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+		try {
+			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+
+			controlsPage.gotoControlsPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+			controlsNewUIPage.clickOnControlsSchedulingPolicies();
+			controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+			int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			// Login as Team Member to create time off
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			String requestUserName = profileNewUIPage.getNickNameFromProfile();
+			String myTimeOffLabel = "My Time Off";
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+			profileNewUIPage.clickOnCreateTimeOffBtn();
+			SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+			// select time off reason
+			if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.FamilyEmergency.getValue())){
+				profileNewUIPage.selectTimeOffReason(ActivityTest.timeOffReasonType.FamilyEmergency.getValue());
+			} else if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.PersonalEmergency.getValue())){
+				profileNewUIPage.selectTimeOffReason(ActivityTest.timeOffReasonType.PersonalEmergency.getValue());
+			} else if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.JuryDuty.getValue())){
+				profileNewUIPage.selectTimeOffReason(ActivityTest.timeOffReasonType.JuryDuty.getValue());
+			} else if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.Sick.getValue())){
+				profileNewUIPage.selectTimeOffReason(ActivityTest.timeOffReasonType.Sick.getValue());
+			} else if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.Vacation.getValue())){
+				profileNewUIPage.selectTimeOffReason(ActivityTest.timeOffReasonType.Vacation.getValue());
+			}
+			List<String> timeOffDates = profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 1);
+			profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+			loginPage.logOut();
+
+			// Login as Store Manager again to check message and reject
+			String RequestTimeOff = "requested";
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+			String respondUserName = profileNewUIPage.getNickNameFromProfile();
+			ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+			activityPage.verifyClickOnActivityIcon();
+			activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.TimeOff.getValue(), ActivityTest.indexOfActivityType.TimeOff.name());
+			activityPage.verifyTheNotificationForReqestTimeOff(requestUserName, getTimeOffStartTime(),getTimeOffEndTime(), RequestTimeOff);
+			activityPage.approveOrRejectTTimeOffRequestOnActivity(requestUserName,respondUserName, ActivityTest.approveRejectAction.Approve.getValue());
+			activityPage.closeActivityWindow();
+
+			// Go to Schedule page, Schedule tab
+
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+			// Navigate to the week that contains the date that provided
+			scheduleCommonPage.goToSpecificWeekByDate(timeOffDates.get(0));
+
+			// Create schedule if it is not created
+			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			List<WebElement> shifts = scheduleMainPage.searchShiftOnSchedulePage(requestUserName);
+
+			if (shifts == null || (shifts != null && shifts.size() == 0)) {
+				// Edit schedule to create the new shift for new TM
+				scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+				shiftOperatePage.deleteTMShiftInWeekView(requestUserName);
+				String workRole = shiftOperatePage.getRandomWorkRole();
+				newShiftPage.clickOnDayViewAddNewShiftButton();
+				newShiftPage.customizeNewShiftPage();
+				newShiftPage.clearAllSelectedDays();
+				newShiftPage.selectDaysByCountAndCannotSelectedDate(1, timeOffDates.get(0));
+				newShiftPage.selectWorkRole(workRole);
+				newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+				newShiftPage.clickOnCreateOrNextBtn();
+				newShiftPage.searchTeamMemberByName(firstName + " " + lastName.toString().substring(0, 1));
+				newShiftPage.clickOnOfferOrAssignBtn();
+				scheduleMainPage.saveSchedule();
+				scheduleMainPage.searchShiftOnSchedulePage(requestUserName);
+			}
+			scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyTM.getValue());
+			// Verify Time Off card will show when group by TM
+			int index = scheduleShiftTablePage.getTheIndexOfTheDayInWeekView(timeOffDates.get(0).substring(timeOffDates.get(0).length() - 2));
+			scheduleShiftTablePage.verifyTimeOffCardShowInCorrectDay(index);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 }

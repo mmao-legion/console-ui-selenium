@@ -117,7 +117,7 @@ public interface ProfileNewUIPage {
 
 	public List<String> selectStartAndEndDate() throws Exception;
 
-	public List<String> selectStartAndEndDate(int daysInadvance) throws Exception;
+	public List<String> selectStartAndEndDate(int daysInadvance, int startDays, int endDays) throws Exception;
 
 	public String selectStartAndEndDateAtSameDay() throws Exception;
 

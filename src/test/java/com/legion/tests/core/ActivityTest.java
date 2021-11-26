@@ -1456,7 +1456,7 @@ public class ActivityTest extends TestBase {
             } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
                 profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
             }
-            profileNewUIPage.selectStartAndEndDate(advancedDays);
+            profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 6);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
             loginPage.logOut();
 
@@ -1490,7 +1490,7 @@ public class ActivityTest extends TestBase {
             } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
                 profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
             }
-            profileNewUIPage.selectStartAndEndDate(advancedDays);
+            profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 6);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
             loginPage.logOut();
 
@@ -1559,7 +1559,7 @@ public class ActivityTest extends TestBase {
             } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
                 profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
             }
-            List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate(advancedDays);
+            List<String> startNEndDates = profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 6);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
             profileNewUIPage.cancelAllTimeOff();
             loginPage.logOut();

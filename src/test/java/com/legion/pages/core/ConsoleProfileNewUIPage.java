@@ -1952,16 +1952,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return startNEndDates;
 	}
 
-	public List<String> selectStartAndEndDate(int daysInadvance) throws Exception {
+	public List<String> selectStartAndEndDate(int daysInadvance, int startDays, int endDays) throws Exception {
 		List<String> startNEndDates = new ArrayList<>();
-		selectDate(daysInadvance+1);
-		selectDate(daysInadvance+6);
-		HashMap<String, String> timeOffDate = getTimeOffDate(daysInadvance+1, daysInadvance+6);
+		selectDate(daysInadvance+startDays);
+		selectDate(daysInadvance+endDays);
+		HashMap<String, String> timeOffDate = getTimeOffDate(daysInadvance+startDays, daysInadvance+endDays);
 		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
 		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
 		setTimeOffStartTime(timeOffStartDate);
 		setTimeOffEndTime(timeOffEndDate);
-		HashMap<String, String> timeOffDateWithYear = getTimeOffDateWithYear(10, 15);
+		HashMap<String, String> timeOffDateWithYear = getTimeOffDateWithYear(daysInadvance+startDays, daysInadvance+endDays);
 		String timeOffStartDateWithYear = timeOffDateWithYear.get("startDateWithYearTimeOff");
 		String timeOffEndDateWithYear = timeOffDateWithYear.get("endDateWithYearTimeOff");
 		startNEndDates.add(timeOffStartDateWithYear);

@@ -1844,6 +1844,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void clickOnSchedulingPoliciesTimeOffAdvanceBtn() throws Exception {
 		if (isElementLoaded(schedulingPoliciesTimeOffFormSectionDiv, 10)) {
+			scrollToElement(schedulingPoliciesTimeOffFormSectionDiv);
+			waitForSeconds(1);
 			WebElement schedulingPoliciesTimeOffAdvanceBtn = schedulingPoliciesTimeOffFormSectionDiv.findElement(
 					By.cssSelector("div.lg-advanced-box__toggle"));
 			if (isElementLoaded(schedulingPoliciesTimeOffAdvanceBtn, 10) && !schedulingPoliciesTimeOffAdvanceBtn.getAttribute("class")

@@ -685,6 +685,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private WebElement shiftJobTitleAsWorkRole;
     @FindBy(css = ".sch-shift-hover div:nth-child(5)>div.ng-binding")
     private WebElement shiftTotalHrs;
+    @FindBy(css = ".week-schedule-shift-place-pto")
+    private WebElement ptoPlace;
+
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
@@ -2888,6 +2891,18 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     }
 
+    @Override
+    public void verifyTimeOffCardShowInCorrectDay(int dayIndex) throws Exception {
+        try {
+            if (isElementLoaded(ptoPlace, 5) && ptoPlace.getAttribute("data-day-index").equalsIgnoreCase(String.valueOf(dayIndex))) {
+                SimpleUtils.pass("Time Off card shows correctly on schedule when grouping by TM!");
+            } else {
+                SimpleUtils.fail("Time Off card failed to show on schedule when grouping by TM!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Time Off card failed to show on schedule when grouping by TM!", false);
+        }
+    }
 
     public String getFullNameOfOneShiftByIndex (int index) {
         String fullName = "";

@@ -420,10 +420,13 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     public void verifyTheNotificationForReqestTimeOff(String requestUserName, String startTime, String endTime,String timeOffAction) throws Exception {
         boolean isFound = false;
         String expectedCancelInfo = "Cancelled on ";
-    	String expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
-        /*if (timeOffAction.toLowerCase().contains("cancel")){
-            expectedMessage = requestUserName +" "+timeOffAction+" the time off request for "+ startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
-        }*/
+    	String expectedMessage = "";
+    	if (startTime.equalsIgnoreCase(endTime)) {
+			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4)) + ".";
+		} else {
+			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
+		}
+
         String actualMessage = "";
         waitForSeconds(5);
         if (areListElementVisible(activityCards, 15)) {

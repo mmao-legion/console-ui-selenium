@@ -111,4 +111,5 @@ public interface ScheduleShiftTablePage {
     public void verifyShiftsOrderByStartTime() throws Exception;
     public void expandOnlyOneGroup(String groupName) throws Exception;
     public void verifyGroupByTitlesAreExpanded() throws Exception;
+    public void verifyTimeOffCardShowInCorrectDay(int dayIndex) throws Exception;
 }
