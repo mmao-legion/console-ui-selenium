@@ -184,8 +184,8 @@
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
                     <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
                     <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
-                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsTeamMember" />
-                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsTeamMember" />
+<!--                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsTeamMember" />
+                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsTeamMember" /> -->
                     <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
                     <include name="verifyManagerCannotEditTheAvailabilityWhenTMHasPendingRequestAsTeamMember" />
                 </methods>
