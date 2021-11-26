@@ -782,7 +782,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	public String getSplitShiftContent() throws Exception{
 		if (isElementLoaded(splitShiftSection, 10)){
-			return splitShiftSection.findElement(By.cssSelector(".lg-question-input__text")).getText();
+			return splitShiftSection.findElement(By.cssSelector(".lg-question-input__text")).getAttribute("innerText");
 		}
 		return "";
 	}
