@@ -891,6 +891,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if(isElementLoaded(cancelButtonInEditShiftTimeWindow,5))
         {
             click(cancelButtonInEditShiftTimeWindow);
+            waitUntilElementIsInVisible(cancelButtonInEditShiftTimeWindow);
             SimpleUtils.pass("Clicked on Cancel Edit Shift Time button");
         }
         else

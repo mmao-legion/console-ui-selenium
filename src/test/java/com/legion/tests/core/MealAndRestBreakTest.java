@@ -121,6 +121,10 @@ public class MealAndRestBreakTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
+            boolean isPublished = createSchedulePage.isWeekPublished();
+            if (!isPublished) {
+                createSchedulePage.publishActiveSchedule();
+            }
 
             // Verify Edit Breaks is clickable in week view
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
