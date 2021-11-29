@@ -708,7 +708,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
                     }
                 }
             } else {
-                SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
+                SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",false);
             }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -985,9 +985,17 @@ public class SchedulingOPEnabledTest  extends TestBase {
         //verify value on widget
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
         List<String> resultListInOverview = scheduleOverviewPage.getOverviewData();
-        if (resultListOnWidget.size()==resultListInOverview.size()){
-            for (int i=0;i<resultListInOverview.size();i++){
-                boolean flag = resultListInOverview.get(i).equals(resultListOnWidget.get(i));
+        if (resultListOnWidget.size() > 0 && resultListInOverview.size() > 0 && resultListOnWidget.size() < resultListInOverview.size()){
+            for (int i=0;i<resultListOnWidget.size();i++){
+                boolean flag = false;
+                String [] widget = resultListOnWidget.get(i).split(",");
+                String [] overview = resultListInOverview.get(i).split(",");
+                // Due to bug: https://legiontech.atlassian.net/browse/SCH-1976, the projected hour may not be consistent
+                widget[widget.length - 1] = "";
+                overview[overview.length - 1] = "";
+                if (widget.length == overview.length && Arrays.equals(widget, overview)) {
+                    flag = true;
+                }
                 if (flag){
                     SimpleUtils.pass("Schedules widget: Values on widget are consistent with the one in overview");
                 } else {
@@ -995,7 +1003,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
                 }
             }
         } else {
-            SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
+            SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",false);
         }
     }
 

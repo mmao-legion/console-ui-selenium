@@ -755,7 +755,7 @@ public class LiquidDashboardTest extends TestBase {
                     }
                 }
             } else {
-                SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",true);
+                SimpleUtils.fail("Schedules widget: something wrong with the number of week displayed!",false);
             }
 
             // Verify the schedule status is Guidance in Overview
