@@ -862,7 +862,7 @@ public class LocationsTest extends TestBase {
                 }
                 newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
                 newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.searchTeamMemberByName("Alysha");
+                newShiftPage.searchTeamMemberByName("Brisa");
                 if (!shiftOperatePage.verifyWFSFunction()) {
                     //to check WFS group exist or not
                     LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
