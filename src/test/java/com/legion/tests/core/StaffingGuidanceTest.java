@@ -5,14 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.legion.pages.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
-import com.legion.pages.DashboardPage;
-import com.legion.pages.SalesForecastPage;
-import com.legion.pages.SchedulePage;
-import com.legion.pages.StaffingGuidancePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -47,8 +44,8 @@ public class StaffingGuidanceTest extends TestBase{
 //    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"), propertyMap.get("DEFAULT_PASSWORD"));
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         dashboardPage.goToToday();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", schedulePage.isSchedule(),false);
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        SimpleUtils.assertOnFail( "Schedule Page not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()),false);
         StaffingGuidancePage staffingGuidancePage = pageFactory.createStaffingGuidancePage();
         staffingGuidancePage.navigateToStaffingGuidanceTab();
         SimpleUtils.assertOnFail( "Staffing Guidance tab not loaded successfully!", staffingGuidancePage.isStaffingGuidanceTabActive(),false);

@@ -39,6 +39,8 @@ public class BasePage {
 
     public static String activeConsoleName;
 
+    public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
+
     protected T currentPage;
 
     protected Map<String,BasePage> resultList;
@@ -149,7 +151,7 @@ public class BasePage {
     
     public void checkElementVisibility(WebElement element)
     {
-        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 60);
+        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 90);
         try {
         	wait.until(ExpectedConditions.visibilityOf(element));
         }

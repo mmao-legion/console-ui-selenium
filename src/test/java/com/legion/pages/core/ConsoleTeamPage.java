@@ -520,7 +520,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement currentMonthYear;
 	@FindBy (css = "div.is-today")
 	private WebElement todayHighlighted;
-	@FindBy (css = "lgn-action-button.change-location-button button")
+	@FindBy (css = "[label=\"Transfer\"]")
 	private WebElement transferButton;
 	@FindBy (className = "location-card-image-name-container")
 	private List<WebElement> locationCards;
@@ -639,7 +639,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement newTimeOffBtn;
 	@FindBy (css = ".user-profile-section")
 	private List<WebElement> userProfileSections;
-	@FindBy (css = "[ng-click=\"actionClicked('Activate')\"]")
+	@FindBy (css = "[class=\"inline-block ng-scope\"] [ng-click=\"actionClicked('Activate')\"]")
 	private WebElement activateButton;
 	@FindBy (css = "div.activate")
 	private WebElement activateWindow;
@@ -649,13 +649,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement deactivateButton;
 	@FindBy (css = "[ng-click=\"actionClicked('Terminate')\"] button")
 	private WebElement terminateButton;
-	@FindBy (css = "[ng-click=\"actionClicked('CancelTerminate')\"]")
+	@FindBy (css = "[class=\"pull-left ng-isolate-scope\"][ng-click=\"actionClicked('CancelTerminate')\"]")
 	private WebElement cancelTerminateButton;
 	@FindBy (css = "div.legion-status div.invitation-status")
 	private WebElement onBoardedDate;
 	@FindBy (css = "div.legion-status>div:nth-child(2)")
 	private WebElement tmStatus;
-	@FindBy (css = "[ng-click=\"actionClicked('CancelDeactivate')\"]")
+	@FindBy (css = "[class=\"pull-left ng-isolate-scope\"][ng-click=\"actionClicked('CancelDeactivate')\"]")
 	private WebElement cancelActivateButton;
 	@FindBy (className = "modal-content")
 	private WebElement deactivateWindow;
@@ -697,6 +697,31 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private List<WebElement> employeeIDsInRoster;
 	@FindBy(css = ".tr .lgn-xs-4 .title")
 	private List<WebElement> jobTitlesInRoster;
+	@FindBy(css = ".tr .employedStatus")
+	private List<WebElement> employmentStatus;
+	@FindBy(css = "[box-title=\"Actions\"]")
+	private WebElement actionsSection;
+
+	@Override
+	public void verifyTheButtonsInActions(List<String> buttons) throws Exception {
+		if (isElementLoaded(actionsSection, 5)) {
+			List<WebElement> availableButtons = actionsSection.findElements(By.cssSelector(".pull-left.ng-isolate-scope"));
+			List<String> buttonNames = new ArrayList<>();
+			for (WebElement name : availableButtons) {
+				if (!name.getAttribute("class").contains("ng-hide") && !name.getText().isEmpty()) {
+					buttonNames.add(name.getText());
+				}
+			}
+			SimpleUtils.report("Get the buttons from Actions: " + buttonNames.toString());
+			if (buttonNames.size() > 0 && buttons.size() > 0 && buttonNames.containsAll(buttons) && buttons.containsAll(buttonNames)) {
+				SimpleUtils.pass("Buttons are correct: " + buttons.toString());
+			} else {
+				SimpleUtils.fail("Buttons are not expected, expected: " + buttons.toString() + ", But actual: " + buttonNames.toString(), false);
+			}
+		} else {
+			SimpleUtils.fail("Actions section not loaded successfully!", false);
+		}
+	}
 
 	@Override
 	public void verifyTheSortFunctionInRosterByColumnName(String columnName) throws Exception {
@@ -725,6 +750,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			targetList = getEmployeeIDListInRoster();
 		} else if (columnName.equals("JOB TITLE")) {
 			targetList = getJobTitleListInRoster();
+		} else if (columnName.equals("EMPLOYMENT")) {
+			targetList = getEmploymentListInRoster();
 		}
 		String className = column.getAttribute("class");
 		List<String> currentList = targetList;
@@ -780,11 +807,21 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		return names;
 	}
 
+	private List<String> getEmploymentListInRoster() {
+		List<String> employments = new ArrayList<>();
+		if (areListElementVisible(employmentStatus, 5)) {
+			for (WebElement name : employmentStatus) {
+				employments.add(name.getText());
+			}
+		}
+		return employments;
+	}
+
 	@Override
 	public void verifyTheColumnInRosterPage(boolean isLocationGroup) throws Exception {
 		try {
-			List<String> expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "STATUS", "BADGES", "ACTION"));
-			List<String> expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "LOCATION", "STATUS", "BADGES", "ACTION"));
+			List<String> expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "STATUS", "BADGES", "ACTION"));
+			List<String> expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "LOCATION", "STATUS", "BADGES", "ACTION"));
 			List<String> actualColumns = new ArrayList<>();
 			if (areListElementVisible(columnsInRoster, 5)) {
 				for (WebElement column : columnsInRoster) {
@@ -952,10 +989,15 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		return timeOffDays;
 	}
 
+	@FindBy(className="roster-header")
+	private WebElement rosterHeaderElement;
 	@Override
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
 		waitUntilElementIsInVisible(teamTabLoadingIcon);
-		if(areListElementVisible(teamMembers, 60)){
+		if(isElementLoaded(rosterLoading, 60)
+				&& areListElementVisible(TeamSubTabsElement, 60)
+				&& isElementLoaded(rosterHeaderElement, 60)
+				&& isElementLoaded(rosterBodyElement, 60)){
 			SimpleUtils.pass("Team Page is Loaded Successfully!");
 		}else{
 			SimpleUtils.fail("Team Page isn't Loaded Successfully", false);
@@ -1093,17 +1135,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@Override
 	public void isCancelTransferButtonLoadedAndClick() throws Exception {
-		String cancelTransfer = "CANCEL TRANSFER";
-		if (isElementLoaded(transferButton, 5)) {
-			if (cancelTransfer.equals(transferButton.getText())) {
-				SimpleUtils.pass("CANCEL TRANSFER button loaded successfully!");
-				waitForSeconds(3);
-				moveToElementAndClick(transferButton);
-			} else {
-				SimpleUtils.fail("This button isn't CANCEL TRANSFER, it is: " + transferButton.getText(), false);
-			}
+		if (isElementLoaded(cancelTransferButton, 5)) {
+			SimpleUtils.pass("CANCEL TRANSFER button loaded successfully!");
+			waitForSeconds(3);
+			moveToElementAndClick(cancelTransferButton);
 		} else {
-			SimpleUtils.fail("TRANSFER/CANCEL TRANSFER button failed to load!", true);
+			SimpleUtils.fail("The cancel transfer button fail to load! ", false);
 		}
 	}
 
@@ -1178,19 +1215,13 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	private boolean isCancelTransferSuccess() throws Exception {
 		boolean isSuccess = false;
-		String cancelTransfer = "CANCEL TRANSFER";
-		String transfer = "TRANSFER";
-		if (isElementLoaded(transferButton, 5) && transferButton.getText().equals(cancelTransfer)) {
-			click(transferButton);
+		if (isElementLoaded(cancelTransferButton, 5)) {
+			click(cancelTransferButton);
 			if (isElementLoaded(confirmButton, 10)) {
 				click(confirmButton);
 				if (isElementLoaded(transferButton, 10)){
-					if (transferButton.getText().equals(transfer)) {
-						isSuccess = true;
-						SimpleUtils.pass("Cancel Transfer Successfully!");
-					}else {
-						SimpleUtils.fail("CANCEL TRANSFER button doesn't change to TRANSFER", true);
-					}
+					isSuccess = true;
+					SimpleUtils.pass("Cancel Transfer Successfully!");
 				}else {
 					SimpleUtils.fail("Cancel Transfer failed!", true);
 				}
@@ -2364,7 +2395,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public boolean isManualOnBoardButtonLoaded() throws Exception {
 		boolean isLoaded = false;
-		if (isElementLoaded(manualOnBoardButton)) {
+		if (isElementLoaded(manualOnBoardButton, 10)) {
 			isLoaded = true;
 			SimpleUtils.pass("Manual Onboard Button Loaded Successfully!");
 		}else{
@@ -2714,7 +2745,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if (shiftPrefs.size() == (changedShiftPrefs.size() + status.size())) {
 				if (shiftPrefs.containsAll(changedShiftPrefs)) {
 					if (shiftPrefs.size() == 4) {
-						if (shiftPrefs.get(3).equalsIgnoreCase(status.get(0))) {
+						if (shiftPrefs.get(3).contains(status.get(0))) {
 							isConsistent = true;
 						}
 					} else if (shiftPrefs.size() == 5) {
@@ -3618,6 +3649,18 @@ private List<WebElement> locationColumn;
 			return  false;
 	}
 
+	@Override
+	public boolean isColumnExisted(String colName) throws Exception {
+		if (areListElementVisible(columnsInRoster, 10)){
+			for (WebElement element: columnsInRoster){
+				if (colName.equalsIgnoreCase(element.getText())){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	@FindBy(xpath = "//span[contains(text(),'School Calendars')]")
 	private WebElement schoolCalendarTab;
 	@Override
@@ -3714,7 +3757,7 @@ private List<WebElement> locationColumn;
 
 	@Override
 	public boolean verifyActivatedSubTab(String SubTabText) throws Exception {
-		if (isElementLoaded(activatedSubTabElement,5)) {
+		if (isElementLoaded(activatedSubTabElement,30)) {
 			if (activatedSubTabElement.getText().trim().equalsIgnoreCase(SubTabText)) {
 				return true;
 			}
@@ -3769,7 +3812,7 @@ private List<WebElement> locationColumn;
 		if (isElementLoaded(calendarNameInput,5)) {
 			calendarNameInput.sendKeys(calendarName);
 			if (calendarNameInput.getAttribute("value").equals(calendarName))
-				SimpleUtils.pass("School Calendars Page: Input customized calendar name" + calendarName + " successfully");
+				SimpleUtils.pass("School Calendars Page: Input customized calendar name " + calendarName + " successfully");
 			else
 				SimpleUtils.fail("School Calendars Page: Failed to input customized calendar name",false);
 		} else
@@ -3781,7 +3824,7 @@ private List<WebElement> locationColumn;
 		String startDate = "";
 		if (areListElementVisible(daysInSessionStart,5)) {
 			int index = (new Random()).nextInt(daysInSessionStart.size());
-			click(daysInSessionStart.get(index));
+			clickTheElement(daysInSessionStart.get(index));
 			if (daysInSessionStart.get(index).getAttribute("class").contains("in-range") && isElementLoaded(startDateInSessionStartEnd,5)) {
 				SimpleUtils.pass("School Calendars Page: Session start random day is selected successfully");
 				startDate = startDateInSessionStartEnd.getText();
@@ -3812,10 +3855,10 @@ private List<WebElement> locationColumn;
 	public void clickOnSaveCalendar() throws Exception {
 		if (isElementLoaded(savePreferButton,5)) {
 			clickTheElement(savePreferButton);
-			if (isElementLoaded(popMessage,10) && popMessage.getText().contains("Success"))
+			if (isElementLoaded(popMessage,120) && popMessage.getText().contains("Success"))
 				SimpleUtils.pass("School Calendars Page: School Calendar is saved successfully");
 			else
-				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",false);
+				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",true);
 		} else
 			SimpleUtils.fail("School Calendars Page: School Session End input field failed to load",false);
 	}
@@ -3862,9 +3905,9 @@ private List<WebElement> locationColumn;
 			}
 		} else {
 			if (priorYearArrow.getAttribute("class").contains("invisible")) {
-				SimpleUtils.pass("School Calendars Page: Prior year arrow is invisible in edit mode as expected");
+				SimpleUtils.fail("School Calendars Page: Prior year arrow is invisible in edit mode unexpectedly", false);
 			} else
-				SimpleUtils.fail("School Calendars Page: Prior year arrow is displayed unexpectedly", false);
+				SimpleUtils.pass("School Calendars Page: Prior year arrow is displayed expectedly");
 		}
 	}
 
@@ -3910,7 +3953,7 @@ private List<WebElement> locationColumn;
 	@Override
 	public boolean isCalendarDisplayedByName(String calendarName) throws Exception {
 		boolean isCalendarDisplayed = false;
-		if (areListElementVisible(calendarTitles, 10)) {
+		if (areListElementVisible(calendarTitles, 60)) {
 			for (WebElement title : calendarTitles) {
 				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
 					isCalendarDisplayed = true;
@@ -3943,6 +3986,8 @@ private List<WebElement> locationColumn;
 	private List<WebElement> rightArrows;
 	@FindBy(css = ".modal-instance-button.confirm")
 	private WebElement saveSchoolSessionBtn;
+	@FindBy(css = "div.modal-instance-button.ng-binding")
+	private WebElement cancelSchoolSessionBtn;
 	@FindBy(css = "[label=\"Delete\"]")
 	private WebElement deleteCalendarBtn;
 	@FindBy(css = "[label=\"Edit\"]")
@@ -4172,7 +4217,7 @@ private List<WebElement> locationColumn;
 
 	@Override
 	public void deleteCalendarByName(String calendarName) throws Exception {
-		if (areListElementVisible(calendarTitles, 10)) {
+		if (areListElementVisible(calendarTitles, 20)) {
 			for (WebElement title : calendarTitles) {
 				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
 					clickTheElement(title);
@@ -4248,7 +4293,7 @@ private List<WebElement> locationColumn;
 		try {
 			Calendar calder = Calendar.getInstance();
 			calder.setTime(new Date());
-			int month = calder.get(Calendar.MONTH);
+			int month = calder.get(Calendar.MONTH)+1;
 			// If month is before August, need to switch to the previous year
 			if (month < 7) {
 				if (isElementLoaded(yearSwitchLeft, 5)) {
@@ -4271,6 +4316,16 @@ private List<WebElement> locationColumn;
 			waitUntilElementIsInVisible(saveSchoolSessionBtn);
 		} else {
 			SimpleUtils.fail("School Calendar Page: Save School Session button not loaded Successfully!", false);
+		}
+	}
+
+	@Override
+	public void clickOnCancelSchoolSessionCalendarBtn() throws Exception {
+		if (isElementLoaded(cancelSchoolSessionBtn, 5)) {
+			clickTheElement(cancelSchoolSessionBtn);
+			waitUntilElementIsInVisible(cancelSchoolSessionBtn);
+		} else {
+			SimpleUtils.fail("School Calendar Page: Cancel School Session button not loaded Successfully!", false);
 		}
 	}
 
@@ -4427,6 +4482,10 @@ private List<WebElement> locationColumn;
 				if(!isCurrentWeek) {
 					if (dayOnCalendar.getText().equalsIgnoreCase("1")){
 						isCurrentWeek = true;
+						if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
+							click (dayOnCalendar);
+							break;
+						}
 					}
 				} else {
 					if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
@@ -4479,14 +4538,14 @@ private List<WebElement> locationColumn;
 			click(cancelActivateButton);
 			if(isElementLoaded(confirmBtn, 5)) {
 				click(confirmBtn);
-				if (isElementLoaded(popupMessage, 10)) {
-					String actualMessage = popupMessage.getText();
-					if (actualMessage.equals("Successfully cancelled deactivation of Team Member.")) {
-						SimpleUtils.pass("Cancel terminate the Team Member successfully!");
-					} else {
-						SimpleUtils.fail("Failed to activate the Team member", false);
-					}
-				}
+//				if (isElementLoaded(popupMessage, 10)) {
+//					String actualMessage = popupMessage.getText();
+//					if (actualMessage.equals("Successfully cancelled deactivation of Team Member.")) {
+//						SimpleUtils.pass("Cancel terminate the Team Member successfully!");
+//					} else {
+//						SimpleUtils.fail("Failed to activate the Team member", false);
+//					}
+//				}
 			}
 			if (isElementLoaded(deactivateButton, 5)) {
 				SimpleUtils.report("Cancel deactivate successfully! ");
@@ -4504,14 +4563,14 @@ private List<WebElement> locationColumn;
 			click(cancelTerminateButton);
 			if(isElementLoaded(confirmBtn, 5)) {
 				click(confirmBtn);
-				if (isElementLoaded(popupMessage, 10)) {
-					String actualMessage = popupMessage.getText();
-					if (actualMessage.equals("Successfully cancelled removal of Team Member from Roster.")) {
-						SimpleUtils.pass("Cancel terminate the Team Member successfully!");
-					} else {
-						SimpleUtils.fail("Failed to activate the Team member", false);
-					}
-				}
+//				if (isElementLoaded(popupMessage, 10)) {
+//					String actualMessage = popupMessage.getText();
+//					if (actualMessage.equals("Successfully cancelled removal of Team Member from Roster.")) {
+//						SimpleUtils.pass("Cancel terminate the Team Member successfully!");
+//					} else {
+//						SimpleUtils.fail("Failed to activate the Team member", false);
+//					}
+//				}
 			}
 			if (isElementLoaded(terminateButton, 5)) {
 				SimpleUtils.report("Cancel terminate successfully! ");
@@ -4523,7 +4582,7 @@ private List<WebElement> locationColumn;
 
 	public boolean checkIfTMExists(String tmName) throws Exception {
 		boolean isTMExists = false;
-		if(isElementLoaded(teamMemberSearchBox, 10)) {
+		if(isElementLoaded(teamMemberSearchBox, 20) && areListElementVisible(teamMembers, 20)) {
 			teamMemberSearchBox.clear();
 			teamMemberSearchBox.sendKeys(tmName);
 			waitForSeconds(4);
@@ -4560,7 +4619,8 @@ private List<WebElement> locationColumn;
 					}
 				}
 			}
-		}
+		} else
+			SimpleUtils.fail("The search TM box or team members fail to load! ", false);
 		return isTMExists;
 	}
 
@@ -4720,5 +4780,162 @@ private List<WebElement> locationColumn;
 		}else
 
 			return 0;
+	}
+
+	@Override
+	public List<String> getCalendarCurrentStartAndEndTime() {
+		List<String> calendarCurrentStartAndEndTime = new ArrayList<>();
+		if (areListElementVisible(rangedCalendars,8)) {
+			for (int i = 0; i < rangedCalendars.size(); i++) {
+				calendarCurrentStartAndEndTime.add(rangedCalendars.get(i).getText());
+				SimpleUtils.pass("Get calendar current start and end time successfully! ");
+			}
+		}else
+			SimpleUtils.fail("Calendar current start and end time fail to load! ", false);
+		return  calendarCurrentStartAndEndTime;
+	}
+
+	@Override
+	public List<String> getAllCalendarMonthNames() {
+		List<String> calendarMonthNames = new ArrayList<>();
+		if (areListElementVisible(calendarMonths,8)) {
+			for (int i = 0; i < calendarMonths.size(); i++) {
+				calendarMonthNames.add(calendarMonths.get(i).getText());
+				SimpleUtils.pass("Get calendar month names successfully! ");
+			}
+		}else
+			SimpleUtils.fail("Calendar month names fail to load! ", false);
+		return  calendarMonthNames;
+	}
+
+
+
+	@FindBy (xpath = "//div[contains(@class,'calendar-cell ng-binding ng-scope non-school-day day-bold')]/preceding-sibling::div")
+	private List<WebElement> theNonSummerDaysInTheLastSchoolMonth;
+
+	public void setNonSchoolDaysForNonSchoolWeek () {
+		if (areListElementVisible(theNonSummerDaysInTheLastSchoolMonth, 10)) {
+			//Click the school days in the last school week to change to non-school day
+			waitForSeconds(3);
+			click(theNonSummerDaysInTheLastSchoolMonth.get(theNonSummerDaysInTheLastSchoolMonth.size() - 1));
+			SimpleUtils.pass("Set the non-school week successfully! ");
+		} else {
+			SimpleUtils.report("The school days fail to load! ");
+		}
+	}
+
+	@FindBy (css = "[label=\"Cancel Transfer\"]")
+	private WebElement cancelTransferButton;
+
+	public void cancelTransfer() throws Exception {
+		if (isElementLoaded(cancelTransferButton, 5)) {
+			clickTheElement(cancelTransferButton);
+			String expectedMessage = "Are you sure you want to cancel the transfer to the new location?";
+			String actualMessage = "";
+			if (isElementLoaded(confirmPopupWindow, 5) && isElementLoaded(popupMessage, 5)) {
+				actualMessage = popupMessage.findElement(By.tagName("span")).getText();
+				if (expectedMessage.trim().equals(actualMessage.trim())){
+					SimpleUtils.pass("Cancel Transfer window pops up!");
+				}else {
+					SimpleUtils.fail("The Message on Cancel Transfer window is incorrect!", true);
+				}
+				clickTheElement(confirmButton);
+				if (isElementLoaded(transferButton, 15)) {
+					SimpleUtils.pass("Cancelled Transfer successfully!");
+				}else {
+				SimpleUtils.fail("Failed to cancel the Transfer!", false);
+			 	}
+			} else {
+				SimpleUtils.fail("Cancel Transfer pop-up window doesn't show!", true);
+			}
+		} else
+			SimpleUtils.report("The cancel transfer button is not loaded! ");
+	}
+
+	@FindBy (className = "modal-content")
+	private WebElement transferTMWindow;
+
+	@FindBy (css = "div.location-carousel-next")
+	private WebElement locationCarouselNext;
+	public void transferTheTeamMemberOnSpecificDay(String transferLocation, String transferFromDate) throws Exception {
+		if (isElementLoaded(transferButton, 5)) {
+			clickTheElement(transferButton);
+			boolean isTransferLocationExists = false;
+			if (isElementLoaded(transferTMWindow, 5)) {
+				String transferMsg = "Successfully transferred the Team Member";
+				String actualMsg = "";
+				if (areListElementVisible(locationCards, 5)) {
+					while (!isTransferLocationExists) {
+						for (WebElement locationCard: locationCards) {
+							if (locationCard.findElement(By.cssSelector("div.location-card-name-text")).
+									getText().equalsIgnoreCase(transferLocation)) {
+								isTransferLocationExists = true;
+								clickTheElement(locationCard);
+							}
+						}
+						if (!isTransferLocationExists && isElementLoaded(locationCarouselNext, 5)) {
+							clickTheElement(locationCarouselNext);
+						}
+					}
+
+				}
+				if (isElementLoaded(monthHeader, 5)
+						&& isElementLoaded(nextMonthArrow, 5)
+						&& areListElementVisible(daysOnCalendar, 5)) {
+					String[] dates = transferFromDate.split(" ");
+					String year = dates[0];
+					String month = dates[1];
+					String day = dates[2];
+
+					String monthInCalendar = monthHeader.getText().split(" ")[0].substring(0, 3);
+					String yearInCalendar = monthHeader.getText().split(" ")[1];
+
+					int i =0;
+					while (i<10 && (!year.equalsIgnoreCase(yearInCalendar) || !month.equalsIgnoreCase(monthInCalendar))){
+						click(nextMonthArrow);
+						i ++;
+						monthInCalendar = monthHeader.getText().split(" ")[0].substring(0, 3);
+					}
+					boolean isCurrentWeek = false;
+					for (WebElement dayOnCalendar: daysOnCalendar){
+						if(!isCurrentWeek) {
+							//There may be have several days from last month in this calendar, like: 26, 27, 28 , 29 , 30
+							//So need to get the first day of this month, if the day is < 20th, the day must belong to the current month
+							if (Integer.parseInt(dayOnCalendar.getText())< 20){
+								isCurrentWeek = true;
+								if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
+									click (dayOnCalendar);
+									break;
+								}
+							}
+						} else {
+							if (dayOnCalendar.getText().equalsIgnoreCase(day)) {
+								click (dayOnCalendar);
+								break;
+							}
+						}
+					}
+					click(applyButton);
+					if (isElementLoaded(confirmPopupWindow, 15) && isElementLoaded(confirmButton, 15)) {
+						click(confirmButton);
+						if (isElementLoaded(popupMessage, 15))
+						{
+							actualMsg = popupMessage.getText();
+							if (transferMsg.equals(actualMsg)) {
+								SimpleUtils.pass("Transfer the team member successfully!");
+							}else {
+								SimpleUtils.fail("The pop up message is incorrect!", false);
+							}
+						}
+					} else {
+						SimpleUtils.fail("Confirm window doesn't show!", false);
+					}
+				} else
+					SimpleUtils.fail("The items on calendar loaded fail!", false);
+			} else
+				SimpleUtils.fail("The transfer TM window fail to load! ", false);
+
+		} else
+			SimpleUtils.fail("The transfer button is fail to loaded! ", false);
 	}
 }

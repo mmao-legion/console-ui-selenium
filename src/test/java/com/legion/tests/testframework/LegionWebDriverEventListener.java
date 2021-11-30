@@ -96,7 +96,7 @@ public class LegionWebDriverEventListener implements WebDriverEventListener, App
 	@Override
 	public void beforeClickOn(WebElement element, WebDriver driver) {
 		// TODO Auto-generated method stub
-        ScreenshotManager.takeScreenShot();
+        //ScreenshotManager.takeScreenShot();
 		
 	}
 
@@ -110,7 +110,7 @@ public class LegionWebDriverEventListener implements WebDriverEventListener, App
 			e.printStackTrace();
 		}finally{
 			setScreenshotConsoleName(BasePage.activeConsoleName);
-			ScreenshotManager.takeScreenShot();
+			//ScreenshotManager.takeScreenShot();
 		}
 
 	}

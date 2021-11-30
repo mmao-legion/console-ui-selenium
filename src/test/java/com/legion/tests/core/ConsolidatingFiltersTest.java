@@ -46,27 +46,29 @@ public class ConsolidatingFiltersTest extends TestBase {
     public void verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Schedule page, Schedule tab
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Create schedule if it is not created
-            schedulePage.navigateToNextWeek();
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 
-            schedulePage.clickOnFilterBtn();
-            schedulePage.verifyShiftTypeInLeft(false);
-            schedulePage.verifyShiftTypeFilters();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.verifyShiftTypeInLeft(false);
+            scheduleMainPage.verifyShiftTypeFilters();
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -83,6 +85,11 @@ public class ConsolidatingFiltersTest extends TestBase {
     public void verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -98,149 +105,151 @@ public class ConsolidatingFiltersTest extends TestBase {
             teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstNameOfTM1);
 
             // Go to Schedule page, Schedule tab
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Create schedule if it is not created
-            schedulePage.navigateToNextWeek();
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
+            Thread.sleep(5000);
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "09:00AM", "11:00PM");
 
             // Edit the Schedule
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Delete all the shifts that are assigned to the team member
-            schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
 
             // Create new shift for TM1 on first and second day for Clopening violation
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectSpecificWorkDay(1);
-            schedulePage.selectWorkRole(workRoleOfTM1);
-            schedulePage.moveSliderAtCertainPoint("11pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("6pm", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(firstNameOfTM1);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectSpecificWorkDay(1);
+            newShiftPage.selectWorkRole(workRoleOfTM1);
+            newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("6pm", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectDaysByIndex(1, 1, 1);
-            schedulePage.selectWorkRole(workRoleOfTM1);
-            schedulePage.moveSliderAtCertainPoint("11am", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(firstNameOfTM1);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(1, 1, 1);
+            newShiftPage.selectWorkRole(workRoleOfTM1);
+            newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
             //Create new shift for TM on third day for meal break violation
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectDaysByIndex(2, 2, 2);
-            schedulePage.selectWorkRole(workRoleOfTM1);
-            schedulePage.moveSliderAtCertainPoint("4pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(firstNameOfTM1);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(2, 2, 2);
+            newShiftPage.selectWorkRole(workRoleOfTM1);
+            newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
             //Create new shift for TM on forth day for OT violation
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectDaysByIndex(3, 3, 3);
-            schedulePage.selectWorkRole(workRoleOfTM1);
-            schedulePage.moveSliderAtCertainPoint("8pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("8am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(firstNameOfTM1);
-            schedulePage.clickOnOfferOrAssignBtn();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(3, 3, 3);
+            newShiftPage.selectWorkRole(workRoleOfTM1);
+            newShiftPage.moveSliderAtCertainPoint("8pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
 
-            schedulePage.saveSchedule();
+            scheduleMainPage.saveSchedule();
 
             // Edit the Schedule
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<WebElement> shiftsOfThirdDay = schedulePage.getOneDayShiftByName(2, firstNameOfTM1);
-            schedulePage.deleteMealBreakForOneShift(shiftsOfThirdDay.get(0));
-            schedulePage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<WebElement> shiftsOfThirdDay = scheduleShiftTablePage.getOneDayShiftByName(2, firstNameOfTM1);
+            shiftOperatePage.deleteMealBreakForOneShift(shiftsOfThirdDay.get(0));
+            scheduleMainPage.saveSchedule();
 
-            schedulePage.clickOnFilterBtn();
-            int allShiftsCount = schedulePage.getShiftsCount();
-            int complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
-            schedulePage.selectShiftTypeFilterByText("Compliance Review");
-            int complianceShiftsCount = schedulePage.getShiftsCount();
+            scheduleMainPage.clickOnFilterBtn();
+            int allShiftsCount = scheduleShiftTablePage.getShiftsCount();
+            int complianceReviewCount = scheduleMainPage.getSpecificFiltersCount("Compliance Review");
+            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
+            int complianceShiftsCount = scheduleShiftTablePage.getShiftsCount();
             SimpleUtils.assertOnFail("The compliance shift count display incorrectly in schedule filter dropdown list! ",
                     complianceReviewCount == complianceShiftsCount, false);
 
-            List<WebElement> shiftsOfFirstDay = schedulePage.getOneDayShiftByName(0, firstNameOfTM1);
-            List<WebElement> shiftsOfSecondDay = schedulePage.getOneDayShiftByName(1, firstNameOfTM1);
-            shiftsOfThirdDay = schedulePage.getOneDayShiftByName(2, firstNameOfTM1);
-            List<WebElement> shiftsOfForthDay = schedulePage.getOneDayShiftByName(3, firstNameOfTM1);
+            List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1);
+            List<WebElement> shiftsOfSecondDay = scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1);
+            shiftsOfThirdDay = scheduleShiftTablePage.getOneDayShiftByName(2, firstNameOfTM1);
+//            List<WebElement> shiftsOfForthDay = scheduleShiftTablePage.getOneDayShiftByName(3, firstNameOfTM1);
 
             //Check the clopening violation shifts on the first and second day
             SimpleUtils.assertOnFail("Clopening compliance message display failed",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("Clopening")
-                            && schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfSecondDay.get(0)).contains("Clopening") , false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("Clopening")
+                            && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfSecondDay.get(0)).contains("Clopening") , false);
 
             //Check the meal break violation shifts on the third day
             SimpleUtils.assertOnFail("Meal break compliance message display failed",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
 
     //            //Check the OT violation shifts on the forth day. Blocked by SCH-4250
     //            SimpleUtils.assertOnFail("OT compliance message display failed",
-    //                    schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
+    //                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
 
-            schedulePage.clickOnFilterBtn();
-            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             SimpleUtils.assertOnFail("Uncheck Compliance Review filter fail! ",
-                    allShiftsCount == schedulePage.getShiftsCount(), false);
+                    allShiftsCount == scheduleShiftTablePage.getShiftsCount(), false);
 
             //Validate Compliance Review in day view
-            schedulePage.clickOnDayView();
-            schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText("Compliance Review");
+            scheduleCommonPage.clickOnDayView();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
             for (int i=0; i< 4; i++) {
-                schedulePage.navigateDayViewWithIndex(i);
-                schedulePage.clickOnFilterBtn();
-                complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
-                complianceShiftsCount = schedulePage.getShiftsCount();
+                scheduleCommonPage.navigateDayViewWithIndex(i);
+                scheduleMainPage.clickOnFilterBtn();
+                complianceReviewCount = scheduleMainPage.getSpecificFiltersCount("Compliance Review");
+                complianceShiftsCount = scheduleShiftTablePage.getShiftsCount();
                 SimpleUtils.assertOnFail("The compliance shift count display incorrectly in schedule filter dropdown list! ",
                         complianceReviewCount == complianceShiftsCount, false);
 
                 //Check the clopening violation shifts on the first and second day
                 if (i ==0 || i==1) {
-                    shiftsOfFirstDay = schedulePage.getShiftsByNameOnDayView(firstNameOfTM1);
+                    shiftsOfFirstDay = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1);
                     SimpleUtils.assertOnFail("Clopening compliance message display failed",
-                            schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("Clopening"), false);
+                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("Clopening"), false);
                 }
 
                 //Check the meal break violation shifts on the third day
                 if (i==2) {
-                    shiftsOfThirdDay = schedulePage.getShiftsByNameOnDayView(firstNameOfTM1);
+                    shiftsOfThirdDay = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1);
                     SimpleUtils.assertOnFail("Meal break compliance message display failed",
-                            schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
+                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
                 }
 
                 //Check the OT violation shifts on the forth day. Blocked by SCH-4250
 //                if (i==3) {
-//                      shiftsOfForthDay = schedulePage.getShiftsByNameOnDayView(firstNameOfTM1);
+//                      shiftsOfForthDay = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1);
 //                    SimpleUtils.assertOnFail("OT compliance message display failed",
-//                            schedulePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
+//                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
 //                }
             }
 
@@ -258,6 +267,10 @@ public class ConsolidatingFiltersTest extends TestBase {
     public void verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "No, keep as unassigned";
@@ -278,7 +291,8 @@ public class ConsolidatingFiltersTest extends TestBase {
                 opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.goToConfigurationPage();
-                configurationPage.goToTemplateDetailsPage("Schedule Collaboration");
+                configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+                configurationPage.clickOnSpecifyTemplateName("Cinemark Base Template", "edit");
                 configurationPage.clickOnEditButtonOnTemplateDetailsPage();
                 configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
                 configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
@@ -287,58 +301,60 @@ public class ConsolidatingFiltersTest extends TestBase {
             }
 
             if(getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))){
-                Thread.sleep(300000);
+                Thread.sleep(180000);
             }
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Create schedule if it is not created
-            schedulePage.navigateToNextWeek();
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "08:00PM");
+            Thread.sleep(3000);
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "08:00AM", "08:00PM");
 
-            schedulePage.clickOnFilterBtn();
-            int allShiftsCount = schedulePage.getShiftsCount();
-            int unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
-            schedulePage.selectShiftTypeFilterByText("Action Required");
-            int unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
+            scheduleMainPage.clickOnFilterBtn();
+            int allShiftsCount = scheduleShiftTablePage.getShiftsCount();
+            int unassignedAndOOOHShiftCount = scheduleMainPage.getSpecificFiltersCount("Action Required");
+            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
+            int unassignedAndOOOHShiftCountInFilter = scheduleShiftTablePage.getShiftsCount();
             SimpleUtils.assertOnFail("The Action Required shift count display incorrectly in schedule filter dropdown list! ",
                     unassignedAndOOOHShiftCount == unassignedAndOOOHShiftCountInFilter, false);
 
-            schedulePage.clickOnFilterBtn();
-            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             SimpleUtils.assertOnFail("Uncheck Action Required filter fail! ",
-                    allShiftsCount == schedulePage.getShiftsCount(), false);
+                    allShiftsCount == scheduleShiftTablePage.getShiftsCount(), false);
 
             //Validate Action Required shifts in day view
-            schedulePage.clickOnDayView();
-            schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText("Action Required");
+            scheduleCommonPage.clickOnDayView();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
             for (int i=0; i< 7; i++) {
-                schedulePage.navigateDayViewWithIndex(i);
-                schedulePage.clickOnFilterBtn();
-                unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
-                unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
+                scheduleCommonPage.navigateDayViewWithIndex(i);
+                scheduleMainPage.clickOnFilterBtn();
+                unassignedAndOOOHShiftCount = scheduleMainPage.getSpecificFiltersCount("Action Required");
+                unassignedAndOOOHShiftCountInFilter = scheduleShiftTablePage.getShiftsCount();
                 SimpleUtils.assertOnFail("The Action Required shift count display incorrectly in schedule filter dropdown list! ",
                         unassignedAndOOOHShiftCount == unassignedAndOOOHShiftCountInFilter, false);
             }
 
-            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
-            schedulePage.publishActiveSchedule();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+            createSchedulePage.publishActiveSchedule();
 
 
             //Get the info of this week for copy schedule
-            String firstWeekInfo = schedulePage.getActiveWeekText();
+            String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
                 if (firstWeekInfo.contains("-")) {
@@ -350,46 +366,46 @@ public class ConsolidatingFiltersTest extends TestBase {
                 }
             }
 
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
 
-            isWeekGenerated = schedulePage.isWeekGenerated();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.clickCreateScheduleBtn();
-            schedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "08:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "08:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "11:00AM", "08:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "11:00AM", "08:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Thursday", "11:00AM", "08:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Friday", "11:00AM", "08:00PM");
-            schedulePage.editOperatingHoursWithGivingPrameters("Saturday", "11:00AM", "08:00PM");
-            schedulePage.clickNextBtnOnCreateScheduleWindow();
-            schedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
-            schedulePage.clickOnFinishButtonOnCreateSchedulePage();
+            createSchedulePage.clickCreateScheduleBtn();
+            createSchedulePage.editOperatingHoursWithGivingPrameters("Sunday", "11:00AM", "08:00PM");
+            createSchedulePage.editOperatingHoursWithGivingPrameters("Monday", "11:00AM", "08:00PM");
+            createSchedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "11:00AM", "08:00PM");
+            createSchedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "11:00AM", "08:00PM");
+            createSchedulePage.editOperatingHoursWithGivingPrameters("Thursday", "11:00AM", "08:00PM");
+            createSchedulePage.editOperatingHoursWithGivingPrameters("Friday", "11:00AM", "08:00PM");
+            createSchedulePage.editOperatingHoursWithGivingPrameters("Saturday", "11:00AM", "08:00PM");
+            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
+            createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
 
-            schedulePage.clickOnFilterBtn();
-            allShiftsCount = schedulePage.getShiftsCount();
-            unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
-            schedulePage.selectShiftTypeFilterByText("Action Required");
-            unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
+            scheduleMainPage.clickOnFilterBtn();
+            allShiftsCount = scheduleShiftTablePage.getShiftsCount();
+            unassignedAndOOOHShiftCount = scheduleMainPage.getSpecificFiltersCount("Action Required");
+            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
+            unassignedAndOOOHShiftCountInFilter = scheduleShiftTablePage.getShiftsCount();
             SimpleUtils.assertOnFail("The Action Required shift count display incorrectly in schedule filter dropdown list! ",
                     unassignedAndOOOHShiftCount == unassignedAndOOOHShiftCountInFilter, false);
 
-            schedulePage.clickOnFilterBtn();
-            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             SimpleUtils.assertOnFail("Uncheck Action Required filter fail! ",
-                    allShiftsCount == schedulePage.getShiftsCount(), false);
+                    allShiftsCount == scheduleShiftTablePage.getShiftsCount(), false);
 
             //Validate Action Required shifts in day view
-            schedulePage.clickOnDayView();
-            schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText("Action Required");
+            scheduleCommonPage.clickOnDayView();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
             for (int i=0; i< 7; i++) {
-                schedulePage.navigateDayViewWithIndex(i);
-                schedulePage.clickOnFilterBtn();
-                unassignedAndOOOHShiftCount = schedulePage.getSpecificFiltersCount("Action Required");
-                unassignedAndOOOHShiftCountInFilter = schedulePage.getShiftsCount();
+                scheduleCommonPage.navigateDayViewWithIndex(i);
+                scheduleMainPage.clickOnFilterBtn();
+                unassignedAndOOOHShiftCount = scheduleMainPage.getSpecificFiltersCount("Action Required");
+                unassignedAndOOOHShiftCountInFilter = scheduleShiftTablePage.getShiftsCount();
                 SimpleUtils.assertOnFail("The Action Required shift count display incorrectly in schedule filter dropdown list! ",
                         unassignedAndOOOHShiftCount == unassignedAndOOOHShiftCountInFilter, false);
             }
@@ -407,30 +423,33 @@ public class ConsolidatingFiltersTest extends TestBase {
     public void verifyShiftTypeContentInFilterWithLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeDistrict("District Whistler");
             locationSelectorPage.changeLocation("Lift Ops_Parent");
             // Go to Schedule page, Schedule tab
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Create schedule if it is not created
-            schedulePage.navigateToNextWeek();
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 
-            schedulePage.clickOnFilterBtn();
-            schedulePage.verifyShiftTypeInLeft(true);
-            schedulePage.verifyShiftTypeFilters();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.verifyShiftTypeInLeft(true);
+            scheduleMainPage.verifyShiftTypeFilters();
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -446,6 +465,9 @@ public class ConsolidatingFiltersTest extends TestBase {
     public void verifyComplianceReviewWithLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -453,47 +475,48 @@ public class ConsolidatingFiltersTest extends TestBase {
             locationSelectorPage.changeLocation("Lift Ops_Parent");
 
             // Go to Schedule page, Schedule tab
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
             // Create schedule if it is not created
-            schedulePage.navigateToNextWeek();
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
 
             // Edit the Schedule
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
-            schedulePage.clickOnFilterBtn();
-            int allShiftsCount = schedulePage.getShiftsCount();
-            int complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
-            schedulePage.selectShiftTypeFilterByText("Compliance Review");
-            int complianceShiftsCount = schedulePage.getShiftsCount();
+            scheduleMainPage.clickOnFilterBtn();
+            int allShiftsCount = scheduleShiftTablePage.getShiftsCount();
+            int complianceReviewCount = scheduleMainPage.getSpecificFiltersCount("Compliance Review");
+            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
+            int complianceShiftsCount = scheduleShiftTablePage.getShiftsCount();
             SimpleUtils.assertOnFail("The compliance shift count display incorrectly in schedule filter dropdown list! ",
                     complianceReviewCount == complianceShiftsCount, false);
 
-            schedulePage.clickOnFilterBtn();
-            schedulePage.clickOnClearFilterOnFilterDropdownPopup();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             SimpleUtils.assertOnFail("Uncheck Compliance Review filter fail! ",
-                    allShiftsCount == schedulePage.getShiftsCount(), false);
+                    allShiftsCount == scheduleShiftTablePage.getShiftsCount(), false);
 
             //Validate Compliance Review in day view
-            schedulePage.clickOnDayView();
-            schedulePage.clickOnFilterBtn();
-            schedulePage.selectShiftTypeFilterByText("Action Required");
+            scheduleCommonPage.clickOnDayView();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
             for (int i=0; i< 7; i++) {
-                schedulePage.navigateDayViewWithIndex(i);
-                schedulePage.clickOnFilterBtn();
-                complianceReviewCount = schedulePage.getSpecificFiltersCount("Compliance Review");
-                complianceShiftsCount = schedulePage.getShiftsCount();
+                scheduleCommonPage.navigateDayViewWithIndex(i);
+                scheduleMainPage.clickOnFilterBtn();
+                complianceReviewCount = scheduleMainPage.getSpecificFiltersCount("Compliance Review");
+                complianceShiftsCount = scheduleShiftTablePage.getShiftsCount();
                 SimpleUtils.assertOnFail("The compliance shift count display incorrectly in schedule filter dropdown list! ",
                         complianceReviewCount == complianceShiftsCount, false);
             }

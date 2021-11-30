@@ -118,20 +118,16 @@ public class PrepareSettingsTest extends TestBase {
             controlsNewUIPage.updateScheduleBufferHoursBefore(beforeBufferCount);
             controlsNewUIPage.updateScheduleBufferHoursAfter(afterBufferCount);
 
-
-
-
-
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
-            MyThreadLocal.setIsNeedEditingOperatingHours(true);
-            createScheduleForThreeWeeks(schedulePage);
+//            MyThreadLocal.setIsNeedEditingOperatingHours(true);
+//            createScheduleForThreeWeeks(schedulePage);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -175,6 +171,15 @@ public class PrepareSettingsTest extends TestBase {
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
             configurationPage.publishNowTheTemplate();
 
+            String wfsName = "Lone Star Region";
+            cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.setWFS("Yes");
+            configurationPage.selectWFSGroup(wfsName);
+            configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
+            configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+            configurationPage.publishNowTheTemplate();
+
             //Set buffer hours on OP: before--2, after--3
             configurationPage.goToConfigurationPage();
             controlsNewUIPage.clickOnControlsOperatingHoursSection();
@@ -189,22 +194,24 @@ public class PrepareSettingsTest extends TestBase {
     }
 
     private void createScheduleForThreeWeeks(SchedulePage schedulePage) throws Exception {
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        schedulePage.createScheduleForNonDGFlowNewUI();
-        schedulePage.navigateToNextWeek();
-        isWeekGenerated = schedulePage.isWeekGenerated();
+        createSchedulePage.createScheduleForNonDGFlowNewUI();
+        scheduleCommonPage.navigateToNextWeek();
+        isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        schedulePage.createScheduleForNonDGFlowNewUI();
-        schedulePage.navigateToNextWeek();
-        isWeekGenerated = schedulePage.isWeekGenerated();
+        createSchedulePage.createScheduleForNonDGFlowNewUI();
+        scheduleCommonPage.navigateToNextWeek();
+        isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        schedulePage.createScheduleForNonDGFlowNewUI();
+        createSchedulePage.createScheduleForNonDGFlowNewUI();
     }
 }

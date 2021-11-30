@@ -3,6 +3,7 @@ package com.legion.pages.core;
 import com.legion.pages.ActivityPage;
 import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
+import com.legion.tests.core.ActivityTest;
 import com.legion.utils.SimpleUtils;
 import org.junit.rules.ExpectedException;
 import org.openqa.selenium.By;
@@ -119,6 +120,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	public void verifyClickOnActivityIcon() throws Exception {
 		if (isElementLoaded(activityBell, 10)) {
 			clickTheElement(activityBell);
+			waitForSeconds(2);
 			if (areListElementVisible(activityFilters, 10)) {
 				SimpleUtils.pass("Click on Activity Bell icon Successfully!");
 			}else {
@@ -271,14 +273,15 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		waitForSeconds(5);
 		if (areListElementVisible(activityCards, 15)) {
 			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
-			if (message != null && message.getText().contains(requestUserName)
-					&& message.getText().toLowerCase().contains(expectedMessage) && message.getText().toLowerCase().contains("@"+location.toLowerCase())) {
-				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
-			}else if( message.getText().toLowerCase().contains("no activities available for the selected filter")) {
+			String messageText = message.getText();
+			if (message != null && messageText.contains(requestUserName)
+					&& messageText.toLowerCase().contains(expectedMessage) && messageText.toLowerCase().contains("@"+location.toLowerCase())) {
+				SimpleUtils.pass("Find Card: " + messageText + " Successfully!");
+			}else if( messageText.toLowerCase().contains("no activities available for the selected filter")) {
 				SimpleUtils.report("No activities available for the selected filter");
 			}else{
 				SimpleUtils.fail("Failed to find the card that is new and contain: " + requestUserName + ", "
-						+ ", " + expectedMessage + "! Actual card is: " + message.getText(), false);
+						+ ", " + expectedMessage + "! Actual card is: " + messageText, false);
 			}
 		}else {
 			SimpleUtils.fail("Shift Offer Activity failed to Load1", false);
@@ -417,10 +420,13 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     public void verifyTheNotificationForReqestTimeOff(String requestUserName, String startTime, String endTime,String timeOffAction) throws Exception {
         boolean isFound = false;
         String expectedCancelInfo = "Cancelled on ";
-    	String expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
-        /*if (timeOffAction.toLowerCase().contains("cancel")){
-            expectedMessage = requestUserName +" "+timeOffAction+" the time off request for "+ startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
-        }*/
+    	String expectedMessage = "";
+    	if (startTime.equalsIgnoreCase(endTime)) {
+			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4)) + ".";
+		} else {
+			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
+		}
+
         String actualMessage = "";
         waitForSeconds(5);
         if (areListElementVisible(activityCards, 15)) {
@@ -461,6 +467,30 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		}
     }
 
+	@FindBy(xpath = "//span[contains(text(),'Work Preferences')]")
+	WebElement workPreferTab;
+    @Override
+	public void goToProfileLinkOnActivity() throws Exception {
+		WebElement timeOffCard = activityCards.get(0);
+		String approveOrRejectMessage = "";
+		if (timeOffCard != null) {
+			//check the go to profile link
+			if (isElementLoaded(timeOffCard.findElement(By.cssSelector(".pushout-button")))) {
+				SimpleUtils.pass("The go to pofil link loaded Successfully!");
+				clickTheElement(timeOffCard.findElement(By.cssSelector(".pushout-button")));
+				if(isElementLoaded(workPreferTab))
+					SimpleUtils.pass("The TM's prifile page loaded Successfully!");
+				else
+					SimpleUtils.pass("The TM's prifile page failed to load!");
+			} else {
+				SimpleUtils.fail("The go to profile link failed to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Failed to find a new activity!", false);
+		}
+	}
+
+
     @Override
     public void approveOrRejectTTimeOffRequestOnActivity(String requestUserName, String respondUserName, String action) throws Exception {
         WebElement timeOffCard = activityCards.get(0);
@@ -476,6 +506,9 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                 }
                 // Wait for the card to change the status message, such as approved or rejected
                 waitForSeconds(3);
+                //refresh the filter and can see the approved or reject info.
+				clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ProfileUpdate.getValue(), ActivityTest.indexOfActivityType.ProfileUpdate.name());
+				clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ProfileUpdate.getValue(), ActivityTest.indexOfActivityType.ProfileUpdate.name());
                 if (areListElementVisible(activityCards, 15)) {
                     approveOrRejectMessage = activityCards.get(0).findElement(By.className("notification-approved")).getText();
                     if (approveOrRejectMessage != null && approveOrRejectMessage.toLowerCase().contains(action.toLowerCase())) {
@@ -560,19 +593,19 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         verifyAvailabilityChangeHourDetail();
         String dateInfo = activityCards.get(0).findElement(By.cssSelector("div[class=\"notification-details-table\"] .date")).getText();
         if (repeatChange.toLowerCase().contains("this week only")){
-            if (dateInfo.toLowerCase().contains(changeDateFormat(weekInfo.split("-")[0]).toLowerCase()) && dateInfo.toLowerCase().contains(changeDateFormat(weekInfo.split("-")[1]).toLowerCase())){
+            if (dateInfo.replace(" - ", "-").contains(weekInfo.replace(" - ", "-"))){
                 SimpleUtils.pass("Week info of availability change is correct! WeekInfo: "+dateInfo);
             } else {
-                SimpleUtils.fail("week info is not correct! expected weekinfo is: "+weekInfo+" actual is: "+dateInfo,true);
+                SimpleUtils.fail("week info is not correct! expected weekinfo is: "+weekInfo+" actual is: "+dateInfo,false);
             }
         } else if (repeatChange.toLowerCase().contains("repeat forward")){
-            if (dateInfo.toLowerCase().contains(changeDateFormat(weekInfo.split("-")[0]).toLowerCase()) && dateInfo.toLowerCase().contains("onward")){
+            if (dateInfo.replace(" - ", "-").contains(weekInfo.replace(" - ", "-"))){
                 SimpleUtils.pass("Week info of availability change is correct! WeekInfo: "+dateInfo);
             } else {
-                SimpleUtils.fail("week info is not correct! actual result is: " + dateInfo, true);
+                SimpleUtils.fail("week info is not correct! actual result is: " + dateInfo, false);
             }
         } else{
-            SimpleUtils.fail("repeatchange label doesn't match anyone", true);
+            SimpleUtils.fail("repeat change label doesn't match anyone", false);
         }
     }
 
@@ -715,7 +748,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                     }
                 }
                 // Wait for the card to change the status message, such as approved or rejected
-                waitForSeconds(3);
+                waitForSeconds(30);
                 if (areListElementVisible(activityCards, 15)) {
                     WebElement approveOrRejectMessage = activityCards.get(0).findElement(By.className("notification-approved"));
                     if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {

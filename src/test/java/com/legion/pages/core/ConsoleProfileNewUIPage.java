@@ -250,6 +250,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void selectProfilePageSubSectionByLabel(String profilePageSubSectionLabel) throws Exception {
 		boolean isSubSectionSelected = false;
+		scrollToTop();
 		if(areListElementVisible(profilePageSubSections,60)) {
 			for(WebElement profilePageSubSection : profilePageSubSections) {
 				if(profilePageSubSection.getText().toLowerCase().contains(profilePageSubSectionLabel.toLowerCase())) {
@@ -267,6 +268,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Profile Page: Sub Section not loaded.", false);
 	}
 
+	public void verifyAvailabilityWeek(String desiredweek) throws Exception {
+		//scroll to the bottom of page to view the Availability table
+		scrollToBottom();
+		waitForSeconds(1);
+		//get the week in Availability
+        String currentWeek=String.valueOf(getMyAvailabilityData().get("activeWeekText"));
+        if(desiredweek.equalsIgnoreCase(currentWeek))
+			SimpleUtils.pass("The current week is the TM requested availability change week or the start of the week!");
+        else
+			SimpleUtils.fail("The go to profile for availability change week is not the set or the start of the week ", false);
+	}
+
 	@Override
 	public void clickOnCreateTimeOffBtn() throws Exception {
 		if(isElementLoaded(newTimeOffBtn, 10)) {
@@ -276,7 +289,21 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		else
 			SimpleUtils.fail("Controls Page: 'Create Time Off' button not loaded.", false);
 	}
-	
+
+	@Override
+	public boolean isReasonLoad(String timeOffReasonLabel) throws Exception{
+		boolean result = false;
+		if(areListElementVisible(timeOffReasons, 20)) {
+			for(WebElement timeOffReason : timeOffReasons) {
+				if(timeOffReason.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
+					result = true;
+				}
+			}
+		} else {
+			result = true;
+		}
+		return result;
+	}
 	
 	@Override
 	public void selectTimeOffReason(String reasonLabel) throws Exception
@@ -1191,7 +1218,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 									if(preferenceOptionsTextLine.toLowerCase().contains("other preferred locations")) {
 										String[] otherPreferredLocationsOptionText = preferenceOptionsTextLine.split(":");
 										if(otherPreferredLocationsOptionText.length > 1) {
-											shiftPreferenceData.put("otherPreferredLocations",otherPreferredLocationsOptionText[1]);
+											shiftPreferenceData.put("otherPreferredLocations",otherPreferredLocationsOptionText[1].split(" ")[1]);
 										}
 										else 
 											SimpleUtils.fail("Profile Page: 'Other preferred locations' not loaded under ' My Shift Preferences' Section.", true);	
@@ -1479,7 +1506,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
  
 	@Override
 	public HashMap<String, Object> getMyAvailabilityData() throws Exception {
-		
 		HashMap<String, Object> myAvailabilityData = new HashMap<String, Object>();
 
 	      float scheduleHoursValue = 0;
@@ -1558,18 +1584,25 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	//added by Haya
+	//return new available hours.
 	@Override
-	public void updateMyAvailability(String hoursType, int sliderIndex,
-										String leftOrRightSliderArrow, double durationhours, String repeatChanges) throws Exception
+	public String updateMyAvailability(String hoursType, int sliderIndex,
+									   String leftOrRightSliderArrow, double durationhours, String repeatChanges) throws Exception
 	{
+		String result = "";
 		if (isElementLoaded(editBtn,30)){
-			click(editBtn);
+			clickTheElement(editBtn);
 			updatePreferredOrBusyHoursDurationNew(sliderIndex,durationhours,leftOrRightSliderArrow, hoursType);
+			result = getAvailableHoursForSpecificWeek();
 			saveMyAvailabilityEditMode(repeatChanges);
 		}else{
 			SimpleUtils.fail("Edit button is not loaded!", false);
 		}
+		return result;
 	}
+
+	@FindBy(css = ".availability-box.availability-box-ghost")
+	List<WebElement> availabilityGrid;
 
 	//Haya: the old method updatePreferredOrBusyHoursDuration has problem with xOffSet. So add copied one and update it.
 	private void updatePreferredOrBusyHoursDurationNew(int rowIndex, double durationhours, String leftOrRightDuration, String hoursType) throws Exception {
@@ -1586,22 +1619,23 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				scrollToElement(hourCellsResizableCursorsRight.get(rowIndex));
 				moveElement(hourCellsResizableCursorsRight.get(rowIndex), xOffSet);
 				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
+			} else if (areListElementVisible(availabilityGrid, 10) && availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).size()==48) {
+				clickTheElement(availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).get(23));
+			} else{
+					SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
 			}
-			else {
-				SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
-			}
-		}
-		else {
+		} else {
 			if(hourCellsResizableCursorsLeft.size() > rowIndex) {
 				moveElement(hourCellsResizableCursorsLeft.get(rowIndex), xOffSet);
 				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
-			}
-			else {
+			} else if (areListElementVisible(availabilityGrid, 10) && availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).size()==48) {
+				clickTheElement(availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).get(23));
+			} else{
 				SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
 			}
 		}
 	}
-	
+
 	@Override
 	public ArrayList<HashMap<String, ArrayList<String>>> getMyAvailabilityPreferredAndBusyHours() {
 		ArrayList<HashMap<String, ArrayList<String>>> result = new ArrayList<HashMap<String, ArrayList<String>>>();
@@ -1678,6 +1712,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					click(myAvailabilityConfirmSubmitBtn);
 				}
 			}
+			waitForSeconds(3);
 			if(!isElementLoaded(myAvailabilityEditModeHeader, 5))
 				SimpleUtils.pass("Profile Page: 'My Availability section' edit mode Saved successfully.");
 			else
@@ -1722,7 +1757,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void selectMyAvaliabilityEditHoursTabByLabel(String tabLabel) throws Exception
 	{
 		boolean isTabFound = false;
-		if(isElementLoaded(myAvailabilityEditModeHeader)) {
+		if(isElementLoaded(myAvailabilityEditModeHeader, 10)) {
 			List<WebElement> myAvailabilityHoursTabs = myAvailabilityEditModeHeader.findElements(
 					By.cssSelector("div[ng-click=\"selectTab($event, t)\"]"));
 			if(myAvailabilityHoursTabs.size() > 0) {
@@ -1917,6 +1952,25 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return startNEndDates;
 	}
 
+	public List<String> selectStartAndEndDate(int daysInadvance, int startDays, int endDays) throws Exception {
+		List<String> startNEndDates = new ArrayList<>();
+		selectDate(daysInadvance+startDays);
+		selectDate(daysInadvance+endDays);
+		HashMap<String, String> timeOffDate = getTimeOffDate(daysInadvance+startDays, daysInadvance+endDays);
+		String timeOffStartDate = timeOffDate.get("startDateTimeOff");
+		String timeOffEndDate = timeOffDate.get("endDateTimeOff");
+		setTimeOffStartTime(timeOffStartDate);
+		setTimeOffEndTime(timeOffEndDate);
+		HashMap<String, String> timeOffDateWithYear = getTimeOffDateWithYear(daysInadvance+startDays, daysInadvance+endDays);
+		String timeOffStartDateWithYear = timeOffDateWithYear.get("startDateWithYearTimeOff");
+		String timeOffEndDateWithYear = timeOffDateWithYear.get("endDateWithYearTimeOff");
+		startNEndDates.add(timeOffStartDateWithYear);
+		startNEndDates.add(timeOffEndDateWithYear);
+		return startNEndDates;
+	}
+
+
+
 	@Override
 	public String selectStartAndEndDateAtSameDay() throws Exception {
 		selectDate(10);
@@ -2042,8 +2096,20 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> pendingTimeOffRequests;
 	@FindBy(css = ".user-profile-section .request-status-Pending")
 	private List<WebElement> pendingAvailabilityRequests;
+	@FindBy(css = ".user-profile-section .request-status-Cancelled")
+	private List<WebElement> cancelledAvailabilityRequests;
+	@FindBy(css = ".user-profile-section .timeoff-requests-request")
+	private  List<WebElement> allAvailabilityRequests;
 	@FindBy(css = ".request-buttons-approve")
 	private WebElement approveAvailabilityButton;
+	@FindBy(css = ".request-buttons-reject")
+	private WebElement rejectAvailabilityButton;
+	@FindBy(css = ".user-profile-section div.count-block.count-block-pending span.count-block-counter")
+	private WebElement pendingCouter;
+	@FindBy(css = ".user-profile-section div.count-block.count-block-approved span.count-block-counter")
+	private WebElement approvedCouter;
+	@FindBy(css = ".user-profile-section div.count-block.count-block-rejected span.count-block-counter")
+	private WebElement rejectedCouter;
 
 	@Override
 	public void approveAllPendingAvailabilityRequest() throws Exception {
@@ -2053,9 +2119,82 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				if (isElementLoaded(approveAvailabilityButton, 10)) {
 					clickTheElement(approveAvailabilityButton);
 					SimpleUtils.pass("Approve the pending availability request successfully!");
+					approveAllPendingAvailabilityRequest();
+					break;
 				}
 			}
 		}
+	}
+
+	@Override
+	public void verifyTheLatestAvailabilityRequestInfo(String weekInfo, double hours, String repeatChanges ) throws Exception {
+		String increaseOrDecrease = "";
+		String hourStr = "";
+		String resultInfo = "";
+		String newHours = "";
+		if (hours>0){
+			increaseOrDecrease = "Increased";
+			hourStr = String.valueOf(hours);
+		} else {
+			increaseOrDecrease = "Decreased";
+			hourStr = String.valueOf(hours).replace("-", "");
+		}
+		if (areListElementVisible(allAvailabilityRequests, 10) && pendingAvailabilityRequests.size()>0 ) {
+			for (WebElement element: allAvailabilityRequests){
+				if (element.findElement(By.cssSelector(".request-stat")).getText().toLowerCase().contains("pending")){
+					resultInfo = element.findElement(By.cssSelector(".request-date")).getText().replace("\n", "");
+					SimpleUtils.assertOnFail("Week info is not correct!", resultInfo.equalsIgnoreCase(weekInfo), true);
+					resultInfo = element.findElement(By.cssSelector(".request-body")).getText();
+					SimpleUtils.assertOnFail("Decreased or Increased hours info is not correct!", resultInfo.contains("Availability "+increaseOrDecrease+" "+hourStr+" Hrs"), true);
+					if (resultInfo.split("\n").length == 3){
+						String newHoursTemp = String.valueOf(resultInfo.split("\n")[1].split(" \\| ")[0].replace("Current: ","").replace("Hrs","").trim());
+						if (SimpleUtils.isNumeric(newHoursTemp)){
+							newHours = String.valueOf(Double.valueOf(newHoursTemp)+hours);
+							SimpleUtils.assertOnFail("Current and New hours are not correct!", resultInfo.contains(newHours+" Hrs"), true);
+						} else {
+							SimpleUtils.fail("Availability request info is not in expected format!", false);
+						}
+					} else {
+						SimpleUtils.fail("Availability request info is not complete!", false);
+					}
+					SimpleUtils.assertOnFail("Submitted date info is not correct!", resultInfo.split("\n")[2].contains("Submitted "+SimpleUtils.getCurrentDateMonthYearWithTimeZone("GMT-5", new SimpleDateFormat("MMM d,yyyy"))), true);
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.report("No pending availability request in the list!");
+		}
+	}
+
+	@Override
+	public String getCountForStatus(String status) throws Exception {
+		if (status.equalsIgnoreCase("pending")){
+			if (isElementLoaded(pendingCouter, 10)){
+				return pendingCouter.getText();
+			}
+		} else if (status.equalsIgnoreCase("approved")){
+			if (isElementLoaded(approvedCouter, 10)){
+				return approvedCouter.getText();
+			}
+		} else if (status.equalsIgnoreCase("rejected")){
+			if (isElementLoaded(rejectedCouter, 10)){
+				return rejectedCouter.getText();
+			}
+		} else {
+			SimpleUtils.fail("Please input the right status!", false);
+		}
+		return null;
+	}
+
+	//Available hours for a week in work preference table.
+	@FindBy(css = ".tm-total-hours-label-green")
+	private WebElement availableHrs;
+	@Override
+	public String getAvailableHoursForSpecificWeek() throws Exception {
+		if (isElementLoaded(availableHrs, 10)){
+			return availableHrs.getText();
+		}
+		return null;
 	}
 
 	@Override
@@ -2715,7 +2854,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
-	@FindBy(css = "[ng-if=\"tm.isMinor\"] .profile-heading")
+	@FindBy(css = "[ng-if=\"tm.isMinor && console.isSchoolCalendarsEnabled\"] .profile-heading")
 	private WebElement schoolCalendar;
 
 	@FindBy(css = "[options=\"schoolCalendars\"]")
@@ -2818,6 +2957,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
+	@Override
+	public void clickPreviousWeek() throws Exception {
+		if (isElementLoaded(pastWeekArrow,10)){
+			click(pastWeekArrow);
+		}
+	}
+
 	//added by Haya
 	@Override
 	public String getAvailabilityWeek() throws Exception {
@@ -2903,7 +3049,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	public void verifyUserProfileSectionIsLoaded() throws Exception {
-		if(isElementLoaded(userProfileSection, 5)){
+		if(isElementLoaded(userProfileSection, 10)){
 			SimpleUtils.pass("User Profile page: User Profile section loaded successfully! ");
 		} else {
 			SimpleUtils.fail("User Profile page: User Profile section fail to load!", false);
@@ -2998,7 +3144,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("User Profile page: The fields in Legion Information section failed to display !", false);
 		} else {
 			if (areListElementVisible(fieldsInLegionInformationSection, 5)
-					&& fieldsInLegionInformationSection.size() == 2
+					&& fieldsInLegionInformationSection.size() >= 2
 					&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
 					&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
 					&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
@@ -3025,12 +3171,24 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	public void verifyContentsInActionsSection() throws Exception {
 		if (isElementLoaded(inviteToLegionButton, 5)){
-			if (isElementLoaded(inviteMessageInActionsSection, 5)
-					&& (inviteMessageInActionsSection.getText().contains("Not invited yet")|| inviteMessageInActionsSection.getText().contains("Invited to onboard"))){
-				SimpleUtils.pass("User Profile page: The invite message in Actions section display correctly! ");
-			} else{
-				SimpleUtils.fail("User Profile page: The invite message in Action section failed to display! ", false);
+			String inviteButtonMessage = inviteToLegionButton.getText();
+			if (inviteButtonMessage.contains("ReInvite")){
+				if (isElementLoaded(showOrHideInvitationCodeButtonHeader, 5)) {
+					if (inviteMessageInActionsSection.getText().contains("Invited to onboard")){
+						SimpleUtils.pass("User Profile page: The invite message in Actions section display correctly! ");
+					} else{
+						SimpleUtils.fail("User Profile page: The invite message in Action section failed to display! ", false);
+					}
+				}
+			} else {
+				if (isElementLoaded(inviteMessageInActionsSection, 10)
+						&& inviteMessageInActionsSection.getText().contains("Not invited yet")){
+					SimpleUtils.pass("User Profile page: The invite message in Actions section display correctly! ");
+				} else{
+					SimpleUtils.fail("User Profile page: The invite message in Action section failed to display! ", false);
+				}
 			}
+
 		} else{
 			if (isElementLoaded(sendUsernameInActionsSection, 5) && isElementLoaded(resetPasswordInActionsSection, 5)){
 				SimpleUtils.pass("User Profile page: The Send Username and Reset Password buttons in Actions section display correctly! ");
@@ -3038,7 +3196,6 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.fail("User Profile page: The Send Username and Reset Password buttons in Actions section failed to display !", false);
 			}
 		}
-
 	}
 
 	public void verifyContentsInActionsSectionInTMView() throws Exception {
@@ -3118,7 +3275,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					if(areListElementVisible(saveBtnsOfProfile, 5)){
 						scrollToElement(saveBtnsOfProfile.get(0));
 						clickTheElement(saveBtnsOfProfile.get(0));
-						verifyAlertDialog();
+						verifyEmailAddressInvalidAlertDialog();
 					}
 				}
 			}
@@ -3137,7 +3294,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return false;
 	}
 
-	private void verifyAlertDialog() throws Exception{
+	private void verifyEmailAddressInvalidAlertDialog() throws Exception{
 		if (isElementLoaded(alertDialog,10) && alertDialog.findElement(By.cssSelector(".lgn-alert-message.ng-scope.warning")).getText().contains("Email address invalid")){
 			clickOnOKBtnOnAlert();
 			SimpleUtils.pass("Email is valid so can not save successfully!");
@@ -3552,7 +3709,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		setTimeOffStartTime(timeOffStartDate);
 		setTimeOffEndTime(timeOffEndDate);
 		clickOnSaveTimeOffRequestBtn();
-		Thread.sleep(1000);
+		Thread.sleep(3000);
 		if(timeOffRequestRows.size() > timeOffRequestCount)
 			SimpleUtils.pass("Profile Page: New Time Off Save Successfully.");
 		else
@@ -3567,17 +3724,24 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> emptyAvailabilities;
 
 	@FindBy(css = "span.tooltip-red")
-	private WebElement availabilityToolTip;
+	private WebElement busyAvailabilityToolTip;
+
+	@FindBy(css = "span.tooltip-green")
+	private WebElement preferredAvailabilityToolTip;
 
 
 	public void updatePreferredOrBusyHoursToAllDay(int dayIndex, String hoursType) throws Exception {
 
 		String preferredHoursTabText = "Preferred";
 		String busyHoursTabText = "Busy";
-		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
+		WebElement availabilityToolTip = null;
+		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase())) {
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
-		else
+			availabilityToolTip = preferredAvailabilityToolTip;
+		} else {
 			selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+			availabilityToolTip = busyAvailabilityToolTip;
+		}
 
 		//Delete all availabilities in the day
 		WebElement dayRow = null;
@@ -3600,6 +3764,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 		WebElement rightCell = dayRow.findElement(By.cssSelector("div.cursor-resizableE"));
 		int i=0;
+
 		while (!availabilityToolTip.getText().contains("12:00am - 12:00am") && i<5){
 			//Drag the availability to the end of the day
 			scrollToElement(rightCell);
@@ -3617,8 +3782,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 
 	public void clickAvailabilityEditButton() throws Exception{
+		scrollToBottom();
 		if (isElementLoaded(editBtn,10)){
-			click(editBtn);
+			moveToElementAndClick(editBtn);
 		}else{
 			SimpleUtils.fail("Edit button is not loaded!", false);
 		}
@@ -3715,5 +3881,229 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			}
 		}
 		return userProfileEngagementDetails;
+	}
+
+
+	@FindBy(css = "div.availability-zone.green-zone.changed")
+	private List<WebElement> changedPreferredAvailabilities;
+
+	@FindBy(css = "div.availability-zone.red-zone.changed")
+	private List<WebElement> changedBusyAvailabilities;
+
+	@FindBy(css = "div.timeoff-requests-request.row-fx")
+	private List<WebElement> allAvailabilityChangeRequests;
+
+	public List<WebElement> getChangedPreferredAvailabilities() throws Exception{
+		List<WebElement> changedAvailabilities = new ArrayList<>();
+		if (areListElementVisible(changedPreferredAvailabilities, 10)){
+			changedAvailabilities = changedPreferredAvailabilities;
+		}
+		return changedAvailabilities;
+	}
+
+	public List<WebElement> getChangedBusyAvailabilities() throws Exception{
+		List<WebElement> changedAvailabilities = new ArrayList<>();
+		if (areListElementVisible(changedBusyAvailabilities, 10)){
+			changedAvailabilities = changedBusyAvailabilities;
+		}
+		return changedAvailabilities;
+	}
+
+	@Override
+	public void approveOrRejectSpecificPendingAvailabilityRequest(String availabilityWeek, String action) throws Exception {
+		if (areListElementVisible(allAvailabilityChangeRequests, 10)) {
+			for (WebElement availabilityChangeRequest : allAvailabilityChangeRequests) {
+				if (isElementLoaded(availabilityChangeRequest, 5)
+						&& availabilityChangeRequest.findElement(By.cssSelector("div.request-date")).
+						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)
+						&& availabilityChangeRequest.findElement(By.cssSelector("span.request-status")).
+						getText().equalsIgnoreCase("pending")) {
+					clickTheElement(availabilityChangeRequest);
+					if (action.equalsIgnoreCase("approve")) {
+						if (isElementLoaded(approveAvailabilityButton, 10)) {
+							clickTheElement(approveAvailabilityButton);
+							SimpleUtils.pass("Approve the pending availability request successfully!");
+						}
+					} else {
+						if (isElementLoaded(rejectAvailabilityButton, 10)) {
+							clickTheElement(rejectAvailabilityButton);
+							SimpleUtils.pass("Reject the pending availability request successfully!");
+						}
+					}
+					break;
+				}
+
+			}
+		}
+	}
+
+
+	public void deleteAllAvailabilitiesForCurrentWeek() throws Exception {
+		String preferredHoursTabText = "Preferred";
+		String busyHoursTabText = "Busy";
+		selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
+		//Delete all preferred availabilities in the day
+		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
+			for (WebElement myAvailabilityDayOfWeekRow: myAvailabilityDayOfWeekRows){
+				List<WebElement> availabilitiesInTheDay = myAvailabilityDayOfWeekRow.findElements(By.cssSelector("div.cursor-resizableW"));
+				for (WebElement availability: availabilitiesInTheDay) {
+					moveToElementAndClick(availability);
+					clickTheElement(removeAvailabilityIcon);
+					SimpleUtils.report("Remove one availability successfully! ");
+				}
+			}
+
+		} else
+			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
+
+		selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+		//Delete all busy availabilities in the week
+		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
+			for (WebElement myAvailabilityDayOfWeekRow: myAvailabilityDayOfWeekRows){
+				List<WebElement> availabilitiesInTheDay = myAvailabilityDayOfWeekRow.findElements(By.cssSelector("div.cursor-resizableW"));
+				for (WebElement availability: availabilitiesInTheDay) {
+					moveToElementAndClick(availability);
+					clickTheElement(removeAvailabilityIcon);
+					SimpleUtils.report("Remove one availability successfully! ");
+				}
+			}
+
+		} else
+			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
+	}
+
+
+	@Override
+	public void cancelSpecificPendingAvailabilityRequest(String availabilityWeek) throws Exception {
+		if (areListElementVisible(allAvailabilityChangeRequests, 10)) {
+			for (WebElement availabilityChangeRequest : allAvailabilityChangeRequests) {
+				if (isElementLoaded(availabilityChangeRequest, 5)
+						&& availabilityChangeRequest.findElement(By.cssSelector("div.request-date")).
+						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)
+						&& availabilityChangeRequest.findElement(By.cssSelector("span.request-status")).
+						getText().equalsIgnoreCase("pending")) {
+					clickTheElement(availabilityChangeRequest);
+					if (isElementLoaded(rejectAvailabilityButton, 10)) {
+						clickTheElement(rejectAvailabilityButton);
+						SimpleUtils.pass("Reject the pending availability request successfully!");
+					}
+					break;
+				}
+
+			}
+		}
+	}
+
+	@Override
+	public void cancelAllPendingAvailabilityRequest() throws Exception {
+		if (areListElementVisible(pendingAvailabilityRequests, 10)) {
+			for (WebElement availabilityChangeRequest : pendingAvailabilityRequests) {
+				clickTheElement(availabilityChangeRequest);
+				if (isElementLoaded(cancelButtonOfPendingRequest, 10)) {
+					clickTheElement(cancelButtonOfPendingRequest);
+					SimpleUtils.pass("Cancel the pending availability request successfully!");
+				}
+			}
+		}
+	}
+
+	@Override
+	public void rejectSpecificApprovedAvailabilityRequest(String availabilityWeek) throws Exception {
+		if (areListElementVisible(allAvailabilityChangeRequests, 10)) {
+			for (WebElement availabilityChangeRequest : allAvailabilityChangeRequests) {
+				if (isElementLoaded(availabilityChangeRequest, 5)
+						&& availabilityChangeRequest.findElement(By.cssSelector("div.request-date")).
+						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)
+						&& availabilityChangeRequest.findElement(By.cssSelector("span.request-status")).
+						getText().equalsIgnoreCase("approved")) {
+					clickTheElement(availabilityChangeRequest);
+					if (isElementLoaded(rejectAvailabilityButton, 10)) {
+						clickTheElement(rejectAvailabilityButton);
+						SimpleUtils.pass("Reject the pending availability request successfully!");
+					} else {
+						SimpleUtils.fail("Reject button fail to load!", false);
+					}
+					break;
+				}
+
+			}
+		}
+	}
+
+	@Override
+	public void approveSpecificRejectedAvailabilityRequest(String availabilityWeek) throws Exception {
+		if (areListElementVisible(allAvailabilityChangeRequests, 10)) {
+			for (WebElement availabilityChangeRequest : allAvailabilityChangeRequests) {
+				if (isElementLoaded(availabilityChangeRequest, 5)
+						&& availabilityChangeRequest.findElement(By.cssSelector("div.request-date")).
+						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)
+						&& availabilityChangeRequest.findElement(By.cssSelector("span.request-status")).
+						getText().equalsIgnoreCase("rejected")) {
+					clickTheElement(availabilityChangeRequest);
+					if (isElementLoaded(approveAvailabilityButton, 10)) {
+						clickTheElement(approveAvailabilityButton);
+						SimpleUtils.pass("Approve the pending availability request successfully!");
+					} else {
+						SimpleUtils.fail("Approve button fail to load!", false);
+					}
+					break;
+				}
+
+			}
+		}
+	}
+
+	@Override
+	public void verifyClickCancelledAvalabilityRequest() throws Exception {
+		if (areListElementVisible(cancelledAvailabilityRequests, 10) && cancelledAvailabilityRequests.size()>0) {
+			clickTheElement(cancelledAvailabilityRequests.get(0));
+			if (!isElementLoaded(cancelButtonOfPendingRequest, 10)
+					&& !isElementLoaded(approveAvailabilityButton,10)
+					&& !isElementLoaded(rejectAvailabilityButton,10)) {
+				SimpleUtils.pass("Cancel the pending availability request successfully!");
+			} else {
+				SimpleUtils.fail("There shouldn't be any buttons pop up for cancelled request!", false);
+			}
+		}
+	}
+
+
+	@Override
+	public boolean isAlertDialogLoaded() throws Exception{
+		boolean isAlertDialogLoaded = false;
+		if (isElementLoaded(alertDialog,10)){
+			isAlertDialogLoaded = true;
+			SimpleUtils.report("Email is valid so can not save successfully!");
+		} else {
+			SimpleUtils.report("No alert dialog for invalid email format!");
+		}
+		return isAlertDialogLoaded;
+	}
+
+	@Override
+	public String getMessageFromAlertDialog () throws Exception{
+		String message = "";
+		if (isElementLoaded(alertDialog,10)){
+			message = alertDialog.findElement(By.cssSelector("span")).getText();
+			SimpleUtils.pass("Email is valid so can not save successfully!");
+		} else {
+			SimpleUtils.fail("No alert dialog for invalid email format!",false);
+		}
+		return message;
+	}
+
+
+	@FindBy(css = "[ng-if=\"minorRuleTemplate\"] p.contentText")
+	private WebElement minorRuleTemplateName;
+	@Override
+	public String getMinorRuleTemplateName () throws Exception{
+		String message = "";
+		if (isElementLoaded(minorRuleTemplateName,10)){
+			message = minorRuleTemplateName.getText();
+			SimpleUtils.pass("Get minor rule template name successfully!");
+		} else {
+			SimpleUtils.fail("Get minor rule template name fail to load!",false);
+		}
+		return message;
 	}
 }

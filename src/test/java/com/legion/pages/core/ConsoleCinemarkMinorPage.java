@@ -238,40 +238,40 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
         }
     }
 
-    @Override
-    public void setMinorRuleByWeek(String minorType, String weekType, String maxOfDay, String maxOfHrs) throws Exception {
-        List<WebElement> dataFields = null; //new ArrayList<WebElement>();
-        if (minorType.equalsIgnoreCase("14N15")){
-            dataFields = schedulingMinorRuleFor14N15.findElements(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
-        } else {
-            dataFields = schedulingMinorRuleFor16N17.findElements(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
-        }
-        if (dataFields.size()>5){
-            if (weekType.equalsIgnoreCase("school week")){
-                dataFields.get(0).clear();
-                dataFields.get(0).sendKeys(maxOfDay);
-                dataFields.get(1).clear();
-                dataFields.get(1).sendKeys(maxOfHrs);
-                SimpleUtils.pass(weekType+" set");
-            }
-            if (weekType.equalsIgnoreCase("non-school week")){
-                dataFields.get(2).clear();
-                dataFields.get(2).sendKeys(maxOfDay);
-                dataFields.get(3).clear();
-                dataFields.get(3).sendKeys(maxOfHrs);
-                SimpleUtils.pass(weekType+" set");
-            }
-            if (weekType.equalsIgnoreCase("summer week")){
-                dataFields.get(4).clear();
-                dataFields.get(4).sendKeys(maxOfDay);
-                dataFields.get(5).clear();
-                dataFields.get(5).sendKeys(maxOfHrs);
-                SimpleUtils.pass(weekType+" set");
-            }
-        } else {
-            SimpleUtils.fail("No setting fields for minor rule",false);
-        }
-    }
+//    @Override
+//    public void setMinorRuleByWeek(String minorType, String weekType, String maxOfDay, String maxOfHrs) throws Exception {
+//        List<WebElement> dataFields = null; //new ArrayList<WebElement>();
+//        if (minorType.equalsIgnoreCase("14N15")){
+//            dataFields = schedulingMinorRuleFor14N15.findElements(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
+//        } else {
+//            dataFields = schedulingMinorRuleFor16N17.findElements(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
+//        }
+//        if (dataFields.size()>5){
+//            if (weekType.equalsIgnoreCase("school week")){
+//                dataFields.get(0).clear();
+//                dataFields.get(0).sendKeys(maxOfDay);
+//                dataFields.get(1).clear();
+//                dataFields.get(1).sendKeys(maxOfHrs);
+//                SimpleUtils.pass(weekType+" set");
+//            }
+//            if (weekType.equalsIgnoreCase("non-school week")){
+//                dataFields.get(2).clear();
+//                dataFields.get(2).sendKeys(maxOfDay);
+//                dataFields.get(3).clear();
+//                dataFields.get(3).sendKeys(maxOfHrs);
+//                SimpleUtils.pass(weekType+" set");
+//            }
+//            if (weekType.equalsIgnoreCase("summer week")){
+//                dataFields.get(4).clear();
+//                dataFields.get(4).sendKeys(maxOfDay);
+//                dataFields.get(5).clear();
+//                dataFields.get(5).sendKeys(maxOfHrs);
+//                SimpleUtils.pass(weekType+" set");
+//            }
+//        } else {
+//            SimpleUtils.fail("No setting fields for minor rule",false);
+//        }
+//    }
 
     @FindBy(xpath = "//div[@class='lg-picker-input__wrapper lg-ng-animate']//div[@class='lg-search-options__option ng-binding lg-search-options__subLabel']")
     private List<WebElement> options;
@@ -288,64 +288,64 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
         }
     }
 
-    @Override
-    public void setMinorRuleByDay(String minorType, String dayType, String from, String to, String maxOfHrs) throws Exception {
-        List<WebElement> dataFields = null; //new ArrayList<WebElement>();
-        if (minorType.equalsIgnoreCase("14N15")){
-            dataFields = schedulingMinorRuleFor14N15.findElements(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
-        } else {
-            dataFields = schedulingMinorRuleFor16N17.findElements(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
-        }
-        if (dataFields.size()>20){
-            if (dayType.equalsIgnoreCase("School today, school tomorrow")){
-                //selectByVisibleText(dataFields.get(6),from);
-                selectOptionForMinorRule(dataFields.get(6), from);
-                //selectByVisibleText(dataFields.get(7),to);
-                selectOptionForMinorRule(dataFields.get(7), to);
-                dataFields.get(8).clear();
-                dataFields.get(8).sendKeys(maxOfHrs);
-                SimpleUtils.pass(dayType+" set");
-            }
-            if (dayType.equalsIgnoreCase("School today, no school tomorrow")){
-                //selectByVisibleText(dataFields.get(9),from);
-                //selectByVisibleText(dataFields.get(10),to);
-                selectOptionForMinorRule(dataFields.get(9), from);
-                selectOptionForMinorRule(dataFields.get(10), to);
-                dataFields.get(11).clear();
-                dataFields.get(11).sendKeys(maxOfHrs);
-                SimpleUtils.pass(dayType+" set");
-            }
-            if (dayType.equalsIgnoreCase("No school today, no school tomorrow")){
-                //selectByVisibleText(dataFields.get(12),from);
-                //selectByVisibleText(dataFields.get(13),to);
-                selectOptionForMinorRule(dataFields.get(12), from);
-                selectOptionForMinorRule(dataFields.get(13), to);
-                dataFields.get(14).clear();
-                dataFields.get(14).sendKeys(maxOfHrs);
-                SimpleUtils.pass(dayType+" set");
-            }
-            if (dayType.equalsIgnoreCase("No school today, school tomorrow")){
-                //selectByVisibleText(dataFields.get(15),from);
-                //selectByVisibleText(dataFields.get(16),to);
-                selectOptionForMinorRule(dataFields.get(15), from);
-                selectOptionForMinorRule(dataFields.get(16), to);
-                dataFields.get(17).clear();
-                dataFields.get(17).sendKeys(maxOfHrs);
-                SimpleUtils.pass(dayType+" set");
-            }
-            if (dayType.equalsIgnoreCase("Summer day")){
-                //selectByVisibleText(dataFields.get(18),from);
-                //selectByVisibleText(dataFields.get(19),to);
-                selectOptionForMinorRule(dataFields.get(18), from);
-                selectOptionForMinorRule(dataFields.get(19), to);
-                dataFields.get(20).clear();
-                dataFields.get(20).sendKeys(maxOfHrs);
-                SimpleUtils.pass(dayType+" set");
-            }
-        } else {
-            SimpleUtils.fail("No setting fields for minor rule",false);
-        }
-    }
+//    @Override
+//    public void setMinorRuleByDay(String minorType, String dayType, String from, String to, String maxOfHrs) throws Exception {
+//        List<WebElement> dataFields = null; //new ArrayList<WebElement>();
+//        if (minorType.equalsIgnoreCase("14N15")){
+//            dataFields = schedulingMinorRuleFor14N15.findElements(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
+//        } else {
+//            dataFields = schedulingMinorRuleFor16N17.findElements(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]"));
+//        }
+//        if (dataFields.size()>20){
+//            if (dayType.equalsIgnoreCase("School today, school tomorrow")){
+//                //selectByVisibleText(dataFields.get(6),from);
+//                selectOptionForMinorRule(dataFields.get(6), from);
+//                //selectByVisibleText(dataFields.get(7),to);
+//                selectOptionForMinorRule(dataFields.get(7), to);
+//                dataFields.get(8).clear();
+//                dataFields.get(8).sendKeys(maxOfHrs);
+//                SimpleUtils.pass(dayType+" set");
+//            }
+//            if (dayType.equalsIgnoreCase("School today, no school tomorrow")){
+//                //selectByVisibleText(dataFields.get(9),from);
+//                //selectByVisibleText(dataFields.get(10),to);
+//                selectOptionForMinorRule(dataFields.get(9), from);
+//                selectOptionForMinorRule(dataFields.get(10), to);
+//                dataFields.get(11).clear();
+//                dataFields.get(11).sendKeys(maxOfHrs);
+//                SimpleUtils.pass(dayType+" set");
+//            }
+//            if (dayType.equalsIgnoreCase("No school today, no school tomorrow")){
+//                //selectByVisibleText(dataFields.get(12),from);
+//                //selectByVisibleText(dataFields.get(13),to);
+//                selectOptionForMinorRule(dataFields.get(12), from);
+//                selectOptionForMinorRule(dataFields.get(13), to);
+//                dataFields.get(14).clear();
+//                dataFields.get(14).sendKeys(maxOfHrs);
+//                SimpleUtils.pass(dayType+" set");
+//            }
+//            if (dayType.equalsIgnoreCase("No school today, school tomorrow")){
+//                //selectByVisibleText(dataFields.get(15),from);
+//                //selectByVisibleText(dataFields.get(16),to);
+//                selectOptionForMinorRule(dataFields.get(15), from);
+//                selectOptionForMinorRule(dataFields.get(16), to);
+//                dataFields.get(17).clear();
+//                dataFields.get(17).sendKeys(maxOfHrs);
+//                SimpleUtils.pass(dayType+" set");
+//            }
+//            if (dayType.equalsIgnoreCase("Summer day")){
+//                //selectByVisibleText(dataFields.get(18),from);
+//                //selectByVisibleText(dataFields.get(19),to);
+//                selectOptionForMinorRule(dataFields.get(18), from);
+//                selectOptionForMinorRule(dataFields.get(19), to);
+//                dataFields.get(20).clear();
+//                dataFields.get(20).sendKeys(maxOfHrs);
+//                SimpleUtils.pass(dayType+" set");
+//            }
+//        } else {
+//            SimpleUtils.fail("No setting fields for minor rule",false);
+//        }
+//    }
 
     @FindBy (css = "[question-title=\"Share school calendars across locations\"] .lg-question-input")
     private WebElement shareSchoolCalendarSection;
@@ -372,5 +372,93 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @FindBy (css = "[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")
+    private List<WebElement> minorDataFields;
+    @Override
+    public void setMinorRuleByDay(String type, String from, String to, String maxOfHrs) throws Exception {
+        if (minorDataFields.size()==21){
+            if (type.equalsIgnoreCase("School today, school tomorrow")){
+                //selectByVisibleText(dataFields.get(6),from);
+                selectOptionForMinorRule(minorDataFields.get(6), from);
+                //selectByVisibleText(dataFields.get(7),to);
+                selectOptionForMinorRule(minorDataFields.get(7), to);
+                minorDataFields.get(8).clear();
+                minorDataFields.get(8).sendKeys(maxOfHrs);
+                SimpleUtils.pass(type+" set");
+            }
+            if (type.equalsIgnoreCase("School today, no school tomorrow")){
+                //selectByVisibleText(dataFields.get(9),from);
+                //selectByVisibleText(dataFields.get(10),to);
+                selectOptionForMinorRule(minorDataFields.get(9), from);
+                selectOptionForMinorRule(minorDataFields.get(10), to);
+                minorDataFields.get(11).clear();
+                minorDataFields.get(11).sendKeys(maxOfHrs);
+                SimpleUtils.pass(type+" set");
+            }
+            if (type.equalsIgnoreCase("No school today, no school tomorrow")){
+                //selectByVisibleText(dataFields.get(12),from);
+                //selectByVisibleText(dataFields.get(13),to);
+                selectOptionForMinorRule(minorDataFields.get(12), from);
+                selectOptionForMinorRule(minorDataFields.get(13), to);
+                minorDataFields.get(14).clear();
+                minorDataFields.get(14).sendKeys(maxOfHrs);
+                SimpleUtils.pass(type+" set");
+            }
+            if (type.equalsIgnoreCase("No school today, school tomorrow")){
+                //selectByVisibleText(dataFields.get(15),from);
+                //selectByVisibleText(dataFields.get(16),to);
+                selectOptionForMinorRule(minorDataFields.get(15), from);
+                selectOptionForMinorRule(minorDataFields.get(16), to);
+                minorDataFields.get(17).clear();
+                minorDataFields.get(17).sendKeys(maxOfHrs);
+                SimpleUtils.pass(type+" set");
+            }
+            if (type.equalsIgnoreCase("Summer day")){
+                //selectByVisibleText(dataFields.get(18),from);
+                //selectByVisibleText(dataFields.get(19),to);
+                selectOptionForMinorRule(minorDataFields.get(18), from);
+                selectOptionForMinorRule(minorDataFields.get(19), to);
+                minorDataFields.get(20).clear();
+                minorDataFields.get(20).sendKeys(maxOfHrs);
+                SimpleUtils.pass(type+" set");
+            }
+        } else {
+            SimpleUtils.fail("Minor setting fields fail to load! ",false);
+        }
+    }
+
+
+
+    @Override
+    public void setMinorRuleByWeek(String weekType, String maxOfDay, String maxOfHrs) throws Exception {
+        if (minorDataFields.size()==21){
+            if (weekType.equalsIgnoreCase("school week")){
+                minorDataFields.get(0).clear();
+                minorDataFields.get(0).sendKeys(maxOfDay);
+                minorDataFields.get(1).clear();
+                minorDataFields.get(1).sendKeys(maxOfHrs);
+                SimpleUtils.pass(weekType+" set");
+            }
+            if (weekType.equalsIgnoreCase("non-school week")){
+                minorDataFields.get(2).clear();
+                minorDataFields.get(2).sendKeys(maxOfDay);
+                minorDataFields.get(3).clear();
+                minorDataFields.get(3).sendKeys(maxOfHrs);
+                SimpleUtils.pass(weekType+" set");
+            }
+            if (weekType.equalsIgnoreCase("summer week")){
+                minorDataFields.get(4).clear();
+                minorDataFields.get(4).sendKeys(maxOfDay);
+                minorDataFields.get(5).clear();
+                minorDataFields.get(5).sendKeys(maxOfHrs);
+                SimpleUtils.pass(weekType+" set");
+            }
+        } else {
+            SimpleUtils.fail("No setting fields for minor rule",false);
+        }
+    }
+
 
 }
