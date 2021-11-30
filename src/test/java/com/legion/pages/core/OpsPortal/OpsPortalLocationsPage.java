@@ -107,8 +107,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void clickOnLocationsTab() throws Exception {
 		if (isElementLoaded(goToLocationsButton, 25)) {
-			click(goToLocationsButton);
-			SimpleUtils.pass("Locations tab is clickable");
+			clickTheElement(goToLocationsButton);
+			if (isElementLoaded(locationsInLocations, 15)) {
+				SimpleUtils.pass("Locations tab is clickable");
+			} else {
+				SimpleUtils.fail("Locations overview page load failed!", false);
+			}
 		} else
 			SimpleUtils.fail("locations tab not load", false);
 	}

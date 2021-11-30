@@ -1877,7 +1877,7 @@ public class LocationsTest extends TestBase {
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
             //go to console to and navigate to NSO to verify internal admin can see the location
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            switchToConsoleWindow();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             //verify customer admin user can see created status location
@@ -1907,7 +1907,7 @@ public class LocationsTest extends TestBase {
             }else
                 SimpleUtils.fail("Internal Customer Admin can not see the NSO location",true);
 
-            loginPage.switchToOriginalWindow(consoleWindow1);
+            switchToConsoleWindow();
             //verify  DM user can not see the NSO location at navigator, but can see Created status NSO location in locations function.
             loginPage.logOut();
             Object[][] districtManagerCredentials = userCredentials.get("DistrictManager");

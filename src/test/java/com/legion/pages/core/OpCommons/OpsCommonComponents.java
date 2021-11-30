@@ -65,9 +65,9 @@ public class OpsCommonComponents extends BasePage {
 
     public void okToActionInModal(boolean okToAction) {
         if (okToAction) {
-            okToEditing.click();
+            clickTheElement(okToEditing);
         } else {
-            cancelEditing.click();
+            clickTheElement(cancelEditing);
         }
         waitForSeconds(3);
     }

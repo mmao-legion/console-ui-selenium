@@ -622,7 +622,7 @@ public class AbsentManagePage extends BasePage {
 
     public void editTimeOffReason(String reaName) throws Exception {
         if (isElementLoaded(editTimeOff, 10)) {
-            editTimeOff.click();
+            clickTheElement(editTimeOff);
             if (isElementLoaded(reasonName, 5)) {
                 reasonName.clear();
                 reasonName.sendKeys(reaName);

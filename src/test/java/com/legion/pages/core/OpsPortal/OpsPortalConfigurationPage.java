@@ -112,7 +112,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="sub-content-box[box-title=\"Days of Week\"]")
 	private WebElement daysOfWeekSection;
 
-	@FindBy(css="lg-dashboard-card[title=\"Dynamic Groups\"] .lg-dashboard-card")
+	@FindBy(css="[box-title=\"Dynamic Group\"]")
 	private WebElement dynamicGroupSection;
 
 	@FindBy(css="sub-content-box[box-title=\"Time of Day\"]")
@@ -1878,24 +1878,29 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void deleteNewCreatedTemplate(String templateName) throws Exception{
-		if(templateName.equals(newTemplateName)){
-			clickTheElement(templateNameList.get(0));
-			waitForSeconds(5);
-
-			if(isElementEnabled(deleteTemplateButton,3)){
-				clickTheElement(deleteTemplateButton);
-				if(isElementEnabled(deleteTemplateDialog,3)){
-					clickTheElement(okButtonOnDeleteTemplateDialog);
+		if(areListElementVisible(templateNameList, 5) && templateNameList.size() > 0){
+			for (WebElement templateNameElement: templateNameList) {
+				if (templateName.equalsIgnoreCase(templateNameElement.getText())) {
+					clickTheElement(templateNameElement);
 					waitForSeconds(5);
-					String firstTemplateName = templateNameList.get(0).getText().trim();
-					if(!firstTemplateName.equals(templateName)){
-						SimpleUtils.pass("User has deleted new created template successfully!");
-					}else {
-						SimpleUtils.fail("User failed to delete new created template!",false);
+
+					if (isElementEnabled(deleteTemplateButton, 3)) {
+						clickTheElement(deleteTemplateButton);
+						if (isElementEnabled(deleteTemplateDialog, 3)) {
+							clickTheElement(okButtonOnDeleteTemplateDialog);
+							waitForSeconds(5);
+							String firstTemplateName = templateNameList.get(0).getText().trim();
+							if (!firstTemplateName.equals(templateName)) {
+								SimpleUtils.pass("User has deleted new created template successfully!");
+							} else {
+								SimpleUtils.fail("User failed to delete new created template!", false);
+							}
+						}
+					} else {
+						SimpleUtils.fail("Clicking the template failed.", false);
 					}
+					break;
 				}
-			}else {
-				SimpleUtils.fail("Clicking the template failed.",false);
 			}
 		}else {
 			SimpleUtils.fail("Create new template failed.",false);
@@ -2661,9 +2666,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 
 	public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception{
-		if(isElementEnabled(templateExternalAttributesBTN,10)){
-			scrollToElement(templateExternalAttributesBTN);
-			clickTheElement(templateExternalAttributesBTN);
+		if(isElementEnabled(templateAssociationBTN,10)){
+			scrollToElement(templateAssociationBTN);
+			clickTheElement(templateAssociationBTN);
 			if(isElementEnabled(searchAssociateFiled,2)){
 				SimpleUtils.pass("Click Association Tab successfully!");
 			}else {
