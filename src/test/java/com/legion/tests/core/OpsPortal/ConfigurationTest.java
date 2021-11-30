@@ -157,6 +157,38 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    //requirement from ops-3151
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void ceateMultipleHistortForOHTempInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Operating Hours";
+            String mode = "edit";
+            //OH templaye  3153 on RC OPauto
+            String templateName = "3153";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            int now=configurationPage.historyRecordLimitCheck(templateName);
+            if (now<101) {
+                SimpleUtils.pass("History records displayed successfully!");
+                //create another 100 records
+                for (int i = 0; i < 103-now; i++) {
+                    configurationPage.clickOnSpecifyTemplateName(templateName, mode);
+                    configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                    configurationPage.changeOHtemp();
+                }
+            } else {
+                SimpleUtils.fail("History records excedded 100!", false);
+            }
+        }
+        catch(Exception e){
+                SimpleUtils.fail(e.getMessage(), false);
+            }
+        }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")

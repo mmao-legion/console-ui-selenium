@@ -48,6 +48,7 @@ public interface PageFactory {
     ActivityPage createConsoleActivityPage();
 
     LocationsPage createOpsPortalLocationsPage();
+    PlanPage createConsolePlanPage();
 
     LiquidDashboardPage createConsoleLiquidDashboardPage();
 

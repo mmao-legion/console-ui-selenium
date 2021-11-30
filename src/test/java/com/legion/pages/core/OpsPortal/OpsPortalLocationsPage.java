@@ -20,7 +20,6 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.legion.tests.TestBase.switchToNewWindow;
 import static com.legion.utils.MyThreadLocal.*;
 
-
 public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	public OpsPortalLocationsPage() {
@@ -64,6 +63,60 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement importBtn;
 	@FindBy(css = "li.header-mode-switch-menu-item")
 	private List<WebElement> modelSwitchOption;
+	@FindBy(xpath = "//h3[contains(text(),'Long range labor budget')]")
+	private WebElement laborBdgetConfigOptionText;
+	@FindBy(xpath = "//h3[contains(text(),'Long range labor budget')]//following-sibling::ng-transclude//yes-no")
+	private WebElement laborBdgetConfigOptionGroup;
+	@FindBy(xpath = "//h3[contains(text(),'level for the subplan')]")
+	private WebElement subPlanLevelConfigText;
+	@FindBy(css = "input-field[value=\"subPlanLevel\"]")
+	private WebElement subPlanLevelConfigFiled;
+
+
+	@Override
+	public void setLaborBudgetLevel(boolean isCentral,String level) {
+		waitForSeconds(3);
+		if (isElementEnabled(laborBdgetConfigOptionText, 10)) {
+			scrollToElement(laborBdgetConfigOptionText);
+			SimpleUtils.pass("The Long range labor budget configuration section show correctly.");
+			clickTheElement(editOnGlobalConfigPage);
+			WebElement yesBtn = laborBdgetConfigOptionGroup.findElement(By.xpath("//span[contains(text(),'Yes')]"));
+			WebElement noBtn = laborBdgetConfigOptionGroup.findElement(By.xpath("//span[contains(text(),'No')]"));
+			if (isCentral) {
+				//click no to disable the level setting
+				clickTheElement(noBtn);
+				scrollToBottom();
+				click(saveBtnInUpdateLocationPage);
+				waitForSeconds(5);
+				SimpleUtils.pass("The Long range labor budget set the centralized successfully!");
+			} else {
+				//click the yes to set user can create plan with sub-plan
+				clickTheElement(yesBtn);
+				if (isElementEnabled(subPlanLevelConfigText, 10)) {
+					//specify the level
+					clickTheElement(subPlanLevelConfigFiled);
+					List<WebElement> levelOptions=subPlanLevelConfigFiled.findElements(By.cssSelector("option"));
+					if (areListElementVisible(levelOptions, 10)){
+						for (WebElement element: levelOptions){
+							if (element.getAttribute("label").equalsIgnoreCase(level)){
+								clickTheElement(element);
+							}
+						}
+						scrollToBottom();
+						click(saveBtnInUpdateLocationPage);
+						waitForSeconds(5);
+						SimpleUtils.pass("The Long range labor budget set the level as:"+level+"successfully!");
+					} else {
+						SimpleUtils.fail("Not find the sub-plan levels", false);
+					}
+				} else
+					SimpleUtils.fail("Specify the level for the subplan not loaded!", false);
+			}
+		}
+		else
+			SimpleUtils.fail("The Long range labor budget configuration section not loaded!",false);
+		scrollToTop();
+	}
 
 
 	@Override

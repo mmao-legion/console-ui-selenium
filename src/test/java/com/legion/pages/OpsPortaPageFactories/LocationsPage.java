@@ -7,6 +7,7 @@ import java.util.List;
 public interface LocationsPage {
 
     public void clickModelSwitchIconInDashboardPage(String value);
+    public void setLaborBudgetLevel(boolean isCentral,String level);
 
     public boolean isOpsPortalPageLoaded() throws Exception;
 
