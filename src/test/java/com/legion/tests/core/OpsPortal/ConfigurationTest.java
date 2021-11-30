@@ -53,7 +53,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Dynamic Group Function->In Template Association")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDynamicGroupFunctionAsAInternalAdminForAssociation(String browser, String username, String password, String location) throws Exception {
+    public void verifyDynamicGroupFunctionAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
             //scheduling rules is not included as some exception, will added later
@@ -86,7 +86,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Create Each Template with Dynamic Group Association ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateEachTemplateWithDynamicGroupAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateEachTemplateWithDynamicGroupAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
             //scheduling rules is not included as some exception, will added later
@@ -111,7 +111,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add country field to holidays")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddCountryFieldToHolidayAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddCountryFieldToHolidayAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
             //scheduling rules is not included as some exception, will added later
