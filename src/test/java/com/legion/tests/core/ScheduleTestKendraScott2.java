@@ -2461,7 +2461,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
 	@TestName(description = "Verify offers generated for open shift")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyOffersGeneratedForOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -2510,6 +2510,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		shiftOperatePage.convertToOpenShiftDirectly();
 		scheduleMainPage.saveSchedule();
 		createSchedulePage.publishActiveSchedule();
+		BasePage.waitForSeconds(5);
 		shiftOperatePage.clickOnProfileIconOfOpenShift();
 		scheduleShiftTablePage.clickViewStatusBtn();
 		shiftOperatePage.verifyListOfOfferNotNull();
