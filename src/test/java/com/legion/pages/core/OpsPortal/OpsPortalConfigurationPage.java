@@ -1878,11 +1878,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void deleteNewCreatedTemplate(String templateName) throws Exception{
-		String newTemplateName = templateNameList.get(0).getText().trim();
 		if(templateName.equals(newTemplateName)){
 			clickTheElement(templateNameList.get(0));
 			waitForSeconds(5);
-			String newTemplateName = templateNameList.get(0).getText().trim();
 
 			if(isElementEnabled(deleteTemplateButton,3)){
 				clickTheElement(deleteTemplateButton);
@@ -3439,8 +3437,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		waitForSeconds(3);
 	}
 
-	@FindBy(css = "lg-button[label=\"Archive\"]")
-	private WebElement archiveBtn;
 	@Override
 	public void archiveOrDeleteAllTemplates() throws Exception {
 		if(isTemplateListPageShow()){

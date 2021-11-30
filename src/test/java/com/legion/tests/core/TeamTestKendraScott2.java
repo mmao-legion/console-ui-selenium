@@ -16,7 +16,6 @@ import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.pages.core.ConsoleGmailPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
-import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.utils.Constants;
 import cucumber.api.java.hu.Ha;
 import org.apache.poi.ss.formula.functions.T;
