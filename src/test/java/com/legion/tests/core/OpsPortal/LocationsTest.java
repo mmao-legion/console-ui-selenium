@@ -1876,6 +1876,7 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.pass("Create new NSO location successfully");
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
+            closeCurrentWindow();
             //go to console to and navigate to NSO to verify internal admin can see the location
             switchToConsoleWindow();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1906,7 +1907,7 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.pass("Internal Customer Admin can see the NSO location successfully");
             }else
                 SimpleUtils.fail("Internal Customer Admin can not see the NSO location",true);
-
+            closeCurrentWindow();
             switchToConsoleWindow();
             //verify  DM user can not see the NSO location at navigator, but can see Created status NSO location in locations function.
             loginPage.logOut();

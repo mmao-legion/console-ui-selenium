@@ -571,6 +571,10 @@ public abstract class TestBase {
         }
     }
 
+    public static void closeCurrentWindow() {
+        getDriver().close();
+    }
+
     public static void switchToConsoleWindow() {
         try {
             Set<String> winHandles = getDriver().getWindowHandles();
