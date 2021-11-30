@@ -16,9 +16,12 @@
                     <include name="verifyTheOnboardingFlowForRehireAndStatusChangeToOnboardedAsInternalAdmin" />
                     <include name="verifyTheOnboardingFlowForRehireAndStatusChangeToActiveAsInternalAdmin" />
                     <include name="verifyTheOnboardingFlowForReHireOnOPEnabledEnvAsInternalAdmin" />
+                    <include name="verifyTMOnboardingWithWFSGEnabledAndToggleOnAsInternalAdmin" />
+                    <include name="verifyTMOnboardingWithWFSGEnabledAndToggleOffAsInternalAdmin" />
+                    <include name="verifyTMOnboardingWithWFSGDisabledAsInternalAdmin" />
+                    <include name="verifyTMOnboardingWorkLocationsStepsOnOPSiteAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
-
 </suite> 

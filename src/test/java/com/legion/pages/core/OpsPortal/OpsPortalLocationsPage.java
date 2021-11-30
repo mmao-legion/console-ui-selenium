@@ -94,9 +94,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
 		boolean isLoaded = false;
-		waitForSeconds(10);
-		if (isElementLoaded(getDriver().findElement(By.cssSelector(".console-navigation-item-label.Locations")), 10))
-			isLoaded = true;
+		try {
+			waitForSeconds(10);
+			if (isElementLoaded(getDriver().findElement(By.cssSelector(".console-navigation-item-label.Locations")), 10))
+				isLoaded = true;
+		} catch (Exception e) {
+			isLoaded = false;
+		}
 		return isLoaded;
 	}
 
@@ -1877,7 +1881,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement criteriaSelect;
 	@FindBy(css = "lg-button[label=\"Add More\"]")
 	private WebElement addMoreBtn;
-
 	@FindBy(css = "i.deleteRule")
 	private List<WebElement> deleteRuleIcon;
 	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
@@ -2046,7 +2049,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return null;
 	}
 
-	private boolean isRemoveDynamicGroupPopUpShowing() {
+	public boolean isRemoveDynamicGroupPopUpShowing() {
 		if (isElementEnabled(removeDGPopup, 5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic group?")
 				&& isElementEnabled(removeBtnInRemovDGPopup, 5)) {
 			SimpleUtils.pass("Remove dynamic group page show well");

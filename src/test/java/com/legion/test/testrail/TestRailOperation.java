@@ -289,7 +289,11 @@ public class TestRailOperation {
             APIClient client = new APIClient(testRailURL);
             client.setUser(testRailUser);
             client.setPassword(testRailPassword);
-            ScreenshotManager.takeScreenShot();
+            if (MyThreadLocal.getDriver()!=null){
+                ScreenshotManager.takeScreenShot();
+            } else {
+                System.out.println("Session is null!");
+            }
             client.sendPost(addResultString,MyThreadLocal.getScreenshotLocation());
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());

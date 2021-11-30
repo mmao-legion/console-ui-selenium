@@ -1,12 +1,14 @@
 package com.legion.tests.core;
 
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.DashboardPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.ProfileNewUIPage;
-import com.legion.pages.SchedulePage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.*;
+import com.legion.pages.core.OpsPortalConfigurationPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.core.OpsPortal.LocationsTest;
@@ -17,6 +19,7 @@ import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -126,23 +129,25 @@ public class CinemarkMinorTest extends TestBase {
     public void prepareTheCalendarForAllMinorsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated){
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            schedulePage.navigateDayViewWithDayName("Sat");
-            Map<String, String> dayInfo = schedulePage.getActiveDayInfo();
+            scheduleCommonPage.navigateDayViewWithDayName("Sat");
+            Map<String, String> dayInfo = scheduleCommonPage.getActiveDayInfo();
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -153,15 +158,17 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
             SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
                     teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
-            String calendarName = "Start Next Saturday2";
+            String calendarName = "Automation" + new Random().nextInt(100) + new Random().nextInt(100) + new Random().nextInt(100);
 
             teamPage.deleteCalendarByName(calendarName);
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year")) - 1) +" Jan 1",
-                    dayInfo.get("year") +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
+            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) +" Jan 1",
+                    (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
+
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
+            teamPage.setNonSchoolDaysForNonSchoolWeek();
             teamPage.inputCalendarName(calendarName);
             teamPage.clickOnSaveSchoolCalendarBtn();
             teamPage.goToTeam();
@@ -297,8 +304,12 @@ public class CinemarkMinorTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify SM will have ability to select a calendar for the minor from a dropdown menu within the profile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifySMCanSelectACalendarForMinorAsStoreManager(String browser, String username, String password, String location) throws Exception {
+    public void verifySMCanSelectACalendarForMinorAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -341,6 +352,13 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            AnalyzePage analyzePage = pageFactory.createAnalyzePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -359,51 +377,53 @@ public class CinemarkMinorTest extends TestBase {
             profileNewUIPage.selectAGivenCalendarForMinor("None");
 
             // Go to Schedule page and navigate to a week
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
 
             // Get the current holiday information if have
             String holidaySmartCard = "HOLIDAYS";
             List<String> holidays = null;
-            if (schedulePage.isSpecificSmartCardLoaded(holidaySmartCard)) {
-                schedulePage.navigateToTheRightestSmartCard();
-                schedulePage.clickLinkOnSmartCardByName("View All");
-                holidays = schedulePage.getHolidaysOfCurrentWeek();
+            if (smartCardPage.isSpecificSmartCardLoaded(holidaySmartCard)) {
+                smartCardPage.navigateToTheRightestSmartCard();
+                smartCardPage.clickLinkOnSmartCardByName("View All");
+                holidays = smartCardPage.getHolidaysOfCurrentWeek();
                 // Close popup window
-                schedulePage.closeAnalyzeWindow();
+                analyzePage.closeAnalyzeWindow();
             }
 
             // Ungenerate the schedule if it is created or published
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
 
             // Create new shift for the minor at weekday, weekend and holiday if have
-            schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.customizeNewShiftPage();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectSpecificWorkDay(7);
-            schedulePage.moveSliderAtCertainPoint("10pm", ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.moveSliderAtCertainPoint("6am", ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-            schedulePage.selectWorkRole("Team Member Corporate-Theatre");
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
-            schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(cinemarkMinors.get("Minor14"));
-            schedulePage.clickOnAssignAnywayButton();
-            schedulePage.clickOnOfferOrAssignBtn();
-            schedulePage.saveSchedule();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            shiftOperatePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectSpecificWorkDay(7);
+            newShiftPage.moveSliderAtCertainPoint("10pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("6am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(cinemarkMinors.get("Minor14"));
+            shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(cinemarkMinors.get("Minor14"));
+            shiftOperatePage.clickOnAssignAnywayButton();
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
 
             // Get holidays index if have
             ArrayList<Integer> holidayIndexes = new ArrayList<>();
@@ -411,7 +431,7 @@ public class CinemarkMinorTest extends TestBase {
             if (holidays!= null) {
                 for (int index = 0; index < 5; index ++) {
                     for (String s: holidays) {
-                        if (s.contains(schedulePage.getWeekDayTextByIndex(index)))
+                        if (s.contains(scheduleShiftTablePage.getWeekDayTextByIndex(index)))
                             holidayIndexes.add(index);
                         else
                             weekdayIndexes.add(index);
@@ -421,15 +441,15 @@ public class CinemarkMinorTest extends TestBase {
                 weekdayIndexes.add(0);
 
             // Validate weekday should apply the settings of school day
-            WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(weekdayIndexes.get(0)));
-            if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+            WebElement newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(weekdayIndexes.get(0)));
+            if (newAddedShift != null && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
                 SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
             else
                 SimpleUtils.fail("Get new added shift failed", false);
 
             // Validate weekend should apply the settings of non school day
-            newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(5));
-            if (newAddedShift != null && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+            newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(5));
+            if (newAddedShift != null && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
                 SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
             else
                 SimpleUtils.fail("Get new added shift failed", false);
@@ -437,11 +457,11 @@ public class CinemarkMinorTest extends TestBase {
 
             // Validate holiday should apply the settings of non school day
             if (holidays != null) {
-                newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(holidayIndexes.get(0)));
+                newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(holidayIndexes.get(0)));
                 if (newAddedShift != null) {
-                    if (holidayIndexes.size() == 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + nonSchoolWeekMaxScheduleHrs + " hrs"))
+                    if (holidayIndexes.size() == 5 && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + nonSchoolWeekMaxScheduleHrs + " hrs"))
                         SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
-                    else if (holidayIndexes.size() < 5 && schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
+                    else if (holidayIndexes.size() < 5 && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
                         SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
                     else
                         SimpleUtils.fail("Schedule Page: Holiday does not apply the settings of non school day",false);
@@ -512,16 +532,16 @@ public class CinemarkMinorTest extends TestBase {
             // Verify the new created calendar will list in the calendar list
             teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
             SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), true);
             if (teamPage.isCalendarDisplayedByName("Calendar" + randomDigits))
                 SimpleUtils.pass("School Calendar: Calendar just created is in the list");
             else
-                SimpleUtils.fail("School Calendar: ACalendar just created is not in the list",false);
+                SimpleUtils.fail("School Calendar: A Calendar just created is not in the list",true);
 
             // Verify the calendar can be deleted
             teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
             SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
-                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), true);
             teamPage.deleteCalendarByName(calendarName);
 
             // Verify the the change for calendar will not been saved after click Cancel button
@@ -570,12 +590,7 @@ public class CinemarkMinorTest extends TestBase {
             loginPage.logOut();
 
             // Login as Store Manager
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise") + fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             int random3 = (new Random()).nextInt(1000);
             int random4 = (new Random()).nextInt(1000);
@@ -598,8 +613,15 @@ public class CinemarkMinorTest extends TestBase {
                 SimpleUtils.pass("School Calendar: All the calendars have been created display in the list");
             else
                 SimpleUtils.fail("School Calendar: All the calendars have been created don't display in the list",false);
+            loginPage.logOut();
 
-            // Clean up data
+            // Login as Internal Admin to clean up data
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
             teamPage.deleteCalendarByName("Calendar" + random1);
             teamPage.deleteCalendarByName("Calendar" + random2);
             teamPage.deleteCalendarByName("Calendar" + random3);
@@ -654,13 +676,7 @@ public class CinemarkMinorTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
-
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -697,11 +713,16 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             String districtName = dashboardPage.getCurrentDistrict();
 
             //Go to OP page
@@ -719,14 +740,14 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
 
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),"","");
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),"","");
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),"","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), "","","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), "","","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), "","","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), "","","");
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), "","","");
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),"","");
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),"","");
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),"","");
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), "","","");
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), "","","");
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), "","","");
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), "","","");
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), "","","");
 
             cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
@@ -739,31 +760,32 @@ public class CinemarkMinorTest extends TestBase {
 //            String minorLocation = "Test For Minors";
 //            locationSelectorPage.changeLocation(minorLocation);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
             // Navigate to a week
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated){
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
-            schedulePage.clickOnDayViewAddNewShiftButton();
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectDaysByIndex(0,0,0);
-            schedulePage.selectWorkRole("MOD");
-            schedulePage.moveSliderAtSomePoint("8", 20, ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-            schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-            schedulePage.clickOnCreateOrNextBtn();
-            schedulePage.searchText(cinemarkMinors.get("Minor17"));
-            SimpleUtils.assertOnFail("Minor warning should not work when setting is empty", !schedulePage.getAllTheWarningMessageOfTMWhenAssign().contains("Minor"), false);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            shiftOperatePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(0,0,0);
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtSomePoint("8", 20, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchText(cinemarkMinors.get("Minor17"));
+            SimpleUtils.assertOnFail("Minor warning should not work when setting is empty", !shiftOperatePage.getAllTheWarningMessageOfTMWhenAssign().contains("Minor"), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -800,12 +822,7 @@ public class CinemarkMinorTest extends TestBase {
             loginPage.logOut();
 
             //Log in as SM to check
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -825,8 +842,7 @@ public class CinemarkMinorTest extends TestBase {
             loginPage.logOut();
 
             //Log in as SM to check
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             teamPage.goToTeam();
             String calendarTab = "School Calendars";
@@ -880,23 +896,23 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenEdit.getValue());
             cinemarkMinorPage.minorRuleToggle("yes","14N15");
 
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
-            cinemarkMinorPage.minorRuleToggle("yes","16N17");
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
-            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor14N15.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor14N15.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
+//            cinemarkMinorPage.minorRuleToggle("yes","16N17");
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByWeek(minorType.Minor16N17.getValue(), minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+//            cinemarkMinorPage.setMinorRuleByDay(minorType.Minor16N17.getValue(), minorRuleDayType.Summer_Day.getValue(), cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
 
             cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
             cinemarkMinorPage.clickOnBtn(buttonGroup.OKWhenPublish.getValue());
@@ -1158,182 +1174,196 @@ public class CinemarkMinorTest extends TestBase {
     public void verifyDayOvertimeViolationsForMinors(String minorName, String shiftTime1, String shiftTime2, String shiftTime3, String workRole,
                                                      String scheduleFromToTime, String scheduleMaxHours, boolean isSummerWeek, String selectWeekDayName) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-        schedulePage.navigateToNextWeek();
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+        scheduleCommonPage.navigateToNextWeek();
         if (isSummerWeek){
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
         }
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
+        Thread.sleep(5000);
         List<String> toCloseDays = new ArrayList<>();
-        //schedulePage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        //newShiftPage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
+        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
-        schedulePage.saveSchedule();
-        if(schedulePage.isRequiredActionSmartCardLoaded()){
-            schedulePage.convertAllUnAssignedShiftToOpenShift();
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            schedulePage.deleteAllOOOHShiftInWeekView();
-            schedulePage.saveSchedule();
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleMainPage.saveSchedule();
+        if(smartCardPage.isRequiredActionSmartCardLoaded()){
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteAllOOOHShiftInWeekView();
+            scheduleMainPage.saveSchedule();
         }
-        schedulePage.publishActiveSchedule();
+        createSchedulePage.publishActiveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.customizeNewShiftPage();
 
         //set shift time
-        schedulePage.moveSliderAtCertainPoint(shiftTime1.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint(shiftTime1.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftTime1.split(",")[1], ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftTime1.split(",")[0], ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         if(!isSummerWeek){
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectWeekDaysByDayName(selectWeekDayName);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectWeekDaysByDayName(selectWeekDayName);
         }
-        schedulePage.selectWorkRole(workRole);
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchText(firstNameOfTM1);
+        newShiftPage.selectWorkRole(workRole);
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchText(firstNameOfTM1);
 
         //check the message in warning mode
-        if(schedulePage.ifWarningModeDisplay()){
+        if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1+" should be scheduled from "+ scheduleFromToTime;
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
-                SimpleUtils.pass("The message in warning mode display correctly! ");
+            String messageInWarningMode = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+            if (messageInWarningMode.contains(warningMessage1)&& messageInWarningMode.contains(warningMessage2)){
+                SimpleUtils.pass("The message in warning mode display correctly!");
             } else
-                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
-            schedulePage.clickOnAssignAnywayButton();
+                SimpleUtils.fail("The message in warning mode display incorrectly!  The expected message is :"+
+                        warningMessage1 + warningMessage2+" The actual message is : " + messageInWarningMode, false);
+            shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
-                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
 
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
 
         //check the compliance smart card
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
-                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
-        schedulePage.clickViewShift();
+                smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
+        smartCardPage.clickViewShift();
         //check the violation in i icon popup of new create shift
-        WebElement newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        WebElement newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor hrs "+ scheduleFromToTime), false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor hrs "+ scheduleFromToTime), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 
-        schedulePage.verifyClearFilterFunction();
+        scheduleMainPage.clickOnFilterBtn();
+        scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+        scheduleMainPage.clickOnFilterBtn();
         //Create new shift with shift hours is more than minor setting for TM1
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
-        schedulePage.saveSchedule();
-        schedulePage.publishActiveSchedule();
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleMainPage.saveSchedule();
+        createSchedulePage.publishActiveSchedule();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.customizeNewShiftPage();
 
         //set shift time
-        schedulePage.moveSliderAtCertainPoint(shiftTime2.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint(shiftTime2.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftTime2.split(",")[1], ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftTime2.split(",")[0], ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         if(!isSummerWeek){
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectWeekDaysByDayName(selectWeekDayName);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectWeekDaysByDayName(selectWeekDayName);
         }
-        schedulePage.selectWorkRole(workRole);
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchText(firstNameOfTM1);
+        newShiftPage.selectWorkRole(workRole);
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchText(firstNameOfTM1);
 
         //check the message in warning mode
-        if(schedulePage.ifWarningModeDisplay()){
+        if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s daily schedule should not exceed "+ scheduleMaxHours +" hours";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else
                 SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
-            schedulePage.clickOnAssignAnywayButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor daily max "+scheduleMaxHours+" hrs! ",
-                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
 
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
         //check the compliance smart card
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
-                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
-        schedulePage.clickViewShift();
+                smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
+        smartCardPage.clickViewShift();
         //check the violation in i icon popup of new create shift
-        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
         } else
             SimpleUtils.fail("Get new added shift failed", false);
 
-        schedulePage.verifyClearFilterFunction();
+        scheduleMainPage.clickOnFilterBtn();
+        scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+        scheduleMainPage.clickOnFilterBtn();
         //Create new shift that not avoid the minor settings for TM1
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
-        schedulePage.saveSchedule();
-        schedulePage.publishActiveSchedule();
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleMainPage.saveSchedule();
+        createSchedulePage.publishActiveSchedule();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.customizeNewShiftPage();
 
         //set shift time
-        schedulePage.moveSliderAtCertainPoint(shiftTime3.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint(shiftTime3.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftTime3.split(",")[1], ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftTime3.split(",")[0], ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         if(!isSummerWeek){
-            schedulePage.clearAllSelectedDays();
-            schedulePage.selectWeekDaysByDayName(selectWeekDayName);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectWeekDaysByDayName(selectWeekDayName);
         }
-        schedulePage.selectWorkRole(workRole);
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchText(firstNameOfTM1);
+        newShiftPage.selectWorkRole(workRole);
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchText(firstNameOfTM1);
         SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
-                !schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
-        schedulePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
-        if(schedulePage.ifWarningModeDisplay()){
-            String warningMessage = schedulePage.getWarningMessageInDragShiftWarningMode();
+                !shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
+        shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
+        if(newShiftPage.ifWarningModeDisplay()){
+            String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
             if (!warningMessage.contains("Minor ")){
                 SimpleUtils.pass("There is no minor warning message display on the warning mode when shift is not avoid the minor setting! ");
             } else
                 SimpleUtils.fail("There should no minor warning message display warning mode when shift is not avoid the minor setting! ", false);
-            schedulePage.clickOnAssignAnywayButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.pass("There is no minor warning message display on search TM page shift is not avoid the minor setting! ");
 
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
 
         //check the violation in i icon popup of new create shift
-        newAddedShift = schedulePage.getTheShiftByIndex(schedulePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("There should no minor warning message display on the i icon when shift is not avoid the minor setting! ",
-                    !schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
+                    !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
     }
@@ -1413,7 +1443,7 @@ public class CinemarkMinorTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify the school week  settings for the Minors of Age 16 or 17")
+    @TestName(description = "Verify the school week settings for the Minors of Age 16 or 17")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
@@ -1484,158 +1514,501 @@ public class CinemarkMinorTest extends TestBase {
                                                       String maxOfDays, String maxOfScheduleHours,
                                                       boolean isSchoolWeek, boolean isNonSchoolWeek) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()), false);
-        schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
         if (isSchoolWeek){
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
         } else if (isNonSchoolWeek){
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+        } else {
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
         }
-        boolean isWeekGenerated = schedulePage.isWeekGenerated();
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
-            schedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
 //        List<String> toCloseDays = new ArrayList<>();
-        //schedulePage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
-        schedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        //newShiftPage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
+        Thread.sleep(3000);
+        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
-        schedulePage.saveSchedule();
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleMainPage.saveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.customizeNewShiftPage();
 
         //set shift time
-        schedulePage.moveSliderAtCertainPoint(shiftTime1.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint(shiftTime1.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.clearAllSelectedDays();
-        schedulePage.selectSpecificWorkDay(needCreateShiftsNumber1);
-        schedulePage.selectWorkRole(workRole);
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstNameOfTM1);
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
+        newShiftPage.moveSliderAtCertainPoint(shiftTime1.split(",")[1], ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftTime1.split(",")[0], ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clearAllSelectedDays();
+        newShiftPage.selectSpecificWorkDay(needCreateShiftsNumber1);
+        newShiftPage.selectWorkRole(workRole);
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
 
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.moveSliderAtCertainPoint(shiftTime1.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint(shiftTime1.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.clearAllSelectedDays();
-        schedulePage.selectDaysByIndex(needCreateShiftsNumber1, needCreateShiftsNumber1, needCreateShiftsNumber1);
-        schedulePage.selectWorkRole(workRole);
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchText(firstNameOfTM1);
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.customizeNewShiftPage();
+        newShiftPage.moveSliderAtCertainPoint(shiftTime1.split(",")[1], ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftTime1.split(",")[0], ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clearAllSelectedDays();
+        newShiftPage.selectDaysByIndex(needCreateShiftsNumber1, needCreateShiftsNumber1, needCreateShiftsNumber1);
+        newShiftPage.selectWorkRole(workRole);
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchText(firstNameOfTM1);
         //check the message in warning mode
-        if(schedulePage.ifWarningModeDisplay()){
+        if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s weekly schedule should not exceed "+ maxOfDays +" days";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else
                 SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
-            schedulePage.clickOnAssignAnywayButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor weekly max "+maxOfDays+"days! ",
-                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor weekly max "+ maxOfDays+ " days"), false);
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor weekly max "+ maxOfDays+ " days"), false);
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
 
         //check the compliance smart card
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
-                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
-        schedulePage.clickViewShift();
+                smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
+        smartCardPage.clickViewShift();
         //check the violation in i icon popup of new create shift
-        WebElement newAddedShift = schedulePage.getOneDayShiftByName(needCreateShiftsNumber1, firstNameOfTM1).get(0);
+        WebElement newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(needCreateShiftsNumber1, firstNameOfTM1).get(0);
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max "+ maxOfDays+ " days"), false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max "+ maxOfDays+ " days"), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 
         //to close the i icon popup
-        schedulePage.publishActiveSchedule();
-        schedulePage.verifyClearFilterFunction();
+        createSchedulePage.publishActiveSchedule();
+        smartCardPage.verifyClearFilterFunction();
         //Create new shift with shift hours is more than minor setting for TM1
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.deleteTMShiftInWeekView(firstNameOfTM1);
-        schedulePage.saveSchedule();
-        schedulePage.publishActiveSchedule();
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.moveSliderAtCertainPoint(shiftTime2.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint(shiftTime2.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.clearAllSelectedDays();
-        schedulePage.selectSpecificWorkDay(needCreateShiftsNumber2);
-        schedulePage.selectWorkRole(workRole);
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchTeamMemberByName(firstNameOfTM1);
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleMainPage.saveSchedule();
+        createSchedulePage.publishActiveSchedule();
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.customizeNewShiftPage();
+        newShiftPage.moveSliderAtCertainPoint(shiftTime2.split(",")[1], ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftTime2.split(",")[0], ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clearAllSelectedDays();
+        newShiftPage.selectSpecificWorkDay(needCreateShiftsNumber2);
+        newShiftPage.selectWorkRole(workRole);
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
 
 
-        schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        schedulePage.clickOnDayViewAddNewShiftButton();
-        schedulePage.customizeNewShiftPage();
-        schedulePage.moveSliderAtCertainPoint(shiftTime2.split(",")[1], ScheduleNewUITest.shiftSliderDroppable.EndPoint.getValue());
-        schedulePage.moveSliderAtCertainPoint(shiftTime2.split(",")[0], ScheduleNewUITest.shiftSliderDroppable.StartPoint.getValue());
-        schedulePage.clearAllSelectedDays();
-        schedulePage.selectDaysByIndex(needCreateShiftsNumber2, needCreateShiftsNumber2, needCreateShiftsNumber2);
-        schedulePage.selectWorkRole(workRole);
-        schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.AssignTeamMemberShift.getValue());
-        schedulePage.clickOnCreateOrNextBtn();
-        schedulePage.searchText(firstNameOfTM1);
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        newShiftPage.customizeNewShiftPage();
+        newShiftPage.moveSliderAtCertainPoint(shiftTime2.split(",")[1], ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftTime2.split(",")[0], ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clearAllSelectedDays();
+        newShiftPage.selectDaysByIndex(needCreateShiftsNumber2, needCreateShiftsNumber2, needCreateShiftsNumber2);
+        newShiftPage.selectWorkRole(workRole);
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.searchText(firstNameOfTM1);
 
         //check the message in warning mode
-        if(schedulePage.ifWarningModeDisplay()){
+        if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s weekly schedule should not exceed "+ maxOfScheduleHours +" hours";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && schedulePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else
                 SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
-            schedulePage.clickOnAssignAnywayButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor weekly max "+maxOfScheduleHours+" hrs! ",
-                schedulePage.getTheMessageOfTMScheduledStatus().contains("Minor weekly max "+maxOfScheduleHours+" hrs"), false);
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor weekly max "+maxOfScheduleHours+" hrs"), false);
 
-        schedulePage.clickOnOfferOrAssignBtn();
-        schedulePage.saveSchedule();
+        newShiftPage.clickOnOfferOrAssignBtn();
+        scheduleMainPage.saveSchedule();
 
         //check the violation in i icon popup of new create shift
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
-                schedulePage.verifyComplianceShiftsSmartCardShowing(), false);
-        schedulePage.clickViewShift();
-        newAddedShift = schedulePage.getOneDayShiftByName(needCreateShiftsNumber2, firstNameOfTM1).get(0);
+                smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
+        smartCardPage.clickViewShift();
+        newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(needCreateShiftsNumber2, firstNameOfTM1).get(0);
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
-                    schedulePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max "+maxOfScheduleHours+" hrs"), false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max "+maxOfScheduleHours+" hrs"), false);
         } else
             SimpleUtils.fail("Get new added shift failed", false);
     }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "validate school calendar default month")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySchoolCalendarDefaultMonthAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            int randomDigits = (new Random()).nextInt(100);
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+            // Go to School Calendars sub tab
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+            // Click on Create New Calendar button, verify the Cancel and Save button display correctly
+            teamPage.clickOnCreateNewCalendarButton();
+
+            // Verify the Session Start and Session End fields are mandatory fields
+            teamPage.verifyCreateCalendarLoaded();
+            teamPage.verifySessionStartNEndIsMandatory();
+
+            // Click on School Session Start
+            teamPage.clickOnSchoolSessionStart();
+
+            //Check the defaul start and end month in calendar
+            List<String> calendarCurrentStartAndEndTime = teamPage.getCalendarCurrentStartAndEndTime();
+            String startMonth = calendarCurrentStartAndEndTime.get(0).split(" ")[0];
+            String endMonth = calendarCurrentStartAndEndTime.get(1).split(" ")[0];
+            SimpleUtils.assertOnFail("The calendar default start month display incorrectly! The expected month is: August, the actual month is: "
+                    + startMonth, startMonth.equalsIgnoreCase("August"), false);
+            SimpleUtils.assertOnFail("The calendar default end month display incorrectly! The expected month is: May, the actual month is: "
+                    + endMonth, endMonth.equalsIgnoreCase("May"), false);
+
+            teamPage.clickOnCancelSchoolSessionCalendarBtn();
+            teamPage.clickOnSchoolSessionEnd();
+            calendarCurrentStartAndEndTime = teamPage.getCalendarCurrentStartAndEndTime();
+            startMonth = calendarCurrentStartAndEndTime.get(0).split(" ")[0];
+            endMonth = calendarCurrentStartAndEndTime.get(1).split(" ")[0];
+            SimpleUtils.assertOnFail("The calendar default start month display incorrectly! The expected month is: August, the actual month is: "
+                    + startMonth, startMonth.equalsIgnoreCase("August"), false);
+            SimpleUtils.assertOnFail("The calendar default end month display incorrectly! The expected month is: August, the actual month is: "
+                    + endMonth, endMonth.equalsIgnoreCase("May"), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "validate the main calendar info on the page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheMainCalendarInfoOnThePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+            // Go to School Calendars sub tab
+            teamPage.clickOnTeamSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue());
+            SimpleUtils.assertOnFail("Team page 'School Calendars' sub tab not loaded",
+                    teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
+
+            // Click on Create New Calendar button, verify the Cancel and Save button display correctly
+            teamPage.clickOnCreateNewCalendarButton();
+
+            // Verify the Session Start and Session End fields are mandatory fields
+            teamPage.verifyCreateCalendarLoaded();
+            teamPage.verifySessionStartNEndIsMandatory();
+
+            // Click on School Session Start
+            teamPage.clickOnSchoolSessionStart();
+
+            //Select start: Jan, end Fed
+            List<String> calendarCurrentStartAndEndTime = teamPage.getCalendarCurrentStartAndEndTime();
+            String startYear = calendarCurrentStartAndEndTime.get(0).split(" ")[1];
+            String endYear = calendarCurrentStartAndEndTime.get(1).split(" ")[1];
+            String startDate = startYear + " Jan 1";
+            String endDate = endYear + " Feb 1";
+            teamPage.selectSchoolSessionStartAndEndDate(startDate, endDate);
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
+
+            //Check the main calendar page, the first month is Jan, the last month is Dec
+            List<String> calendarMonthNames = teamPage.getAllCalendarMonthNames();
+            SimpleUtils.assertOnFail("The first month display incorrectly, the expected first month is: January, the actual first month is: " +
+                    calendarMonthNames.get(0).split(" ")[0], calendarMonthNames.get(0).split(" ")[0].equalsIgnoreCase("January"), false);
+            SimpleUtils.assertOnFail("The last month display incorrectly, the expected last month is: December, the actual last month is: " +
+                            calendarMonthNames.get(calendarMonthNames.size()-1).split(" ")[0],
+                    calendarMonthNames.get(calendarMonthNames.size()-1).split(" ")[0].equalsIgnoreCase("December"), false);
+
+            //Select start: Aug, end Oct
+            teamPage.clickOnSchoolSessionStart();
+            startDate = startYear + " Aug 1";
+            endDate = endYear + " Oct 1";
+            teamPage.selectSchoolSessionStartAndEndDate(startDate, endDate);
+            teamPage.clickOnSaveSchoolSessionCalendarBtn();
+
+            //Check the main calendar page, the first month is Jan, the last month is Dec
+            calendarMonthNames = teamPage.getAllCalendarMonthNames();
+            SimpleUtils.assertOnFail("The first month display incorrectly, the expected first month is: August , the actual first month is: " +
+                    calendarMonthNames.get(0).split(" ")[0], calendarMonthNames.get(0).split(" ")[0].equalsIgnoreCase("August"), false);
+            SimpleUtils.assertOnFail("The last month display incorrectly, the expected last month is: July, the actual last month is: " +
+                            calendarMonthNames.get(calendarMonthNames.size()-1).split(" ")[0],
+                    calendarMonthNames.get(calendarMonthNames.size()-1).split(" ")[0].equalsIgnoreCase("July"), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Minor profile page when minors has been assigned minor rule template-OP")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), "stoneman@legion.co", "admin11.a");
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //SM or admin log in, go OP side
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToUserManagementPage();
+            configurationPage.goToDynamicEmployeeGroupPage();
+            //delete all dynamic employee group
+            configurationPage.deleteSpecifyDynamicEmployeeGroupsInList("Group-ForAuto");
+            //create a User Group for 13 year old minors
+            List<String> groupCriteriaList = new ArrayList<>();
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.LessThan14.getValue());
+            String minor13GroupTitle = "Minor13Group-ForAuto";
+            String minor13GroupDescription = "Minor13-Description-ForAuto";
+            configurationPage.createNewDynamicEmployeeGroup(minor13GroupTitle, minor13GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+            String minor14GroupTitle = "Minor14Group-ForAuto";
+            String minor14GroupDescription = "Minor14-Description-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals14.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(minor14GroupTitle, minor14GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+            String minor15GroupTitle = "Minor15Group-ForAuto";
+            String minor15GroupDescription = "Minor15-Description-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals15.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(minor15GroupTitle, minor15GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+            String minor16GroupTitle = "Minor16Group-ForAuto";
+            String minor16GroupDescription = "Minor16-Description-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals16.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(minor16GroupTitle, minor16GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+            String minor17GroupTitle = "Minor17Group-ForAuto";
+            String minor17GroupDescription = "Minor17-Description-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals17.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(minor17GroupTitle, minor17GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
+            configurationPage.archiveOrDeleteAllTemplates();
+            String minor13TemplateName = "Minor13Template-ForAuto";
+            createMinor13N14N15TemplateAndSetMinorSettings(minor13TemplateName, minor13GroupTitle);
+            String minor14TemplateName = "Minor14Template-ForAuto";
+            createMinor13N14N15TemplateAndSetMinorSettings(minor14TemplateName, minor14GroupTitle);
+            String minor15TemplateName = "Minor15Template-ForAuto";
+            createMinor13N14N15TemplateAndSetMinorSettings(minor15TemplateName, minor15GroupTitle);
+            String minor16TemplateName = "Minor16Template-ForAuto";
+            createMinor16N17TemplateAndSetMinorSettings(minor16TemplateName, minor16GroupTitle);
+            String minor17TemplateName = "Minor17Template-ForAuto";
+            createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
+            switchToConsoleWindow();
+            //wait for 5 mins for catch
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            for (int i = 0; i< 5; i++) {
+                teamPage.goToTeam();
+                teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+                Thread.sleep(60000);
+            }
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String minor13Name = "Minor13 Cinemark13";
+            String minor14Name = "Minor14 Cinemark14";
+            String minor15Name = "Minor15 Cinemark15";
+            String minor16Name = "Minor16 Cinemark16";
+            String minor17Name = "Minor17 Cinemark17";
+
+            verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
+//            teamPage.searchAndSelectTeamMemberByName(minor13Name);
+//            SimpleUtils.assertOnFail("The minor rule template name of Minor 13 display incorrectly! ",
+//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor13TemplateName), false);
+            verifyTemplateNameOnProfilePage(minor14Name, minor14TemplateName);
+//            teamPage.goToTeam();
+//            teamPage.searchAndSelectTeamMemberByName(minor14Name);
+//            SimpleUtils.assertOnFail("The minor rule template name of Minor 14 display incorrectly! ",
+//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor14TemplateName), false);
+            verifyTemplateNameOnProfilePage(minor15Name, minor15TemplateName);
+//            teamPage.goToTeam();
+//            teamPage.searchAndSelectTeamMemberByName(minor15Name);
+//            SimpleUtils.assertOnFail("The minor rule template name of Minor 15 display incorrectly! ",
+//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor15TemplateName), false);
+            verifyTemplateNameOnProfilePage(minor16Name, minor16TemplateName);
+//            teamPage.goToTeam();
+//            teamPage.searchAndSelectTeamMemberByName(minor16Name);
+//            SimpleUtils.assertOnFail("The minor rule template name of Minor 16 display incorrectly! ",
+//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor16TemplateName), false);
+            verifyTemplateNameOnProfilePage(minor17Name, minor17TemplateName);
+//            teamPage.goToTeam();
+//            teamPage.searchAndSelectTeamMemberByName(minor17Name);
+//            SimpleUtils.assertOnFail("The minor rule template name of Minor 17 display incorrectly! ",
+//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor17TemplateName), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    private void createMinor13N14N15TemplateAndSetMinorSettings (String templateName, String dynamicGroup) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.Summer_Day.getValue(), cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
+        configurationPage.selectOneDynamicGroup(dynamicGroup);
+        configurationPage.clickOnTemplateDetailTab();
+        cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
+        Thread.sleep(3000);
+    }
+
+    private void createMinor16N17TemplateAndSetMinorSettings (String templateName, String dynamicGroup) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting16N17.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue(), cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
+        cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.Summer_Day.getValue(), cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[0], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[1], cinemarkSetting16N17.get(minorRuleDayType.Summer_Day.getValue()).split(",")[2]);
+        configurationPage.selectOneDynamicGroup(dynamicGroup);
+        configurationPage.clickOnTemplateDetailTab();
+        cinemarkMinorPage.saveOrPublishTemplate(templateAction.Publish_Now.getValue());
+        Thread.sleep(3000);
+    }
+
+
+    private void verifyTemplateNameOnProfilePage (String minorName, String templateName) throws Exception {
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        int i = 0;
+        String name = "None";
+        while (i< 20 && name.equals("None")) {
+            Thread.sleep(60000);
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(minorName);
+            name = profileNewUIPage.getMinorRuleTemplateName();
+            i++;
+        }
+        SimpleUtils.assertOnFail("The minor rule template name of "+templateName+" display incorrectly! ",
+                name.equalsIgnoreCase(templateName), false);
+
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Minor profile page when the TM does not have minor rule template associated")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), "stoneman@legion.co", "admin11.a");
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //SM or admin log in, go OP side
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
+            String minor13TemplateName = "Minor13Template-ForAuto";
+            configurationPage.archiveOrDeleteTemplate(minor13TemplateName);
+            switchToConsoleWindow();
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String minor13Name = "Minor13 Cinemark13";
+            teamPage.searchAndSelectTeamMemberByName(minor13Name);
+            SimpleUtils.assertOnFail("The minor rule template name of Minor 13 display incorrectly! ",
+                    profileNewUIPage.getMinorRuleTemplateName().equals("None"), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
 }

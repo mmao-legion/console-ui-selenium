@@ -6,9 +6,6 @@ import com.legion.pages.DashboardPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.TimeSheetPage;
-import com.legion.pages.*;
-import com.legion.pages.core.ConsoleScheduleDMViewPage;
-import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -23,11 +20,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 import java.util.*;
-
-import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class DMViewTest extends TestBase {
 
@@ -79,7 +73,7 @@ public class DMViewTest extends TestBase {
             locationSelectorPage.changeAnotherDistrictInDMView();
             districtName = dashboardPage.getCurrentDistrict();
             districtName = districtName.contains("\n")? districtName.split("\n")[0]:districtName;
-            String districtOnDashboard = dashboardPage.getDistrictNameOnDashboard();
+            String districtOnDashboard = dashboardPage.getUpperfieldNameOnDashboard();
             if (districtName.equals(districtOnDashboard))
                 SimpleUtils.pass("Dashboard Page: When the user selects a different district from the DM view, the data updates to reflect the selected district");
             else
@@ -111,7 +105,7 @@ public class DMViewTest extends TestBase {
             dashboardPage.validateRefreshTimestamp();
 
             // Validate Refresh when navigation back
-            dashboardPage.validateRefreshWhenNavigationBack();
+            dashboardPage.validateRefreshWhenNavigationBack("Dashboard");
 
             // Validate Refresh function
             dashboardPage.validateRefreshFunction();
@@ -138,7 +132,8 @@ public class DMViewTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully", dashboardPage.isProjectedComplianceWidgetDisplay(), false);
+            SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully",
+                    dashboardPage.isProjectedComplianceWidgetDisplay(), false);
             //Validate the content of Projected Compliance widget
             dashboardPage.verifyTheContentInProjectedComplianceWidget();
 
@@ -146,7 +141,7 @@ public class DMViewTest extends TestBase {
             String totalViolationHrsFromProjectedComplianceWidget =
                     dashboardPage.getTheTotalViolationHrsFromProjectedComplianceWidget();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            dashboardPage.clickOnViewComplianceLink();
+            dashboardPage.clickOnViewViolationsLink();
             String totalViolationHrsFromCompliancePage =
                     compliancePage.getTheTotalViolationHrsFromSmartCard().split(" ")[0];
             SimpleUtils.assertOnFail("Project Compliance widget not loaded successfully",
@@ -165,16 +160,18 @@ public class DMViewTest extends TestBase {
     public void verifyTimesheetApprovalRateWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!",
+                    dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SimpleUtils.assertOnFail("Timesheet Approval Rate widget not loaded successfully", dashboardPage.isTimesheetApprovalRateWidgetDisplay(), false);
+            SimpleUtils.assertOnFail("Timesheet Approval Rate widget not loaded successfully",
+                    dashboardPage.isTimesheetApprovalRateWidgetDisplay(), false);
 
             // Validate the content on Timesheet Approval Rate widget on TA env
-            dashboardPage.validateTheContentOnTimesheetApprovalRateWidgetInDMView();
+            dashboardPage.validateTheContentOnTimesheetApprovalRateWidgetInUpperfieldView();
 
             // Validate status value of Timesheet Approval Rate widget on TA env
             dashboardPage.validateStatusValueOfTimesheetApprovalRateWidget();
@@ -209,13 +206,13 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Compliance Violations widget not loaded successfully", dashboardPage.isComplianceViolationsWidgetDisplay(), false);
 
             // Validate the content on Compliance Violations widget on TA env
-            dashboardPage.validateTheContentOnComplianceViolationsWidgetInDMView();
+            dashboardPage.validateTheContentOnComplianceViolationsWidgetInUpperfield();
 
-            // Validate the data on Compliance Violations widget on TA env
-            List<String> complianceViolationsOnDMViewDashboard = dashboardPage.getComplianceViolationsOnDMViewWidget();
-            dashboardPage.clickOnViewViolations();
+            // Validate the data in Compliance Violations widget with TA between dashboard and compliance
+            List<String> complianceViolationsOnDMViewDashboard = dashboardPage.getComplianceViolationsOnDashboard();
+            dashboardPage.clickOnViewViolationsLink();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            List<String> complianceViolationsFromOnDMViewCompliance = compliancePage.getComplianceViolationsOnDMViewSmartCard();
+            List<String> complianceViolationsFromOnDMViewCompliance = compliancePage.getComplianceViolationsOnSmartCard();
             dashboardPage.validateDataOnComplianceViolationsWidget(complianceViolationsOnDMViewDashboard, complianceViolationsFromOnDMViewCompliance);
             //todo SCH-1906： [Dashboard] Compliance violation widget -> the numbers of violation is incorrect
 
@@ -238,33 +235,67 @@ public class DMViewTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+            //  Set 'Apply labor budget to schedules?' to Yes
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            dashboardPage.clickOnDashboardConsoleMenu();
+            SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
 
             // Validate the content on Payroll Projection widget on TA env
-            dashboardPage.validateTheContentOnPayrollProjectionWidget();
+            dashboardPage.validateTheContentOnPayrollProjectionWidget(true);
 
             // Validate the date on Payroll Projection widget on TA env
             String weekOnPayrollProjectionWidget = dashboardPage.getWeekOnPayrollProjectionWidget();
-            String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetSurplusOnPayrollProjectionWidget();
+            String forecastKPIOnPayrollProjectionWidget = dashboardPage.getBudgetComparisonOnPayrollProjectionWidget();
             dashboardPage.clickOnViewSchedulesOnPayrollProjectWidget();
             SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             String currentWeekInDMViewSchedule = scheduleDMViewPage.getCurrentWeekInDMView();
-            String forecastKPIInDMViewSchedule = scheduleDMViewPage.getBudgetSurplusInDMView();
+            String forecastKPIInDMViewSchedule = scheduleDMViewPage.getBudgetComparisonInDMView();
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Payroll Projection widget not loaded successfully", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
             dashboardPage.validateWeekOnPayrollProjectionWidget(weekOnPayrollProjectionWidget, currentWeekInDMViewSchedule);
-            dashboardPage.validateBudgetSurplusOnPayrollProjectionWidget(forecastKPIOnPayrollProjectionWidget, forecastKPIInDMViewSchedule);
+            dashboardPage.validateBudgetComparisonOnPayrollProjectionWidget(forecastKPIOnPayrollProjectionWidget, forecastKPIInDMViewSchedule);
 
-            // Validate as of time on Payroll Projection widget on TA env
-            dashboardPage.validateAsOfTimeOnPayrollProjectionWidget();
+            // Validate today's time line on Payroll Projection widget on TA env
+            dashboardPage.validateTodayAtTimeOnPayrollProjectionWidget();
 
-            // Validate the future Budget Surplus on Payroll Projection widget on TA env
-            dashboardPage.validateTheFutureBudgetSurplusOnPayrollProjectionWidget();
+            // Validate the future Budget Comparison on Payroll Projection widget on TA env
+            dashboardPage.validateTheFutureBudgetComparisonOnPayrollProjectionWidget();
 
             // Validate hours tooltips of Payroll Projection widget on TA env
             dashboardPage.validateHoursTooltipsOfPayrollProjectionWidget();
-           // todo due to SCH-2634
+
+            // Validate the data in Payroll Projection widget with TA
+            HashMap<String, Integer> theSumOfValues = dashboardPage.getTheSumOfValuesOnPayrollProjectionWidget();
+            List<String> dataOnLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            if ((Integer.valueOf(dataOnLocationSummaryWidget.get(0)) - theSumOfValues.get("Budgeted") < 14)
+                    && theSumOfValues.get("Scheduled").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(1)))
+                    && theSumOfValues.get("Projected").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(2))))
+                SimpleUtils.pass("Dashboard Page: The sum of days matches the numbers in Location Summary widget for Budgeted, Scheduled and Projected");
+            else
+                SimpleUtils.fail("Dashboard Page: The sum of days doesn't match the numbers in Location Summary widget for Budgeted, Scheduled and Projected",false);
+
+            // Set 'Apply labor budget to schedules?' to No
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            dashboardPage.clickOnDashboardConsoleMenu();
+            SimpleUtils.assertOnFail("Payroll Projection widget loaded fail! ", dashboardPage.isPayrollProjectionWidgetDisplay(), false);
+
+            // Validate the content in Payroll Projection widget with TA
+            dashboardPage.validateTheContentOnPayrollProjectionWidget(false);
+
+            // Validate the data in Payroll Projection widget with TA
+            theSumOfValues = dashboardPage.getTheSumOfValuesOnPayrollProjectionWidget();
+            if (Integer.valueOf(dataOnLocationSummaryWidget.get(0)) - theSumOfValues.get("Budgeted") < 14
+                    && theSumOfValues.get("Scheduled").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(1)))
+                    && theSumOfValues.get("Projected").equals(Integer.valueOf(dataOnLocationSummaryWidget.get(2))))
+                SimpleUtils.pass("Dashboard Page: The sum of days matches the numbers in Location Summary widget for Guidance, Scheduled and Projected");
+            else
+                SimpleUtils.fail("Dashboard Page: The sum of days doesn't match the numbers in Location Summary widget for Guidance, Scheduled and Projected",false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
@@ -279,14 +310,16 @@ public class DMViewTest extends TestBase {
     public void verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
 
@@ -306,30 +339,30 @@ public class DMViewTest extends TestBase {
             scheduleDMViewPage.validateRefreshPerformance();
 
             // Validate Refresh function for past weeks
-            schedulePage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
             scheduleDMViewPage.validateRefreshTimestamp();
             scheduleDMViewPage.clickOnRefreshButton();
             scheduleDMViewPage.validateRefreshFunction();
 
             // Validate Refresh function for current/future weeks
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             scheduleDMViewPage.validateRefreshTimestamp();
             scheduleDMViewPage.clickOnRefreshButton();
             scheduleDMViewPage.validateRefreshFunction();
 
             // Validate Refresh reflects schedule change
             while (!scheduleDMViewPage.isNotStartedScheduleDisplay()) {
-                schedulePage.navigateToNextWeek();
+                scheduleCommonPage.navigateToNextWeek();
             }
             if (scheduleDMViewPage.isNotStartedScheduleDisplay()) {
                 String notStartedLocation = scheduleDMViewPage.getLocationsWithNotStartedSchedules().get(0);
-                schedulePage.clickOnLocationNameInDMView(notStartedLocation);
+                scheduleDMViewPage.clickOnLocationNameInDMView(notStartedLocation);
                 SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-                boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+                boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                 if (!isWeekGenerated) {
-                    schedulePage.createScheduleForNonDGFlowNewUI();
+                    createSchedulePage.createScheduleForNonDGFlowNewUI();
                 }
                 locationSelectorPage.reSelectDistrict(districtName);
                 scheduleDMViewPage.clickOnRefreshButton();
@@ -338,10 +371,10 @@ public class DMViewTest extends TestBase {
                     SimpleUtils.pass("Schedule Page: After the first refreshing, it is \"In Progress\" status");
                 else
                     SimpleUtils.fail("Schedule Page: After the first refreshing, it isn't \"In Progress\" status", false);
-                schedulePage.clickOnLocationNameInDMView(notStartedLocation);
+                scheduleDMViewPage.clickOnLocationNameInDMView(notStartedLocation);
                 SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-                schedulePage.publishActiveSchedule();
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+                createSchedulePage.publishActiveSchedule();
                 locationSelectorPage.reSelectDistrict(districtName);
                 scheduleDMViewPage.clickOnRefreshButton();
                 scheduleStatus = scheduleDMViewPage.getScheduleStatusForGivenLocation(notStartedLocation);
@@ -365,13 +398,15 @@ public class DMViewTest extends TestBase {
     public void verifyRefreshFeatureOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
@@ -404,13 +439,13 @@ public class DMViewTest extends TestBase {
             if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
                 timeSheetPage.navigateToSchedule();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                        schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-                schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-                boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                 if (!isWeekGenerated) {
-                    schedulePage.createScheduleForNonDGFlowNewUI();
+                    createSchedulePage.createScheduleForNonDGFlowNewUI();
                 }
-                schedulePage.publishActiveSchedule();
+                createSchedulePage.publishActiveSchedule();
                 timeSheetPage.clickOnTimeSheetConsoleMenu();
                 SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
             }
@@ -449,6 +484,7 @@ public class DMViewTest extends TestBase {
     public void verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
         String districtName = dashboardPage.getCurrentDistrict();
@@ -457,7 +493,8 @@ public class DMViewTest extends TestBase {
 
         CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         compliancePage.clickOnComplianceConsoleMenu();
         SimpleUtils.assertOnFail("Compliance page not loaded successfully", compliancePage.isCompliancePageLoaded(), false);
 
@@ -499,13 +536,13 @@ public class DMViewTest extends TestBase {
         if (!timeSheetPage.isWorkerDisplayInTimesheetTable()) {
             timeSheetPage.navigateToSchedule();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
-                schedulePage.createScheduleForNonDGFlowNewUI();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            schedulePage.publishActiveSchedule();
+            createSchedulePage.publishActiveSchedule();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             SimpleUtils.assertOnFail("Timesheet page not loaded successfully", timeSheetPage.isTimeSheetPageLoaded(), false);
         }
@@ -668,6 +705,8 @@ public class DMViewTest extends TestBase {
     public void verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
@@ -681,7 +720,7 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Compliance page not loaded successfully", compliancePage.isCompliancePageLoaded(), false);
 
             // Validate the field names in analytics table
-            compliancePage.verifyFieldNamesInAnalyticsTable();
+            compliancePage.verifyFieldNamesInAnalyticsTable("Location");
 
             // Validate the field columns can be ordered
             compliancePage.verifySortByColForLocationsInDMView(1);
@@ -695,7 +734,7 @@ public class DMViewTest extends TestBase {
 
             // Validate the data of analytics table for past week.
             compliancePage.navigateToPreviousWeek();
-            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for past week successfully",compliancePage.isComplianceDMView(), false);
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for past week successfully",compliancePage.isComplianceUpperFieldView(), false);
             List<String> dataInDMForPast = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
             String totalExtraHoursInDMView = dataInDMForPast.get(0);
 
@@ -717,7 +756,7 @@ public class DMViewTest extends TestBase {
             String totalHrsInSMForCurrent = dataInSMForCurrent.get(6);
             locationSelectorPage.reSelectDistrict(districtName);
             compliancePage.clickOnComplianceConsoleMenu();
-            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for current week successfully",compliancePage.isComplianceDMView(), false);
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for current week successfully",compliancePage.isComplianceUpperFieldView(), false);
             List<String> dataInDMForCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
             String totalExtraHoursInDMViewForCurrent = dataInDMForCurrent.get(0);
             SimpleUtils.report("Total Extra Hours In DM View for current week is " + totalExtraHoursInDMViewForCurrent);
@@ -729,7 +768,7 @@ public class DMViewTest extends TestBase {
 
             // Validate the data of analytics table for future week
             compliancePage.navigateToNextWeek();
-            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for future week successfully",compliancePage.isComplianceDMView(), false);
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for future week successfully",compliancePage.isComplianceUpperFieldView(), false);
             List<String> dataInDMForFuture = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
             String totalExtraHoursInDMViewForFuture = dataInDMForFuture.get(0);
             SimpleUtils.report("Total Extra Hours In DM View for future week is " + totalExtraHoursInDMViewForFuture);
@@ -747,15 +786,16 @@ public class DMViewTest extends TestBase {
             Thread.sleep(2000);
             controlsNewUIPage.updateDaysInAdvancePublishSchedulesInSchedulingPolicies("7");
 
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
-            schedulePage.clickOnLocationNameInDMView(location);
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            scheduleDMViewPage.clickOnLocationNameInDMView(location);
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated)
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            schedulePage.publishActiveSchedule();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.publishActiveSchedule();
             locationSelectorPage.reSelectDistrict(districtName);
 
             compliancePage.clickOnComplianceConsoleMenu();
@@ -767,15 +807,15 @@ public class DMViewTest extends TestBase {
                 SimpleUtils.fail("Compliance Page: Late Schedule is not Yes",false);
 
             // Validate Late Schedule is No
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnLocationNameInDMView(location);
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
-            isWeekGenerated = schedulePage.isWeekGenerated();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleDMViewPage.clickOnLocationNameInDMView(location);
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated)
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            schedulePage.publishActiveSchedule();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.publishActiveSchedule();
             locationSelectorPage.reSelectDistrict(districtName);
 
             compliancePage.clickOnComplianceConsoleMenu();
@@ -845,8 +885,8 @@ public class DMViewTest extends TestBase {
 
             //Validate the data of Schedule Publish Status widget
             Map<String, Integer> scheduleStatusFromSchedulePublishStatusWidget = dashboardPage.getAllScheduleStatusFromSchedulePublishStatusWidget();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             Map<String, Integer> scheduleStatusFromScheduleDMViewPage = scheduleDMViewPage.getThreeWeeksScheduleStatusFromScheduleDMViewPage();
             SimpleUtils.assertOnFail("Schedule status on Schedule Publish Status widget and Schedule DM view page are different! ",
@@ -864,38 +904,41 @@ public class DMViewTest extends TestBase {
     public void verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             // Create open shift in schedule so that we can verify the content on Open_Shifts Widget
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
 
-            if (schedulePage.isWeekGenerated() && !schedulePage.isWeekPublished()){
-                schedulePage.publishActiveSchedule();
+            if (createSchedulePage.isWeekGenerated() && !createSchedulePage.isWeekPublished()){
+                createSchedulePage.publishActiveSchedule();
             }
-            int openShiftsNumForLoc1 = schedulePage.getShiftsNumberByName("open");
-            int shiftsNumForLoc1 = schedulePage.getShiftsNumberByName("");
+            int openShiftsNumForLoc1 = scheduleShiftTablePage.getShiftsNumberByName("open");
+            int shiftsNumForLoc1 = scheduleShiftTablePage.getShiftsNumberByName("");
             dashboardPage.navigateToDashboard();
             locationSelectorPage.changeLocation("NY CENTRAL");
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-            if (schedulePage.isWeekGenerated() && !schedulePage.isWeekPublished()){
-                schedulePage.publishActiveSchedule();
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+            if (createSchedulePage.isWeekGenerated() && !createSchedulePage.isWeekPublished()){
+                createSchedulePage.publishActiveSchedule();
             }
-            int openShiftsNumForLoc2 = schedulePage.getShiftsNumberByName("open");
-            int shiftsNumForLoc2 = schedulePage.getShiftsNumberByName("");
+            int openShiftsNumForLoc2 = scheduleShiftTablePage.getShiftsNumberByName("open");
+            int shiftsNumForLoc2 = scheduleShiftTablePage.getShiftsNumberByName("");
             int openRateExpected = 0;
             if ((shiftsNumForLoc1+shiftsNumForLoc2)!=0){
                 openRateExpected = Math.round((float)(openShiftsNumForLoc1+openShiftsNumForLoc2)*100/(shiftsNumForLoc1+shiftsNumForLoc2));
@@ -915,16 +958,16 @@ public class DMViewTest extends TestBase {
             locationSelectorPage.reSelectDistrict(districtName);
 
             SimpleUtils.assertOnFail("Open Shifts widget not loaded successfully", dashboardPage.isOpenShiftsWidgetDisplay(), false);
-            String currentWeek = dashboardPage.getWeekInfoFromDMView();
+            String currentWeek = dashboardPage.getWeekInfoFromUpperfieldView();
 
             //Get values on open shifts widget and verify the info on Open_Shifts Widget
             HashMap<String, Integer> valuesOnOpenShiftsWidget = dashboardPage.verifyContentOfOpenShiftsWidgetForDMView();
 
             // Verify navigation to schedule page by "View Schedules" button on Open_Shifts Widget
             dashboardPage.clickViewSchedulesLinkOnOpenShiftsWidget();
-            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            SimpleUtils.assertOnFail("Schedule page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
             String[] weekInfoInDMView = MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n");
-            String weekInfoExpected = schedulePage.convertDateStringFormat(weekInfoInDMView[weekInfoInDMView.length-1]);
+            String weekInfoExpected = scheduleCommonPage.convertDateStringFormat(weekInfoInDMView[weekInfoInDMView.length-1]);
             if (currentWeek.toLowerCase().contains(weekInfoExpected.toLowerCase())) {
                 SimpleUtils.pass("Open Shifts: \"View Schedules\" button is to navigate to current week schedule page");
             } else {
@@ -949,39 +992,40 @@ public class DMViewTest extends TestBase {
     public void verifyScheduleFunctionalityForDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Go to the Schedule page in DM view. And to verify the title.
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(districtName);
             locationSelectorPage.isLocationSelected("All Locations");
-            List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
-            schedulePage.verifySortByColForLocationsInDMView(1);
-            schedulePage.verifySortByColForLocationsInDMView(1);
-            schedulePage.verifySortByColForLocationsInDMView(4);
-            schedulePage.verifySortByColForLocationsInDMView(4);
-            String weekInfo = schedulePage.getActiveWeekText();
-            System.out.println(weekInfo);
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToPreviousWeek();
-            schedulePage.navigateToPreviousWeek();
-            System.out.println(schedulePage.getActiveWeekText());
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
-            schedulePage.verifySearchLocationInScheduleDMView(location);
+            List<String> locationInDistrict1 =  scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable();
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(1);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(1);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(3);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(3);
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            System.out.println(scheduleCommonPage.getActiveWeekText());
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
+            scheduleDMViewPage.verifySearchLocationInScheduleDMView(location);
             //Change to another district.
             dashboardPage.navigateToDashboard();
             locationSelectorPage.changeAnotherDistrict();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             String anotherDistrictName = dashboardPage.getCurrentDistrict();
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
-            List<String> locationInDistrict2 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            List<String> locationInDistrict2 =  scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable();
             SimpleUtils.assertOnFail("Schedule DM view page fail to update!", !locationInDistrict1.containsAll(locationInDistrict2), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -995,35 +1039,37 @@ public class DMViewTest extends TestBase {
     public void verifyLocationListAndSublocationInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Go to the Schedule page in DM view.
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
 
             //Click on a location name and go to the schedule page.
-            schedulePage.clickOnLocationNameInDMView(location);
+            scheduleDMViewPage.clickOnLocationNameInDMView(location);
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             //Validate go back from one location---function changed: cannot go back to DM View in schedule page
             //locationSelectorPage.reSelectDistrictInDMView(districtName);
-            //SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            //SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
 
             //Validate click given location and given week
             dashboardPage.navigateToDashboard();
             locationSelectorPage.reSelectDistrict(districtName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.navigateToNextWeek();
-            String weekInfo = schedulePage.getActiveWeekText();
-            schedulePage.clickOnLocationNameInDMView(location);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.navigateToNextWeek();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
+            scheduleDMViewPage.clickOnLocationNameInDMView(location);
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()), false);
-            SimpleUtils.assertOnFail("Didn't go to the right week!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            SimpleUtils.assertOnFail("Didn't go to the right week!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1037,11 +1083,12 @@ public class DMViewTest extends TestBase {
     public void verifyTimesheetFunctionalityInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
@@ -1052,26 +1099,26 @@ public class DMViewTest extends TestBase {
             //Verify district selected and displayed with "All locations".
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(districtName);
             locationSelectorPage.isLocationSelected("All Locations");
-            List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            List<String> locationInDistrict1 =  scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable();
 
             //Validate changing district.
             locationSelectorPage.changeAnotherDistrictInDMView();
             String anotherDistrictName = dashboardPage.getCurrentDistrict();
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
-            List<String> locationInDistrict2 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            List<String> locationInDistrict2 =  scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable();
             SimpleUtils.assertOnFail("TimeSheet DM view page fail to update!", !locationInDistrict1.containsAll(locationInDistrict2), false);
 
             //Validate the clickability of backward button.
-            String weekInfo = schedulePage.getActiveWeekText();
-            schedulePage.navigateToPreviousWeek();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
+            scheduleCommonPage.navigateToPreviousWeek();
 
             //Validate the clickability of forward button.
-            schedulePage.navigateToNextWeek();
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            scheduleCommonPage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
 
             //Validate search function.
             locationSelectorPage.reSelectDistrict(districtName);
-            schedulePage.verifySearchLocationInScheduleDMView(location);
+            scheduleDMViewPage.verifySearchLocationInScheduleDMView(location);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1084,32 +1131,34 @@ public class DMViewTest extends TestBase {
     public void verifyLocationSummaryInScheduleDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Go to the Schedule page in DM view.
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
 
             //Validate the content of LOCATION SUMMARY smart card for current/future weeks.
-            HashMap<String, Float> valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("current");
+            HashMap<String, Float> valuesFromLocationSummaryCard =  scheduleDMViewPage.getValuesAndVerifyInfoForLocationSummaryInDMView("location","current");
 
             //Validate the data LOCATION SUMMARY smart card for current/future weeks.
-            SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
-            SimpleUtils.assertOnFail("Location counts from projected info are inconsistent!", (Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedWithin")) + Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("Location counts from projected info are inconsistent!", (Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedWithin")) + Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedOver"))) == scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budgeted Hours")));
+            List<Float> data = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Budgeted Hours")));
             float budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
             SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
+            data = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Scheduled Hours")));
             float scheduledHrsFromTable = 0;
             for (Float f: data){
                 scheduledHrsFromTable = scheduledHrsFromTable + f;
@@ -1117,7 +1166,7 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
 
             //Verify difference value between budgeted and projected.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Projected Hours")));
+            data = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Projected Hours")));
             float projectedHours = 0;
             for (Float f: data){
                 projectedHours = projectedHours + f;
@@ -1130,31 +1179,31 @@ public class DMViewTest extends TestBase {
             }
 
             //Verify currect week Projected Hours displays.
-            schedulePage.verifyClockedOrProjectedInDMViewTable("Projected Hours");
+            scheduleDMViewPage.verifyClockedOrProjectedInDMViewTable("Projected Hours");
 
             //Navigate to the past week to verify the info and data.
-            schedulePage.navigateToPreviousWeek();
-            valuesFromLocationSummaryCard =  schedulePage.getValuesAndVerifyInfoForLocationSummaryInDMView("past");
+            scheduleCommonPage.navigateToPreviousWeek();
+            valuesFromLocationSummaryCard =  scheduleDMViewPage.getValuesAndVerifyInfoForLocationSummaryInDMView("location", "past");
 
             //Validate the data LOCATION SUMMARY smart card for the past weeks.
-            SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
-            SimpleUtils.assertOnFail("Location counts from projected info are inconsistent!", (Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedWithin")) + Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedOver"))) == schedulePage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("Location counts in title are inconsistent!", Math.round(valuesFromLocationSummaryCard.get("NumOfLocations")) == scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().size(), false);
+            SimpleUtils.assertOnFail("Location counts from projected info are inconsistent!", (Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedWithin")) + Math.round(valuesFromLocationSummaryCard.get("NumOfProjectedOver"))) == scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().size(), false);
             //verify budgeted hours.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Budgeted Hours")));
+            data = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Budgeted Hours")));
             budgetedHrsFromTable = 0;
             for (Float f: data){
                 budgetedHrsFromTable = budgetedHrsFromTable + f;
             }
             SimpleUtils.assertOnFail("Budgeted hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Budgeted Hrs")) - budgetedHrsFromTable) == 0, false);
             //verify scheduled hours.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Scheduled Hours")));
+            data = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Scheduled Hours")));
             scheduledHrsFromTable = 0;
             for (Float f: data){
                 scheduledHrsFromTable = scheduledHrsFromTable + f;
             }
             SimpleUtils.assertOnFail("Published hours are inconsistent!", (Math.abs(valuesFromLocationSummaryCard.get("Published Hrs")) - scheduledHrsFromTable) == 0, false);
             //Verify difference value between budgeted and projected.
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clocked Hours")));
+            data = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Clocked Hours")));
             projectedHours = 0;
             for (Float f: data){
                 projectedHours = projectedHours + f;
@@ -1166,7 +1215,7 @@ public class DMViewTest extends TestBase {
 
             }
             //Verify past week Clocked Hours displays.
-            schedulePage.verifyClockedOrProjectedInDMViewTable("Clocked Hours");
+            scheduleDMViewPage.verifyClockedOrProjectedInDMViewTable("Clocked Hours");
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1180,27 +1229,28 @@ public class DMViewTest extends TestBase {
     public void verifyUnplannedClocksForTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Validate the content on Unplanned Clocks summary card.
             timeSheetPage.clickOnTimeSheetConsoleMenu();
-            HashMap<String, Integer> valuesFromUnplannedClocksSummaryCard = schedulePage.getValueOnUnplannedClocksSummaryCardAndVerifyInfo();
-            int index = schedulePage.getIndexOfColInDMViewTable("Unplanned Clocks");
-            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            HashMap<String, Integer> valuesFromUnplannedClocksSummaryCard = scheduleDMViewPage.getValueOnUnplannedClocksSummaryCardAndVerifyInfo();
+            int index = scheduleDMViewPage.getIndexOfColInDMViewTable("Unplanned Clocks");
+            List<Float> data = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(index));
             int unplannedClocks = 0;
             for (Float f: data){
                 unplannedClocks = unplannedClocks + Math.round(f);
             }
             SimpleUtils.assertOnFail("Unplanned clocks from summary card and analytic table are inconsistent!", valuesFromUnplannedClocksSummaryCard.get("unplanned clocks")==unplannedClocks, false);
 
-            index = schedulePage.getIndexOfColInDMViewTable("Total Timesheets");
-            data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            index = scheduleDMViewPage.getIndexOfColInDMViewTable("Total Timesheets");
+            data = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(index));
             int totalTimesheets = 0;
             for (Float f: data){
                 totalTimesheets = totalTimesheets + Math.round(f);
@@ -1222,15 +1272,15 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Validate the content on Unplanned Clocks summary smart card.
             timeSheetPage.clickOnTimeSheetConsoleMenu();
-            HashMap<String, Integer> valuesFromUnplannedClocksSummaryCard = schedulePage.getValueOnUnplannedClocksSmartCardAndVerifyInfo();
-            int index = schedulePage.getIndexOfColInDMViewTable("Unplanned Clocks");
-            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
+            HashMap<String, Integer> valuesFromUnplannedClocksSummaryCard = scheduleDMViewPage.getValueOnUnplannedClocksSmartCardAndVerifyInfo();
+            int index = scheduleDMViewPage.getIndexOfColInDMViewTable("Unplanned Clocks");
+            List<Float> data = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(index));
             int unplannedClocks = 0;
             for (Float f: data){
                 unplannedClocks = unplannedClocks + Math.round(f);
@@ -1252,9 +1302,10 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Validate the title and info of Compliance page.
@@ -1264,26 +1315,26 @@ public class DMViewTest extends TestBase {
             //Verify district selected and displayed with "All locations".
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(districtName);
             locationSelectorPage.isLocationSelected("All Locations");
-            List<String> locationInDistrict1 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            List<String> locationInDistrict1 =  scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable();
 
             //Validate changing district.
             locationSelectorPage.changeAnotherDistrictInDMView();
             String anotherDistrictName = dashboardPage.getCurrentDistrict();
             locationSelectorPage.verifyTheDisplayDistrictWithSelectedDistrictConsistent(anotherDistrictName);
-            List<String> locationInDistrict2 =  schedulePage.getLocationsInScheduleDMViewLocationsTable();
+            List<String> locationInDistrict2 =  scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable();
             SimpleUtils.assertOnFail("Compliance DM view page fail to update!", !locationInDistrict1.containsAll(locationInDistrict2), false);
 
             //Validate search function.
             locationSelectorPage.reSelectDistrictInDMView(districtName);
-            schedulePage.verifySearchLocationInScheduleDMView(location);
+            scheduleDMViewPage.verifySearchLocationInScheduleDMView(location);
 
             //Validate the clickability of backward button.
-            String weekInfo = schedulePage.getActiveWeekText();
-            schedulePage.navigateToPreviousWeek();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
+            scheduleCommonPage.navigateToPreviousWeek();
 
             //Validate the clickability of forward button.
-            schedulePage.navigateToNextWeek();
-            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(schedulePage.getActiveWeekText()), false);
+            scheduleCommonPage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Week picker has issue!", weekInfo.equals(scheduleCommonPage.getActiveWeekText()), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1300,9 +1351,11 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Navigate to Compliance page.
@@ -1314,7 +1367,7 @@ public class DMViewTest extends TestBase {
 
             //Validate the data Toatal Violation smart card for current week.
             //Verify total violation hours for current week.
-            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Total Extra Hours")));
+            List<Float> data = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Total Extra Hours")));
             float totalViolationHrsFromTable = 0;
             for (Float f: data){
                 totalViolationHrsFromTable = totalViolationHrsFromTable + f;
@@ -1329,7 +1382,7 @@ public class DMViewTest extends TestBase {
             }
 
             //Verify total violation hours for last week.
-            schedulePage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
             HashMap<String, Float> valuesFromToatalViolationCardForLastWeek =  compliancePage.getValuesAndVerifyInfoForTotalViolationSmartCardInDMView();
             SimpleUtils.assertOnFail("Violation hours for last week are inconsistent!", (Math.abs(valuesFromToatalViolationCard.get("vioHrsPastWeek")) - valuesFromToatalViolationCardForLastWeek.get("vioHrsCurrentWeek")) == 0, false);
 
@@ -1351,9 +1404,10 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Navigate to Compliance page.
@@ -1361,32 +1415,22 @@ public class DMViewTest extends TestBase {
             SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
 
             //Validate the content on Locations with violation card.
-            HashMap<String, Integer> valuesFromLocationsWithViolationCard = compliancePage.getValueOnLocationsWithViolationCardAndVerifyInfo();
-            int index = schedulePage.getIndexOfColInDMViewTable("Total Extra Hours");
-            List<Float> data = schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(index));
-            index = schedulePage.getIndexOfColInDMViewTable("Late Schedule?");
-            List<String> dataFromLateScheduleCol = schedulePage.getListByColInTimesheetDMView(index);
-            List flag = new ArrayList();
+            HashMap<String, Integer> valuesFromLocationsWithViolationCard = compliancePage.getValueOnLocationsWithViolationCardAndVerifyInfo("Location");
+            int index = scheduleDMViewPage.getIndexOfColInDMViewTable("Extra Hours");
+            List<Float> extraHours = scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(index));
+            index = scheduleDMViewPage.getIndexOfColInDMViewTable("Late Schedule");
+            List<String> publishStatus = scheduleDMViewPage.getListByColInTimesheetDMView(index);
+            SimpleUtils.assertOnFail("The extra hour count should consistent with publish status count! ", extraHours.size() == publishStatus.size(), false);
             int totalLocationWithViolation = 0;
-            int locationWithViolationCountFromTotalExtraHrs = 0;
-            int locationWithViolationCountFromLateSchedule = 0;
-            for (int i = 0; i < data.size(); i++){
-                if (!(data.get(i) >0)){
-                    flag.add(i);
-                    locationWithViolationCountFromTotalExtraHrs++;
+
+            for (int i = 0; i < extraHours.size(); i++){
+                if (extraHours.get(i) >0 || publishStatus.get(i).equals("Yes")){
+                    totalLocationWithViolation ++;
                 }
             }
-            locationWithViolationCountFromTotalExtraHrs = data.size() - locationWithViolationCountFromTotalExtraHrs;
-            if (flag.size()>0){
-                for (int i = 0; i < flag.size(); i++){
-                    if (dataFromLateScheduleCol.get(i).equals("yes")){
-                        locationWithViolationCountFromLateSchedule++;
-                    }
-                }
-            }
-            totalLocationWithViolation = locationWithViolationCountFromTotalExtraHrs + locationWithViolationCountFromLateSchedule;
-            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!", valuesFromLocationsWithViolationCard.get("LocationsWithViolation") == totalLocationWithViolation, false);
-            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!", valuesFromLocationsWithViolationCard.get("total locations") == totalLocationWithViolation, false);
+
+            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!", valuesFromLocationsWithViolationCard.get("UpperFieldsWithViolations") == totalLocationWithViolation, false);
+            SimpleUtils.assertOnFail("Locations With Violation Card and analytic table are inconsistent!", valuesFromLocationsWithViolationCard.get("TotalUpperFields") == extraHours.size(), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1394,7 +1438,7 @@ public class DMViewTest extends TestBase {
     }
 
     @Owner(owner = "Haya")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify TOP x VIOLATIONS (HRS) on Compliance in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTopViolationsCardInComplianceDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1403,26 +1447,25 @@ public class DMViewTest extends TestBase {
 
         String districtName = dashboardPage.getCurrentDistrict();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
         CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         locationSelectorPage.reSelectDistrict(districtName);
 
         //Navigate to Compliance page.
         timeSheetPage.clickOnComplianceConsoleMenu();
         SimpleUtils.assertOnFail("Compliance Page not loaded Successfully!",compliancePage.isCompliancePageLoaded() , false);
 
-        float topViolationInOvertimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Overtime"))));
-        float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Clopening"))));
-        float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Missed Meal"))));
-        float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Schedule Changed"))));
-        float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(schedulePage.transferStringToFloat(schedulePage.getListByColInTimesheetDMView(schedulePage.getIndexOfColInDMViewTable("Doubletime"))));
+        float topViolationInOvertimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Overtime"))));
+        float topViolationInClopeningCol = compliancePage.getTopOneViolationHrsOrNumOfACol(scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Clopening"))));
+        float topViolationInMissedMealCol = compliancePage.getTopOneViolationHrsOrNumOfACol(scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Missed Meal"))));
+        float topViolationInScheduleChangedCol = compliancePage.getTopOneViolationHrsOrNumOfACol(scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Schedule Changed"))));
+        float topViolationInDoubletimeCol = compliancePage.getTopOneViolationHrsOrNumOfACol(scheduleDMViewPage.transferStringToFloat(scheduleDMViewPage.getListByColInTimesheetDMView(scheduleDMViewPage.getIndexOfColInDMViewTable("Double time"))));
 
 
         if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
             HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
-
-
 
             if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
                 SimpleUtils.assertOnFail("Overtime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Overtime (Hrs)")-topViolationInOvertimeCol)==0, false);
@@ -1440,13 +1483,6 @@ public class DMViewTest extends TestBase {
                 SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime (Hrs)")-topViolationInDoubletimeCol)==0, false);
             }
         }
-        //Validate the content on top violations card.
-
-        try {
-
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
     }
 
     @Owner(owner = "Haya")
@@ -1460,21 +1496,22 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             //Validate user has access to 1 district.
             locationSelectorPage.reSelectDistrict(districtName);
             locationSelectorPage.isDMView();
-            String currentWeek = dashboardPage.getWeekInfoFromDMView();
+            String currentWeek = dashboardPage.getWeekInfoFromUpperfieldView();
 
             //Validate drilling into a store location.
             locationSelectorPage.changeLocation(location);
 
             //Validate navigating back to district view.
             //Validate default date.
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             locationSelectorPage.reSelectDistrict(districtName);
-            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", schedulePage.isScheduleDMView(), false);
+            SimpleUtils.assertOnFail("Schedule DM view page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
             if (currentWeek.toLowerCase().contains(MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n")[MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active")).getText().toLowerCase().split("\n").length-1])) {
                 SimpleUtils.pass("Open Shifts: \"View Schedules\" button is to navigate to current week schedule page");
             } else {
@@ -1484,12 +1521,12 @@ public class DMViewTest extends TestBase {
             //Validate changing date and location.
             dashboardPage.navigateToDashboard();
             locationSelectorPage.changeLocation(location);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab("Schedule");
-            schedulePage.navigateToNextWeek();
-            String weekInfo = schedulePage.getActiveWeekText();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab("Schedule");
+            scheduleCommonPage.navigateToNextWeek();
+            String weekInfo = scheduleCommonPage.getActiveWeekText();
             locationSelectorPage.reSelectDistrict(districtName);
-            SimpleUtils.assertOnFail("Dates are inconsistent after changing date and location!", schedulePage.getActiveWeekText().equalsIgnoreCase(weekInfo), false);
+            SimpleUtils.assertOnFail("Dates are inconsistent after changing date and location!", scheduleCommonPage.getActiveWeekText().equalsIgnoreCase(weekInfo), false);
 
             //Changing district and navigate to Timesheet page(Checked in other script).
             //Verify no timesheet tab in non-TA env.
@@ -1510,8 +1547,10 @@ public class DMViewTest extends TestBase {
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Validate fields name in analytic table.
@@ -1524,34 +1563,34 @@ public class DMViewTest extends TestBase {
             String field6 = "Within 48 Hrs";
             String field7 = "Beyond 48 Hrs";
             String field8 = "Avg. Approval Time";
-            SimpleUtils.assertOnFail(field1 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field1) > 0, false);
-            SimpleUtils.assertOnFail(field2 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field2) > 0, false);
-            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field3) > 0, false);
-            SimpleUtils.assertOnFail(field4 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field4) > 0, false);
-            SimpleUtils.assertOnFail(field5 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field5) > 0, false);
-            SimpleUtils.assertOnFail(field6 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field6) > 0, false);
-            SimpleUtils.assertOnFail(field7 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field7) > 0, false);
-            SimpleUtils.assertOnFail(field8 + " field doesn't show up!", schedulePage.getIndexOfColInDMViewTable(field8) > 0, false);
+            SimpleUtils.assertOnFail(field1 + " field doesn't show up!", scheduleDMViewPage.getIndexOfColInDMViewTable(field1) > 0, false);
+            SimpleUtils.assertOnFail(field2 + " field doesn't show up!", scheduleDMViewPage.getIndexOfColInDMViewTable(field2) > 0, false);
+            SimpleUtils.assertOnFail(field3 + " field doesn't show up!", scheduleDMViewPage.getIndexOfColInDMViewTable(field3) > 0, false);
+            SimpleUtils.assertOnFail(field4 + " field doesn't show up!", scheduleDMViewPage.getIndexOfColInDMViewTable(field4) > 0, false);
+            SimpleUtils.assertOnFail(field5 + " field doesn't show up!", scheduleDMViewPage.getIndexOfColInDMViewTable(field5) > 0, false);
+            SimpleUtils.assertOnFail(field6 + " field doesn't show up!", scheduleDMViewPage.getIndexOfColInDMViewTable(field6) > 0, false);
+            SimpleUtils.assertOnFail(field7 + " field doesn't show up!", scheduleDMViewPage.getIndexOfColInDMViewTable(field7) > 0, false);
+            SimpleUtils.assertOnFail(field8 + " field doesn't show up!", scheduleDMViewPage.getIndexOfColInDMViewTable(field8) > 0, false);
 
             //Validate the field columns can be ordered.
-            schedulePage.verifySortByColForLocationsInDMView(1);
-            schedulePage.verifySortByColForLocationsInDMView(2);
-            schedulePage.verifySortByColForLocationsInDMView(3);
-            schedulePage.verifySortByColForLocationsInDMView(4);
-            schedulePage.verifySortByColForLocationsInDMView(5);
-            schedulePage.verifySortByColForLocationsInDMView(6);
-            schedulePage.verifySortByColForLocationsInDMView(7);
-            schedulePage.verifySortByColForLocationsInDMView(8);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(1);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(2);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(3);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(4);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(5);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(6);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(7);
+            scheduleDMViewPage.verifySortByColForLocationsInDMView(8);
 
             //Validate the data of analytics table for past week.
-            schedulePage.navigateToPreviousWeek();
-            schedulePage.clickSpecificLocationInDMViewAnalyticTable(location);
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(location);
             SimpleUtils.assertOnFail("This is not the Timesheet SM view page for past week!",timeSheetPage.isTimeSheetPageLoaded(), false);
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Validate the data of analytics table for current week.
-            schedulePage.navigateToNextWeek();
-            schedulePage.clickSpecificLocationInDMViewAnalyticTable(location);
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(location);
             SimpleUtils.assertOnFail("This is not the Timesheet SM view page for current!",timeSheetPage.isTimeSheetPageLoaded(), false);
 
         } catch (Exception e) {
@@ -1571,8 +1610,10 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             locationSelectorPage.reSelectDistrict(districtName);
 
             //Validate Controls existing from DM view.
@@ -1593,9 +1634,9 @@ public class DMViewTest extends TestBase {
             }
             timeSheetPage.clickOnComplianceConsoleMenu();
             for (int i = 0; i < weekCount; i++ ){//There should be weekCount next weeks we can navigate to.
-                schedulePage.navigateToNextWeek();
+                scheduleCommonPage.navigateToNextWeek();
             }
-            SimpleUtils.assertOnFail("There shouldn't be another next week can access to!", !schedulePage.hasNextWeek(), false);
+            SimpleUtils.assertOnFail("There shouldn't be another next week can access to!", !scheduleDMViewPage.hasNextWeek(), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1623,7 +1664,11 @@ public class DMViewTest extends TestBase {
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
             dashboardPage.clickOnDashboardConsoleMenu();
 
-            //Validate the Schedule Vs Guidance By Day widget is loaded on dashboard
+            //Try to refresh the Guidance message
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            dashboardPage.clickOnDashboardConsoleMenu();
+            //Validate the Schedule Vs Guidance By Day widget is loaded on dashboard‘
             SimpleUtils.assertOnFail("Schedule Vs Guidance By Day widget loaded fail! ",
                     dashboardPage.isScheduleVsGuidanceByDayWidgetDisplay(), false);
 
@@ -1668,6 +1713,15 @@ public class DMViewTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+        dashboardPage.clickOnDashboardConsoleMenu();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        dashboardPage.clickOnDashboardConsoleMenu();
         String districtName = dashboardPage.getCurrentDistrict();
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.reSelectDistrict(districtName);
@@ -1677,23 +1731,25 @@ public class DMViewTest extends TestBase {
                 dashboardPage.isLocationSummaryWidgetDisplay(), false);
 
         //Validate the content on Location Summary widget display correctly
-        dashboardPage.verifyTheContentOnLocationSummaryWidget();
+        dashboardPage.verifyTheContentOnOrgSummaryWidget(false, true);
 
         //Validate the Hrs Over Or Under Budget On Location Summary Widget
-//        dashboardPage.verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget();  //having a bug: https://legiontech.atlassian.net/browse/SCH-2767
+        dashboardPage.verifyTheHrsOverOrUnderBudgetOnLocationSummaryWidget();
 
         //Validate the hours on Location Summary widget is consistent with the hours on schedule page
         List<String> dataFromLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         List<Float> totalBudgetedScheduledProjectedHour= scheduleDMViewPage.getTheTotalBudgetedScheduledProjectedHourOfScheduleInDMView();
         List<String> locationNumbersFromLocationSummarySmartCard= scheduleDMViewPage.getLocationNumbersFromLocationSummarySmartCard();
         List<String> textOnTheChartInLocationSummarySmartCard= scheduleDMViewPage.getTextFromTheChartInLocationSummarySmartCard();
-        DecimalFormat df1 = new DecimalFormat("###.#");
-        boolean isBudgetedHrsCorrect = dataFromLocationSummaryWidget.get(0).equals(df1.format(totalBudgetedScheduledProjectedHour.get(0)));
-        boolean isScheduledHrsCorrect = dataFromLocationSummaryWidget.get(1).equals(df1.format(totalBudgetedScheduledProjectedHour.get(1)));
-        boolean isProjectedHrsCorrect = dataFromLocationSummaryWidget.get(2).equals(df1.format(totalBudgetedScheduledProjectedHour.get(2)));
+
+        BigDecimal b1 = new BigDecimal(totalBudgetedScheduledProjectedHour.get(0));
+        BigDecimal b2 = new BigDecimal(totalBudgetedScheduledProjectedHour.get(1));
+        boolean isBudgetedHrsCorrect = Float.parseFloat(dataFromLocationSummaryWidget.get(0))
+                - b1.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue() == 0;
+        boolean isScheduledHrsCorrect = Float.parseFloat(dataFromLocationSummaryWidget.get(1)) -
+                b2.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue() == 0;
         boolean isProjectedWithinBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(3).equals(locationNumbersFromLocationSummarySmartCard.get(0));
         boolean isProjectedOverBudgetLocationsCorrect = dataFromLocationSummaryWidget.get(4).equals(locationNumbersFromLocationSummarySmartCard.get(1));
         boolean isHrsOfUnderOrCoverBudgetCorrect = false;
@@ -1705,8 +1761,7 @@ public class DMViewTest extends TestBase {
                     equals(textOnTheChartInLocationSummarySmartCard.get(4).split(" ")[0]);
 
         SimpleUtils.assertOnFail("The hours on Location Summary widget is inconsistent with the hours on schedule page! ",
-                isBudgetedHrsCorrect && isScheduledHrsCorrect
-                && isProjectedHrsCorrect && isProjectedWithinBudgetLocationsCorrect
+                isBudgetedHrsCorrect && isScheduledHrsCorrect && isProjectedWithinBudgetLocationsCorrect
                 && isProjectedOverBudgetLocationsCorrect&&isHrsOfUnderOrCoverBudgetCorrect, false);
 
     }
@@ -1731,16 +1786,17 @@ public class DMViewTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Validate the smart card and schedule table header for previous week
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             scheduleDMViewPage.verifySchedulesTableHeaderNames(true, false);
-            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false);
-            schedulePage.navigateToPreviousWeek();
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true,false);
+            scheduleCommonPage.navigateToPreviousWeek();
             scheduleDMViewPage.verifySchedulesTableHeaderNames(true, true);
-            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true,true);
 
             /*
             *  comment it because bug: https://legiontech.atlassian.net/browse/LEG-7198
@@ -1749,14 +1805,14 @@ public class DMViewTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Validate the smart card and schedule table header for current week
             scheduleDMViewPage.verifySchedulesTableHeaderNames(false, false);
-            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false);
-            schedulePage.navigateToPreviousWeek();
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false, false);
+            scheduleCommonPage.navigateToPreviousWeek();
             scheduleDMViewPage.verifySchedulesTableHeaderNames(false, true);
-            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true);
+            scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false, true);
             *
             *
             *
@@ -1781,8 +1837,8 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 
@@ -1792,14 +1848,14 @@ public class DMViewTest extends TestBase {
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Current Week");
 
             //Validate the schedule status and hours on schedule list
-//            schedulePage.navigateToNextWeek();
+//            scheduleCommonPage.navigateToNextWeek();
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Next Week");        //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Next Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Next Week");
 
             //Validate the schedule status and hours on schedule list
-//            schedulePage.navigateToPreviousWeek();
-//            schedulePage.navigateToPreviousWeek();
+//            scheduleCommonPage.navigateToPreviousWeek();
+//            scheduleCommonPage.navigateToPreviousWeek();
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Previous Week");        //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
@@ -1824,8 +1880,8 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 
@@ -1835,14 +1891,14 @@ public class DMViewTest extends TestBase {
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Current Week");
 
             //Validate the schedule status and hours on schedule list
-//            schedulePage.navigateToNextWeek();
+//            scheduleCommonPage.navigateToNextWeek();
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Next Week");
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Next Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Next Week");
 
             //Validate the schedule status and hours on schedule list
-//            schedulePage.navigateToPreviousWeek();
-//            schedulePage.navigateToPreviousWeek();
+//            scheduleCommonPage.navigateToPreviousWeek();
+//            scheduleCommonPage.navigateToPreviousWeek();
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Previous Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Previous Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Previous Week"); //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
@@ -1867,8 +1923,8 @@ public class DMViewTest extends TestBase {
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.reSelectDistrict(districtName);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 
@@ -1878,14 +1934,14 @@ public class DMViewTest extends TestBase {
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "In Progress", "Current Week");       // comment it because bug: https://legiontech.atlassian.net/browse/SCH-1653
 
             //Validate the schedule status and hours on schedule list
-//            schedulePage.navigateToNextWeek();
+//            scheduleCommonPage.navigateToNextWeek();
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "Published", "Next Week");
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "Not Started", "Next Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "In Progress", "Next Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1653
 
             //Validate the schedule status and hours on schedule list
-//            schedulePage.navigateToPreviousWeek();
-//            schedulePage.navigateToPreviousWeek();
+//            scheduleCommonPage.navigateToPreviousWeek();
+//            scheduleCommonPage.navigateToPreviousWeek();
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "Published", "Previous Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "Not Started", "Previous Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
 //            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, true, "In Progress", "Previous Week"); //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482

@@ -116,13 +116,13 @@ public class LocationsTest extends TestBase {
 //            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 //            locationSelectorPage.changeDistrict(locationInfoDetails.get(0).get("locationDistrict"));
 //            locationSelectorPage.changeLocation(locationInfoDetails.get(0).get("locationName"));
-//            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-//            schedulePage.clickOnScheduleConsoleMenuItem();
-//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-//            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+//
+//            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
 //            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
-//                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
+//                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()) , false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -736,27 +736,31 @@ public class LocationsTest extends TestBase {
 
             List<String> wfsGroup = new ArrayList<>();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            schedulePage.navigateToNextWeek();
-            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.clickOnDayViewAddNewShiftButton();
-                schedulePage.customizeNewShiftPage();
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
                 } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
                 }
-                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-                schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("aglae");
-                if (!schedulePage.verifyWFSFunction()) {
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByName("aglae");
+                if (!shiftOperatePage.verifyWFSFunction()) {
                     //to check WFS group exist or not
                     LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                     locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
@@ -795,19 +799,19 @@ public class LocationsTest extends TestBase {
                     SimpleUtils.pass("Workforce sharing function work well");
 
             } else {
-                schedulePage.createScheduleForNonDGFlowNewUI();
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.clickOnDayViewAddNewShiftButton();
-                schedulePage.customizeNewShiftPage();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
                 } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
                 }
-                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-                schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("Aglae");
-                if (!schedulePage.verifyWFSFunction()) {
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByName("Aglae");
+                if (!shiftOperatePage.verifyWFSFunction()) {
                     SimpleUtils.fail("Workforce sharing function work failed",false);
                 }else
                     SimpleUtils.pass("Workforce sharing function work well");
@@ -835,27 +839,31 @@ public class LocationsTest extends TestBase {
 
             List<String> wfsGroup = new ArrayList<>();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            schedulePage.navigateToNextWeek();
-            boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.clickOnDayViewAddNewShiftButton();
-                schedulePage.customizeNewShiftPage();
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
                 } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
                 }
-                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-                schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("a");
-                if (!schedulePage.verifyWFSFunction()) {
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByName("Alysha");
+                if (!shiftOperatePage.verifyWFSFunction()) {
                     //to check WFS group exist or not
                     LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                     locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
@@ -894,19 +902,19 @@ public class LocationsTest extends TestBase {
                     SimpleUtils.pass("Workforce sharing function work well");
 
             } else {
-                schedulePage.createScheduleForNonDGFlowNewUI();
-                schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                schedulePage.clickOnDayViewAddNewShiftButton();
-                schedulePage.customizeNewShiftPage();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
                 if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
                 } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    schedulePage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
                 }
-                schedulePage.clickRadioBtnStaffingOption(ScheduleNewUITest.staffingOption.ManualShift.getValue());
-                schedulePage.clickOnCreateOrNextBtn();
-                schedulePage.searchTeamMemberByName("a");
-                if (!schedulePage.verifyWFSFunction()) {
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByName("Alysha");
+                if (!shiftOperatePage.verifyWFSFunction()) {
                     SimpleUtils.fail("Workforce sharing function work failed",false);
                 }else
                     SimpleUtils.pass("Workforce sharing function work well");

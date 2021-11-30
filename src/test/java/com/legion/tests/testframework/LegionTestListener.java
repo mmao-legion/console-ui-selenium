@@ -41,7 +41,13 @@ import static com.legion.utils.MyThreadLocal.*;
 			// TODO Auto-generated method stub
 //			SimpleUtils.addTestResultIntoTestRail(5,result.getThrowable().toString());
 			ExtentTestManager.getTest().log(Status.FAIL, MarkupHelper.createLabel("Test case Failed:",ExtentColor.RED));
-			String targetFile = ScreenshotManager.takeScreenShot();
+			String targetFile = "";
+			if (MyThreadLocal.getDriver()!=null){
+				targetFile = ScreenshotManager.takeScreenShot();
+			} else {
+				System.out.println("Session is null!");
+			}
+
 			String screenshotLoc = propertyMap.get("Screenshot_Path") + File.separator + targetFile;
 			try {
 				ExtentTestManager.getTest().addScreenCaptureFromPath("<a href='"+screenshotLoc+ "'>" +"Screenshots"+"</a>");

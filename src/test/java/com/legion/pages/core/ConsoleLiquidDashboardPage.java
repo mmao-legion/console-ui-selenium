@@ -115,15 +115,16 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                         } else {
                             scrollToElement(widgets.get(i));
                             click(widgets.get(i).findElement(By.cssSelector(".slider")));
-                            SimpleUtils.pass(widget+" widget's already switched on!");
+                            SimpleUtils.pass(widget+" widget's switched on!");
+                            waitForSeconds(2);
                         }
                         break;
                     }
                 }
                 //return to edit dashboard
-                if (isElementLoaded(editDashboardBtn,5)){
+                if (isElementLoaded(editDashboardBtn,10)){
                     click(editDashboardBtn);
-                    SimpleUtils.assertOnFail(widget+" widget is not loaded!",verifyIfSpecificWidgetDisplayed(widget), true);
+                    SimpleUtils.assertOnFail(widget+" widget is not loaded!",verifyIfSpecificWidgetDisplayed(widget), false);
                 } else {
                     SimpleUtils.fail("Edit Dashboard button fail to load!",true);
                 }
@@ -151,7 +152,8 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                         } else {
                             scrollToElement(widgets.get(i));
                             clickTheElement(widgets.get(i).findElement(By.cssSelector(".slider")));
-                            SimpleUtils.pass(widget+" widget's already switched off!");
+                            SimpleUtils.pass(widget+" widget's switched off!");
+                            waitForSeconds(2);
                         }
                         break;
                     }
@@ -162,7 +164,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                     if (!verifyIfSpecificWidgetDisplayed(widget)){
                         flag = true;
                     }
-                    SimpleUtils.assertOnFail(widget+"widget is loaded which is not expected!",flag, true);
+                    SimpleUtils.assertOnFail(widget+"widget is loaded which is not expected!",flag, false);
                 } else {
                     SimpleUtils.fail("Edit Dashboard button fail to load!",true);
                 }
@@ -177,28 +179,25 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     //parameter option: helpful links and so on
     private boolean verifyIfSpecificWidgetDisplayed(String widgetTitle) {
         waitForSeconds(10);
-        if (areListElementVisible(widgetsInDashboardPage,20)){
+        boolean result = false;
+        if (areListElementVisible(widgetsInDashboardPage,30)){
             for (WebElement widgetTemp : widgetsInDashboardPage){
-                try {
-                    if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))) {
-                        if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")) {
-                            if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        } else {
-                            return true;
+                String s = widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText();
+                if (widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains(widgetsNameWrapper(widgetTitle))) {
+                    if (widgetsNameWrapper(widgetTitle).equalsIgnoreCase("timesheet approval")) {
+                        if (!widgetTemp.findElement(By.cssSelector(".dms-box-title")).getText().toLowerCase().contains("timesheet approval status")) {
+                            result =  true;
                         }
+                    } else {
+                        result =  true;
                     }
-                } catch (Exception e) {
-                    // Do nothing
+                    break;
                 }
             }
         } else {
             SimpleUtils.fail("Widgets in Dashboard page fail to load!",false);
         }
-        return false;
+        return result;
     }
 
     @Override
@@ -220,7 +219,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
                         }
                     } else {
                         scrollToElement(widgetTemp);
-                        click(widgetTemp.findElement(By.cssSelector(".boxclose")));
+                        clickTheElement(widgetTemp.findElement(By.cssSelector(".boxclose")));
                         if (!verifyIfSpecificWidgetDisplayed(widgetTitle)){
                             flag = true;
                         }
@@ -329,22 +328,20 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
 
 
     //get widget name in edit page
-    private String widgetsNameWrapper(String widgetTitleInManagePage) throws Exception {
+    private String widgetsNameWrapper(String widgetTitleInManagePage) {
         if (widgetTitleInManagePage.contains("starting soon")){
             return "starting";
         } else if (widgetTitleInManagePage.contains("timesheet approval rate")){
             return "timesheet approval";
         } else if (widgetTitleInManagePage.contains("compliance violation")){
             return "compliance violation";
-        } else if (widgetTitleInManagePage.contains("today")){
-            return "today";
         }
         return widgetTitleInManagePage;
     }
 
 
     // Added by Nora
-    @FindBy(css = ".gridster-item")
+    @FindBy(xpath = "//*[contains(@class, \"gridster-item\")]")
     private List<WebElement> widgets;
     @FindBy(css = "div.background-current-week-legend-table")
     private WebElement currentWeekOnSchedules;
@@ -486,14 +483,15 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     public void clickOnLinkByWidgetNameAndLinkName(String widgetName, String linkName) throws Exception {
         try {
             if (areListElementVisible(widgets, 10)) {
-                for (WebElement widget : widgets) {
+                for (int i =0; i<widgets.size(); i++) {
                     // wait for all the widget content loaded Successfully
-                    waitForSeconds(5);
-                    WebElement widgetTitle = widget.findElement(By.className("dms-box-title"));
+                    waitForSeconds(2);
+                    WebElement widgetTitle = getDriver().findElements(By.xpath("//*[contains(@class, \"gridster-item\")]//*[contains(@class, \"dms-box-title\")]")).get(i);
+                    System.out.println(widgetTitle.getText());
                     if (widgetTitle != null && (widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)) ||
                             widgetTitle.getText().toLowerCase().trim().contains(widgetsNameWrapper(widgetName)))) {
                         try {
-                            WebElement link = widget.findElement(By.className("dms-action-link"));
+                            WebElement link = widgets.get(i).findElement(By.cssSelector(".dms-action-link"));
                             if (link != null && linkName.toLowerCase().equals(link.getText().toLowerCase().trim())) {
                                 clickTheElement(link);
                                 SimpleUtils.pass("Click on: \"" + linkName + "\" on Widget: \"" + widgetName + "\" Successfully!");
@@ -844,14 +842,15 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         }
     }
 
-    @FindBy (css = ".dms-number-x-large")
+    @FindBy (css = ".MuiBox-root.jss10 div div div div div div")
     private List<WebElement> dataOnComplianceWidget;
     @Override
     public List<String> getDataOnComplianceViolationWidget() throws Exception {
         List<String> resultList= new ArrayList<String>();
         if (areListElementVisible(dataOnComplianceWidget,10)){
             for (int i=0;i<dataOnComplianceWidget.size();i++){
-                resultList.add(dataOnComplianceWidget.get(i).getText());
+                String numberOnComplianceWidget = dataOnComplianceWidget.get(i).findElement(By.cssSelector("div")).getText();
+                resultList.add(numberOnComplianceWidget);
             }
         } else {
             SimpleUtils.fail("data on Compliance violation widget fail to load!",true);

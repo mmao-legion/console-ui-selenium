@@ -16,6 +16,7 @@ import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.swing.text.StyledEditorKit;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -308,7 +309,6 @@ public class OnboardingTest extends TestBase {
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-        OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
 
         // Go to Team page, to create the new user for onboarding
@@ -367,5 +367,234 @@ public class OnboardingTest extends TestBase {
         locationSelectorPage.changeLocation(currentLocation);
         boolean isLoginDone = loginPage.isLoginDone();
         loginPage.verifyLoginDone(isLoginDone, currentLocation);
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate TM onboarding with WFSG enabled and toggle on")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTMOnboardingWithWFSGEnabledAndToggleOnAsInternalAdmin(String browser, String username, String password, String location){
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            verifyTMOnboardingWithWFSGEnabledAndToggleOnOrOff("Yes", true);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate TM onboarding with WFSG enabled and toggle off")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTMOnboardingWithWFSGEnabledAndToggleOffAsInternalAdmin(String browser, String username, String password, String location){
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            verifyTMOnboardingWithWFSGEnabledAndToggleOnOrOff("Yes", false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate TM onboarding with WFSG disabled")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTMOnboardingWithWFSGDisabledAsInternalAdmin(String browser, String username, String password, String location){
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            verifyTMOnboardingWithWFSGEnabledAndToggleOnOrOff("No", false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    private void verifyTMOnboardingWithWFSGEnabledAndToggleOnOrOff (String setWFS, boolean enableWorkLocationOrNot) throws Exception {
+        //Verify WFSG can be enabled or disable
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.setWFS(setWFS);
+
+        //Check if there is the url set under Controls -> Compliance -> Company Mobile Policy
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        controlsNewUIPage.clickOnControlsComplianceSection();
+        SimpleUtils.assertOnFail("Controls: Compliance page not loaded Successfully!", controlsNewUIPage.isControlsComplianceLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        hasCompanyMobilePolicyURL = controlsNewUIPage.hasCompanyMobilePolicyURLOrNot();
+
+        OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
+        ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        //Verify TM can be invited
+        createNewUserAndInvite();
+        String lastName = MyThreadLocal.getLastNameForNewHire();
+        onboardingPage.openOnboardingPage(invitationCode, firstName, false, "KendraScott2");
+        onboardingPage.verifyTheContentOfCreateAccountPage(firstName, invitationCode);
+        onboardingPage.verifyLastName(lastName);
+        SimpleUtils.assertOnFail("Create Account page failed to load after verifying last name!",
+                onboardingPage.isCreateAccountPageLoadedAfterVerifyingLastName(), false);
+        onboardingPage.createAccountForNewHire(newPassword);
+        // Verify "Is this email correct?" dialog pops up
+        onboardingPage.verifyIsEmailCorrectDialogPopup();
+        // Click the YES button On 'Is Email Correct' Dialog
+        onboardingPage.clickYesBtnOnIsEmailCorrectDialog();
+        // Click the Continue button on Important Notice from your Employer page
+        if (hasCompanyMobilePolicyURL) {
+            onboardingPage.clickOnButtonByLabel(continueLabel);
+        }
+        // Click the Next button on Verify Profile page
+        onboardingPage.clickOnButtonByLabel(nextLabel);
+
+        //Click the Next on Set Availability page
+        onboardingPage.clickOnNextButtonOnSetAvailabilityPage();
+
+        if (setWFS.equalsIgnoreCase("Yes")) {
+            //Verify the content on Work Locations page
+            onboardingPage.verifyWorkLocationsPageLoaded();
+            if (!enableWorkLocationOrNot) {
+                onboardingPage.setOtherPreferredLocationsToggleOnWorkLocationsPage("No");
+            }
+
+            //Verify the functionality of Back button
+            onboardingPage.clickOnBackButtonOnWorkLocationsPage();
+            onboardingPage.verifySetAvailabilityPageLoaded();
+            onboardingPage.clickOnNextButtonOnSetAvailabilityPage();
+
+            //Verify the functionality of Next button
+            onboardingPage.clickOnNextButtonOnWorkLocationsPage();
+        }
+
+        onboardingPage.verifyThatsItPageLoaded();
+
+        onboardingPage.clickOnDoneOnThatsItPage();
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.verifyNewTermsOfServicePopUp();
+
+        //Check other preferred location from preferences page
+        profileNewUIPage.clickOnUserProfileImage();
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
+        HashMap<String, String>  shiftPreferenceData = profileNewUIPage.getMyShiftPreferenceData();
+        String otherPreferredLocationsStatus = shiftPreferenceData.get("otherPreferredLocations");
+        if (enableWorkLocationOrNot) {
+            SimpleUtils.assertOnFail("The other Preferred Locations should display as Yes, but it display as: " + otherPreferredLocationsStatus,
+                    otherPreferredLocationsStatus.equalsIgnoreCase("yes"), false);
+        } else
+            SimpleUtils.assertOnFail("The other Preferred Locations should display as No, but it display as: " + otherPreferredLocationsStatus,
+                    otherPreferredLocationsStatus.equalsIgnoreCase("no"), false);
+    }
+
+
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate TM onboarding Work Locations steps on OP site")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTMOnboardingWorkLocationsStepsOnOPSiteAsInternalAdmin(String browser, String username, String password, String location){
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Switch to OP side to get the setting for current location
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(currentLocation);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(currentLocation), false);
+            locationsPage.clickOnLocationInLocationResult(currentLocation);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            //Get WFSG status
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));
+            boolean wfsStatus = configurationPage.isWFSEnabled();
+            //Check if there is the url set under Controls -> Compliance -> Company Mobile Policy
+            configurationPage.goToConfigurationPage();
+            controlsNewUIPage.clickOnControlsComplianceSection();
+            cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Compliance"));
+            hasCompanyMobilePolicyURL = configurationPage.hasCompanyMobilePolicyURLOrNotOnOP();
+            switchToConsoleWindow();
+
+            OnboardingPage onboardingPage = pageFactory.createOnboardingPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            //Verify TM can be invited
+            createNewUserAndInvite();
+            String lastName = MyThreadLocal.getLastNameForNewHire();
+            onboardingPage.openOnboardingPage(invitationCode, firstName, false, "Cinemark-Wkdy");
+            onboardingPage.verifyTheContentOfCreateAccountPage(firstName, invitationCode);
+            onboardingPage.verifyLastName(lastName);
+            SimpleUtils.assertOnFail("Create Account page failed to load after verifying last name!",
+                    onboardingPage.isCreateAccountPageLoadedAfterVerifyingLastName(), false);
+            onboardingPage.createAccountForNewHire(newPassword);
+            // Verify "Is this email correct?" dialog pops up
+            onboardingPage.verifyIsEmailCorrectDialogPopup();
+            // Click the YES button On 'Is Email Correct' Dialog
+            onboardingPage.clickYesBtnOnIsEmailCorrectDialog();
+            // Click the Continue button on Important Notice from your Employer page
+            if (hasCompanyMobilePolicyURL) {
+                onboardingPage.clickOnButtonByLabel(continueLabel);
+            }
+            // Click the Next button on Verify Profile page
+            onboardingPage.clickOnButtonByLabel(nextLabel);
+
+            //Click the Next on Set Availability page
+            onboardingPage.clickOnNextButtonOnSetAvailabilityPage();
+
+            if (wfsStatus) {
+                //Verify the content on Work Locations page
+                onboardingPage.verifyWorkLocationsPageLoaded();
+
+                //Verify the functionality of Back button
+                onboardingPage.clickOnBackButtonOnWorkLocationsPage();
+                onboardingPage.verifySetAvailabilityPageLoaded();
+                onboardingPage.clickOnNextButtonOnSetAvailabilityPage();
+
+                //Verify the functionality of Next button
+                onboardingPage.clickOnNextButtonOnWorkLocationsPage();
+            }
+
+            onboardingPage.verifyThatsItPageLoaded();
+
+            onboardingPage.clickOnDoneOnThatsItPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.verifyNewTermsOfServicePopUp();
+
+            //Check other preferred location from preferences page
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
+            Thread.sleep(3000);
+            HashMap<String, String>  shiftPreferenceData = profileNewUIPage.getMyShiftPreferenceData();
+            String otherPreferredLocationsStatus = shiftPreferenceData.get("otherPreferredLocations");
+            if (wfsStatus) {
+                SimpleUtils.assertOnFail("The other Preferred Locations should display as Yes, but it display as: " + otherPreferredLocationsStatus,
+                        otherPreferredLocationsStatus.equalsIgnoreCase("yes"), false);
+            } else
+                SimpleUtils.assertOnFail("The other Preferred Locations should display as No, but it display as: " + otherPreferredLocationsStatus,
+                        otherPreferredLocationsStatus.equalsIgnoreCase("no"), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 }

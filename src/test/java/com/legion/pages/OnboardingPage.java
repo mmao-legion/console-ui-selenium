@@ -19,4 +19,8 @@ public interface OnboardingPage {
     public void clickOnDoneOnThatsItPage() throws Exception;
     public void verifyTheContentOfLoginToYourAccountPage() throws Exception;
     public void verifyRehireLoginToPreviousCredential(String username, String password) throws Exception;
+    public void verifyWorkLocationsPageLoaded() throws Exception;
+    public void clickOnNextButtonOnWorkLocationsPage() throws Exception;
+    public void clickOnBackButtonOnWorkLocationsPage() throws Exception;
+    public void setOtherPreferredLocationsToggleOnWorkLocationsPage(String yesOrNo) throws Exception;
 }
