@@ -14,17 +14,17 @@
         <classes>
             <class name="com.legion.tests.core.OpsPortal.LocationsTest">
                 <methods>
-                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
-                    <include name="verifyCreateMockLocationAndNavigate" />
-                    <include name="verifyCreateNSOLocationAndNavigate" />
-                    <include name="verifyDisableEnableLocationFunction" />
+                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigateAsInternalAdminForUpperFieldTile" />
+                    <include name="verifyCreateMockLocationAndNavigateAsInternalAdminForUpperFieldTile" />
+                    <include name="verifyCreateNSOLocationAndNavigateAsInternalAdminForUpperFieldTile" />
+                    <include name="verifyDisableEnableLocationFunctionAsInternalAdminForUpperFieldTile" />
                     <!--                    <include name="verifyImportLocationDistrict" />-->
-                    <include name="verifyExportLocationDistrict" />
+                    <include name="verifyExportLocationDistrictAsInternalAdminForUpperFieldTile" />
 
-                    <include name="verifyMSLocationGroupFunctionForRegular" />
-                    <include name="verifyChangeMSToP2P" />
-                    <include name="verifyP2PLocationGroupFunctionForRegular" />
-                    <include name="verifyChangeP2PToMS" />
+                    <include name="verifyMSLocationGroupFunctionForRegularAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeMSToP2PAsInternalAdminForLocationGroup" />
+                    <include name="verifyP2PLocationGroupFunctionForRegularAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeP2PToMSAsInternalAdminForLocationGroup" />
 
                     <!--                    <include name="verifyCreateMSLocationGroupWithRegularTypeFunction" />-->
                     <!--                    <include name="verifyUpdateMSLocationGroupDistrictFunction" />-->
@@ -36,29 +36,29 @@
                     <!--                    <include name="verifyDisableEnableParentChildLocationInLGP2P" />-->
 
 
-                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />
-                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />
-                    <include name="verifyNoLocationGroupSettingForMock" />
+                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunctionAsInternalAdminForLocationGroup" />
+                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunctionAsInternalAdminForLocationGroup" />
+                    <include name="verifyNoLocationGroupSettingForMockAsInternalAdminForLocationGroup" />
 
-                    <include name="verifyChangeNoneLocationToChild" />
-                    <include name="verifyChangeNoneLocationToP2PParent" />
-                    <include name="verifyChangeNoneLocationToMSParent" />
+                    <include name="verifyChangeNoneLocationToChildAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeNoneLocationToP2PParentAsInternalAdminForLocationGroup" />
+                    <include name="verifyChangeNoneLocationToMSParentAsInternalAdminForLocationGroup" />
                     <!--                    <include name="verifyAddNewDistricBtnAsInternalAdmin" />-->
 
 
 
                     <!--                    <include name="verifyChangeMSChildLocationToNoneFunction" />-->
                     <!--                    <include name="verifyChangeMSParentLocationToNoneFunction" />-->
-                    <include name="verifyChangeMSLocationsToNoneFunction" />
-                    <include name="verifyChangeP2PLocationsToNoneFunction" />
+<!--                    <include name="verifyChangeMSLocationsToNoneFunction" />-->
+<!--                    <include name="verifyChangeP2PLocationsToNoneFunction" />-->
                     <!--                    <include name="verifyChangeP2PParentLocationToNoneFunction" />-->
                     <!--                    <include name="verifyChangeP2PParentLocationToNoneFunction" />-->
 
                     <!--                    District test cases-->
-                    <include name="verifyDistrictListPageLoading" />
-                    <include name="verifySearchDistrictFunction" />
+<!--                    <include name="verifyDistrictListPageLoading" />-->
+<!--                    <include name="verifySearchDistrictFunction" />-->
                     <!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
-                    <include name="verifyDisableEnableDistrictFunction" />
+<!--                    <include name="verifyDisableEnableDistrictFunction" />-->
                 </methods>
             </class>
         </classes>
@@ -68,10 +68,10 @@
         <classes>
             <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest">
                 <methods>
-                    <include name="verifyLocationProfilePageInControls" />
-                    <include name="verifyManagerLocationForOneUserInControlsInControls" />
-                    <!--                    <include name="verifyLocationListFunctionInTimesheet" />-->
-                    <!--                    <include name="verifyLegionBasicNavigationFunctionIn" />-->
+                    <include name="verifyLocationProfilePageInControlsAsInternalAdminForNewNavigationFlow" />
+                    <include name="verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow" />
+                    <!--                    <include name="verifyLocationListFunctionInTimesheetAsInternalAdminForNewNavigationFlow" />-->
+                    <!--                    <include name="verifyLegionBasicNavigationFunctionAsLegionBasicUser" />-->
                     <include name="verifyDashboardViewAsInternalAdmin" />
 <!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
 <!--                    <include name="verifyDashboardViewAsStoreManager" />-->
@@ -87,12 +87,12 @@
         <classes>
             <class name="com.legion.tests.core.OpsPortal.JobTest">
                 <methods>
-                    <include name="verifyJobLandingPage" />
-                    <include name="verifyJobSearchFunction" />
-<!--                    <include name="verifyCreateScheduleJobFunction" />-->
-                    <include name="verifyCheckJobDetailsFunction" />
-                    <include name="verifyCopyStopResumeAndArchiveJobFunctionFunction" />
-                    <include name="verifyFilterFunction" />
+                    <include name="verifyJobLandingPageAsInternalAdminForJob" />
+                    <include name="verifyJobSearchFunctionAsInternalAdminForJob" />
+<!--                    <include name="verifyCreateScheduleJobFunctionAsInternalAdminForJob" />-->
+                    <include name="verifyCheckJobDetailsFunctionAsInternalAdminForJob" />
+                    <include name="verifyCopyStopResumeAndArchiveJobFunctionFunctionAsInternalAdminForJob" />
+                    <include name="verifyFilterFunctionAsInternalAdminForJob" />
 
 
                 </methods>
@@ -104,23 +104,23 @@
         <classes>
             <class name="com.legion.tests.core.OpsPortal.ConfigurationTest">
                 <methods>
-                    <include name="verifyCreateEachTemplateWithDynamicGroupAsAInternalAdmin"/>
-                    <include name="verifyUserCanOpenEachTypeTemplate"/>
-                    <include name="verifyNewAdvancedStaffingRulePage"/>
-                    <include name="verifyCheckBoxOfDaysOfWeek"/>
-                    <include name="verifyInputFormulaForDaysOfWeek"/>
-                    <include name="verifyTimeOfDayStartSection"/>
-                    <include name="verifyTimeOfDayDuringSection"/>
-                    <include name="verifyTimeOfDayEndSection"/>
-                    <include name="verifyTimeOfDayFormulaSection"/>
-                    <include name="verifyMealAndRestBreaks"/>
-                    <include name="verifyNumberOfShifts"/>
-                    <include name="verifyBadgesOfAdvanceStaffingRules"/>
-                    <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRules"/>
-                    <include name="verifySaveAndCancelButtonOfAdvanceStaffingRules"/>
-                    <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRules"/>
-                    <include name="verifyCreateAllTypeTemplate"/>
-                    <include name="verifyAdvancedStaffingRulesShowWell"/>
+                    <include name="verifyCreateEachTemplateWithDynamicGroupAsInternalAdminForConfiguration"/>
+                    <include name="verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration"/>
+                    <include name="verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration"/>
+                    <include name="verifyCheckBoxOfDaysOfWeekAsInternalAdminForConfiguration"/>
+                    <include name="verifyInputFormulaForDaysOfWeekAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayStartSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayDuringSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayEndSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyTimeOfDayFormulaSectionAsInternalAdminForConfiguration"/>
+                    <include name="verifyMealAndRestBreaksAsInternalAdminForConfiguration"/>
+                    <include name="verifyNumberOfShiftsAsInternalAdminForConfiguration"/>
+                    <include name="verifyBadgesOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifySaveAndCancelButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                    <include name="verifyCreateAllTypeTemplateAsInternalAdminForConfiguration"/>
+                    <include name="verifyAdvancedStaffingRulesShowWellAsInternalAdminForConfiguration"/>
                 </methods>
             </class>
         </classes>
