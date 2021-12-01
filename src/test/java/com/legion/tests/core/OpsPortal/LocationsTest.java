@@ -442,9 +442,11 @@ public class LocationsTest extends TestBase {
 
         try{
 
-            String upperfieldsName = "Level:Region";
+            String upperfieldsName = "RegionNoTouch";
             String searchChara = "re";
             int index = 1;
+            String districtLevel = "District";
+            String regionLevel = "Region";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -460,11 +462,12 @@ public class LocationsTest extends TestBase {
             locationsPage.goToUpperFieldsPage();
 
             //update upperfield
-            String updateUpperfield = locationsPage.updateUpperfield(upperfieldsName, upperfieldsName,  searchChara, index);
+            String updateUpperfield = locationsPage.updateUpperfield(upperfieldsName, upperfieldsName,  searchChara, index, districtLevel);
 
             ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(updateUpperfield);
             if (upperfieldInfo.get(0).get("upperfieldLevel").equalsIgnoreCase("District")) {
                 SimpleUtils.pass("Upperfield update successfully");
+                locationsPage.updateUpperfield(updateUpperfield, updateUpperfield,  searchChara, index, regionLevel);
             }else
                 SimpleUtils.fail("Upperfield update failed",false);
 

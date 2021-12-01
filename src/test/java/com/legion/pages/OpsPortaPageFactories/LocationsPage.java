@@ -100,7 +100,7 @@ public interface LocationsPage {
 
     public void addNewDistrict(String districtName, String districtId,String searchChara,int index) throws Exception;
 
-    public String updateUpperfield(String districtName, String districtId, String searchChara, int index) throws Exception;
+    public String updateUpperfield(String districtName, String districtId, String searchChara, int index, String level) throws Exception;
 
     public ArrayList<HashMap<String, String>> getUpperfieldsInfo(String districtName);
 
