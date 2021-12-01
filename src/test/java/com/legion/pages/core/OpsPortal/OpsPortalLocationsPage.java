@@ -8,9 +8,8 @@ import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -1674,8 +1673,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 		searchUpperFields(upperfieldsName);
 		if (upperfieldRows.size() > 0) {
-			List<WebElement> districtDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
-			click(districtDetailsLinks.get(0));
+			clickOnTheEnabledUpperfield();
 			click(editUpperfieldBtn);
 			selectByVisibleText(levelDropDownList, "District");
 			if (isElementEnabled(upperfieldLevelChangeWin, 10)) {
@@ -1719,6 +1717,33 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("No search result", true);
 
 		return "FromRegionToDistrict" + currentTime;
+	}
+
+	private void clickOnTheEnabledUpperfield() throws Exception {
+		boolean isFound = false;
+		if (areListElementVisible(upperfieldRows, 5) && upperfieldRows.size() > 0) {
+			for (WebElement row : upperfieldRows) {
+				WebElement status = row.findElement(By.tagName("lg-eg-status"));
+				WebElement upperfieldName = row.findElement(By.cssSelector("button[type='button']"));
+				if (status.getText().equalsIgnoreCase("ENABLED")) {
+					isFound = true;
+					clickTheElement(upperfieldName);
+					break;
+				}
+			}
+			if (!isFound) {
+				try {
+					if (isElementLoaded(pageRightBtnInDistrict, 5)) {
+						clickTheElement(pageRightBtnInDistrict);
+						clickOnTheEnabledUpperfield();
+					}
+				} catch (NoSuchElementException | TimeoutException te) {
+					SimpleUtils.fail("There is no results in Upperfield list!", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("There is no results in Upperfield list!", false);
+		}
 	}
 
 
