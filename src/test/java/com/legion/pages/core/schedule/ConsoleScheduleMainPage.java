@@ -1291,6 +1291,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                     && isElementEnabled(groupByWorkRole,3)
                     && isElementEnabled(groupByTM,3)
                     && isElementLoaded(groupByJobTitle,3)
+                    && isGroupByDayPartsLoaded()
                     && (isLocationGroup? isElementLoaded(groupByLocation, 5):true))
                 if(isLocationGroup){
                     SimpleUtils.pass("In Week view: 'Group by All' filter have 5 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title 5 Group by location");

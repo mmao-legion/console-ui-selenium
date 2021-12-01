@@ -752,7 +752,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
     }
 
 
-    private void changeConvertToOpenShiftsSettings(String option, String location) throws Exception {
+    public void changeConvertToOpenShiftsSettings(String option, String location) throws Exception {
         if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();

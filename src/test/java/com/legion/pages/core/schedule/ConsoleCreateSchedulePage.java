@@ -1593,4 +1593,76 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         } else
             SimpleUtils.fail("Select All Shift Assignment loaded fail! ", false);
     }
+
+
+    @FindBy (css = "[value=\"config.createAsOpenShifts\"] span")
+    private WebElement onlyCopyShiftsSwitch;
+    @FindBy (xpath = "//div[contains(text(),'Only copy shifts')]")
+    private WebElement onlyCopyShiftsSwitchMessage;
+    @FindBy (css = "[data-tootik=\"Option to copy assignments from selected week based on work roles\"]")
+    private WebElement onlyCopyShiftsSwitchTooltip;
+    @FindBy (xpath = "//div[contains(text(),'Only copy partial assignments')]")
+    private WebElement onlyCopyPartialAssignmentsSwitchMessage;
+
+    @Override
+    public boolean checkOnlyCopyShiftsSwitchDisplayOrNot () throws Exception {
+        boolean switchDisplay = false;
+        if (isElementLoaded(onlyCopyShiftsSwitch, 5)
+                && isElementLoaded(onlyCopyShiftsSwitchMessage, 5)
+                && isElementLoaded(onlyCopyShiftsSwitchTooltip, 5)) {
+            switchDisplay = true;
+            SimpleUtils.report("The only copy shifts switch is display! ");
+        } else
+            SimpleUtils.report("The only copy shifts switch is not display! ");
+        return switchDisplay;
+    }
+
+    @Override
+    public boolean checkOnlyCopyShiftsSwitchEnableOrNot () throws Exception {
+        boolean switchEnabled = false;
+        if (isElementLoaded(onlyCopyShiftsSwitch, 5)
+                && isElementLoaded(onlyCopyShiftsSwitchMessage, 5)) {
+            if (onlyCopyShiftsSwitchMessage.getAttribute("class").contains("active")){
+                switchEnabled = true;
+            }
+        } else
+            SimpleUtils.fail("The only copy shifts switch fail to load! ", false);
+        return switchEnabled;
+    }
+
+    @Override
+    public void turnOnOrTurnOffOnlyCopyShiftsSwitch (boolean action) throws Exception {
+        if (isElementLoaded(onlyCopyShiftsSwitch, 5)
+                && isElementLoaded(onlyCopyShiftsSwitchMessage, 5)) {
+            if (onlyCopyShiftsSwitchMessage.getAttribute("class").contains("active")){
+                if (action) {
+                    SimpleUtils.pass("The switch already been enabled! ");
+                } else {
+                    clickTheElement(onlyCopyShiftsSwitch);
+                    SimpleUtils.pass("The switch been enabled successfully! ");
+                }
+            } else {
+                if (action) {
+                    clickTheElement(onlyCopyShiftsSwitch);
+                    SimpleUtils.pass("The switch been disabled successfully! ");
+                } else {
+                    SimpleUtils.pass("The switch already been disabled! ");
+                }
+            }
+        } else
+            SimpleUtils.fail("The only copy shifts switch fail to load! ", false);
+    }
+
+    @Override
+    public boolean checkOnlyCopyPartialAssignmentSwitchEnableOrNot () throws Exception {
+        boolean switchEnabled = false;
+        if (isElementLoaded(copyPartialScheduleSwitch, 5)
+                && isElementLoaded(onlyCopyPartialAssignmentsSwitchMessage, 5)) {
+            if (onlyCopyPartialAssignmentsSwitchMessage.getAttribute("class").contains("active")){
+                switchEnabled = true;
+            }
+        } else
+            SimpleUtils.fail("The Only copy partial assignments switch fail to load! ", false);
+        return switchEnabled;
+    }
 }

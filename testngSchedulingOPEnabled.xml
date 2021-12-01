@@ -175,6 +175,17 @@
                     <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember" />
                     <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" />
                     <include name="verifyPTORequestInScheduleAsInternalAdmin" />
+                    <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
+                    <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
+                    <!--                   <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" /> -->
+                    <include name="verifyAssignTMInDayViewAsInternalAdmin" />
+                    <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
+                    <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
+                    <include name="verifyEditShiftTimeInDayViewAsInternalAdmin" />
+                    <include name="verifyEditMealBreakTimeInDayViewAsInternalAdmin" />
+                    <include name="verifyDeleteShiftInDayViewAsInternalAdmin" />
+                    <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />
+                    <!--                   <include name="verifyShiftsCanBeDraggedInDayViewAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5728 -->
                 </methods>
             </class>
         </classes>
@@ -201,6 +212,8 @@
                     <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
                     <!--                    <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" /> Blocked by SCH-4331  -->
                     <!--                    <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" /> Blocked by SCH-4331  -->
+<!--                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsStoreManager" />
+                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5505-->
                 </methods>
             </class>
         </classes>
@@ -333,6 +346,19 @@
                     <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
                     <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
 <!--                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" /> -->
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Copy Schedule Without Assignments Test">
+        <classes>
+            <class name="com.legion.tests.core.CopyScheduleWithoutAssignments">
+                <methods>
+                    <include name="verifyTheResultingSchedulesShouldAllBeCreatedAsOpenShiftsAsInternalAdmin" />
+                    <include name="verifyTheResultingSchedulesWhenSettingIsKeepAsUnassignedAsInternalAdmin" />
+                    <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
