@@ -1667,36 +1667,49 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public String updateUpperfield(String upperfieldsName, String upperfieldsId, String searchChara, int index) throws Exception {
+	public String updateUpperfield(String upperfieldsName, String upperfieldsId, String searchChara, int index, String level) throws Exception {
 
 		String currentTime =  TestBase.getCurrentTime().substring(4);
 
 		searchUpperFields(upperfieldsName);
 		if (upperfieldRows.size() > 0) {
-			clickOnTheEnabledUpperfield();
+			List<WebElement> districtDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(districtDetailsLinks.get(0));
 			click(editUpperfieldBtn);
-			selectByVisibleText(levelDropDownList, "District");
+			selectByVisibleText(levelDropDownList, level);
 			if (isElementEnabled(upperfieldLevelChangeWin, 10)) {
 				click(okBtnInUpperfiledConfirmPage);
 				SimpleUtils.pass("Upperfield Level Change done");
 			} else
 				SimpleUtils.fail("Upperfield Level Change window load failed", false);
-			//add parent upperfield
-			click(selectParentUpperfield);
-			selectLocationOrDistrict(searchChara, index);
+			if (level.equalsIgnoreCase("District")) {
+				//add parent upperfield
+				click(selectParentUpperfield);
+				selectLocationOrDistrict(searchChara, index);
 
-			upperfieldNameInput.clear();
-			upperfieldNameInput.sendKeys("FromRegionToDistrict" + currentTime);
-			upperfieldIdInput.clear();
-			waitForSeconds(2);
-			if (isElementEnabled(districtIdChangePopUpWin, 3)) {
-				click(okBtnInUpperfiledConfirmPage);
-				upperfieldIdInput.sendKeys("FromRegionToDistrict" + currentTime);
-			} else
-				SimpleUtils.fail("Upperfield id change window not show", true);
-			scrollToBottom();
-			click(ManagerBtnInDistrictCreationPage);
-			managerDistrictLocations(searchChara, index);
+				upperfieldNameInput.clear();
+				upperfieldNameInput.sendKeys("FromRegionToDistrict" + currentTime);
+				upperfieldIdInput.clear();
+				waitForSeconds(2);
+				if (isElementEnabled(districtIdChangePopUpWin, 3)) {
+					click(okBtnInUpperfiledConfirmPage);
+					upperfieldIdInput.sendKeys("FromRegionToDistrict" + currentTime);
+				} else
+					SimpleUtils.fail("Upperfield id change window not show", true);
+				scrollToBottom();
+				click(ManagerBtnInDistrictCreationPage);
+				managerDistrictLocations(searchChara, index);
+			} else if (level.equalsIgnoreCase("Region")) {
+				upperfieldNameInput.clear();
+				upperfieldNameInput.sendKeys("RegionNoTouch");
+				upperfieldIdInput.clear();
+				waitForSeconds(2);
+				if (isElementEnabled(districtIdChangePopUpWin, 3)) {
+					click(okBtnInUpperfiledConfirmPage);
+					upperfieldIdInput.sendKeys("RegionNoTouch" + currentTime);
+				} else
+					SimpleUtils.fail("Upperfield id change window not show", true);
+			}
 			scrollToBottom();
 			click(saveBtnInUpdateLocationPage);
 			if (isElementEnabled(selectDistrictPopUpWins, 15)) {
@@ -1712,40 +1725,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				}
 			} else
 				SimpleUtils.report("There is no location under this upperfield and no need to move");
-
 		} else
 			SimpleUtils.fail("No search result", true);
 
 		return "FromRegionToDistrict" + currentTime;
 	}
-
-	private void clickOnTheEnabledUpperfield() throws Exception {
-		boolean isFound = false;
-		if (areListElementVisible(upperfieldRows, 5) && upperfieldRows.size() > 0) {
-			for (WebElement row : upperfieldRows) {
-				WebElement status = row.findElement(By.tagName("lg-eg-status"));
-				WebElement upperfieldName = row.findElement(By.cssSelector("button[type='button']"));
-				if (status.getText().equalsIgnoreCase("ENABLED")) {
-					isFound = true;
-					clickTheElement(upperfieldName);
-					break;
-				}
-			}
-			if (!isFound) {
-				try {
-					if (isElementLoaded(pageRightBtnInDistrict, 5)) {
-						clickTheElement(pageRightBtnInDistrict);
-						clickOnTheEnabledUpperfield();
-					}
-				} catch (NoSuchElementException | TimeoutException te) {
-					SimpleUtils.fail("There is no results in Upperfield list!", false);
-				}
-			}
-		} else {
-			SimpleUtils.fail("There is no results in Upperfield list!", false);
-		}
-	}
-
 
 	public ArrayList<HashMap<String, String>> getUpperfieldsInfo(String searchChara) {
 		ArrayList<HashMap<String, String>> upperfieldInfo = new ArrayList<>();
