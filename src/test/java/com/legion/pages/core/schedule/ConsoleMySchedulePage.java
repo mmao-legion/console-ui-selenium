@@ -1389,8 +1389,8 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             if (subMenusOnSchedulePage.get(0).getAttribute("class").contains("active") && subMenusOnSchedulePage.get(0).getText().contains("My Schedule")) {
                 SimpleUtils.pass("Schedule Page: My schedule is selected by default not the Team schedule successfully ");
             } else
-                SimpleUtils.fail("Schedule Page: My schedule isn't selected by default", true);
-        } else SimpleUtils.fail("Schedule Page: Sub menus failed to load", true);
+                SimpleUtils.fail("Schedule Page: My schedule isn't selected by default", false);
+        } else SimpleUtils.fail("Schedule Page: Sub menus failed to load", false);
     }
 
     @Override

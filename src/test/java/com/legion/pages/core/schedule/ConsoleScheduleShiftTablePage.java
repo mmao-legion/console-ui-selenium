@@ -5,6 +5,7 @@ import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -1800,12 +1801,23 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @Override
     public void clickProfileIconOfShiftByIndex(int index) throws Exception {
-        if(areListElementVisible(weekShifts, 15) && index < weekShifts.size()){
-            clickTheElement(weekShifts.get(index).findElement(By.cssSelector(".worker-image-optimized img")));
-            SimpleUtils.pass("clicked shift icon!");
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        if (scheduleCommonPage.isScheduleDayViewActive()) {
+            if(areListElementVisible(shiftsInDayView, 15) && index < shiftsInDayView.size()){
+                clickTheElement(shiftsInDayView.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-detail")));
+                SimpleUtils.pass("clicked shift icon!");
+            } else {
+                SimpleUtils.fail("There is no shift you want",false);
+            }
         } else {
-            SimpleUtils.fail("There is no shift you want",false);
+            if(areListElementVisible(weekShifts, 15) && index < weekShifts.size()){
+                clickTheElement(weekShifts.get(index).findElement(By.cssSelector(".worker-image-optimized img")));
+                SimpleUtils.pass("clicked shift icon!");
+            } else {
+                SimpleUtils.fail("There is no shift you want",false);
+            }
         }
+
     }
 
 
@@ -2813,8 +2825,14 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public List<String> verifyGroupByTitlesOrder() throws Exception{
         List<String> results = new ArrayList<>();
-        if (areListElementVisible(groupTitleList, 10)){
-            for (WebElement element: groupTitleList){
+        List<WebElement> groupTitles = new ArrayList<>();
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        if (scheduleCommonPage.isScheduleDayViewActive()) {
+            groupTitles = availableJobTitleListInDayView;
+        } else
+            groupTitles = groupTitleList;
+        if (areListElementVisible(groupTitles, 10)){
+            for (WebElement element: groupTitles){
                 results.add(element.getText().trim());
             }
             SimpleUtils.assertOnFail("Order results is incorrect!", results.stream().sorted().collect(Collectors.toList()).containsAll(results), false);
@@ -2936,5 +2954,109 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             }
         }
         return fullName;
+    }
+
+    //Focus on one shift and the X button and shift time popup can display display
+    public void clickOnShiftInDayView (WebElement shiftInDayView) throws Exception {
+        if (isElementLoaded(shiftInDayView, 10)) {
+            moveElement(shiftInDayView.findElement(By.cssSelector(".break-container")), 0);
+            if (isElementLoaded(btnDelete) && areListElementVisible(shiftTimeInDayViewPopUp)) {
+                SimpleUtils.pass("Click the shift successfully! ");
+            } else
+                SimpleUtils.fail("Fail to click the shift! ", false);
+        } else
+            SimpleUtils.fail("The given shift is not exist! ", false);
+    }
+
+    @FindBy(css = ".sch-day-view-shift-hour-container")
+    private List<WebElement> shiftTimeInDayViewPopUp;
+
+    public List<String> getShiftTimeInDayViewPopUp () {
+        List<String> shiftTimes = new ArrayList<>();
+        if (areListElementVisible(shiftTimeInDayViewPopUp, 10)) {
+            shiftTimes.add(shiftTimeInDayViewPopUp.get(0).getText().replace("\n", " "));
+            shiftTimes.add(shiftTimeInDayViewPopUp.get(1).getText().replace("\n", " "));
+            SimpleUtils.pass("Get shift times successfully! ");
+        } else
+            SimpleUtils.fail("The shift times in popup in day view fail to load! ", false);
+        return shiftTimes;
+    }
+
+    public void clickOnXButtonInDayView () throws Exception {
+        if(isElementLoaded(btnDelete, 10)){
+            clickTheElement(btnDelete);
+            if (areListElementVisible(deleteShiftImgsInDayView, 10)){
+                SimpleUtils.pass("Click the X button successfully! ");
+            } else
+                SimpleUtils.fail("Fail to click the X button successfully! ", false);
+        } else
+            SimpleUtils.fail("The X button is not display! ", false);
+    }
+
+
+    @FindBy(css = "[ng-repeat=\"shift in shiftGroup\"]")
+    private List<WebElement> dayViewShiftGroups;
+    public boolean checkIfShiftInDayViewBeenMarkAsDeletedByIndex (int index) throws Exception {
+        boolean isShiftMarkAsDeleted = false;
+        if (areListElementVisible(dayViewShiftGroups, 5) && dayViewShiftGroups.size() > index) {
+            if (isElementLoaded(dayViewShiftGroups.get(index).findElement(By.cssSelector(".sch-day-view-shift")))
+                    && dayViewShiftGroups.get(index).findElement(By.cssSelector(".sch-day-view-shift")).getAttribute("class").contains("deleted")) {
+                isShiftMarkAsDeleted = true;
+                SimpleUtils.pass("The shift with index: " + index + " been marked as deleted in day view!");
+            }
+        } else
+            SimpleUtils.fail("The shifts in day view fail to load! ", false);
+        return isShiftMarkAsDeleted;
+    }
+
+
+    public void verifyTheEditedImgDisplayForShiftInDayByIndex (int index) throws Exception {
+        if (areListElementVisible(dayViewShiftGroups, 5) && dayViewShiftGroups.size() > index) {
+            if (isElementLoaded(dayViewShiftGroups.get(index).findElement(By.cssSelector("[ng-src=\"img/legion/edit/edited-shift-day@2x.png\"]")))) {
+                SimpleUtils.pass("The shift with index: " + index + " been marked as edited in day view!");
+            } else
+                SimpleUtils.fail("The shift with index: " + index + " is not marked as edited in day view!", false);
+        } else
+            SimpleUtils.fail("The shifts in day view fail to load! ", false);
+    }
+
+
+    public void clickTheDeleteImgForSpecifyShiftByIndex (int index) throws Exception {
+        if (areListElementVisible(dayViewShiftGroups, 5) && dayViewShiftGroups.size() > index) {
+            if (isElementLoaded(dayViewShiftGroups.get(index).findElement(By.cssSelector("[ng-src=\"img/legion/edit/deleted-shift-day@2x.png\"]")))) {
+                clickTheElement(dayViewShiftGroups.get(index).findElement(By.cssSelector("[ng-src=\"img/legion/edit/deleted-shift-day@2x.png\"]")));
+                waitForSeconds(2);
+                if (dayViewShiftGroups.get(index).findElement(By.cssSelector(".sch-day-view-shift")).getAttribute("class").contains("deleted")) {
+                    SimpleUtils.pass("The shift with index: " + index + " been returned back in day view successfully!");
+                }
+            } else
+                SimpleUtils.fail("The delete img for the shift fail to load! ", false);
+        }else
+            SimpleUtils.fail("The shifts in day view fail to load! ", false);
+    }
+
+    public void clickOnEditedOrDeletedImgForShiftInDayViewByIndex (int index) throws Exception {
+        if (areListElementVisible(dayViewShiftGroups, 5) && dayViewShiftGroups.size() > index) {
+            if (isElementLoaded(dayViewShiftGroups.get(index).findElement(By.cssSelector(".sch-day-view-right-gutter img")))) {
+                scrollToElement(dayViewShiftGroups.get(index).findElement(By.cssSelector(".sch-day-view-right-gutter img")));
+                clickTheElement(dayViewShiftGroups.get(index).findElement(By.cssSelector(".sch-day-view-right-gutter img")));
+                SimpleUtils.pass("Click the deleted or edited img for the shift successfully! ");
+            } else
+                SimpleUtils.fail("The deleted or edited img for the shift fail to load! ", false);
+        } else
+            SimpleUtils.fail("The shifts in day view fail to load! ", false);
+    }
+
+
+    public void moveShiftByIndexInDayView (int index) throws Exception {
+        if (areListElementVisible(dayViewShiftGroups, 5) && dayViewShiftGroups.size() > index) {
+            scrollToElement(dayViewShiftGroups.get(index));
+            moveElement(dayViewShiftGroups.get(index).findElement(By.cssSelector(".left-shift-box")), 0);
+            mouseHoverDragandDrop(dayViewShiftGroups.get(index).findElement(By.cssSelector(".left-shift-box")),
+                    dayViewShiftGroups.get(index).findElements(By.cssSelector(".sch-day-view-grid-cell")).get(0));
+            SimpleUtils.pass("Click the shift successfully! ");
+
+        }else
+            SimpleUtils.fail("The shifts in day view fail to load! ", false);
     }
 }

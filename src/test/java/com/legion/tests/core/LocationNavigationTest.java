@@ -1277,4 +1277,79 @@ public class LocationNavigationTest extends TestBase {
         }
     }
 
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify changing location on TM view schedule page when login as SM")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangeLocationOnSchedulePageWhenLoginAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            profileNewUIPage.getNickNameFromProfile();
+            if (dashboardPage.isSwitchToEmployeeViewPresent()) {
+                dashboardPage.clickOnSwitchToEmployeeView();
+            }
+            //Verify changing location on My Schedule page
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.MySchedule.getValue());
+            locationSelectorPage.changeAnotherLocation();
+            //Location should be changed successfully, My Schedule page is loaded
+            mySchedulePage.validateTheAvailabilityOfScheduleMenu();
+            mySchedulePage.validateTheFocusOfSchedule();
+            //Verify changing location on Team Schedule page
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.TeamSchedule.getValue());
+            locationSelectorPage.changeAnotherLocation();
+            //Location should be changed successfully, My Schedule page is loaded
+            mySchedulePage.validateTheAvailabilityOfScheduleMenu();
+            mySchedulePage.validateTheFocusOfSchedule();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify changing location on TM view schedule page when login as TM")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangeLocationOnSchedulePageWhenLoginAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            //Verify changing location on My Schedule page
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.MySchedule.getValue());
+            locationSelectorPage.changeAnotherLocation();
+            //Location should be changed successfully, My Schedule page is loaded
+            mySchedulePage.validateTheAvailabilityOfScheduleMenu();
+            mySchedulePage.validateTheFocusOfSchedule();
+            //Verify changing location on Team Schedule page
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.TeamSchedule.getValue());
+            locationSelectorPage.changeAnotherLocation();
+            //Location should be changed successfully, My Schedule page is loaded
+            mySchedulePage.validateTheAvailabilityOfScheduleMenu();
+            mySchedulePage.validateTheFocusOfSchedule();
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

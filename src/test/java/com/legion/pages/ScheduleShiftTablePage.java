@@ -112,4 +112,12 @@ public interface ScheduleShiftTablePage {
     public void expandOnlyOneGroup(String groupName) throws Exception;
     public void verifyGroupByTitlesAreExpanded() throws Exception;
     public void verifyTimeOffCardShowInCorrectDay(int dayIndex) throws Exception;
+    public void clickOnShiftInDayView (WebElement shiftInDayView) throws Exception;
+    public List<String> getShiftTimeInDayViewPopUp ();
+    public void clickOnXButtonInDayView () throws Exception;
+    public boolean checkIfShiftInDayViewBeenMarkAsDeletedByIndex (int index) throws Exception;
+    public void verifyTheEditedImgDisplayForShiftInDayByIndex (int index) throws Exception;
+    public void clickTheDeleteImgForSpecifyShiftByIndex (int index) throws Exception;
+    public void clickOnEditedOrDeletedImgForShiftInDayViewByIndex (int index) throws Exception;
+    public void moveShiftByIndexInDayView (int index) throws Exception;
 }

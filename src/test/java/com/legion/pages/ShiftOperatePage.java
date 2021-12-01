@@ -36,6 +36,7 @@ public interface ShiftOperatePage {
     public boolean isViewOpenShiftEnable() throws Exception;
     public boolean isChangeRoleEnable() throws Exception;
     public boolean isAssignTMEnable() throws Exception;
+    public boolean isEditShiftNotesEnable() throws Exception;
     public void clickonAssignTM() throws Exception;
     public void clickOnConvertToOpenShift() throws Exception;
     public void verifyOfferTMOptionIsAvailable() throws Exception;
