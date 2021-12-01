@@ -184,11 +184,11 @@
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
                     <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
-                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
-<!--                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsTeamMember" />
+                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsInternalAdmin" />
+                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsTeamMember" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsTeamMember" />
                     <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
-                    <include name="verifyManagerCannotEditTheAvailabilityWhenTMHasPendingRequestAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5714-->
+                    <include name="verifyManagerCannotEditTheAvailabilityWhenTMHasPendingRequestAsTeamMember" />
                 </methods>
             </class>
         </classes>
