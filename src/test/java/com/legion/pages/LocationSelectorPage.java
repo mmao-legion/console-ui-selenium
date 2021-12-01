@@ -7,6 +7,7 @@ import java.util.Map;
 public interface LocationSelectorPage {
 
 	public Boolean isChangeLocationButtonLoaded() throws Exception;
+	public Boolean findLocationByMagnifyGlassIcon(String locationName);
 	public void changeLocation(String locationName);
 	public Boolean isLocationSelected(String locationName) ;
 	public String getCurrentUserLocation() throws Exception;

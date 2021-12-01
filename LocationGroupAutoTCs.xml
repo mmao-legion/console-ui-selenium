@@ -12,7 +12,7 @@
 
     <test name="LocationGroup Test">
         <classes>
-            <class name="com.legion.tests.core.LocationsTest">
+            <class name="com.legion.tests.core.OpsPortal.LocationsTest">
                 <methods>
                     <include name="verifyMSLocationGroupFunctionForRegularAsInternalAdminForLocationGroup" />
                     <include name="verifyChangeMSToP2PAsInternalAdminForLocationGroup" />

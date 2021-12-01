@@ -13,8 +13,9 @@
 
     <test name="Configuration Test">
         <classes>
-            <class name="com.legion.tests.core.ConfigurationTest">
+            <class name="com.legion.tests.core.OpsPortal.ConfigurationTest">
                 <methods>
+                    <include name="verifyDynamicGroupFunctionAsAInternalAdminForAssociation"/>
                     <include name="verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration"/>
                     <include name="verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration"/>
                     <include name="verifyCheckBoxOfDaysOfWeekAsInternalAdminForConfiguration"/>

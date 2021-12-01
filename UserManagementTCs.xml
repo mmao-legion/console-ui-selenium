@@ -11,7 +11,7 @@
 
     <test name="User Management Test">
         <classes>
-            <class name="com.legion.tests.core.UserManagementTest">
+            <class name="com.legion.tests.core.OpsPortal.UserManagementTest">
                 <methods>
                     <include name="verifyAddUpdateWorkRoleAsInternalAdminForUserManagement"/>
                     <include name="verifyDynamicGroupFunctionInUserManagementTabAsInternalAdminForUserManagement"/>

@@ -20,7 +20,7 @@
         <enterprise>opauto</enterprise>
         <env>https://rc-enterprise.dev.legion.work/</env>
         <testRail>No</testRail>
-        <seleniumGridPort>4466</seleniumGridPort>
+        <seleniumGridPort>4444</seleniumGridPort>
         <domainName>localhost</domainName>
     </properties>
 
@@ -289,7 +289,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <version>3.0.0-M4</version>
                 <configuration>
                     <parallel>classes</parallel>
                     <suiteXmlFiles>
@@ -300,10 +300,11 @@
                         <env>${env}</env>
                         <enterprise>${enterprise}</enterprise>
                         <testRail>${testRail}</testRail>
-                        <seleniumGridPort>${seleniumGridPort}</seleniumGridPort>
-                        <domainName>${domainName}</domainName>
                     </systemPropertyVariables>
-                    <useSystemClassLoader>false</useSystemClassLoader>
+
+                    <systemPropertyVariables>
+
+                    </systemPropertyVariables>
                     <forkCount>5</forkCount>
                     <reuseForks>true</reuseForks>
                     <redirectTestOutputToFile>false</redirectTestOutputToFile>
