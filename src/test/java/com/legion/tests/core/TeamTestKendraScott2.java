@@ -1,9 +1,7 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
-import java.net.SocketImpl;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,9 +11,11 @@ import com.legion.pages.*;
 
 import java.util.Map;
 
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.pages.core.ConsoleGmailPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
-import com.legion.pages.core.OpsPortalLocationsPage;
 import com.legion.utils.Constants;
 import cucumber.api.java.hu.Ha;
 import org.apache.poi.ss.formula.functions.T;

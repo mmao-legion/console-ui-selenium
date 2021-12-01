@@ -12,10 +12,10 @@
 
     <test name="Location Test">
         <classes>
-            <class name="com.legion.tests.core.LocationsTest">
+            <class name="com.legion.tests.core.OpsPortal.LocationsTest">
                 <methods>
                     <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />
-<!--                    <include name="verifyCreateMockLocationAndNavigate" />-->
+                    <include name="verifyCreateMockLocationAndNavigate" />
                     <include name="verifyCreateNSOLocationAndNavigate" />
                     <include name="verifyDisableEnableLocationFunction" />
                     <include name="verifyExportLocationDistrict" />
@@ -42,7 +42,11 @@
                     <include name="verifyUserCanSeeEachTypeOfTemViaClickingTemName" />
                     <include name="verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevel" />
                     <include name="verifyOverriddenSchedulingRulesInLocationLevel" />
-
+                    <include name="verifyOverriddenLaborModelInLocationLevel" />
+                    <include name="verifyOverriddenAssignmentRulesInLocationLevel" />
+                    <include name="verifyOverriddenOperatingHoursInLocationLevel" />
+                    <include name="verifyDefaultValueOfExternalAttributesInLocationLevel"/>
+                    <include name="verifyLocationLevelExternalAttributesDescription"/>
 
 
                 </methods>
@@ -53,7 +57,7 @@
     <test name="Navigation Test">
 
         <classes>
-            <class name="com.legion.tests.core.NewNavigationFlowTest">
+            <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest">
                 <methods>
 <!--                    <include name="verifyLocationProfilePageInControls" />-->
                     <include name="verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow" />
@@ -75,7 +79,7 @@
     </test>
     <test name="Job Test">
         <classes>
-            <class name="com.legion.tests.core.JobTest">
+            <class name="com.legion.tests.core.OpsPortal.JobTest">
                 <methods>
                     <include name="verifyJobLandingPageAsInternalAdminForJob" />
                     <include name="verifyJobSearchFunctionAsInternalAdminForJob" />
@@ -101,7 +105,7 @@
 
     <test name="Configuration Test">
         <classes>
-            <class name="com.legion.tests.core.ConfigurationTest">
+            <class name="com.legion.tests.core.OpsPortal.ConfigurationTest">
                 <methods>
                     <include name="verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration"/>
                     <include name="verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration"/>
@@ -132,7 +136,7 @@
 
     <test name="User Management Test">
         <classes>
-            <class name="com.legion.tests.core.UserManagementTest">
+            <class name="com.legion.tests.core.OpsPortal.UserManagementTest">
                 <methods>
                     <include name="verifyAddUpdateWorkRoleAsInternalAdminForUserManagement"/>
                     <include name="verifyDynamicGroupFunctionInUserManagementTabAsInternalAdminForUserManagement"/>
@@ -148,16 +152,19 @@
 
     <test name="Labor Model Test">
         <classes>
-            <class name="com.legion.tests.core.LaborModelTest">
+            <class name="com.legion.tests.core.OpsPortal.LaborModelTest">
                 <methods>
                     <include name="verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdminForLaborModel"/>
+                    <include name="verifyCreateUpdateAndDeleteNewAttributeFunctionAsInternalAdminForLaborModel"/>
+                    <include name="verifyTemplateLevelAttributeFunctionAsInternalAdminForLaborModel"/>
+                    <include name="verifyDescriptionOfExternalAttributesAsInternalAdminForLaborModel"/>
                 </methods>
             </class>
         </classes>
     </test>
     <test name="Location Group Test">
         <classes>
-            <class name="com.legion.tests.core.LocationsGroupTestInOP">
+            <class name="com.legion.tests.core.OpsPortal.LocationsGroupTestInOP">
                 <methods>
                     <include name="verifyMSLocationGroupFunctionForRegularAsInternalAdminForLocationGroup"/>
                     <include name="verifyChangeMSToP2PAsInternalAdminForLocationGroup"/>
@@ -175,7 +182,38 @@
             </class>
         </classes>
     </test>
-
+    <test name="Work Role Test">
+        <classes>
+            <class name="com.legion.tests.core.opusermanagement.WorkRoleTest">
+                <methods>
+                    <include name="verifyAddEditSearchAndDisableWorkRoleAsInternalAdminForUserManagement"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Labor Model Repository Test">
+        <classes>
+            <class name="com.legion.tests.core.oplabormodel.LaborModelRepositoryTest">
+                <methods>
+                    <include name="verifyAddEditSearchAndDisableTasksAsInternalAdminForLaborModel"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Absent Management Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.AbsentManagementTemplateTest">
+                <methods>
+                    <include name="verifyEmployeeManagementModuleAndDashboardAsInternalAdminForEmployeeManagement"/>
+                    <include name="verifyAddEditSearchAndDisableTemplateAsInternalAdminForEmployeeManagement"/>
+                    <include name="verifyActionsInSettingsTabAsInternalAdminForEmployeeManagement"/>
+                    <include name="verifyTemplateDetailsAsInternalAdminForEmployeeManagement"/>
+                    <include name="verifyTimeOffConfigurationAsInternalAdminForEmployeeManagement"/>
+                    <include name="verifyTimeOffRequestRulesAsInternalAdminForEmployeeManagement"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->
 
 

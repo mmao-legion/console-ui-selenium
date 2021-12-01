@@ -35,7 +35,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     @FindBy(className="fa-sign-out")
     private WebElement logoutButton;
     
-    @FindBy(className="home-dashboard")
+    @FindBy(css=".no-left-right-padding")
     private WebElement legionDashboardSection;
     
     @FindBy (css = "div.console-navigation-item-label.Dashboard")
@@ -77,8 +77,19 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     	userNameField.sendKeys(userName);
 		passwordField.sendKeys(Password);
 		clickTheElement(loginButton);
+		waitForSeconds(4);
     }
 
+
+	@Override
+	public void switchToOriginalWindow(String handle)  throws Exception {
+		for (String chandle : getDriver().getWindowHandles()) {
+			if (chandle.equals(handle)) {
+				getDriver().switchTo().window(handle);
+				break;
+			}
+		}
+	}
 	private boolean isUserNameInputLoaded() {
 		boolean isLoaded = false;
 		try {

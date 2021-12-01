@@ -12,7 +12,7 @@
 
     <test name="Navigation Test">
         <classes>
-            <class name="com.legion.tests.core.NewNavigationFlowTest">
+            <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest">
                 <methods>
                     <!--                    <include name="verifyLocationProfilePageInControls" />-->
                     <include name="verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow" />

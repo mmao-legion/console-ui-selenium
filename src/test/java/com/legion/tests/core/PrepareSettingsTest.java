@@ -1,9 +1,8 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
-import com.legion.pages.core.ConsoleControlsNewUIPage;
-import com.legion.pages.core.ConsoleIntegrationPage;
-import com.legion.pages.core.OpsPortalLocationsPage;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -17,9 +16,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PrepareSettingsTest extends TestBase {

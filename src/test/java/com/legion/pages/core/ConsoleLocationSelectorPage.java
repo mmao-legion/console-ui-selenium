@@ -215,9 +215,9 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
 
 
     //added by estelle to search location if the location is not in recent list
-    @FindBy(css = "input[placeholder=\"Search Location\"]")
-    private WebElement locationSearchInput;
     @FindBy(css = "input[placeholder=\"Search\"]")
+    private WebElement locationSearchInput;
+    @FindBy(css = "input[placeholder=\"Search Location\"]")
     private WebElement upperFieldSearchInput;
     private void searchLocationAndSelect(String locationName) throws Exception {
         if (isElementLoaded(locationSearchInput,5)) {
@@ -587,7 +587,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     }
 
     //added by Estelle for upperfield view
-    @FindBy(css = "div[ng-repeat-start=\"hierarchy in $ctrl.getNavHierarchy()\"]")
+    @FindBy(css = "lg-picker-input > div > input-field > ng-form > div")
     private List<WebElement> levelDisplay;
     @FindBy(css = "input[placeholder=\"Search BU\"]")
     private WebElement buSearchInput;
@@ -1338,6 +1338,42 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Boolean findLocationByMagnifyGlassIcon(String locationName) {
+        boolean findResult=false;
+        try {
+            if (isElementEnabled(magnifyGlassIcon,5) ) {
+                click(magnifyGlassIcon);
+                if (isElementEnabled(selectInputBoxForGlobalSearch,5)) {
+                    SimpleUtils.pass("Magnifying glass icon is clickable");
+                    selectInputBoxForGlobalSearch.sendKeys(locationName);
+                    selectInputBoxForGlobalSearch.sendKeys(Keys.ENTER);
+                    waitForSeconds(5);
+                    if (areListElementVisible(upperFieldsInResentView,5)&& upperFieldsInResentView.size()>0) {
+                        for (WebElement each:upperFieldsInResentView) {
+                            if (each.getText().split("\n")[0].equalsIgnoreCase(locationName)) {
+                                click(each);
+                                break;
+                            }
+                        }
+                        //check whether navigate success
+                        List<String> navigatorText = new ArrayList();
+
+                        if (areListElementVisible(levelDisplay,5)) {
+                            for (WebElement ss :levelDisplay) {
+                                navigatorText.add(ss.getText());
+                            }
+                            if (navigatorText.contains(locationName)) {
+                                SimpleUtils.pass("Find location:" + locationName +"  successfully");
+                                findResult=true;
+                            }
+                        }}}}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return findResult;
     }
 
     @FindBy(css = "input-field[placeholder=\"All HQs\"]")

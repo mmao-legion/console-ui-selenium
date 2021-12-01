@@ -3251,7 +3251,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement managerLocationBtn;
 	@FindBy(css = "[modal-title=\"Manage Locations\"]")
 	private WebElement managerLocationPopUpTitle;
-	@FindBy(css = "input[placeholder=\"You can search by location name, city, and state.\"]")
+	@FindBy(css = "input[placeholder=\"You can search by location name, level, city, and state.\"]")
 	private WebElement managerLocationInputFiled;
 	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.filtered\"]")
 	private List<WebElement> locationListRows;
@@ -3283,7 +3283,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						click(selectAllCheckBoxInManaLocationWin);
 						if (locationCheckBoxs.size()>0) {
 							SimpleUtils.pass("Can search upperfield of region");
-							for (int i = 2; i <5 ; i++) {
+							for (int i = 2; i <5 && i<locationCheckBoxs.size(); i++) {
 								if (isElementLoaded(locationCheckBoxs.get(i)) && !locationCheckBoxs.get(i).getAttribute("class").contains("not-empty")) {
 									click(locationCheckBoxs.get(i));
 								}
