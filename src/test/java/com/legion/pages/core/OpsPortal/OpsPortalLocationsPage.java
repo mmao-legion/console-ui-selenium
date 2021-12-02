@@ -95,7 +95,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		boolean isLoaded = false;
 		try {
 			waitForSeconds(10);
-			if (isElementLoaded(getDriver().findElement(By.cssSelector(".console-navigation-item-label.Locations")), 10))
+			if (isElementLoaded(getDriver().findElement(By.cssSelector(".console-navigation-item-label.Locations")), 20))
 				isLoaded = true;
 		} catch (Exception e) {
 			isLoaded = false;
@@ -355,8 +355,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			waitForSeconds(10);
 			if (areListElementVisible(locationRowsInSelectLocation, 30) && locationRowsInSelectLocation.size() > 0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"radio\"]"));
-				click(firstRow);
-				click(okBtnInSelectLocation);
+				clickTheElement(firstRow);
+				clickTheElement(okBtnInSelectLocation);
 			} else
 				SimpleUtils.report("Search location result is 0");
 
@@ -945,7 +945,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			selectByVisibleText(locationGroupSelect, newLocationParas.get(parentRelationship));
-			click(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
+			clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
 			locationId.sendKeys(getLocationName());
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
