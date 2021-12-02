@@ -19,6 +19,8 @@ public interface ShiftOperatePage {
     public void deleteAllShiftsOfGivenDayPartInDayView(String dayPart) throws Exception;
     public void  verifyDeleteShiftCancelButton() throws Exception;
     public WebElement clickOnProfileIcon() throws Exception;
+    public int getTheIndexWhenClickingOnProfileIcon() throws Exception;
+    public WebElement getShiftElementByIndex(int index) throws Exception;
     public boolean isProfileIconsEnable() throws Exception;
     public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) throws Exception;
     public void verifyDeleteMealBreakFunctionality() throws Exception;

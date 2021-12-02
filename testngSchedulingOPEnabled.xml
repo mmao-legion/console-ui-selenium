@@ -177,7 +177,7 @@
                     <include name="verifyPTORequestInScheduleAsInternalAdmin" />
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
-                    <!--                   <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" /> -->
+                    <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" />
                     <include name="verifyAssignTMInDayViewAsInternalAdmin" />
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
