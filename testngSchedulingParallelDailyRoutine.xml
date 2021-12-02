@@ -84,7 +84,7 @@
                     <include name="verifyPTORequestInScheduleAsInternalAdmin" />
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
- <!--                   <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" /> cannot locate to Apply and Cancel button in day view-->
+                    <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" />
                     <include name="verifyAssignTMInDayViewAsInternalAdmin" />
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />

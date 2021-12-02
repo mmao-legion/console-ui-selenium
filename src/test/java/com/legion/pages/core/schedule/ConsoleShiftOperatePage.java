@@ -424,7 +424,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css = "div[ng-class*='ChangeRole'] span")
     private WebElement changeRole;
     public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception {
-        WebElement clickedShift = clickOnProfileIcon();
+        int index = getTheIndexWhenClickingOnProfileIcon();
+        WebElement clickedShift = getShiftElementByIndex(index);
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         clickOnChangeRole();
         if(isElementEnabled(schWorkerInfoPrompt,5)) {
@@ -460,17 +461,19 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             if (isElementEnabled(applyButtonChangeRole, 5) && isElementEnabled(cancelButtonChangeRole, 5)) {
                 SimpleUtils.pass("Apply and Cancel buttons are enabled");
                 if (isApplyChange) {
-                    String test = shiftPopover.getAttribute("innerHTML");
-                    clickTheElement(applyButtonChangeRole);
+                    moveToElementAndClick(applyButtonChangeRole);
                     if (isElementEnabled(roleViolationAlter, 5)) {
                         click(roleViolationAlterOkButton);
                     }
                     //to close the popup
                     waitForSeconds(5);
-                    clickTheElement(clickedShift);
+                    if (isElementLoaded(shiftPopover, 5)) {
+                        clickTheElement(clickedShift);
+                    }
 
+                    clickedShift = getShiftElementByIndex(index);
                     if (scheduleCommonPage.isScheduleDayViewActive()) {
-                        clickTheElement(clickedShift.findElement(By.cssSelector(".sch-day-view-shift .sch-shift-worker-img-cursor")));
+                        clickTheElement(clickedShift.findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
                     } else
                         clickTheElement(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
                     SimpleUtils.pass("Apply button has been clicked ");
@@ -485,7 +488,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             //check the shift role
             if (!isElementEnabled(changeRole, 5)) {
                 if (scheduleCommonPage.isScheduleDayViewActive()) {
-                    clickTheElement(clickedShift.findElement(By.cssSelector(".sch-day-view-shift .sch-shift-worker-img-cursor")));
+                    clickTheElement(clickedShift.findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
                 } else
                     clickTheElement(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
             }
@@ -583,6 +586,47 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             selectedShift = dayViewAvailableShifts.get(randomIndex);
         } else
             SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
+
+        return selectedShift;
+    }
+
+    @Override
+    public int getTheIndexWhenClickingOnProfileIcon() throws Exception {
+        int index = 0;
+        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+            int randomIndex = (new Random()).nextInt(profileIcons.size());
+            int i = 0;
+            while (i < 100 && profileIcons.get(randomIndex).getAttribute("src").contains("openShiftImage")){
+                randomIndex = (new Random()).nextInt(profileIcons.size());
+                i++;
+            }
+            clickTheElement(profileIcons.get(randomIndex));
+            index = randomIndex;
+        } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
+            int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+            int i = 0;
+            String dayViewShiftNames = dayViewAvailableShifts.get(randomIndex).findElement(By.className("sch-day-view-shift-worker-name")).getText();
+            while (i < 100 && (dayViewShiftNames.contains("Open") || dayViewShiftNames.contains("Unassigned"))){
+                randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
+                i++;
+            }
+            clickTheElement(scheduleTableWeekViewWorkerDetail.get(randomIndex));
+            index = randomIndex;
+        } else
+            SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
+
+        return index;
+    }
+
+    @Override
+    public WebElement getShiftElementByIndex(int index) throws Exception {
+        WebElement selectedShift = null;
+        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+            selectedShift = shifts.get(index);
+        } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
+            selectedShift = dayViewAvailableShifts.get(index);
+        } else
+            SimpleUtils.fail("Shifts are not available in week/day view!",false);
 
         return selectedShift;
     }
