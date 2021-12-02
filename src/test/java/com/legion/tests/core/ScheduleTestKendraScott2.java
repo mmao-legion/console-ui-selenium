@@ -2511,7 +2511,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		shiftOperatePage.convertToOpenShiftDirectly();
 		scheduleMainPage.saveSchedule();
 		createSchedulePage.publishActiveSchedule();
-		BasePage.waitForSeconds(5);
+		BasePage.waitForSeconds(10);
 		shiftOperatePage.clickOnProfileIconOfOpenShift();
 		scheduleShiftTablePage.clickViewStatusBtn();
 		shiftOperatePage.verifyListOfOfferNotNull();
