@@ -25,7 +25,7 @@ import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
-public class CopyScheduleWithoutAssignments extends TestBase {
+public class CopyScheduleWithoutAssignmentsTest extends TestBase {
     private static String controlEnterprice = "Vailqacn_Enterprise";
     private static String opEnterprice = "CinemarkWkdy_Enterprise";
     @Override

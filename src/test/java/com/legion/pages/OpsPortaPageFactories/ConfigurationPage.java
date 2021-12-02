@@ -112,4 +112,7 @@ public interface ConfigurationPage {
     public void archiveOrDeleteAllTemplates() throws Exception;
     public void clickOnTemplateDetailTab() throws Exception;
     public void deleteSpecifyDynamicEmployeeGroupsInList(String groupName) throws Exception;
+    public void verifyMinorRulesTileIsLoaded() throws Exception;
+    public boolean checkIfMinorSectionsLoaded () throws Exception;
+    public void clickOnBackButton () throws Exception;
 }

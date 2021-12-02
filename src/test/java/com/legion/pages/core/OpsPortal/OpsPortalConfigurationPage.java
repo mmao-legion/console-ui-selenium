@@ -1844,7 +1844,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
 					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 				}
-				if(isElementEnabled(saveAsDraftButton, 5)){
+				if(isElementEnabled(saveAsDraftButton, 5)
+						&& isElementLoaded(templateDetailsAssociateTab, 10)
+						&& isElementLoaded(templateDetailsBTN, 10)
+						&& isElementLoaded(templateExternalAttributesBTN, 10)){
 					SimpleUtils.pass("User can click continue button successfully!");
 					clickTheElement(saveAsDraftButton);
 					waitForSeconds(5);
@@ -3503,4 +3506,52 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Published template was archived",false);
 	}
 
+
+
+	@FindBy(css = "[title=\"Minors Rules\"] div")
+	private WebElement minorRulesTile;
+	@Override
+	public void verifyMinorRulesTileIsLoaded() throws Exception {
+		if (isElementLoaded(minorRulesTile, 10)) {
+			String textOnTile1 = "Scheduling Rules for Minors";
+			String textOnTile2 = "Min/Max Hours for school days and non-school days";
+			String textOnTile3 = "Min/Max Hours for school weeks and non-school weeks";
+			String textOnTile4 = "Meal and Rest break rules for minors";
+			String messageOnTile = minorRulesTile.findElement(By.className("lg-dashboard-card__body")).getText();
+			if (messageOnTile.contains(textOnTile1)
+					&& messageOnTile.contains(textOnTile2)
+					&& messageOnTile.contains(textOnTile3)
+					&& messageOnTile.contains(textOnTile4)) {
+				SimpleUtils.pass("The message on the Minor Rule tile display correctly! ");
+			} else
+				SimpleUtils.fail("The message on the Minor Rule tile display incorrectly! ", false);
+		} else
+			SimpleUtils.fail("Minor Rules tile fail to loaded! ", false);
+	}
+
+
+	@FindBy(css = "[form-title=\"Minor Schedule by Week\"]")
+	private WebElement minorScheduleByWeekSection;
+
+	@FindBy(css = "[form-title=\"Minor Schedule by Day\"]")
+	private WebElement minorScheduleByDaySection;
+
+	public boolean checkIfMinorSectionsLoaded () throws Exception {
+		boolean ifSectionLoaded = false;
+		if (isElementLoaded(minorScheduleByWeekSection, 5)
+				&& isElementLoaded(minorScheduleByDaySection, 5)) {
+			ifSectionLoaded = true;
+			SimpleUtils.pass("The sections display correctly on the minor template page! ");
+		} else
+			SimpleUtils.report("The sections display incorrectly on the minor template page! ");
+		return ifSectionLoaded;
+	}
+
+	public void clickOnBackButton () throws Exception {
+		if (isElementLoaded(backButton, 5)) {
+			clickTheElement(backButton);
+			SimpleUtils.pass("Click back button successfully! ");
+		} else
+			SimpleUtils.fail("Back button fail to loaded! ", false);
+	}
 }
