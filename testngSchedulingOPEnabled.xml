@@ -181,7 +181,7 @@
                     <include name="verifyAssignTMInDayViewAsInternalAdmin" />
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
-                    <include name="verifyEditShiftTimeInDayViewAsInternalAdmin" />
+<!--                    <include name="verifyEditShiftTimeInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5700-->
                     <include name="verifyEditMealBreakTimeInDayViewAsInternalAdmin" />
                     <include name="verifyDeleteShiftInDayViewAsInternalAdmin" />
                     <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />

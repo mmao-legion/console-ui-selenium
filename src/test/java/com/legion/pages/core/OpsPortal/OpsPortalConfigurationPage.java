@@ -112,7 +112,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="sub-content-box[box-title=\"Days of Week\"]")
 	private WebElement daysOfWeekSection;
 
-	@FindBy(css="[box-title=\"Dynamic Group\"]")
+	@FindBy(css="[title=\"Dynamic Groups\"] div")
 	private WebElement dynamicGroupSection;
 
 	@FindBy(css="sub-content-box[box-title=\"Time of Day\"]")

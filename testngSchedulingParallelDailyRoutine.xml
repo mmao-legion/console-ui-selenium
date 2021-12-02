@@ -84,11 +84,11 @@
                     <include name="verifyPTORequestInScheduleAsInternalAdmin" />
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
- <!--                   <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" /> -->
+ <!--                   <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" /> cannot locate to Apply and Cancel button in day view-->
                     <include name="verifyAssignTMInDayViewAsInternalAdmin" />
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
-                    <include name="verifyEditShiftTimeInDayViewAsInternalAdmin" />
+<!--                    <include name="verifyEditShiftTimeInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5700-->
                     <include name="verifyEditMealBreakTimeInDayViewAsInternalAdmin" />
                     <include name="verifyDeleteShiftInDayViewAsInternalAdmin" />
                     <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />

@@ -574,7 +574,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
             int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
             int i = 0;
-            while (i < 100 && dayViewAvailableShifts.get(randomIndex).findElement(By.className("sch-day-view-shift-worker-name")).getText().contains("Open")){
+            String dayViewShiftNames = dayViewAvailableShifts.get(randomIndex).findElement(By.className("sch-day-view-shift-worker-name")).getText();
+            while (i < 100 && (dayViewShiftNames.contains("Open") || dayViewShiftNames.contains("Unassigned"))){
                 randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
                 i++;
             }
