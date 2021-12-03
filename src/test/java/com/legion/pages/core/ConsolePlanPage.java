@@ -49,15 +49,15 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     private WebElement planCreateOKBTN;
     @FindBy(css = "h1.title.ng-binding")
     private WebElement scenarioPlanNameInDeatil;
-    @FindBy(css = "input[placeholder=\"Search Planed Budget\"]")
+    @FindBy(css = "input[placeholder=\"Search by labor budget name\"]")
     private WebElement planSearchInputField;
-    @FindBy(css = "tr[ng-repeat-start=\"plan in filteredPlanLists\"]")
+    @FindBy(css = "div[ng-repeat-start=\"plan in filteredPlanLists\"]")
     private List<WebElement> planSearchedResults;
     @FindBy(css = "lg-button[label=\"Create\"]")
     private List<WebElement> createScPlanButton;
     @FindBy(css = "lg-button[label=\"Save\"]>button")
     private WebElement planSaveButton;
-    @FindBy(css = "tr[ng-repeat=\"s in plan.scenaries\"]")
+    @FindBy(css = "div[ng-repeat=\"s in plan.scenaries\"]")
     private List<WebElement> scenarioPlanRecords;
     @FindBy(css = "span[ng-class=\"getPlanStatusClass(scenario)\"]")
     private WebElement planStatusInDetail;
@@ -197,18 +197,18 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     @Override
     public void takeOperationToPlan(String parentPlanName, String scenarioPlanName, String status) throws Exception {
         searchAPlan(parentPlanName);
-        //click the arrow to expand
-        WebElement arrowExpandIcon = planSearchedResults.get(0).findElement(By.cssSelector("td[ng-click=\"expandScenario(plan)\"]"));
-        if (isElementLoaded(arrowExpandIcon, 5)) {
-            SimpleUtils.pass("Arrow icon to expand a parent plan loaded successfully!");
-            clickTheElement(arrowExpandIcon);
+        //click the planName to expand
+        WebElement planName = planSearchedResults.get(0).findElement(By.cssSelector("div[ng-click=\"expandScenario(plan)\"]"));
+        if (isElementLoaded(planName, 5)) {
+            SimpleUtils.pass("plan name loaded successfully!");
+            clickTheElement(planName);
             //find the scenario plan to view
             if (scenarioPlanRecords.size() > 0) {
                 SimpleUtils.pass("Scenario plan loaded successfully");
                 for (int index = 0; index < scenarioPlanRecords.size(); index++) {
-                    if (scenarioPlanRecords.get(index).findElement(By.cssSelector("td.one-line-overflow.ng-binding")).getText().equals(scenarioPlanName)){
-                        WebElement viewEle=scenarioPlanRecords.get(index).findElement(By.cssSelector("td:nth-last-child(1)>lg-button"));
-                        if(isElementLoaded(viewEle)&&viewEle.getText().trim().equals("View")) {
+                    if (scenarioPlanRecords.get(index).findElement(By.cssSelector("div.lg-scenario-table-improved__grid-column--left.ng-binding")).getText().equals(scenarioPlanName)){
+                        WebElement viewEle=scenarioPlanRecords.get(index).findElement(By.cssSelector("lg-button[label=\"View\"] button"));
+                        if(isElementLoaded(viewEle,5)) {
                             SimpleUtils.pass("Plan view button loaded successfully");
                             clickTheElement(viewEle);
                             waitForSeconds(2);

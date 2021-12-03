@@ -152,7 +152,7 @@ public class PlanTest extends TestBase {
             //go to Global Configuration tab
             locationsPage.goToGlobalConfigurationInLocations();
             //set the plan level as centrailized
-            locationsPage.setLaborBudgetLevel(true,planLevelSelection.NoSubPlans.getValue());
+            locationsPage.setLaborBudgetLevel(false,planLevelSelection.NoSubPlans.getValue());
             //switch back to controls
             locationsPage.clickModelSwitchIconInDashboardPage(ConfigurationTest.modelSwitchOperation.Console.getValue());
 //            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);
@@ -226,7 +226,7 @@ public class PlanTest extends TestBase {
             String regionName="Region-ForAutomation";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail(pa l"DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
