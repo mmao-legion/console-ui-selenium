@@ -152,7 +152,7 @@ public class PlanTest extends TestBase {
             //go to Global Configuration tab
             locationsPage.goToGlobalConfigurationInLocations();
             //set the plan level as centrailized
-            locationsPage.setLaborBudgetLevel(false,planLevelSelection.NoSubPlans.getValue());
+            locationsPage.setLaborBudgetLevel(true,planLevelSelection.NoSubPlans.getValue());
             //switch back to controls
             locationsPage.clickModelSwitchIconInDashboardPage(ConfigurationTest.modelSwitchOperation.Console.getValue());
 //            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);
@@ -199,7 +199,7 @@ public class PlanTest extends TestBase {
             //go to Global Configuration tab
             locationsPage.goToGlobalConfigurationInLocations();
             //set the plan level as centrailized
-            locationsPage.setLaborBudgetLevel(true,planLevelSelection.NoSubPlans.getValue());
+            locationsPage.setLaborBudgetLevel(false,planLevelSelection.NoSubPlans.getValue());
             //switch back to controls
             locationsPage.clickModelSwitchIconInDashboardPage(ConfigurationTest.modelSwitchOperation.Console.getValue());
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);

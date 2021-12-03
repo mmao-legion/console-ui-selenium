@@ -137,7 +137,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                 //input plan description
                 createPlanDescription.sendKeys("The description was created by automation ");
                 //Select duration for the budget to take place
-                planDurationSetting(0, 90);
+                planDurationSetting(366, 395);
                 //click the ok
                 clickOnSavePlanOKBtn();
                 waitForSeconds(3);
