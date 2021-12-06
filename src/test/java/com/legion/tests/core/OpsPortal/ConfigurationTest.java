@@ -106,6 +106,30 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Operating Hours")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOperatiingHoursAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+        try{
+            String OHtemplate = "Operating Hours";
+            String mode = "edit";
+            String templateName = "OHTemplateCreationCheck";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OHtemplate);
+            //check the operating hours list
+            configurationPage.OHListPageCheck();
+            //create a OH template and check create page
+            configurationPage.createOHTemplateUICheck(templateName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")

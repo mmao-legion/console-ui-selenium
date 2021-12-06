@@ -16,6 +16,7 @@ import java.util.*;
 
 import static com.legion.tests.TestBase.*;
 import static com.legion.utils.MyThreadLocal.*;
+import static org.apache.commons.lang.math.RandomUtils.nextInt;
 
 
 public class OpsPortalConfigurationPage extends BasePage implements ConfigurationPage {
@@ -399,6 +400,366 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Please specify which type of template would you open?",false);
 		}
 	}
+
+	@FindBy(css="ng-include[ng-if=\"noOfPublished > 0\"]")
+	private WebElement OHListSmartCard;
+	@FindBy(css="table.lg-table tbody tr")
+	private List<WebElement> OHListData;
+	@FindBy(css="div.lg-pagination__pages")
+	private List<WebElement> OHListTurnPage;
+	@FindBy(css="span.ml-10.fs-14 a")
+	private WebElement OHStartDaylink;
+	@FindBy(css="ul.dropdown-menu.oh-start-day li input-field")
+	private List<WebElement> OHStartDayOptions;
+	@FindBy(css="span.ml-10 a")
+	private List<WebElement> OHScheduleTimeLink;
+	@FindBy(css="ul.dropdown-menu.oh-start-time li input-field")
+	private List<WebElement> OHScheduleTimeOptions;
+	@FindBy(css="span[ng-click=\"$ctrl.manageDayparts()\"]")
+	private WebElement OHmanageDayPartlink;
+	@FindBy(css="modal[modal-title=\"Manage Dayparts\"]")
+	private WebElement OHmanageDayPartDialog;
+	@FindBy(css="table.lg-table tbody tr[ng-repeat*='currentPageItems']")
+	private List<WebElement> OHmanageDayPartData;
+	@FindBy(css="table[ng-if=\"$ctrl.getSelectedDayparts().length\"] tbody tr")
+	private List<WebElement> OHmanageDayPartsSelectedData;
+	@FindBy(css="div.buffer-hours.ng-scope div.option-item")
+	private List<WebElement> OHOperateBufferHrsOptions;
+	@FindBy(css="input-field[value=\"$ctrl.openingBufferHours\"] ng-form input")
+	private WebElement OHOperateOpenCloseOffsetStartTime;
+	@FindBy(css="input-field[value=\"$ctrl.closingBufferHours\"] ng-form input")
+	private WebElement OHOperateOpenCloseOffsetEndTime;
+	@FindBy(css="span.startend-time")
+	private WebElement OHOperateOpenCloseTimeEditLink;
+	@FindBy(css="div.modal-dialog ")
+	private WebElement OHOperateOpenCloseTimeEditDialog;
+	@FindBy(css="div.lgn-time-slider-notch-selector.lgn-time-slider-notch-selector-start")
+	private WebElement OHOperateOpenCloseStartTimeDrag;
+	@FindBy(css="div.lgn-time-slider-notch-selector.lgn-time-slider-notch-selector-end")
+	private WebElement OHOperateOpenCloseEndTimeDrag;
+	@FindBy(css="a[ng-if*='ContinuousOperation']")
+	private WebElement OHOperateOpenCloseContinuousTimeLink;
+	@FindBy(css="ul.dropdown-menu.oh-co-start-time li input-field")
+	private List<WebElement> OHOperateOpenCloseContinuousTimeOptions;
+	@FindBy(css="div.row-fx.mt-15.ng-scope")
+	private List<WebElement> OHBusinessHoursEntries;
+	@FindBy(css="input-field[label=\"All days\"] input")
+	private WebElement OHOperateOpenCloseAllDayOption;
+	@FindBy(css="input-field[type=\"checkbox\"] input")
+	private List<WebElement> OHBusinessHoursDays;
+	@FindBy(css="nav.lg-tabs__nav div:nth-child(2)")
+	private WebElement OHOperateDayPartTab;
+	@FindBy(css="div.availability-box.availability-box-ghost div")
+	private List<WebElement> OHBusinessHoursTimeCells;
+	@FindBy(css="div.col-sm-8 div[tooltip-class=\"operating-hour-daypart-tooltip\"]")
+	private List<WebElement> OHBusinessHoursTimeDayParts;
+
+
+
+
+
+
+	@Override
+	public void OHListPageCheck() throws Exception {
+		//verify the smart card show
+		if (isElementLoaded(OHListSmartCard)) {
+			SimpleUtils.pass("Publised smartcard show at operating hours list page");
+			//continue to check the published count at listed data
+			int publishedCountAtSmart=Integer.parseInt(OHListSmartCard.findElement(By.cssSelector("h1")).getText().trim().split("Published")[0].trim());
+			//get all published template at listed data
+			int pageLength=Integer.parseInt(OHListTurnPage.get(0).getText().trim().split("of")[1].trim());
+			int listedPublisedTP=0;
+			for(int round=0;round<pageLength;round++) {
+				for(WebElement OHdata:OHListData) {
+					if (OHdata.findElement(By.cssSelector("td>lg-eg-status")).getAttribute("type").equals("Published"))
+						listedPublisedTP++;
+				}
+				if (pageLength>1)
+				   //turn page to continue
+				   selectByVisibleText(OHListTurnPage.get(0).findElement(By.cssSelector("select")),round+"2");
+				else
+					break;
+			}
+			//check the data matched
+			if(listedPublisedTP==publishedCountAtSmart)
+				SimpleUtils.pass("Published OH templates is equal to the data in smart card");
+			else
+				SimpleUtils.report("Published OH templates is not equal to the data in smart card");
+
+		}
+		else
+			SimpleUtils.report("No Publised smartcard show at operating hours list page");
+	}
+
+    @Override
+	public void createOHTemplateUICheck(String OHTempTemplate) throws Exception {
+		//check template existed or not
+		//search and archive the template
+		if(searchTemplate(OHTempTemplate))
+			if (templateDraftStatusList.size() > 0)
+				//Delete the temp
+				archivePublishedOrDeleteDraftTemplate(OHTempTemplate, "Delete");
+		//click the add new template
+		clickTheElement(newTemplateBTN);
+		waitForSeconds(1);
+		if (isElementEnabled(createNewTemplatePopupWindow)) {
+			SimpleUtils.pass("User can click new template button successfully!");
+			clickTheElement(newTemplateName);
+			newTemplateName.sendKeys(OHTempTemplate);
+			clickTheElement(newTemplateDescription);
+			newTemplateDescription.sendKeys(OHTempTemplate);
+			clickTheElement(continueBTN);
+			waitForSeconds(4);
+			if (isElementEnabled(welcomeCloseButton)) {
+				clickTheElement(welcomeCloseButton);
+			}
+			//check the start day
+			if (isElementLoaded(OHStartDaylink)) {
+				SimpleUtils.pass("Already in operating hours detail page");
+				clickTheElement(OHStartDaylink);
+				waitForSeconds(1);
+				if (OHStartDayOptions.size() == 7) {
+					SimpleUtils.pass("There are 7 options for start day!");
+					int random=new Random().nextInt(OHStartDayOptions.size());
+					WebElement randomDay=OHStartDayOptions.get(random);
+					//get the current selection
+					String currentStartDay = randomDay.getAttribute("label").trim();
+					clickTheElement(randomDay.findElement(By.cssSelector("ng-form input")));
+					waitForSeconds(1);
+					//get the start day value at detail that selected
+					String selectedDay = OHStartDaylink.getText().trim();
+					if (currentStartDay.equals(selectedDay))
+						SimpleUtils.pass("The start day of week at OH template detail page works well");
+					else
+						SimpleUtils.report("The selection of start day of week at OH template detail page not work!");
+					}
+				} else
+					SimpleUtils.fail("Some options are missing for start day settings!", false);
+
+			//check the Time for Schedule week
+			if (isElementLoaded(OHScheduleTimeLink.get(1))) {
+				SimpleUtils.pass("Schedule start time loaded in operating hours detail page");
+				int randoms=new Random().nextInt(OHScheduleTimeOptions.size());
+				WebElement randomSch=OHScheduleTimeOptions.get(randoms);
+				clickTheElement(OHScheduleTimeLink.get(1));
+				waitForSeconds(1);
+				if (OHScheduleTimeOptions.size() == 48) {
+					SimpleUtils.pass("Schedule start time loaded with 48 options");
+					//select a rando schedule time
+					String selectedTime = randomSch.getAttribute("label").trim();
+					clickTheElement(randomSch.findElement(By.cssSelector("ng-form input")));
+					waitForSeconds(1);
+					//get the current start day at detail page
+					String currentStartTime = OHScheduleTimeLink.get(1).getText().trim();
+					if (currentStartTime.equals(selectedTime))
+						SimpleUtils.pass("The schedule start time at OH template detail page works well");
+					else
+						SimpleUtils.report("The selection of schedule start time at OH template detail page not work!");
+
+				} else
+					SimpleUtils.fail("Schedule start time not loaded with all options", false);
+			}
+
+			//check the day parts setting
+			String selectDayPart = null;
+			clickTheElement(OHmanageDayPartlink);
+			waitForSeconds(1);
+			waitForSeconds(1);
+			if (isElementLoaded(OHmanageDayPartDialog)) {
+				SimpleUtils.pass("The manage day parts dialog pop up successfully");
+				if (areListElementVisible(OHmanageDayPartData,5)) {
+					OHmanageDayPartData.get(0).findElement(By.cssSelector("input-field[type=\"checkbox\"]")).click();
+					waitForSeconds(1);
+					selectDayPart = OHmanageDayPartData.get(0).findElement(By.cssSelector("td:nth-child(3) span")).getText().trim();
+					clickTheElement(saveButton);
+					waitForSeconds(1);
+				} else
+					SimpleUtils.report("No day parts option showed!");
+				if (areListElementVisible(OHmanageDayPartsSelectedData,5)) {
+					SimpleUtils.pass("Set day part for the template success!");
+					//get the selected day part
+					String selectedDayPart = OHmanageDayPartsSelectedData.get(0).findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+					if (selectedDayPart.equals(selectDayPart))
+						SimpleUtils.pass("The day part showed is the one user selected");
+				} else
+					SimpleUtils.report("Set day part for the template failed");
+			} else
+				SimpleUtils.report("The manage day parts dialog not pop up");
+
+			//check business hours settings
+			//check the options number
+			scrollToElement(OHBusinessHoursEntries.get(0));
+			if (areListElementVisible(OHBusinessHoursEntries,5) && OHBusinessHoursEntries.size() == 7) {
+				SimpleUtils.pass("Business Hours options loaded successfully");
+				//check the first option status
+				boolean enableStatus = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("input[type=\"checkbox\"]")).getAttribute("class").contains("ng-not-empty") ? true : false;
+				OHTempBusinessHoursDaySetting(enableStatus);
+				OHTempBusinessHoursDaySetting(!enableStatus);
+			} else
+				SimpleUtils.fail("Business Hours options not loaded", false);
+
+            //check the Operating / Buffer Hours
+			OHTempOperatinBufferHoursCheck();
+			//save the template as draft
+			if (isElementEnabled(saveAsDraftButton, 5)) {
+				SimpleUtils.pass("User can click continue button successfully!");
+				clickTheElement(saveAsDraftButton);
+				waitForSeconds(5);
+			}
+
+			//search and archive the template
+			if(searchTemplate(OHTempTemplate))
+				if (templateDraftStatusList.size() > 0)
+					//Delete the temp
+					archivePublishedOrDeleteDraftTemplate(OHTempTemplate, "Delete");
+
+
+		} else
+			SimpleUtils.fail("Add new template button not loaded", false);
+	}
+
+	private void OHTempOperatinBufferHoursCheck() throws Exception{
+		if (areListElementVisible(OHOperateBufferHrsOptions,5) && OHOperateBufferHrsOptions.size()==4) {
+			SimpleUtils.report("Operating / Buffer Hours options showed correct;y at OH template detail page");
+			//set the option for Open / Close
+			OHOperateBufferHrsOptions.get(1).findElement(By.cssSelector("input-field:nth-child(1)")).click();
+			waitForSeconds(1);
+			//check the operating hours shift time edit dialog.
+			clickTheElement(OHOperateOpenCloseTimeEditLink);
+			if (isElementLoaded(OHOperateOpenCloseTimeEditDialog)) {
+				SimpleUtils.pass("The dialog of 'Set Operating Hours opening and closing shift times' pops up successflly ");
+				String str1 = OHOperateOpenCloseTimeEditDialog.findElement(By.cssSelector("lg-tab[tab-title=\"Open/Close\"] span.setting-title")).getText();
+				if (str1.contains("opening and closing shift times"))
+					SimpleUtils.pass("The dialog title is correct!");
+				//get the original start time
+				String OHStartOrigin = OHOperateOpenCloseStartTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
+				//get the original end time
+				String OHEndOrigin = OHOperateOpenCloseEndTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
+				//drag to change the start time and end time
+				moveDayViewCards(OHOperateOpenCloseStartTimeDrag, 40);
+				moveDayViewCards(OHOperateOpenCloseEndTimeDrag, -40);
+				//get the changed start time and end time
+				String OHStartCurrent = OHOperateOpenCloseStartTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
+				String OHEndCurrent = OHOperateOpenCloseEndTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
+				if (!OHStartOrigin.equals(OHStartCurrent) && !OHEndOrigin.equals(OHEndCurrent))
+					SimpleUtils.pass("Drag to change Operating Hours opening and closing shift times successfully");
+				//click save
+				clickTheElement(saveButton);
+				waitForSeconds(1);
+			}
+			//Continuous Operation option check
+			OHOperateBufferHrsOptions.get(3).findElement(By.cssSelector("input-field:nth-child(1)")).click();
+			waitForSeconds(1);
+			clickTheElement(OHOperateOpenCloseContinuousTimeLink);
+			if (areListElementVisible(OHOperateOpenCloseContinuousTimeOptions,5) && OHOperateOpenCloseContinuousTimeOptions.size() == 48) {
+				SimpleUtils.pass("The Operation time set options are loaded successfully");
+				clickTheElement(OHOperateOpenCloseContinuousTimeOptions.get(0).findElement(By.cssSelector("input-field ng-form input")));
+				waitForSeconds(1);
+			}
+			//check the selected time option
+			String currentClospeningTime = OHOperateOpenCloseContinuousTimeLink.getText().trim();
+			if (currentClospeningTime.equals("12:00AM"))
+				SimpleUtils.pass("The Continuous Operation time setting works well! ");
+
+			//check the  Offset and none action
+			OHOperateBufferHrsOptions.get(2).findElement(By.cssSelector("input-field:nth-child(1)")).click();
+			waitForSeconds(1);
+			//Offset start and  end time setting
+			OHOperateOpenCloseOffsetStartTime.clear();
+			OHOperateOpenCloseOffsetStartTime.sendKeys("0.5");
+			OHOperateOpenCloseOffsetEndTime.clear();
+			OHOperateOpenCloseOffsetEndTime.sendKeys("2");
+			waitForSeconds(2);
+			//change to select option as :none
+			OHOperateBufferHrsOptions.get(0).findElement(By.cssSelector("input-field:nth-child(1)")).click();
+			waitForSeconds(1);
+			//get the Offset start and  end time setting and assert
+			String offSetStart=OHOperateBufferHrsOptions.get(2).findElement(By.cssSelector("input-field[value=\"$ctrl.openingBufferHours\"] div.input-faked")).getAttribute("disabled");
+			String offSetEnd=OHOperateBufferHrsOptions.get(2).findElement(By.cssSelector("input-field[value=\"$ctrl.closingBufferHours\"] div.input-faked")).getAttribute("disabled");
+			if(offSetStart.equalsIgnoreCase("disabled")&&offSetEnd.equalsIgnoreCase("disabled"))
+				SimpleUtils.pass("Change clos/open option to none will set the offset change as default");
+
+		} else
+			SimpleUtils.report("No Operating / Buffer Hours options or not enough options showed at OH template detail page");
+
+	}
+
+
+
+	private void OHTempBusinessHoursDaySetting(boolean status) throws Exception {
+			if (status) {
+				//disable the day
+				SimpleUtils.report("The day of business hours option is opened");
+				//Click to set it as disabled
+				OHBusinessHoursEntries.get(0).findElement(By.cssSelector("label.switch span")).click();
+				waitForSeconds(1);
+				String currentSta = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("div.col-sm-8")).getText().trim();
+				if (currentSta.contains("Closed for the day"))
+					SimpleUtils.pass("Set the day of as closed successfully!");
+			} else {//enable the day
+				SimpleUtils.report("The day of business hours option is closed");
+				//Click to set it as enabled
+				OHBusinessHoursEntries.get(0).findElement(By.cssSelector("label.switch span")).click();
+				waitForSeconds(1);
+				WebElement defaultDaypartSet = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("div.col-sm-8 label"));
+				if (isElementLoaded(defaultDaypartSet) && defaultDaypartSet.getText().trim().contains("Day parts Not Set"))
+					SimpleUtils.pass("Set the day of as opened successfully and default as no day parts set");
+				//get default start time and end time
+				String StartOrigin = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("span.work-time")).getText().trim();
+				//get the original end time
+				String EndOrigin = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("span.work-time.mr-2")).getText().trim();
+				if (StartOrigin.equals("12:00am") && EndOrigin.equals("12:00am"))
+					SimpleUtils.pass("The default start time and end time show correctly");
+				//change the time
+				OHBusinessHoursEntries.get(0).findElement(By.cssSelector("lg-button[label=\"Edit\"]")).click();
+				waitForSeconds(1);
+				//drag to change the start time and end time
+				moveDayViewCards(OHOperateOpenCloseStartTimeDrag, 40);
+				moveDayViewCards(OHOperateOpenCloseEndTimeDrag, -40);
+				waitForSeconds(1);
+				//check the all day selection
+				boolean selection = true;
+				if (OHBusinessHoursDays.get(OHBusinessHoursDays.size() - 1).getAttribute("class").contains("ng-empty")) {
+					clickTheElement(OHOperateOpenCloseAllDayOption);
+					waitForSeconds(1);
+					for (WebElement days : OHBusinessHoursDays) {
+						if (days.getAttribute("class").contains("ng-empty")) ;
+						{
+							selection = false;
+							break;
+						}
+					}
+					if (!selection)
+						SimpleUtils.pass("Check 'All days' option select all options successfully");
+					else
+						SimpleUtils.report("Check 'All days' option select all options failed!");
+				}
+				//switch to day part tab
+				clickTheElement(OHOperateDayPartTab);
+				waitForSeconds(2);
+				if (areListElementVisible(OHBusinessHoursTimeCells) && OHBusinessHoursTimeCells.size() == 96) {
+					SimpleUtils.pass("Day part time cell show correctly");
+					//drag to select a day part
+					moveDayViewCards(OHBusinessHoursTimeCells.get(10), 20);
+					//click save
+					clickTheElement(saveButton);
+					waitForSeconds(1);
+					//check all day has set day part
+					if (areListElementVisible(OHBusinessHoursTimeDayParts) && OHBusinessHoursTimeDayParts.size() == 7)
+						SimpleUtils.pass("Day part set for every day success!");
+				}
+				//get the start time and end time again and assert time was updated
+				//get default start time and end time for the first day again
+				String StartCurrent = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("span.work-time")).getText().trim();
+				//get the original end time
+				String EndCurrent = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("span.work-time.mr-2")).getText().trim();
+				if (!StartOrigin.equals(StartCurrent) && !EndOrigin.equals(EndCurrent))
+					SimpleUtils.pass("Operating hours start time and end time was changes successfully");
+
+
+			}
+		}
+
 
 	@Override
 	public void goToTemplateDetailsPage(String templateType) throws Exception {
