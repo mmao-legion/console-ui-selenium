@@ -47,6 +47,8 @@ public interface ConfigurationPage {
     public void addMultipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
     public void editAdvanceStaffingRule(String shiftsNumber) throws Exception;
     public void deleteAdvanceStaffingRule() throws Exception;
+    public void OHListPageCheck() throws Exception;
+    public void createOHTemplateUICheck(String tpname) throws Exception;
     public void verifyClockInDisplayAndSelect(List<String> clockInGroup) throws Exception;
     public void setWFS(String wfsMode);
     public void selectWFSGroup(String wfsName) throws Exception;
