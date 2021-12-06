@@ -435,7 +435,7 @@
 
     <test name="Copy Schedule Without Assignments Test">
         <classes>
-            <class name="com.legion.tests.core.CopyScheduleWithoutAssignments">
+            <class name="com.legion.tests.core.CopyScheduleWithoutAssignmentsTest">
                 <methods>
                     <include name="verifyTheResultingSchedulesShouldAllBeCreatedAsOpenShiftsAsInternalAdmin" />
                     <include name="verifyTheResultingSchedulesWhenSettingIsKeepAsUnassignedAsInternalAdmin" />
