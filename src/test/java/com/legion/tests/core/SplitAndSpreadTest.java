@@ -667,9 +667,10 @@ public class SplitAndSpreadTest extends TestBase {
             List<String> shiftInfo =  scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
             String tmFirstName = shiftInfo.get(0);
             int i=0;
-            while (i< 20 && (tmFirstName.equalsIgnoreCase("open") || tmFirstName.equalsIgnoreCase("Unassigned"))) {
+            while (i< 200 && (tmFirstName.equalsIgnoreCase("open") || tmFirstName.equalsIgnoreCase("Unassigned"))) {
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
                 tmFirstName  = shiftInfo.get(0);
+                i++;
             }
             String workRole = shiftInfo.get(4);
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -782,10 +783,11 @@ public class SplitAndSpreadTest extends TestBase {
             List<String> shiftInfo =  scheduleShiftTablePage.getTheShiftInfoByIndex(index);
             String tmFirstName = shiftInfo.get(0);
             int i=0;
-            while (i< 20 && (tmFirstName.equalsIgnoreCase("open") || tmFirstName.equalsIgnoreCase("Unassigned"))) {
+            while (i< 200 && (tmFirstName.equalsIgnoreCase("open") || tmFirstName.equalsIgnoreCase("Unassigned"))) {
                 index = scheduleShiftTablePage.getRandomIndexOfShift();
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
                 tmFirstName  = shiftInfo.get(0);
+                i++;
             }
             String workRole = shiftInfo.get(4);
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
