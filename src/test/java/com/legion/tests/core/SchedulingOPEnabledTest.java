@@ -567,7 +567,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             shiftOperatePage.convertToOpenShiftDirectly();
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
-            BasePage.waitForSeconds(10);
+            BasePage.waitForSeconds(30);
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyListOfOfferNotNull();
