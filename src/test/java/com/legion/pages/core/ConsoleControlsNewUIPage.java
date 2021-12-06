@@ -6915,4 +6915,39 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Edit Meal Break button is not loaded!", false);
 		}
 	}
+
+	@FindBy(css = "[question-title=\"Lock employee availability edits…\"] h3")
+	private WebElement lockEmployeeAvailabilityMessage;
+
+	@FindBy(css = "[question-title=\"Lock employee availability edits…\"] select")
+	private WebElement lockEmployeeAvailabilitySelector;
+
+	@Override
+	public void verifyLockEmployeeAvailabilityEditsIsLoaded () throws Exception {
+		String message = "Lock employee availability edits…";
+		String option1 = "Once schedule is created";
+		String option2 = "During schedule planning window";
+		if (isElementLoaded(lockEmployeeAvailabilityMessage, 10)
+				&& isElementLoaded(lockEmployeeAvailabilitySelector, 10)) {
+			Select selector = new Select(lockEmployeeAvailabilitySelector);
+			if (lockEmployeeAvailabilityMessage.getText().equalsIgnoreCase(message)
+					&& selector.getOptions().get(0).getText().equalsIgnoreCase(option1)
+					&& selector.getOptions().get(1).getText().equalsIgnoreCase(option2)) {
+				SimpleUtils.pass("The text for 'Lock employee availability edits…' display correctly! ");
+			} else
+				SimpleUtils.fail("The text for 'Lock employee availability edits…' display incorrectly! ", false);
+		} else
+			SimpleUtils.fail("Lock employee availability edits section fail to loaded! ", false);
+	}
+
+	@Override
+	public void updateLockEmployeeAvailabilityEdits(String lockOption) throws Exception {
+		if (isElementLoaded(lockEmployeeAvailabilitySelector, 10)) {
+			Select selector = new Select(lockEmployeeAvailabilitySelector);
+			selector.selectByVisibleText(lockOption);
+			displaySuccessMessage();
+			SimpleUtils.pass("Select option successfully! ");
+		} else
+			SimpleUtils.fail("Lock employee availability edits section fail to loaded! ", false);
+	}
 }

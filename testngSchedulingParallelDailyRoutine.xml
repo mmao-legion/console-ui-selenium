@@ -445,4 +445,16 @@
         </classes>
     </test>
 
+    <test name="Controls New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ControlsNewUITest">
+                <methods>
+                    <include name="verifySetTheSettingForLockEmployeeAvailabilityEditsAsInternalAdmin" />
+                    <include name="verifyTheTMCannotEditTheAvailabilityWhenScheduleIsCreatedAsInternalAdmin" />
+                    <include name="verifyTheTMCannotEditTheAvailabilityWhenWeekDuringSchedulePlanningWindowAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

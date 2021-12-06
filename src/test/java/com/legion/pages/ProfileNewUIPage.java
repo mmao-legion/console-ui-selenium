@@ -291,4 +291,5 @@ public interface ProfileNewUIPage {
 
 	public String getMessageFromAlertDialog () throws Exception;
 	public String getMinorRuleTemplateName () throws Exception;
+	public String getToolTipMessageOfAvailabilityLockIcon() throws Exception;
 }

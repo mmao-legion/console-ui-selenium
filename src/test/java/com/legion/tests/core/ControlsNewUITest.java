@@ -1,30 +1,47 @@
-//package com.legion.tests.core;
-//
-//import java.lang.reflect.Method;
-//import java.util.ArrayList;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//
-//import com.legion.pages.*;
-//import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
-//import org.openqa.selenium.WebElement;
-//import org.testng.annotations.BeforeMethod;
-//import org.testng.annotations.Test;
-//import com.legion.tests.TestBase;
-//import com.legion.tests.annotations.Automated;
-//import com.legion.tests.annotations.Enterprise;
-//import com.legion.tests.annotations.Owner;
-//import com.legion.tests.annotations.TestName;
-//import com.legion.tests.core.ScheduleTestKendraScott2.SchedulePageSubTabText;
-//import com.legion.tests.core.ScheduleNewUITest.overviewWeeksStatus;
-//import com.legion.tests.data.CredentialDataProviderSource;
-//import com.legion.utils.JsonUtil;
-//import com.legion.utils.SimpleUtils;
-//
-//
-//public class ControlsNewUITest extends TestBase{
-//
+package com.legion.tests.core;
+
+import java.lang.reflect.Method;
+import java.util.List;
+
+import com.legion.pages.*;
+import com.legion.tests.annotations.Automated;
+import com.legion.tests.annotations.Enterprise;
+import com.legion.tests.annotations.Owner;
+import com.legion.tests.annotations.TestName;
+import com.legion.tests.data.CredentialDataProviderSource;
+import org.openqa.selenium.WebElement;
+import org.testng.annotations.BeforeMethod;
+import com.legion.tests.TestBase;
+import com.legion.utils.SimpleUtils;
+import org.testng.annotations.Test;
+
+
+public class ControlsNewUITest extends TestBase{
+
+    String lockMessage1 = "This week's Availability is locked because you already have a schedule.";
+    String lockMessage2 = "Editing is not permitted during the schedule planning period.";
+    @Override
+    @BeforeMethod()
+    public void firstTest(Method testMethod, Object[] params) {
+        try {
+            this.createDriver((String) params[0], "69", "Window");
+            visitPage(testMethod);
+            loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+	public enum lockEmployeeAvailabilityEditsOptions {
+        OnceScheduleIsCreated("Once schedule is created"),
+        DuringSchedulePlanningWindow("During schedule planning window");
+        private final String value;
+        lockEmployeeAvailabilityEditsOptions(final String newValue) {
+	            value = newValue;
+        }
+        public String getValue() { return value; }
+	}
+
 //
 //	public enum dayWeekOrPayPeriodViewType{
 //		  Next("Next"),
@@ -1473,4 +1490,151 @@
 //	}
 //
 //
-//}
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify can set the settings for Lock employee availability edits")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySetTheSettingForLockEmployeeAvailabilityEditsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            //Verify the content in dropdown list
+            controlsNewUIPage.verifyLockEmployeeAvailabilityEditsIsLoaded();
+
+            //Verify the options can be selected successfully
+            controlsNewUIPage.updateLockEmployeeAvailabilityEdits(lockEmployeeAvailabilityEditsOptions.OnceScheduleIsCreated.getValue());
+            controlsNewUIPage.updateLockEmployeeAvailabilityEdits(lockEmployeeAvailabilityEditsOptions.DuringSchedulePlanningWindow.getValue());
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify the TM cannot edit the availability when schedule is created")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheTMCannotEditTheAvailabilityWhenScheduleIsCreatedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            //Verify the content in dropdown list
+            controlsNewUIPage.verifyLockEmployeeAvailabilityEditsIsLoaded();
+
+            //select option as "Once schedule is created"
+            controlsNewUIPage.updateLockEmployeeAvailabilityEdits(lockEmployeeAvailabilityEditsOptions.OnceScheduleIsCreated.getValue());
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            // Create the schedule for current week
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            scheduleCommonPage.navigateToNextWeek();
+            //Delete the schedule for next week
+            isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+
+            // Login as TM, go to My Work Preferences
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+            profileNewUIPage.getNickNameFromProfile();
+            String myWorkPreferencesLabel = "My Work Preferences";
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+            SimpleUtils.assertOnFail("The My Availability should be locked! ",
+                    profileNewUIPage.isMyAvailabilityLockedNewUI(), false);
+            SimpleUtils.assertOnFail("The My Availability lock message display incorrectly! It should be: " + lockMessage1
+                            + " But the actual is: " + profileNewUIPage.getToolTipMessageOfAvailabilityLockIcon(),
+                    lockMessage1.equalsIgnoreCase(profileNewUIPage.getToolTipMessageOfAvailabilityLockIcon()), false);
+
+            profileNewUIPage.clickNextWeek();
+            SimpleUtils.assertOnFail("The My Availability should not be locked! ",
+                    !profileNewUIPage.isMyAvailabilityLockedNewUI(), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify the TM cannot edit the availability when week during schedule planning window")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheTMCannotEditTheAvailabilityWhenWeekDuringSchedulePlanningWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            //Verify the content in dropdown list
+            controlsNewUIPage.verifyLockEmployeeAvailabilityEditsIsLoaded();
+
+            //select option as "During schedule planning window"
+            controlsNewUIPage.updateLockEmployeeAvailabilityEdits(lockEmployeeAvailabilityEditsOptions.DuringSchedulePlanningWindow.getValue());
+            int schedulePlanningWindowWeeks = Integer.parseInt(controlsNewUIPage.getSchedulePlanningWindowWeeks().split(" ")[0]);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            // Create the schedule for current week
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            scheduleCommonPage.navigateToNextWeek();
+            //Delete the schedule for next week
+            isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+
+            // Login as TM, go to My Work Preferences
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+            profileNewUIPage.getNickNameFromProfile();
+            String myWorkPreferencesLabel = "My Work Preferences";
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+            for (int i = 0; i< schedulePlanningWindowWeeks +1 ; i++) {
+                SimpleUtils.assertOnFail("The My Availability should be locked! ",
+                        profileNewUIPage.isMyAvailabilityLockedNewUI(), false);
+                SimpleUtils.assertOnFail("The My Availability lock message display incorrectly! It should be: " + lockMessage2
+                                + " But the actual is: " + profileNewUIPage.getToolTipMessageOfAvailabilityLockIcon(),
+                        lockMessage2.equalsIgnoreCase(profileNewUIPage.getToolTipMessageOfAvailabilityLockIcon()), false);
+                profileNewUIPage.clickNextWeek();
+            }
+
+            SimpleUtils.assertOnFail("The My Availability should not be locked! ",
+                    !profileNewUIPage.isMyAvailabilityLockedNewUI(), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+}

@@ -1564,7 +1564,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	//added by Haya
 	@FindBy(css="user-profile-section[editing-locked]")
 	private WebElement myAvailability;
-	@FindBy(css="i.fa-lock")
+	@FindBy(css=".user-profile-section__lock")
 	private WebElement lockIcon;
 	@FindBy(css="user-profile-section[editing-locked] div[class=\"user-profile-section__header\"] span")
 	private WebElement editBtn;
@@ -4104,6 +4104,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		} else {
 			SimpleUtils.fail("Get minor rule template name fail to load!",false);
 		}
+		return message;
+	}
+
+	@Override
+	public String getToolTipMessageOfAvailabilityLockIcon() throws Exception {
+		String message = "";
+		if (isElementLoaded(lockIcon)) {
+			message = lockIcon.getAttribute("data-tootik");
+			SimpleUtils.pass("Get lock tooltip message successfully! ");
+		} else
+			SimpleUtils.fail("The Availability lock icon is not loaded! ", false);
+
 		return message;
 	}
 }
