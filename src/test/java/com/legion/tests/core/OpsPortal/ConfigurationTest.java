@@ -812,6 +812,7 @@ public class ConfigurationTest extends TestBase {
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -834,6 +835,8 @@ public class ConfigurationTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.selectShiftTypeFilterByText("Assigned");
             indexes = scheduleShiftTablePage.getIndexOfDaysHaveShifts();
             for(String index:indexes){
                 scheduleShiftTablePage.verifyShiftTimeInReadMode(index,shiftTime);
@@ -882,6 +885,8 @@ public class ConfigurationTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 //          Click on edit button on week view
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.selectShiftTypeFilterByText("Assigned");
             SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , shiftOperatePage.verifyContextOfTMDisplay(), false);
 //          Click On Profile icon -> Breaks
             shiftOperatePage.clickOnProfileIcon();
@@ -891,7 +896,7 @@ public class ConfigurationTest extends TestBase {
             if(mealRestBreaks.get("Meal Break").compareToIgnoreCase(mealBreakTime) == 0){
                 SimpleUtils.pass("The Meal Break info is correct");
             }else
-                SimpleUtils.fail("The Meal Break info is correct",false);
+                SimpleUtils.fail("The Meal Break info is incorrect",false);
             if(mealRestBreaks.get("Rest Break").compareToIgnoreCase(restBreakTime) == 0){
                 SimpleUtils.pass("The Rest Break info is correct");
             }else
