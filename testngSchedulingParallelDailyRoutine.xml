@@ -432,7 +432,7 @@
             </class>
         </classes>
     </test>
-
+<!-- Feature been disabled on RC
     <test name="Copy Schedule Without Assignments Test">
         <classes>
             <class name="com.legion.tests.core.CopyScheduleWithoutAssignmentsTest">
@@ -444,7 +444,7 @@
             </class>
         </classes>
     </test>
-
+-->
     <test name="Controls New UI Test">
         <classes>
             <class name="com.legion.tests.core.ControlsNewUITest">

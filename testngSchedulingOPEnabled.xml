@@ -353,17 +353,17 @@
         </classes>
     </test>
 
-
-    <test name="Copy Schedule Without Assignments Test">
-        <classes>
-            <class name="com.legion.tests.core.CopyScheduleWithoutAssignmentsTest">
-                <methods>
-                    <include name="verifyTheResultingSchedulesShouldAllBeCreatedAsOpenShiftsAsInternalAdmin" />
-                    <include name="verifyTheResultingSchedulesWhenSettingIsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-    
-</suite> <!-- Suite -->
+    <!-- Feature been disabled on RC
+        <test name="Copy Schedule Without Assignments Test">
+            <classes>
+                <class name="com.legion.tests.core.CopyScheduleWithoutAssignmentsTest">
+                    <methods>
+                        <include name="verifyTheResultingSchedulesShouldAllBeCreatedAsOpenShiftsAsInternalAdmin" />
+                        <include name="verifyTheResultingSchedulesWhenSettingIsKeepAsUnassignedAsInternalAdmin" />
+                        <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" />
+                    </methods>
+                </class>
+            </classes>
+        </test>
+        -->
+    </suite> <!-- Suite -->

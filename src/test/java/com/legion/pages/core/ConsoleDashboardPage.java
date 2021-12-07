@@ -949,7 +949,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(xpath = "//*[contains(text(),'Refresh')]")
 	private WebElement refreshButton;
 
-	@FindBy(xpath = "//i[contains(@class,'fa fa-clock-o ng-scope')]/following-sibling::span")
+	@FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div/div/div/p")
 	private WebElement lastUpdatedIcon;
 
 

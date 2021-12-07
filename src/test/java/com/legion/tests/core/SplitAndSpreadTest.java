@@ -792,9 +792,9 @@ public class SplitAndSpreadTest extends TestBase {
             String workRole = shiftInfo.get(4);
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView(tmFirstName);
+            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 
             //Create first shift for tm
