@@ -47,4 +47,5 @@ public interface NewShiftPage {
     public void clickOnCloseButtonOnCustomizeShiftPage() throws Exception;
     public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception;
     public void closeCustomizeNewShiftWindow() throws Exception;
+    public void clickOnBackButton () throws Exception;
 }

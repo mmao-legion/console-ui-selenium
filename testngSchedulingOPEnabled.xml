@@ -121,6 +121,8 @@
                     <!-- blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" /> -->
                     <include name="verifySchoolCalendarDefaultMonthAsInternalAdmin" />
                     <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
+                    <include name="verifyAutoScheduleRespectTheMinorsRulesAsInternalAdmin" />
+                    <include name="verifyRecommendationRespectTheMinorsRulesAsInternalAdmin" />
 
                 </methods>
             </class>
