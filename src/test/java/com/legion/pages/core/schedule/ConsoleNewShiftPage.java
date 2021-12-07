@@ -1372,4 +1372,15 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.fail("Customize New Shift window: Close button not loaded Successfully!", false);
         }
     }
+
+    @FindBy(css = "[ng-click=\"prevAction()\"]")
+    private WebElement backButton;
+    @Override
+    public void clickOnBackButton () throws Exception {
+        if (isElementLoaded(backButton, 10)) {
+            clickTheElement(backButton);
+            SimpleUtils.pass("Click Back button successfully! ");
+        } else
+            SimpleUtils.fail("The Back button fail to loaded! ", false);
+    }
 }
