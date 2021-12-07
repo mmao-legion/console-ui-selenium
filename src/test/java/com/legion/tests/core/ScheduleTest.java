@@ -1124,6 +1124,7 @@ public class ScheduleTest extends TestBase{
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1155,6 +1156,12 @@ public class ScheduleTest extends TestBase{
 			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			profileNewUIPage.getNickNameFromProfile();
+			if (dashboardPage.isSwitchToEmployeeViewPresent()) {
+				dashboardPage.clickOnSwitchToEmployeeView();
+			}
+
 			mySchedulePage.goToSchedulePageAsTeamMember();
 			scheduleCommonPage.navigateToNextWeek();
 			String subTitle = "Team Schedule";
