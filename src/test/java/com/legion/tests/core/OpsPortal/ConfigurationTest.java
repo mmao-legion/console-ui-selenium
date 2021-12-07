@@ -134,8 +134,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add country field to holidays")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
-    // Blocked by bug: https://legiontech.atlassian.net/browse/OPS-3840
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddCountryFieldToHolidayAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
