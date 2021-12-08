@@ -444,4 +444,69 @@ public class LaborModelTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify the entry of override location level work role by csv")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheEntryOfOverrideLocationLevelWorkRoleByCsvAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateName="AutoUsingByFiona";
+            String mode="edit";
+            //go to specify template detail page - check the labor model subscription entry
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
+            laborModelPage.verifyEntryOfLaborModelSubscription();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify export Location Subscription of labor model template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportLocationSubscriptionOfLaborModelTemplateAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateName="AutoUsingByFiona";
+            String mode="edit";
+            //go to specify template detail page - check the labor model subscription entry
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
+            laborModelPage.verifyEntryOfLaborModelSubscription();
+            laborModelPage.exportLaborModelSubscriptionCsv();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify import Location Subscription of labor model template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyImportLocationSubscriptionOfLaborModelTemplateAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateName="AutoUsingByFiona";
+            String mode="edit";
+            //go to specify template detail page - check the labor model subscription entry
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
+            laborModelPage.verifyEntryOfLaborModelSubscription();
+            laborModelPage.verifyImportLocationLevelWorkRoleSubscription();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
