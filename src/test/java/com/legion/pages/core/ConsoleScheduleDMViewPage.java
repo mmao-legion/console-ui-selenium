@@ -581,7 +581,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         scheduleStatusAccount.put("totalPublishedSchedules",0);
         scheduleStatusAccount.put("totalInProgressSchedules",0);
 
-        if(areListElementVisible(scheduleStatusCards, 5) && scheduleStatusCards.size()>0){
+        if(areListElementVisible(scheduleStatusCards, 15) && scheduleStatusCards.size()>0){
 
             for (WebElement scheduleStatusCard: scheduleStatusCards){
                 String scheduleStatus = scheduleStatusCard.findElement(By.cssSelector("div.analytics-card-color-text-2")).getText();
