@@ -5163,7 +5163,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			profileNewUIPage.clickOnSaveTimeOffRequestBtn();
 			loginPage.logOut();
 
-			// Login as Store Manager again to check message and reject
+			// Login as Store Manager again to check message and approve
 			String RequestTimeOff = "requested";
 			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			String respondUserName = profileNewUIPage.getNickNameFromProfile();
@@ -5193,14 +5193,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				createSchedulePage.createScheduleForNonDGFlowNewUI();
 			}
 
+			String workRole = shiftOperatePage.getRandomWorkRole();
 			scheduleMainPage.clickOnOpenSearchBoxButton();
 			List<WebElement> shifts = scheduleMainPage.searchShiftOnSchedulePage(requestUserName);
 
 			if (shifts == null || (shifts != null && shifts.size() == 0)) {
 				// Edit schedule to create the new shift for new TM
 				scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-				shiftOperatePage.deleteTMShiftInWeekView(requestUserName);
-				String workRole = shiftOperatePage.getRandomWorkRole();
 				newShiftPage.clickOnDayViewAddNewShiftButton();
 				newShiftPage.customizeNewShiftPage();
 				newShiftPage.clearAllSelectedDays();
@@ -5208,7 +5207,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				newShiftPage.selectWorkRole(workRole);
 				newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 				newShiftPage.clickOnCreateOrNextBtn();
-				newShiftPage.searchTeamMemberByName(firstName + " " + lastName.toString().substring(0, 1));
+				newShiftPage.searchTeamMemberByName(requestUserName);
 				newShiftPage.clickOnOfferOrAssignBtn();
 				scheduleMainPage.saveSchedule();
 				scheduleMainPage.searchShiftOnSchedulePage(requestUserName);
