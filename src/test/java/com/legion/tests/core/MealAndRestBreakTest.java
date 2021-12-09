@@ -169,6 +169,7 @@ public class MealAndRestBreakTest extends TestBase {
             shiftOperatePage.clickOnEditMeaLBreakTime();
             shiftOperatePage.verifyBreakTimesAreUpdated(breakTimes);
             shiftOperatePage.clickOnCancelEditShiftTimeButton();
+            Thread.sleep(1000);
             // Verify the changed meal break and rest break are saved successfully
             scheduleMainPage.saveSchedule();
             mySchedulePage.clickOnShiftByIndex(index);
@@ -220,20 +221,10 @@ public class MealAndRestBreakTest extends TestBase {
             String firstNameOfTM = "";
             int index = 0;
             while (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned")) {
-                index = scheduleShiftTablePage.getRandomIndexOfShift();
-                String info = scheduleShiftTablePage.getTheShiftInfoByIndexInDayview(index);
-                String [] temp = info.split("\n");
-                if (temp.length <= 4) {
-                    firstNameOfTM = temp[0].split(" ")[0];
-                } else {
-                    shiftInfo.add(temp[1].split(" ")[0]);
-                    shiftInfo.add(temp[0]);
-                    shiftInfo.add(temp[3]);
-                    shiftInfo.add(temp[2]);
-                    shiftInfo.add(temp[1].substring(temp[1].indexOf("("), temp[1].indexOf(")")));
-                    //Search shift by TM names: first name and last name
-                    firstNameOfTM = shiftInfo.get(0);
-                }
+                //index = scheduleShiftTablePage.getRandomIndexOfShift();
+                index = 1;
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(index);
+                firstNameOfTM = shiftInfo.get(0);
             }
             mySchedulePage.clickOnShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();

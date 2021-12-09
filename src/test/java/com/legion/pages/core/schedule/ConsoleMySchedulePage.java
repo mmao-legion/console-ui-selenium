@@ -1213,6 +1213,18 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         }
     }
 
+    @Override
+    public void clickOnDeclineButton() throws Exception {
+        if (isElementLoaded(declineBtn, 5)) {
+            clickTheElement(declineBtn);
+            waitForSeconds(2);
+            if (isElementLoaded(agreeClaimBtn, 10) && agreeClaimBtn.getText().equalsIgnoreCase("OK")) {
+                clickTheElement(agreeClaimBtn);
+            }
+        } else {
+            SimpleUtils.fail("Decline button failed to load!", false);
+        }
+    }
 
     @FindBy(css = ".day-view-shift-hover-info-icon")
     private List<WebElement> hoverIcons;

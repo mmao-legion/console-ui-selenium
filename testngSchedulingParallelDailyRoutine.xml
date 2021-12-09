@@ -314,6 +314,8 @@
                     SCH-4171, SCH-3620  <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
                 SCH-4171, SCH-3620     <include name="verifyTMCanBeOfferedAsTeamMember" />   -->
                       <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyTheShiftOfferCountWhenNeedingApprovalAsTeamMember" />
+<!--                    <include name="verifyTheShiftOfferCountWhenNotNeedingApprovalAsTeamMember" Wait for code freeze/>-->
                 </methods>
             </class>
         </classes>

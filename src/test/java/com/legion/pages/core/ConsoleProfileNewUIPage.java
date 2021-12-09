@@ -241,7 +241,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isProfilePageLoaded() throws Exception
 	{
-		if(isElementLoaded(profileSection, 15)) {
+		if(isElementLoaded(profileSection, 25)) {
 			return true;
 		}
 		return false;
@@ -4117,5 +4117,24 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("The Availability lock icon is not loaded! ", false);
 
 		return message;
+	}
+
+	@Override
+	public String getJobTitleFromProfilePage() throws Exception {
+		String jobTitle = "";
+		if (areListElementVisible(profileInfoFields, 5) && profileInfoFields.size() > 0) {
+			for (WebElement field : profileInfoFields) {
+				WebElement label = field.findElement(By.className("label"));
+				WebElement value = field.findElement(By.className("value"));
+				if (label != null && value != null) {
+					if (label.getText().equalsIgnoreCase("JOB TITLE")) {
+						jobTitle = value.getText();
+						SimpleUtils.report("Get the job title: " + jobTitle);
+						break;
+					}
+				}
+			}
+		}
+		return jobTitle;
 	}
 }

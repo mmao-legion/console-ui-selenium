@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -1467,6 +1468,280 @@ public class OfferTMTest extends TestBase {
             SimpleUtils.assertOnFail("Offer TMs option should be disabled!", !shiftOperatePage.isOfferTMOptionEnabled(), false);
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(2);
 
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify the count on WANT MORE HOURS? smart card when needing approval")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheShiftOfferCountWhenNeedingApprovalAsTeamMember(String browser, String username, String password, String location) throws Exception{
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String firstName = profileNewUIPage.getNickNameFromProfile();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            SimpleUtils.assertOnFail("Profile page failed to load!", profileNewUIPage.isProfilePageLoaded(), false);
+            String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
+            loginPage.logOut();
+
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // "Is approval by Manager required when an employee claims an Open Shift?" is set to "Always"
+            String option = "Always";
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+            SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
+            controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.selectGroupByFilter(jobTitle);
+            String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRoleOfTM);
+            newShiftPage.selectDaysByIndex(0,1,2);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstName);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
+
+            // Wait for 10 seconds when the shift offer is offered
+            Thread.sleep(20000);
+            loginPage.logOut();
+
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'My Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.MySchedule.getValue()), false);
+            scheduleCommonPage.navigateToNextWeek();
+
+            String smartCard = "WANT MORE HOURS?";
+            SimpleUtils.assertOnFail("Smart Card: " + smartCard + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(smartCard), false);
+            // Verify can get the shift offer count from smart card
+            int originalCount = smartCardPage.getCountFromSmartCardByName(smartCard);
+            scheduleMainPage.clickOnFilterBtn();
+            // Verify can get the open shift count from filter
+            int offeredCount = scheduleMainPage.getSpecificFiltersCount("Offered");
+            String linkName = "View Shifts";;
+            smartCardPage.clickLinkOnSmartCardByName(linkName);
+            SimpleUtils.assertOnFail("Open shifts not loaded Successfully!", scheduleShiftTablePage.areShiftsPresent(), false);
+            // Verify the count on smart card won't change if accepting the shift offer
+            List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
+            mySchedulePage.selectOneShiftIsClaimShift(claimShift);
+            mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
+
+            int shiftOfferCount = smartCardPage.getCountFromSmartCardByName(smartCard);
+            if (originalCount == shiftOfferCount) {
+                SimpleUtils.pass("The count on smart card doesn't change when accepting the shift offer and need approval!");
+            } else {
+                SimpleUtils.fail("The count is changed when accepting the shift offer and need approval", false);
+            }
+
+            // Verify the count in filter won't change
+            scheduleMainPage.clickOnFilterBtn();
+            int currentOfferedCount = scheduleMainPage.getSpecificFiltersCount("Offered");
+            if (offeredCount == currentOfferedCount) {
+                SimpleUtils.pass("The count in filter doesn't change when accepting the shift offer and need approval!");
+            } else {
+                SimpleUtils.fail("The count is changed when accepting the shift offer and need approval", false);
+            }
+
+            mySchedulePage.selectOneShiftIsClaimShift(claimShift);
+            mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
+            mySchedulePage.clickOnDeclineButton();
+
+            // Verify the count on smart card will decrease if declining the shift offer
+            shiftOfferCount = smartCardPage.getCountFromSmartCardByName(smartCard);
+            if (originalCount - shiftOfferCount == 1) {
+                SimpleUtils.pass("The count on smart card decreased when declining the shift offer and need approval!");
+            } else {
+                SimpleUtils.fail("The count doesn't decreased when decling the shift offer and need approval", false);
+            }
+
+            // Verify the count in filter will decrease if declining the shift offer
+            scheduleMainPage.clickOnFilterBtn();
+            currentOfferedCount = scheduleMainPage.getSpecificFiltersCount("Offered");
+            if (offeredCount - currentOfferedCount == 1) {
+                SimpleUtils.pass("The count in filter decreased when declining the shift offer and need approval!");
+            } else {
+                SimpleUtils.fail("The count doesn't decrease when declining the shift offer and need approval", false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify the count on WANT MORE HOURS? smart card when not needing approval")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheShiftOfferCountWhenNotNeedingApprovalAsTeamMember(String browser, String username, String password, String location) throws Exception{
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String firstName = profileNewUIPage.getNickNameFromProfile();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            SimpleUtils.assertOnFail("Profile page failed to load!", profileNewUIPage.isProfilePageLoaded(), false);
+            String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
+            loginPage.logOut();
+
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // "Is approval by Manager required when an employee claims an Open Shift?" is set to "Never"
+            String option = "Never";
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+            SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
+            controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.selectGroupByFilter(jobTitle);
+            String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRoleOfTM);
+            newShiftPage.selectDaysByIndex(0,1,2);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstName);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
+
+            // Wait for 10 seconds when the shift offer is offered
+            Thread.sleep(20000);
+            loginPage.logOut();
+
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'My Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.MySchedule.getValue()), false);
+            scheduleCommonPage.navigateToNextWeek();
+
+            String smartCard = "WANT MORE HOURS?";
+            SimpleUtils.assertOnFail("Smart Card: " + smartCard + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(smartCard), false);
+            // Verify can get the shift offer count from smart card
+            int originalCount = smartCardPage.getCountFromSmartCardByName(smartCard);
+            scheduleMainPage.clickOnFilterBtn();
+            // Verify can get the open shift count from filter
+            int offeredCount = scheduleMainPage.getSpecificFiltersCount("Offered");
+            String linkName = "View Shifts";;
+            smartCardPage.clickLinkOnSmartCardByName(linkName);
+            SimpleUtils.assertOnFail("Open shifts not loaded Successfully!", scheduleShiftTablePage.areShiftsPresent(), false);
+            // Verify the count on smart card will decrease if accepting the shift offer
+            List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
+            mySchedulePage.selectOneShiftIsClaimShift(claimShift);
+            mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimSuccessMessage);
+
+            int shiftOfferCount = smartCardPage.getCountFromSmartCardByName(smartCard);
+            if (originalCount - shiftOfferCount == 1) {
+                SimpleUtils.pass("The count on smart card decreased when accepting the shift offer and not need approval!");
+            } else {
+                SimpleUtils.fail("The count doesn't decrease when accepting the shift offer and not need approval", false);
+            }
+
+            // Verify the count in filter will decrease if declining the shift offer
+            scheduleMainPage.clickOnFilterBtn();
+            int currentOfferedCount = scheduleMainPage.getSpecificFiltersCount("Offered");
+            if (offeredCount - currentOfferedCount == 1) {
+                SimpleUtils.pass("The count in filter decreased when accepting the shift offer and not need approval!");
+            } else {
+                SimpleUtils.fail("The count doesn't decrease when accepting the shift offer and not need approval", false);
+            }
+
+            mySchedulePage.selectOneShiftIsClaimShift(claimShift);
+            mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
+            mySchedulePage.clickOnDeclineButton();
+
+            // Verify the count on smart card will decrease if declining the shift offer
+            shiftOfferCount = smartCardPage.getCountFromSmartCardByName(smartCard);
+            if (originalCount - shiftOfferCount == 1) {
+                SimpleUtils.pass("The count on smart card decreased when declining the shift offer and need approval!");
+            } else {
+                SimpleUtils.fail("The count doesn't decreased when decling the shift offer and need approval", false);
+            }
+
+            // Verify the count in filter will decrease if declining the shift offer
+            scheduleMainPage.clickOnFilterBtn();
+            currentOfferedCount = scheduleMainPage.getSpecificFiltersCount("Offered");
+            if (offeredCount - currentOfferedCount == 1) {
+                SimpleUtils.pass("The count in filter decreased when declining the shift offer and need approval!");
+            } else {
+                SimpleUtils.fail("The count doesn't decrease when declining the shift offer and need approval", false);
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
