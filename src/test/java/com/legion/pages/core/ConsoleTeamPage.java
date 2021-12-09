@@ -4453,11 +4453,19 @@ private List<WebElement> locationColumn;
 		}
 
 		if (isTerminate) {
-			click(terminateButton);
-			isTerminateWindowLoaded();
+			if (isElementLoaded(terminateButton, 10)) {
+				click(terminateButton);
+				isTerminateWindowLoaded();
+			} else
+				SimpleUtils.fail("Terminate button fail to loaded! ", false);
+
 		} else {
-			click(deactivateButton);
-			isActivateWindowLoaded();
+			if (isElementLoaded(deactivateButton, 10)) {
+				click(deactivateButton);
+				isActivateWindowLoaded();
+			} else
+				SimpleUtils.fail("Deactivate button fail to loaded! ", false);
+
 		}
 
 		if (isElementLoaded(monthHeader, 5)
