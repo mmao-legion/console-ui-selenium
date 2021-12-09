@@ -1060,6 +1060,9 @@ public class SplitAndSpreadTest extends TestBase {
 
             // Delete all the shifts that are assigned to the team member
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            scheduleMainPage.saveSchedule();
+            // Edit the Schedule
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Create new shift for TM1 on first day and second day
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1093,7 +1096,7 @@ public class SplitAndSpreadTest extends TestBase {
             SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() == 2, false);
             List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
             int dayIndexOfMon = Integer.valueOf(shiftInfo1.get(1));
-            // Edit the Schedule and try to drag TM1 on second day to first day
+            // Edit the Schedule and try to drag TM1 on Tue day to Mon day
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             int i=0;
             while (!scheduleShiftTablePage.isDragAndDropConfirmPageLoaded() && i<5){
