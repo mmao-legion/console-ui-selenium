@@ -1,5 +1,7 @@
 package com.legion.pages.OpsPortaPageFactories;
 
+import org.openqa.selenium.WebElement;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,8 @@ public interface LocationsPage {
     public void addNewRegularLocationWithAllFields(String locationName, String searchCharactor, int index) throws Exception;
 
     public void addNewMockLocationWithAllFields(String searchCharactor, int index) throws Exception;
+    public void addNewRegularLocationWithDate(String locaname,String searchCharactor, int index,int fromToday) throws Exception;
+    public void locationPageCommonFeatureCheck() throws Exception;
 
     public void verifyImportLocationDistrict();
 
@@ -33,6 +37,7 @@ public interface LocationsPage {
     public void addNewNSOLocation(String locationName, String searchCharactor, int index) throws Exception;
 
     public String disableLocation(String autoCreate) throws Exception;
+    public String searchLocationAndGetStatus(String locaname) throws Exception;
 
     public void verifyExportAllLocationDistrict();
 
@@ -122,7 +127,7 @@ public interface LocationsPage {
 
     public String updateWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception;
 
-    public void verifyPaginationFunctionInDistrict() throws Exception;
+    public void verifyPageNavigationFunctionInDistrict() throws Exception;
 
     public List<String> getAllDayPartsFromGlobalConfiguration() throws Exception;
 
