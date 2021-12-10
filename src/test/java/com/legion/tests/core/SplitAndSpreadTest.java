@@ -693,6 +693,7 @@ public class SplitAndSpreadTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(tmFirstName);
             newShiftPage.clickOnOfferOrAssignBtn();
+            Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
 
             //Create second shift for tm
@@ -1098,6 +1099,7 @@ public class SplitAndSpreadTest extends TestBase {
             int dayIndexOfMon = Integer.valueOf(shiftInfo1.get(1));
             // Edit the Schedule and try to drag TM1 on Tue day to Mon day
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            Thread.sleep(3000);
             int i=0;
             while (!scheduleShiftTablePage.isDragAndDropConfirmPageLoaded() && i<5){
                 scheduleShiftTablePage.dragOneShiftToAnotherDay(dayIndexOfMon+1,firstNameOfTM1,dayIndexOfMon);

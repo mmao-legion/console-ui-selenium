@@ -1731,6 +1731,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     }
 
     public boolean validateVariousWorkRolePrompt() throws Exception{
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         if(isElementEnabled(schWorkerInfoPrompt,5)){
             SimpleUtils.pass("Various Work Role Prompt is displayed ");
             if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >0) {
@@ -1753,7 +1754,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
             if (isElementEnabled(applyButtonChangeRole, 5) && isElementEnabled(cancelButtonChangeRole, 5)) {
                 SimpleUtils.pass("Apply and Cancel buttons are enabled");
-                clickTheElement(applyButtonChangeRole);
+                if (scheduleCommonPage.isScheduleDayViewActive()) {
+                    scrollToBottom();
+                    click(applyButtonChangeRole);
+                } else {
+                    clickTheElement(applyButtonChangeRole);
+                }
+
                 if (isElementEnabled(roleViolationAlter, 5)) {
                     click(roleViolationAlterOkButton);
                 }
