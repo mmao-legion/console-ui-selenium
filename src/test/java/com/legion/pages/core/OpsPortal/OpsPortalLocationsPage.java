@@ -9,10 +9,11 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	private static Map<String, String> newLocationParas = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewLocation.json");
 	private static HashMap<String, String> parameterMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/envCfg.json");
+	private static HashMap<String, String> imageFilePath = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ProfileImageFilePath.json");
 
 
 	// Added by Estelle
@@ -214,6 +216,126 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement createLocationBtn;
 	@FindBy(css = "lg-button[label=\"Cancel\"]")
 	private WebElement cancelBtn;
+	@FindBy(css = "lg-search[fire-on-edit=\"$ctrl.fireSearchOnEdit\"] input")
+	private WebElement locationSearchInput;
+	@FindBy(css = "a[ng-click=\"$ctrl.back()\"]")
+	private WebElement locationBackLink;
+	@FindBy(css = "img[ngf-src=\"$ctrl.value\"]")
+	private WebElement locationUploadedImg;
+	@FindBy(css = "lg-button[ng-click=\"$ctrl.removeImage()\"]")
+	private WebElement locationRemovePicLink;
+
+
+	@Override
+	public void locationPageCommonFeatureCheck() throws Exception{
+		//check the search input field
+		if(isElementLoaded(locationSearchInput)&&locationSearchInput.getAttribute("placeholder").equals("You can search by name, id, district, country, state and city."))
+			SimpleUtils.pass("The location search input field loaded successfully");
+		else
+			SimpleUtils.report("The location search input field not loaded or loaded with wrong place holder");
+		//check search with location name
+		if(searchOutLocation("TestLocationDSName"));
+		   SimpleUtils.pass("Search location with location name successfully!");
+		//check search with location City
+		if(searchOutLocation("Agua Agria"));
+		   SimpleUtils.pass("Search location with location city successfully!");
+		//blocked by https://legiontech.atlassian.net/browse/OPS-3858
+		/*
+		//check search with location state
+		 if(searchOutLocation("Baja California Sur"));
+		   SimpleUtils.pass("Search location with location state successfully!");
+		//check search with location country
+		if(searchOutLocation("Mexico"));
+		   SimpleUtils.pass("Search location with location country successfully!");
+		 */
+		//check search with location Distrcit
+		if(searchOutLocation("ClearDistrict"));
+		   SimpleUtils.pass("Search location with location District successfully!");
+		//Check the 10 records in a page
+		searchInput.clear();
+		int dataCount=locationRows.size();
+		if(dataCount==10)
+			SimpleUtils.pass("There are 10 records in a page at most.");
+		else
+			SimpleUtils.fail("There are more than 10 records in a page",false);
+		//check back link
+		clickTheElement(locationBackLink);
+		waitForSeconds(2);
+		validateItemsInLocations();
+		//go to location page again
+		goToSubLocationsInLocationsPage();
+		//do location search and check turn page
+		searchOutLocation("ClearDistrict");
+		verifyPageNavigationFunction(locationNamesInLocationRows);
+		//check the back and cancel button at create location page
+		if (isElementEnabled(addLocationBtn, 15)) {
+			clickTheElement(addLocationBtn);
+			waitForSeconds(2);
+			clickTheElement(locationBackLink);
+			waitForSeconds(2);
+			if(isElementLoaded(locationSearchInput))
+				SimpleUtils.pass("Page back to location landing page after back from create location page");
+			clickTheElement(addLocationBtn);
+			waitForSeconds(2);
+			clickTheElement(cancelBtnInImportLocationPage);
+			waitForSeconds(2);
+			if(isElementLoaded(locationSearchInput))
+				SimpleUtils.pass("Page back to location landing page after cancel from create location page");
+		}
+		clickTheElement(addLocationBtn);
+		waitForSeconds(2);
+		//check the import and remove picture at create location page
+		if (isElementEnabled(uploadImageBtn, 5)&&isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(0), 5)) {
+			// Team Member updates the business profile
+			String filePath = imageFilePath.get("FilePath");
+			File file = new File(filePath);
+			getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(0).sendKeys(file.getCanonicalPath());
+			// wait for the picture to be loaded
+			waitForSeconds(6);
+			//check the image uploaded success
+			if(isElementDisplayed(locationUploadedImg)){
+				SimpleUtils.pass("Upload Location Picture successfully");
+			    //remove picture
+			    clickTheElement(locationRemovePicLink);
+			    //check no picture displayed
+				if(isElementLoaded(locationUploadedImg,5))
+					SimpleUtils.pass("Remove Location Picture successfully");
+			}
+
+		} else
+			SimpleUtils.fail("Import button load failed", true);
+		//back to location list page
+		clickTheElement(backBtnInLocationDetailsPage);
+		clickTheElement(leaveThisPage);
+		waitForSeconds(3);
+
+	}
+
+	private boolean searchOutLocation(String searchInputText) throws Exception {
+		boolean res=false;
+		String[] searchLocationCha = searchInputText.split(",");
+		if (isElementLoaded(searchInput, 10)) {
+			for (int i = 0; i < searchLocationCha.length; i++) {
+				searchInput.clear();
+				searchInput.sendKeys(searchLocationCha[0]);
+				searchInput.sendKeys(Keys.ENTER);
+				waitForSeconds(5);
+				if (locationRows.size() > 0) {
+					res=true;
+					SimpleUtils.pass("Locations: " + locationRows.size() + " location(s) found  ");
+					break;
+				} else {
+					searchInput.clear();
+				}
+			}
+
+		} else {
+			SimpleUtils.fail("Search input is not clickable", true);
+		}
+		return res;
+
+	}
+
 
 	@Override
 	public void addNewRegularLocationWithMandatoryFields(String locationName) throws Exception {
@@ -305,6 +427,51 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return isFound;
 	}
 
+
+	@Override
+	public void addNewRegularLocationWithDate(String locationNameS, String searchCharactor, int index,int fromToday) throws Exception {
+		String locationName=locationNameS;
+		if (isElementEnabled(addLocationBtn, 15)) {
+			click(addLocationBtn);
+			displayNameInput.sendKeys(locationName);
+			setLocationName(locationName);
+			locationId.sendKeys(getLocationName());
+			nameInput.sendKeys(getLocationName());
+			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
+			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
+			setLatitudeAndLongitude();
+			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			click(state);
+			if (!isElementEnabled(stateList, 10)) {
+				click(state);
+			}
+			click(firstState);
+			city.sendKeys(newLocationParas.get("City"));
+			zipCode.sendKeys(newLocationParas.get("Zip_Code"));
+			primaryContact.sendKeys(newLocationParas.get("Primary_Contact"));
+			phoneNumber.sendKeys(newLocationParas.get("Phone_Number"));
+			emailAddress.sendKeys(newLocationParas.get("Email_Address"));
+			click(selectOneInSourceLocation);
+			selectLocationOrDistrict(searchCharactor, index);
+			if (isElementEnabled(configTypeSelect, 5)) {
+				selectByVisibleText(configTypeSelect, newLocationParas.get("Configuration_Type"));
+			}
+			click(selectOneInChooseDistrict);
+			selectLocationOrDistrict(searchCharactor, index);
+			click(effectiveDateSelect);
+			selectDateForTimesheet(fromToday);
+//			click(previousMonthBtn.get(0));
+//			click(firstDay.findElement(By.cssSelector("div:nth-child(8)")));
+			scrollToBottom();
+			click(createLocationBtn);
+			waitForSeconds(5);
+			SimpleUtils.pass("New location creation done");
+
+		} else
+			SimpleUtils.fail("New location page load failed", false);
+	}
+
 	@Override
 	public void addNewRegularLocationWithAllFields(String locationName, String searchCharactor, int index) throws Exception {
 		if (isElementEnabled(addLocationBtn, 15)) {
@@ -346,7 +513,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		} else
 			SimpleUtils.fail("New location page load failed", false);
 	}
-
 
 	private void selectLocationOrDistrict(String searchCharactor, int index) {
 		if (isElementEnabled(selectALocationTitle, 5)) {
@@ -650,6 +816,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 
 		return null;
+	}
+
+	@Override
+	public String searchLocationAndGetStatus(String locationname) throws Exception {
+		String status = null;
+		searchInput.clear();
+		searchLocation(locationname);
+		if (locationRows.size() > 0) {
+			status = getLocationStatus().get(0);
+		}
+		return status;
 	}
 
 
@@ -1533,9 +1710,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-
 	@Override
-	public void verifyPaginationFunctionInDistrict() throws Exception {
+	public void verifyPageNavigationFunctionInDistrict() throws Exception {
+		verifyPageNavigationFunction(upperfieldRows);
+
+	}
+
+
+	private void verifyPageNavigationFunction(List<WebElement> datalist) throws Exception {
 		waitForSeconds(20);
 		if (isElementLoaded(pageNumSelector, 3)) {
 			int minPageNum = 1;
@@ -1554,15 +1736,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						SimpleUtils.fail("Page select doesn't work", true);
 				}
 				waitForSeconds(5);
-				String firstLineText = upperfieldRows.get(0).getText();
+				String firstLineText = datalist.get(0).getText();
 				click(pageLeftBtnInDistrict);
-				String firstLineTextAftLeft = upperfieldRows.get(0).getText();
+				String firstLineTextAftLeft = datalist.get(0).getText();
 				if (!firstLineTextAftLeft.equalsIgnoreCase(firstLineText)) {
 					SimpleUtils.pass("Left pagination button work well");
 				} else
 					SimpleUtils.fail("Left pagination button work wrong", false);
 				click(pageRightBtnInDistrict);
-				String firstLineTextAftRight = upperfieldRows.get(0).getText();
+				String firstLineTextAftRight = datalist.get(0).getText();
 				if (!firstLineTextAftRight.equalsIgnoreCase(firstLineTextAftLeft)) {
 					SimpleUtils.pass("Right pagination button work well");
 				} else
