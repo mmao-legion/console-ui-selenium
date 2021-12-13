@@ -2285,6 +2285,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         WebElement weekDay = getDriver().findElement(By.cssSelector("[data-day-index=\""+endIndex+"\"] .sch-calendar-day-label"));
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0 && weekDay!=null) {
             for (WebElement start : startElements) {
+                scrollToElement(start);
                 WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
                 if (startName != null && startName.getText().split(" ")[0].equalsIgnoreCase(firstName)) {
                     mouseHoverDragandDrop(start, endElements.get(0));
