@@ -19,6 +19,7 @@ import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.tests.TestBase.switchToNewWindow;
+import static com.legion.tests.TestBase.uploadFiles;
 import static com.legion.utils.MyThreadLocal.*;
 
 
@@ -247,6 +248,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		//check search with location country
 		if(searchOutLocation("Mexico"));
 		   SimpleUtils.pass("Search location with location country successfully!");
+
 		 */
 		//check search with location Distrcit
 		if(searchOutLocation("ClearDistrict"));
@@ -284,13 +286,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 		clickTheElement(addLocationBtn);
 		waitForSeconds(2);
+
+
 		//check the import and remove picture at create location page
 		if (isElementEnabled(uploadImageBtn, 5)&&isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(0), 5)) {
-			// Team Member updates the business profile
+			WebElement inputEle=getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(0);
 			String filePath = imageFilePath.get("FilePath");
-			File file = new File(filePath);
-			getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(0).sendKeys(file.getCanonicalPath());
+			uploadFiles(inputEle,filePath);
+
+//			String filePath = imageFilePath.get("FilePath");
+//			File file = new File(filePath);
+//			getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(0).sendKeys(file.getCanonicalPath());
+
 			// wait for the picture to be loaded
+
 			waitForSeconds(6);
 			//check the image uploaded success
 			if(isElementDisplayed(locationUploadedImg)){

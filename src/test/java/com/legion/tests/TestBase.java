@@ -30,6 +30,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.*;
 import org.testng.Assert;
 import org.testng.ITestContext;
@@ -210,6 +211,30 @@ public abstract class TestBase {
         setCurrentTestMethodName(method.getName());
         setSessionTimestamp(date.toString().replace(":", "_").replace(" ", "_"));
     }
+
+
+         /**
+         * upload file with the input element
+         * @param fileName file name with relative path xxx/xxx.png
+         */
+        public static void uploadFiles(WebElement ele, String fileName) throws Exception {
+            Actions actions = new Actions(getDriver());
+            // if linux system
+         if (System.getProperty("os.name").contains("Linux")) {
+                String filePath = null;
+                // change the inputBy element as block
+                filePath = "/data/jenkins/workspace/Ops_Portal_UI/"+new File(fileName).getAbsolutePath();
+                ele.sendKeys(filePath);
+                actions.sendKeys(Keys.ENTER).build().perform();
+            }
+         else {
+             //run at local
+             String absolutePath = new File(fileName).getCanonicalPath();
+             ele.sendKeys(absolutePath);
+             //return
+             actions.sendKeys(Keys.ENTER).build().perform();
+         }
+        }
 
     protected void createDriver (String browser, String version, String os) throws Exception {
         if (getBrowserNeeded() && browser != null) {
