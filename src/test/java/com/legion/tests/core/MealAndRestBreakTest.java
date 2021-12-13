@@ -221,8 +221,7 @@ public class MealAndRestBreakTest extends TestBase {
             String firstNameOfTM = "";
             int index = 0;
             while (firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned")) {
-                //index = scheduleShiftTablePage.getRandomIndexOfShift();
-                index = 1;
+                index = scheduleShiftTablePage.getRandomIndexOfShift();
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(index);
                 firstNameOfTM = shiftInfo.get(0);
             }
