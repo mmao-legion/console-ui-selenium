@@ -223,7 +223,7 @@ public abstract class TestBase {
          if (System.getProperty("os.name").contains("Linux")) {
                 String filePath = null;
                 // change the inputBy element as block
-                filePath = "/data/jenkins/workspace/Ops_Portal_UI/"+new File(fileName).getAbsolutePath();
+                filePath = "/data/jenkins/workspace/Ops_Portal_UI"+new File(fileName).getAbsolutePath();
                 ele.sendKeys(filePath);
                 actions.sendKeys(Keys.ENTER).build().perform();
             }
