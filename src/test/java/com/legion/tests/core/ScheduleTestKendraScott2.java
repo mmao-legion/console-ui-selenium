@@ -5125,6 +5125,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 
 			controlsPage.gotoControlsPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -5159,7 +5160,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			} else if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.Vacation.getValue())){
 				profileNewUIPage.selectTimeOffReason(ActivityTest.timeOffReasonType.Vacation.getValue());
 			}
-			List<String> timeOffDates = profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 1);
+			List<String> timeOffDates = profileNewUIPage.selectStartAndEndDate(advancedDays, 7, 7);
 			profileNewUIPage.clickOnSaveTimeOffRequestBtn();
 			loginPage.logOut();
 
@@ -5216,6 +5217,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			// Verify Time Off card will show when group by TM
 			int index = scheduleShiftTablePage.getTheIndexOfTheDayInWeekView(timeOffDates.get(0).substring(timeOffDates.get(0).length() - 2));
 			scheduleShiftTablePage.verifyTimeOffCardShowInCorrectDay(index);
+
+			// Clear the time off request
+			teamPage.goToTeam();
+			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			teamPage.searchAndSelectTeamMemberByName(requestUserName);
+			SimpleUtils.assertOnFail("Profile page failed to load!", teamPage.isProfilePageLoaded(), false);
+			profileNewUIPage.selectProfilePageSubSectionByLabel("Time Off");
+			profileNewUIPage.rejectAllTimeOff();
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
