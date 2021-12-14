@@ -149,6 +149,8 @@
 <!--                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5657-->
                     <include name="verifyCanUpdateTheHRConfigInIntegrationAsInternalAdmin" />
 <!--                    <include name="verifyTheButtonsForEmployeeInDifferentStatusAsInternalAdmin" Blocked by SCH-5660/>-->
+                    <include name="validateErrorMessageWhenThereIsRecurringPendingAvailabilityRequestAsStoreManager" />
+                    <!--                    <include name="validateErrorMessageWhenThereIsNoRecurringPendingAvailabilityRequestAsStoreManager" Blocked by SCH-5388/>-->
                 </methods>
             </class>
         </classes>

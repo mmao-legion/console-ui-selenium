@@ -10,6 +10,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -230,5 +232,21 @@ public class ConsoleAnalyzePage extends BasePage implements AnalyzePage {
             }
         }
         return null;
+    }
+
+    @FindBy(css = "div.sch-schedule-analyze__hours-legend")
+    private WebElement workRoleSectionFromLaborGuidance;
+    @Override
+    public ArrayList<HashMap<String, String>> getLaborGuidanceWorkRoleStyleInfo() throws Exception {
+        ArrayList<HashMap<String,String>> workRoleInfo = new ArrayList<>();
+        if (workRoleSectionFromLaborGuidance.findElements(By.cssSelector("div.sch-schedule-analyze__role-title")).size() > 0) {
+            for (WebElement row : workRoleSectionFromLaborGuidance.findElements(By.cssSelector("div.sch-schedule-analyze__role-title"))) {
+                HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+                workRoleInfoInEachRow.put("WorkRoleName", row.getText().substring(row.getText().indexOf("Hrs")+3).trim().toLowerCase());
+                workRoleInfoInEachRow.put("WorkRoleStyle", row.findElement(By.cssSelector("span[style]")).getAttribute("style"));
+                workRoleInfo.add(workRoleInfoInEachRow);
+            }
+        }
+        return workRoleInfo;
     }
 }

@@ -1957,4 +1957,36 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             SimpleUtils.fail("filter button is not Loaded Successfully!", true);
         }
     }
+
+    @FindBy(xpath = "//div[contains(text(),'Work Role')]/parent::div")
+    private WebElement workRoleFilterSection;
+    @Override
+    public ArrayList<HashMap<String, String>> getWorkRoleInfoFromFilter() throws Exception {
+        ArrayList<HashMap<String,String>> workRoleInfo = new ArrayList<>();
+        if (workRoleFilterSection.findElements(By.cssSelector(".lg-filter__category-items .input-label")).size() > 0) {
+            for (WebElement row : workRoleFilterSection.findElements(By.cssSelector(".lg-filter__category-items .input-label"))) {
+                HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+                workRoleInfoInEachRow.put("WorkRoleName", row.getText().substring(0, row.getText().indexOf("(")).trim().toLowerCase());
+                workRoleInfoInEachRow.put("WorkRoleStyle", row.findElement(By.cssSelector("span")).getAttribute("style"));
+                workRoleInfo.add(workRoleInfoInEachRow);
+            }
+        }
+        return workRoleInfo;
+    }
+
+    @FindBy(css = "div[ng-class*=\"staffing.guidance\"]")
+    private WebElement staffSectionFromToggleSummaryView;
+    @Override
+    public ArrayList<HashMap<String, String>> getToggleSummaryStaffWorkRoleStyleInfo() throws Exception {
+        ArrayList<HashMap<String,String>> workRoleInfo = new ArrayList<>();
+        if (staffSectionFromToggleSummaryView.findElements(By.cssSelector("tr[ng-repeat*=\"summary.staffingGuidance.roleHours\"]")).size() > 0) {
+            for (WebElement row : staffSectionFromToggleSummaryView.findElements(By.cssSelector("tr[ng-repeat*=\"summary.staffingGuidance.roleHours\"]"))) {
+                HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+                workRoleInfoInEachRow.put("WorkRoleName", row.findElement(By.cssSelector("td[class = \"ng-binding\"]")).getText().trim().toLowerCase());
+                workRoleInfoInEachRow.put("WorkRoleStyle", row.findElement(By.cssSelector("td[style]")).getAttribute("style"));
+                workRoleInfo.add(workRoleInfoInEachRow);
+            }
+        }
+        return workRoleInfo;
+    }
 }

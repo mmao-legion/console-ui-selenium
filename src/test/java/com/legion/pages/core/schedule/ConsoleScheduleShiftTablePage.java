@@ -2843,6 +2843,28 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         return results;
     }
 
+    @Override
+    public ArrayList<HashMap<String,String>> getGroupByWorkRoleStyleInfo() throws Exception{
+        ArrayList<HashMap<String,String>> results = new ArrayList<>();
+        List<WebElement> groupTitles;
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        if (scheduleCommonPage.isScheduleDayViewActive()) {
+            groupTitles = availableJobTitleListInDayView;
+        } else
+            groupTitles = groupTitleList;
+        if (areListElementVisible(groupTitles, 10)){
+            for (WebElement element: groupTitles){
+                HashMap<String, String> workRoleStyleInfo = new HashMap<>();
+                workRoleStyleInfo.put("WorkRoleName",element.findElement(By.cssSelector(".week-schedule-shift-title")).getText().toLowerCase());
+                workRoleStyleInfo.put("WorkRoleStyle", element.findElement(By.cssSelector(".week-schedule-shift-color")).getAttribute("style"));
+                results.add(workRoleStyleInfo);
+            }
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+        return results;
+    }
+
     @FindBy(css = ".week-schedule-shift[data-day=\"1\"] .week-schedule-worker-name")
     private List<WebElement> workerNamesOnTheShiftsOfTheFirstDay;
     @Override

@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -573,6 +574,233 @@ public class SchedulingOPEnabledTest  extends TestBase {
             shiftOperatePage.verifyListOfOfferNotNull();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Work Role in Configuration")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWorkRoleConfigurationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        //Go to OP page
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to User Management page
+        UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+        userManagementPage.clickOnUserManagementTab();
+        userManagementPage.goToWorkRolesTile();
+
+        HashMap<String,String> workRoleInfo  = userManagementPage.getAllWorkRoleStyleInfo("");
+        SimpleUtils.assertOnFail("There should be style info for work role!", !workRoleInfo.isEmpty(), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Work Role in FILTER")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWorkRoleInFilterAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+        // Navigate to a week
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        // create the schedule if not created
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+        }
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        scheduleMainPage.clickOnFilterBtn();
+        ArrayList<HashMap<String,String>> workRoleInfoInFilter  = scheduleMainPage.getWorkRoleInfoFromFilter();
+
+        //Go to OP page
+        dashboardPage.navigateToDashboard();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to User Management page
+        UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+        userManagementPage.clickOnUserManagementTab();
+        userManagementPage.goToWorkRolesTile();
+
+        if (!workRoleInfoInFilter.isEmpty()){
+            HashMap<String,String> workRoleInfoInConfiguration  = userManagementPage.getAllWorkRoleStyleInfo(workRoleInfoInFilter.get(0).get("WorkRoleName"));
+            if (workRoleInfoInFilter.get(0).get("WorkRoleStyle").replace("background-color", "background").equalsIgnoreCase(workRoleInfoInConfiguration.get(workRoleInfoInFilter.get(0).get("WorkRoleName")))){
+                SimpleUtils.pass("Work Role color match!");
+            }  else {
+                SimpleUtils.fail("Work role color don't match!", false);
+            }
+        } else {
+            SimpleUtils.fail("No work role displaying!", false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Work Role in Schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWorkRoleInScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+        // Navigate to a week
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        // create the schedule if not created
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+        }
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        ArrayList<HashMap<String,String>> workRoleInfoInGroupBySection  = scheduleShiftTablePage.getGroupByWorkRoleStyleInfo();
+
+        //Go to OP page
+        dashboardPage.navigateToDashboard();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to User Management page
+        UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+        userManagementPage.clickOnUserManagementTab();
+        userManagementPage.goToWorkRolesTile();
+
+        if (!workRoleInfoInGroupBySection.isEmpty()){
+            HashMap<String,String> workRoleInfoInConfiguration  = userManagementPage.getAllWorkRoleStyleInfo(workRoleInfoInGroupBySection.get(0).get("WorkRoleName"));
+            if (workRoleInfoInGroupBySection.get(0).get("WorkRoleStyle").replace("background-color", "background").equalsIgnoreCase(workRoleInfoInConfiguration.get(workRoleInfoInGroupBySection.get(0).get("WorkRoleName")))){
+                SimpleUtils.pass("Work Role color match!");
+            }  else {
+                SimpleUtils.fail("Work role color don't match!", false);
+            }
+        } else {
+            SimpleUtils.fail("No work role displaying!", false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Work Role in STAFF")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWorkRoleInStaffAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+        // Navigate to a week
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        // create the schedule if not created
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+        }
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        scheduleMainPage.goToToggleSummaryView();
+        ArrayList<HashMap<String,String>> workRoleInfoInStaffSection  = scheduleMainPage.getToggleSummaryStaffWorkRoleStyleInfo();
+
+        //Go to OP page
+        dashboardPage.navigateToDashboard();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to User Management page
+        UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+        userManagementPage.clickOnUserManagementTab();
+        userManagementPage.goToWorkRolesTile();
+
+        if (!workRoleInfoInStaffSection.isEmpty()){
+            HashMap<String,String> workRoleInfoInConfiguration  = userManagementPage.getAllWorkRoleStyleInfo(workRoleInfoInStaffSection.get(0).get("WorkRoleName"));
+            if (workRoleInfoInStaffSection.get(0).get("WorkRoleStyle").replace("background-color", "background").equalsIgnoreCase(workRoleInfoInConfiguration.get(workRoleInfoInStaffSection.get(0).get("WorkRoleName")))){
+                SimpleUtils.pass("Work Role color match!");
+            }  else {
+                SimpleUtils.fail("Work role color don't match!", false);
+            }
+        } else {
+            SimpleUtils.fail("No work role displaying!", false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate Work Role in Labor Guidance")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWorkRoleInLaborGuidanceAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+        // Navigate to a week
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        // create the schedule if not created
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (!isWeekGenerated){
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+        }
+        AnalyzePage analyzePage = pageFactory.createAnalyzePage();
+        analyzePage.clickOnAnalyzeBtn("labor guidance");
+        ArrayList<HashMap<String,String>> workRoleInfoInLaborGuidanceSection  = analyzePage.getLaborGuidanceWorkRoleStyleInfo();
+        analyzePage.closeAnalyzeWindow();
+        //Go to OP page
+        dashboardPage.navigateToDashboard();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to User Management page
+        UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+        userManagementPage.clickOnUserManagementTab();
+        userManagementPage.goToWorkRolesTile();
+
+        if (!workRoleInfoInLaborGuidanceSection.isEmpty()){
+            HashMap<String,String> workRoleInfoInConfiguration  = userManagementPage.getAllWorkRoleStyleInfo(workRoleInfoInLaborGuidanceSection.get(0).get("WorkRoleName"));
+            if (workRoleInfoInLaborGuidanceSection.get(0).get("WorkRoleStyle").replace("background-color", "background").equalsIgnoreCase(workRoleInfoInConfiguration.get(workRoleInfoInLaborGuidanceSection.get(0).get("WorkRoleName")))){
+                SimpleUtils.pass("Work Role color match!");
+            }  else {
+                SimpleUtils.fail("Work role color don't match!", false);
+            }
+        } else {
+            SimpleUtils.fail("No work role displaying!", false);
         }
     }
 

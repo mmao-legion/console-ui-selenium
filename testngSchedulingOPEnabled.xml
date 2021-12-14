@@ -66,6 +66,11 @@
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
                     <include name="verifyAutoPublishSettingAsInternalAdmin" />
                     <include name="verifyAutoPublishSettingCanBeSavedAsInternalAdmin" />
+                    <include name="verifyWorkRoleConfigurationAsInternalAdmin" />
+                    <include name="verifyWorkRoleInFilterAsInternalAdmin" />
+                    <include name="verifyWorkRoleInScheduleAsInternalAdmin" />
+                    <include name="verifyWorkRoleInStaffAsInternalAdmin" />
+                    <include name="verifyWorkRoleInLaborGuidanceAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -200,6 +205,8 @@
 <!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5674-->
 <!--                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5657-->
                     <include name="verifyCanUpdateTheHRConfigInIntegrationAsInternalAdmin" />
+                    <include name="validateErrorMessageWhenThereIsRecurringPendingAvailabilityRequestAsStoreManager" />
+                    <!--                    <include name="validateErrorMessageWhenThereIsNoRecurringPendingAvailabilityRequestAsStoreManager" Blocked by SCH-5388/>-->
 <!--                    <include name="verifyTheButtonsForEmployeeInDifferentStatusAsInternalAdmin" Blocked by SCH-5660/>-->
                 </methods>
             </class>

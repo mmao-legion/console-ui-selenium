@@ -3790,6 +3790,16 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 	}
 
+	@FindBy(css = "div.modal-dialog")
+	private WebElement warningDialog;
+	@Override
+	public boolean verifyErrorMessageForEditAvailabilityShowsUpOrNot() throws Exception {
+		if (isElementLoaded(warningDialog, 10) && warningDialog.findElement(By.cssSelector(".lgn-alert-message")).getText().equalsIgnoreCase("This Team Member current has an open Availability Request. Please approve or deny the request before making any changes")){
+			return true;
+		}
+		return false;
+	}
+
 	@FindBy(tagName = "lg-eg-status")
 	private WebElement statusOnProfilePage;
 

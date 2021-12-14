@@ -120,4 +120,5 @@ public interface ScheduleShiftTablePage {
     public void clickTheDeleteImgForSpecifyShiftByIndex (int index) throws Exception;
     public void clickOnEditedOrDeletedImgForShiftInDayViewByIndex (int index) throws Exception;
     public void moveShiftByIndexInDayView (int index) throws Exception;
+    public ArrayList<HashMap<String,String>> getGroupByWorkRoleStyleInfo() throws Exception;
 }

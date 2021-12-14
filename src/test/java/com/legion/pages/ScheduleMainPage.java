@@ -78,4 +78,6 @@ public interface ScheduleMainPage {
     public int getSpecificFiltersCount (String filterText) throws Exception;
     public boolean isGroupByDayPartsLoaded() throws Exception;
     public void clickOnFilterBtn() throws Exception;
+    public ArrayList<HashMap<String, String>> getWorkRoleInfoFromFilter() throws Exception;
+    public ArrayList<HashMap<String,String>> getToggleSummaryStaffWorkRoleStyleInfo() throws Exception;
 }
