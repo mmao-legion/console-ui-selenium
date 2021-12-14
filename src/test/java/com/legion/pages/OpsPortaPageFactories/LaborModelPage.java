@@ -75,4 +75,10 @@ public interface LaborModelPage {
     public void verifyImportLocationLevelWorkRoleSubscription();
 
     public boolean verifyImportLocationWorkRolePageShow();
+
+    public void disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+
+    public void enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+
+    public boolean verifyWorkRoleStatusInLocationLevel(String workRole);
 }

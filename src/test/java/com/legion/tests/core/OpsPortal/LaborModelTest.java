@@ -509,4 +509,61 @@ public class LaborModelTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Update Work Role subscription via csv")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpdateWorkRoleSubscriptionViaCsvAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+        try {
+            String locationName="AutoUsingForLaborBudget";
+            String templateName="AutoUsingByLocationLevelWorkRole";
+            String workRole="Mgr on Duty";
+            String mode="edit";
+            boolean flag;
+            boolean flag1;
+            //go to location level to check the work role status
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            flag = laborModelPage.verifyWorkRoleStatusInLocationLevel(workRole);
+            //go to labor model template to check upload csv to update location level work role status
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
+            laborModelPage.verifyEntryOfLaborModelSubscription();
+            if(flag){
+                laborModelPage.disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+            }else {
+                laborModelPage.enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+            }
+            laborModelPage.clickOnSaveButton();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Details");
+            laborModelPage.publishNowTemplate();
+            //go to location to check location level work role again
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo1 = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo1.get(7).get("Template Type"), "View");
+            flag1 = laborModelPage.verifyWorkRoleStatusInLocationLevel(workRole);
+            if(flag != flag1){
+                SimpleUtils.pass("User update work role by upload csv successfully!");
+            }else {
+                SimpleUtils.fail("User update work role by upload csv failed!",true);
+            }
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

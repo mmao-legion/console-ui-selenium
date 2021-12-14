@@ -867,6 +867,58 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		return false;
 	}
 
+	@Override
+	public void disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate() {
+		String pth = System.getProperty("user.dir");
+		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
+			click(locationSubscriptionImportButton);
+			if (verifyImportLocationWorkRolePageShow()) {
+				SimpleUtils.pass("Import location level work role page show well");
+			} else
+				SimpleUtils.fail("Import location level work role page load failed", true);
+			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/AutoUsingForLaborBudgetDisable.csv");
+			waitForSeconds(5);
+			click(importBtnInImportLocationPage);
+			SimpleUtils.pass("File import action done");
+		}
+	}
+
+	@Override
+	public void enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate() {
+		String pth = System.getProperty("user.dir");
+		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
+			click(locationSubscriptionImportButton);
+			if (verifyImportLocationWorkRolePageShow()) {
+				SimpleUtils.pass("Import location level work role page show well");
+			} else
+				SimpleUtils.fail("Import location level work role page load failed", true);
+			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/AutoUsingForLaborBudgetEnable.csv");
+			waitForSeconds(5);
+			click(importBtnInImportLocationPage);
+			SimpleUtils.pass("File import action done");
+		} else
+			SimpleUtils.fail("Import button load failed", true);
+	}
+
+	@Override
+	public boolean verifyWorkRoleStatusInLocationLevel(String workRole) {
+		boolean flag = false;
+		waitForSeconds(5);
+		if (workRolesInLocationLevel.size() > 0) {
+			for (WebElement workRolesInLocationLevel : workRolesInLocationLevel) {
+				String workRoleName = workRolesInLocationLevel.findElement(By.cssSelector("div.workRole")).getText().trim();
+				if (workRoleName.equalsIgnoreCase(workRole)) {
+					if (workRolesInLocationLevel.getAttribute("class").contains("not-empty")) {
+						flag = true;
+					}
+					break;
+				}
+			}
+		} else
+			SimpleUtils.report("There is no assignment rule");
+		return flag;
+	}
+
 
 }
 
