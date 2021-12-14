@@ -838,14 +838,14 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 
 	@Override
 	public void verifyImportLocationLevelWorkRoleSubscription() {
-		String pth = System.getProperty("user.dir");
+//		String pth = System.getProperty("user.dir");
 		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
 			click(locationSubscriptionImportButton);
 			if (verifyImportLocationWorkRolePageShow()) {
 				SimpleUtils.pass("Import location level work role page show well");
 			} else
 				SimpleUtils.fail("Import location level work role page load failed", true);
-			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/WorkerRoleSubscription.csv");
+			uploaderFileInputBtn.sendKeys( "/src/test/resources/WorkerRoleSubscription.csv");
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			SimpleUtils.pass("File import action done");
@@ -869,14 +869,14 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 
 	@Override
 	public void disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate() {
-		String pth = System.getProperty("user.dir");
+//		String pth = System.getProperty("user.dir");
 		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
 			click(locationSubscriptionImportButton);
 			if (verifyImportLocationWorkRolePageShow()) {
 				SimpleUtils.pass("Import location level work role page show well");
 			} else
 				SimpleUtils.fail("Import location level work role page load failed", true);
-			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/AutoUsingForLaborBudgetDisable.csv");
+			uploaderFileInputBtn.sendKeys("/src/test/resources/AutoUsingForLaborBudgetDisable.csv");
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			SimpleUtils.pass("File import action done");
@@ -892,7 +892,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 				SimpleUtils.pass("Import location level work role page show well");
 			} else
 				SimpleUtils.fail("Import location level work role page load failed", true);
-			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/AutoUsingForLaborBudgetEnable.csv");
+			uploaderFileInputBtn.sendKeys("/src/test/resources/AutoUsingForLaborBudgetEnable.csv");
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			SimpleUtils.pass("File import action done");
