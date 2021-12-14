@@ -1603,8 +1603,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     scrollToElement(editShiftTimeOption);
                     click(editShiftTimeOption);
                     if (isElementEnabled(editShiftTimePopUp, 5)) {
-                        moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
                         moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
+                        moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
                         waitForSeconds(2);
                         click(confirmBtnOnDragAndDropConfirmPage);
                     } else {
@@ -1615,18 +1615,41 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
     }
 
+    //Elements on the set opening and closing shift times page on Control -> Working hours page
+
+    @FindBy(css = ".ui-droppable")
+    private List<WebElement> shiftTimeValuesOnSetOpeningOrClosingTimesPage;
+
+    @FindBy(css = ".null-selector-start")
+    private WebElement startSliderOnSetOpeningOrClosingTimesPage;
+
+    @FindBy(css = ".null-selector-end")
+    private WebElement endSliderOnSetOpeningOrClosingTimesPage;
     public void moveSliderAtCertainPointOnEditShiftTimePage(String shiftTime, String startingPoint) throws Exception {
         WebElement element = null;
         String time = "am";
-        if(areListElementVisible(noUiValues, 15) && noUiValues.size() >0){
-            for (WebElement noUiValue: noUiValues){
-                if (noUiValue.getAttribute("class").contains("pm")) {
+        List<WebElement> shiftTimeValues = new ArrayList<>();
+        WebElement startSlider = null;
+        WebElement endSlider = null;
+        if (areListElementVisible(shiftTimeValuesOnSetOpeningOrClosingTimesPage, 15) && shiftTimeValuesOnSetOpeningOrClosingTimesPage.size() >0) {
+            shiftTimeValues = shiftTimeValuesOnSetOpeningOrClosingTimesPage;
+            startSlider = startSliderOnSetOpeningOrClosingTimesPage;
+            endSlider = endSliderOnSetOpeningOrClosingTimesPage;
+        } else if (areListElementVisible(noUiValues, 10) && noUiValues.size() >0) {
+            shiftTimeValues = noUiValues;
+            startSlider = shiftStartTimeButton;
+            endSlider = shiftEndTimeButton;
+        }  else
+            SimpleUtils.fail("Shift time values fail to loaded! ", false);
+        if(areListElementVisible(shiftTimeValues, 15) && shiftTimeValues.size() >0){
+            for (WebElement noUiValue: shiftTimeValues){
+                if (noUiValue.getAttribute("class").contains("pm") || noUiValue.getText().contains("PM")) {
                     time = "pm";
-                } else if (noUiValue.getAttribute("class").contains("am")){
+                } else if (noUiValue.getAttribute("class").contains("am") || noUiValue.getText().contains("AM")){
                     time = "am";
                 }
                 if (time.equalsIgnoreCase(shiftTime.substring(shiftTime.length() - 2))) {
-                    if(noUiValue.getText().equals(shiftTime.substring(0, shiftTime.length() - 2))){
+                    if(noUiValue.getText().equals(shiftTime.substring(0, shiftTime.length() - 2).split(":")[0])){
                         element = noUiValue;
                         break;
                     }
@@ -1637,16 +1660,16 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("Cannot found the operating hour on edit operating hour page! ", false);
         }
         if(startingPoint.equalsIgnoreCase("End")){
-            if(isElementLoaded(shiftEndTimeButton,10)){
+            if(isElementLoaded(endSlider,10)){
                 SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
-                mouseHoverDragandDrop(shiftEndTimeButton,element);
+                mouseHoverDragandDrop(endSlider,element);
             } else{
                 SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
             }
         }else if(startingPoint.equalsIgnoreCase("Start")){
-            if(isElementLoaded(shiftStartTimeButton,10)){
+            if(isElementLoaded(startSlider,10)){
                 SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
-                mouseHoverDragandDrop(shiftStartTimeButton,element);
+                mouseHoverDragandDrop(startSlider,element);
             } else{
                 SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
             }

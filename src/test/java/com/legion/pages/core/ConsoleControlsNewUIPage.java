@@ -3,6 +3,8 @@ package com.legion.pages.core;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.legion.pages.ShiftOperatePage;
+import com.legion.pages.core.schedule.ConsoleShiftOperatePage;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
@@ -562,9 +564,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "div.lgn-time-slider-notch-label")
 	private List<WebElement> sliderNotchLabel;
 
+	@FindBy(css = ".each-day-selector input-field")
+	private List<WebElement> applyOtherDays;
 	@Override
-	public void updateControlsRegularHours(String isStoreClosed, String openingHours, String closingHours, String day)
-			throws Exception {
+	public void updateControlsRegularHours(String openingHours, String closingHours, String day, List<String> applyToOtherDays) throws Exception {
 		openingHours = openingHours.replace(" ", "");
 		closingHours = closingHours.replace(" ", "");
 		WebElement collapsibleHeader = regularHoursBlock.findElement(By.cssSelector("div.collapsible.row"));
@@ -574,18 +577,31 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			click(regularHoursBlock);
 
 		if (areListElementVisible(regularHoursRows, 10)) {
+			ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
 			for (WebElement regularHoursRow : regularHoursRows) {
 				if (regularHoursRow.getText().toLowerCase().contains(day.toLowerCase())) {
+					if (regularHoursRow.findElement(By.cssSelector("label[class=\"switch\"]")).getAttribute("class").contains("ng-empty")) {
+						clickTheElement(regularHoursRow.findElement(By.cssSelector("label[class=\"switch\"]")));
+					}
 					WebElement regularHoursEditBtn = regularHoursRow.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
 					if (isElementLoaded(regularHoursEditBtn)) {
 						click(regularHoursEditBtn);
-						// Select Opening Hours
-						WebElement editRegularHoursSlidersStart = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch-selector-start"));
-						moveDayViewCards(editRegularHoursSlidersStart, 80);
+						// Select Opening and closing Hours
+						shiftOperatePage.moveSliderAtCertainPointOnEditShiftTimePage(closingHours, "End");
+						shiftOperatePage.moveSliderAtCertainPointOnEditShiftTimePage(openingHours, "Start");
+						//Apply to other days
+						if (applyToOtherDays.size() != 0) {
+							if (areListElementVisible(applyOtherDays, 5) && applyOtherDays.size() >= 6) {
+								for (WebElement otherDay: applyOtherDays) {
+									if (applyToOtherDays.contains(otherDay.getText())) {
+										clickTheElement(otherDay.findElement(By.tagName("input")));
+									}
+								}
+							} else
+								SimpleUtils.fail("Apply to other days fail to load! ", false);
+						}
 
-						// Select Closing Hours
-						WebElement editRegularHoursSlidersEnd = getDriver().findElement(By.cssSelector("div.lgn-time-slider-notch-selector-end"));
-						moveDayViewCards(editRegularHoursSlidersEnd, -40);
+						//Save the change
 						if (isElementLoaded(saveWorkersHoursBtn)) {
 							click(saveWorkersHoursBtn);
 							SimpleUtils.pass("Controls Working Hours Section: Regular Hours Updated for the day ('" + day + "'). ");
@@ -594,6 +610,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					} else {
 						SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Edit' Button not loaded.", true);
 					}
+					break;
 				}
 
 			}
@@ -618,6 +635,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public void clickOnSaveRegularHoursBtn() throws Exception {
 		if (isElementLoaded(saveAllRegularHoursBtn)) {
 			click(saveAllRegularHoursBtn);
+			displaySuccessMessage();
 			SimpleUtils.pass("Controls Working Hours Section: Regular Hours Saved successfully. ");
 		} else {
 			SimpleUtils.fail("Controls Working Hours Section: Regular Hours 'Save' Button not loaded.", true);
@@ -4963,7 +4981,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement onBoardOption;
 	@FindBy(css = "input-field[value*=\"teamPreference\"] select")
 	private WebElement inviteOnBoardSelect;
-	@FindBy(css = ".collapsible-title-text span")
+	@FindBy(css = ".collapsible-title")
 	private List<WebElement> workingHoursTypes;
 	@FindBy(css = "#day\\.dayOfTheWeek .pills-row")
 	private List<WebElement> weekDays;
@@ -6949,5 +6967,351 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.pass("Select option successfully! ");
 		} else
 			SimpleUtils.fail("Lock employee availability edits section fail to loaded! ", false);
+	}
+
+
+	@Override
+	public void verifyTheSectionsOnWorkingHoursPage() throws Exception {
+		if (areListElementVisible(workingHoursTypes, 5) && workingHoursTypes.size() >= 3) {
+			if (workingHoursTypes.size()== 4){
+				SimpleUtils.assertOnFail("The sections display incorrectly on working hours page! ",
+						workingHoursTypes.get(0).getText().equalsIgnoreCase("Dayparts")
+								&& workingHoursTypes.get(1).getText().equalsIgnoreCase("Regular")
+								&& workingHoursTypes.get(2).getText().equalsIgnoreCase("Holiday")
+								&& workingHoursTypes.get(3).getText().equalsIgnoreCase("Company Holidays"), false);
+
+			} else {
+				SimpleUtils.assertOnFail("The sections display incorrectly on working hours page! ",
+						workingHoursTypes.get(0).getText().equalsIgnoreCase("Regular")
+								&& workingHoursTypes.get(1).getText().equalsIgnoreCase("Holiday")
+								&& workingHoursTypes.get(2).getText().equalsIgnoreCase("Company Holidays"), false);
+
+			}
+		} else {
+			SimpleUtils.fail("Working Hours Types not loaded Successfully!", true);
+		}
+	}
+
+	@Override
+	public boolean checkIfWorkHoursTypeCollapsed(String title) throws Exception {
+		boolean workingHoursTypeCollapsed = false;
+		if (areListElementVisible(workingHoursTypes, 5)) {
+			for (WebElement workingHoursType : workingHoursTypes) {
+				if (workingHoursType.getText().equalsIgnoreCase(title)) {
+					if (workingHoursType.getAttribute("class").contains("collapsible-title-open")) {
+						workingHoursTypeCollapsed = true;
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("Working Hours Types not loaded Successfully!", true);
+		}
+		return workingHoursTypeCollapsed;
+	}
+
+
+	@Override
+	public void turnOnOrOffSpecificHolidayHours(String holidayName, String action) throws Exception {
+		if (areListElementVisible(holidayHoursRows,10)){
+			for (WebElement day: holidayHoursRows) {
+				if (day.findElement(By.cssSelector(".ellipsis")).getText().equalsIgnoreCase(holidayName)) {
+					if (day.findElement(By.cssSelector("[type=\"checkbox\"]")).getAttribute("class").contains("ng-not-empty")) {
+						if (action.equalsIgnoreCase("on")) {
+							SimpleUtils.pass(holidayName + " already on!");
+						} else {
+							clickTheElement(day.findElement(By.cssSelector("label[class=\"switch\"]")));
+							if (day.findElement(By.cssSelector("[type=\"checkbox\"]")).getAttribute("class").contains("ng-empty")) {
+								SimpleUtils.pass(holidayName + " Unchecked!");
+							} else
+								SimpleUtils.fail("Fail to turn off the Holiday Working Hours", false);
+
+						}
+					} else {
+						if (action.equalsIgnoreCase("off")) {
+							SimpleUtils.pass(holidayName + " already off!");
+						} else {
+							clickTheElement(day.findElement(By.cssSelector("label[class=\"switch\"]")));
+							if (day.findElement(By.cssSelector("[type=\"checkbox\"]")).getAttribute("class").contains("ng-not-empty")) {
+								SimpleUtils.pass(holidayName + " Checked!");
+							} else
+								SimpleUtils.fail("Fail to turn on the Holiday Working Hours", false);
+						}
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("No access item loaded!", false);
+		}
+	}
+
+
+	@Override
+	public void turnOnOrOffSpecificRegularWorkingHours(String regularDay, String action) throws Exception {
+		if (areListElementVisible(regularHoursRows,10) && regularHoursRows.size() == 7){
+			for (WebElement day: regularHoursRows) {
+				if (day.findElement(By.cssSelector(".ellipsis")).getText().equalsIgnoreCase(regularDay)) {
+					if (day.findElement(By.cssSelector("[type=\"checkbox\"]")).getAttribute("class").contains("ng-not-empty")) {
+						if (action.equalsIgnoreCase("on")) {
+							SimpleUtils.pass(regularDay + " already on!");
+						} else {
+							clickTheElement(day.findElement(By.cssSelector("label[class=\"switch\"]")));
+							if (day.findElement(By.cssSelector("[type=\"checkbox\"]")).getAttribute("class").contains("ng-empty")) {
+								SimpleUtils.pass(regularDay + " Unchecked!");
+							} else
+								SimpleUtils.fail("Fail to turn off the Regular Working Hours", false);
+
+						}
+					} else {
+						if (action.equalsIgnoreCase("off")) {
+							SimpleUtils.pass(regularDay + " already off!");
+						} else {
+							clickTheElement(day.findElement(By.cssSelector("label[class=\"switch\"]")));
+							if (day.findElement(By.cssSelector("[type=\"checkbox\"]")).getAttribute("class").contains("ng-not-empty")) {
+								SimpleUtils.pass(regularDay + " Checked!");
+							} else
+								SimpleUtils.fail("Fail to turn on the Regular Working Hours", false);
+						}
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("No access item loaded!", false);
+		}
+	}
+
+
+	@Override
+	public LinkedHashMap<String, List<String>> getHolidayWorkingHours() throws Exception {
+		LinkedHashMap<String, List<String>> holidayHours = new LinkedHashMap<>();
+		List<String> startNEndTime = null;
+		if (areListElementVisible(holidayHoursRows, 30)) {
+			for (int i = 0; i < holidayHoursRows.size(); i++) {
+				WebElement day = holidayHoursRows.get(i).findElement(By.className("ellipsis"));
+				List<WebElement> workTimes = holidayHoursRows.get(i).findElements(By.className("work-time"));
+				if (day != null) {
+					startNEndTime = new ArrayList<>();
+					String startTime = "";
+					String endTime = "";
+					if (workTimes != null && workTimes.size() == 2) {
+						startTime = workTimes.get(0).getText();
+						endTime = workTimes.get(1).getText();
+						startNEndTime.add(startTime);
+						startNEndTime.add(endTime);
+					}
+					holidayHours.put(holidayHoursRows.get(i).findElement(By.className("ellipsis")).getText(), startNEndTime);
+					SimpleUtils.report("Get time for: " + holidayHoursRows.get(i).findElement(By.className("ellipsis")).getText() +
+							", time is: " + startTime + " - " + endTime);
+				}
+			}
+		}
+		return holidayHours;
+	}
+
+
+	@Override
+	public void updateControlsHolidayHours(String openingHours, String closingHours, String day, List<String> applyToOtherDays) throws Exception {
+		openingHours = openingHours.replace(" ", "");
+		closingHours = closingHours.replace(" ", "");
+		WebElement collapsibleHeader = holidayHoursBlock.findElement(By.cssSelector("div.collapsible.row"));
+		boolean isHolidayHoursSectionOpened = collapsibleHeader.getAttribute("class").contains("open");
+
+		if (!isHolidayHoursSectionOpened)
+			click(holidayHoursBlock);
+
+		if (areListElementVisible(holidayHoursRows)) {
+			ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
+			for (WebElement holidayHoursRow : holidayHoursRows) {
+				if (holidayHoursRow.getText().toLowerCase().contains(day.toLowerCase())) {
+					if (holidayHoursRow.findElement(By.cssSelector("label[class=\"switch\"]")).getAttribute("class").contains("ng-empty")) {
+						clickTheElement(holidayHoursRow.findElement(By.cssSelector("label[class=\"switch\"]")));
+					}
+					WebElement holidayHoursEditBtn = holidayHoursRow.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
+					if (isElementLoaded(holidayHoursEditBtn)) {
+						click(holidayHoursEditBtn);
+						// Select Opening and closing Hours
+						shiftOperatePage.moveSliderAtCertainPointOnEditShiftTimePage(closingHours, "End");
+						shiftOperatePage.moveSliderAtCertainPointOnEditShiftTimePage(openingHours, "Start");
+						//Apply to other days
+						if (applyToOtherDays.size() != 0) {
+							if (areListElementVisible(applyOtherDays, 5)) {
+								for (WebElement otherDay: applyOtherDays) {
+									if (applyToOtherDays.contains(otherDay.getText())) {
+										clickTheElement(otherDay.findElement(By.tagName("input")));
+									}
+								}
+							} else
+								SimpleUtils.fail("Apply to other days fail to load! ", false);
+						}
+
+						//Save the change
+						if (isElementLoaded(saveWorkersHoursBtn)) {
+							click(saveWorkersHoursBtn);
+							SimpleUtils.pass("Controls Working Hours Section: Holiday Hours Updated for the day ('" + day + "'). ");
+						} else
+							SimpleUtils.fail("Controls Working Hours Section: Editing Holiday Hours 'Save' Button not loaded.", true);
+					} else {
+						SimpleUtils.fail("Controls Working Hours Section: Holiday Hours 'Edit' Button not loaded.", true);
+					}
+					break;
+				}
+
+			}
+		} else {
+			SimpleUtils.fail("Controls Working Hours Section: Holiday Hours not loaded.", true);
+		}
+	}
+
+
+	@FindBy(css = "[label=\"Save\"]")
+	private WebElement saveBtn;
+	public void clickOnSaveBtn() throws Exception {
+		if (isElementLoaded(saveBtn)) {
+			click(saveBtn);
+			displaySuccessMessage();
+		} else
+			SimpleUtils.report("Save Button not loaded.");
+	}
+
+
+	@FindBy(css = "lg-button[label=\"Manage\"]")
+	private WebElement manageBtn;
+	public void clickOnManageBtn() throws Exception {
+		if (isElementLoaded(manageBtn)) {
+			click(manageBtn);
+			SimpleUtils.pass("Manage button clicked successfully.");
+		} else
+			SimpleUtils.report("Manage Button not loaded.");
+	}
+
+
+	@FindBy(css = "modal[modal-title=\"Manage Company Holidays\"]")
+	private WebElement manageCompanyHolidaysModal;
+	@FindBy(css = "input[placeholder=\"You can search by holiday name\"]")
+	private WebElement holidaySearchBox;
+	@FindBy(css = "div.lg-company-holidays__item")
+	private List<WebElement> companyHolidays;
+	@FindBy(css = ".company-holidays-list__table-wrapper tr")
+	private List<WebElement> companyHolidaysInSearchResultLists;
+
+	public List<String> getAllSelectedCompanyHolidays () {
+		if (areListElementVisible(companyHolidays, 10)) {
+			List<String> selectedCompanyHolidays = new ArrayList<>();
+			for (WebElement holiday: companyHolidays) {
+				selectedCompanyHolidays.add(holiday.getText());
+			}
+			SimpleUtils.pass("Get all company holidays successfully! ");
+			return selectedCompanyHolidays;
+		} else
+			return null;
+	}
+
+	public void searchSpecificCompanyHolidays (String companyHolidays) throws Exception {
+		if (isElementLoaded(holidaySearchBox, 10)) {
+			holidaySearchBox.clear();
+			holidaySearchBox.sendKeys(companyHolidays);
+			waitForSeconds(2);
+			SimpleUtils.pass("Search company holidays successfully! ");
+		} else
+			SimpleUtils.fail("The company holiday search box fail to loaded! ", false);
+	}
+
+
+	public void checkOrUncheckSpecificCompanyHolidays (Boolean isCheck, String companyHoliday) throws Exception {
+		if (!isElementLoaded(manageCompanyHolidaysModal)) {
+			clickOnManageBtn();
+		}
+		searchSpecificCompanyHolidays(companyHoliday);
+		if (areListElementVisible(companyHolidaysInSearchResultLists, 10) && companyHolidaysInSearchResultLists.size()>0) {
+			boolean isCompanyHolidayExist = false;
+			for (WebElement holiday : companyHolidaysInSearchResultLists) {
+				if (holiday.findElement(By.cssSelector(".company-holidays-list__table-wrapper--name")).getText().equalsIgnoreCase(companyHoliday)){
+					isCompanyHolidayExist = true;
+					if (holiday.getAttribute("class").contains("selected")){
+						if (isCheck){
+							SimpleUtils.pass("This company holiday already checked! ");
+						} else {
+							clickTheElement(holiday.findElement(By.cssSelector(".company-holidays-list__table-wrapper--enabled input")));
+							if (!holiday.getAttribute("class").contains("selected")) {
+								SimpleUtils.pass("Uncheck this company holiday successfully! ");
+							} else
+								SimpleUtils.fail("Fail to uncheck this company holiday! ", false);
+						}
+					} else {
+						if (isCheck){
+							clickTheElement(holiday.findElement(By.cssSelector(".company-holidays-list__table-wrapper--enabled input")));
+							if (holiday.getAttribute("class").contains("selected")) {
+								SimpleUtils.pass("Check this company holiday successfully! ");
+							} else
+								SimpleUtils.fail("Fail to check this company holiday! ", false);
+						} else {
+							SimpleUtils.pass("This company holiday already unchecked! ");
+						}
+					}
+					break;
+				}
+			}
+			if (!isCompanyHolidayExist) {
+				SimpleUtils.fail("The specific company holidays is not exist! ", false);
+			}
+			clickOnSaveBtn();
+		} else
+			SimpleUtils.fail("The specific company holidays is not exist! ", false);
+
+	}
+
+	public void setFixedHoursForSpecificCompanyHolidays (String companyHoliday, String fixedHours) throws Exception {
+		if (!isElementLoaded(manageCompanyHolidaysModal)) {
+			clickOnManageBtn();
+		}
+		searchSpecificCompanyHolidays(companyHoliday);
+		if (areListElementVisible(companyHolidaysInSearchResultLists, 10) && companyHolidaysInSearchResultLists.size()>0) {
+			boolean isCompanyHolidayExist = false;
+			for (WebElement holiday : companyHolidaysInSearchResultLists) {
+				if (holiday.findElement(By.cssSelector(".company-holidays-list__table-wrapper--name")).getText().equalsIgnoreCase(companyHoliday)){
+					isCompanyHolidayExist = true;
+					holiday.findElement(By.cssSelector(".company-holidays-list__table-wrapper--fixed-hours input")).clear();
+					holiday.findElement(By.cssSelector(".company-holidays-list__table-wrapper--fixed-hours input")).sendKeys(fixedHours);
+					break;
+				}
+			}
+			if (!isCompanyHolidayExist) {
+				SimpleUtils.fail("The specific company holidays is not exist! ", false);
+			}
+			clickOnSaveBtn();
+		} else
+			SimpleUtils.fail("The specific company holidays is not exist! ", false);
+	}
+
+
+	@Override
+	public LinkedHashMap<String, List<String>> getCompanyHolidaysInSearchResult() throws Exception {
+		LinkedHashMap<String, List<String>> companyHolidays = new LinkedHashMap<>();
+		List<String> holidayInfo = null;
+		if (areListElementVisible(companyHolidaysInSearchResultLists, 30)) {
+			for (int i = 0; i < companyHolidaysInSearchResultLists.size(); i++) {
+				holidayInfo = new ArrayList<>();
+				boolean checkOrNot = false;
+				WebElement holidayName = companyHolidaysInSearchResultLists.get(i).findElement(By.className("company-holidays-list__table-wrapper--name"));
+				String numberOfFixedHours = companyHolidaysInSearchResultLists.get(i).
+						findElement(By.cssSelector(".company-holidays-list__table-wrapper--fixed-hours input")).getAttribute("value");
+				//Set the value of holiday checked or not
+				if (companyHolidaysInSearchResultLists.get(i).getAttribute("class").contains("selected")) {
+					checkOrNot = true;
+				}
+				holidayInfo.add(checkOrNot? "checked":"unchecked");
+
+				//Set the holiday name
+				holidayInfo.add(holidayName.getText());
+
+				//Set the number of fixed hours
+				holidayInfo.add(numberOfFixedHours);
+
+				companyHolidays.put(holidayName.getText(), holidayInfo);
+			}
+		}
+		return companyHolidays;
 	}
 }
