@@ -1,7 +1,7 @@
 package com.legion.tests.core;
 
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.*;
 
 import com.legion.pages.*;
 import com.legion.tests.annotations.Automated;
@@ -42,6 +42,35 @@ public class ControlsNewUITest extends TestBase{
         public String getValue() { return value; }
 	}
 
+    public enum workingHoursTypes {
+        DayParts("DayParts"),
+        Regular("Regular"),
+        Holiday("Holiday"),
+        CompanyHolidays("Company Holidays"),
+        ;
+        private final String value;
+        workingHoursTypes(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
+    }
+
+
+    public enum weekDays {
+        SUNDAY("SUNDAY"),
+        MONDAY("MONDAY"),
+        TUESDAY("TUESDAY"),
+        WEDNESDAY("WEDNESDAY"),
+        THURSDAY("THURSDAY"),
+        FRIDAY("FRIDAY"),
+        SATURDAY("SATURDAY"),
+        ;
+        private final String value;
+        weekDays(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
+    }
 //
 //	public enum dayWeekOrPayPeriodViewType{
 //		  Next("Next"),
@@ -1632,6 +1661,350 @@ public class ControlsNewUITest extends TestBase{
 
             SimpleUtils.assertOnFail("The My Availability should not be locked! ",
                     !profileNewUIPage.isMyAvailabilityLockedNewUI(), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate the sections display on Working Hours page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheSectionsDisplayOnWorkingHoursPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!",
+                    controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsWorkingHoursCard();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!",
+                    controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
+            //verify there are four sections Working Hours page
+            controlsNewUIPage.verifyTheSectionsOnWorkingHoursPage();
+
+            //verify all sections can be expanded and collapsed
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.DayParts.getValue());
+            SimpleUtils.assertOnFail("The working hours section should be expanded! ",
+                    controlsNewUIPage.checkIfWorkHoursTypeCollapsed(workingHoursTypes.DayParts.getValue()),
+                    false);
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.DayParts.getValue());
+            SimpleUtils.assertOnFail("The working hours section should be collapsed! ",
+                    !controlsNewUIPage.checkIfWorkHoursTypeCollapsed(workingHoursTypes.DayParts.getValue()),
+                    false);
+
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.Regular.getValue());
+            SimpleUtils.assertOnFail("The working hours section should be expanded! ",
+                    controlsNewUIPage.checkIfWorkHoursTypeCollapsed(workingHoursTypes.Regular.getValue()),
+                    false);
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.Regular.getValue());
+            SimpleUtils.assertOnFail("The working hours section should be collapsed! ",
+                    !controlsNewUIPage.checkIfWorkHoursTypeCollapsed(workingHoursTypes.Regular.getValue()),
+                    false);
+
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.Holiday.getValue());
+            SimpleUtils.assertOnFail("The working hours section should be expanded! ",
+                    controlsNewUIPage.checkIfWorkHoursTypeCollapsed(workingHoursTypes.Holiday.getValue()),
+                    false);
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.Holiday.getValue());
+            SimpleUtils.assertOnFail("The working hours section should be collapsed! ",
+                    !controlsNewUIPage.checkIfWorkHoursTypeCollapsed(workingHoursTypes.Holiday.getValue()),
+                    false);
+
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.CompanyHolidays.getValue());
+            SimpleUtils.assertOnFail("The working hours section should be expanded! ",
+                    controlsNewUIPage.checkIfWorkHoursTypeCollapsed(workingHoursTypes.CompanyHolidays.getValue()),
+                    false);
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.CompanyHolidays.getValue());
+            SimpleUtils.assertOnFail("The working hours section should be collapsed! ",
+                    !controlsNewUIPage.checkIfWorkHoursTypeCollapsed(workingHoursTypes.CompanyHolidays.getValue()),
+                    false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate the Regular section on Working Hours page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheRegularSectionsOnWorkingHoursPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!",
+                    controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsWorkingHoursCard();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!",
+                    controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
+
+            //verify there are 7 days in Regular section
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.Regular.getValue());
+
+            //verify all 7 days can be closed or opened
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.SUNDAY.getValue(), "off");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.SUNDAY.getValue(), "on");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.MONDAY.getValue(), "off");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.MONDAY.getValue(), "on");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.TUESDAY.getValue(), "off");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.TUESDAY.getValue(), "on");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.WEDNESDAY.getValue(), "off");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.WEDNESDAY.getValue(), "on");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.THURSDAY.getValue(), "off");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.THURSDAY.getValue(), "on");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.FRIDAY.getValue(), "off");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.FRIDAY.getValue(), "on");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.SATURDAY.getValue(), "off");
+            controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.SATURDAY.getValue(), "on");
+            LinkedHashMap<String, List<String>> regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            List<String> workingHours = regularWorkingHours.get(weekDays.SUNDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.MONDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.TUESDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.WEDNESDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.THURSDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.FRIDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.SATURDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+
+            //verify all 7 day's opening and closing time can be edit
+            List<String> applyToOtherDays = new ArrayList<>();
+            String openingTime = "6:00am";
+            String closingTime = "6:00pm";
+            controlsNewUIPage.updateControlsRegularHours(openingTime, closingTime, weekDays.SUNDAY.getValue(), applyToOtherDays);
+            controlsNewUIPage.updateControlsRegularHours(openingTime, closingTime, weekDays.MONDAY.getValue(), applyToOtherDays);
+            controlsNewUIPage.updateControlsRegularHours(openingTime, closingTime, weekDays.TUESDAY.getValue(), applyToOtherDays);
+            controlsNewUIPage.updateControlsRegularHours(openingTime, closingTime, weekDays.WEDNESDAY.getValue(), applyToOtherDays);
+            controlsNewUIPage.updateControlsRegularHours(openingTime, closingTime, weekDays.THURSDAY.getValue(), applyToOtherDays);
+            controlsNewUIPage.updateControlsRegularHours(openingTime, closingTime, weekDays.FRIDAY.getValue(), applyToOtherDays);
+            controlsNewUIPage.updateControlsRegularHours(openingTime, closingTime, weekDays.SATURDAY.getValue(), applyToOtherDays);
+            controlsNewUIPage.clickOnSaveRegularHoursBtn();
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.SUNDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.MONDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.TUESDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.WEDNESDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.THURSDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.FRIDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.SATURDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+
+            String openingTime2 = "8:00am";
+            String closingTime2 = "8:00pm";
+            applyToOtherDays.add("All days");
+            controlsNewUIPage.updateControlsRegularHours(openingTime2, closingTime2, weekDays.SUNDAY.getValue(), applyToOtherDays);
+            controlsNewUIPage.clickOnCancelBtn();
+            workingHours = regularWorkingHours.get(weekDays.SUNDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.MONDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.TUESDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.WEDNESDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.THURSDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.FRIDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
+            workingHours = regularWorkingHours.get(weekDays.SATURDAY.getValue());
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
+                    && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate the Holiday section on Working Hours page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheHolidaySectionsOnWorkingHoursPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!",
+                    controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsWorkingHoursCard();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!",
+                    controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
+
+            //verify the holiday in Holiday section
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.Holiday.getValue());
+            LinkedHashMap<String, List<String>> holidayWorkingHours = controlsNewUIPage.getHolidayWorkingHours();
+            SimpleUtils.assertOnFail("There is no holiday for this location! ",
+                    holidayWorkingHours.size() != 0, false);
+            for (Map.Entry<String, List<String>> entry: holidayWorkingHours.entrySet()) {                ;
+                controlsNewUIPage.turnOnOrOffSpecificHolidayHours(entry.getKey(), "off");
+                controlsNewUIPage.turnOnOrOffSpecificHolidayHours(entry.getKey(), "on");
+            }
+
+            holidayWorkingHours = controlsNewUIPage.getHolidayWorkingHours();
+            for (Map.Entry<String, List<String>> entry: holidayWorkingHours.entrySet()) {
+                List<String> workingHours = entry.getValue();
+                SimpleUtils.assertOnFail("The holiday working hours display incorrectly! ",
+                        workingHours.get(0).equalsIgnoreCase("12:00am")
+                        && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            }
+
+            //verify all 7 day's opening and closing time can be edit
+            List<String> applyToOtherDays = new ArrayList<>();
+            String openingTime = "6:00am";
+            String closingTime = "6:00pm";
+            for (Map.Entry<String, List<String>> entry: holidayWorkingHours.entrySet()) {
+                controlsNewUIPage.updateControlsHolidayHours(openingTime, closingTime, entry.getKey(), applyToOtherDays);
+            }
+            controlsNewUIPage.clickOnSaveBtn();
+
+            holidayWorkingHours = controlsNewUIPage.getHolidayWorkingHours();
+            for (Map.Entry<String, List<String>> entry: holidayWorkingHours.entrySet()) {
+                List<String> workingHours = entry.getValue();
+                SimpleUtils.assertOnFail("The holiday working hours display incorrectly! ",
+                        workingHours.get(0).equalsIgnoreCase(openingTime)
+                                && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            }
+
+            String openingTime2 = "8:00am";
+            String closingTime2 = "8:00pm";
+            applyToOtherDays.add("All days");
+            controlsNewUIPage.updateControlsHolidayHours(openingTime2, closingTime2, weekDays.SUNDAY.getValue(), applyToOtherDays);
+            for (Map.Entry<String, List<String>> entry: holidayWorkingHours.entrySet()) {
+                controlsNewUIPage.updateControlsHolidayHours(openingTime, closingTime, entry.getKey(), applyToOtherDays);
+                break;
+            }
+            controlsNewUIPage.clickOnCancelBtn();
+
+            holidayWorkingHours = controlsNewUIPage.getHolidayWorkingHours();
+            for (Map.Entry<String, List<String>> entry: holidayWorkingHours.entrySet()) {
+                List<String> workingHours = entry.getValue();
+                SimpleUtils.assertOnFail("The holiday working hours display incorrectly! ",
+                        workingHours.get(0).equalsIgnoreCase(openingTime)
+                                && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate the Company Holidays section on Working Hours page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheCompanyHolidaySectionsOnWorkingHoursPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!",
+                    controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsWorkingHoursCard();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!",
+                    controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
+
+            controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.CompanyHolidays.getValue());
+            //Get all selected company holidays
+            List<String> allSelectedCompanyHolidays = controlsNewUIPage.getAllSelectedCompanyHolidays();
+
+            //Uncheck all selected company holidays
+            if (allSelectedCompanyHolidays != null) {
+                for (String holiday: allSelectedCompanyHolidays) {
+                    controlsNewUIPage.checkOrUncheckSpecificCompanyHolidays(false, holiday);
+                }
+            }
+
+            //verify the company holiday can be selected and fixed hours can be set
+            controlsNewUIPage.clickOnManageBtn();
+            LinkedHashMap<String, List<String>> companyHolidaysInSearchResult = controlsNewUIPage.getCompanyHolidaysInSearchResult();
+            String companyHolidayName = "";
+            if (companyHolidaysInSearchResult.size()> 0) {
+                for (Map.Entry<String, List<String>> entry: companyHolidaysInSearchResult.entrySet()) {
+                    companyHolidayName =  entry.getKey();
+                    controlsNewUIPage.checkOrUncheckSpecificCompanyHolidays(true,companyHolidayName);
+                    controlsNewUIPage.setFixedHoursForSpecificCompanyHolidays(companyHolidayName, "10");
+                    break;
+                }
+            } else
+                SimpleUtils.fail("There is no company holidays in search result list! ", false);
+            SimpleUtils.assertOnFail("The checked company holiday should display on the Company Holiday section! ",
+                    controlsNewUIPage.getAllSelectedCompanyHolidays().contains(companyHolidayName), false);
+
+            controlsNewUIPage.clickOnManageBtn();
+            controlsNewUIPage.searchSpecificCompanyHolidays(companyHolidayName);
+            companyHolidaysInSearchResult = controlsNewUIPage.getCompanyHolidaysInSearchResult();
+            if (companyHolidaysInSearchResult.size()> 0) {
+                for (Map.Entry<String, List<String>> entry: companyHolidaysInSearchResult.entrySet()) {
+                    if (entry.getKey().equalsIgnoreCase(companyHolidayName)) {
+                        SimpleUtils.assertOnFail("The fixed hours display incorrectly! ",
+                                entry.getValue().get(2).equalsIgnoreCase("10"), false);
+
+                        break;
+                    }
+
+                }
+            } else
+                SimpleUtils.fail("There is no company holidays in search result list! ", false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

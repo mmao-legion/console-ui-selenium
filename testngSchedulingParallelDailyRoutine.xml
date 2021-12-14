@@ -454,6 +454,10 @@
                     <include name="verifySetTheSettingForLockEmployeeAvailabilityEditsAsInternalAdmin" />
                     <include name="verifyTheTMCannotEditTheAvailabilityWhenScheduleIsCreatedAsInternalAdmin" />
                     <include name="verifyTheTMCannotEditTheAvailabilityWhenWeekDuringSchedulePlanningWindowAsInternalAdmin" />
+                    <include name="verifyTheSectionsDisplayOnWorkingHoursPageAsInternalAdmin" />
+                    <include name="verifyTheRegularSectionsOnWorkingHoursPageAsInternalAdmin" />
+                    <include name="verifyTheHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />
+                    <include name="verifyTheCompanyHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

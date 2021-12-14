@@ -27,8 +27,6 @@ public interface ControlsNewUIPage {
 
 	public void clickOnControlsWorkingHoursCard() throws Exception;
 
-	public void updateControlsRegularHours(String isStoreClosed, String openingHours, String closingHours, String day) throws Exception;
-
 	public void clickOnSaveRegularHoursBtn() throws Exception;
 
 	public void clickOnControlsSchedulingPolicies() throws Exception;
@@ -344,4 +342,19 @@ public interface ControlsNewUIPage {
 	public void editMealBreak(String mealBreakDuration, String paidType, String scheduleHoursLimit, boolean saveOrNot) throws Exception;
 	public void verifyLockEmployeeAvailabilityEditsIsLoaded () throws Exception;
 	public void updateLockEmployeeAvailabilityEdits(String lockOption) throws Exception;
+	public void verifyTheSectionsOnWorkingHoursPage() throws Exception;
+	public boolean checkIfWorkHoursTypeCollapsed(String title) throws Exception;
+	public void turnOnOrOffSpecificHolidayHours(String holidayName, String action) throws Exception;
+	public void turnOnOrOffSpecificRegularWorkingHours(String regularDay, String action) throws Exception;
+	public void updateControlsRegularHours(String openingHours, String closingHours, String day, List<String> applyToOtherDays) throws Exception;
+	public void clickOnCancelBtn() throws Exception;
+	public LinkedHashMap<String, List<String>> getHolidayWorkingHours() throws Exception;
+	public void updateControlsHolidayHours(String openingHours, String closingHours, String day, List<String> applyToOtherDays) throws Exception;
+	public void clickOnSaveBtn() throws Exception;
+	public void clickOnManageBtn() throws Exception;
+	public List<String> getAllSelectedCompanyHolidays ();
+	public void searchSpecificCompanyHolidays (String companyHolidays) throws Exception;
+	public void checkOrUncheckSpecificCompanyHolidays (Boolean isCheck, String companyHoliday) throws Exception;
+	public void setFixedHoursForSpecificCompanyHolidays (String companyHoliday, String fixedHours) throws Exception;
+	public LinkedHashMap<String, List<String>> getCompanyHolidaysInSearchResult() throws Exception;
 }
