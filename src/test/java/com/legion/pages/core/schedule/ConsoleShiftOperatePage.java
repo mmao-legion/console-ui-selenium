@@ -2260,7 +2260,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
                 if (workerName != null && optionCircle != null) {
                     if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.trim().toLowerCase())) {
-                        click(optionCircle);
+                        clickTheElement(optionCircle);
                         SimpleUtils.report("Select Team Member: " + name + " Successfully!");
                     }
                 }else {

@@ -374,23 +374,8 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate TM and SM can see the dotted lines to check the availability changes for This Week Only")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-        public void verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        public void verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
-            // Set availability policy
-            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-            controlsPage.gotoControlsPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-            controlsNewUIPage.clickOnGlobalLocationButton();
-            String isApprovalRequired = "Required for all changes";
-            controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            loginPage.logOut();
-
-            //Login as TM
-            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -402,6 +387,30 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
                 profileNewUIPage.clickNextWeek();
             }
+            String weekInfo = profileNewUIPage.getAvailabilityWeek();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+
+            // Set availability policy
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            controlsNewUIPage.clickOnGlobalLocationButton();
+            String isApprovalRequired = "Required for all changes";
+            controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(tmName);
+            profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
+            profileNewUIPage.approveAllPendingAvailabilityRequest();
+            while (!weekInfo.equalsIgnoreCase(profileNewUIPage.getAvailabilityWeek())){
+                profileNewUIPage.clickNextWeek();
+            }
+
             //Delete all availabilities of the first two editable weeks
             Thread.sleep(3000);
             profileNewUIPage.clickAvailabilityEditButton();
@@ -411,18 +420,6 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             profileNewUIPage.clickAvailabilityEditButton();
             profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
             profileNewUIPage.saveMyAvailabilityEditMode("This week only");
-
-
-            loginPage.logOut();
-
-            //Login as SM and approve all the pending request of the TM
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            teamPage.goToTeam();
-            teamPage.searchAndSelectTeamMemberByName(tmName);
-            profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
-            Thread.sleep(5000);
-            profileNewUIPage.approveAllPendingAvailabilityRequest();
             loginPage.logOut();
 
             //Login back to TM and add availabilities
