@@ -742,9 +742,10 @@ public class SplitAndSpreadTest extends TestBase {
 
 
             newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(0, tmFirstName).get(1);
+            List<String> messageFromInfoIconPopup = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift);
             if (newAddedShift != null) {
-                SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! ",
-                        scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Spread of hours"), false);
+                SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! The actual message is: "+ messageFromInfoIconPopup,
+                        messageFromInfoIconPopup.contains("Spread of hours"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed! ", false);
 

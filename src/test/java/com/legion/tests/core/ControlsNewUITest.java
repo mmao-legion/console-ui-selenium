@@ -1926,11 +1926,9 @@ public class ControlsNewUITest extends TestBase{
 
             String openingTime2 = "8:00am";
             String closingTime2 = "8:00pm";
-            applyToOtherDays.add("All days");
             controlsNewUIPage.updateControlsHolidayHours(openingTime2, closingTime2, weekDays.SUNDAY.getValue(), applyToOtherDays);
             for (Map.Entry<String, List<String>> entry: holidayWorkingHours.entrySet()) {
                 controlsNewUIPage.updateControlsHolidayHours(openingTime, closingTime, entry.getKey(), applyToOtherDays);
-                break;
             }
             controlsNewUIPage.clickOnCancelBtn();
 
