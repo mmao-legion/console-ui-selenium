@@ -504,7 +504,7 @@ public class LaborModelTest extends TestBase {
             laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
             laborModelPage.verifyEntryOfLaborModelSubscription();
-            laborModelPage.verifyImportLocationLevelWorkRoleSubscription();
+//            laborModelPage.verifyImportLocationLevelWorkRoleSubscription();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -540,11 +540,11 @@ public class LaborModelTest extends TestBase {
             laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
             laborModelPage.verifyEntryOfLaborModelSubscription();
-            if(flag){
-                laborModelPage.disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
-            }else {
-                laborModelPage.enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
-            }
+//            if(flag){
+//                laborModelPage.disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+//            }else {
+//                laborModelPage.enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+//            }
             laborModelPage.clickOnSaveButton();
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Details");
             laborModelPage.publishNowTemplate();
@@ -556,11 +556,11 @@ public class LaborModelTest extends TestBase {
             List<HashMap<String, String>> templateInfo1 = locationsPage.getLocationTemplateInfoInLocationLevel();
             locationsPage.actionsForEachTypeOfTemplate(templateInfo1.get(7).get("Template Type"), "View");
             flag1 = laborModelPage.verifyWorkRoleStatusInLocationLevel(workRole);
-            if(flag != flag1){
-                SimpleUtils.pass("User update work role by upload csv successfully!");
-            }else {
-                SimpleUtils.fail("User update work role by upload csv failed!",true);
-            }
+//            if(flag != flag1){
+//                SimpleUtils.pass("User update work role by upload csv successfully!");
+//            }else {
+//                SimpleUtils.fail("User update work role by upload csv failed!",true);
+//            }
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

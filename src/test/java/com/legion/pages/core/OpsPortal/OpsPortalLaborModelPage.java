@@ -908,10 +908,12 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 			for (WebElement workRolesInLocationLevel : workRolesInLocationLevel) {
 				String workRoleName = workRolesInLocationLevel.findElement(By.cssSelector("div.workRole")).getText().trim();
 				if (workRoleName.equalsIgnoreCase(workRole)) {
-					if (workRolesInLocationLevel.getAttribute("class").contains("not-empty")) {
+					if (workRolesInLocationLevel.findElement(By.cssSelector("input")).getAttribute("class").contains("not-empty")) {
 						flag = true;
 					}
 					break;
+				}else {
+					continue;
 				}
 			}
 		} else
