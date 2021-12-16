@@ -21,7 +21,7 @@ public class NewNavigationFlowTest extends TestBase {
     public enum modelSwitchOperation{
 
         Console("Console"),
-        OperationPortal("Operation Portal");
+        OperationPortal("Control Center");
 
         private final String value;
         modelSwitchOperation(final String newValue) {
@@ -547,7 +547,7 @@ public class NewNavigationFlowTest extends TestBase {
 
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         //go to locations tab
         locationsPage.clickOnLocationsTab();
         //go to sub-district tab
@@ -594,7 +594,7 @@ public class NewNavigationFlowTest extends TestBase {
         //go to OPS -> Locations -> District function
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         //go to locations tab
         locationsPage.clickOnLocationsTab();
         //go to sub-district tab

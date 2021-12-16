@@ -648,7 +648,7 @@ public class CinemarkMinorTest extends TestBase {
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
@@ -690,7 +690,7 @@ public class CinemarkMinorTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
             cinemarkMinorPage.findDefaultTemplate(MyThreadLocal.getCurrentComplianceTemplate());
@@ -729,7 +729,7 @@ public class CinemarkMinorTest extends TestBase {
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
@@ -885,7 +885,7 @@ public class CinemarkMinorTest extends TestBase {
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
@@ -930,7 +930,7 @@ public class CinemarkMinorTest extends TestBase {
         //Go to OP page
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         locationsPage.clickOnLocationsTab();
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.searchLocation(currentLocation);               ;
@@ -1814,7 +1814,7 @@ public class CinemarkMinorTest extends TestBase {
 
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //SM or admin log in, go OP side
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -1990,7 +1990,7 @@ public class CinemarkMinorTest extends TestBase {
 
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //SM or admin log in, go OP side
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();

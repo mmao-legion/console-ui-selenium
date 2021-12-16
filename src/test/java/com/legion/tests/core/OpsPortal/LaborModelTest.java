@@ -29,7 +29,7 @@ public class LaborModelTest extends TestBase {
 
     public enum modelSwitchOperation{
         Console("Console"),
-        OperationPortal("Operation Portal");
+        OperationPortal("Control Center");
 
         private final String value;
         modelSwitchOperation(final String newValue) {
@@ -48,7 +48,7 @@ public class LaborModelTest extends TestBase {
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
 

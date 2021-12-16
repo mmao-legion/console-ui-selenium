@@ -158,7 +158,7 @@ public class PrepareSettingsTest extends TestBase {
 
             String option = "Yes, all unassigned shifts";
             OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage("Operation Portal");
+            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage("Control Center");
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();

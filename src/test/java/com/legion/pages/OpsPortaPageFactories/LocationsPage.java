@@ -27,6 +27,7 @@ public interface LocationsPage {
     public void addNewMockLocationWithAllFields(String searchCharactor, int index) throws Exception;
     public void addNewRegularLocationWithDate(String locaname,String searchCharactor, int index,int fromToday) throws Exception;
     public void locationPageCommonFeatureCheck() throws Exception;
+    public void checkEveryLocationTemplateConfig(String locName) throws Exception;
 
     public void verifyImportLocationDistrict();
 
