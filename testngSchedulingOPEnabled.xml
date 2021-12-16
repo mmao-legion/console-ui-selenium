@@ -69,7 +69,7 @@
                     <include name="verifyWorkRoleConfigurationAsInternalAdmin" />
                     <include name="verifyWorkRoleInFilterAsInternalAdmin" />
                     <include name="verifyWorkRoleInScheduleAsInternalAdmin" />
-                    <include name="verifyWorkRoleInStaffAsInternalAdmin" />
+               <!--     <include name="verifyWorkRoleInStaffAsInternalAdmin" />  sch-5793-->
                     <include name="verifyWorkRoleInLaborGuidanceAsInternalAdmin" />
                 </methods>
             </class>
