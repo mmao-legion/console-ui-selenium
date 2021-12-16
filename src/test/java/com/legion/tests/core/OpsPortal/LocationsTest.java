@@ -2014,6 +2014,35 @@ public class LocationsTest extends TestBase {
 
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Source Location")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationSourceTypeSelectAsInternalAdminForUpperFieldTile(String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-locations tab
+            locationsPage.goToSubLocationsInLocationsPage();
+            //location page UI check
+            locationsPage.locationSourceTypeCheck();
+            //create a regular/Mock/NSO location as been covered in other test scenarios.
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+
 
     @Automated(automated = "Automated")
     @Owner(owner = "Lizzy")
