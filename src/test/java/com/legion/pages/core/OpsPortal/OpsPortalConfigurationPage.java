@@ -3107,7 +3107,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		waitForSeconds(10);
 	}
 
-	@FindBy(css="div.groupAction lg-button[ng-click=\"$ctrl.addDynamicGroup()\"] button")
+	@FindBy(css="img[ng-src*='add.png']")
 	private WebElement addDynamicGroupButton;
 	@FindBy(css="div.lg-modal h1.lg-modal__title")
 	private WebElement manageDynamicGroupPopupTitle;
