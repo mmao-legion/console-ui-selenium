@@ -385,7 +385,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "input[placeholder*=\"You can search by name, id, district, country, state and city.\"]")
+	@FindBy(css = "input[placeholder='You can search by name, id, district and city.']")
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
@@ -871,6 +871,84 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement exportSpecificLocationsRadio;
 	@FindBy(css = "lg-button[label=\"OK\"]")
 	private WebElement okBtnInExportLocationPage;
+	@FindBy(css = "div.lg-tabs__nav-item")
+	private List<WebElement> locationViewNavigate;
+	@FindBy(css = "tr[ng-repeat=\"(key,value) in $ctrl.templates\"]")
+	private List<WebElement> locationConfiguredTemplates;
+	@FindBy(css = "p[ng-class=\"{'templateName': $ctrl.showName}\"]")
+	private WebElement locationTempDisplayName;
+	@FindBy(css = "span.action[ng-class*='editing']")
+	private List<WebElement> locationConfiguredTemplatesEdit;
+
+
+
+
+	@Override
+	public void checkEveryLocationTemplateConfig(String locationName) throws Exception{
+		//search a location
+		searchLocation(locationName);
+		//click to enter the firrst location details
+		if (locationRows.size() > 0) {
+			clickTheElement(locationRows.get(0).findElement(By.cssSelector("td.one-line-overflow lg-button")));
+			waitForSeconds(2);
+			//navigate to Configuration tab and view to each template detail
+			if(areListElementVisible(locationViewNavigate)&&locationViewNavigate.size()>1) {
+				SimpleUtils.pass("Location detail page loaded successfully!");
+				clickTheElement(locationViewNavigate.get(1));
+				waitForSeconds(2);
+				//check the view actions
+				if(areListElementVisible(locationConfiguredTemplates)){
+					for(int ini=0;ini<locationConfiguredTemplates.size();ini++){
+						WebElement viewac=locationConfiguredTemplates.get(ini);
+						//check if view action is displayed
+						if (isElementLoaded(viewac.findElement(By.cssSelector("span[ng-click=\"$ctrl.getTemplateDetails(value,'view')\"]")))) {
+							//get the template name
+							String currTemp = viewac.findElement(By.cssSelector("td.tl.ng-binding")).getText().trim();
+							clickTheElement(viewac.findElement(By.cssSelector("span[ng-click=\"$ctrl.getTemplateDetails(value,'view')\"]")));
+							waitForSeconds(2);
+							//try to get the display name of each template
+							if(isElementLoaded(locationTempDisplayName,5)&&isElementDisplayed(backBtnInDistrictListPage)){
+							   String TempDisplayname=locationTempDisplayName.getText().trim();
+							   SimpleUtils.pass("Currently viewed template display name is:"+TempDisplayname);
+							   //click back
+								clickTheElement(backBtnInDistrictListPage);
+								waitForSeconds(2);
+								SimpleUtils.pass("View the template " + currTemp + " detail successfully!");
+							}
+						}
+					}
+				//check each Configuried template that can be edited
+					for(int init=0;init<locationConfiguredTemplatesEdit.size();init++){
+						WebElement editEle=locationConfiguredTemplatesEdit.get(init);
+						if (areListElementVisible(locationConfiguredTemplatesEdit)) {
+							//enter edit location mode
+							if (isElementLoaded(editLocationBtn)) {
+								clickTheElement(editLocationBtn);
+								waitForSeconds(2);
+								//click edit
+								clickTheElement(editEle);
+								waitForSeconds(2);
+								//get template display name and back
+								if (isElementLoaded(locationTempDisplayName, 5) && isElementDisplayed(backBtnInDistrictListPage)) {
+									String TempDisplayname = locationTempDisplayName.getText().trim();
+									SimpleUtils.pass("Currently template display name is:" + TempDisplayname + " at edit page");
+									clickTheElement(backBtnInDistrictListPage);
+									waitForSeconds(2);
+								}
+							}
+						}
+				}
+
+				}
+			    else
+					SimpleUtils.fail("Location load with no templates configured!", false);
+
+		    }
+			else
+			  SimpleUtils.fail("Location detail not show Configuration tab successfully", false);
+		}
+
+		}
 
 	private boolean verifyExportLocationsPageShow() {
 

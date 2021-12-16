@@ -95,7 +95,7 @@ public class GroupByDayPartsTest extends TestBase {
         //Go to OP page
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         locationsPage.clickOnLocationsTab();
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.searchLocation(currentLocation);               ;
@@ -135,7 +135,7 @@ public class GroupByDayPartsTest extends TestBase {
                 controlsNewUIPage.disableAllDayparts();
             } else if (MyThreadLocal.getDriver().getCurrentUrl().contains(parameterMap.get("CinemarkWkdy_Enterprise"))) {
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
                 locationsPage.clickOnLocationsTab();
                 locationsPage.goToSubLocationsInLocationsPage();
                 locationsPage.searchLocation(location);
@@ -178,7 +178,7 @@ public class GroupByDayPartsTest extends TestBase {
                 controlsNewUIPage.enableDaypart("Dinner");
             } else if (MyThreadLocal.getDriver().getCurrentUrl().contains(parameterMap.get("CinemarkWkdy_Enterprise"))) {
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
                 locationsPage.clickOnLocationsTab();
                 locationsPage.goToGlobalConfigurationInLocations();
                 locationsPage.enableDaypart("Lunch");
@@ -533,7 +533,7 @@ public class GroupByDayPartsTest extends TestBase {
             //Go to OP page
             locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad("Operating Hours");
             configurationPage.clickOnSpecifyTemplateName(MyThreadLocal.getCurrentOperatingTemplate(), "edit");
