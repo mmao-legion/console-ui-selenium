@@ -12,6 +12,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -392,6 +393,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 //	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]:nth-child(2) > td.one-line-overflow > div > lg-button > button > span > span")
 	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]> td.one-line-overflow > div > lg-button > button > span > span")
 	private List<WebElement> locationsName;
+	@FindBy(css = "select[aria-label=\"Location Type\"]")
+	private WebElement locationSourceType;
+	@FindBy(css = "span[ng-click='!$ctrl.disabled && $ctrl.select()']")
+	private List<WebElement> locationsLinks;
+	@FindBy(css = "modal[modal-title=\"Select a Location\"]")
+	private WebElement selectSourceLocationDialog;
+
+
 
 	@Override
 	public boolean searchNewLocation(String locationName) {
@@ -438,6 +447,40 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return isFound;
 	}
 
+	@Override
+	public void locationSourceTypeCheck() throws Exception{
+		//check the source type as regular
+		if (isElementEnabled(addLocationBtn, 15)) {
+			click(addLocationBtn);
+			waitForSeconds(2);
+			//select the source type as regular
+			Select sourceType = new Select(locationSourceType);
+			sourceType.selectByVisibleText("Regular");
+			//check the Source location with link displayed
+			if(areListElementVisible(locationsLinks)&&locationsLinks.get(0).getText().trim().equals("Select A Location")){
+				SimpleUtils.pass("The Source Location configuration supported for regular location type!");
+				clickTheElement(locationsLinks.get(0));
+				if(isElementLoaded(selectSourceLocationDialog))
+					clickTheElement(cancelBtnInImportLocationPage);
+			}
+			//select the source type as MOCK
+			sourceType.selectByVisibleText("Mock");
+			//check there is no source location link
+			if(areListElementVisible(locationsLinks)&&!locationsLinks.get(0).getText().trim().equals("Select A Location")){
+				SimpleUtils.pass("The Source Location configuration not supported for Mock location type!");
+			}
+			//select the source type as NSO
+			sourceType.selectByVisibleText("NSO");
+			//check the Source location with link displayed
+			if(areListElementVisible(locationsLinks)&&locationsLinks.get(0).getText().trim().equals("Select A Location")){
+				SimpleUtils.pass("The Source Location configuration supported for NSO location type!");
+				clickTheElement(locationsLinks.get(0));
+				if(isElementLoaded(selectSourceLocationDialog))
+					clickTheElement(cancelBtnInImportLocationPage);
+			}
+			}
+
+		}
 
 	@Override
 	public void addNewRegularLocationWithDate(String locationNameS, String searchCharactor, int index,int fromToday) throws Exception {

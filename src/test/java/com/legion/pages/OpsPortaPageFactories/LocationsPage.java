@@ -11,6 +11,7 @@ public interface LocationsPage {
     public void clickModelSwitchIconInDashboardPage(String value);
 
     public boolean isOpsPortalPageLoaded() throws Exception;
+    public void locationSourceTypeCheck() throws Exception;
 
     public void clickOnLocationsTab() throws Exception;
 
