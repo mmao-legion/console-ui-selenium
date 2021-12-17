@@ -8,6 +8,7 @@ import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
@@ -3109,7 +3110,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css="img[ng-src*='add.png']")
 	private WebElement addDynamicGroupButton;
-	@FindBy(css="div.lg-modal h1.lg-modal__title")
+	@FindBy(css="div.lg-modal h1.lg-modal__title div")
 	private WebElement manageDynamicGroupPopupTitle;
 	@FindBy(css="input-field[label=\"Group Name\"] input")
 	private WebElement dynamicGroupName;
@@ -3119,20 +3120,24 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement dynamicGroupNameRequiredMsg;
 	@FindBy(css="input-field[value=\"$ctrl.dynamicGroup.description\"] input")
 	private WebElement dynamicGroupDescription;
-	@FindBy(css="input-field[type=\"select\"] select")
+	@FindBy(css="input-field[placeholder=\"Select one\"]")
 	private WebElement dynamicGroupCriteria;
-	@FindBy(css="input-field[value=\"$ctrl.displayValue\"]")
-	private WebElement dynamicGroupCriteriaValue;
-	@FindBy(css="input[placeholder=\"Search \"]")
+	@FindBy(css="div.lg-search-options .lg-search-options__option.lg-search-options__subLabel")
+	private List<WebElement> dynamicGroupCriteriaOptions;
+	@FindBy(css="input-field[placeholder=\"Select...\"]")
+	private List<WebElement> dynamicGroupCriteriaValueInputs;
+	@FindBy(css=".lg-search-options__option[title='IN']")
+	private WebElement dynamicGroupCriteriaINOption;
+	@FindBy(css=".lg-search-options__option[title='NOT IN']")
+	private WebElement dynamicGroupCriteriaINotNOption;
+	@FindBy(css="input[placeholder=\"Search\"]")
 	private WebElement dynamicGroupCriteriaSearchInput;
-	@FindBy(css="input-field[type=\"checkbox\"]")
+	@FindBy(css="input-field[type=\"checkbox\"] input")
 	private List<WebElement> dynamicGroupCriteriaResults;
-	@FindBy(css="div.add-label-button")
-	private WebElement dynamicGroupCriteriaAddIcon;
 	@FindBy(css="lg-button[label=\"Add More\"]")
 	private WebElement dynamicGroupCriteriaAddMoreLink;
 	@FindBy(css="i.deleteRule")
-	private WebElement dynamicGroupCriteriaAddDelete;
+	private List<WebElement> dynamicGroupCriteriaAddDelete;
 	@FindBy(css="lg-button[label=\"Test\"]")
 	private WebElement dynamicGroupTestButton;
 	@FindBy(css="span.testInfo")
@@ -3152,10 +3157,28 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			clickTheElement(dynamicGroupName);
 			dynamicGroupName.sendKeys(name);
 			waitForSeconds(5);
-			selectByVisibleText(dynamicGroupCriteria,criteria);
-			waitForSeconds(3);
-			formulaTextAreaOfDynamicGroup.sendKeys(Keys.TAB);
-			formulaTextAreaOfDynamicGroup.sendKeys(formula);
+			//select a criteria type
+			clickTheElement(dynamicGroupCriteria);
+			waitForSeconds(1);
+			String optionLoc=".lg-search-options__option[title='"+criteria+"']";
+			getDriver().findElement(By.cssSelector(optionLoc)).click();
+			waitForSeconds(2);
+			if(criteria.equals("Custom")){
+				formulaTextAreaOfDynamicGroup.sendKeys(Keys.TAB);
+			    formulaTextAreaOfDynamicGroup.sendKeys(formula);
+			}
+			else {
+				//select a criteria value
+				//set up value
+				clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
+				waitForSeconds(2);
+				if (areListElementVisible(dynamicGroupCriteriaResults, 5)) {
+					SimpleUtils.pass("The current selected Criteria has value options");
+					clickTheElement(dynamicGroupCriteriaResults.get(0));
+					waitForSeconds(3);
+				}
+
+			}
 			clickTheElement(okButtonOnManageDynamicGroupPopup);
 			waitForSeconds(3);
 		}else {
@@ -3185,7 +3208,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		if(isElementLoaded(addDynamicGroupButton,5)){
 			SimpleUtils.pass("The "+" icon for adding dynamic group button show as expected");
 			clickTheElement(addDynamicGroupButton);
-			if(manageDynamicGroupPopupTitle.getText().trim().equalsIgnoreCase("Manage Dynamic Group")){
+			if(manageDynamicGroupPopupTitle.getText().trim().equalsIgnoreCase("Manage Dynamic Location Group")){
 				SimpleUtils.pass("Dynamic group dialog title show as expected");
 				//check the group name is required
 				if(dynamicGroupName.getAttribute("required").equals("true")){
@@ -3198,48 +3221,50 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					if(isElementLoaded(dynamicGroupNameRequiredMsg)&&dynamicGroupNameRequiredMsg.getText().contains("Group Name is required"))
 						SimpleUtils.pass("group name is required message displayed if not input");
 					dynamicGroupName.sendKeys(name);
-					waitForSeconds(5);
-					//check every criteria options is selectable
-					clickTheElement(dynamicGroupCriteria);
-					waitForSeconds(4);
-					String[] criteriaOps={"Config Type","District","Country","State","City","Location Name",
-							"Location Id","Location Type","UpperField","Custom"};
+					waitForSeconds(2);
+					String[] criteriaOps={"Custom","District","Country","State","City","Location Name",
+							"Location Id","Location Type","UpperField","Config Type"};
 					for(String ss:criteriaOps){
-						selectByVisibleText(dynamicGroupCriteria,ss);
+						//check every criteria options is selectable
+						clickTheElement(dynamicGroupCriteria);
+						waitForSeconds(4);
+						String optionType=".lg-search-options__option[title='"+ss+"']";
+						getDriver().findElement(By.cssSelector(optionType)).click();
+						SimpleUtils.pass("The criteria "+ss+" was selected!");
 						waitForSeconds(3);
 					}
-					//set a criteria
-					selectByVisibleText(dynamicGroupCriteria,"Config Type");
-					waitForSeconds(3);
 					//set up value
-					clickTheElement(dynamicGroupCriteriaValue);
+					clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
 					waitForSeconds(2);
 					if(areListElementVisible(dynamicGroupCriteriaResults,5)){
 						SimpleUtils.pass("The current selected Criteria has value options");
 						clickTheElement(dynamicGroupCriteriaResults.get(0));
 						waitForSeconds(3);
-						clickTheElement(dynamicGroupCriteriaAddIcon);
+						//click add more link//click add more link
+						clickTheElement(dynamicGroupCriteriaAddMoreLink);
+						waitForSeconds(2);
 						//Check the delete icon showed
-						if(isElementLoaded(dynamicGroupCriteriaAddDelete)){
-							clickTheElement(dynamicGroupCriteriaAddDelete);
+						if(areListElementVisible(dynamicGroupCriteriaAddDelete)&&dynamicGroupCriteriaAddDelete.size()>1){
+							clickTheElement(dynamicGroupCriteriaAddDelete.get(1));
 							waitForSeconds(2);
-							//check no criteria showed after deleted
-							if(isElementLoaded(dynamicGroupCriteriaAddDelete))
-							  SimpleUtils.fail("The criteria still show after it was deleted!",false);
-							//click add more link
-							clickTheElement(dynamicGroupCriteriaAddMoreLink);
-							waitForSeconds(3);
-							//set a criteria
-							selectByVisibleText(dynamicGroupCriteria,"Country");
-							waitForSeconds(3);
-							//set up value
-							clickTheElement(dynamicGroupCriteriaValue);
+							//select a criteria type
+							clickTheElement(dynamicGroupCriteria);
+							waitForSeconds(1);
+							String optionCountry=".lg-search-options__option[title='Country']";
+							getDriver().findElement(By.cssSelector(optionCountry)).click();
+							waitForSeconds(2);
+							//set up criteria relationship
+							clickTheElement(dynamicGroupCriteriaValueInputs.get(0));
+							// check IN and NOTIN options supported
+							if(isElementLoaded(dynamicGroupCriteriaINOption)&&isElementLoaded(dynamicGroupCriteriaINotNOption))
+								SimpleUtils.pass("The IN and NOt IN relation are supported for Criteria relationship.");
+							//set up criteria value
+							clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
 							//input search key words
 							dynamicGroupCriteriaSearchInput.sendKeys("United States");
 							waitForSeconds(2);
 							clickTheElement(dynamicGroupCriteriaResults.get(0));
 							waitForSeconds(2);
-							clickTheElement(dynamicGroupCriteriaAddIcon);
 							//click the test button to chek value
 							clickTheElement(dynamicGroupTestButton);
 							waitForSeconds(3);
