@@ -368,7 +368,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     }
 
 
-    @FindBy (css = "[ng-if=\"(scheduleSmartCard.unassignedShifts || scheduleSmartCard.outsideOperatingHoursShifts) && hasSchedule()\"] .card-carousel-card")
+    @FindBy (css = "[ng-if=\"(scheduleSmartCard.minorBlockingViolations || scheduleSmartCard.unassignedShifts || scheduleSmartCard.outsideOperatingHoursShifts) && hasSchedule()\"] .card-carousel-card")
     private WebElement requiredActionSmartCard;
     @FindBy (css = "[ng-click=\"smartCardShiftFilter('Requires Action')\"]")
     private WebElement viewShiftsBtnOnRequiredActionSmartCard;
@@ -735,13 +735,13 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     }
 
 
-    @FindBy (css = "[ng-if=\"scheduleSmartCard.unassignedShifts && scheduleSmartCard.outsideOperatingHoursShifts\"] .col-fx-1")
+    @FindBy (css = "[ng-if=\"requiredActionsCount >= 2\"] .col-fx-1")
     private List<WebElement> unassignedAndOOOHMessageOnActionRequiredSmartCard;
 
-    @FindBy (css = "[ng-if=\"!scheduleSmartCard.outsideOperatingHoursShifts\"]")
+    @FindBy (css = "[ng-if=\"scheduleSmartCard.unassignedShifts && requiredActionsCount === 1\"]")
     private WebElement unassignedMessageOnActionRequiredSmartCard;
 
-    @FindBy (css = "[ng-if=\"!scheduleSmartCard.unassignedShifts\"]")
+    @FindBy (css = "[ng-if=\"scheduleSmartCard.outsideOperatingHoursShifts && requiredActionsCount === 1\"]")
     private WebElement oOOHMessageOnActionRequiredSmartCard;
 
     @Override

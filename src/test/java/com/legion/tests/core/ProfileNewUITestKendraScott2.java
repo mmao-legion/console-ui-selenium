@@ -798,84 +798,84 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         }
     }
 
-
-    @Automated(automated ="Automated")
-    @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Validate the manager cannot edit the availability of the TM that has pending request")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void verifyManagerCannotEditTheAvailabilityWhenTMHasPendingRequestAsTeamMember(String browser, String username, String password, String location) throws Exception {
-        try {
-            //Login as TM
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String tmName = profileNewUIPage.getNickNameFromProfile();
-            String myProfileLabel = "My Work Preferences";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-            int i = 0;
-            while (!profileNewUIPage.getCountForStatus("pending").trim().equalsIgnoreCase("0") && i <20) {
-                profileNewUIPage.cancelAllPendingAvailabilityRequest();
-                Thread.sleep(2000);
-                i++;
-            }
-            //Create multiple availability requests
-            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-                profileNewUIPage.clickNextWeek();
-            }
-            String availabilityWeek1 = profileNewUIPage.getAvailabilityWeek();
-            profileNewUIPage.clickAvailabilityEditButton();
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
-            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
-            profileNewUIPage.clickNextWeek();
-            String availabilityWeek2 = profileNewUIPage.getAvailabilityWeek();
-            profileNewUIPage.clickAvailabilityEditButton();
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
-            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
-            String pendingCount = profileNewUIPage.getCountForStatus("pending").trim();
-            SimpleUtils.assertOnFail("There should have 2 pending Availability Change Requests, but it actual has: "+ pendingCount,
-                    pendingCount.equalsIgnoreCase("2"), false);
-
-            //Get the editable week info
-
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            loginPage.logOut();
-
-            //Login as SM
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            teamPage.goToTeam();
-            teamPage.searchAndSelectTeamMemberByName(tmName);
-            profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
-            pendingCount = profileNewUIPage.getCountForStatus("pending").trim();
-            SimpleUtils.assertOnFail("There should have 2 pending Availability Change Requests, but it actual has: "+ pendingCount,
-                    pendingCount.equalsIgnoreCase("2"), false);
-            profileNewUIPage.clickAvailabilityEditButton();
-            SimpleUtils.assertOnFail("The availability cannot be edited alert fail to load! ",
-                    profileNewUIPage.isAlertDialogLoaded()
-                            && profileNewUIPage.getMessageFromAlertDialog().equalsIgnoreCase("This Team Member current has open Availability Requests. Please approve or deny the requests before making any changes"), false);
-            profileNewUIPage.clickOnOKBtnOnAlert();
-
-            //Approve or reject one request, then try to edit the TM's availability
-            profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest( availabilityWeek1, "Approve");
-            Thread.sleep(3000);
-            profileNewUIPage.clickAvailabilityEditButton();
-            SimpleUtils.assertOnFail("The availability cannot be edited alert fail to load! ",
-                    profileNewUIPage.isAlertDialogLoaded()
-                            && profileNewUIPage.getMessageFromAlertDialog().equalsIgnoreCase("This Team Member current has an open Availability Request. Please approve or deny the request before making any changes"), false);
-            profileNewUIPage.clickOnOKBtnOnAlert();
-
-            //Approve or reject all requests, then try to edit the TM's availability
-            profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(availabilityWeek2, "Reject");
-            Thread.sleep(3000);
-            profileNewUIPage.clickAvailabilityEditButton();
-            SimpleUtils.assertOnFail("The availability cannot be edited alert fail to load! ",
-                    !profileNewUIPage.isAlertDialogLoaded(), false);
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
+//   Has new requirement: https://legiontech.atlassian.net/browse/SCH-5388
+//    @Automated(automated ="Automated")
+//    @Owner(owner = "Mary")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+////    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @TestName(description = "Validate the manager cannot edit the availability of the TM that has pending request")
+//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//    public void verifyManagerCannotEditTheAvailabilityWhenTMHasPendingRequestAsTeamMember(String browser, String username, String password, String location) throws Exception {
+//        try {
+//            //Login as TM
+//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//
+//            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+//            String tmName = profileNewUIPage.getNickNameFromProfile();
+//            String myProfileLabel = "My Work Preferences";
+//            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+//            int i = 0;
+//            while (!profileNewUIPage.getCountForStatus("pending").trim().equalsIgnoreCase("0") && i <20) {
+//                profileNewUIPage.cancelAllPendingAvailabilityRequest();
+//                Thread.sleep(2000);
+//                i++;
+//            }
+//            //Create multiple availability requests
+//            while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+//                profileNewUIPage.clickNextWeek();
+//            }
+//            String availabilityWeek1 = profileNewUIPage.getAvailabilityWeek();
+//            profileNewUIPage.clickAvailabilityEditButton();
+//            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+//            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+//            profileNewUIPage.clickNextWeek();
+//            String availabilityWeek2 = profileNewUIPage.getAvailabilityWeek();
+//            profileNewUIPage.clickAvailabilityEditButton();
+//            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+//            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+//            String pendingCount = profileNewUIPage.getCountForStatus("pending").trim();
+//            SimpleUtils.assertOnFail("There should have 2 pending Availability Change Requests, but it actual has: "+ pendingCount,
+//                    pendingCount.equalsIgnoreCase("2"), false);
+//
+//            //Get the editable week info
+//
+//            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+//            loginPage.logOut();
+//
+//            //Login as SM
+//            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+//            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+//            teamPage.goToTeam();
+//            teamPage.searchAndSelectTeamMemberByName(tmName);
+//            profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
+//            pendingCount = profileNewUIPage.getCountForStatus("pending").trim();
+//            SimpleUtils.assertOnFail("There should have 2 pending Availability Change Requests, but it actual has: "+ pendingCount,
+//                    pendingCount.equalsIgnoreCase("2"), false);
+//            profileNewUIPage.clickAvailabilityEditButton();
+//            SimpleUtils.assertOnFail("The availability cannot be edited alert fail to load! ",
+//                    profileNewUIPage.isAlertDialogLoaded()
+//                            && profileNewUIPage.getMessageFromAlertDialog().equalsIgnoreCase("This Team Member current has open Availability Requests. Please approve or deny the requests before making any changes"), false);
+//            profileNewUIPage.clickOnOKBtnOnAlert();
+//
+//            //Approve or reject one request, then try to edit the TM's availability
+//            profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest( availabilityWeek1, "Approve");
+//            Thread.sleep(3000);
+//            profileNewUIPage.clickAvailabilityEditButton();
+//            SimpleUtils.assertOnFail("The availability cannot be edited alert fail to load! ",
+//                    profileNewUIPage.isAlertDialogLoaded()
+//                            && profileNewUIPage.getMessageFromAlertDialog().equalsIgnoreCase("This Team Member current has an open Availability Request. Please approve or deny the request before making any changes"), false);
+//            profileNewUIPage.clickOnOKBtnOnAlert();
+//
+//            //Approve or reject all requests, then try to edit the TM's availability
+//            profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(availabilityWeek2, "Reject");
+//            Thread.sleep(3000);
+//            profileNewUIPage.clickAvailabilityEditButton();
+//            SimpleUtils.assertOnFail("The availability cannot be edited alert fail to load! ",
+//                    !profileNewUIPage.isAlertDialogLoaded(), false);
+//
+//        } catch (Exception e){
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
+//    }
 }

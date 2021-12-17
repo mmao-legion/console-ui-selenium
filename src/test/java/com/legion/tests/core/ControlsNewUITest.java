@@ -1888,6 +1888,7 @@ public class ControlsNewUITest extends TestBase{
             controlsNewUIPage.clickOnControlsWorkingHoursCard();
             SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!",
                     controlsNewUIPage.isControlsWorkingHoursLoaded(), false);
+            controlsNewUIPage.clickOnGlobalLocationButton();
 
             //verify the holiday in Holiday section
             controlsNewUIPage.clickOnWorkHoursTypeByText(workingHoursTypes.Holiday.getValue());

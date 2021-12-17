@@ -1044,7 +1044,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public List<WebElement> getAllShiftsOfOneTM(String name) throws Exception{
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         List<WebElement> allShifts = new ArrayList<>();
-        if (areListElementVisible(shiftsWeekView, 15)) {
+        if (areListElementVisible(shiftsWeekView, 20)) {
             for (WebElement shiftWeekView : shiftsWeekView) {
                 WebElement workerName = null;
                 if(scheduleCommonPage.isScheduleDayViewActive()){
