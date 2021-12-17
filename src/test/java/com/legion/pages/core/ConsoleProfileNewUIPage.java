@@ -3794,7 +3794,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement warningDialog;
 	@Override
 	public boolean verifyErrorMessageForEditAvailabilityShowsUpOrNot() throws Exception {
-		if (isElementLoaded(warningDialog, 10) && warningDialog.findElement(By.cssSelector(".lgn-alert-message")).getText().equalsIgnoreCase("This Team Member current has an open Availability Request. Please approve or deny the request before making any changes")){
+		String s = warningDialog.findElement(By.cssSelector(".lgn-alert-message")).getText();
+		if (isElementLoaded(warningDialog, 10) && warningDialog.findElement(By.cssSelector(".lgn-alert-message")).getText().equalsIgnoreCase("This Team Member current has an open Recurring Availability Request. Please approve or deny the request before making any changes")){
 			return true;
 		}
 		return false;
