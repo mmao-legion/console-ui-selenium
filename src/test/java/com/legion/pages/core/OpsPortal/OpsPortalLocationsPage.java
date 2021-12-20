@@ -252,7 +252,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "input[placeholder*=\"You can search by name, id, district, country, state and city.\"]")
+	@FindBy(css = "input[placeholder*=\"You can search by name, id, district and city.\"]")
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
