@@ -2192,7 +2192,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-	@FindBy(css = "lg-dashboard-card[title=\"Dynamic Groups\"]")
+	@FindBy(css = "lg-dashboard-card[title=\"Dynamic Location Groups\"]")
 	private WebElement dynamicGroupCard;
 	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"]")
 	private WebElement workForceSharingDg;

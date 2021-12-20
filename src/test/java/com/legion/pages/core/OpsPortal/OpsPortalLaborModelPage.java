@@ -796,7 +796,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	// added by Fiona
     @FindBy(css="nav.lg-tabs__nav>div:nth-last-child(2)")
     private WebElement templateAssociationBTN;
-	@FindBy(css="div.templateAssociation_title.gray span.templateAssociation_titleText")
+	@FindBy(css="//img[contains(@src, 'location')]/following-sibling::span")
 	private WebElement locationSubscription;
 	@FindBy(css="lg-button[label=\"Import\"] button")
 	private WebElement locationSubscriptionImportButton;

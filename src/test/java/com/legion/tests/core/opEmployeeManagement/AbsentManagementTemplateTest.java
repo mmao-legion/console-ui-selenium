@@ -283,7 +283,7 @@ public class AbsentManagementTemplateTest extends TestBase {
 
         //switch between details and associations
         absentManagePage.switchToAssociation();
-        Assert.assertEquals(absentManagePage.getTemplateAssociationTitle(), "Dynamic Groups", "Failed to switch to association page!");
+        Assert.assertEquals(absentManagePage.getTemplateAssociationTitle(), "Dynamic Employee Groups", "Failed to switch to association page!");
         absentManagePage.switchToDetails();
         Assert.assertEquals(absentManagePage.getCanEmployeeRequestLabel(), "Can employees request time off ?", "Failed to switch to details page!");
         SimpleUtils.pass("Succeeded in validating switch between details and association!");
