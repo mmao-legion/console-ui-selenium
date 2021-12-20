@@ -374,7 +374,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
     }
 
 
-    @FindBy (css = "[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")
+    @FindBy (css = "[ng-if=\"checkFormTemplates()\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")
     private List<WebElement> minorDataFields;
     @Override
     public void setMinorRuleByDay(String type, String from, String to, String maxOfHrs) throws Exception {

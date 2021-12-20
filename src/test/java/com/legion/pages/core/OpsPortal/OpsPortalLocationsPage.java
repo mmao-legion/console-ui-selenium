@@ -570,7 +570,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 
 		} else {
-			SimpleUtils.fail("Search input is not clickable", true);
+			SimpleUtils.fail("Search input is not clickable", false);
 		}
 
 	}

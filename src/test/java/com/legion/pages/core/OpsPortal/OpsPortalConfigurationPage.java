@@ -112,7 +112,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="sub-content-box[box-title=\"Days of Week\"]")
 	private WebElement daysOfWeekSection;
 
-	@FindBy(css="[title=\"Dynamic Groups\"] div")
+	@FindBy(css="[title=\"Dynamic Employee Groups\"] div")
 	private WebElement dynamicGroupSection;
 
 	@FindBy(css="sub-content-box[box-title=\"Time of Day\"]")
@@ -3340,14 +3340,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement labelsSelector;
 	@FindBy(css = ".item.ng-scope")
 	private List<WebElement> labelsItems;
-	@FindBy(css = "[value=\"group.values\"] input[placeholder=\"Select...\"]")
+	@FindBy(css = "[class=\"input-form ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-maxlength\"] input[placeholder=\"Select...\"]")
 	private List<WebElement> subCriteriaSelector;
-	@FindBy(css = "[value=\"group.values\"] .item.ng-scope input-field")
+	@FindBy(css = ".select-list-item")
 	private List<WebElement> subCriteriaSelectorItems;
 	@FindBy(css = "input[placeholder=\"Search Label\"]")
 	private WebElement searchLabelBox;
 	@FindBy(css = "div.new-label")
 	private WebElement newLabel;
+	@FindBy(css = ".lg-search-options__option")
+	private List<WebElement> criteriaSelectorItems;
+	@FindBy(css = "[class=\"lg-picker-input__wrapper lg-ng-animate\"]")
+	private WebElement pickerPopup;
 
 	@Override
 	public void createNewDynamicEmployeeGroup(String groupTitle, String description, String groupLabels, List<String> groupCriteria) throws Exception {
@@ -3377,19 +3381,35 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						}
 					}
 				}
+				//To close the label pick popup
+				if (isElementLoaded(pickerPopup, 5)){
+					clickTheElement(newLabel);
+				}
+
 				//Add more criteria if criteria more than 1
 				if (groupCriteria.size()>1) {
 					for (int i=0; i< groupCriteria.size()-2; i++) {
 						clickTheElement(addMoreBtn);
 					}
 				}
+				waitForSeconds(3);
 				//Select criteria and sub-criteria
 				if (criteriaSelectors.size() == groupCriteria.size()) {
 					for (int i = 0; i< groupCriteria.size(); i++) {
 						String criteria = groupCriteria.get(i).split("-")[0];
 						String subCriteria = groupCriteria.get(i).split("-")[1];
 						//Select criteria
-						selectByVisibleText(criteriaSelectors.get(i), criteria);
+						clickTheElement(criteriaSelectors.get(i));
+						if (areListElementVisible(criteriaSelectorItems, 15)) {
+							for (WebElement item: criteriaSelectorItems) {
+								if (item.getText().equalsIgnoreCase(criteria)){
+									clickTheElement(item);
+									break;
+								}
+							}
+						} else
+							SimpleUtils.fail("Criteria selector items fail to load! ", false);
+//						selectByVisibleText(criteriaSelectors.get(i), criteria);
 						waitForSeconds(3);
 						//Select sub-criteria
 						clickTheElement(subCriteriaSelector.get(i));
@@ -3400,11 +3420,16 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 							}
 						}
 					}
-				}
+				} else
+					SimpleUtils.fail("Criteria selector fail to load! ", false);
 
 				//Click on OK button
 				clickTheElement(okButton);
+				waitForSeconds(2);
 				displaySuccessMessage();
+				if (isManagerDGpopShowWell()) {
+					SimpleUtils.fail("Fail to save the Dynamic Employee Group! ", false);
+				}
 			} else
 				SimpleUtils.fail("Manage Dynamic Group window load failed", false);
 		} else
@@ -3412,14 +3437,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 
-	@FindBy(css = "modal[modal-title=\"Manage Dynamic Group\"]>div")
+	@FindBy(css = "modal[modal-title=\"Manage Dynamic Location Group\"]>div")
 	private WebElement managerDGpop;
 	@FindBy(css = "input[aria-label=\"Group Name\"]")
 	private WebElement groupNameInput;
 	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
 	private WebElement groupDescriptionInput;
 
-	@FindBy(css = "select.ng-pristine.ng-empty.ng-valid.ng-valid-required")
+	@FindBy(css = "input[placeholder=\"Select one\"]")
 	private List<WebElement> criteriaSelectors;
 
 	@FindBy(css = "lg-button[label=\"Test\"]")
