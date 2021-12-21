@@ -248,6 +248,8 @@ public class UserManagementTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDynamicEmployeeGroupAsInternalAdminForUserManagement(String browser, String username, String password, String location) throws Exception {
         try {
+            String manageDynamicEmployeeGroup = "Manage Dynamic Employee Group";
+            String removeWarningMsg = "Are you sure you want to remove this dynamic employee group?";
             OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
             navigationPage.navigateToUserManagement();
             OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
@@ -269,7 +271,7 @@ public class UserManagementTest extends TestBase {
             panelPage.goToDynamicGroups();
             DynamicEmployeePage dynamicEmployeePage = new DynamicEmployeePage();
             dynamicEmployeePage.addGroup();
-            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), "Manage Dynamic Group", "Failed to open manage dynamic group modal");
+            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), manageDynamicEmployeeGroup, "Failed to open manage dynamic group modal");
 
             //work role
             List<String> wrList2 = dynamicEmployeePage.getCriteriaValues("Work Role");
@@ -315,13 +317,13 @@ public class UserManagementTest extends TestBase {
 
             //create a new employee group
             dynamicEmployeePage.addGroup();
-            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), "Manage Dynamic Group", "Failed to open manage dynamic group modal!");
+            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), manageDynamicEmployeeGroup, "Failed to open manage dynamic group modal!");
             dynamicEmployeePage.editEmployeeGroup("AutoTestCreating", "create a new group", "autoTest", "Work Role");
             dynamicEmployeePage.saveCreating();
 
             //cancel creating
             dynamicEmployeePage.addGroup();
-            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), "Manage Dynamic Group", "Failed to open manage dynamic group modal!");
+            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), manageDynamicEmployeeGroup, "Failed to open manage dynamic group modal!");
             dynamicEmployeePage.editEmployeeGroup("AutoTestCancel", "give up creating a new group", "cancel", "Employment Type");
             dynamicEmployeePage.cancelCreating();
 
@@ -330,25 +332,25 @@ public class UserManagementTest extends TestBase {
 
             //edit an existing group
             dynamicEmployeePage.edit();
-            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), "Manage Dynamic Group", "Failed to open manage dynamic group modal!");
+            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), manageDynamicEmployeeGroup, "Failed to open manage dynamic group modal!");
             dynamicEmployeePage.editEmployeeGroup("TestEdit", "edit an existing group", "edit", "Employment Status");
             dynamicEmployeePage.saveCreating();
 
             //cancel editing
             dynamicEmployeePage.searchGroup("TestEdit");
             dynamicEmployeePage.edit();
-            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), "Manage Dynamic Group", "Failed to open manage dynamic group modal!");
+            Assert.assertEquals(dynamicEmployeePage.getModalTitle(), manageDynamicEmployeeGroup, "Failed to open manage dynamic group modal!");
             dynamicEmployeePage.editEmployeeGroup("TestCancelEdit", "cancel edit", "cancel edit", "Minor");
             dynamicEmployeePage.cancelCreating();
 
             //cancel remove
             dynamicEmployeePage.remove();
-            Assert.assertEquals(dynamicEmployeePage.getContentOfRemoveModal(), "Are you sure you want to remove this dynamic group?", "Failed to open the remove modal!");
+            Assert.assertEquals(dynamicEmployeePage.getContentOfRemoveModal(), removeWarningMsg, "Failed to open the remove modal!");
             dynamicEmployeePage.cancelRemove();
 
             //remove an existing group
             dynamicEmployeePage.remove();
-            Assert.assertEquals(dynamicEmployeePage.getContentOfRemoveModal(), "Are you sure you want to remove this dynamic group?", "Failed to open the remove modal!");
+            Assert.assertEquals(dynamicEmployeePage.getContentOfRemoveModal(), removeWarningMsg, "Failed to open the remove modal!");
             dynamicEmployeePage.removeTheGroup();
             SimpleUtils.pass("Succeeded in removing dynamic group!");
 

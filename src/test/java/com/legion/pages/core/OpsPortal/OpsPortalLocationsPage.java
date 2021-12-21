@@ -2198,14 +2198,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement workForceSharingDg;
 	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"]")
 	private WebElement clockInDg;
-	@FindBy(css = "lg-button[label=\"Test\"]")
+	@FindBy(css = "lg-button[label=\"Test\"] span")
 	private WebElement testBtn;
 	@FindBy(css = "input[aria-label=\"Group Name\"]")
 	private WebElement groupNameInput;
 	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
 	private WebElement groupDescriptionInput;
-	@FindBy(css = "select.ng-pristine.ng-untouched.ng-valid")
+	@FindBy(css = ".picker-input")
 	private WebElement criteriaSelect;
+	@FindBy(css = ".lg-search-options__option-wrapper")
+	private List<WebElement> criteriaOptions;
 	@FindBy(css = "lg-button[label=\"Add More\"]")
 	private WebElement addMoreBtn;
 	@FindBy(css = "i.deleteRule")
@@ -2214,9 +2216,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private List<WebElement> addDynamicGroupBtn;
 	@FindBy(css = "input[placeholder=\"You can search by name and description\"]")
 	private List<WebElement> dgSearchInput;
-	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr:nth-child(2) > td.tr > div > lg-button:nth-child(1) > button")
+	@FindBy(css = "[dynamic-groups=\"clockinDg\"] .fa-pencil")
 	private List<WebElement> editDGIconInClockIn;
-	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr:nth-child(2) > td.tr > div > lg-button:nth-child(1)")
+	@FindBy(css = "[dynamic-groups=\"workForceSharingDg\"] .fa-pencil")
 	private List<WebElement> editDGIconInWFS;
 	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope > td.tr > div > lg-button:nth-child(2)")
 	private List<WebElement> deleteDGIconInWFS;
@@ -2225,7 +2227,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "tr[ng-repeat=\"group in filterdynamicGroups\"]")
 	private List<WebElement> groupRows;
-	@FindBy(css = "lg-picker-input[value=\"group.values\"]")
+	@FindBy(css = "lg-picker-input[multiple=\"true\"]")
 	private WebElement criteriaValue;
 	@FindBy(css = "input[placeholder=\"Search \"")
 	private WebElement searchBoxInCriteriaValue;
@@ -2243,10 +2245,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void iCanSeeDynamicGroupItemInLocationsTab() {
 		if (isElementEnabled(dynamicGroupCard, 5)) {
-			SimpleUtils.pass("Dynamic group card is shown");
+			SimpleUtils.pass("Dynamic Location group card is shown");
 			String contextInfo = dynamicGroupCard.getText();
-			if (contextInfo.contains("Dynamic Group") && contextInfo.contains("Dynamic Group Configuration") &&
-					contextInfo.contains("Work Force Sharing Group") && contextInfo.contains("Dynamic Group")) {
+			if (contextInfo.contains("Dynamic Location Groups") && contextInfo.contains("Dynamic Location Group Configuration") &&
+					contextInfo.contains("Work Force Sharing Group") && contextInfo.contains("Clock-In Group")) {
 				SimpleUtils.pass("Title and description show well");
 			} else
 				SimpleUtils.fail("Title and description are wrong", false);
@@ -2271,18 +2273,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception {
+		String testInfo = "";
 		if (areListElementVisible(addDynamicGroupBtn)) {
 			click(addDynamicGroupBtn.get(0));
 			if (isManagerDGpopShowWell()) {
 				groupNameInput.sendKeys(groupName);
 				groupDescriptionInput.sendKeys(description);
-				selectByVisibleText(criteriaSelect, criteria);
+				selectTheCriteria(criteria);
 				if (!isElementEnabled(formulaInputBox)) {
 					click(criteriaValue);
 					click(checkboxInCriteriaValue.get(0));
 					click(criteriaValue);
-					click(testBtn);
-					String testInfo = testBtnInfo.getText().trim();
+					clickTheElement(testBtn);
+					if (isElementLoaded(testBtnInfo, 5))
+					testInfo = testBtnInfo.getText().trim();
 					click(okBtnInSelectLocation);
 					waitForSeconds(3);
 					searchWFSDynamicGroup(groupName);
@@ -2303,6 +2307,25 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Global dynamic group page load failed", false);
 
 		return null;
+	}
+
+	private void selectTheCriteria(String criteria) throws Exception {
+		if (isElementLoaded(criteriaSelect, 5)) {
+			clickTheElement(criteriaSelect);
+			if (areListElementVisible(criteriaOptions, 10)) {
+				for (WebElement option : criteriaOptions) {
+					if (option.getText().equalsIgnoreCase(criteria)) {
+						clickTheElement(option);
+						SimpleUtils.report("Select the option: " + criteria);
+						break;
+					}
+				}
+			} else {
+				SimpleUtils.fail("Criteria options failed to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Criteria Select failed to load!", false);
+		}
 	}
 
 	@Override
@@ -2354,16 +2377,23 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public String updateWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception {
 		waitForSeconds(3);
-		click(editDGIconInWFS.get(0));
+		String testInfo = "";
+		if (areListElementVisible(editDGIconInWFS, 10)) {
+			click(editDGIconInWFS.get(0));
+		} else {
+			SimpleUtils.fail("There is no records in WFS!", false);
+		}
 		if (isManagerDGpopShowWell()) {
 			groupNameInput.clear();
 			groupNameInput.sendKeys(groupName + "Update");
-			selectByVisibleText(criteriaSelect, criteriaUpdate);
+			selectTheCriteria(criteriaUpdate);
 			click(criteriaValue);
 			click(checkboxInCriteriaValue.get(0));
 			click(testBtn);
-			String testInfo = testBtnInfo.getText().trim();
-			click(okBtnInSelectLocation);
+			if (isElementLoaded(testBtnInfo, 5)) {
+				testInfo = testBtnInfo.getText().trim();
+			}
+			clickTheElement(okBtnInSelectLocation);
 			waitForSeconds(3);
 			searchWFSDynamicGroup(groupName + "Update");
 			if (groupRows.size() > 0) {
@@ -2385,7 +2415,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return false;
 	}
 
-	@FindBy(css = "modal[modal-title=\"Manage Dynamic Group\"]>div")
+	@FindBy(css = "[modal-title=\"Manage Dynamic Location Group\"] .lg-modal")
 	private WebElement managerDGpop;
 
 	private boolean isManagerDGpopShowWell() {
@@ -2430,7 +2460,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isManagerDGpopShowWell()) {
 				groupNameInput.sendKeys(groupName);
 				groupDescriptionInput.sendKeys(description);
-				selectByVisibleText(criteriaSelect, criteria);
+				selectTheCriteria(criteria);
 				click(criteriaValue);
 				click(checkboxInCriteriaValue.get(0));
 				click(testBtn);
@@ -2454,11 +2484,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public String updateClockInDynamicGroup(String groupNameForCloIn, String criteriaUpdate) throws Exception {
 		waitForSeconds(3);
-		click(editDGIconInClockIn.get(0));
+		if (areListElementVisible(editDGIconInClockIn, 5)) {
+			click(editDGIconInClockIn.get(0));
+		} else {
+			SimpleUtils.fail("There is no records in Clock-In!", false);
+		}
 		if (isManagerDGpopShowWell()) {
 			groupNameInput.clear();
 			groupNameInput.sendKeys(groupNameForCloIn + "Update");
-			selectByVisibleText(criteriaSelect, criteriaUpdate);
+			selectTheCriteria(criteriaUpdate);
 			click(criteriaValue);
 			click(checkboxInCriteriaValue.get(0));
 			click(testBtn);
