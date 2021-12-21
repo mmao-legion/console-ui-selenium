@@ -1911,7 +1911,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	//added by Estelle to verify ClockIn
-	@FindBy(css="input-field[options=\"$ctrl.dynamicGroupList\"] > ng-form > div.select-wrapper>select")
+	@FindBy(css="[value*=\"ClockInGroup\"] select")
 	private WebElement clockInSelector;
 	@FindBy(css="form-section[form-title=\"Clock in Group\"")
 	private WebElement clockInForm;
