@@ -210,7 +210,7 @@ public class ConsolidatingFiltersTest extends TestBase {
 
             //Check the meal break violation shifts on the third day
             SimpleUtils.assertOnFail("Meal break compliance message display failed",
-                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal Break"), false);
 
     //            //Check the OT violation shifts on the forth day. Blocked by SCH-4250
     //            SimpleUtils.assertOnFail("OT compliance message display failed",
@@ -244,7 +244,7 @@ public class ConsolidatingFiltersTest extends TestBase {
                 if (i==2) {
                     shiftsOfThirdDay = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1);
                     SimpleUtils.assertOnFail("Meal break compliance message display failed",
-                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
+                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal Break"), false);
                 }
 
                 //Check the OT violation shifts on the forth day. Blocked by SCH-4250

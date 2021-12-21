@@ -194,13 +194,13 @@
         <classes>
             <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
                 <methods>
-                    <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
-                    <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
-                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
                     <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsTeamMember" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsTeamMember" />
                     <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
+                    <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
+                    <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
+                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
                 </methods>
             </class>
         </classes>
