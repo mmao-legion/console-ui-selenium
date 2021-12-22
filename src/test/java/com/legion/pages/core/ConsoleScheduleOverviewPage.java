@@ -412,11 +412,21 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0].replace(",",""));
 			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0].replace(",",""));
 			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0].replace(",",""));
+			float projectedHours = Float.valueOf(weekHoursElement.get(3).getText().split(" ")[0].replace(",",""));
 			weekHours.put("guidanceHours", guidanceHours);
 			weekHours.put("scheduledHours", scheduledHours);
 			weekHours.put("otherHours", otherHours);
+			weekHours.put("projectedHours", projectedHours);
 
-		}
+		} else if (weekHoursElement.size() == 3) {
+			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0].replace(",",""));
+			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0].replace(",",""));
+			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0].replace(",",""));
+			weekHours.put("guidanceHours", guidanceHours);
+			weekHours.put("scheduledHours", scheduledHours);
+			weekHours.put("otherHours", otherHours);
+		} else
+			SimpleUtils.fail("The week hours fail to load! ", false);
 		return weekHours;
 	}
 
@@ -660,6 +670,16 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		else
 			days = Integer.valueOf(scheduleStartDay) + 31 - Integer.valueOf(finalizeByDay);
 		return days;
+	}
+
+
+	public void clickOnLastWeek() throws Exception {
+		if(isElementLoaded(leftAngle,10)){
+			click(leftAngle);
+		}
+		if (isElementLoaded(lastWeekNavigation,10)){
+			click(lastWeekNavigation);// click on last in overview page
+		}
 	}
 
 }

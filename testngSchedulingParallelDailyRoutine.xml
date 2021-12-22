@@ -249,6 +249,8 @@
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
                     <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
 <!--                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />  Blocked by https://legiontech.atlassian.net/browse/SCH-5058-->
+                    <include name="verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin" />
+<!--                    <include name="verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5413 https://legiontech.atlassian.net/browse/SCH-5829-->
                </methods>
             </class>
         </classes>

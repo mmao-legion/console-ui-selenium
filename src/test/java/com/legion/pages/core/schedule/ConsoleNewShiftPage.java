@@ -963,80 +963,57 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = "[ng-click=\"$dismiss()\"] button[ng-click=\"$ctrl.onSubmit({type:'saveas',label:$ctrl.label})\"]")
     private WebElement editOperatingHourCancelButton;
 
-    @FindBy(css = "[ng-click=\"save()\"] button")
+    @FindBy(css = "[ng-click=\"save()\"]")
     private WebElement editOperatingHourSaveButton;
 
     @FindBy(css = "lg-button[label=\"Cancel\"]")
     private WebElement operatingHoursCancelBtn;
 
-
+    @FindBy(css = "lg-button.edit-operating-hours-link")
+    private WebElement editOperatingHoursBtn;
+    @FindBy (css = ".operating-hours-day-list-item.ng-scope")
+    private List<WebElement> operatingHoursDayLists;
     @Override
     public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception {
-        waitForSeconds(6);
-        if (areListElementVisible(operatingHours, 20) && operatingHours.size()==7){
-            for (WebElement operatingHour : operatingHours){
-                WebElement weekDay = operatingHour.findElement(By.cssSelector("td[class=\"ng-binding\"]"));
-                WebElement editButton = operatingHour.findElement(By.cssSelector("span[ng-if=\"canEditWorkingHours\"]"));
-                WebElement openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
-
-                if (isElementLoaded(weekDay, 5) && !weekDay.getText().equals("")
-                        && isElementLoaded(editButton, 5)
-                        && isElementLoaded(openCloseHours, 5) && !openCloseHours.getText().equals("")){
-                    if (weekDaysToClose.contains(weekDay.getText())){
-                        if (openCloseHours.getText().equalsIgnoreCase("Closed")) {
-                            SimpleUtils.report("Week day: "+weekDay.getText()+" is already closed");
-                        } else{
-                            click(editButton);
-                            if (isElementLoaded(openOrCloseWeekDayButton, 5)){
-                                if (!openOrCloseWeekDayButton.getAttribute("class").contains("switcher-closed")) {
-                                    click(openOrCloseWeekDayButton);
-                                    click(editOperatingHourSaveButton);
-                                    openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
-                                    if (openCloseHours.getText().equalsIgnoreCase("Closed")){
-                                        SimpleUtils.report("Week day: "+weekDay.getText()+" been closed successfully!");
-                                    } else {
-                                        SimpleUtils.fail("Close week day: "+weekDay.getText()+" failed!", false);
-                                    }
+        if (areListElementVisible(operatingHours, 20) && operatingHours.size()==7 && isElementLoaded(editOperatingHoursBtn, 10)){
+            clickTheElement(editOperatingHoursBtn);
+            if (isElementLoaded(customizeNewShift, 10)) {
+                if (areListElementVisible(operatingHoursDayLists, 15)) {
+                    for (WebElement dayList : operatingHoursDayLists) {
+                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                        if (weekDay != null) {
+                            WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                            if (!weekDaysToClose.contains(weekDay.getText())) {
+                                if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                    clickTheElement(checkbox);
                                 }
-                            } else{
-                                SimpleUtils.fail("Open Or Close week day button not loaded Successfully!", false);
-                            }
-                        }
-                    } else{
-                        if (!openCloseHours.getText().equalsIgnoreCase(startTime+"-"+endTime)){
-                            click(editButton);
-                            if (openOrCloseWeekDayButton.getAttribute("class").contains("switcher-closed")){
-                                click(openOrCloseWeekDayButton);
-                                SimpleUtils.report("Week day: "+weekDay.getText()+" been opened successfully!");
-                            }
-                            moveSliderAtCertainPoint(endTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-                            moveSliderAtCertainPoint(startTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
-                            clickTheElement(editOperatingHourSaveButton);
-                            waitForSeconds(2);
-                            // If operating hours is consistent with the values wanted to change, then Save button is disabled
-                            if (isElementLoaded(operatingHoursCancelBtn, 5)) {
-                                clickTheElement(operatingHoursCancelBtn);
-                            }
-                            openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
-                            if (openCloseHours.getText().equalsIgnoreCase(startTime+":00-"+endTime+":00")){
-                                SimpleUtils.report("Week day: "+weekDay.getText()+" been edited successfully!");
-                            } else  if (openCloseHours.getText().equalsIgnoreCase(startTime+"-"+endTime)){
-                                SimpleUtils.report("Week day: "+weekDay.getText()+" been edited successfully!");
-                            } else  if (openCloseHours.getText().equalsIgnoreCase(startTime+"am-"+endTime+"pm")){
-                                SimpleUtils.report("Week day: "+weekDay.getText()+" been edited successfully!");
+                                List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                                String openTime = startNEndTimes.get(0).getAttribute("value");
+                                String closeTime = startNEndTimes.get(1).getAttribute("value");
+                                if (!openTime.equals(startTime) || !closeTime.equals(endTime)) {
+                                    startNEndTimes.get(0).clear();
+                                    startNEndTimes.get(1).clear();
+                                    startNEndTimes.get(0).sendKeys(startTime);
+                                    startNEndTimes.get(1).sendKeys(endTime);
+                                }
                             } else {
-                                SimpleUtils.fail("Edit week day: "+weekDay.getText()+" failed!", false);
+                                if (!checkbox.getAttribute("class").contains("ng-empty")) {
+                                    clickTheElement(checkbox);
+                                }
                             }
                         } else {
-                            SimpleUtils.report("Week day: "+weekDay.getText()+"'s operating hours already been set as: " + openCloseHours.getText());
+                            SimpleUtils.fail("Failed to find weekday element!", false);
                         }
-
                     }
-                } else{
-                    SimpleUtils.fail("Week days not loaded Successfully!", false);
+                    clickTheElement(editOperatingHourSaveButton);
+                    if (isElementEnabled(editOperatingHoursBtn, 15)) {
+                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
+                    } else {
+                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
+                    }
                 }
-
-            }
+            } else
+                SimpleUtils.fail("Edit operating hours modal fail to load! ", false);
         }else{
             SimpleUtils.fail("Operating Hours not loaded Successfully!", false);
         }

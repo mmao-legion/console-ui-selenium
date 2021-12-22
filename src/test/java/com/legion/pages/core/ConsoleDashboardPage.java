@@ -952,6 +952,23 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div/div/div/p")
 	private WebElement lastUpdatedIcon;
 
+	@FindBy(xpath = "//div[contains(@class,'last-updated-countdown')]/span[1]")
+	private WebElement lastUpdatedIconOnSMDashboard;
+	@Override
+	public void clickOnRefreshButtonOnSMDashboard() throws Exception {
+		waitForSeconds(3);
+		if (isElementLoaded(refreshButton, 20)) {
+			clickTheElement(refreshButton);
+			waitForSeconds(2);
+			if(isElementLoaded(lastUpdatedIconOnSMDashboard, 120)
+					&& lastUpdatedIconOnSMDashboard.getText().equalsIgnoreCase("JUST UPDATED")){
+				SimpleUtils.pass("Click on Refresh button Successfully!");
+			} else
+				SimpleUtils.fail("Refresh timeout! ", false);
+		} else {
+			SimpleUtils.fail("Refresh button not Loaded!", false);
+		}
+	}
 
 	@Override
 	public void clickOnRefreshButton() throws Exception {
@@ -959,7 +976,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		if (isElementLoaded(refreshButton, 20)) {
 			clickTheElement(refreshButton);
 			waitForSeconds(2);
-			if(isElementLoaded(lastUpdatedIcon, 60) && lastUpdatedIcon.getText().equalsIgnoreCase("JUST UPDATED")){
+			if(isElementLoaded(lastUpdatedIcon, 120)
+					&& lastUpdatedIcon.getText().equalsIgnoreCase("JUST UPDATED")){
 				SimpleUtils.pass("Click on Refresh button Successfully!");
 			} else
 				SimpleUtils.fail("Refresh timeout! ", false);
@@ -2783,7 +2801,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private List<WebElement> scheduledHoursTitles;
 
 	@FindBy(css = "[data-testid$=\"-hours\"]")
-	private List<WebElement> bugetedScheduledProjectedHours;
+	private List<WebElement> budgetedScheduledProjectedHours;
 
 	@FindBy(css = "[data-testid=\"locations-within-budget\"] span")
 	private WebElement projectedWithinBudgetCaret;
@@ -2921,13 +2939,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			if (isElementLoaded(orgSummaryWidgetTitle, 5)
 					&& orgSummaryWidgetTitle.getText().contains(org + " Summary")
 					&& areListElementVisible(scheduledHoursTitles, 5)
-					&& scheduledHoursTitles.size() == 3
+					&& scheduledHoursTitles.size() == 5
 					&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Budgeted")
 					&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
 					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
-					&& areListElementVisible(bugetedScheduledProjectedHours, 5)
-					&& bugetedScheduledProjectedHours.size() == 5
-					&& (isClockEnable? isElementLoaded(projectedHoursAsCurrentTime, 5): true)
+					&& areListElementVisible(budgetedScheduledProjectedHours, 5)
+					&& budgetedScheduledProjectedHours.size() == 3
+					&& (!isClockEnable || isElementLoaded(projectedHoursAsCurrentTime, 5))
 					&& isElementLoaded(projectedWithinBudgetCaret, 5)
 					&& isElementLoaded(projectedOverBudgetCaret, 5)
 					&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
@@ -2948,8 +2966,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Guidance")
 					&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
 					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
-					&& areListElementVisible(bugetedScheduledProjectedHours, 5)
-					&& bugetedScheduledProjectedHours.size() == 3
+					&& areListElementVisible(budgetedScheduledProjectedHours, 5)
+					&& budgetedScheduledProjectedHours.size() == 3
 					&& isElementLoaded(projectedHoursAsCurrentTime,5)
 					&& isElementLoaded(projectedWithinBudgetCaret, 5)
 					&& isElementLoaded(projectedOverBudgetCaret, 5)
