@@ -660,16 +660,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             List<String> scheduleHoursOnScheduleDetailPage = new ArrayList<>();
             String theSelectedScheduleLocationName = locationName;
             clickSpecificScheduleByLocationName(theSelectedScheduleLocationName);
-            if (createSchedulePage.isWeekGenerated()){
-                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-            }
-            if (scheduleStatus.equals("Published")){
-                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
-                shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
-                createSchedulePage.publishActiveSchedule();
-            } else if (scheduleStatus.equalsIgnoreCase("In Progress")){
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
-            }
+            waitForSeconds(3);
 
             //Check the buttons on schedule page
             DecimalFormat df1 = new DecimalFormat("###.#");
@@ -692,11 +683,10 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         scheduleOverviewPage.clickOnLastWeek();
                         overviewWeek = scheduleOverviewPage.getOverviewScheduleWeeks().get(0);
                     }
-                    String budgetHrsOnOverViewPage = df1.format(scheduleOverviewPage.
-                            getWeekHoursByWeekElement(overviewWeek).get("guidanceHours"));
+                    LinkedHashMap<String, Float> weekInfo = scheduleOverviewPage.getWeekHoursByWeekElement(overviewWeek);
+                    String budgetHrsOnOverViewPage = df1.format(weekInfo.get("guidanceHours"));
                     scheduleHoursOnScheduleDetailPage.add(budgetHrsOnOverViewPage);
-                    String scheduledHrsOnOverViewPage = df1.format(scheduleOverviewPage.
-                            getWeekHoursByWeekElement(overviewWeek).get("scheduledHours"));
+                    String scheduledHrsOnOverViewPage = df1.format(weekInfo.get("scheduledHours"));
                     scheduleHoursOnScheduleDetailPage.add(scheduledHrsOnOverViewPage);
                     hoursFromScheduleSMOnDGEnv.put("BudgetedASM","0");
                     hoursFromScheduleSMOnDGEnv.put("BudgetedLSA","0");
@@ -731,7 +721,10 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledOpen"));
                     } else {
                         Map<String, String> hoursFromScheduleSMOnNonDGEnv = smartCardPage.getBudgetNScheduledHoursFromSmartCard();
-                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Budget"));
+                        if (hoursFromScheduleSMOnNonDGEnv.get("Budget")!=null) {
+                            scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Budget"));
+                        } else
+                            scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Guidance"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Scheduled"));
                     }
 
@@ -748,7 +741,10 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnDGEnv.get("ScheduledTotal"));
                     } else {
                         Map<String, String> hoursFromScheduleSMOnNonDGEnv = smartCardPage.getBudgetNScheduledHoursFromSmartCard();
-                        scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Budget"));
+                        if (hoursFromScheduleSMOnNonDGEnv.get("Budget")!=null) {
+                            scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Budget"));
+                        } else
+                            scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Guidance"));
                         scheduleHoursOnScheduleDetailPage.add(hoursFromScheduleSMOnNonDGEnv.get("Scheduled"));
                     }
                     break;
@@ -845,7 +841,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             clickOnRefreshButton();
             waitForSeconds(3);
             int i = 0;
-            while (isElementLoaded(lastUpdated, 3) && i<5) {
+            while (isElementLoaded(lastUpdated) && i<5) {
                 clickOnRefreshButton();
                 i++;
             }
