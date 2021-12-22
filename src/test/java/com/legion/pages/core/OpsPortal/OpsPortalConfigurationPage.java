@@ -3023,7 +3023,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement dynamicGroupRemoveBTN;
 	@FindBy(css="div[ng-if*=showAction] lg-button[label=\"Edit\"]")
 	private WebElement dynamicGroupEditBTN;
-	@FindBy(css="modal[modal-title=\"Remove Dynamic Group\"] lg-button[label=\"Remove\"]")
+	@FindBy(css="modal[modal-title=\"Remove Dynamic Location Group\"] lg-button[label=\"Remove\"]")
 	private WebElement dynamicGroupRemoveBTNOnDialog;
 
 

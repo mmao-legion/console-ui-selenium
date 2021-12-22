@@ -91,8 +91,12 @@ public class DynamicEmployeePage extends BasePage {
         addGroupButton.click();
     }
 
-    public String getModalTitle() {
-        return dynamicGroupModalTitle.getText();
+    public String getModalTitle() throws Exception{
+        if (isElementLoaded(dynamicGroupModalTitle, 10)) {
+            return dynamicGroupModalTitle.getText();
+        } else {
+            return null;
+        }
     }
 
     public List<String> getCriteriaValues(String criteriaName) throws Exception {
@@ -197,6 +201,7 @@ public class DynamicEmployeePage extends BasePage {
     }
 
     public void saveCreating() {
+        waitForSeconds(1);
         clickTheElement(okButtonInModal);
     }
 
