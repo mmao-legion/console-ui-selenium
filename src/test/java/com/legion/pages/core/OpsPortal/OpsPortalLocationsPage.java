@@ -2063,7 +2063,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	public boolean isRemoveDynamicGroupPopUpShowing() {
-		if (isElementEnabled(removeDGPopup, 5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic group?")
+		if (isElementEnabled(removeDGPopup, 5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic employee group?")
 				&& isElementEnabled(removeBtnInRemovDGPopup, 5)) {
 			SimpleUtils.pass("Remove dynamic group page show well");
 			return true;
