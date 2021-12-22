@@ -1917,7 +1917,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchBoxInCriteriaValue;
 	@FindBy(css = "input-field[type=\"checkbox\"]")
 	private List<WebElement> checkboxInCriteriaValue;
-	@FindBy(css = "modal[modal-title=\"Remove Dynamic Group\"]")
+	@FindBy(css = "modal[modal-title=\"Remove Dynamic Employee Group\"]")
 	private WebElement removeDGPopup;
 	@FindBy(css = "ng-transclude.lg-modal__body")
 	private WebElement removeDGPopupDes;
