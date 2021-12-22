@@ -3437,7 +3437,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 
-	@FindBy(css = "modal[modal-title=\"Manage Dynamic Location Group\"]>div")
+	@FindBy(css = "modal[modal-title=\"Manage Dynamic Employee Group\"]>div")
 	private WebElement managerDGpop;
 	@FindBy(css = "input[aria-label=\"Group Name\"]")
 	private WebElement groupNameInput;
