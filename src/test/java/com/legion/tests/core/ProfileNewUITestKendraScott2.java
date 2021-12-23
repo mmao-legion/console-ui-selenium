@@ -573,6 +573,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         //Delete all availabilities of the first editable week
         Thread.sleep(3000);
         profileNewUIPage.clickAvailabilityEditButton();
+        profileNewUIPage.cancelAllPendingAvailabilityRequest();
         profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
         profileNewUIPage.saveMyAvailabilityEditMode("Repeat Forward");
 

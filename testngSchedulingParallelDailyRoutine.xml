@@ -244,8 +244,7 @@
                     <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksSmartCardForTimesheetInDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
+<!--                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5829-->
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
                     <include name="verifyTotalLocationsWithViolationCardInComplianceDMViewAsInternalAdmin" />
 <!--                    <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnTAEnvAsInternalAdmin" />  Blocked by https://legiontech.atlassian.net/browse/SCH-5058-->
