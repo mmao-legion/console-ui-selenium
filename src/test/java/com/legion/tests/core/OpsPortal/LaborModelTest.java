@@ -566,4 +566,50 @@ public class LaborModelTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can view and update location level labor model template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOverriddenLaborModelInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String locationName = "OMLocation16";
+            String workRoleName = "ForAutomation";
+            int index = 0;
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Edit");
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.overriddenLaborModelRuleInLocationLevel(index);
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.saveBtnIsClickable();
+
+            List<HashMap<String, String>> templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (templateInfoAftOverridden.get(7).get("Overridden").equalsIgnoreCase("Yes")) {
+                SimpleUtils.pass("Overridden Labor Model successfully");
+            } else
+                SimpleUtils.fail("Overridden Labor Model failed", false);
+
+            //reset
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Reset");
+            List<HashMap<String, String>> templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (templateInfoAftReset.get(7).get("Overridden").equalsIgnoreCase("No")) {
+                SimpleUtils.pass("Reset Labor Model successfully");
+            } else
+                SimpleUtils.fail("Reset Labor Model failed", false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
