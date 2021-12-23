@@ -2220,9 +2220,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private List<WebElement> editDGIconInClockIn;
 	@FindBy(css = "[dynamic-groups=\"workForceSharingDg\"] .fa-pencil")
 	private List<WebElement> editDGIconInWFS;
-	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"workForceSharingDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope > td.tr > div > lg-button:nth-child(2)")
+	@FindBy(css = "[dynamic-groups=\"workForceSharingDg\"] .fa-times")
 	private List<WebElement> deleteDGIconInWFS;
-	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"clockinDg\"] > lg-paged-search-new > div > ng-transclude > table > tbody > tr.ng-scope > td.tr > div > lg-button:nth-child(2)")
+	@FindBy(css = "[dynamic-groups=\"clockinDg\"] .fa-times")
 	private List<WebElement> deleteDGIconInClockIn;
 
 	@FindBy(css = "tr[ng-repeat=\"group in filterdynamicGroups\"]")
@@ -2233,7 +2233,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchBoxInCriteriaValue;
 	@FindBy(css = "input-field[type=\"checkbox\"]")
 	private List<WebElement> checkboxInCriteriaValue;
-	@FindBy(css = "modal[modal-title=\"Remove Dynamic Group\"]")
+	@FindBy(css = "modal[modal-title=\"Remove Dynamic Location Group\"]")
 	private WebElement removeDGPopup;
 	@FindBy(css = "ng-transclude.lg-modal__body")
 	private WebElement removeDGPopupDes;
@@ -2354,24 +2354,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void iCanDeleteExistingClockInDG() {
 		waitForSeconds(20);
-		if (groupRows.size() > 0) {
-			if (areListElementVisible(deleteDGIconInClockIn, 30)) {
-				for (WebElement dg : deleteDGIconInClockIn) {
-					waitForSeconds(10);
-					click(dg);
-					if (isRemoveDynamicGroupPopUpShowing()) {
-						waitForSeconds(3);
-						click(removeBtnInRemovDGPopup);
-					} else
-						SimpleUtils.fail("loRemove dynamic group page load failed ", false);
-				}
-
-			} else
-				SimpleUtils.report("There is not dynamic group yet");
+		if (areListElementVisible(deleteDGIconInClockIn, 30)) {
+			for (WebElement dg : deleteDGIconInClockIn) {
+				clickTheElement(dg);
+				if (isRemoveDynamicGroupPopUpShowing()) {
+					waitForSeconds(3);
+					click(removeBtnInRemovDGPopup);
+				} else
+					SimpleUtils.fail("loRemove dynamic group page load failed ", false);
+			}
 		} else
-			SimpleUtils.report("There is no groups which selected");
-
-
+			SimpleUtils.report("There is not dynamic group yet");
 	}
 
 	@Override
@@ -2407,7 +2400,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	public boolean isRemoveDynamicGroupPopUpShowing() {
-		if (isElementEnabled(removeDGPopup, 5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic group?")
+		if (isElementEnabled(removeDGPopup, 5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic location group?")
 				&& isElementEnabled(removeBtnInRemovDGPopup, 5)) {
 			SimpleUtils.pass("Remove dynamic group page show well");
 			return true;

@@ -3049,7 +3049,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		searchAssociateFiled.clear();
 		searchAssociateFiled.sendKeys(dynamicGroupName);
 		waitForSeconds(5);
-		if(templateAssociationRows.size()>0){
+		if(areListElementVisible(getDriver().findElements(By.cssSelector("[ng-repeat*=\"filterdynamicGroups\"]")), 5)
+				&& (getDriver().findElements(By.cssSelector("[ng-repeat*=\"filterdynamicGroups\"]"))).size()>0){
 			dataExist=true;
 			SimpleUtils.pass("User can search out association named: " + dynamicGroupName);
 		}else {
