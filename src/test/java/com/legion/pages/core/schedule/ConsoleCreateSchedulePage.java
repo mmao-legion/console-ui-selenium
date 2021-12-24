@@ -879,6 +879,48 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         }
     }
 
+    @Override
+    public void editOperatingHoursWithGivingPrameters(String startTime, String endTime) throws Exception {
+        if (isElementLoaded(operatingHoursEditBtn, 10)) {
+            clickTheElement(operatingHoursEditBtn);
+            if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
+                SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
+                if (areListElementVisible(operatingHoursDayLists, 15)) {
+                    for (WebElement dayList : operatingHoursDayLists) {
+                        WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                        List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                        if (checkbox != null && startNEndTimes != null && startNEndTimes.size() == 2) {
+                            if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                clickTheElement(checkbox);
+                            }
+                            startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                            String openTime = startNEndTimes.get(0).getAttribute("value");
+                            String closeTime = startNEndTimes.get(1).getAttribute("value");
+                            if (!openTime.equals(startTime) || !closeTime.equals(endTime)) {
+                                startNEndTimes.get(0).clear();
+                                startNEndTimes.get(1).clear();
+                                startNEndTimes.get(0).sendKeys(startTime);
+                                startNEndTimes.get(1).sendKeys(endTime);
+                            }
+                        }else {
+                            SimpleUtils.fail("Failed to find the checkbox, weekday or start and end time elements!", false);
+                        }
+                    }
+                    clickTheElement(operatingHoursSaveBtn);
+                    if (isElementEnabled(operatingHoursEditBtn, 10)) {
+                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
+                    }else {
+                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
+                    }
+                }
+            }else {
+                SimpleUtils.fail("Click on Operating Hours Edit button failed!", false);
+            }
+        }else {
+            SimpleUtils.fail("Operating Hours Edit button not loaded Successfully!", false);
+        }
+    }
+
 
     @Override
     public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception {

@@ -7314,4 +7314,95 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 		return companyHolidays;
 	}
+
+	@Override
+	public void turnOnOrTurnOffDailyOTToggle(boolean action) throws Exception {
+		String content = getDailyOTContent();
+		if (isElementLoaded(DailyOvertimePaySection, 10)
+				&&content.contains("An employee will receive Overtime Pay for hours worked in excess of ")
+				&&content.contains(" in a ")){
+			if (isElementLoaded(DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+				if (action && DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+					scrollToElement(DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input__toggle")));
+					clickTheElement(DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Toggle is turned on!");
+				} else if (!action && !DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+					clickTheElement(DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Toggle is turned off!");
+				} else {
+					SimpleUtils.pass("Toggle status is expected!");
+				}
+			} else {
+				SimpleUtils.fail("Toggle fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Daily OT section fail to load!", false);
+		}
+	}
+
+	@FindBy(css = "[form-title=\"Overtime Pay\"] [question-title*=\"</b> in a <b>\"]")
+	private WebElement DailyOvertimePaySection;
+	@FindBy(css = "[form-title=\"Overtime Pay\"] [ng-click=\"openDailyOvertimeConfigDialog()\"]")
+	private WebElement dailyOvertimePayEditBtn;
+	public String getDailyOTContent() throws Exception{
+		if (isElementLoaded(DailyOvertimePaySection, 10)){
+			return DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input__text")).getText();
+		}
+		return "";
+	}
+
+	/*
+	 * numOfHrs: "8 hours"; "10 hours";"12 hours".
+	 * singleDayOr24Hrs: "single work day"; "24 hour period".
+	 */
+	@Override
+	public void editDailyOT(String numOfHrs, String singleDayOr24Hrs, boolean saveOrNot) throws Exception {
+		if (isElementLoaded(dailyOvertimePayEditBtn, 5)){
+			String contentBefore = getDailyOTContent();
+			clickTheElement(dailyOvertimePayEditBtn);
+			if (isElementLoaded(splitShiftDialog, 10)){
+				//check the title.
+				if (splitShiftDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Daily Overtime")){
+					SimpleUtils.pass("Dialog title is expected!");
+				} else {
+					SimpleUtils.fail("Dialog title is not correct", false);
+				}
+				//Check setting content.
+				if(splitShiftDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("An employee will receive Overtime Pay for hours worked in excess of")
+						&&splitShiftDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("in a")){
+					SimpleUtils.pass("Setting content in the dialog is expected!");
+				} else {
+					SimpleUtils.fail("Setting content is not expected!", false);
+				}
+				//edit the content, input the parameters.
+				if (splitShiftDialog.findElements(By.cssSelector("select")).size() == 2){
+					selectByVisibleText(splitShiftDialog.findElements(By.cssSelector("select")).get(0), numOfHrs);
+					selectByVisibleText(splitShiftDialog.findElements(By.cssSelector("select")).get(1), singleDayOr24Hrs);
+				} else {
+					SimpleUtils.fail("Selects are not shown as expected!", false);
+				}
+				//save or cancel.
+				if (isElementLoaded(splitShiftDialog.findElement(By.cssSelector("[label=\"Cancel\"]")), 5)
+						&&isElementLoaded(splitShiftDialog.findElement(By.cssSelector("[label=\"Save\"]")), 5)){
+					if (saveOrNot){
+						clickTheElement(splitShiftDialog.findElement(By.cssSelector("[label=\"Save\"] button")));
+						waitForSeconds(2);
+						SimpleUtils.assertOnFail("Setting is not saved successfully!", getDailyOTContent().contains(numOfHrs)&&getDailyOTContent().contains(singleDayOr24Hrs), false);
+					} else {
+						clickTheElement(splitShiftDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
+						waitForSeconds(2);
+						SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getDailyOTContent()), false);
+					}
+				} else {
+					SimpleUtils.fail("Save or Cancel button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.fail("Split shift dialog fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit split shift button is not loaded!", false);
+		}
+	}
 }

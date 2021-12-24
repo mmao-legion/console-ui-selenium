@@ -26,6 +26,7 @@ public interface CreateSchedulePage {
     public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
     public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception;
     public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
+    public void editOperatingHoursWithGivingPrameters(String startTime, String endTime) throws Exception;
     public void fillBudgetValues(List<WebElement> element) throws Exception;
     public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception;
     public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception;

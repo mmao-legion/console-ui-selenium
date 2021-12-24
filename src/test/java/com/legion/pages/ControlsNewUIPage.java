@@ -357,4 +357,7 @@ public interface ControlsNewUIPage {
 	public void checkOrUncheckSpecificCompanyHolidays (Boolean isCheck, String companyHoliday) throws Exception;
 	public void setFixedHoursForSpecificCompanyHolidays (String companyHoliday, String fixedHours) throws Exception;
 	public LinkedHashMap<String, List<String>> getCompanyHolidaysInSearchResult() throws Exception;
+	public void turnOnOrTurnOffDailyOTToggle(boolean action) throws Exception;
+	public void editDailyOT(String numOfHrs, String singleDayOr24Hrs, boolean saveOrNot) throws Exception;
+
 }
