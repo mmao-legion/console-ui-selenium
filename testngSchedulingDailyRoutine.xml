@@ -56,4 +56,15 @@
         </classes>
     </test>
 
+    <test name="Location Group Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationGroupTest">
+                <methods>
+                    <include name="validateTheLocationFilterOnDemandTabAsInternalAdmin" />
+                    <include name="validateTheLocationFilterOnLabelTabAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

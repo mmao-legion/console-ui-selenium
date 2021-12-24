@@ -97,7 +97,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
 
     public HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
                                                                      String hours, String hoursAndWagesKey) {
-        if (!SimpleUtils.isNumeric(hours)){
+        if (!SimpleUtils.isNumeric(hours.replace(",",""))){
             hours = "0";
         }
         scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours.replaceAll(",","")));
