@@ -3193,4 +3193,156 @@ public class LocationGroupTest extends TestBase {
         scheduleMainPage.selectGroupByFilter(ScheduleTestKendraScott2.scheduleGroupByFilterOptions.groupbyLocation.getValue());
         scheduleShiftTablePage.verifyGroupByTitlesAreExpanded();
     }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the location filter on Demand tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTheLocationFilterOnDemandTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(getCrendentialInfo("LGInfo"));
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+
+            //Location filter dropdown will display on the Demand tab in forecast page
+            SimpleUtils.assertOnFail("Location filter dropdown fail to load on the Demand tab in forecast page! ",
+                    forecastPage.checkIsLocationFilterLoaded(), false);
+
+            //All locations been selected in locations filter and get all info in smart card
+            SimpleUtils.assertOnFail("All locations should be selected in filter dropdown by default! ",
+                    forecastPage.checkIfAllLocationBeenSelected(), false);
+            HashMap<String, Float> forecastDataForAllLocations= forecastPage.getInsightDataInShopperWeekView();
+            float peakDemand = forecastDataForAllLocations.get("peakDemand");
+            float totalDemand = forecastDataForAllLocations.get("totalDemand");
+            //The relevant info will display when user filters the location
+            List<String> locations = forecastPage.getAllLocationsFromFilter();
+            int index = (new Random()).nextInt(locations.size());
+            forecastPage.checkOrUncheckLocationInFilter(false, locations.get(index));
+            HashMap<String, Float> forecastDataForPartOfLocations= forecastPage.getInsightDataInShopperWeekView();
+            SimpleUtils.assertOnFail("The peak demand for all locations should more than or equal to the value for part of locations! ",
+                    peakDemand >=forecastDataForPartOfLocations.get("peakDemand"), false);
+            SimpleUtils.assertOnFail("The total demand for all locations should more than or equal to the value for part of locations! ",
+                    totalDemand >=forecastDataForPartOfLocations.get("totalDemand"), false);
+
+            forecastPage.checkOrUncheckLocationInFilter(true, locations.get(index));
+            forecastDataForPartOfLocations= forecastPage.getInsightDataInShopperWeekView();
+            SimpleUtils.assertOnFail("The peak demand for all locations should equal with before! ",
+                    peakDemand == forecastDataForPartOfLocations.get("peakDemand"), false);
+            SimpleUtils.assertOnFail("The total demand for all locations should equal with before! ",
+                    totalDemand == forecastDataForPartOfLocations.get("totalDemand"), false);
+
+            //Verify locations filter in day view
+            scheduleCommonPage.clickOnDayView();
+
+            //Location filter dropdown will display on the Demand tab in forecast page
+            SimpleUtils.assertOnFail("Location filter dropdown fail to load on the Demand tab in forecast page! ",
+                    forecastPage.checkIsLocationFilterLoaded(), false);
+
+            //All locations been selected in locations filter and get all info in smart card
+            SimpleUtils.assertOnFail("All locations should be selected in filter dropdown by default! ",
+                    forecastPage.checkIfAllLocationBeenSelected(), false);
+            forecastDataForAllLocations= forecastPage.getInsightDataInShopperWeekView();
+            peakDemand = forecastDataForAllLocations.get("peakDemand");
+            totalDemand = forecastDataForAllLocations.get("totalDemand");
+            //The relevant info will display when user filters the location
+            locations = forecastPage.getAllLocationsFromFilter();
+            index = (new Random()).nextInt(locations.size());
+            forecastPage.checkOrUncheckLocationInFilter(false, locations.get(index));
+            forecastDataForPartOfLocations= forecastPage.getInsightDataInShopperWeekView();
+            SimpleUtils.assertOnFail("The peak demand for all locations should more than or equal to the value for part of locations! ",
+                    peakDemand >=forecastDataForPartOfLocations.get("peakDemand"), false);
+            SimpleUtils.assertOnFail("The total demand for all locations should more than or equal to the value for part of locations! ",
+                    totalDemand >=forecastDataForPartOfLocations.get("totalDemand"), false);
+
+            forecastPage.checkOrUncheckLocationInFilter(true, locations.get(index));
+            forecastDataForPartOfLocations= forecastPage.getInsightDataInShopperWeekView();
+            SimpleUtils.assertOnFail("The peak demand for all locations should equal with before! ",
+                    peakDemand == forecastDataForPartOfLocations.get("peakDemand"), false);
+            SimpleUtils.assertOnFail("The total demand for all locations should equal with before! ",
+                    totalDemand == forecastDataForPartOfLocations.get("totalDemand"), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the location filter on Labor tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTheLocationFilterOnLabelTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(getCrendentialInfo("LGInfo"));
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            forecastPage.clickOnLabor();
+            //Location filter dropdown will display on the Labor tab in forecast page
+            SimpleUtils.assertOnFail("Location filter dropdown fail to load on the Labor tab in forecast page! ",
+                    forecastPage.checkIsLocationFilterLoaded(), false);
+
+            //All locations been selected in locations filter and get all info in smart card
+            SimpleUtils.assertOnFail("All locations should be selected in filter dropdown by default! ",
+                    forecastPage.checkIfAllLocationBeenSelected(), false);
+            HashMap<String, Float> forecastDataForAllLocations= forecastPage.getInsightDataInShopperWeekView();
+            float forecastHrs = forecastDataForAllLocations.get("ForecastHrs");
+            //The relevant info will display when user filters the location
+            List<String> locations = forecastPage.getAllLocationsFromFilter();
+            int index = (new Random()).nextInt(locations.size());
+            forecastPage.checkOrUncheckLocationInFilter(false, locations.get(index));
+            HashMap<String, Float> forecastDataForPartOfLocations= forecastPage.getInsightDataInShopperWeekView();
+            SimpleUtils.assertOnFail("The Forecast Hrs for all locations should more than or equal to the value for part of locations! ",
+                    forecastHrs >=forecastDataForPartOfLocations.get("ForecastHrs"), false);
+
+            forecastPage.checkOrUncheckLocationInFilter(true, locations.get(index));
+            forecastDataForPartOfLocations= forecastPage.getInsightDataInShopperWeekView();
+            SimpleUtils.assertOnFail("The Forecast Hrs for all locations should more than or equal to the value for part of locations! ",
+                    forecastHrs == forecastDataForPartOfLocations.get("ForecastHrs"), false);
+
+            //Verify locations filter in day view
+            scheduleCommonPage.clickOnDayView();
+
+            //Location filter dropdown will display on the Labor tab in forecast page
+            SimpleUtils.assertOnFail("Location filter dropdown fail to load on the Labor tab in forecast page! ",
+                    forecastPage.checkIsLocationFilterLoaded(), false);
+
+            //All locations been selected in locations filter and get all info in smart card
+            SimpleUtils.assertOnFail("All locations should be selected in filter dropdown by default! ",
+                    forecastPage.checkIfAllLocationBeenSelected(), false);
+            forecastDataForAllLocations= forecastPage.getInsightDataInShopperWeekView();
+            forecastHrs = forecastDataForAllLocations.get("ForecastHrs");
+            //The relevant info will display when user filters the location
+            locations = forecastPage.getAllLocationsFromFilter();
+            index = (new Random()).nextInt(locations.size());
+            forecastPage.checkOrUncheckLocationInFilter(false, locations.get(index));
+            forecastDataForPartOfLocations= forecastPage.getInsightDataInShopperWeekView();
+            SimpleUtils.assertOnFail("The Forecast Hrs for all locations should more than or equal to the value for part of locations! ",
+                    forecastHrs >=forecastDataForPartOfLocations.get("ForecastHrs"), false);
+
+            forecastPage.checkOrUncheckLocationInFilter(true, locations.get(index));
+            forecastDataForPartOfLocations= forecastPage.getInsightDataInShopperWeekView();
+            SimpleUtils.assertOnFail("The Forecast Hrs for all locations should more than or equal to the value for part of locations! ",
+                    forecastHrs ==forecastDataForPartOfLocations.get("ForecastHrs"), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+
+    }
 }

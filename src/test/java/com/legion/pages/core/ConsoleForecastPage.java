@@ -2138,4 +2138,106 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		else
 			SimpleUtils.fail("Forecast Page: Content under labor tab is not loaded",false);
 	}
+
+	@FindBy(css = "[label=\"Locations\"] ng-form [placeholder=\"None\"]")
+	private WebElement locationsFilter;
+
+	public boolean checkIsLocationFilterLoaded() throws Exception {
+		boolean isLocationFilterLoaded = false;
+		if (isElementLoaded(locationsFilter, 10)) {
+			isLocationFilterLoaded = true;
+			SimpleUtils.report("Location filter on Forecast page is loaded! ");
+		} else
+			SimpleUtils.report("Location filter on Forecast page is not loaded! ");
+		return isLocationFilterLoaded;
+	}
+
+	@FindBy(css = "[class=\"lg-filter__wrapper lg-ng-animate space-for-clear-button\"] [value=\"opt.checked\"]")
+	private List<WebElement> locationsInLocationFilter;
+
+	@FindBy(css = "[class=\"lg-filter__wrapper lg-ng-animate space-for-clear-button\"] input[placeholder=\"Search Locations\"]")
+	private WebElement locationSearchInputInLocationFilter;
+
+	public boolean checkIfAllLocationBeenSelected () {
+		boolean ifAllLocationBeenSelected = true;
+		clickTheElement(locationsFilter);
+		if (areListElementVisible(locationsInLocationFilter, 10) && locationsInLocationFilter.size() > 0) {
+			for (WebElement location: locationsInLocationFilter) {
+				if(location.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+					SimpleUtils.report("Location: "+ location.findElement(By.tagName("label")).getText()+ " is selected! ");
+				} else {
+					ifAllLocationBeenSelected = false;
+					SimpleUtils.report("Location: "+ location.findElement(By.tagName("label")).getText()+ " is not selected! ");
+					break;
+				}
+			}
+		} else
+			SimpleUtils.fail("Locations in location filter fail to load! ", false);
+		clickTheElement(locationsFilter);
+		return ifAllLocationBeenSelected;
+	}
+
+
+	public void checkOrUncheckLocationInFilter (boolean ifCheck, String locationName) throws Exception {
+		if (isElementLoaded(locationsFilter, 10)) {
+			boolean isLocationExists = false;
+			clickTheElement(locationsFilter);
+			if (areListElementVisible(locationsInLocationFilter, 10)
+					&& locationsInLocationFilter.size() > 0
+					&& isElementLoaded(locationSearchInputInLocationFilter, 10)) {
+				locationSearchInputInLocationFilter.clear();
+				locationSearchInputInLocationFilter.sendKeys(locationName);
+				for (WebElement location: locationsInLocationFilter) {
+					if (location.findElement(By.tagName("label")).getText().equalsIgnoreCase(locationName)) {
+						isLocationExists = true;
+						if(location.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+							if (ifCheck) {
+								SimpleUtils.pass("Location already been checked! ");
+							} else {
+								clickTheElement(location.findElement(By.tagName("input")));
+								if (location.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+									SimpleUtils.pass("Location been checked successfully! ");
+								}
+							}
+						} else {
+							if (ifCheck) {
+								clickTheElement(location.findElement(By.tagName("input")));
+								if (location.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+									SimpleUtils.pass("Location been checked successfully! ");
+								}
+							} else
+								SimpleUtils.pass("Location already been unchecked! ");
+						}
+						break;
+					}
+				}
+				if (!isLocationExists) {
+					SimpleUtils.fail("Location: " + locationName+ " is not exists! ", false);
+				}
+				//To close the filter popup
+				clickTheElement(locationsFilter);
+			} else
+				SimpleUtils.fail("Locations in loction filter fail to load! ", false);
+		} else
+			SimpleUtils.fail("The locations filter fail to load!", false);
+	}
+
+
+	public List<String> getAllLocationsFromFilter () throws Exception {
+		List<String> locations = new ArrayList<>();
+		if (isElementLoaded(locationsFilter, 10)) {
+			clickTheElement(locationsFilter);
+			if (areListElementVisible(locationsInLocationFilter, 10)
+					&& locationsInLocationFilter.size() > 0) {
+				for (WebElement location: locationsInLocationFilter) {
+					locations.add(location.findElement(By.tagName("label")).getText());
+					}
+				} else
+					SimpleUtils.fail("Locations in loction filter fail to load! ", false);
+				//To close the filter popup
+				clickTheElement(locationsFilter);
+		} else
+			SimpleUtils.fail("The locations filter fail to load!", false);
+		return locations;
+	}
 }

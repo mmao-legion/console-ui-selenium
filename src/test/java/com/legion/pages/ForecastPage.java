@@ -93,4 +93,8 @@ public interface ForecastPage<pubic> {
 	public void selectFilterOptionsByText(String option) throws Exception;
 	public void clickOnFilterButtonUnderDefinedTab() throws Exception;
 	public void clickOnDayPartsFilterButtonUnderLaborTab() throws Exception;
+	public boolean checkIsLocationFilterLoaded() throws Exception;
+	public boolean checkIfAllLocationBeenSelected ();
+	public void checkOrUncheckLocationInFilter (boolean ifCheck, String locationName) throws Exception;
+	public List<String> getAllLocationsFromFilter () throws Exception;
 }
