@@ -1675,7 +1675,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//generate and save, should not display number of changes, we set it as 0.
 		int changesNotPublished = 0;
 		//Verify changes not publish smart card.
-		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",smartCardPage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",smartCardPage.isSpecificSmartCardLoaded("UNPUBLISHED CHANGES"),false);
 		smartCardPage.verifyChangesNotPublishSmartCard(changesNotPublished);
 		createSchedulePage.verifyLabelOfPublishBtn("Publish");
 		String activeWeek = scheduleCommonPage.getActiveWeekText();
@@ -1743,7 +1743,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			int changesNotPublished = 1;
 			//Verify changes not publish smart card.
-			SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",smartCardPage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
+			SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",smartCardPage.isSpecificSmartCardLoaded("UNPUBLISHED CHANGES"),false);
 			smartCardPage.verifyChangesNotPublishSmartCard(changesNotPublished);
 			createSchedulePage.verifyLabelOfPublishBtn("Republish");
 			String activeWeek = scheduleCommonPage.getActiveWeekText();
