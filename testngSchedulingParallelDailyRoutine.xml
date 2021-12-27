@@ -441,7 +441,7 @@
             </class>
         </classes>
     </test>
-<!-- Feature been disabled on RC
+
     <test name="Copy Schedule Without Assignments Test">
         <classes>
             <class name="com.legion.tests.core.CopyScheduleWithoutAssignmentsTest">
@@ -453,7 +453,7 @@
             </class>
         </classes>
     </test>
--->
+
     <test name="Controls New UI Test">
         <classes>
             <class name="com.legion.tests.core.ControlsNewUITest">
@@ -465,6 +465,17 @@
                     <include name="verifyTheRegularSectionsOnWorkingHoursPageAsInternalAdmin" />
                     <include name="verifyTheHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />
                     <include name="verifyTheCompanyHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Approve Activities By Home Or Non Home Manager Test">
+        <classes>
+            <class name="com.legion.tests.core.ApproveActivitiesByHomeOrNonHomeManagerTest">
+                <methods>
+                    <include name="verifyActivityOfClaimOpenShiftNoNeedApprovalForHomeManagerWhenSetOpenShiftSettingToNonHomeLocationOnlyAsTeamMember" />
+
                 </methods>
             </class>
         </classes>

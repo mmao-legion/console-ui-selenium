@@ -1641,7 +1641,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private WebElement onlyCopyShiftsSwitch;
     @FindBy (xpath = "//div[contains(text(),'Only copy shifts')]")
     private WebElement onlyCopyShiftsSwitchMessage;
-    @FindBy (css = "[data-tootik=\"Option to copy assignments from selected week based on work roles\"]")
+    @FindBy (css = "[data-tootik=\"This will only copy shifts & not the assigned Team Members\"]")
     private WebElement onlyCopyShiftsSwitchTooltip;
     @FindBy (xpath = "//div[contains(text(),'Only copy partial assignments')]")
     private WebElement onlyCopyPartialAssignmentsSwitchMessage;

@@ -350,7 +350,7 @@
         </classes>
     </test>
 
-    <!-- Feature been disabled on RC
+
         <test name="Copy Schedule Without Assignments Test">
             <classes>
                 <class name="com.legion.tests.core.CopyScheduleWithoutAssignmentsTest">
@@ -362,5 +362,5 @@
                 </class>
             </classes>
         </test>
-        -->
+
     </suite> <!-- Suite -->
