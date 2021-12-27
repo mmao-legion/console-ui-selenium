@@ -476,7 +476,7 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         // 3.Login with the TM to claim the shift
         loginAsDifferentRole(AccessRoles.TeamMember.getValue());
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        dashboardPage.goToTodayForNewUI();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.navigateToNextWeek();
         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         String cardName = "WANT MORE HOURS?";

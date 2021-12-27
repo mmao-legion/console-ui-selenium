@@ -334,6 +334,15 @@
                 <methods>
                     <include name="verifyChangingLocationOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQComplianceTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
+                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" /> 
+                    <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" />
+                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsStoreManager" />
+                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsTeamMember" />
                     <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifyChangingRegionOnSMScheduleTabAsInternalAdmin" />
@@ -343,15 +352,6 @@
                     <include name="verifySelectingHQOnBusinessUnitScheduleTabAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheHQOnSMScheduleTabAsInternalAdmin" />
                     <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQScheduleTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQComplianceTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
-                    <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" /> 
-                    <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" />
-<!--                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsStoreManager" />
-                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5505-->
                 </methods>
             </class>
         </classes>
@@ -460,7 +460,7 @@
                 <methods>
                     <include name="verifySetTheSettingForLockEmployeeAvailabilityEditsAsInternalAdmin" />
                     <include name="verifyTheTMCannotEditTheAvailabilityWhenScheduleIsCreatedAsInternalAdmin" />
-                    <include name="verifyTheTMCannotEditTheAvailabilityWhenWeekDuringSchedulePlanningWindowAsInternalAdmin" />
+<!--                    <include name="verifyTheTMCannotEditTheAvailabilityWhenWeekDuringSchedulePlanningWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5851-->
                     <include name="verifyTheSectionsDisplayOnWorkingHoursPageAsInternalAdmin" />
                     <include name="verifyTheRegularSectionsOnWorkingHoursPageAsInternalAdmin" />
                     <include name="verifyTheHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />

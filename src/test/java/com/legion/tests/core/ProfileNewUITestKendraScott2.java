@@ -534,7 +534,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate TM and SM can see the dotted lines to check the availability changes for Repeat Forward and dotted will disappear after SM approve request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String action = "Approve";
             verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForRepeatForward(action);
@@ -548,7 +548,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate TM and SM can see the dotted lines to check the availability changes for Repeat Forward and dotted will disappear after SM reject request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String action = "Reject";
             verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForRepeatForward(action);
@@ -558,7 +558,18 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
     }
 
     private void verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForRepeatForward(String action) throws Exception {
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        controlsNewUIPage.clickOnControlsConsoleMenu();
+        controlsNewUIPage.clickOnControlsSchedulingPolicies();
+        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+        controlsNewUIPage.clickOnGlobalLocationButton();
+        String isApprovalRequired = "Required for all changes";
+        controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
         //Login as TM
+        loginAsDifferentRole(AccessRoles.TeamMember.getValue());
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -576,8 +587,6 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         profileNewUIPage.cancelAllPendingAvailabilityRequest();
         profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
         profileNewUIPage.saveMyAvailabilityEditMode("Repeat Forward");
-
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 
         //Login as SM and approve all the pending request of the TM

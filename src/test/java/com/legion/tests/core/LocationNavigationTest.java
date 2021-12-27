@@ -153,6 +153,11 @@ public class LocationNavigationTest extends TestBase {
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            dashboardPage.clickOnDashboardConsoleMenu();
             //Get the upperfield info of current location
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> upperFields1 = locationSelectorPage.getSelectedUpperFields();

@@ -1572,6 +1572,7 @@ public class ControlsNewUITest extends TestBase{
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             // Create the schedule for current week
+            scheduleCommonPage.navigateToNextWeek();
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated){
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -1589,6 +1590,7 @@ public class ControlsNewUITest extends TestBase{
             profileNewUIPage.getNickNameFromProfile();
             String myWorkPreferencesLabel = "My Work Preferences";
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+            profileNewUIPage.clickNextWeek();
             SimpleUtils.assertOnFail("The My Availability should be locked! ",
                     profileNewUIPage.isMyAvailabilityLockedNewUI(), false);
             SimpleUtils.assertOnFail("The My Availability lock message display incorrectly! It should be: " + lockMessage1
