@@ -355,9 +355,9 @@
             <classes>
                 <class name="com.legion.tests.core.CopyScheduleWithoutAssignmentsTest">
                     <methods>
-                        <include name="verifyTheResultingSchedulesShouldAllBeCreatedAsOpenShiftsAsInternalAdmin" />
+<!--                        <include name="verifyTheResultingSchedulesShouldAllBeCreatedAsOpenShiftsAsInternalAdmin" />
                         <include name="verifyTheResultingSchedulesWhenSettingIsKeepAsUnassignedAsInternalAdmin" />
-                        <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" />
+                        <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" /> SCH-5862-->
                     </methods>
                 </class>
             </classes>

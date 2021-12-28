@@ -120,7 +120,9 @@ public class CopyScheduleWithoutAssignmentsTest extends TestBase {
             SimpleUtils.assertOnFail("All shifts in second schedule are open shifts! ",
                     allShiftsInSecondSchedule.size() == allOpenShifts.size(), false);
             //Scheduled hour should be consistent with the copied schedule
-            SimpleUtils.assertOnFail("The scheduled hour should be consistent with the copied schedule! ",
+            SimpleUtils.assertOnFail("The scheduled hour should be consistent with the copied schedule! " +
+                            "The origin schedule hour is: "+ scheduleHoursForFirstSchedule.get("scheduledHours")
+                            +" The copy schedule hour is: "+scheduleHoursForSecondSchedule.get("scheduledHours"),
                     scheduleHoursForFirstSchedule.get("scheduledHours").equals(scheduleHoursForSecondSchedule.get("scheduledHours")), false);
 
         } catch (Exception e) {
@@ -197,9 +199,10 @@ public class CopyScheduleWithoutAssignmentsTest extends TestBase {
             SimpleUtils.assertOnFail("All shifts in second schedule are open shifts! ",
                     allShiftsInSecondSchedule.size() == allOpenShifts.size(), false);
             //Scheduled hour should be consistent with the copied schedule
-            SimpleUtils.assertOnFail("The scheduled hour should be consistent with the copied schedule! ",
+            SimpleUtils.assertOnFail("The scheduled hour should be consistent with the copied schedule! " +
+                            "The origin schedule hour is: "+ scheduleHoursForFirstSchedule.get("scheduledHours")
+                            +" The copy schedule hour is: "+scheduleHoursForSecondSchedule.get("scheduledHours"),
                     scheduleHoursForFirstSchedule.get("scheduledHours").equals(scheduleHoursForSecondSchedule.get("scheduledHours")), false);
-
             changeConvertToOpenShiftsSettings("Yes, all unassigned shifts", location);
 
         } catch (Exception e) {
@@ -322,9 +325,10 @@ public class CopyScheduleWithoutAssignmentsTest extends TestBase {
             SimpleUtils.assertOnFail("All shifts in second schedule are open shifts! ",
                     allShiftsInSecondSchedule.size() == allOpenShifts.size(), false);
             //Scheduled hour should be consistent with the copied schedule
-            SimpleUtils.assertOnFail("The scheduled hour should be consistent with the copied schedule! ",
+            SimpleUtils.assertOnFail("The scheduled hour should be consistent with the copied schedule! " +
+                            "The origin schedule hour is: "+ scheduleHoursForFirstSchedule.get("scheduledHours")
+                            +" The copy schedule hour is: "+scheduleHoursForSecondSchedule.get("scheduledHours"),
                     scheduleHoursForFirstSchedule.get("scheduledHours").equals(scheduleHoursForSecondSchedule.get("scheduledHours")), false);
-
             // "Outside Operating hours" violation should show on the shifts on the closed day
             int i;
             for (i = 0; i< 7; i++) {

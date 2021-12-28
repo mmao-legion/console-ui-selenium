@@ -199,7 +199,7 @@
         <classes>
             <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
                 <methods>
-                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsTeamMember" />
+                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />
                     <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
@@ -415,7 +415,7 @@
                     <include name="verifySpreadOfHoursViolationWhenSearchTMAsInternalAdmin" />
                     <include name="verifySpreadOfHoursViolationWhenEditShiftTimeAsInternalAdmin" />
                     <include name="verifySpreadOfHoursViolationWhenDraggingTheAvatarToChangeTheAssignmentAsInternalAdmin" />
-                    <include name="verifySpreadOfHoursViolationWhenDraggingTheShiftToAnotherDayAsInternalAdmin" />
+<!--                    <include name="verifySpreadOfHoursViolationWhenDraggingTheShiftToAnotherDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5861 -->
                     <include name="verifyOpenShiftWithSpreadOfHoursViolationCannotBeClaimedAsTeamMember" />
                     <include name="verifySplitShiftCanBeConfiguredAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWhenSearchTMAsInternalAdmin" />
@@ -448,7 +448,7 @@
                 <methods>
                     <include name="verifyTheResultingSchedulesShouldAllBeCreatedAsOpenShiftsAsInternalAdmin" />
                     <include name="verifyTheResultingSchedulesWhenSettingIsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" />
+<!--                    <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" /> SCH-5863-->
                 </methods>
             </class>
         </classes>
@@ -459,7 +459,7 @@
             <class name="com.legion.tests.core.ControlsNewUITest">
                 <methods>
                     <include name="verifySetTheSettingForLockEmployeeAvailabilityEditsAsInternalAdmin" />
-                    <include name="verifyTheTMCannotEditTheAvailabilityWhenScheduleIsCreatedAsInternalAdmin" />
+<!--                    <include name="verifyTheTMCannotEditTheAvailabilityWhenScheduleIsCreatedAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5851-->
 <!--                    <include name="verifyTheTMCannotEditTheAvailabilityWhenWeekDuringSchedulePlanningWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5851-->
                     <include name="verifyTheSectionsDisplayOnWorkingHoursPageAsInternalAdmin" />
                     <include name="verifyTheRegularSectionsOnWorkingHoursPageAsInternalAdmin" />

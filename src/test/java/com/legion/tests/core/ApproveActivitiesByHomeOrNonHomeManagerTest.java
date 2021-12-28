@@ -476,13 +476,18 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         // 3.Login with the TM to claim the shift
         loginAsDifferentRole(AccessRoles.TeamMember.getValue());
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-        String cardName = "WANT MORE HOURS?";
-        SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
-        String linkName = "View Shifts";
-        smartCardPage.clickLinkOnSmartCardByName(linkName);
+        int i=0;
+        while (!scheduleShiftTablePage.areShiftsPresent() && i < 5) {
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            String cardName = "WANT MORE HOURS?";
+            SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
+            String linkName = "View Shifts";
+            smartCardPage.clickLinkOnSmartCardByName(linkName);
+            Thread.sleep(10000);
+            i++;
+        }
         SimpleUtils.assertOnFail("Open shifts not load Successfully!", scheduleShiftTablePage.areShiftsPresent(), false);
         List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
         Thread.sleep(5000);

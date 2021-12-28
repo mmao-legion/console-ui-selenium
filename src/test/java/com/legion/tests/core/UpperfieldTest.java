@@ -1731,8 +1731,8 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!",
                     scheduleDMViewPage.isScheduleDMView(), false);
 
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
-
+            SimpleUtils.assertOnFail("The district: " + districtName+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(districtName), false);
             //Validate changing regions
             String[] upperFields2 = null;
             if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
@@ -1745,7 +1745,8 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(Region, regionName2);
             SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!",
                     scheduleDMViewPage.isScheduleDMView(), false);
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName2);
+            SimpleUtils.assertOnFail("The district: " + districtName2+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(districtName2), false);
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
@@ -1805,8 +1806,8 @@ public class UpperfieldTest extends TestBase {
 
             SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!",
                     scheduleDMViewPage.isScheduleDMView(), false);
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
-
+            SimpleUtils.assertOnFail("The region: " + regionName+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(regionName), false);
             //Validate changing BUs
             String[] upperFields3 = null;
             if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
@@ -1820,7 +1821,8 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName2);
             SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!",
                     scheduleDMViewPage.isScheduleDMView(), false);
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName2);
+            SimpleUtils.assertOnFail("The region: " + regionName2+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(regionName2), false);
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
@@ -4308,8 +4310,8 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
 
             // Validate the region list
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
-
+            SimpleUtils.assertOnFail("The region: " + regionName+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(regionName), false);
             // Validate click one region
             scheduleDMViewPage.clickOnLocationNameInDMView(regionName);
 
@@ -4383,8 +4385,8 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
 
             // Validate the district list
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
-
+            SimpleUtils.assertOnFail("The district: " + districtName+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(districtName), false);
             // Validate click one district
             scheduleDMViewPage.clickOnLocationNameInDMView(districtName);
 
