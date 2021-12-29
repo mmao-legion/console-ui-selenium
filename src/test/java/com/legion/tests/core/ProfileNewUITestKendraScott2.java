@@ -577,14 +577,13 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
         String tmName = profileNewUIPage.getNickNameFromProfile();
         String myProfileLabel = "My Work Preferences";
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-
+        profileNewUIPage.cancelAllPendingAvailabilityRequest();
         while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
             profileNewUIPage.clickNextWeek();
         }
         //Delete all availabilities of the first editable week
         Thread.sleep(3000);
         profileNewUIPage.clickAvailabilityEditButton();
-        profileNewUIPage.cancelAllPendingAvailabilityRequest();
         profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
         profileNewUIPage.saveMyAvailabilityEditMode("Repeat Forward");
         loginPage.logOut();
