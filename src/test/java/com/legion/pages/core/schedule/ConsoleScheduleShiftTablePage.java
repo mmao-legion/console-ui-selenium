@@ -688,7 +688,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private WebElement shiftTotalHrs;
     @FindBy(css = ".week-schedule-shift-place-pto")
     private List<WebElement> ptoPlaces;
-
+    @FindBy (css = ".hover-sub-container")
+    private List<WebElement> infoContainers;
+    
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
@@ -705,9 +707,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
                 clickTheElement(infoIcon);
                 String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
-                if (isElementLoaded(shiftDuration, 10) && isElementLoaded(shiftTotalHrs, 10)) {
-                    String shiftTime = shiftDuration.getText();
-                    String totalHrs = shiftTotalHrs.getText().split("\\|")[1];
+                if (areListElementVisible(infoContainers, 5) && infoContainers.size() >= 3) {
+                    String shiftTime = infoContainers.get(infoContainers.size() - 2).getText().split("\n")[0];
+                    String totalHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[1];
                     shiftInfo.add(firstName);
                     shiftInfo.add(dayIndex);
                     shiftInfo.add(shiftTime);
