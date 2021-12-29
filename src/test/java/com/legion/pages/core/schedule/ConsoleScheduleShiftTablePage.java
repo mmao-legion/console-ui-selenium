@@ -680,11 +680,11 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> weekShifts;
     @FindBy(css = ".week-schedule-shift.week-schedule-shift-another-location")
     private List<WebElement> weekShiftsFromAnotherLocation;
-    @FindBy(css = ".sch-shift-hover div:nth-child(3)>div.ng-binding")
+    @FindBy(css = ".sch-shift-hover div:nth-child(5)>div.ng-binding")
     private WebElement shiftDuration;
     @FindBy(css = ".shift-hover-subheading.ng-binding:not([ng-if])")
     private WebElement shiftJobTitleAsWorkRole;
-    @FindBy(css = ".sch-shift-hover div:nth-child(5)>div.ng-binding")
+    @FindBy(css = ".sch-shift-hover div:nth-child(7)>div.ng-binding")
     private WebElement shiftTotalHrs;
     @FindBy(css = ".week-schedule-shift-place-pto")
     private List<WebElement> ptoPlaces;

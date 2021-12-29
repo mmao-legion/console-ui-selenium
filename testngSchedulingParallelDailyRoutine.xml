@@ -97,22 +97,22 @@
                     <include name="verifyExcessOf8HrsInA24HrsPeriodAsInternalAdmin" />
                     <include name="verifyExcessOf10HrsInA24HrsPeriodAsInternalAdmin" />
                     <include name="verifyExcessOf12HrsInA24HrsPeriodAsInternalAdmin" />
-                    <include name="verifyExcessOf8HrsInASingleWorkDayAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+                    <!--                    <include name="verifyExcessOf8HrsInASingleWorkDayAsInternalAdmin" />  SCH-2411  -->
+                                   </methods>
+                               </class>
+                           </classes>
+                       </test>
 
-    <test name="Schedule Copy Improvement Test">
-        <classes>
-            <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
-                <methods>
-                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
-                    <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
-<!--                    <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5767-->
+                       <test name="Schedule Copy Improvement Test">
+                           <classes>
+                               <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
+                                   <methods>
+                                       <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />
+                                       <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
+                                       <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
+                                       <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
+                                       <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
+                   <!--                    <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5767-->
                     <include name="validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
                     <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />

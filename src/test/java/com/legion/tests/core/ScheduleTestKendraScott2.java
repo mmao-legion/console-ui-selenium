@@ -1638,7 +1638,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
 	@TestName(description = "Verify smart card for schedule not publish(include past weeks)")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifySmartCardForScheduleNotPublishAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -1675,7 +1675,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//generate and save, should not display number of changes, we set it as 0.
 		int changesNotPublished = 0;
 		//Verify changes not publish smart card.
-		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",smartCardPage.isSpecificSmartCardLoaded("UNPUBLISHED CHANGES"),false);
+		SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",smartCardPage.isSpecificSmartCardLoaded("ACTION REQUIRED"),false);
 		smartCardPage.verifyChangesNotPublishSmartCard(changesNotPublished);
 		createSchedulePage.verifyLabelOfPublishBtn("Publish");
 		String activeWeek = scheduleCommonPage.getActiveWeekText();
