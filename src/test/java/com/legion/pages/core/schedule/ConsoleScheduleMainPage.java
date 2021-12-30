@@ -1877,7 +1877,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                     SimpleUtils.fail("Schedule Page: The drop down list does not pop up",false);
             } else {
                 if (isElementLoaded(filterPopup,5)) {
-                    if (filterLabels.size() == 3 && filterLabels.get(0).getText().equals("SHIFT TYPE"))
+                    if (filterLabels.size() >= 3 && filterLabels.get(0).getText().equals("SHIFT TYPE"))
                         SimpleUtils.pass("Schedule Page: 'SHIFT TYPE' displays in left");
                     else
                         SimpleUtils.fail("Schedule Page: 'SHIFT TYPE' is not in the left",false);

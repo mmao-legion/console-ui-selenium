@@ -3951,6 +3951,13 @@ public class UpperfieldTest extends TestBase {
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.clickOnGlobalLocationButton();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            dashboardPage.clickOnDashboardConsoleMenu();
+
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
@@ -4086,13 +4093,6 @@ public class UpperfieldTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            controlsNewUIPage.clickOnControlsConsoleMenu();
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            controlsNewUIPage.clickOnGlobalLocationButton();
-            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-            dashboardPage.clickOnDashboardConsoleMenu();
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
