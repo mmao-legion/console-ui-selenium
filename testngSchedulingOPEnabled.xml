@@ -37,7 +37,7 @@
  <!--                   <include name="verifySchedulesWidgetsAsStoreManager" />-->
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
                     <include name="verifyScheduleFunctionalityForecastAsStoreManager" />
-                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin" />
+<!--                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin" Blocked by bug: SCH-5896/>-->
                     <include name="validateWeatherSmartCardOnForecastPage" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
  <!--                   <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />-->

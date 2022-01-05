@@ -166,6 +166,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         // Minimum Shifts, 3
         // Average Hours, 30
         // Location, AUSTIN DOWNTOWN
+        waitForSeconds(2);
         HashMap<String, String> theContentOfWeekSummary = new HashMap<>();
         if (isElementLoaded(weekSummary,5)) {
             theContentOfWeekSummary.put("Minimum Shifts", gfeMinShifts.getAttribute("value"));
@@ -481,18 +482,21 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     //Added by Haya
     @FindBy(css = ".gfe-send-to-select [ng-model=\"search\"]")
     private WebElement sendToInput;
-    @FindBy(css = ".gfe-send-to-select .selector-dropdown [ng-bind=\"getObjValue(option, labelAttr) || option\"]")
+    @FindBy(css = ".gfe-send-to-select .selector-input")
+    private WebElement sendTo;
+    @FindBy(css = ".gfe-send-to-select .selector-dropdown .selector-option")
     private List<WebElement> tmOptions;
     @Override
     public void sendToTM(String nickName) throws Exception {
-        if (isElementLoaded(sendToInput,10)){
-            clickTheElement(sendToInput);
+        if (isElementLoaded(sendToInput,10) && isElementLoaded(sendTo, 10)){
+            clickTheElement(sendTo);
             sendToInput.sendKeys(nickName);
             waitForSeconds(10);
             if (areListElementVisible(tmOptions, 10)) {
                 for (WebElement tmOption : tmOptions) {
                     if (tmOption.getText().contains(nickName)) {
-                        click(tmOption);
+                        clickTheElement(tmOption);
+                        waitForSeconds(1);
                         SimpleUtils.pass("GFE Announcement: Select " + nickName + " Successfully!");
                         break;
                     }
@@ -500,7 +504,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             } else {
                 SimpleUtils.report("GFE Announcement: Cannot find " + nickName + "!, try again");
                 sendToInput.clear();
-                sendToInput.sendKeys(nickName, Keys.ENTER);
+                sendToInput.sendKeys(nickName);
             }
         } else {
             SimpleUtils.fail("GFE Announcement: Send to element failed to load!", false);

@@ -1770,7 +1770,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     public String getDeleteScheduleForWhichWeekText() throws Exception {
         String scheduleWeekText = "";
         if (isElementLoaded(weekPeriod, 5) && isElementLoaded(calMonthYear, 5)) {
-            String year = calMonthYear.getText().trim().substring(calMonthYear.getText().trim().length() - 4);
+            String year = calMonthYear.getText().trim().substring(4, 8);
             String [] items = weekPeriod.getText().split(" ");
             if (items.length == 7) {
                 scheduleWeekText = "Delete " + items[0] + " " + items[1] + " " + items[2].substring(0, 3) + " " + (items[3].length() == 2 ? items[3] : ("0" + items[3]))

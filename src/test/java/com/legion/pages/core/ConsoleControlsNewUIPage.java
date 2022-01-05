@@ -5357,7 +5357,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 							if (toggle.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
 								scrollToElement(toggle);
 								waitForSeconds(1);
-								click(toggle);
+								clickTheElement(toggle);
 								displaySuccessMessage();
 								SimpleUtils.pass("GFE toggle is turned on!");
 							} else {
