@@ -343,7 +343,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				while(teamMembers.size() == 0 && i< 5){
 					teamMemberSearchBox.clear();
 					teamMemberSearchBox.sendKeys(username);
-					waitForSeconds(3);
+					waitForSeconds(5);
 					i++;
 				}
 				if (teamMembers.size() > 0){

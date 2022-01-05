@@ -459,11 +459,11 @@
             <class name="com.legion.tests.core.ControlsNewUITest">
                 <methods>
                     <include name="verifySetTheSettingForLockEmployeeAvailabilityEditsAsInternalAdmin" />
-<!--                    <include name="verifyTheTMCannotEditTheAvailabilityWhenScheduleIsCreatedAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5851-->
-<!--                    <include name="verifyTheTMCannotEditTheAvailabilityWhenWeekDuringSchedulePlanningWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5851-->
+                    <include name="verifyTheTMCannotEditTheAvailabilityWhenScheduleIsCreatedAsInternalAdmin" />
+                    <include name="verifyTheTMCannotEditTheAvailabilityWhenWeekDuringSchedulePlanningWindowAsInternalAdmin" />
                     <include name="verifyTheSectionsDisplayOnWorkingHoursPageAsInternalAdmin" />
                     <include name="verifyTheRegularSectionsOnWorkingHoursPageAsInternalAdmin" />
-                    <include name="verifyTheHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />
+<!--                    <include name="verifyTheHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />  SCH-5882 -->
                     <include name="verifyTheCompanyHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />
                 </methods>
             </class>
