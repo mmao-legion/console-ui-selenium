@@ -1541,8 +1541,8 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
-            // Wait for 10 seconds when the shift offer is offered
-            Thread.sleep(20000);
+            // Wait for 40 seconds when the shift offer is offered
+            Thread.sleep(40000);
             loginPage.logOut();
 
             loginToLegionAndVerifyIsLoginDone(username, password, location);
@@ -1560,7 +1560,7 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             // Verify can get the open shift count from filter
             int offeredCount = scheduleMainPage.getSpecificFiltersCount("Offered");
-            String linkName = "View Shifts";;
+            String linkName = "View Shifts";
             smartCardPage.clickLinkOnSmartCardByName(linkName);
             SimpleUtils.assertOnFail("Open shifts not loaded Successfully!", scheduleShiftTablePage.areShiftsPresent(), false);
             // Verify the count on smart card won't change if accepting the shift offer

@@ -690,7 +690,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> ptoPlaces;
     @FindBy (css = ".hover-sub-container")
     private List<WebElement> infoContainers;
-    
+
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();

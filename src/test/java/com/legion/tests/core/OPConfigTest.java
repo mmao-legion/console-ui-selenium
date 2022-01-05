@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -14,6 +15,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class OPConfigTest extends TestBase {
 
@@ -108,6 +112,76 @@ public class OPConfigTest extends TestBase {
             configurationPage.clickOnBackButton();
             configurationPage.deleteTemplate(templateName);
 
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify new tile for Meal and Rest")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMealAndRestTileAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            // Verify the title of the tile
+            // Verify the description of the tile
+            // Verify the sub description list of the tile
+            List<String> expectedContent = new ArrayList<>();
+            expectedContent.add("Meal and Rest Breaks");
+            expectedContent.add("Number and length of meal breaks per shift");
+            expectedContent.add("Number and length of rest breaks per shift");
+            expectedContent.add("Paid / non paid meal break definitions");
+            configurationPage.verifyTheContentOnSpecificCard(
+                    OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MealAndRest.getValue(), expectedContent);
+            // Verify the "Meal and Rest" tile is clickable
+            configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MealAndRest.getValue());
+            // Verify the content on Meal and Rest page
+            configurationPage.isTemplateListPageShow();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality on Meal and Rest Details page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheMealAndRestTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String meal = "Meal";
+            String templateName = TestBase.getCurrentTime().substring(0, 8);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+
+            configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MealAndRest.getValue());
+            // Verify the content on Meal and Rest page
+            configurationPage.isTemplateListPageShow();
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            // Verify the content on Meal Breaks section
+            configurationPage.verifyTheContentOnMealBreaksSection();
+            // Verify Yes/No button is clickable on Meal Breaks section
+            configurationPage.selectYesOrNoOnMealOrRest(meal, "Yes");
+            configurationPage.selectYesOrNoOnMealOrRest(meal, "No");
+            // Verify + Add button is clickable on Meal Breaks section
+            configurationPage.clickOnAddButtonOnMealOrRestSection(meal);
+            // Verify the functionality of 7 input boxes on Meal Breaks section
+            configurationPage.verifyTheFunctionalityOfInputsInMealOrRest(meal);
+            // Verify X button is clickable on Meal Breaks section
+            configurationPage.verifyXbuttonOnMealOrRest(meal);
+            // Verify the content on Rest Breaks section
+            configurationPage.verifyTheContentOnRestBreaksSection();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

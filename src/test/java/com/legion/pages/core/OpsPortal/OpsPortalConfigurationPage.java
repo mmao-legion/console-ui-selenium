@@ -33,6 +33,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="[class=\"tb-wrapper ng-scope\"] lg-dashboard-card h1")
 	private List<WebElement> configurationCardsList;
 
+	@FindBy(css = ".lg-dashboard-card")
+	private List<WebElement> configurationCards;
+
 	@FindBy(css="div.card-carousel-card-title")
 	private List<WebElement> smartCardsList;
 
@@ -3561,6 +3564,45 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "[form-title=\"Minor Schedule by Day\"]")
 	private WebElement minorScheduleByDaySection;
 
+	@FindBy(css = "[form-title=\"Meal Breaks\"]")
+	private WebElement mealBreakSection;
+
+	@FindBy(css = "[form-title=\"Rest Breaks\"]")
+	private WebElement restBreakSection;
+
+	@FindBy(css = "[form-title=\"Meal Breaks\"] .lg-question-input__text")
+	private List<WebElement> mealBreakTexts;
+
+	@FindBy(css = "[form-title=\"Rest Breaks\"] .lg-question-input__text")
+	private List<WebElement> restBreakTexts;
+
+	@FindBy(css = "[form-title=\"Meal Breaks\"] .lg-button-group div")
+	private List<WebElement> mealBreakPaidBtns;
+
+	@FindBy(css = "[form-title=\"Rest Breaks\"] .lg-button-group div")
+	private List<WebElement> restBreakPaidBtns;
+
+	@FindBy(css = "[form-title=\"Meal Breaks\"] th.ng-binding")
+	private List<WebElement> mealBreakTableTitles;
+
+	@FindBy(css = "[form-title=\"Meal Breaks\"] [label=\"+ Add\"]")
+	private WebElement mealAddBtn;
+
+	@FindBy(css = "[form-title=\"Rest Breaks\"] [label=\"+ Add\"]")
+	private WebElement restAddBtn;
+
+	@FindBy(css = "[form-title=\"Meal Breaks\"] input[type=\"number\"]")
+	private List<WebElement> mealInputs;
+
+	@FindBy(css = "[form-title=\"Rest Breaks\"] table input[type=\"number\"]")
+	private List<WebElement> restInputs;
+
+	@FindBy(css = "[form-title=\"Meal Breaks\"] .delete-action")
+	private List<WebElement> mealDeleteBtns;
+
+	@FindBy(css = "[form-title=\"Meal Breaks\"] .delete-action")
+	private List<WebElement> restDeleteBtns;
+
 	public boolean checkIfMinorSectionsLoaded () throws Exception {
 		boolean ifSectionLoaded = false;
 		if (isElementLoaded(minorScheduleByWeekSection, 5)
@@ -3578,5 +3620,206 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.pass("Click back button successfully! ");
 		} else
 			SimpleUtils.fail("Back button fail to loaded! ", false);
+	}
+
+	@Override
+	public void verifyTheContentOnSpecificCard(String cardName, List<String> content) throws Exception {
+		if (areListElementVisible(configurationCards, 5) && configurationCards.size() > 0) {
+			for (WebElement card : configurationCards) {
+				if (card.findElement(By.tagName("h1")).getText().equalsIgnoreCase(cardName)) {
+					WebElement body = card.findElement(By.className("lg-dashboard-card__body"));
+					String bodyText = body.getText();
+					String [] temp = bodyText.split("\n");
+					List<String> actualContent = Arrays.asList(temp);
+					if (actualContent.containsAll(content) && content.containsAll(actualContent)) {
+						SimpleUtils.pass("The content on card: " + cardName + " is correct!");
+					} else {
+						SimpleUtils.fail("The content on card: " + cardName + " is incorrect!", false);
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("Cards failed to load on Configuration page!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheContentOnMealBreaksSection() throws Exception {
+		if (isElementLoaded(mealBreakSection, 10)) {
+			if (isElementLoaded(mealBreakSection.findElement(By.className("info"))) &&
+					mealBreakSection.findElement(By.className("info")).getText().equalsIgnoreCase("Meal Breaks")
+			&& areListElementVisible(mealBreakTexts, 5) && mealBreakTexts.size() == 2 &&
+			mealBreakTexts.get(0).getText().equalsIgnoreCase("Are meal breaks paid?") && mealBreakTexts.get(1).getText().equalsIgnoreCase("Meal Breaks")
+			&& areListElementVisible(mealBreakPaidBtns, 5) && mealBreakPaidBtns.size() == 2) {
+				SimpleUtils.pass("Meal breaks content shows correctly");
+				if (areListElementVisible(mealBreakTableTitles, 5) && mealBreakTableTitles.size() == 7 &&
+				mealBreakTableTitles.get(0).getText().equalsIgnoreCase("Meal Break #") &&
+				mealBreakTableTitles.get(1).getText().equalsIgnoreCase("Min Shift Length (inclusive)") &&
+				mealBreakTableTitles.get(2).getText().equalsIgnoreCase("Max Shift Length (exclusive)") &&
+				mealBreakTableTitles.get(3).getText().equalsIgnoreCase("Duration") &&
+				mealBreakTableTitles.get(4).getText().equalsIgnoreCase("Left Offset") &&
+				mealBreakTableTitles.get(5).getText().equalsIgnoreCase("Right Offset") &&
+				mealBreakTableTitles.get(6).getText().equalsIgnoreCase("Latest Start") && isElementLoaded(mealAddBtn, 5)) {
+					SimpleUtils.pass("Meal Break setting table and + Add buttons loaded successfully!");
+				} else {
+					SimpleUtils.fail("Meal Break setting table and + Add buttons failed to load!", false);
+				}
+			} else {
+				SimpleUtils.fail("Meal breaks content not loaded!", false);
+			}
+		} else {
+			SimpleUtils.fail("Meal Breaks section not loaded on Meal And Rest template!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheContentOnRestBreaksSection() throws Exception {
+		if (isElementLoaded(restBreakSection, 5) && isElementLoaded(restBreakSection.findElement(By.className("info"))) &&
+				restBreakSection.findElement(By.className("info")).getText().equalsIgnoreCase("Rest Breaks")) {
+
+		} else {
+			SimpleUtils.fail("Rest Breaks section not loaded on Meal And Rest template!", false);
+		}
+	}
+
+	@Override
+	public void selectYesOrNoOnMealOrRest(String mealOrRest, String yesOrNo) throws Exception {
+		if (mealOrRest.equalsIgnoreCase("Meal")) {
+			if (areListElementVisible(mealBreakPaidBtns, 5) && mealBreakPaidBtns.size() == 2) {
+				for (WebElement button : mealBreakPaidBtns) {
+					if (button.getText().equalsIgnoreCase(yesOrNo)) {
+						clickTheElement(button);
+						waitForSeconds(1);
+						if (button.getAttribute("class").contains("lg-button-group-selected")) {
+							SimpleUtils.report("Click the: " + yesOrNo + " button in Meal Breaks Section successfully");
+						} else {
+							SimpleUtils.fail("Failed to click the: " + yesOrNo + " button in Meal Breaks Section!", false);
+						}
+						break;
+					}
+				}
+			}
+		} else if (mealOrRest.equalsIgnoreCase("Rest")) {
+			if (areListElementVisible(restBreakPaidBtns, 5) && restBreakPaidBtns.size() == 2) {
+				for (WebElement button : restBreakPaidBtns) {
+					if (button.getText().equalsIgnoreCase(yesOrNo)) {
+						clickTheElement(button);
+						waitForSeconds(1);
+						if (button.getAttribute("class").contains("lg-button-group-selected")) {
+							SimpleUtils.report("Click the: " + yesOrNo + " button in Rest Breaks Section successfully");
+						} else {
+							SimpleUtils.fail("Failed to click the: " + yesOrNo + " button in Rest Breaks Section!", false);
+						}
+						break;
+					}
+				}
+			}
+		} else {
+			SimpleUtils.fail("Please send the correct Param: Meal Or Rest!", false);
+		}
+	}
+
+	@Override
+	public void clickOnAddButtonOnMealOrRestSection(String mealOrRest) throws Exception {
+		String zero = "0";
+		if (mealOrRest.equalsIgnoreCase("Meal")) {
+			if (isElementLoaded(mealAddBtn, 5)) {
+				clickTheElement(mealAddBtn);
+				if (areListElementVisible(mealInputs, 10) && mealInputs.size() == 7) {
+					for (WebElement input : mealInputs) {
+						if (!input.getAttribute("value").equalsIgnoreCase(zero)) {
+							SimpleUtils.fail("The Default value is not zero!", false);
+							break;
+						}
+					}
+				} else {
+					SimpleUtils.fail("Seven inputs failed to show when clicking + Add button!", false);
+				}
+			}
+		} else if (mealOrRest.equalsIgnoreCase("Rest")) {
+			if (isElementLoaded(restAddBtn, 5)) {
+				clickTheElement(restAddBtn);
+				if (areListElementVisible(restInputs, 10) && restInputs.size() == 3) {
+					for (WebElement input : restInputs) {
+						if (!input.getAttribute("value").equalsIgnoreCase(zero)) {
+							SimpleUtils.fail("The Default value is not zero!", false);
+							break;
+						}
+					}
+				} else {
+					SimpleUtils.fail("Three inputs failed to show when clicking + Add button!", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("Please send the correct Param: Meal Or Rest!", false);
+		}
+	}
+
+	@Override
+	public void verifyTheFunctionalityOfInputsInMealOrRest(String mealOrRest) throws Exception {
+		int number = 10;
+		String text = "a";
+		if (mealOrRest.equalsIgnoreCase("Meal")) {
+			if (areListElementVisible(mealInputs, 5) && mealInputs.size() == 7) {
+				clickTheElement(mealInputs.get(0));
+				mealInputs.get(0).clear();
+				mealInputs.get(0).sendKeys(String.valueOf(number));
+				if (mealInputs.get(0).getAttribute("value").equalsIgnoreCase(String.valueOf(number))) {
+					SimpleUtils.pass("Meal inputs: number is supported!");
+				} else {
+					SimpleUtils.fail("Number is not updated successfully!", false);
+				}
+				mealInputs.get(0).clear();
+				mealInputs.get(0).sendKeys(text);
+				if (mealInputs.get(0).getAttribute("value").equalsIgnoreCase(String.valueOf(number))) {
+					SimpleUtils.fail("Meal inputs: only number is supported!", false);
+				} else if (mealInputs.get(0).getAttribute("value").equalsIgnoreCase("#")) {
+					SimpleUtils.pass("Meal inputs: only number is supported! If inputing other format, it should show #");
+				}
+			} else {
+				SimpleUtils.fail("Seven inputs failed to show when clicking + Add button!", false);
+			}
+		} else if (mealOrRest.equalsIgnoreCase("Rest")) {
+			if (areListElementVisible(restInputs, 5) && restInputs.size() == 3) {
+				clickTheElement(restInputs.get(0));
+				restInputs.get(0).sendKeys(String.valueOf(number));
+				if (restInputs.get(0).getAttribute("value").equalsIgnoreCase(String.valueOf(number))) {
+					SimpleUtils.pass("Rest inputs: number is supported!");
+				} else {
+					SimpleUtils.fail("Number is not updated successfully!", false);
+				}
+				restInputs.get(0).clear();
+				restInputs.get(0).sendKeys(text);
+				if (restInputs.get(0).getAttribute("value").equalsIgnoreCase(String.valueOf(number))) {
+					SimpleUtils.fail("Rest inputs: only number is supported!", false);
+				} else if (restInputs.get(0).getAttribute("value").equalsIgnoreCase("#")) {
+					SimpleUtils.pass("Rest inputs: only number is supported! If inputing other format, it should show #");
+				}
+			} else {
+				SimpleUtils.fail("Three inputs failed to show when clicking + Add button!", false);
+			}
+		} else {
+			SimpleUtils.fail("Please send the correct Param: Meal Or Rest!", false);
+		}
+	}
+
+	@Override
+	public void verifyXbuttonOnMealOrRest(String mealOrRest) throws Exception {
+		if (mealOrRest.equalsIgnoreCase("Meal")) {
+			if (areListElementVisible(mealDeleteBtns, 5) && mealDeleteBtns.size() > 0) {
+				clickTheElement(mealDeleteBtns.get(mealDeleteBtns.size() - 1));
+			} else {
+				SimpleUtils.fail("X buttons not loaded on Meal Breaks template!", false);
+			}
+		} else if (mealOrRest.equalsIgnoreCase("Rest")) {
+			if (areListElementVisible(restDeleteBtns, 5) && restDeleteBtns.size() > 0) {
+				clickTheElement(restDeleteBtns.get(restDeleteBtns.size() - 1));
+			} else {
+				SimpleUtils.fail("X buttons not loaded on Rest Breaks template!", false);
+			}
+		} else {
+			SimpleUtils.fail("Please send the correct Param: Meal Or Rest!", false);
+		}
 	}
 }

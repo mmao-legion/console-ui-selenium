@@ -543,7 +543,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         if (areListElementVisible(smartCards, 5)) {
             for (WebElement smartCard : smartCards) {
                 WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
-                if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
+                if (title != null && title.getText().trim().contains(cardName)) {
                     WebElement h1 = smartCard.findElement(By.tagName("h1"));
                     String h1Title = h1 == null ? "" : h1.getText();
                     if (h1Title.contains(" ")) {
