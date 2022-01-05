@@ -6147,7 +6147,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			int index = scheduleShiftTablePage.getAvailableShiftsInDayView().size()-1;
 			String shiftInfoBeforeEdit = scheduleShiftTablePage.getTheShiftInfoByIndexInDayview(index).replace("\n", " ");
 			String id = scheduleShiftTablePage.getTheShiftByIndex(index).getAttribute("id");
-			scheduleShiftTablePage.moveShiftByIndexInDayView(index);
+			scheduleShiftTablePage.moveShiftByIndexInDayView(index, true);
 			scheduleMainPage.saveSchedule();
 
 			index = scheduleShiftTablePage.getShiftIndexById(id);
@@ -6160,7 +6160,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			index = scheduleShiftTablePage.getAvailableShiftsInDayView().size()-1;
 			id = scheduleShiftTablePage.getTheShiftByIndex(index).getAttribute("id");
 			shiftInfoBeforeEdit = scheduleShiftTablePage.getTheShiftInfoByIndexInDayview(index).replace("\n", " ");
-			scheduleShiftTablePage.moveShiftByIndexInDayView(index);
+			scheduleShiftTablePage.moveShiftByIndexInDayView(index, true);
 			scheduleShiftTablePage.verifyTheEditedImgDisplayForShiftInDayByIndex(index);
 
 			//Click the edit img and change will go back
