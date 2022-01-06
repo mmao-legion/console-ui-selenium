@@ -122,4 +122,6 @@ public interface ConfigurationPage {
     public void verifyTheFunctionalityOfInputsInMealOrRest(String mealOrRest) throws Exception;
     public void verifyXbuttonOnMealOrRest(String mealOrRest) throws Exception;
     public void verifyTheContentOnRestBreaksSection() throws Exception;
+    public void setStrictlyEnforceMinorViolations(String yesOrNo) throws Exception;
+    public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception;
 }

@@ -3617,6 +3617,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void clickOnBackButton () throws Exception {
 		if (isElementLoaded(backButton, 5)) {
 			clickTheElement(backButton);
+			if(isElementEnabled(leaveThisPageButton)){
+				clickTheElement(leaveThisPageButton);
+				waitForSeconds(2);
+			}
 			SimpleUtils.pass("Click back button successfully! ");
 		} else
 			SimpleUtils.fail("Back button fail to loaded! ", false);
@@ -3821,5 +3825,45 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		} else {
 			SimpleUtils.fail("Please send the correct Param: Meal Or Rest!", false);
 		}
+	}
+	@FindBy(css ="[question-title=\"Strictly enforce minor violations?\"] yes-no")
+	private WebElement yesNoForStrictlyEnforceMinorViolations;
+	@Override
+	public void setStrictlyEnforceMinorViolations(String yesOrNo) throws Exception {
+		if (isElementLoaded(yesNoForStrictlyEnforceMinorViolations,10)){
+			scrollToElement(yesNoForStrictlyEnforceMinorViolations);
+			if (yesOrNo.equalsIgnoreCase("yes")){
+				if (isElementLoaded(yesNoForStrictlyEnforceMinorViolations.findElement(By.cssSelector(".lg-button-group-first")),10)){
+					click(yesNoForStrictlyEnforceMinorViolations.findElement(By.cssSelector(".lg-button-group-first")));
+					SimpleUtils.pass("Turned on 'Strictly enforce minor violations?' setting successfully! ");
+				} else {
+					SimpleUtils.fail("Yes button fail to load!", false);
+				}
+			} else if (yesOrNo.equalsIgnoreCase("no")){
+				if (isElementLoaded(yesNoForStrictlyEnforceMinorViolations.findElement(By.cssSelector(".lg-button-group-last")),10)){
+					click(yesNoForStrictlyEnforceMinorViolations.findElement(By.cssSelector(".lg-button-group-last")));
+					SimpleUtils.pass("Turned off 'Strictly enforce minor violations?' setting successfully! ");
+				} else {
+					SimpleUtils.fail("No button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.warn("You have to input the right command: yes or no");
+			}
+		} else {
+			SimpleUtils.fail("'Strictly enforce minor violations?' setting is not loaded!", false);
+		}
+	}
+
+
+	@Override
+	public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception {
+		boolean isStrictlyEnforceMinorViolationSettingEnabled = false;
+		if (isElementLoaded(yesNoForStrictlyEnforceMinorViolations, 5)) {
+			if (yesNoForStrictlyEnforceMinorViolations.
+					findElement(By.cssSelector(".lg-button-group-first")).getAttribute("class").contains("selected")){
+				isStrictlyEnforceMinorViolationSettingEnabled = true;
+			}
+		}
+		return isStrictlyEnforceMinorViolationSettingEnabled;
 	}
 }

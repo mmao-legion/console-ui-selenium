@@ -487,7 +487,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Thers are 4 unassigned shifts should display! but actually there are "+unassignedShiftsCount+" display",
                     unassignedShiftsCount >= 4, false);
             //Check the message on the Action required smart card
-            HashMap<String, String> message = smartCardPage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+            HashMap<String, String> message = smartCardPage.getMessageFromActionRequiredSmartCard();
             SimpleUtils.assertOnFail("Unassigned shifts message display incorrectly! ",
                     message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+" shifts\n" +"Unassigned") ||
                             message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+ " unassigned shifts\n" +
@@ -598,14 +598,14 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 //Check the message on the Action required smart card
                 List<WebElement> allOOOHShifts = scheduleShiftTablePage.getAllOOOHShifts();
                 oOOHShiftsCount = allOOOHShifts.size();
-                HashMap<String, String> message = smartCardPage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+                HashMap<String, String> message = smartCardPage.getMessageFromActionRequiredSmartCard();
                 SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,
                         message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount+ " shifts\n" +
                                 "Outside Operating Hours") &&
                                 message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+" shifts\n" +"Unassigned"),
                         false);
             } else {
-                HashMap<String, String> message = smartCardPage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+                HashMap<String, String> message = smartCardPage.getMessageFromActionRequiredSmartCard();
                 SimpleUtils.assertOnFail("Unassigned shifts message display incorrectly! ",
                         message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+" shifts\n" +"Unassigned") ||
                                 message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+ " unassigned shifts\n" +
@@ -642,7 +642,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                         Thread.sleep(2000);
                         allShiftsInDayView = scheduleShiftTablePage.getAvailableShiftsInDayView();
                         if (ifVerifyOOOHShifts){
-                            HashMap<String, String> message = smartCardPage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+                            HashMap<String, String> message = smartCardPage.getMessageFromActionRequiredSmartCard();
                             oOOHShiftsCount = scheduleShiftTablePage.getAllOOOHShifts().size();
                             unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
                             SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,(
@@ -696,7 +696,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             if (ifVerifyOOOHShifts){
-                HashMap<String, String> message = smartCardPage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+                HashMap<String, String> message = smartCardPage.getMessageFromActionRequiredSmartCard();
                 oOOHShiftsCount = scheduleShiftTablePage.getAllOOOHShifts().size();
                 SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,
                         message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount+ " shifts\n" +
@@ -907,7 +907,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             //Check the message on the Action required smart card
             List<WebElement> allOOOHShifts = scheduleShiftTablePage.getAllOOOHShifts();
             int oOOHShiftsCount = allOOOHShifts.size();
-            HashMap<String, String> message = smartCardPage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+            HashMap<String, String> message = smartCardPage.getMessageFromActionRequiredSmartCard();
             SimpleUtils.assertOnFail("OOOH shifts message display incorrectly! The actual message is: " + message.get("OOOH"),
                             message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount+ " shifts\n" +
                                     "Outside Operating Hours"), false);
@@ -1028,7 +1028,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             //Check the message on the Action required smart card
             int unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
-            HashMap<String, String> message = smartCardPage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+            HashMap<String, String> message = smartCardPage.getMessageFromActionRequiredSmartCard();
             SimpleUtils.assertOnFail("Unassigned shifts message display incorrectly! ",
                     message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+" shifts\n" +"Unassigned") ||
                             message.get("unassigned").equalsIgnoreCase(unassignedShiftsCount+ " unassigned shifts\n" +
@@ -1290,7 +1290,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             int oOOHShiftsCount = 0;
             List<WebElement> allOOOHShifts = scheduleShiftTablePage.getAllOOOHShifts();
             oOOHShiftsCount = allOOOHShifts.size();
-            HashMap<String, String> message = smartCardPage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+            HashMap<String, String> message = smartCardPage.getMessageFromActionRequiredSmartCard();
             SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,
                     (message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount+ " shifts\n" +
                             "Outside Operating Hours") || message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount+ " shift\n" +
@@ -1331,7 +1331,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                             complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                             SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                     !complianceMessage.contains("Unassigned Shift") && complianceMessage.contains("Outside Operating hours"), false);
-                            message = smartCardPage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+                            message = smartCardPage.getMessageFromActionRequiredSmartCard();
                             SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,
                                     message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount+ " shifts\n" +
                                             "Outside Operating Hours") &&
@@ -1343,7 +1343,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                             complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                             SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                     !complianceMessage.contains("Unassigned Shift") && !complianceMessage.contains("Outside Operating hours"), false);
-                            message = smartCardPage.getUnassignedAndOOOHMessageFromActionRequiredSmartCard();
+                            message = smartCardPage.getMessageFromActionRequiredSmartCard();
                             SimpleUtils.assertOnFail("The unassiged and OOOH shifts message display incorrectly! The actual message is: " + message,
                                     smartCardPage.isRequiredActionSmartCardLoaded() ||
                                             ((message.get("OOOH").equalsIgnoreCase(oOOHShiftsCount-1+ " shifts\n" +

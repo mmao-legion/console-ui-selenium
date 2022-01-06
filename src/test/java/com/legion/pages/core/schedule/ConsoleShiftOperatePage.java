@@ -10,10 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -2701,6 +2698,20 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 SimpleUtils.fail("The meal break time line fail to load! ", false);
         }else
             SimpleUtils.fail("There is no breaks! ", false);
+    }
+
+    public String getOfferStatusFromOpenShiftStatusList (String tmName) {
+        String status = "";
+        if (areListElementVisible(numberOfOffersMade,20)){
+            for (WebElement element: numberOfOffersMade){
+                if (element.getText().toLowerCase().contains(tmName.toLowerCase())){
+                    status = element.getText().toLowerCase();
+                }
+            }
+        } else {
+            SimpleUtils.fail("The offer list is null!",false);
+        }
+        return status;
     }
 }
 

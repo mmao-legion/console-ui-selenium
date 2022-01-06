@@ -480,7 +480,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement warningMode;
 
     @FindBy(css = "span.lgn-alert-message")
-    private List<WebElement> warningMessagesInWarningMode;
+    private WebElement warningMessagesInWarningMode;
 
     @FindBy(className = "lgn-action-button-success")
     private WebElement okBtnInWarningMode;
@@ -984,18 +984,21 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         if (weekDay != null) {
                             WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
                             if (!weekDaysToClose.contains(weekDay.getText())) {
-                                if (checkbox.getAttribute("class").contains("ng-empty")) {
-                                    clickTheElement(checkbox);
+                                if (!startTime.equals("") || !endTime.equals("")) {
+                                    if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                        clickTheElement(checkbox);
+                                    }
+                                    List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                                    String openTime = startNEndTimes.get(0).getAttribute("value");
+                                    String closeTime = startNEndTimes.get(1).getAttribute("value");
+                                    if (!openTime.equals(startTime) || !closeTime.equals(endTime)) {
+                                        startNEndTimes.get(0).clear();
+                                        startNEndTimes.get(1).clear();
+                                        startNEndTimes.get(0).sendKeys(startTime);
+                                        startNEndTimes.get(1).sendKeys(endTime);
+                                    }
                                 }
-                                List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
-                                String openTime = startNEndTimes.get(0).getAttribute("value");
-                                String closeTime = startNEndTimes.get(1).getAttribute("value");
-                                if (!openTime.equals(startTime) || !closeTime.equals(endTime)) {
-                                    startNEndTimes.get(0).clear();
-                                    startNEndTimes.get(1).clear();
-                                    startNEndTimes.get(0).sendKeys(startTime);
-                                    startNEndTimes.get(1).sendKeys(endTime);
-                                }
+
                             } else {
                                 if (!checkbox.getAttribute("class").contains("ng-empty")) {
                                     clickTheElement(checkbox);
@@ -1359,5 +1362,29 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.pass("Click Back button successfully! ");
         } else
             SimpleUtils.fail("The Back button fail to loaded! ", false);
+    }
+
+    public boolean checkIfWarningModalDisplay () throws Exception {
+        boolean checkIfWarningModalDisplay = false;
+        if (isElementLoaded(popUpScheduleOverlap, 10)) {
+            checkIfWarningModalDisplay = true;
+        }
+        return checkIfWarningModalDisplay;
+    }
+
+    public String getWarningMessageFromWarningModal () throws Exception {
+        String warningMesssage ="";
+        if (isElementLoaded(warningMessagesInWarningMode, 5)) {
+            warningMesssage= warningMessagesInWarningMode.getText();
+        } else
+            SimpleUtils.fail("The warning message fail to load! ", false);
+        return warningMesssage;
+    }
+
+    public void clickOnOkButtonOnWarningModal () throws Exception {
+        if (isElementLoaded(okBtnInWarningMode, 5)) {
+            clickTheElement(okBtnInWarningMode);
+        } else
+            SimpleUtils.fail("The OK button fail to load! ", false);
     }
 }

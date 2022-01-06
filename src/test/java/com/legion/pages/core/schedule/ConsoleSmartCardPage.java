@@ -744,23 +744,56 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     @FindBy (css = "[ng-if=\"scheduleSmartCard.outsideOperatingHoursShifts && requiredActionsCount === 1\"]")
     private WebElement oOOHMessageOnActionRequiredSmartCard;
 
+    @FindBy (css = "[ng-if=\"scheduleSmartCard.minorBlockingViolations && requiredActionsCount === 1\"]")
+    private WebElement minorViolationMessageOnActionRequiredSmartCard;
+
     @Override
-    public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception {
-        HashMap<String, String> unassignedAndOOOHMessage = new HashMap<String, String>();
+    public HashMap<String, String> getMessageFromActionRequiredSmartCard() throws Exception {
+        HashMap<String, String> messageOnSmartCard = new HashMap<String, String>();
         if (isElementLoaded(requiredActionSmartCard, 5)) {
             if (areListElementVisible(unassignedAndOOOHMessageOnActionRequiredSmartCard, 5)) {
-                unassignedAndOOOHMessage.put("unassigned", unassignedAndOOOHMessageOnActionRequiredSmartCard.get(0).getText());
-                unassignedAndOOOHMessage.put("OOOH", unassignedAndOOOHMessageOnActionRequiredSmartCard.get(1).getText());
+                boolean hasUnassignedMessage = false;
+                boolean hasOOOHMessage = false;
+                boolean hasMinorViolationMessage = false;
+                for (WebElement message: unassignedAndOOOHMessageOnActionRequiredSmartCard) {
+                    String firstMessage = message.findElement(By.tagName("div")).getText();
+                    switch (firstMessage) {
+                        case "Unassigned":
+                            messageOnSmartCard.put("unassigned", message.getText());
+                            hasUnassignedMessage = true;
+                        case "Outside Operating Hours":
+                            messageOnSmartCard.put("OOOH", message.getText());
+                            hasOOOHMessage = true;
+                        case "Minor Violation":
+                            messageOnSmartCard.put("minorViolation", message.getText());
+                            hasMinorViolationMessage = true;
+                    }
+                }
+                if (!hasUnassignedMessage) {
+                    messageOnSmartCard.put("unassigned", "");
+                }
+                if (!hasOOOHMessage) {
+                    messageOnSmartCard.put("OOOH", "");
+                }
+                if (!hasMinorViolationMessage) {
+                    messageOnSmartCard.put("minorViolation", "");
+                }
             } else if (isElementLoaded(unassignedMessageOnActionRequiredSmartCard, 5)) {
-                unassignedAndOOOHMessage.put("unassigned", unassignedMessageOnActionRequiredSmartCard.getText());
-                unassignedAndOOOHMessage.put("OOOH", "");
+                messageOnSmartCard.put("unassigned", unassignedMessageOnActionRequiredSmartCard.getText());
+                messageOnSmartCard.put("OOOH", "");
+                messageOnSmartCard.put("minorViolation", "");
             } else if (isElementLoaded(oOOHMessageOnActionRequiredSmartCard, 5)) {
-                unassignedAndOOOHMessage.put("OOOH", oOOHMessageOnActionRequiredSmartCard.getText());
-                unassignedAndOOOHMessage.put("unassigned", "");
-            } else
+                messageOnSmartCard.put("OOOH", oOOHMessageOnActionRequiredSmartCard.getText());
+                messageOnSmartCard.put("unassigned", "");
+                messageOnSmartCard.put("minorViolation", "");
+            } else if (isElementLoaded(minorViolationMessageOnActionRequiredSmartCard, 5)) {
+                messageOnSmartCard.put("OOOH", "");
+                messageOnSmartCard.put("unassigned", "");
+                messageOnSmartCard.put("minorViolation", minorViolationMessageOnActionRequiredSmartCard.getText());
+            }else
                 SimpleUtils.fail("No available message display on Action Required smart card! ", false);
         } else
             SimpleUtils.fail("Required Action smart card fail to load! ", false);
-        return unassignedAndOOOHMessage;
+        return messageOnSmartCard;
     }
 }
