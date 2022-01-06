@@ -128,7 +128,13 @@
                     <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
                     <include name="verifyAutoScheduleRespectTheMinorsRulesAsInternalAdmin" />
                     <include name="verifyRecommendationRespectTheMinorsRulesAsInternalAdmin" />
-
+                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
+                    <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
+                    <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" />
+<!--                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" /> Minor template been disabled-->
                 </methods>
             </class>
         </classes>

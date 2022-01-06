@@ -48,4 +48,7 @@ public interface NewShiftPage {
     public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception;
     public void closeCustomizeNewShiftWindow() throws Exception;
     public void clickOnBackButton () throws Exception;
+    public boolean checkIfWarningModalDisplay () throws Exception;
+    public String getWarningMessageFromWarningModal () throws Exception;
+    public void clickOnOkButtonOnWarningModal () throws Exception;
 }

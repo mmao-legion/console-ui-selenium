@@ -38,5 +38,5 @@ public interface SmartCardPage {
     public void navigateToTheRightestSmartCard() throws Exception;
     public boolean isScheduleNotPublishedSmartCardLoaded() throws Exception;
     public String getWholeMessageFromActionRequiredSmartCard() throws Exception;
-    public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception;
+    public HashMap<String, String> getMessageFromActionRequiredSmartCard() throws Exception;
 }
