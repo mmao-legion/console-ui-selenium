@@ -3169,7 +3169,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			for (int i = 0; i < locationDetailsLinks.size(); i++) {
 				if (locationDetailsLinks.size() > 0) {
 					click(locationDetailsLinks.get(i));
-					if (isElementEnabled(editLocationBtn, 5)) {
+					if (isElementEnabled(editLocationBtn, 15)) {
 						SimpleUtils.pass("Go to location details page successfully");
 						break;
 					} else

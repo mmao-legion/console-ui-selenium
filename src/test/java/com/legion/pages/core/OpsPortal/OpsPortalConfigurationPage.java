@@ -3046,8 +3046,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public boolean searchOneDynamicGroup(String dynamicGroupName) throws Exception{
 		boolean dataExist=false;
 		clickOnAssociationTabOnTemplateDetailsPage();
-		searchAssociateFiled.clear();
-		searchAssociateFiled.sendKeys(dynamicGroupName);
+		if (isElementLoaded(searchAssociateFiled, 10)) {
+			searchAssociateFiled.clear();
+			searchAssociateFiled.sendKeys(dynamicGroupName);
+		}
 		waitForSeconds(5);
 		if(areListElementVisible(getDriver().findElements(By.cssSelector("[ng-repeat*=\"filterdynamicGroups\"]")), 5)
 				&& (getDriver().findElements(By.cssSelector("[ng-repeat*=\"filterdynamicGroups\"]"))).size()>0){
