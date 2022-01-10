@@ -302,9 +302,9 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			if (locationRowsInSelectLocation.size()>0) {
 				SimpleUtils.pass("Can select UpperField in select a location window");
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
-				click(firstRow);
-				click(addBtn);
-				click(okBtnInCreateNewJobPage);
+				clickTheElement(firstRow);
+				clickTheElement(addBtn);
+				clickTheElement(okBtnInCreateNewJobPage);
 			}else
 				SimpleUtils.report("Search location result is 0");
 
