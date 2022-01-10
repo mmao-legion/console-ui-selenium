@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import com.legion.pages.*;
+import com.legion.utils.MyThreadLocal;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -15,6 +16,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import sun.rmi.runtime.Log;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.getEnterprise;
@@ -418,7 +420,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
 	@TestName(description = "Validate the left navigation menu on login using CA (Customer Admin) access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin(String browser, String username, String password, String location) throws Exception {
@@ -554,5 +556,60 @@ public class DashboardTestKendraScott2 extends TestBase {
 		Thread.sleep(5000);
 		loginPage.logOut();
 		loginPage.verifyLoginPageIsLoaded();
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Validate user can logout successfully when login and do nothing")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyUserCanLogoutWhenLoginAndDoNothingAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try{
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			//Get users
+			String fileName = "UsersCredentials.json";
+			if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("rel")){
+				fileName = "Release"+ MyThreadLocal.getEnterprise()+fileName;
+			} else {
+				fileName = MyThreadLocal.getEnterprise() + fileName;
+			}
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+			String simpleClassName = getCurrentClassName();
+			Object[][] adminCredentials = userCredentials.get(AccessRoles.InternalAdmin.getValue() + "Of" + simpleClassName);
+			Object[][] smCredentials = userCredentials.get(AccessRoles.StoreManager.getValue() + "Of" + simpleClassName);
+			Object[][] tlCredentials = userCredentials.get(AccessRoles.TeamLead.getValue() + "Of" + simpleClassName);
+			Object[][] tmCredentials = userCredentials.get(AccessRoles.TeamMember.getValue() + "Of" + simpleClassName);
+			Object[][] dmCredentials = userCredentials.get(AccessRoles.DistrictManager.getValue() + "Of" + simpleClassName);
+			Object[][] caCredentials = userCredentials.get(AccessRoles.CustomerAdmin.getValue() + "Of" + simpleClassName);
+
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			loginPage.loginToLegionWithCredential(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+			loginPage.loginToLegionWithCredential(String.valueOf(smCredentials[0][0]), String.valueOf(smCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+			loginPage.loginToLegionWithCredential(String.valueOf(tlCredentials[0][0]), String.valueOf(tlCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+			loginPage.loginToLegionWithCredential(String.valueOf(tmCredentials[0][0]), String.valueOf(tmCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+			loginPage.loginToLegionWithCredential(String.valueOf(dmCredentials[0][0]), String.valueOf(dmCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+			loginPage.loginToLegionWithCredential(String.valueOf(caCredentials[0][0]), String.valueOf(caCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 }
