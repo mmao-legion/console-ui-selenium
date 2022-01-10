@@ -99,7 +99,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		boolean isLoaded = false;
 		try {
 			waitForSeconds(10);
-			if (isElementLoaded(getDriver().findElement(By.cssSelector(".console-navigation-item-label.Locations")), 20))
+			if (isElementLoaded(getDriver().findElement(By.cssSelector(".console-navigation-item-label.Locations")), 30))
 				isLoaded = true;
 		} catch (Exception e) {
 			isLoaded = false;
