@@ -10,6 +10,7 @@ import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.*;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
+import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.core.OpsPortal.LocationsTest;
@@ -2280,24 +2281,7 @@ public class CinemarkMinorTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            //Go to Control Center -> Configuration tab ,click on Compliance title
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.Compliance.getValue());
-            configurationPage.clickOnSpecifyTemplateName(MyThreadLocal.getCurrentComplianceTemplate(), "edit");
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-
-            // Click the Yes buttons of setting "Strictly enforce minor violations?"
-            configurationPage.setStrictlyEnforceMinorViolations("Yes");
-            SimpleUtils.assertOnFail("The 'Strictly enforce minor violations?' should be setting as Yes! ",
-                    configurationPage.isStrictlyEnforceMinorViolationSettingEnabled(), false);
-
-            //Publish the template
-            configurationPage.publishNowTheTemplate();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            setStrictlyEnforceMinorViolationSetting("Yes");
 
             //Go to schedule and make one minor shift has violation
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -2985,5 +2969,4 @@ public class CinemarkMinorTest extends TestBase {
                 Thread.sleep(360000);
             }
     }
-
 }

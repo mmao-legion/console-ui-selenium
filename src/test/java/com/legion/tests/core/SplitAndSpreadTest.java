@@ -1190,7 +1190,7 @@ public class SplitAndSpreadTest extends TestBase {
             String workRoleOfTM1 = "";
             List<WebElement> shiftOfTM = scheduleShiftTablePage.getAllShiftsOfOneTM(firstNameOfTM);
             if (shiftOfTM.size() > 0) {
-                List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getTheIndexOfShift(shiftOfTM.get(0)));
+                List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM).get(0));
                 workRoleOfTM1 = shiftInfo.get(4);
             } else {
                 if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
