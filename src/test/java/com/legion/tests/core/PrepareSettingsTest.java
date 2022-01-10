@@ -2,12 +2,15 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -35,7 +38,7 @@ public class PrepareSettingsTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Prepare the control settings First")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void prepareSettingsInControlsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -43,12 +46,12 @@ public class PrepareSettingsTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            // Go to Team page, reject all the time off request
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            teamPage.goToTeam();
-            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            teamPage.rejectAllTeamMembersTimeOffRequest(profileNewUIPage, 0);
+//            // Go to Team page, reject all the time off request
+//            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+//            teamPage.goToTeam();
+//            teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+//            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+//            teamPage.rejectAllTeamMembersTimeOffRequest(profileNewUIPage, 0);
 
             dashboardPage.clickOnIntegrationConsoleMenu();
             dashboardPage.verifyIntegrationPageIsLoaded();
@@ -75,7 +78,7 @@ public class PrepareSettingsTest extends TestBase {
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
             SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
-
+            controlsPage.clickGlobalSettings();
             //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
             controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
             controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption("Yes, all unassigned shifts");
@@ -85,6 +88,7 @@ public class PrepareSettingsTest extends TestBase {
 
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            controlsPage.clickGlobalSettings();
             controlsNewUIPage.updateCanWorkerRequestTimeOff("Yes");
             controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
             controlsNewUIPage.updateShowTimeOffReasons("Yes");
@@ -94,6 +98,7 @@ public class PrepareSettingsTest extends TestBase {
             controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
 
             controlsPage.gotoControlsPage();
+            controlsPage.clickGlobalSettings();
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
             SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
@@ -156,20 +161,30 @@ public class PrepareSettingsTest extends TestBase {
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
+            //Go to OP page
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+
             String option = "Yes, all unassigned shifts";
-            OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage("Operation Portal");
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-            cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template");
+            cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
             configurationPage.publishNowTheTemplate();
 
             String wfsName = "Lone Star Region";
-            cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template");
+            cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.setWFS("Yes");
             configurationPage.selectWFSGroup(wfsName);
@@ -180,10 +195,23 @@ public class PrepareSettingsTest extends TestBase {
             //Set buffer hours on OP: before--2, after--3
             configurationPage.goToConfigurationPage();
             controlsNewUIPage.clickOnControlsOperatingHoursSection();
-            cinemarkMinorPage.findDefaultTemplate("Cinemark Base Template Updated");
+            cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Operating Hours"));
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.selectOperatingBufferHours("BufferHour");
             configurationPage.setOpeningAndClosingBufferHours(2, 3);
+            configurationPage.publishNowTheTemplate();
+
+            //setStrictlyEnforceMinorViolationSetting
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.Compliance.getValue());
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            // Click the Yes buttons of setting "Strictly enforce minor violations?"
+            configurationPage.setStrictlyEnforceMinorViolations("No");
+            SimpleUtils.assertOnFail("The 'Strictly enforce minor violations?' should be setting as No! ",
+                        !configurationPage.isStrictlyEnforceMinorViolationSettingEnabled(), false);
+            //Publish the template
             configurationPage.publishNowTheTemplate();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
