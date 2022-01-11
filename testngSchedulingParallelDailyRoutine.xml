@@ -203,10 +203,10 @@
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
                     <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
-                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />
-                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
                     <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsTeamMember" />
+                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />
+                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
                 </methods>
             </class>
         </classes>

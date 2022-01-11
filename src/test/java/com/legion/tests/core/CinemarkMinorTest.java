@@ -2963,7 +2963,7 @@ public class CinemarkMinorTest extends TestBase {
             //Publish the template
             configurationPage.publishNowTheTemplate();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-
+            Thread.sleep(5000);
             if (statusAfterEdit != statusBeforeEdit) {
                 //Wait for the timed cache
                 Thread.sleep(360000);

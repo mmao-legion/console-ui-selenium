@@ -843,8 +843,9 @@ public class LocationNavigationTest extends TestBase {
     public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQComplianceTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            dashboardPage.isConsoleNavigationBarIsGray("Compliance");
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            dashboardPage.isConsoleNavigationBarIsGray("Compliance");
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             compliancePage.clickOnComplianceConsoleMenu();
 
