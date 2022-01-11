@@ -137,6 +137,7 @@
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
+<!--                    <include name="verifyUserCanLogoutWhenLoginAndDoNothingAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5820-->
                 </methods>
             </class>
         </classes>

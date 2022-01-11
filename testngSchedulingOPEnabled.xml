@@ -369,4 +369,23 @@
             </classes>
         </test>
 SCH-5862-->
+
+    <test name="Dashboard Test">
+        <classes>
+            <class name="com.legion.tests.core.DashboardTestKendraScott2">
+                <methods>
+                    <!--                    <include name="verifyDashboardFunctionalityAsTeamMember" Need fix/>-->
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
+                    <!--                    <include name="verifyUserCanLogoutWhenLoginAndDoNothingAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5820-->
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
     </suite> <!-- Suite -->
