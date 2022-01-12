@@ -6179,4 +6179,91 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the overnight shift can be drag to other day")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+			//Go to one schedule page day view
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			scheduleCommonPage.navigateToNextWeek();
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
+			int i = 0;
+			List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			String firstNameOfTM1 = shiftInfo.get(0);
+			while (i< 50 && (firstNameOfTM1.equalsIgnoreCase("open") || firstNameOfTM1.equalsIgnoreCase("Unassigned"))) {
+				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+				firstNameOfTM1  = shiftInfo.get(0);
+				i++;
+			}
+			String workRole = shiftInfo.get(4);
+
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+			scheduleMainPage.saveSchedule();
+
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectDaysByIndex(2,2,2);
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("6pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+
+			scheduleCommonPage.clickOnDayView();
+			scheduleCommonPage.navigateDayViewWithIndex(2);
+			//Verify overnight shift can be created
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			int index = scheduleShiftTablePage.
+					getTheIndexOfShift(scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).get(0));
+			scheduleShiftTablePage.moveShiftByIndexInDayView(index, false);
+			scheduleMainPage.saveSchedule();
+			//Verify the overnight shift can display on next day
+			scheduleCommonPage.navigateDayViewWithIndex(3);
+			SimpleUtils.assertOnFail("The overnight shift also display on the next day! ",
+					scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size()>0, false);
+			//Verify the overnight shift can be dragged to other days
+			scheduleCommonPage.clickOnWeekView();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.dragOneShiftToAnotherDay(2, firstNameOfTM1, 1);
+			scheduleShiftTablePage.selectCopyOrMoveByOptionName("move");
+			scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+			Thread.sleep(3000);
+			scheduleShiftTablePage.verifyShiftIsMovedToAnotherDay(2,firstNameOfTM1,1);
+			scheduleMainPage.saveSchedule();
+			scheduleShiftTablePage.verifyShiftIsMovedToAnotherDay(2,firstNameOfTM1,1);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 }
