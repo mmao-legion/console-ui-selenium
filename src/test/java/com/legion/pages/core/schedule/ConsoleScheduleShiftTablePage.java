@@ -2385,7 +2385,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement end : endElements) {
                 WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
                 if (endName != null) {
-                    if (endName.getText().equalsIgnoreCase(firstName)) {
+                    if (endName.getText().contains(firstName)) {
                         isMoved = true;
                         break;
                     }
