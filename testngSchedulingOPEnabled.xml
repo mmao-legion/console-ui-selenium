@@ -199,6 +199,7 @@
                     <include name="verifyDeleteShiftInDayViewAsInternalAdmin" />
                     <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />
                     <!--                   <include name="verifyShiftsCanBeDraggedInDayViewAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5728 -->
+                    <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
