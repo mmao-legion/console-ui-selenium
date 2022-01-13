@@ -721,9 +721,9 @@ public class SplitAndSpreadTest extends TestBase {
             } else
                 SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
-
             //check the violation message in Status column
-            SimpleUtils.assertOnFail("The spread of hour violation fail to display in Status column! ",
+            Thread.sleep(3000);
+            SimpleUtils.assertOnFail("The spread of hour violation fail to display in Status column! The actual message is: " + shiftOperatePage.getTheMessageOfTMScheduledStatus(),
                     shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Will trigger spread of hours"), false);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();

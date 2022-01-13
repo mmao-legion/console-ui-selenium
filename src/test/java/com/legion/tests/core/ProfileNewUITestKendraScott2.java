@@ -388,6 +388,10 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
                 profileNewUIPage.clickNextWeek();
             }
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
+            Thread.sleep(3000);
+            profileNewUIPage.clickAvailabilityEditButton();
+            profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
+            profileNewUIPage.saveMyAvailabilityEditMode("Repeat Forward");
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
