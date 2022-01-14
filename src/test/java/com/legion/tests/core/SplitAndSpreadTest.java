@@ -666,6 +666,7 @@ public class SplitAndSpreadTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             List<String> shiftInfo =  scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
             String tmFirstName = shiftInfo.get(0);
+            String tmLastName = shiftInfo.get(5);
             int i=0;
             while (i< 200 && (tmFirstName.equalsIgnoreCase("open") || tmFirstName.equalsIgnoreCase("Unassigned"))) {
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
@@ -707,7 +708,7 @@ public class SplitAndSpreadTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(tmFirstName);
+            newShiftPage.searchTeamMemberByName(tmFirstName+ " "+tmLastName);
             Thread.sleep(5);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(tmFirstName);
             //check the message in warning mode

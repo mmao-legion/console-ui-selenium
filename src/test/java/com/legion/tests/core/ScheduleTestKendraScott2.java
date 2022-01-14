@@ -5839,6 +5839,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//if checkbox is unselected then, shift is convert to open
 			WebElement selectedShift = shiftOperatePage.clickOnProfileIcon();
 			String tmFirstName = selectedShift.findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
+			int i = 0;
+			while (i<10 && (tmFirstName.equalsIgnoreCase("open")||tmFirstName.equalsIgnoreCase("unassigned"))) {
+				selectedShift = shiftOperatePage.clickOnProfileIcon();
+				tmFirstName = selectedShift.findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
+				i++;
+			}
 			shiftOperatePage.clickOnConvertToOpenShift();
 			if (shiftOperatePage.verifyConvertToOpenPopUpDisplay(tmFirstName)) {
 				shiftOperatePage.convertToOpenShiftDirectly();
@@ -5846,6 +5852,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//if checkbox is select then select team member page will display
 			selectedShift = shiftOperatePage.clickOnProfileIcon();
 			tmFirstName = selectedShift.findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
+			i = 0;
+			while (i<10 && (tmFirstName.equalsIgnoreCase("open")||tmFirstName.equalsIgnoreCase("unassigned"))) {
+				selectedShift = shiftOperatePage.clickOnProfileIcon();
+				tmFirstName = selectedShift.findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
+				i++;
+			}
 			shiftOperatePage.clickOnConvertToOpenShift();
 			if (shiftOperatePage.verifyConvertToOpenPopUpDisplay(tmFirstName)) {
 				shiftOperatePage.convertToOpenShiftAndOfferToSpecificTMs();

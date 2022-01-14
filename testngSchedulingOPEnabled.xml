@@ -97,7 +97,7 @@
             <class name="com.legion.tests.core.CinemarkMinorTest">
                 <methods>
                     <!--                           <include name="verifyTurnOnAndSetMinorRuleAsInternalAdmin" />Due to new template -->
-                    <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
+<!--                    <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" /> https://legiontech.atlassian.net/browse/OPS-4123-->
                     <include name="verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin" />
                     <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
@@ -134,7 +134,7 @@
                     <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
                     <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
                     <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" />
-<!--                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" /> Minor template been disabled-->
+                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
