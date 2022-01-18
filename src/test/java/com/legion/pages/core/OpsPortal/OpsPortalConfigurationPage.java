@@ -3027,6 +3027,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement dynamicGroupRemoveBTNOnDialog;
 
 
+	@Override
 	public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception{
 		if(isElementEnabled(templateAssociationBTN,10)){
 			scrollToElement(templateAssociationBTN);
@@ -3891,5 +3892,4 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}else
 			SimpleUtils.fail("Published template was archived",false);
 	}
-
 }

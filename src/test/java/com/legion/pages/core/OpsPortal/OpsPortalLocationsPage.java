@@ -3833,5 +3833,42 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		latitude.sendKeys("34.3416");
 		longitude.sendKeys("108.9398");
 	}
+
+	@FindBy(css = "[form-title=\"Workforce sharing\"] lg-button[ng-click*=\"addDynamicGroup()\"]")
+	private WebElement addBtnDynamicGroup;
+	@Override
+	public void clickOnAddBtnForSharingDynamicLocationGroup() throws Exception {
+		if (isElementLoaded(addBtnDynamicGroup, 10)){
+			clickTheElement(addBtnDynamicGroup);
+		} else {
+			SimpleUtils.fail("Add button fail to load!", false);
+		}
+	}
+
+	@FindBy(css = ".modal-dialog lg-button[label=\"Cancel\"]")
+	private WebElement cancelBtnDynamicGroup;
+	@Override
+	public void clickOnCancelBtnOnSharingDynamicLocationGroupWindow() throws Exception {
+		if (isElementLoaded(cancelBtnDynamicGroup, 10)){
+			clickTheElement(cancelBtnDynamicGroup);
+		} else {
+			SimpleUtils.fail("Cancel button fail to load!", false);
+		}
+	}
+
+	@FindBy(css = ".modal-dialog .lg-modal__title-icon")
+	private WebElement titleForWorkforceSharingLocationGroup;
+	@Override
+	public void verifyTitleForWorkforceSharingLocationGroup() throws Exception {
+		if (isElementLoaded(titleForWorkforceSharingLocationGroup, 10)){
+			if (titleForWorkforceSharingLocationGroup.getText().contains("Manage Dynamic Location Group")){
+				SimpleUtils.pass("Title is expected!");
+			} else {
+				SimpleUtils.fail("Title is not expected! actual is: " + titleForWorkforceSharingLocationGroup.getText(), false);
+			}
+		} else {
+			SimpleUtils.fail("Title fail to load!", false);
+		}
+	}
 }
 

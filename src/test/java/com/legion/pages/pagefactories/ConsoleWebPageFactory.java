@@ -192,4 +192,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public NewShiftPage createNewShiftPage() { return new ConsoleNewShiftPage(); }
+
+	@Override
+	public SettingsAndAssociationPage createSettingsAndAssociationPage() {	return new OpsPortalSettingsAndAssociationPage(); }
 }

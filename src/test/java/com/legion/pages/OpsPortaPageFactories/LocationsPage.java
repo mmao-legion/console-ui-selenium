@@ -123,6 +123,8 @@ public interface LocationsPage {
 
     public void goToDynamicGroup();
 
+    public void clickOnAddBtnForSharingDynamicLocationGroup() throws Exception;
+
     public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception;
 
     public void iCanDeleteExistingWFSDG();
@@ -260,4 +262,8 @@ public interface LocationsPage {
     public void cancelBtnOnImportExportPopUpWinsIsClickable();
 
     public void clickOnExportBtn();
+
+    public void verifyTitleForWorkforceSharingLocationGroup() throws Exception;
+
+    public void clickOnCancelBtnOnSharingDynamicLocationGroupWindow() throws Exception;
 }

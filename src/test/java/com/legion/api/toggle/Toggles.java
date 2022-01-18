@@ -4,6 +4,7 @@ public enum Toggles {
 
     UseLegionAccrual("UseLegionAccrual"),
     MinorRulesTemplate("MinorRulesTemplate"),
+    DynamicGroupV2("DynamicGroupV2"),
     ScheduleShowFullNames("ScheduleShowFullNames");
 
     private final String value;

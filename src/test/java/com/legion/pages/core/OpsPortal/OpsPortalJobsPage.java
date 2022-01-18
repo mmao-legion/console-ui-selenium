@@ -67,7 +67,8 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	@Override
 	public void iCanEnterJobsTab() {
 		if (isElementEnabled(goToJobsButton,3)) {
-			click(goToJobsButton);
+			scrollToElement(goToJobsButton);
+			clickTheElement(goToJobsButton);
 			if (isElementEnabled(createNewJobBtn,5)) {
 				SimpleUtils.pass("I can enter jobs page");
 			}else
@@ -1301,4 +1302,18 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 	}
 
+	@FindBy(css = ".lg-tabs__nav")
+	private WebElement navForAddLocation;
+	@Override
+	public void verifyDynamicGroupName() throws Exception {
+		if (isElementLoaded(navForAddLocation, 10)){
+			if (navForAddLocation.getText().contains("Dynamic Location Group")){
+				SimpleUtils.pass("Dynamic Group name is expected!");
+			} else {
+				SimpleUtils.fail("Dynamic Group name is not expected! actual is: "+ navForAddLocation.getText(), false);
+			}
+		} else {
+			SimpleUtils.fail("Navigation tab are not loaded!", false);
+		}
+	}
 }
