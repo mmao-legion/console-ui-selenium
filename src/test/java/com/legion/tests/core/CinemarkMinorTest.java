@@ -2931,7 +2931,7 @@ public class CinemarkMinorTest extends TestBase {
             String tooltip = scheduleMainPage.getTooltipOfPublishButton();
             SimpleUtils.assertOnFail("The tooltip of publish button should display as: Please address required action(s)! But the actual tooltip is: "+ tooltip,
                     tooltip.equalsIgnoreCase("Please address required action(s)"), false);
-
+            setStrictlyEnforceMinorViolationSetting("No");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }
