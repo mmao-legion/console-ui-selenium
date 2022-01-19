@@ -44,7 +44,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate manager location for one user in controls")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow(String browser, String username, String password, String location) throws Exception {
+    public void verifyManagerLocationForOneUserInControlsInControlsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -375,7 +375,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate location profile page in controls")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationProfilePageInControlsAsInternalAdminForNewNavigationFlow(String browser, String username, String password, String location) throws Exception {
+    public void verifyLocationProfilePageInControlsAsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -400,7 +400,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate location list in Timesheet page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationListFunctionInTimesheetAsInternalAdminForNewNavigationFlow(String browser, String username, String password, String location) throws Exception {
+    public void verifyLocationListFunctionInTimesheetAsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

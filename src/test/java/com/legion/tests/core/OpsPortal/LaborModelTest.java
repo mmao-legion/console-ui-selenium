@@ -58,7 +58,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify create delete and publish labor model template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
@@ -84,7 +84,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global External Attributes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateUpdateAndDeleteNewAttributeFunctionAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateUpdateAndDeleteNewAttributeFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
@@ -155,7 +155,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template level external attributes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTemplateLevelAttributeFunctionAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyTemplateLevelAttributeFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
@@ -232,7 +232,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add update disable tasks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditSearchAndDisableTasksAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddEditSearchAndDisableTasksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
             navigationPage.navigateToLaborModelPage();
@@ -339,7 +339,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Description of External Attributes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDescriptionOfExternalAttributesAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyDescriptionOfExternalAttributesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
@@ -449,7 +449,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify the entry of override location level work role by csv")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTheEntryOfOverrideLocationLevelWorkRoleByCsvAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyTheEntryOfOverrideLocationLevelWorkRoleByCsvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateName="AutoUsingByFiona";
             String mode="edit";
@@ -470,7 +470,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify export Location Subscription of labor model template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportLocationSubscriptionOfLaborModelTemplateAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyExportLocationSubscriptionOfLaborModelTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateName="AutoUsingByFiona";
             String mode="edit";
@@ -492,7 +492,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify import Location Subscription of labor model template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyImportLocationSubscriptionOfLaborModelTemplateAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyImportLocationSubscriptionOfLaborModelTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateName="AutoUsingByFiona";
             String mode="edit";
@@ -515,7 +515,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Update Work Role subscription via csv")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpdateWorkRoleSubscriptionViaCsvAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpdateWorkRoleSubscriptionViaCsvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String locationName="AutoUsingForLaborBudget";
             String templateName="AutoUsingByLocationLevelWorkRole";

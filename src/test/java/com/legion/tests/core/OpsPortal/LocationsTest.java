@@ -102,7 +102,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = " create a Type Regular location with effective date as a past date")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateRegularLocationWithAllFieldsAndNavigateAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateRegularLocationWithAllFieldsAndNavigateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime = dfs.format(new Date());
@@ -152,7 +152,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "create a Type MOCK location that based on a ENABLED status regular location ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateMockLocationAndNavigateAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateMockLocationAndNavigateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String currentTime = TestBase.getCurrentTime().substring(4);
             String locationName = "AutoCreate" + currentTime;
@@ -204,7 +204,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Create a Type NSO location with below conditions successfully")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateNSOLocationAndNavigateAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateNSOLocationAndNavigateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime = dfs.format(new Date());
@@ -246,7 +246,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify disable the Type Regular locations")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDisableEnableLocationFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyDisableEnableLocationFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
             String searchInputText = "status:Enabled";
             String disableLocationName = "";
@@ -276,7 +276,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Cancel to export or import locations")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCancelToExportOrImportLocationsAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyCancelToExportOrImportLocationsAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -306,28 +306,23 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Export all/specific location function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportLocationDistrictAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
-        try {
-            int index = 0;
-            String searchCharactor = "*";
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+    public void verifyExportLocationDistrictAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        int index = 0;
+        String searchCharactor = "*";
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-locations
-            locationsPage.goToSubLocationsInLocationsPage();
-            locationsPage.verifyExportAllLocationDistrict();
-            locationsPage.verifyExportSpecificLocationDistrict(searchCharactor, index);
-
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-locations
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.verifyExportAllLocationDistrict();
+        locationsPage.verifyExportSpecificLocationDistrict(searchCharactor, index);
     }
 
     @Automated(automated = "Automated")
@@ -335,7 +330,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify UpperFields list page and search function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpperFieldsListPageAndSearchFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpperFieldsListPageAndSearchFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
             String[] searchInfo = {"BU1", "Level: District", "Level: Region", "status:enabled", "status: disabled"};
@@ -372,7 +367,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Add New Upperfields with different level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddUpperFieldsWithDiffLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddUpperFieldsWithDiffLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
             String currentTime = TestBase.getCurrentTime().substring(4);
@@ -412,7 +407,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify disable and enable upperfield")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDisableEnableUpperFieldFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyDisableEnableUpperFieldFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
             String disableAction = "Disable";
@@ -456,42 +451,35 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify update upperfield")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpdateUpperFieldFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpdateUpperFieldFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        String upperfieldsName = "RegionNoTouch";
+        String searchChara = "re";
+        int index = 1;
+        String districtLevel = "District";
+        String regionLevel = "Region";
 
-        try {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
-            String upperfieldsName = "RegionNoTouch";
-            String searchChara = "re";
-            int index = 1;
-            String districtLevel = "District";
-            String regionLevel = "Region";
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-district  tab
+        locationsPage.goToUpperFieldsPage();
 
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //update upperfield
+        String updateUpperfield = locationsPage.updateUpperfield(upperfieldsName, upperfieldsName, searchChara, index, districtLevel);
 
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-district  tab
-            locationsPage.goToUpperFieldsPage();
-
-            //update upperfield
-            String updateUpperfield = locationsPage.updateUpperfield(upperfieldsName, upperfieldsName, searchChara, index, districtLevel);
-
-            ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(updateUpperfield);
-            if (upperfieldInfo.get(0).get("upperfieldLevel").equalsIgnoreCase("District")) {
-                SimpleUtils.pass("Upperfield update successfully");
-                locationsPage.updateUpperfield(updateUpperfield, updateUpperfield, searchChara, index, regionLevel);
-            } else
-                SimpleUtils.fail("Upperfield update failed", false);
-
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+        ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(updateUpperfield);
+        if (upperfieldInfo.get(0).get("upperfieldLevel").equalsIgnoreCase("District")) {
+            SimpleUtils.pass("Upperfield update successfully");
+            locationsPage.updateUpperfield(updateUpperfield, updateUpperfield, searchChara, index, regionLevel);
+        } else
+            SimpleUtils.fail("Upperfield update failed", false);
 
     }
 
@@ -500,7 +488,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify cancel creating upperfield")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCancelCreatingUpperfieldFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyCancelCreatingUpperfieldFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
 
@@ -537,7 +525,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify upperfield smartcard data")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpperFieldSmartCardDataAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpperFieldSmartCardDataAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
 
@@ -619,7 +607,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global dynamic group in Locations tab  ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalDynamicGroupFunctionInLocationsTabAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyGlobalDynamicGroupFunctionInLocationsTabAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -670,7 +658,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global dynamic group for Clock in")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalDynamicGroupInClockInFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyGlobalDynamicGroupInClockInFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
 
@@ -711,7 +699,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify abnormal scenarios")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalDynamicGroupAbnormalScenariosAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyGlobalDynamicGroupAbnormalScenariosAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
 
@@ -744,101 +732,97 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global dynamic group for Workforce Sharing")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalDynamicGroupInWFSAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyGlobalDynamicGroupInWFSAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try {
-            String templateType = "Schedule Collaboration";
-            String mode = "edit";
-            String templateName = "UsedByAuto_NoTouchNoDelete";
-            String wfsMode = "Yes";
-            String wfsName = "WFS";
-            String locationName = "OMLocation16";
-            String criteria = "Custom";
+        String templateType = "Schedule Collaboration";
+        String mode = "edit";
+        String templateName = "UsedByAuto_NoTouchNoDelete";
+        String wfsMode = "Yes";
+        String wfsName = "WFS";
+        String locationName = "OMLocation16";
+        String criteria = "Custom";
 
-            List<String> wfsGroup = new ArrayList<>();
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            scheduleCommonPage.navigateToNextWeek();
-            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (isActiveWeekGenerated) {
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                newShiftPage.clickOnDayViewAddNewShiftButton();
-                newShiftPage.customizeNewShiftPage();
-                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
-                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
-                }
-                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
-                newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.searchTeamMemberByName("aglae");
-                if (!shiftOperatePage.verifyWFSFunction()) {
-                    //to check WFS group exist or not
-                    LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-                    SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-                    //go to locations tab
-                    locationsPage.clickOnLocationsTab();
-                    //check dynamic group item
-                    locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
-                    //go to dynamic group
-                    locationsPage.goToDynamicGroup();
-                    wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
-                    for (int i = 0; i < wfsGroup.size(); i++) {
-                        if (wfsGroup.get(i).contains(wfsName)) {
-                            SimpleUtils.report("Workforce sharing group for automation existing");
-                            break;
-                        } else
-                            locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName, "Used by auto", criteria);
-                    }
-
-                    //to check wfs is on or off in schedule collaboration configuration page
-                    ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                    configurationPage.goToConfigurationPage();
-                    configurationPage.clickOnConfigurationCrad(templateType);
-                    configurationPage.clickOnSpecifyTemplateName(templateName, mode);
-                    configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-                    configurationPage.setWFS(wfsMode);
-                    configurationPage.selectWFSGroup(wfsName);
-                    configurationPage.publishNowTheTemplate();
-
-                    //go to schedule to generate schedule
-
-                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-                    SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-                } else
-                    SimpleUtils.pass("Workforce sharing function work well");
-
-            } else {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                newShiftPage.clickOnDayViewAddNewShiftButton();
-                newShiftPage.customizeNewShiftPage();
-                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
-                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
-                }
-                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
-                newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.searchTeamMemberByName("Aglae");
-                if (!shiftOperatePage.verifyWFSFunction()) {
-                    SimpleUtils.fail("Workforce sharing function work failed", false);
-                } else
-                    SimpleUtils.pass("Workforce sharing function work well");
+        List<String> wfsGroup = new ArrayList<>();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.navigateToNextWeek();
+        boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (isActiveWeekGenerated) {
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
             }
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName("aglae");
+            if (!shiftOperatePage.verifyWFSFunction()) {
+                //to check WFS group exist or not
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+                //go to locations tab
+                locationsPage.clickOnLocationsTab();
+                //check dynamic group item
+                locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
+                //go to dynamic group
+                locationsPage.goToDynamicGroup();
+                wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
+                for (int i = 0; i < wfsGroup.size(); i++) {
+                    if (wfsGroup.get(i).contains(wfsName)) {
+                        SimpleUtils.report("Workforce sharing group for automation existing");
+                        break;
+                    } else
+                        locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName, "Used by auto", criteria);
+                }
+
+                //to check wfs is on or off in schedule collaboration configuration page
+                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad(templateType);
+                configurationPage.clickOnSpecifyTemplateName(templateName, mode);
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                configurationPage.setWFS(wfsMode);
+                configurationPage.selectWFSGroup(wfsName);
+                configurationPage.publishNowTheTemplate();
+
+                //go to schedule to generate schedule
+
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            } else
+                SimpleUtils.pass("Workforce sharing function work well");
+
+        } else {
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+            }
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName("Aglae");
+            if (!shiftOperatePage.verifyWFSFunction()) {
+                SimpleUtils.fail("Workforce sharing function work failed", false);
+            } else
+                SimpleUtils.pass("Workforce sharing function work well");
         }
     }
 
@@ -847,101 +831,96 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Parent formula in Workforce Sharing")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyParentFormulaInWFSAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyParentFormulaInWFSAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        String templateType = "Schedule Collaboration";
+        String mode = "edit";
+        String templateName = "ParentFormular";
+        String wfsMode = "Yes";
+        String wfsName = "WFS";
+        String locationName = "SeaTac AirportSEA";
+        String criteria = "Custom";
 
-        try {
-            String templateType = "Schedule Collaboration";
-            String mode = "edit";
-            String templateName = "ParentFormular";
-            String wfsMode = "Yes";
-            String wfsName = "WFS";
-            String locationName = "SeaTac AirportSEA";
-            String criteria = "Custom";
-
-            List<String> wfsGroup = new ArrayList<>();
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            scheduleCommonPage.navigateToNextWeek();
-            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (isActiveWeekGenerated) {
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                newShiftPage.clickOnDayViewAddNewShiftButton();
-                newShiftPage.customizeNewShiftPage();
-                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
-                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
-                }
-                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
-                newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.searchTeamMemberByName("Brisa");
-                if (!shiftOperatePage.verifyWFSFunction()) {
-                    //to check WFS group exist or not
-                    LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-                    SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-                    //go to locations tab
-                    locationsPage.clickOnLocationsTab();
-                    //check dynamic group item
-                    locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
-                    //go to dynamic group
-                    locationsPage.goToDynamicGroup();
-                    wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
-                    for (int i = 0; i < wfsGroup.size(); i++) {
-                        if (wfsGroup.get(i).contains(wfsName)) {
-                            SimpleUtils.report("Workforce sharing group for automation existing");
-                            break;
-                        } else
-                            locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName, "Used by auto", criteria);
-                    }
-
-                    //to check wfs is on or off in schedule collaboration configuration page
-                    ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                    configurationPage.goToConfigurationPage();
-                    configurationPage.clickOnConfigurationCrad(templateType);
-                    configurationPage.clickOnSpecifyTemplateName(templateName, mode);
-                    configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-                    configurationPage.setWFS(wfsMode);
-                    configurationPage.selectWFSGroup(wfsName);
-                    configurationPage.publishNowTheTemplate();
-
-                    //go to schedule to generate schedule
-
-                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-                    SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-                } else
-                    SimpleUtils.pass("Workforce sharing function work well");
-
-            } else {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                newShiftPage.clickOnDayViewAddNewShiftButton();
-                newShiftPage.customizeNewShiftPage();
-                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
-                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
-                }
-                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
-                newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.searchTeamMemberByName("Alysha");
-                if (!shiftOperatePage.verifyWFSFunction()) {
-                    SimpleUtils.fail("Workforce sharing function work failed", false);
-                } else
-                    SimpleUtils.pass("Workforce sharing function work well");
+        List<String> wfsGroup = new ArrayList<>();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.navigateToNextWeek();
+        boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (isActiveWeekGenerated) {
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
             }
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName("Brisa");
+            if (!shiftOperatePage.verifyWFSFunction()) {
+                //to check WFS group exist or not
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+                //go to locations tab
+                locationsPage.clickOnLocationsTab();
+                //check dynamic group item
+                locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
+                //go to dynamic group
+                locationsPage.goToDynamicGroup();
+                wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
+                for (int i = 0; i < wfsGroup.size(); i++) {
+                    if (wfsGroup.get(i).contains(wfsName)) {
+                        SimpleUtils.report("Workforce sharing group for automation existing");
+                        break;
+                    } else
+                        locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName, "Used by auto", criteria);
+                }
+
+                //to check wfs is on or off in schedule collaboration configuration page
+                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad(templateType);
+                configurationPage.clickOnSpecifyTemplateName(templateName, mode);
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                configurationPage.setWFS(wfsMode);
+                configurationPage.selectWFSGroup(wfsName);
+                configurationPage.publishNowTheTemplate();
+
+                //go to schedule to generate schedule
+
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            } else
+                SimpleUtils.pass("Workforce sharing function work well");
+
+        } else {
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+            }
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName("Alysha");
+            if (!shiftOperatePage.verifyWFSFunction()) {
+                SimpleUtils.fail("Workforce sharing function work failed", false);
+            } else
+                SimpleUtils.pass("Workforce sharing function work well");
         }
     }
 
@@ -950,7 +929,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify default value of Organization Hierarchy")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDefaultOrganizationHierarchyShowAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyDefaultOrganizationHierarchyShowAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -972,7 +951,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate add edit remove organization hierarchy")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditRemoveOrganizationHierarchyAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddEditRemoveOrganizationHierarchyAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
             List<String> hierarchyNames = new ArrayList<String>() {{
@@ -1002,7 +981,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "abnormal cases of hierarchy")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAbnormalCasesOfOrganizationHierarchyAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyAbnormalCasesOfOrganizationHierarchyAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1027,7 +1006,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can see template value via click template name in location level and compare")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUserCanSeeEachTypeOfTemViaClickingTemNameAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyUserCanSeeEachTypeOfTemViaClickingTemNameAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
             String locationName = "OMLocation16";
@@ -1175,7 +1154,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "View template of Scheduling policy schedule collaboration TA and Compliance")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
 
@@ -1237,7 +1216,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Overridden scheduling rules template in location level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOverriddenSchedulingRulesInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyOverriddenSchedulingRulesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
 
@@ -1290,7 +1269,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Overridden Operating Hours template in location level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOverriddenOperatingHoursInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyOverriddenOperatingHoursInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
 
@@ -1339,7 +1318,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Overridden assignment rules template in location level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOverriddenAssignmentRulesInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyOverriddenAssignmentRulesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
 
@@ -1391,7 +1370,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Overridden Labor model template in location level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOverriddenLaborModelInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyOverriddenLaborModelInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
 
@@ -1440,7 +1419,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "User can view the default location level external attribute")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDefaultValueOfExternalAttributesInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyDefaultValueOfExternalAttributesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
 
@@ -1560,7 +1539,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "User can update location level external attributes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpdateExternalAttributesInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpdateExternalAttributesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
             String locationName = "AutoUsingByFiona1";
@@ -1644,7 +1623,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "External Attribute E2E")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExternalAttributeE2EAsInternalAdminForUpperFieldTile(String username, String password, String browser, String location) throws Exception {
+    public void verifyExternalAttributeE2EAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
 
         String locationName = "AutoUsingByFiona1";
         String label = "External Attributes";
@@ -1705,7 +1684,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Location Level External Attributes Description")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationLevelExternalAttributesDescriptionAsInternalAdminForUpperFieldTile(String username, String password, String browser, String location) throws Exception {
+    public void verifyLocationLevelExternalAttributesDescriptionAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
 
         SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
         String currentTime = dfs.format(new Date()).trim();
@@ -1870,7 +1849,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "NSOLocation_Enhancements")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyNSOLocationEnhancementsCheckAsInternalAdminForUpperFieldTile(String username, String password, String browser, String location) throws Exception {
+    public void verifyNSOLocationEnhancementsCheckAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime = dfs.format(new Date());
@@ -1969,48 +1948,43 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Location common features test")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationCommonFeatureAsInternalAdminForUpperFieldTile(String username, String password, String browser, String location) throws Exception {
-        try {
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime1 = dfs.format(new Date());
-            String locationName1 = "AutoTestLocationCheck"+currentTime1;
-            int index = 0;
-            String searchCharactor = "No touch";
+    public void verifyLocationCommonFeatureAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime1 = dfs.format(new Date());
+        String locationName1 = "AutoTestLocationCheck"+currentTime1;
+        int index = 0;
+        String searchCharactor = "No touch";
 
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-locations tab
-            locationsPage.goToSubLocationsInLocationsPage();
-            //location page UI check
-            locationsPage.locationPageCommonFeatureCheck();
-            //create a regular location with effective day as today
-            locationsPage.addNewRegularLocationWithDate(locationName1,searchCharactor, index,0);
-            //check the location status
-            if(locationsPage.searchLocationAndGetStatus(currentTime1).equals("ENABLED"))
-                SimpleUtils.pass("New created location with today as effective day is enabled");
-            else
-                SimpleUtils.report("New created location with today as effective day status is incorrect");
-            String currentTime2 = dfs.format(new Date());
-            String locationName2 = "AutoTestLocationCheck"+currentTime2;
-            //create a regular location with effective day as a future daya
-            locationsPage.addNewRegularLocationWithDate(locationName2,searchCharactor, index,-5);
-            //check the location status
-            if(locationsPage.searchLocationAndGetStatus(currentTime2).equals("CREATED"))
-                SimpleUtils.pass("New created location with future effective day is created");
-            else
-                SimpleUtils.report("New created location with future effective day status is incorrect");
-
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-locations tab
+        locationsPage.goToSubLocationsInLocationsPage();
+        //location page UI check
+        locationsPage.locationPageCommonFeatureCheck();
+        //create a regular location with effective day as today
+        locationsPage.addNewRegularLocationWithDate(locationName1,searchCharactor, index,0);
+        //check the location status
+        if(locationsPage.searchLocationAndGetStatus(currentTime1).equals("ENABLED"))
+            SimpleUtils.pass("New created location with today as effective day is enabled");
+        else
+            SimpleUtils.report("New created location with today as effective day status is incorrect");
+        String currentTime2 = dfs.format(new Date());
+        String locationName2 = "AutoTestLocationCheck"+currentTime2;
+        //create a regular location with effective day as a future daya
+        locationsPage.addNewRegularLocationWithDate(locationName2,searchCharactor, index,-5);
+        //check the location status
+        if(locationsPage.searchLocationAndGetStatus(currentTime2).equals("CREATED"))
+            SimpleUtils.pass("New created location with future effective day is created");
+        else
+            SimpleUtils.report("New created location with future effective day status is incorrect");
 
     }
 
@@ -2019,7 +1993,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Source Location")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationSourceTypeSelectAsInternalAdminForUpperFieldTile(String username, String password, String browser, String location) throws Exception {
+    public void verifyLocationSourceTypeSelectAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2049,7 +2023,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add display name in location level template page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationDiaplayNameAtTempLevelAsInternalAdminForUpperFieldTile(String username, String password, String browser, String location) throws Exception {
+    public void verifyLocationDiaplayNameAtTempLevelAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
         try {
             String locationName = "Checkpoint A";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

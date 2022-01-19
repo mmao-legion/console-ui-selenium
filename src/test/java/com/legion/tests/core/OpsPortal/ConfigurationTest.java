@@ -53,7 +53,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Dynamic Group Function->In Template Association")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDynamicGroupFunctionAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyDynamicGroupFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
             //scheduling rules is not included as some exception, will added later
@@ -86,7 +86,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Create Each Template with Dynamic Group Association ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateEachTemplateWithDynamicGroupAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateEachTemplateWithDynamicGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
             //scheduling rules is not included as some exception, will added later
@@ -112,7 +112,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Operating Hours")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOperatiingHoursAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyOperatiingHoursAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
             String mode = "edit";
@@ -135,7 +135,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add country field to holidays")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddCountryFieldToHolidayAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddCountryFieldToHolidayAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
             //scheduling rules is not included as some exception, will added later
@@ -160,7 +160,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify open each type template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyUserCanOpenEachTypeTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             List<String> templateTypeList = new ArrayList<String>(){{
@@ -188,7 +188,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "New advanced staffing rules page verify")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyNewAdvancedStaffingRulePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -214,7 +214,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Days of Week check box validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCheckBoxOfDaysOfWeekAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyCheckBoxOfDaysOfWeekAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -241,7 +241,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Days of Week formula validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyInputFormulaForDaysOfWeekAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyInputFormulaForDaysOfWeekAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -269,7 +269,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time of Day Start Section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOfDayStartSectionAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOfDayStartSectionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -321,7 +321,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time of Day During Section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOfDayDuringSectionAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOfDayDuringSectionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -351,7 +351,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time of Day End Section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOfDayEndSectionAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOfDayEndSectionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -381,7 +381,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time of Day Formula Section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOfDayFormulaSectionAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOfDayFormulaSectionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -410,7 +410,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Meal and Rest Breaks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyMealAndRestBreaksAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyMealAndRestBreaksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -450,7 +450,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Number of Shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyNumberOfShiftsAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyNumberOfShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -481,7 +481,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Badges")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyBadgesOfAdvanceStaffingRulesAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyBadgesOfAdvanceStaffingRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -507,7 +507,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "X button and Check Mark button")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCrossAndCheckMarkButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyCrossAndCheckMarkButtonOfAdvanceStaffingRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -542,7 +542,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Cancel button and Save button")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifySaveAndCancelButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifySaveAndCancelButtonOfAdvanceStaffingRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -571,7 +571,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add Edit and Delete advance staffing rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditDeleteFunctionOfAdvanceStaffingRulesAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddEditDeleteFunctionOfAdvanceStaffingRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -601,7 +601,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Create all type template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateAllTypeTemplateAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateAllTypeTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
 
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -622,7 +622,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate advance staffing rule should be shown correct")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAdvancedStaffingRulesShowWellAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyAdvancedStaffingRulesShowWellAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -681,7 +681,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E days of week validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void daysOfWeekE2EAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void daysOfWeekE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
             List<String> days = new ArrayList<String>(){{
@@ -738,7 +738,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E Verify number of shift function in advance staffing rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void numberOfShiftsInADVRuleE2EAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void numberOfShiftsInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
             String shiftsNumber = "9";
@@ -804,7 +804,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E -> Verify the time of day setting in advance staffing rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void timeOfDayInADVRuleE2EAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void timeOfDayInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
             String shiftTime = "8:30am - 5pm";
@@ -851,7 +851,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E Verify meal and rest break function in advance staffing rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void mealAndRestBreakInADVRuleE2EAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void mealAndRestBreakInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
             String mealBreakTime = "1:30pm - 2:15pm";
@@ -911,7 +911,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Location Level Advance Staffing Rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void locationLevelAdvanceStaffingRuleAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void locationLevelAdvanceStaffingRuleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String shiftsNumber = "9";
             List<String> days = new ArrayList<String>(){{
@@ -948,7 +948,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify archive published template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyArchivePublishedTemplateAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyArchivePublishedTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String action = "Archive";
             String templateType = "Scheduling Policies";

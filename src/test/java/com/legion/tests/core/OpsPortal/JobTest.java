@@ -55,7 +55,7 @@ public class JobTest extends TestBase {
 //    @Enterprise(name = "Op_Enterprise")
 //    @TestName(description = "Validate to enable centralized schedule release function")
 //    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-//    public void verifyOpenCentralizedScheduleReleaseToYesAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+//    public void verifyOpenCentralizedScheduleReleaseToYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 //
 //        try{
 //            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -91,7 +91,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate job landing page show")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyJobLandingPageAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyJobLandingPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
@@ -108,7 +108,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate job search function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyJobSearchFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyJobSearchFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String searchText = "*,Adjust Forecast,Create Schedule,Adjust Budget,Release Schedule";
@@ -131,7 +131,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate check each type of job details page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCheckJobDetailsFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyCheckJobDetailsFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
 
@@ -170,7 +170,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify copy stop resume and archive job function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCopyStopResumeAndArchiveJobFunctionFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyCopyStopResumeAndArchiveJobFunctionFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             int index = 0;
@@ -220,7 +220,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate filter function by job type and job status")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyFilterFunctionByJobTypeAndJobStatusAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyFilterFunctionByJobTypeAndJobStatusAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
@@ -252,7 +252,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate filter function by job status")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyFilterFunctionByJobStatusAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyFilterFunctionByJobStatusAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
@@ -268,7 +268,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate create create schedule job")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateScheduleJobFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateScheduleJobFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
 
         try {
@@ -351,7 +351,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate abnormal create job flow")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAbnormalCheatJobFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyAbnormalCheatJobFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
@@ -397,7 +397,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate release schedule job function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateReleaseScheduleJobFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateReleaseScheduleJobFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
 
         try {
@@ -441,7 +441,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate adjust budget job function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAdjustBudgetJobFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyAdjustBudgetJobFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime =  dfs.format(new Date());
@@ -495,7 +495,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate adjust forecast job function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAdjustForecastJobFunctionAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyAdjustForecastJobFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime =  dfs.format(new Date());
@@ -548,7 +548,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Export Result File and Export Task Summary function In Create Schedule Job")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJobAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyExportResultFileAndExportTaskSummaryFunctionInCreateScheduleJobAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             int index =0;
             String searchCharactor = "Create Schedule";
@@ -570,7 +570,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Export Result File and Export Task Summary function In Adjust Budget Job")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJobAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyExportResultFileAndExportTaskSummaryFunctionInAdjustBudgetJobAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             int index =0;
             String searchCharactor = "Adjust Budget";
@@ -592,7 +592,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Export Result File In Release Schedule Job")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportResultFileFunctionInReleaseScheduleJobAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyExportResultFileFunctionInReleaseScheduleJobAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             int index =0;
             String searchCharactor = "Release Schedule";
@@ -613,7 +613,7 @@ public class JobTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Export Result File In Adjust Forecast Job")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportResultFileFunctionInAdjustForecastJobAsInternalAdminForJob(String browser, String username, String password, String location) throws Exception {
+    public void verifyExportResultFileFunctionInAdjustForecastJobAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             int index =0;
             String searchCharactor = "Adjust Forecast";

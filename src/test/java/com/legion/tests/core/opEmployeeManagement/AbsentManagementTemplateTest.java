@@ -36,7 +36,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Employee manage tab and absence management tile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyEmployeeManagementModuleAndDashboardAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyEmployeeManagementModuleAndDashboardAsInternalAdmin(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
         navigationPage.navigateToEmployeeManagement();
@@ -57,7 +57,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Templates list page validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditSearchAndDisableTemplateAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddEditSearchAndDisableTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -150,7 +150,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Settings page validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyActionsInSettingsTabAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
+    public void verifyActionsInSettingsTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -242,7 +242,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTemplateDetailsAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
+    public void verifyTemplateDetailsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -383,7 +383,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffConfigurationAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOffConfigurationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -469,7 +469,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffRequestRulesAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOffRequestRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
