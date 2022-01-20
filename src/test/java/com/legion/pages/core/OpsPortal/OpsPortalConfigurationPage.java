@@ -45,14 +45,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="div.lg-tab-toolbar__search")
 	private WebElement searchField;
 
-	@FindBy(css="[class=\"lg-table ng-scope\"] tbody")
+	@FindBy(css="[class=\"lg-table lg-templates-table-improved ng-scope\"] .lg-templates-table-improved__grid-row.ng-scope")
 	private List<WebElement> templatesList;
 
-	@FindBy(css="[class=\"lg-table ng-scope\"] button span.ng-binding")
+	@FindBy(css="[class=\"lg-table lg-templates-table-improved ng-scope\"] button span.ng-binding")
 	private List<WebElement> templateNameList;
 	@FindBy(css="lg-eg-status[type='Draft']")
 	private List<WebElement> templateDraftStatusList;
-	@FindBy(css="td.toggle i[class=\"fa fa-caret-right\"]")
+	@FindBy(css="div.toggle i[class=\"fa fa-caret-right\"]")
 	private WebElement templateToggleButton;
 
 	@FindBy(css="lg-button[label=\"Edit\"]")
@@ -436,7 +436,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
@@ -3114,7 +3114,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				&& templateNameList.size()>0) {
 			for (int i = 0; i< templateNameList.size(); i++) {
 				if (templateNameList.get(i).getText().equalsIgnoreCase(templateName)) {
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templateToggleButton);
 						waitForSeconds(3);
