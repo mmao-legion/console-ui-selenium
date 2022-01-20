@@ -125,48 +125,32 @@ public class PlanTest extends TestBase {
         }
     }
 
+
     @Automated(automated = "Automated")
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "verify HQ level create plan without sub-plan")
+    @TestName(description = "Plan Creation-Create plan Flow")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateHQCentralPlanAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateAPlanAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime =  dfs.format(new Date()).trim();
             String planName = "AutomationCreatedPlanName" +currentTime;
-//            String regionName="Region-ForAutomation";
-            String regionName="Region1";
+            String scePlanName = "ScenarioPlanName" +currentTime;
+            String regionName="RegionForPlan_Auto";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);
-            //Go to OP page
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //go to Global Configuration tab
-            locationsPage.goToGlobalConfigurationInLocations();
-            //set the plan level as centrailized
-            locationsPage.setLaborBudgetLevel(true,planLevelSelection.NoSubPlans.getValue());
-            //switch back to controls
-            locationsPage.clickModelSwitchIconInDashboardPage(ConfigurationTest.modelSwitchOperation.Console.getValue());
-//            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);
-            //nacigate to plan page
+            //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
+            //create a centralized plan with existing name as fail
+            planPage.createANewPlan("testPlan-Not Delete");
             //create a centralized plan
             planPage.createANewPlan(planName);
-            String scePlanName=planName+" scenario 1";
-            //Assert the scenario plan created and scenario plan name
-            planPage.verifyScenarioPlanAutoCreated(scePlanName);
-            //search a plan and do operation for some scenario plan
-            planPage.takeOperationToPlan(planName,scePlanName,PlanTest.statusCheck.NotStarted.getValue());
-            planPage.takeOperationToPlan(planName,scePlanName, PlanTest.statusCheck.Inprogress.getValue());
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -176,54 +160,105 @@ public class PlanTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "verify HQ level create plan with sub-plan")
+    @TestName(description = "Scenarios Creation flow ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreatePlanWithSubPlansAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateAScenarioPlanAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime =  dfs.format(new Date()).trim();
-            String planName = "AutomationCreatedPlanName" +currentTime;
-            String regionName="Region-ForAutomation";
+            String planName = "AutomationCreatedPlanName";
+            String scePlanName = "ScenarioPlanName-" +currentTime;
+            String regionName="RegionForPlan_Auto";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);
-             //Go to OP page
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //go to Global Configuration tab
-            locationsPage.goToGlobalConfigurationInLocations();
-            //set the plan level as centrailized
-            locationsPage.setLaborBudgetLevel(false,planLevelSelection.NoSubPlans.getValue());
-            //switch back to controls
-            locationsPage.clickModelSwitchIconInDashboardPage(ConfigurationTest.modelSwitchOperation.Console.getValue());
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);
-            //nacigate to plan page
+            //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
-            //create a centralized plan
-            planPage.createANewPlan(planName);
+            //Assert create a scenario plan with existing name
+            planPage.verifyScenarioPlanAutoCreated("testPlan-Not Delete","testPlan01 scenario-Not delete");
             //Assert the scenario plan created and scenario plan name
-            planPage.verifyScenarioPlanAutoCreated(planName);
+            planPage.verifyScenarioPlanAutoCreated(planName,scePlanName);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
     @Automated(automated = "Automated")
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "verify HQ level create plan with sub-plan")
+    @TestName(description = "Create plan button available")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyHQCentralPlanListPageAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreatePlanButtonAvailableAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            String keywords = "AutomationCreatedPlanName";
-            String regionName="Region-ForAutomation";
+            String regionName="RegionForPlan_Auto";
+            String districtName="DistrcitForPlan2";
+            String loactionName="Loc1ForDistrict2";
+            String BUName="BU-ForPlan";
+            String HQName="HQ";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            //navigate to some region
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);
+            //navigate to plan page
+            PlanPage planPage = pageFactory.createConsolePlanPage();
+            planPage.clickOnPlanConsoleMenuItem();
+            //check create button at region level
+            boolean regionAvail=planPage.verifyCreatePlanButtonAvail(regionName);
+            if(regionAvail)
+                SimpleUtils.pass("Create plan button is available for navigation as Region.");
+            else
+                SimpleUtils.fail("Not see the create plan button at Region level.",false);
+            //check create button at district level
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(districtName);
+            boolean districtAvail=planPage.verifyCreatePlanButtonAvail(districtName);
+            if(regionAvail)
+                SimpleUtils.pass("Create plan button is available for navigation as district.");
+            else
+                SimpleUtils.fail("Not see the create plan button at district level.",false);
+            //check create button at BU level
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(BUName);
+            boolean BUAvail=planPage.verifyCreatePlanButtonAvail(BUName);
+            if(BUAvail)
+                SimpleUtils.pass("Create plan button is available for navigation as BU.");
+            else
+                SimpleUtils.fail("Not see the create plan button at BU level.",false);
+            //check create button at HQ level
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(HQName);
+            boolean HQAvail=planPage.verifyCreatePlanButtonAvail(HQName);
+            if(HQAvail)
+                SimpleUtils.pass("Create plan button is available for navigation as HQ.");
+            else
+                SimpleUtils.fail("Not see the create plan button at HQ level.",false);
+            //check create button at location level
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(loactionName);
+            boolean locaAvail=planPage.verifyCreatePlanButtonAvail(loactionName);
+            if(!locaAvail)
+                SimpleUtils.pass("Create plan button is not available for navigation as location.");
+            else
+                SimpleUtils.fail("Create plan button is available at location level.",false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Plan Creation-Plan landing page UI")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyParentPlanLandingPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String keywords = "checkPlanCount";
+            String regionName="RegionForPlan_Auto";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -233,9 +268,67 @@ public class PlanTest extends TestBase {
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
-            //check a HQ parent can be expanded
-            planPage.searchAPlan(keywords);
+            //check the plan landing page
+            planPage.verifyCreatePlanLandingPage(keywords);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Plan Creation-Create plan dialog UI")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyParentPlanCreatePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String keywords = "SpecialChars";
+            String regionName="RegionForPlan_Auto";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            //navigate to some region
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            //navigate to plan page
+            PlanPage planPage = pageFactory.createConsolePlanPage();
+            planPage.clickOnPlanConsoleMenuItem();
+            //check the location in plan create dialgo
+            if(planPage.getCurrentLocationsForCreatePlan().equals(regionName))
+                SimpleUtils.pass("The location is show as current navigator successfully!");
+            else
+                SimpleUtils.fail("The location in plan creating page is not match to the current navigator",false);
+            //check the Create plan dialog UI
+            planPage.verifyCreatePlanDialog(keywords);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Scenarios Creation-Scenario details page UI")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScenarioPlanDetailAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String planName = "checkPlanCount";
+            String scPlanName = "Scenario Plan DoNot Delete";
+            String regionName="RegionForPlan_Auto";
+            String copiedPlanName="Test Copy To Generate Plan";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            //navigate to some region
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            //navigate to plan page
+            PlanPage planPage = pageFactory.createConsolePlanPage();
+            planPage.clickOnPlanConsoleMenuItem();
+            //check the created scenario plan detail UI
+            planPage.verifyCreatePlanDetailUICheck(planName,scPlanName,copiedPlanName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

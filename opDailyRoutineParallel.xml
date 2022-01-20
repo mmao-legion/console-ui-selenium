@@ -13,6 +13,7 @@
             <class name = "com.legion.tests.core.OpsPortal.ConfigurationTest"/>
             <class name = "com.legion.tests.core.OpsPortal.UserManagementTest"/>
             <class name = "com.legion.tests.core.OpsPortal.LaborModelTest"/>
+            <class name = "com.legion.tests.core.PlanTest"/>
         </classes>
     </test>
 </suite>
