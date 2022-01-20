@@ -3,80 +3,10 @@
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="No"/>
-    <parameter name="testRailRunName" value="Automation Regression"/>
+    <parameter name="testRailRunName" value="Scheduling Full Run"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
-<!--======================================================Start - This is OP tests===================================================-->
-
-<!--    <test name="Location Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.OpsPortal.LocationsTest">-->
-<!--                <methods>-->
-<!--                    <include name="verifyCreateRegularLocationWithMandatoryFields" />-->
-<!--                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigate" />-->
-<!--                    <include name="verifyCreateMockLocationAndNavigate" />-->
-<!--                    <include name="verifyCreateNSOLocationAndNavigate" />-->
-<!--                    <include name="verifyDisableEnableLocationFunction" />-->
-<!--                    <include name="verifyImportLocationDistrict" />-->
-<!--                    <include name="verifyExportLocationDistrict" />-->
-
-<!--                    <include name="verifyCreateMSLocationGroupWithRegularTypeFunction" />-->
-<!--                    <include name="verifyUpdateMSLocationGroupDistrictFunction" />-->
-<!--                    <include name="verifyDisableEnableParentChildLocationInLGMS" />-->
-
-<!--                    <include name="verifyCreateP2PLocationGroupWithRegularTypeFunction" />-->
-<!--                    <include name="verifyUpdateP2PLocationGroupDistrictFunction" />-->
-<!--                    <include name="verifyDisableEnableParentChildLocationInLGP2P" />-->
-
-<!--                    <include name="verifyChangeNoneLocationToChild" />-->
-<!--                    <include name="verifyChangeNoneLocationToP2PParent" />-->
-<!--                    <include name="verifyChangeNoneLocationToMSParent" />-->
-<!--                    <include name="verifyAddNewDistricBtnAsInternalAdmin" />-->
-
-<!--                    <include name="verifyCreateMSLocationGroupWithNSOTypeFunction" />-->
-<!--                    <include name="verifyCreateP2PLocationGroupWithNsoTypeFunction" />-->
-<!--                    <include name="verifyNoLocationGroupSettingForMock" />-->
-
-<!--                    <include name="verifyChangeChildLocationToNoneFunction" />-->
-<!--                    <include name="verifyChangeP2PToMS" />-->
-<!--                    <include name="verifyChangeMSToP2P" />-->
-<!--                    <include name="verifyChangeMSParentLocationToNoneFunction" />-->
-<!--                    <include name="verifyChangeP2PParentLocationToNoneFunction" />-->
-
-<!--                    &lt;!&ndash;                    District test cases&ndash;&gt;-->
-<!--                    <include name="verifyDistrictListPageLoading" />-->
-<!--                    <include name="verifySearchDistrictFunction" />-->
-<!--                    <include name="verifyAddOrUpdateDistrictFunction" />-->
-<!--                    <include name="verifyDisableEnableDistrictFunction" />-->
-
-
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-<!--    <test name="Navigation Test">-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest">-->
-<!--                <methods>-->
-<!--                    <include name="verifyLocationProfilePageInControls" />-->
-<!--                    <include name="verifyManagerLocationForOneUserInControlsInControls" />-->
-<!--                    <include name="verifyLocationListFunctionInTimesheet" />-->
-<!--                    <include name="verifyLegionBasicNavigationFunctionIn" />-->
-<!--                    <include name="verifyDashboardViewAsInternalAdmin" />-->
-<!--                    <include name="verifyDashboardViewAsDistrictManager" />-->
-<!--                    <include name="verifyDashboardViewAsStoreManager" />-->
-<!--                    <include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />-->
-<!--                    <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-<!--======================================================End - This is OP tests===================================================-->
-
-<!--======================================================Start - This is Scheduling tests=========================================-->
 
     <test name="Prepare Settings Test">
         <classes>
@@ -148,16 +78,22 @@
        <classes>
            <class name="com.legion.tests.core.TeamTestKendraScott2">
                <methods>
-<!--                   <include name="verifyTheTeamFunctionalityInRoster" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInTransfer" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInUpdateInfo" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInBadges" />-->
-<!--                   <include name="verifyTheTeamFunctionalityInInviteTeamMember" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInRosterAsInternalAdmin" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInTransferAsInternalAdmin" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInUpdateInfoAsInternalAdmin" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInBadgesAsInternalAdmin" />-->
+<!--                   <include name="verifyTheTeamFunctionalityInInviteTeamMemberAsInternalAdmin" />-->
                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
 <!--                   <include name="verifyTheTeamFunctionalityInProfileSectionAsInternalAdmin" />-->
-                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
+                   <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                    <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
                    <include name="verifyTheProfileInvitationCodeInProfileUIAsInternalAdmin" />
+                   <include name="validateCreateChangeAvailabilityRequestAsTeamMember" />
+                   <include name="validateCancelAvailabilityRequestAsTeamMember" />
+                   <include name="validateApproveAvailabilityRequestAsTeamMember" />
+                   <include name="validateCancelledAvailabilityHasNoOptionRequestAsTeamMember" />
+                   <include name="validateRejectAvailabilityRequestAsStoreManager" />
+                   <include name="validateCreateAvailabilityRequestWithoutApprovalAsInternalAdmin" />
                </methods>
            </class>
        </classes>
@@ -167,8 +103,8 @@
         <classes>
             <class name="com.legion.tests.core.TeamTest">
                 <methods>
-<!--                    <include name="verifyTheTeamFunctionalityInActivate" />-->
-<!--                    <include name="verifyTheTeamFunctionalityInTerminate" />-->
+<!--                    <include name="verifyTheTeamFunctionalityInActivateAsInternalAdmin" />-->
+<!--                    <include name="verifyTheTeamFunctionalityInTerminateAsInternalAdmin" />-->
                     <include name="verifyTheTeamFunctionalityInCoverageAsInternalAdmin" />
                     <include name="verifyEditModeInNewUserProfilePageAsInternalAdmin" />
 <!--                    <include name="verifyTheTeamFunctionalityInTimeOffAsInternalAdmin" />-->
@@ -208,14 +144,18 @@
                 <class name="com.legion.tests.core.ForecastTest">
                     <methods>
                         <include name="verifyScheduleLaborForeCastFunctionality"/>
-                        <include name="verifyShopperForecastFunctionality"/>
-                        <include name="validateWeatherSmartCardOnForecastPage"/>
-                        <include name="verifyScheduleFunctionalityForecast"/>
+                        <include name="verifyShopperForecastFunctionalityAsInternalAdmin"/>
+                        <include name="validateWeatherSmartCardOnForecastPageAsInternalAdmin"/>
+                        <include name="verifyScheduleFunctionalityForecastAsInternalAdmin"/>
                         <include name="verifyEditForecastInDayViewViewAsInternalAdmin"/>
                         <include name="verifyEditForecastInWeekViewViewAsInternalAdmin"/>
                         <include name="verifyFunctionalityOfRefreshAsInternalAdmin"/>
                         <include name="verifyFunctionalityOfRefreshAsStoreManager"/>
                         <include name="validateP2PLaborForecastCanLoadAsInternalAdmin"/>
+                        <include name="validateDayPartsAvailableInDefinedTabOfWeekViewAsInternalAdmin"/>
+                        <include name="validateDayPartsAvailableInLablorTabOfWeekViewAsInternalAdmin"/>
+                        <include name="validateDayPartsAvailableInDefinedTabOfDayViewAsInternalAdmin"/>
+                        <include name="validateDayPartsAvailableInLablorTabOfDayViewAsInternalAdmin"/>
                     </methods>
                 </class>
             </classes>
@@ -328,6 +268,20 @@
                     <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
                     <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
                     <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
+                    <include name="verifyDragDropToAMiddleDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToABlankMiddleDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToAMiddleDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToABlankMiddleDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheFirstDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankFirstDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheFirstDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankFirstDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheLastDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankLastDayToCopyShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheLastDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToTheBlankLastDayToMoveShiftAsInternalAdmin" />
+                    <include name="verifyDragDropToCopyGetOverlappingShiftsAsInternalAdmin" />
+                    <include name="verifyDragDropToToTheSameDayAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -345,6 +299,9 @@
                     <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                     <include name="verifyWarningMessageForExceedWeekendHrsAsInternalAdmin"/>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />
+                    <include name="verifyMinorInfoOnProfilePageAsInternalAdmin" />
+                    <include name="verifyMinorFilterAsInternalAdmin" />
+                    <include name="verifyMinorBadgeInfoAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -356,7 +313,7 @@
                 <methods>
                     <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
                     <include name="verifyMinorFieldIsDisplayedOnTMProfileAsInternalAdmin" />
-                    <include name="verifySMCanSelectACalendarForMinorAsStoreManager" />
+                    <include name="verifySMCanSelectACalendarForMinorAsInternalAdmin" />
                     <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />
                     <include name="verifySchoolCalendarListAsInternalAdmin" />
                     <include name="verifyCreateCalendarAsInternalAdmin" />
@@ -430,6 +387,25 @@
                     <include name="verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin" />
                     <include name="verifyComplianceWarningInPublishConfirmModalAsInternalAdmin" />
                     <include name="verifyHrsOverBudgetInPublishConfirmModalForNonDGAsInternalAdmin" />
+                    <include name="verifyCanSeeEmployeeHomeLocationAsInternalAdmin" />
+                    <include name="verifyCanSeeEmployeeHomeLocationAsStoreManager" />
+                    <include name="verifyCanSeeEmployeeHomeLocationAsDistrictManager" />
+                    <include name="verifyGroupByDayPartsCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyGroupByWorkRoleCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyGroupByJobTitleCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="verifyGroupByLocationCanBeCollapsedNExpandedAsInternalAdmin" />
+                    <include name="verifyEditNotesOptionIsAvailableAsInternalAdmin" />
+                    <include name="verifyEditNotesOptionIsAvailableForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyUpdateShiftNotesForAssignedShiftsAsInternalAdmin" />
+                    <include name="verifyUpdateEditNotesForOpenShiftsAsInternalAdmin" />
+                    <include name="verifyEmployeesScheduledInOtherLocationShowUpInGroupByTMAsInternalAdmin" />
+                    <include name="verifyEmployeesFromOtherLocationShowUpInGroupByTMAsInternalAdmin" />
+                    <include name="verifyEmployeesLocationInfoFromOtherLocationAsInternalAdmin" />
+                    <include name="verifyTheTotalHrsOfEmployeesScheduledInOtherLocationAsInternalAdmin" />
+                    <include name="verifyScheduleVersionAndWorkRoleShowsCorrectlyAsInternalAdmin" />
+                    <include name="verifyGroupByResultsOrderedAlphabetilyAsInternalAdmin" />
+                    <include name="verifyGroupByAllResultsOrderedByStartTimeAsInternalAdmin" />
+                    <include name="verifyAutomaticallyExpandWhenGroupByInRegularLocationAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -482,33 +458,35 @@
         <classes>
             <class name="com.legion.tests.core.LocationGroupTest">
                 <methods>
-                    <include name="validateTheGenerationOfLGScheduleForMSAsInternalAdmin" />
-                    <include name="validateTheGenerationOfLGScheduleForP2PAsInternalAdmin" />
-                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForMSAsInternalAdmin" />
-                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PAsInternalAdmin" />
-                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForMSAsInternalAdmin" />
-                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleForP2PAsInternalAdmin"/>
-                    <include name="validateTheButtonsOnSchedulePageForMSAsInternalAdmin" />
-                    <include name="validateTheButtonsOnSchedulePageForP2PAsInternalAdmin" />
-                    <include name="validateTheGroupByDropdownListForMSAsInternalAdmin" />
-                    <include name="validateTheGroupByDropdownListForP2PAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForP2PAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForMSAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForMSInDayViewAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForP2PInDayViewAsInternalAdmin" />
-                    <!--           <include name="validateTheFunctionOfManualOpenShiftForP2PAsInternalAdmin" />   P2P doesn't turn on travel time needed violation -->
-                    <include name="validateTheFunctionOfManualOpenShiftForMSAsInternalAdmin" />
-                    <include name="validateTheFunctionOfManualOpenShiftInDayViewForMSAsInternalAdmin" />
-                    <include name="verifyActivityOfClaimOpenShiftForMSAsTeamMemberLG" />
-                    <include name="verifyActivityOfClaimOpenShiftForP2PAsTeamMemberLG" />
-                    <include name="validateOperateLGScheduleByDifferentUserForMSAsInternalAdmin" />
-                    <include name="validateOperateLGScheduleByDifferentUserForP2PAsInternalAdmin" />
-                    <include name="validateUIPerformanceForLargeRosterForMSAsInternalAdmin" />
-                    <include name="validateUIPerformanceForLargeRosterForP2PAsInternalAdmin" />
-                    <include name="validatePrintScheduleForMSAsInternalAdmin" />
-                    <include name="validatePrintScheduleForP2PAsInternalAdmin" />
-                    <include name="validateTheFilterOnSchedulePageForMSAsInternalAdmin" />
-                    <include name="validateTheFilterOnSchedulePageForP2PAsInternalAdmin" />
+                    <include name="validateTheGenerationOfLGScheduleAsInternalAdminPC" />
+                    <include name="validateTheGenerationOfLGScheduleAsInternalAdminP2P" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdminPC" />
+                    <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionAsInternalAdminP2P" />
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleAsInternalAdminPC" />
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateScheduleAsInternalAdminP2P"/>
+                    <include name="validateTheButtonsOnSchedulePageAsInternalAdminPC" />
+                    <include name="validateTheButtonsOnSchedulePageAsInternalAdminP2P" />
+                    <include name="validateTheGroupByDropdownListAsInternalAdminPC" />
+                    <include name="validateTheGroupByDropdownListAsInternalAdminP2P" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamMemberLGPC" />
+                    <include name="verifyActivityOfClaimOpenShiftAsTeamMemberLGP2P" />
+                    <include name="validateTheFunctionOfAutoOpenShiftAsInternalAdminP2P" />
+                    <include name="validateTheFunctionOfAutoOpenShiftAsInternalAdminPC" />
+                    <include name="validateTheFunctionOfAutoOpenShiftInDayViewAsInternalAdminPC" />
+                    <include name="validateTheFunctionOfAutoOpenShiftInDayViewAsInternalAdminP2P" />
+                    <!--           <include name="validateTheFunctionOfManualOpenShiftAsInternalAdminP2P" />   P2P doesn't turn on travel time needed violation -->
+                    <include name="validateTheFunctionOfManualOpenShiftAsInternalAdminPC" />
+                    <include name="validateTheFunctionOfManualOpenShiftInDayViewAsInternalAdminPC" />
+                    <include name="validateOperateLGScheduleByDifferentUserAsInternalAdminPC" />
+                    <include name="validateOperateLGScheduleByDifferentUserAsInternalAdminP2P" />
+                    <include name="validateUIPerformanceForLargeRosterAsInternalAdminPC" />
+                    <include name="validateUIPerformanceForLargeRosterAsInternalAdminP2P" />
+                    <include name="validatePrintScheduleAsInternalAdminPC" />
+                    <include name="validatePrintScheduleAsInternalAdminP2P" />
+                    <include name="validateTheFilterOnSchedulePageAsInternalAdminPC" />
+                    <include name="validateTheFilterOnSchedulePageAsInternalAdminP2P" />
+                    <include name="verifyAutomaticallyExpandWhenGroupByInPCLGAsInternalAdmin" />
+                    <include name="verifyAutomaticallyExpandWhenGroupByInP2PLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -568,6 +546,95 @@
         </classes>
     </test>
 
+    <test name="Approve Activities By Home Or Non Home Manager Test" >
+        <classes>
+            <class name="com.legion.tests.core.ApproveActivitiesByHomeOrNonHomeManagerTest">
+                <methods>
+                    <include name="verifyManagerNeedToApproveShiftWhenEnableShiftInHomeLocationSettingOnOPAsTeamMember" />
+                    <include name="verifyManagerDoesNotNeedToApproveShiftWhenDisableShiftInHomeLocationSettingOnOPAsTeamMember" />
+                    <include name="verifyNonHomeManagerNeedToApproveShiftWhenEnableShiftInNonHomeLocationSettingOnOPAsTeamMember" />
+                    <include name="verifyActivityOfClaimOpenShiftNoNeedApprovalForHomeManagerWhenSetOpenShiftSettingToNonHomeLocationOnlyAsTeamMemberOfApproveActivitiesByHomeOrNonHomeManagerTest" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+        <test name="Upperfield Test">
+            <classes>
+                <class name="com.legion.tests.core.UpperfieldTest">
+                    <methods>
+                        <include name="verifyDashboardFunctionalityInBUViewAsInternalAdmin" />
+                        <include name="verifyDashboardFunctionalityInRegionViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyProjectedComplianceWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyProjectedComplianceWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyTimesheetApprovalRateWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyTimesheetApprovalRateWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifySchedulePublishStatusWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifySchedulePublishStatusWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyOpenShiftsWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyOpenShiftsWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyComplianceViolationsWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyComplianceViolationsWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyPayrollProjectionWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyPayrollProjectionWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyRegionSummaryWidgetOnDashboardInBUViewAsInternalAdmin" />
+                        <include name="verifyDistrictSummaryWidgetOnDashboardInRegionViewAsInternalAdmin" />
+                        <include name="verifyScheduleFunctionalityForBUViewAsInternalAdmin" />
+                        <include name="verifyScheduleFunctionalityForRegionViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnScheduleInRegionViewAsInternalAdmin" />
+                        <include name="verifyTheContentBetweenWeeksOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyTheContentBetweenWeeksOnScheduleInRegionViewAsInternalAdmin" />
+
+                        <!-- Added by Mary -->
+                        <include name="verifyRegionViewNavigationAsInternalAdmin" />
+                        <include name="verifyBUViewNavigationAsInternalAdmin" />
+                        <include name="verifyControlsInBUViewAsInternalAdmin" />
+                        <include name="verifyControlsInRegionViewAsInternalAdmin" />
+                        <!--                         <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525 -->
+                                                <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" />
+                                                <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
+                                                <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
+                        <!--                        <include name="verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin" />
+                                                <include name="verifyRefreshFeatureOnComplianceInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525 -->
+                        <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" />
+                        <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" />
+                        <include name="verifyTotalLocationsWithViolationCardInComplianceBUViewAsInternalAdmin" />
+                        <include name="verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin" />
+                        <include name="verifyTopViolationsCardInComplianceBUViewAsInternalAdmin" />
+                        <include name="verifyTopViolationsCardInComplianceRegionViewAsInternalAdmin" />
+                        <include name="verifyAnalyticTableInTimesheetBUViewAsInternalAdmin" />
+                        <include name="verifyAnalyticTableInTimesheetRegionViewAsInternalAdmin" />
+ <!--                       <include name="verifyRegionListAndSubRegionOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyRegionListAndSubRegionOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525-->
+                        <include name="verifyTimesheetFunctionalityInBUViewAsInternalAdmin" />
+                        <include name="verifyTimesheetFunctionalityInRegionViewAsInternalAdmin" />
+<!--                        <include name="verifyRefreshFeatureOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyRefreshFeatureOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-5058 -->
+<!--                        <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/TA-5507-->
+                        <include name="verifyUnplannedClocksOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin" />
+                        <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" />
+                        <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" />
+                        <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
+                        <include name="verifyScheduleStatusOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
+                        <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInBUViewAsInternalAdmin" />
+                        <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInRegionViewAsInternalAdmin" />
+                    </methods>
+                </class>
+            </classes>
+        </test>
 <!--======================================================End - This is Scheduling tests==============================================-->
 
 </suite> <!-- Suite -->

@@ -33,6 +33,26 @@ public interface ControlsNewUIPage {
 
 	public void clickOnControlsSchedulingPolicies() throws Exception;
 
+	public void updateAndVerifyAutoPublishSettings(String option) throws Exception;
+
+	public void updateAutoPublishSchedulePublishDayOfWeek(String option) throws Exception;
+
+	public void updateAutoPublishSchedulePublishTimeOfDay(String mins) throws Exception;
+
+	public void updateAutoPublishScheduleRepublishDayOfWeek(String option) throws Exception;
+
+	public void updateAutoPublishScheduleRepublishTimeOfDay(String mins) throws Exception;
+
+	public String getAutoPublishSettings() throws Exception;
+
+	public String getAutoPublishSchedulePublishDayOfWeek() throws Exception;
+
+	public String getAutoPublishSchedulePublishTimeOfDay() throws Exception;
+
+	public String getAutoPublishScheduleRepublishDayOfWeek() throws Exception;
+
+	public String getAutoPublishScheduleRepublishTimeOfDay() throws Exception;
+
 	public void enableOrDisableScheduleCopyRestriction(String yesOrNo) throws Exception;
 
 	public void setCopyConfig(boolean onOrOff, String toggleName) throws Exception;
@@ -54,6 +74,8 @@ public interface ControlsNewUIPage {
 	public void clickOnControlsLocationProfileSection() throws Exception;
 	public void clickOnControlsScheduleCollaborationSection() throws Exception;
 	public void clickOnControlsComplianceSection() throws Exception;
+	public void turnOnOrTurnOffSplitShiftToggle(boolean action) throws Exception;
+	public void editSplitShiftPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception;
 	public void clickOnControlsUsersAndRolesSection() throws Exception;
 	public void clickOnControlsTasksAndWorkRolesSection() throws Exception;
 	public void clickOnControlsOperatingHoursSection() throws Exception;
@@ -137,6 +159,8 @@ public interface ControlsNewUIPage {
 	public void updateCanWorkerRequestTimeOff(String canWorkerRequestTimeOffValue) throws Exception;
 
 	public void clickOnSchedulingPoliciesTimeOffAdvanceBtn() throws Exception;
+
+	public int getDaysInAdvanceCreateTimeOff() throws Exception;
 
 	public void updateMaxEmployeeCanRequestForTimeOffOnSameDay(String maxWorkersTimeOfPerDayCount) throws Exception;
 
@@ -312,4 +336,10 @@ public interface ControlsNewUIPage {
 	public void enableDaypart(String dayPart) throws Exception;
 	public void turnOnOrOffSpecificPermissionForDifferentRole(String rolePermission, String section, String permission, String action) throws Exception;
 	public void setDaypart(String dayPart, String startTime, String endTime) throws Exception;
+	public String getApplyLaborBudgetToSchedulesActiveBtnLabel() throws Exception;
+	public void turnOnOrTurnOffSpreadOfHoursToggle(boolean action) throws Exception;
+	public void editSpreadOfHoursPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception;
+	public void verifyCloseSplitShiftPremiumDialogButton () throws Exception;
+	public void turnOnOrTurnOffMealBreakToggle(boolean action) throws Exception;
+	public void editMealBreak(String mealBreakDuration, String paidType, String scheduleHoursLimit, boolean saveOrNot) throws Exception;
 }

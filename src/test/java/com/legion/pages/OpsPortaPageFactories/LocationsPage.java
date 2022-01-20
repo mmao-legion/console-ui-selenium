@@ -1,5 +1,7 @@
 package com.legion.pages.OpsPortaPageFactories;
 
+import org.openqa.selenium.WebElement;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +12,7 @@ public interface LocationsPage {
     public void setLaborBudgetLevel(boolean isCentral,String level);
 
     public boolean isOpsPortalPageLoaded() throws Exception;
+    public void locationSourceTypeCheck() throws Exception;
 
     public void clickOnLocationsTab() throws Exception;
 
@@ -24,6 +27,9 @@ public interface LocationsPage {
     public void addNewRegularLocationWithAllFields(String locationName, String searchCharactor, int index) throws Exception;
 
     public void addNewMockLocationWithAllFields(String searchCharactor, int index) throws Exception;
+    public void addNewRegularLocationWithDate(String locaname,String searchCharactor, int index,int fromToday) throws Exception;
+    public void locationPageCommonFeatureCheck() throws Exception;
+    public void checkEveryLocationTemplateConfig(String locName) throws Exception;
 
     public void verifyImportLocationDistrict();
 
@@ -34,6 +40,7 @@ public interface LocationsPage {
     public void addNewNSOLocation(String locationName, String searchCharactor, int index) throws Exception;
 
     public String disableLocation(String autoCreate) throws Exception;
+    public String searchLocationAndGetStatus(String locaname) throws Exception;
 
     public void verifyExportAllLocationDistrict();
 
@@ -101,7 +108,7 @@ public interface LocationsPage {
 
     public void addNewDistrict(String districtName, String districtId,String searchChara,int index) throws Exception;
 
-    public String updateUpperfield(String districtName, String districtId, String searchChara, int index) throws Exception;
+    public String updateUpperfield(String districtName, String districtId, String searchChara, int index, String level) throws Exception;
 
     public ArrayList<HashMap<String, String>> getUpperfieldsInfo(String districtName);
 
@@ -117,13 +124,15 @@ public interface LocationsPage {
 
     public void goToDynamicGroup();
 
+    public void clickOnAddBtnForSharingDynamicLocationGroup() throws Exception;
+
     public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception;
 
     public void iCanDeleteExistingWFSDG();
 
     public String updateWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception;
 
-    public void verifyPaginationFunctionInDistrict() throws Exception;
+    public void verifyPageNavigationFunctionInDistrict() throws Exception;
 
     public List<String> getAllDayPartsFromGlobalConfiguration() throws Exception;
 
@@ -254,4 +263,8 @@ public interface LocationsPage {
     public void cancelBtnOnImportExportPopUpWinsIsClickable();
 
     public void clickOnExportBtn();
+
+    public void verifyTitleForWorkforceSharingLocationGroup() throws Exception;
+
+    public void clickOnCancelBtnOnSharingDynamicLocationGroupWindow() throws Exception;
 }

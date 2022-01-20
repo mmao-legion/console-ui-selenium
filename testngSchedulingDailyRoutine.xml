@@ -1,229 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest">
+<suite verbose ="0" thread-count="5" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="yes"/>
-    <parameter name="testRailRunName" value="Automation - Daily Routine"/>
+    <parameter name="testRailRunName" value="Automation - Daily Routine - NonTA"/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
-
-    <test name="Prepare Settings Test">
-        <classes>
-            <class name="com.legion.tests.core.PrepareSettingsTest">
-                <methods>
-                    <include name="prepareSettingsInControlsAsInternalAdmin"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Dashboard Test">
-        <classes>
-            <class name="com.legion.tests.core.DashboardTestKendraScott2">
-                <methods>
-<!--                    <include name="verifyDashboardFunctionalityAsTeamMember" Blocked by SCH-4019/>-->
-                    <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
-                    <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
-                    <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
-                    <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
-                    <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
-                    <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="TeamTab Test KendraScott2">
-       <classes>
-           <class name="com.legion.tests.core.TeamTestKendraScott2">
-               <methods>
-<!--                   <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by SCH-3934/>-->
-                   <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
-                   <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsStoreManager" />
-                   <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />
-               </methods>
-           </class>
-       </classes>
-   </test>
-
-    <test name="Overview Test">
-        <classes>
-            <class name="com.legion.tests.core.ScheduleOverviewTest">
-                <methods>
-                    <include name="verifyScheduleFunctionalityOverviewAsStoreManager"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Schedule Test LegionCoffee">
-        <classes>
-            <class name="com.legion.tests.core.ScheduleTest">
-                <methods>
-                    <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
-<!--                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" Blocked by SCH-4171/>-->
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Forecast Test">
-        <classes>
-            <class name="com.legion.tests.core.ForecastTest">
-                <methods>
-                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin"/>
-                    <include name="validateWeatherSmartCardOnForecastPage"/>
-                    <include name="verifyScheduleFunctionalityForecast"/>
-<!--                    <include name="verifyShopperForecastFunctionality"/>-->
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Activity Test">
-        <classes>
-            <class name="com.legion.tests.core.ActivityTest">
-                <methods>
-                    <include name="verifyAccessControlsOnActivitiesPageAsInternalAdmin"/>
-                    <include name="verifyTheContentOnActivityAsStoreManager"/>
-                    <include name="verifyTheContentOfShiftSwapActivityAsStoreManager"/>
-<!--                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-4529/>-->
-                    <include name="verifyTheContentOfActivityPageAsStoreManager" />
-                    <include name="verifyToCloseActivityFeedAsStoreManager" />
-                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
-                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
-                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
-<!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" Blocked by SCH-4171/>-->
-                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
-                    <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
-                    <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
-                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
-                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />
-                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
-                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
-                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
-                    <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Profile Test">
-        <classes>
-            <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
-                <methods>
-                    <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
-                    <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
-<!--                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" Blocked by SCH-4254/>-->
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="LiquidDashboard Test">
-        <classes>
-            <class name="com.legion.tests.core.LiquidDashboardTest">
-                <methods>
-                    <include name="verifyCommonUIOfWidgetsAsStoreManager" />
-<!--                    <include name="verifySchedulesWidgetsAsStoreManager" Blocked by SCH-4155/>-->
-                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
-                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Schedule New UI Test">
-        <classes>
-            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
-                <methods>
-                    <include name="verifyComplianceSmartCardFunctionality" />
-                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
-                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
-                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>
-<!--                    <include name="verificationOfMySchedulePageAsTeamMember" Blocked by SCH-4019/>-->
-                    <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
-                    <include name="verifyProfilePictureFunctionalityAsTeamMember" />
-                    <include name="verifyInfoIconFunctionalityAsTeamMember" />
-                    <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
-<!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" /> Blocked by SCH-3942 -->
-<!--                    <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" Blocked by SCH-4155/>-->
-                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
-                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
-<!--                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsStoreManager" Blocked by SCH-4162/>-->
-                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityForScheduleCopyRestrictionsAsInternalAdmin" />
-                    <include name="verifyContentAfterChangingOperatingHrsAsInternalAdmin" />
-                    <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
-                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAtAnotherStoreAsInternalAdmin" />
-                    <include name="verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Inbox Test">
-        <classes>
-            <class name="com.legion.tests.core.InboxTest">
-                <methods>
-                    <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
-                    <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
-                    <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
-                    <include name="verifyTurnOnGFEAsInternalAdmin" />
-                    <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
-<!--                    <include name="verifyContentOfGFEAsInternalAdmin" Blocked by SCH-4547/>-->
-<!--                    <include name="verifyVSLInfoAsInternalAdmin" Blocked by SCH-4012/>-->
-                </methods>
-            </class>
-        </classes>
-    </test>
 
     <test name="DM View Test">
         <classes>
             <class name="com.legion.tests.core.DMViewTest">
                 <methods>
-<!--                    <include name="verifyDashboardFunctionalityInDMViewAsInternalAdmin" Blocked by SCH-4071/>-->
-                    <!--                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />  Blocking by SCH-3800 -->
-                    <!--                     <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800 -->
-                    <!--                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> Blocking by SCH-3800 -->
-                    <include name="verifyScheduleFunctionalityForDMViewAsInternalAdmin" />
-                    <include name="verifyLocationListAndSublocationInDMViewAsInternalAdmin" />
-                    <!--  SCH-3942                   <include name="verifyTimesheetFunctionalityInDMViewAsInternalAdmin" />  -->
-                    <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
-                    <include name="verifyTopViolationsCardInComplianceDMViewAsInternalAdmin" />
+                    <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
+                    <!--                   <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5413 -->
+                    <!--<include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" /> we don't have open shifts widget for now-->
+                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
-
+<!-- Age < 16 yr old
     <test name="Scheduling Minor Test">
         <classes>
             <class name="com.legion.tests.core.SchedulingMinorTest">
                 <methods>
-                    <include name="verifyEditMinorRulesAsInternalAdmin"/>
-                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
                     <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
-                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
-                    <include name="verifyTheWarningMessageAndViolationWhenMinorShiftDaysExceedTheWeekDaysInSettingAsInternalAdmin" />
-                    <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
-
+    -->
     <test name="Drag And Drop Test">
         <classes>
             <class name="com.legion.tests.core.DragAndDropTest">
                 <methods>
-<!--                    <include name="verifyWarningModelForTimeOffAsInternalAdmin" Blocked by drag&drop new feature/>-->
-<!--                    <include name="verifyWarningMessageForAlreadyScheduledAtHomeLocationAsInternalAdmin" Blocked by drag&drop new feature/>-->
-                    <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
-                    <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
-                    <include name="verifyWarningModelForClopeningAsInternalAdmin" />
-                    <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
                     <include name="verifySwapWarningModelForRoleViolationConfigNoAsInternalAdmin" />
                 </methods>
             </class>
@@ -234,55 +47,8 @@
         <classes>
             <class name="com.legion.tests.core.DeleteScheduleTest">
                 <methods>
-                    <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
-                    <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
-                    <include name="verifySMCannotSeeDeleteButtonIfScheduleIsPublishedAsStoreManager" />
                     <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Schedule Copy Improvement Test">
-        <classes>
-            <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
-                <methods>
-                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
-                    <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
-                    <include name="validateOneShiftWhichHasBothUnassignedAndOOHViolationAsInternalAdmin" />
-                    <include name="validateThatIfAnEmployeeIsOnPTOLeaveOrTerminatedAsOfTheNewWeekTheShiftDayTimeShouldBeCopiedButWillBeUnassignedAsInternalAdmin" />
-                    <include name="validateTheHierarchyPriorityOrderForAllSmartCardsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsExceptOpeningClosingShiftsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
-                    <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsAllUnassignedShiftsAsInternalAdmin" />
-                    <include name="validateTheOOOHShiftsAsInternalAdmin" />
-<!--                    <include name="validateThatIfEmployeeAvailabilityPreferenceIsSetToUnavailableOrHasViolationsTheScheduleShouldBeCopiedAsIsAsInternalAdmin" /> Blocked by SCH-4250-->
-                    <include name="validateTheOperatingHoursGridWillAutomaticallyAdjustToFitFullRangeIfCopiedScheduleExtendOutsideTheOperatingHourAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Offer TM Test">
-        <classes>
-            <class name="com.legion.tests.core.OfferTMTest">
-                <methods>
-                    <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
-                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
-                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
-                    <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
-                    <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
-                    <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
-                    <include name="verifyTMCanBeOfferedAsTeamMember" />
-                    <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

@@ -11,6 +11,7 @@ public interface LoginPage {
     public boolean isLoginDone() throws Exception;
     public void goToDashboardHomePage(String username, String password) throws Exception;
     public void logOut() throws Exception;
+    public void switchToOriginalWindow(String handle) throws Exception;
     public void verifyLoginDone(boolean isLoginDone, String selectedLocation) throws Exception;
     public void verifyNewTermsOfServicePopUp() throws Exception;
     public void verifyLoginPageIsLoaded() throws Exception;

@@ -1,6 +1,7 @@
 package com.legion.tests.data;
 
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
 import java.lang.reflect.Array;
@@ -18,7 +19,12 @@ public class CredentialDataProviderSource {
     public static Object[][] firstCredentialsByEnterprise(Method testMethod) {
         String fileName = "UsersCredentials.json";
         if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
-            fileName = System.getProperty("enterprise")+fileName;
+            //for release.
+            if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("rel")){
+                fileName = "Release"+System.getProperty("enterprise")+fileName;
+            } else {
+                fileName = System.getProperty("enterprise")+fileName;
+            }
         }else {
             fileName = SimpleUtils.getEnterprise(testMethod) + fileName;
         }
@@ -42,18 +48,30 @@ public class CredentialDataProviderSource {
      public static Object[][] credentialsByRoles (Method testMethod) {
          String fileName = "UsersCredentials.json";
          if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
-             fileName = System.getProperty("enterprise")+fileName;
+             //for release.
+             if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("rel")){
+                 fileName = "Release"+System.getProperty("enterprise")+fileName;
+             } else {
+                 fileName = System.getProperty("enterprise")+fileName;
+             }
          }else {
              fileName = SimpleUtils.getEnterprise(testMethod) + fileName;
          }
          HashMap<String, Object[][]> userCredentials = SimpleUtils
         		 .getEnvironmentBasedUserCredentialsFromJson(fileName);
-         
         	 for(Map.Entry<String, Object[][]> entry : userCredentials.entrySet())
              {
-                 if(testMethod.getName().contains(entry.getKey()))
-                 {
-                     return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue()) ;
+                 String testFullName = testMethod.getName();
+                 String simpleClassName = "Of" + testMethod.getDeclaringClass().getSimpleName();
+                 String testNameNClassName = testFullName + simpleClassName;
+                 if (entry.getKey().contains(simpleClassName)) {
+                     if (testNameNClassName.contains(entry.getKey())) {
+                         return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue());
+                     }
+                 } else {
+                     if (testFullName.contains(entry.getKey())) {
+                         return SimpleUtils.concatenateObjects(browserDataProvider(testMethod), entry.getValue());
+                     }
                  }
              }
          

@@ -7,6 +7,7 @@ import java.util.Map;
 public interface LocationSelectorPage {
 
 	public Boolean isChangeLocationButtonLoaded() throws Exception;
+	public Boolean findLocationByMagnifyGlassIcon(String locationName);
 	public void changeLocation(String locationName);
 	public Boolean isLocationSelected(String locationName) ;
 	public String getCurrentUserLocation() throws Exception;
@@ -52,4 +53,19 @@ public interface LocationSelectorPage {
 	public void verifyGreyOutPageInHQView();
 	public List<String> getNavigatorValue();
 	public void refreshTheBrowser();
+	public void isBUView() throws Exception;
+	public void isRegionView() throws Exception;
+	public Boolean isChangeRegionButtonLoaded() throws Exception;
+	public void changeAnotherBUInBUView() throws Exception;
+	public Boolean isBUSelected(String buName);
+	public void verifyTheDisplayBUWithSelectedBUConsistent(String buName) throws Exception;
+	public Boolean isChangeBUButtonLoaded() throws Exception;
+	public Boolean isRegionSelected(String regionName);
+	public void verifyTheDisplayRegionWithSelectedRegionConsistent(String regionName) throws Exception;
+	public void changeAnotherRegionInRegionView() throws Exception;
+	public List<String> getAllUpperFieldNamesInUpperFieldDropdownList(String upperFieldType) throws Exception;
+	public List<String> getOrgList() throws Exception;
+	public void verifyClickChangeRegionButton() throws Exception;
+	public String changeAnotherLocation() throws Exception;
+	public String getOneRandomNameFromUpperFieldDropdownList(String upperFieldType) throws Exception;
 }

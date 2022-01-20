@@ -2,6 +2,9 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ForecastPage;
+import com.legion.pages.SmartCardPage;
+import com.legion.pages.core.schedule.ConsoleSmartCardPage;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -566,7 +569,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				if (areListElementVisible(weatherTemperatures, 8)) {
 					String weatherWeekTest = getWeatherDayOfWeek();
 					SimpleUtils.report("Weather smart card is displayed for a week from mon to sun" + weatherWeekTest);
-					for (ConsoleScheduleNewUIPage.DayOfWeek e : ConsoleScheduleNewUIPage.DayOfWeek.values()) {
+					for (ScheduleTestKendraScott2.DayOfWeek e : ScheduleTestKendraScott2.DayOfWeek.values()) {
 						if (weatherWeekTest.contains(e.toString())) {
 							SimpleUtils.pass("Weather smartcard include one week weather");
 						} else {
@@ -700,6 +703,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public HashMap<String, Float> getSummaryLaborHoursAndWages() throws Exception {
 		HashMap<String, Float> summaryHoursAndWages = new HashMap<String, Float>();
+		SmartCardPage smartCardPage = new ConsoleSmartCardPage();
 		WebElement summaryLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-card.card-carousel-card-primary.card-carousel-card-table"));
 		if (isElementLoaded(summaryLabelsDivElement,5)) {
 			String sumarySmartCardText = summaryLabelsDivElement.getText();
@@ -708,12 +712,12 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 				if(hoursAndBudget.toLowerCase().contains(ConsoleScheduleNewUIPage.scheduleHoursAndWagesData.hours.getValue().toLowerCase()))
 				{
-					summaryHoursAndWages = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(summaryHoursAndWages , hoursAndBudget.split(" ")[1],
+					summaryHoursAndWages = smartCardPage.updateScheduleHoursAndWages(summaryHoursAndWages , hoursAndBudget.split(" ")[1],
 							"ForecastHours");
 				}
 				else if(hoursAndBudget.toLowerCase().contains(ConsoleScheduleNewUIPage.scheduleHoursAndWagesData.wages.getValue().toLowerCase()))
 				{
-					summaryHoursAndWages = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(summaryHoursAndWages , hoursAndBudget.split(" ")[1]
+					summaryHoursAndWages = smartCardPage.updateScheduleHoursAndWages(summaryHoursAndWages , hoursAndBudget.split(" ")[1]
 							.replace("$", ""), "ForecastWages");
 				}
 			}
@@ -747,6 +751,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public HashMap<String, Float> getInsightDataInShopperWeekView() throws Exception {
 		HashMap<String, Float> insightData = new HashMap<String, Float>();
+		SmartCardPage smartCardPage = new ConsoleSmartCardPage();
 		WebElement insightIsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-fixed"));
 		if (isElementLoaded(insightIsDivElement,5)) {
 			String insightSmartCardText = insightIsDivElement.getText();
@@ -757,21 +762,30 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				if (actualDataInSightSmartCard.size()> 0) {
 					if(peakShopperDay.toLowerCase().contains("peak items"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
-								"actualEditedPeakItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
-								"actualPeakItems");
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"peakEditedPeakItems");
+						//insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						//		"actualPeakItems");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak shoppers"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"peakEditedShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
-								"actualPeakShoppers");
+						//insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						//		"actualPeakShoppers");
+					}
+					else if(peakShopperDay.toLowerCase().contains("peak demand"))
+					{
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+								"peakDemand");
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"peakEditedDemand");
+						//insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						//		"actualPeakDemand");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak day"))
 					{
@@ -786,25 +800,34 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						Float peaktime=null;
 						Float actualPeaktime=null;
 						insightData.put(peakShopperDay.split(" ")[2],peaktime);
-						insightData.put(peakShopperDay.split(" ")[4],actualPeaktime);
+						insightData.put(peakShopperDay.split(" ")[3],actualPeaktime);
 					}
 					else if(peakShopperDay.toLowerCase().contains("total items"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"totalEditedItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
-								"actualTotalItems");
+						//insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						//		"actualTotalItems");
 					}
 					else if(peakShopperDay.toLowerCase().contains("total shoppers"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"totalEditedShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
-								"actualTotalShoppers");
+						//insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						//		"actualTotalShoppers");
+					}
+					else if(peakShopperDay.toLowerCase().contains("total demand"))
+					{
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+								"totalDemand");
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+								"totalEditedDemand");
+						//insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+						//		"actualTotalDemand");
 					}
 	//				else {
 	//				SimpleUtils.fail("this data is not which i wanted,ig",true);
@@ -812,45 +835,103 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				}else {
 					if(peakShopperDay.toLowerCase().contains("peak items"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakItems");
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak shoppers"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
-								"peakShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
-								"peakEditedShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
-								"actualTotalShoppers");
+						if (peakShopperDay.split(" ").length>=3){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+									"peakShoppers");
+						}
+						if (peakShopperDay.split(" ").length>=4){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+									"peakEditedShoppers");
+						}
+						if (peakShopperDay.split(" ").length>=5){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+									"actualTotalShoppers");
+						}
+					}
+					else if(peakShopperDay.toLowerCase().contains("peak demand"))
+					{
+						if (peakShopperDay.split(" ").length>=3){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+									"peakDemand");
+						}
+						if (peakShopperDay.split(" ").length>=4){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+									"peakEditedDemand");
+						}
+						if (peakShopperDay.split(" ").length>=5){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
+											"actualPeakDemand");
+						}
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak day"))
 					{
 						Float peakday=null;
-						insightData.put(peakShopperDay.split(" ")[3],peakday);
+						if (peakShopperDay.split(" ").length>=3){
+							insightData.put(peakShopperDay.split(" ")[2],peakday);
+						}
+						if (peakShopperDay.split(" ").length>=4){
+							insightData.put(peakShopperDay.split(" ")[3],peakday);
+						}
 					}
 					else if(peakShopperDay.toLowerCase().contains("peak time"))
 					{
-						insightData.put("peakTime", Float.valueOf(peakShopperDay.split(" ")[2].replace(":",".")));
-						insightData.put("editedPeakTime", Float.valueOf(peakShopperDay.split(" ")[4].replace(":",".")));
+						if (peakShopperDay.split(" ").length>=3){
+							smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2].replace("am","").replace("pm","").replace(":","."),
+									"peakTime");
+							//insightData.put("peakTime", Float.valueOf(peakShopperDay.split(" ")[2].replace("am","").replace("pm","").replace(":",".")));
+						}
+						if (peakShopperDay.split(" ").length>=4){
+							smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3].replace("am","").replace("pm","").replace(":","."),
+									"editedPeakTime");
+							//insightData.put("editedPeakTime", Float.valueOf(peakShopperDay.split(" ")[3].replace("am","").replace("pm","").replace(":",".")));
+						}
 					}
 					else if(peakShopperDay.toLowerCase().contains("total items"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
-								"totalItems");
+						if (peakShopperDay.split(" ").length>=3){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+									"totalItems");
+						}
+
 					}
 					else if(peakShopperDay.toLowerCase().contains("total shoppers"))
 					{
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
-								"totalShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
-								"totalEditedShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[4],
-								"actualTotalShoppers");
+						if (peakShopperDay.split(" ").length>=3){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+									"totalShoppers");
+						}
+						if (peakShopperDay.split(" ").length>=4){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+									"totalEditedShoppers");
+						}
 					}
-	//				else {
-	//				SimpleUtils.fail("this data is not which i wanted,ig",true);
-	//				}
+					else if(peakShopperDay.toLowerCase().contains("total demand"))
+					{
+						if (peakShopperDay.split(" ").length>=3){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+									"totalDemand");
+						}
+						if (peakShopperDay.split(" ").length>=4){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+									"totalEditedDemand");
+						}
+					}
+					else if(peakShopperDay.toLowerCase().contains("hours"))
+					{
+						if (peakShopperDay.split(" ").length>=2){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[1],
+									"ForecastHrs");
+						}
+						if (peakShopperDay.split(" ").length>=3){
+							insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+									"BudgetedHrs");
+						}
+					}
 				}
 
 			}
@@ -864,6 +945,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public HashMap<String, Float> getInsightDataInShopperDayView() throws Exception {
 		HashMap<String, Float> insightData = new HashMap<String, Float>();
+		SmartCardPage smartCardPage = new ConsoleSmartCardPage();
 		WebElement insightIsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector(".card-carousel-fixed"));
 		if (isElementLoaded(insightIsDivElement,5)) {
 			String insightSmartCardText = insightIsDivElement.getText();
@@ -871,14 +953,14 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			for (String peakShopperDay: peakShopperDayInInsight) {
 				if (SimpleUtils.isNumeric(peakShopperDay.split(" ")[2]) && SimpleUtils.isNumeric(peakShopperDay.split(" ")[3])){
 					if(peakShopperDay.toLowerCase().contains("peak items")) {
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"actualEditedPeakItems");
 					} else if(peakShopperDay.toLowerCase().contains("peak shoppers")) {
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"peakShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"peakEditedShoppers");
 					} else if(peakShopperDay.toLowerCase().contains("peak day")) {
 						Float editedPeakday=null;
@@ -889,14 +971,14 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 						insightData.put(peakShopperDay.split(" ")[2],peaktime);
 						insightData.put(peakShopperDay.split(" ")[3],editedPeaktime);
 					} else if(peakShopperDay.toLowerCase().contains("total items")) {
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalItems");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"totalEditedItems");
 					} else if(peakShopperDay.toLowerCase().contains("total shoppers")) {
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[2],
 								"totalShoppers");
-						insightData = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
+						insightData = smartCardPage.updateScheduleHoursAndWages(insightData , peakShopperDay.split(" ")[3],
 								"totalEditedShoppers");
 					}
 				} else {
@@ -1180,6 +1262,74 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		return filterList;
 	}
 
+	@FindBy(css = "[ng-show*=\"projection === 'sales'\"] .lg-filter input-field[ng-click=\"$ctrl.openFilter()\"]")
+	private WebElement filterBtnOnForecastDemandPage;
+	@Override
+	public void clickOnFilterButtonUnderDefinedTab() throws Exception {
+		if (isElementLoaded(filterBtnOnForecastDemandPage, 10)){
+			clickTheElement(filterBtnOnForecastDemandPage);
+		}else {
+			SimpleUtils.fail("No available filters on this page!", false);
+		}
+	}
+
+	@FindBy(css = "[ng-show*=\"projection === 'labor'\"] .lg-filter")
+	private List<WebElement> filterBtnsOnForecastLaborPage;
+	@Override
+	public void clickOnDayPartsFilterButtonUnderLaborTab() throws Exception {
+		boolean flag = false;
+		if (areListElementVisible(filterBtnsOnForecastLaborPage, 10)){
+			for (WebElement filter: filterBtnsOnForecastLaborPage){
+				if (filter.findElement(By.cssSelector(".lg-filter__label")).getText().equalsIgnoreCase("day part")){
+					clickTheElement(filter.findElement(By.cssSelector("input-field[ng-click=\"$ctrl.openFilter()\"]")));
+					flag = true;
+					break;
+				}
+			}
+			if (flag){
+				SimpleUtils.pass("Find the day part filter successfully!");
+			} else {
+				SimpleUtils.fail("No day part filter on this page!", false);
+			}
+		}else {
+			SimpleUtils.fail("No available filters on this page!", false);
+		}
+	}
+
+	@FindBy(css = ".lg-filter__category-label")
+	private List<WebElement> labelsInForecastFilter;
+	@Override
+	public void verifyThereAreDayPartsItemsInTheFilter() throws Exception {
+		boolean flag = false;
+		if (areListElementVisible(labelsInForecastFilter, 10) && labelsInForecastFilter.size()>0){
+			for (WebElement element: labelsInForecastFilter){
+				if (element.getText().equalsIgnoreCase("dayparts")){
+					flag = true;
+					break;
+				}
+			}
+			if (flag){
+				SimpleUtils.pass("Day parts filter is available!");
+			} else {
+				SimpleUtils.fail("Day parts filter is not available!", false);
+			}
+		} else {
+			SimpleUtils.fail("No options in the filter", false);
+		}
+	}
+
+	@FindBy(css = "[class*=\"lg-filter__wrapper lg-ng-animate\"] input-field[type=\"checkbox\"]")
+	private List<WebElement> filterOptions;
+	@Override
+	public void selectFilterOptionsByText(String option) throws Exception {
+		waitForSeconds(3);
+		for (WebElement filterOption : filterOptions) {
+			if (filterOption.getAttribute("label").toLowerCase().contains(option.toLowerCase())) {
+				clickTheElement(filterOption.findElement(By.cssSelector("input")));
+				break;
+			}
+		}
+	}
 
 	public boolean verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable() throws Exception {
 		boolean flag=false;

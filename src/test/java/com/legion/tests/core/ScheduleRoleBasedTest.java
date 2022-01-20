@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.legion.pages.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.legion.pages.LocationSelectorPage;
-import com.legion.pages.SchedulePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -124,9 +123,9 @@ public class ScheduleRoleBasedTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void scheduleTestAsTeamMember(String username, String password, String browser, String location)
         throws Exception {
-    	SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
-            schedulePage.isCurrentScheduleWeekPublished(), false);
+            createSchedulePage.isCurrentScheduleWeekPublished(), false);
         List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
         HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
         SimpleUtils.assertOnFail("Schedule Page: Wages are loaded for Team Member in week view.",
@@ -144,9 +143,9 @@ public class ScheduleRoleBasedTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void scheduleTestAsTeamLead(String username, String password, String browser, String location)
         throws Exception {
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
-            schedulePage.isCurrentScheduleWeekPublished(), false);
+            createSchedulePage.isCurrentScheduleWeekPublished(), false);
         HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
         List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
         SimpleUtils.assertOnFail("Schedule Page: Wages are loaded for Team Lead in week view.",
@@ -163,9 +162,9 @@ public class ScheduleRoleBasedTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void scheduleTestAsStoreManager(String username, String password, String browser, String location)
         throws Exception {
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
-            schedulePage.isCurrentScheduleWeekPublished(), false);
+            createSchedulePage.isCurrentScheduleWeekPublished(), false);
         HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
         List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
         SimpleUtils.assertOnFail("Schedule Page: Wages are not loaded for Store Manager in week view.",
@@ -181,9 +180,9 @@ public class ScheduleRoleBasedTest extends TestBase {
     @Enterprise(name = "Tech_Enterprise")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
     public void scheduleTest(String browser, String username, String password, String location) throws Exception {
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         SimpleUtils.assertOnFail("Schedule Page: Schedule is not Published for current week.",
-				  schedulePage.isCurrentScheduleWeekPublished(), false);
+				  createSchedulePage.isCurrentScheduleWeekPublished(), false);
         List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays = getDaysDataofCurrentWeek();
         HashMap<String, Float> scheduleWeekViewLabelData = getCurrentWeekData();
         comparingWeekScheduledHoursAndSumOfDaysScheduledHours(scheduleWeekViewLabelData,
@@ -191,9 +190,10 @@ public class ScheduleRoleBasedTest extends TestBase {
     }
 
     public void navigateToSchedulePage() throws Exception {
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnScheduleConsoleMenuItem();
-        schedulePage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.value);
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.value);
 
     }
 
@@ -208,9 +208,10 @@ public class ScheduleRoleBasedTest extends TestBase {
 
     public HashMap<String, Float> getCurrentWeekData() throws Exception {
         HashMap<String, Float> scheduleWeekViewLabelData = new HashMap<String, Float>();
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnWeekView();
-        scheduleWeekViewLabelData = schedulePage.getScheduleLabelHoursAndWages();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+        scheduleCommonPage.clickOnWeekView();
+        scheduleWeekViewLabelData = smartCardPage.getScheduleLabelHoursAndWages();
 
         return scheduleWeekViewLabelData;
 
@@ -218,9 +219,10 @@ public class ScheduleRoleBasedTest extends TestBase {
 
     public synchronized List<HashMap<String, Float>> getDaysDataofCurrentWeek() throws Exception {
         List<HashMap<String, Float>> scheduleDaysViewLabelDataForWeekDays = new ArrayList<HashMap<String, Float>>();
-        SchedulePage schedulePage= pageFactory.createConsoleScheduleNewUIPage();
-        schedulePage.clickOnDayView();
-        scheduleDaysViewLabelDataForWeekDays = schedulePage.getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+        scheduleCommonPage.clickOnDayView();
+        scheduleDaysViewLabelDataForWeekDays = smartCardPage.getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek();
 
         return scheduleDaysViewLabelDataForWeekDays;
     }

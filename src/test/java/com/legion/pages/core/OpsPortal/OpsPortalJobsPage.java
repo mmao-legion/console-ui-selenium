@@ -2,7 +2,8 @@ package com.legion.pages.core.OpsPortal;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.JobsPage;
-import com.legion.pages.core.ConsoleScheduleNewUIPage;
+import com.legion.pages.SmartCardPage;
+import com.legion.pages.core.schedule.ConsoleSmartCardPage;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -66,7 +67,8 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	@Override
 	public void iCanEnterJobsTab() {
 		if (isElementEnabled(goToJobsButton,3)) {
-			click(goToJobsButton);
+			scrollToElement(goToJobsButton);
+			clickTheElement(goToJobsButton);
 			if (isElementEnabled(createNewJobBtn,5)) {
 				SimpleUtils.pass("I can enter jobs page");
 			}else
@@ -168,6 +170,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 	@Override
 	public void addLocationBtnIsClickable() {
+		scrollToElement(addLocationBtn);
 		click(addLocationBtn);
 		if (isElementEnabled(selectALocationTitle,5)) {
 			SimpleUtils.pass("Add location button is clickable and can enter select location page");
@@ -209,6 +212,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	@Override
 	public void iCanSelectLocationsViaDynamicGroupInAddLocation(String searchText) throws Exception {
 		if (isElementEnabled(selectALocationTitle,5)) {
+			scrollToElement(dynamicGroupTabAftClickAddLocationBtn);
 			click(dynamicGroupTabAftClickAddLocationBtn);
 			if (groupRows.size()>0) {
 				for (WebElement eachRow: groupRows) {
@@ -216,6 +220,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 					WebElement checkBoxOfEachGroup = eachRow.findElement(By.cssSelector("td>div>input-field"));
 					if (groupNameInEachRow.getText().equalsIgnoreCase(searchText) ||groupNameInEachRow.getText().contains(searchText)) {
 						click(checkBoxOfEachGroup);
+						scrollToElement(okBtnInCreateNewJobPage);
 						click(okBtnInCreateNewJobPage);
 						break;
 					}else
@@ -298,9 +303,9 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			if (locationRowsInSelectLocation.size()>0) {
 				SimpleUtils.pass("Can select UpperField in select a location window");
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
-				click(firstRow);
-				click(addBtn);
-				click(okBtnInCreateNewJobPage);
+				clickTheElement(firstRow);
+				clickTheElement(addBtn);
+				clickTheElement(okBtnInCreateNewJobPage);
 			}else
 				SimpleUtils.report("Search location result is 0");
 
@@ -744,6 +749,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 	public HashMap<String, Float> getSummaryComplateInprogressAndNotStartNum() throws Exception {
 		HashMap<String, Float> summaryComplateInprogressAndNotStartNums = new HashMap<String, Float>();
+		SmartCardPage smartCardPage = new ConsoleSmartCardPage();
 		WebElement smartCardElement = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class='card-carousel-card card-carousel-card-primary card-carousel-card-table ']"));
 		if (isElementLoaded(smartCardElement,5)) {
 			String sumarySmartCardText = smartCardElement.getText();
@@ -752,17 +758,17 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 				if(complateInprogressAndNotStartNum.toLowerCase().contains(jobSummarySmartCardData.jobsCompleted.getValue().toLowerCase()))
 				{
-					summaryComplateInprogressAndNotStartNums = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1],
+					summaryComplateInprogressAndNotStartNums = smartCardPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1],
 							"ComplatedNum");
 				}
 				else if(complateInprogressAndNotStartNum.toLowerCase().contains(jobSummarySmartCardData.jobsInProgress.getValue().toLowerCase()))
 				{
-					summaryComplateInprogressAndNotStartNums = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1]
+					summaryComplateInprogressAndNotStartNums = smartCardPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1]
 							.replace("$", ""), "InProgressNum");
 				}
 				else if(complateInprogressAndNotStartNum.toLowerCase().contains(jobSummarySmartCardData.notStarted.getValue().toLowerCase()))
 				{
-					summaryComplateInprogressAndNotStartNums = ConsoleScheduleNewUIPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1]
+					summaryComplateInprogressAndNotStartNums = smartCardPage.updateScheduleHoursAndWages(summaryComplateInprogressAndNotStartNums , complateInprogressAndNotStartNum.split(" ")[1]
 							.replace("$", ""), "NotStartNum");
 				}
 			}
@@ -1296,4 +1302,18 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 	}
 
+	@FindBy(css = ".lg-tabs__nav")
+	private WebElement navForAddLocation;
+	@Override
+	public void verifyDynamicGroupName() throws Exception {
+		if (isElementLoaded(navForAddLocation, 10)){
+			if (navForAddLocation.getText().contains("Dynamic Location Group")){
+				SimpleUtils.pass("Dynamic Group name is expected!");
+			} else {
+				SimpleUtils.fail("Dynamic Group name is not expected! actual is: "+ navForAddLocation.getText(), false);
+			}
+		} else {
+			SimpleUtils.fail("Navigation tab are not loaded!", false);
+		}
+	}
 }

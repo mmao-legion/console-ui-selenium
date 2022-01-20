@@ -228,10 +228,12 @@ public class TestRailOperation {
 
     public static void addResultForTest() {
         if(TestBase.testRailReportingFlag!=null&&MyThreadLocal.getTestCaseExistsFlag()){
-            if (MyThreadLocal.getTestResultFlag()){
-                addTestResultIntoTestRailN(1, "");
-            } else {
-                addTestResultIntoTestRailN(5, "");
+            if (!MyThreadLocal.getTestSkippedFlag()){
+                if (MyThreadLocal.getTestResultFlag()){
+                    addTestResultIntoTestRailN(1, "");
+                } else {
+                    addTestResultIntoTestRailN(5, "");
+                }
             }
         }
     }
@@ -287,7 +289,11 @@ public class TestRailOperation {
             APIClient client = new APIClient(testRailURL);
             client.setUser(testRailUser);
             client.setPassword(testRailPassword);
-            ScreenshotManager.takeScreenShot();
+            if (MyThreadLocal.getDriver()!=null){
+                ScreenshotManager.takeScreenShot();
+            } else {
+                System.out.println("Session is null!");
+            }
             client.sendPost(addResultString,MyThreadLocal.getScreenshotLocation());
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());

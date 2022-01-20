@@ -39,6 +39,8 @@ public class BasePage {
 
     public static String activeConsoleName;
 
+    public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
+
     protected T currentPage;
 
     protected Map<String,BasePage> resultList;
@@ -47,6 +49,7 @@ public class BasePage {
         try {
             waitUntilElementIsVisible(element);
             element.click();
+            waitForSeconds(2);
         } catch (TimeoutException te) {
             ExtentTestManager.getTest().log(Status.WARNING,te);
         }
@@ -149,7 +152,7 @@ public class BasePage {
     
     public void checkElementVisibility(WebElement element)
     {
-        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 60);
+        WebDriverWait wait = new WebDriverWait(MyThreadLocal.getDriver(), 90);
         try {
         	wait.until(ExpectedConditions.visibilityOf(element));
         }
@@ -878,6 +881,24 @@ public class BasePage {
         } catch (Exception e) {
             // Do nothing
         }
+    }
+
+    public Boolean isElementDisplayed(WebElement element) {
+        try {
+            return element.isDisplayed();
+        } catch (Exception NoSuchElementException) {
+            return false;
+        }
+    }
+    public void removeHidden(WebElement element){
+        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].style.display='block';", element);
+    }
+    public ArrayList getWebElementsText(List<WebElement> webElementsList) {
+        ArrayList<String> list = new ArrayList<>();
+        webElementsList.forEach((e) -> {
+            list.add(e.getText());
+        });
+        return list;
     }
 //
 //

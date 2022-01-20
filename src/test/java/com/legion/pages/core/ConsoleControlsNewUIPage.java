@@ -316,6 +316,49 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "question-input[question-title=\"Is approval by Manager required when an employee claims an Open Shift?\"]")
 	private WebElement isApprovedByManagerWhileClaimOpenShift;
 
+
+	public enum MealBreakDuration {
+
+		Minute5("5 minute"),
+		Minute10("10 minute"),
+		Minute15("15 minute"),
+		Minute20("20 minute"),
+		Minute25("25 minute"),
+		Minute30("30 minute"),
+		Minute35("35 minute"),
+		Minute40("40 minute"),
+		Minute45("45 minute"),
+		Minute50("50 minute"),
+		Minute55("55 minute"),
+		Minute60("60 minute");
+
+		private final String value;
+
+		MealBreakDuration(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
+	public enum MealBreakPaidType {
+
+		Paid("paid"),
+		Unpaid("unpaid");
+
+		private final String value;
+
+		MealBreakPaidType(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
 	String timeSheetHeaderLabel = "Controls";
 
 	@Override
@@ -700,6 +743,101 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Controls Page: Compliance Card not Loaded!", false);
 	}
 
+	@FindBy(css = "[form-title=\"Split Shift\"]")
+	private WebElement splitShiftSection;
+	@FindBy(css = "[form-title=\"Split Shift\"] [label=\"Edit\"]")
+	private WebElement splitShiftEditBtn;
+	@FindBy(css = ".modal-dialog")
+	private WebElement splitShiftDialog;
+	@Override
+	public void turnOnOrTurnOffSplitShiftToggle(boolean action) throws Exception {
+		String content = getSplitShiftContent();
+		if (isElementLoaded(splitShiftSection, 10)
+				&&splitShiftSection.findElement(By.cssSelector(".info")).getText().equalsIgnoreCase("Split Shift")
+				&&content.contains("An employee will receive a ")
+				&&content.contains(" hour premium for shifts worked with more than ")
+				&&content.contains(" minutes between last clock out and next clock in.")){
+			if (isElementLoaded(splitShiftSection.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+				if (action && splitShiftSection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+					scrollToElement(splitShiftSection.findElement(By.cssSelector(".lg-question-input__toggle")));
+					clickTheElement(splitShiftSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					SimpleUtils.pass("Toggle is turned on!");
+				} else if (!action){
+					clickTheElement(splitShiftSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					SimpleUtils.pass("Toggle is turned off!");
+					clickTheElement(splitShiftEditBtn);
+					if (isElementLoaded(splitShiftDialog, 5)){
+						SimpleUtils.fail("Edit button should be disabled when toggle off!", false);
+					}
+				} else {
+					SimpleUtils.pass("Toggle status is expected!");
+				}
+			} else {
+				SimpleUtils.fail("Toggle fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Split Shift section fail to load!", false);
+		}
+	}
+
+	public String getSplitShiftContent() throws Exception{
+		if (isElementLoaded(splitShiftSection, 10)){
+			return splitShiftSection.findElement(By.cssSelector(".lg-question-input__text")).getAttribute("innerText");
+		}
+		return "";
+	}
+
+	@Override
+	public void editSplitShiftPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception {
+		if (isElementLoaded(splitShiftEditBtn, 5)){
+			String contentBefore = getSplitShiftContent();
+			clickTheElement(splitShiftEditBtn);
+			if (isElementLoaded(splitShiftDialog, 10)){
+				//check the title.
+				if (splitShiftDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Split Shift Premium")){
+					SimpleUtils.pass("Dialog title is expected!");
+				} else {
+					SimpleUtils.fail("Dialog title is not correct", false);
+				}
+				//Check setting content.
+				if(splitShiftDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("An employee will receive a")
+						&&splitShiftDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("hour premium for shifts worked with more than")
+						&&splitShiftDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("minutes between last clock out and next clock in.")){
+					SimpleUtils.pass("Setting content in the dialog is expected!");
+				} else {
+					SimpleUtils.fail("Setting content is not expected!", false);
+				}
+				//edit the content, input the parameters.
+				if (splitShiftDialog.findElements(By.cssSelector("input")).size() == 2){
+					splitShiftDialog.findElements(By.cssSelector("input")).get(0).clear();
+					splitShiftDialog.findElements(By.cssSelector("input")).get(0).sendKeys(numOfPremiumHrs);
+					splitShiftDialog.findElements(By.cssSelector("input")).get(1).clear();
+					splitShiftDialog.findElements(By.cssSelector("input")).get(1).sendKeys(greaterThan);
+				} else {
+					SimpleUtils.fail("inputs are not shown as expected!", false);
+				}
+				//save or cancel.
+				if (isElementLoaded(splitShiftDialog.findElement(By.cssSelector("[label=\"Cancel\"]")), 5)
+					&&isElementLoaded(splitShiftDialog.findElement(By.cssSelector("[label=\"Save\"]")), 5)){
+					if (saveOrNot){
+						clickTheElement(splitShiftDialog.findElement(By.cssSelector("[label=\"Save\"] button")));
+						SimpleUtils.assertOnFail("Setting is not saved successfully!", getSplitShiftContent().contains(numOfPremiumHrs)&&getSplitShiftContent().contains(greaterThan), false);
+					} else {
+						clickTheElement(splitShiftDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
+						waitForSeconds(2);
+						SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getSplitShiftContent()), false);
+					}
+				} else {
+					SimpleUtils.fail("Save or Cancel button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.fail("Split shift dialog fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit split shift button is not loaded!", false);
+		}
+	}
+
 	@Override
 	public boolean isCompliancePageLoaded() throws Exception {
 		if (isElementLoaded(overtimeWeeklyText, 15)) {
@@ -758,7 +896,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public boolean isControlsScheduleCollaborationLoaded() throws Exception {
-		if (isElementLoaded(breadcrumbsScheduleCollaboration)) {
+		if (isElementLoaded(breadcrumbsScheduleCollaboration, 10)) {
 			SimpleUtils.pass("Controls Page: Schedule Collaboration Section Loaded Successfully.");
 			return true;
 		}
@@ -860,10 +998,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void clickOnSchedulingPoliciesShiftAdvanceBtn() throws Exception {
-		if (isElementLoaded(schedulingPoliciesShiftFormSectionDiv)) {
+		if (isElementLoaded(schedulingPoliciesShiftFormSectionDiv,15)) {
 			WebElement schedulingPoliciesShiftAdvanceBtn = schedulingPoliciesShiftFormSectionDiv.findElement(
 					By.cssSelector("div.lg-advanced-box__toggle"));
-			if (isElementLoaded(schedulingPoliciesShiftAdvanceBtn) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
+			if (isElementLoaded(schedulingPoliciesShiftAdvanceBtn, 15) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
 					.contains("--advanced")) {
 				scrollToElement(schedulingPoliciesShiftAdvanceBtn);
 				moveToElementAndClick(schedulingPoliciesShiftAdvanceBtn);
@@ -1387,11 +1525,12 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			} else {
 				List<WebElement> applyLaborBudgetToSchedulesBtns = applyLaborBudgetToSchedules.findElements(
 						By.cssSelector("div[ng-click=\"!button.disabled && $ctrl.change(button.value)\"]"));
+				waitForSeconds(5);
 				if (applyLaborBudgetToSchedulesBtns.size() > 0) {
 					for (WebElement applyLaborBudgetToSchedulesBtn : applyLaborBudgetToSchedulesBtns) {
 						if (applyLaborBudgetToSchedulesBtn.getText().toLowerCase().contains(isLaborBudgetToApply.toLowerCase())) {
 							scrollToElement(applyLaborBudgetToSchedulesBtn);
-							click(applyLaborBudgetToSchedulesBtn);
+							clickTheElement(applyLaborBudgetToSchedulesBtn);
 							preserveTheSetting();
 						}
 					}
@@ -1409,6 +1548,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Scheduling Policies: Apply Labor Budget to Schedules section not loaded.", true);
 	}
 
+	@Override
 	public String getApplyLaborBudgetToSchedulesActiveBtnLabel() throws Exception {
 		String laborBudgetToApplyActiveBtnLabel = "";
 		if (isElementLoaded(applyLaborBudgetToSchedules)) {
@@ -1703,10 +1843,12 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void clickOnSchedulingPoliciesTimeOffAdvanceBtn() throws Exception {
-		if (isElementLoaded(schedulingPoliciesTimeOffFormSectionDiv)) {
+		if (isElementLoaded(schedulingPoliciesTimeOffFormSectionDiv, 10)) {
+			scrollToElement(schedulingPoliciesTimeOffFormSectionDiv);
+			waitForSeconds(1);
 			WebElement schedulingPoliciesTimeOffAdvanceBtn = schedulingPoliciesTimeOffFormSectionDiv.findElement(
 					By.cssSelector("div.lg-advanced-box__toggle"));
-			if (isElementLoaded(schedulingPoliciesTimeOffAdvanceBtn) && !schedulingPoliciesTimeOffAdvanceBtn.getAttribute("class")
+			if (isElementLoaded(schedulingPoliciesTimeOffAdvanceBtn, 10) && !schedulingPoliciesTimeOffAdvanceBtn.getAttribute("class")
 					.contains("--advanced")) {
 				click(schedulingPoliciesTimeOffAdvanceBtn);
 				SimpleUtils.pass("Controls Page: - Scheduling Policies 'Time Off' section: 'Advance' button clicked.");
@@ -1714,6 +1856,21 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.fail("Controls Page: - Scheduling Policies 'Time Off' section: 'Advance' button not loaded.", false);
 		} else
 			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Time Off' form section not loaded.", false);
+	}
+
+	@FindBy(css = "[question-title*=\"days in advance.\"] .input-form")
+	private WebElement daysInAdvanceToCreateTimeOff;
+	@Override
+	public int getDaysInAdvanceCreateTimeOff() throws Exception {
+		waitForSeconds(3);
+		if (isElementLoaded(daysInAdvanceToCreateTimeOff,15)){
+			if (SimpleUtils.isNumeric(daysInAdvanceToCreateTimeOff.findElement(By.cssSelector("div.input-faked")).getAttribute("innerText").replaceAll("\n","").trim())){
+				return Integer.parseInt(daysInAdvanceToCreateTimeOff.findElement(By.cssSelector("div.input-faked")).getAttribute("innerText").replaceAll("\n","").trim());
+			}
+		} else {
+			SimpleUtils.fail("Days in advance fail to load!", false);
+		}
+		return 0;
 	}
 
 	@Override
@@ -2089,7 +2246,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void selectSchdulingPolicyGroupsTabByLabel(String tabLabel) throws Exception {
 		boolean isTabSelected = false;
-		if (schedulingPolicyGroupsTabs.size() > 0) {
+		if (areListElementVisible(schedulingPolicyGroupsTabs, 10) && schedulingPolicyGroupsTabs.size() > 0) {
 			for (WebElement schedulingPolicyGroupsTab : schedulingPolicyGroupsTabs) {
 				if (schedulingPolicyGroupsTab.getText().replace("Non Exempt", "Nonexempt").toLowerCase().contains(tabLabel.toLowerCase())) {
 					click(schedulingPolicyGroupsTab);
@@ -3094,7 +3251,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement managerLocationBtn;
 	@FindBy(css = "[modal-title=\"Manage Locations\"]")
 	private WebElement managerLocationPopUpTitle;
-	@FindBy(css = "input[placeholder=\"You can search by location name, city, and state.\"]")
+	@FindBy(css = "input[placeholder=\"You can search by location name, level, city, and state.\"]")
 	private WebElement managerLocationInputFiled;
 	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.filtered\"]")
 	private List<WebElement> locationListRows;
@@ -3126,7 +3283,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						click(selectAllCheckBoxInManaLocationWin);
 						if (locationCheckBoxs.size()>0) {
 							SimpleUtils.pass("Can search upperfield of region");
-							for (int i = 2; i <5 ; i++) {
+							for (int i = 2; i <5 && i<locationCheckBoxs.size(); i++) {
 								if (isElementLoaded(locationCheckBoxs.get(i)) && !locationCheckBoxs.get(i).getAttribute("class").contains("not-empty")) {
 									click(locationCheckBoxs.get(i));
 								}
@@ -4978,12 +5135,15 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	public void enableOverRideAssignmentRuleAsYes() throws Exception {
 		boolean OverrideAssignmentRule = true;
-		if (isElementEnabled(btnOverrideAssignmentRule, 5)) {
+		if (isElementEnabled(btnOverrideAssignmentRule, 20)) {
 			if (isElementEnabled(btnOverrideAssignmentRuleYes, 3)) {
 				if (btnOverrideAssignmentRuleYes.getAttribute("class").contains("selected")) {
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button already enabled");
 				} else {
 					clickTheElement(btnOverrideAssignmentRuleYes);
+					if (isElementLoaded(overridePopup, 10) && isElementLoaded(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")),10)){
+						clickTheElement(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")));
+					}
 					Actions actions = new Actions(getDriver());
 					actions.moveByOffset(0, 0).click().build().perform();
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");
@@ -4997,16 +5157,20 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void enableOverRideAssignmentRuleAsNo() throws Exception {
-		if (isElementEnabled(btnOverrideAssignmentRule, 10)) {
+		if (isElementEnabled(btnOverrideAssignmentRule, 20)) {
 			if (isElementEnabled(btnOverrideAssignmentRuleNo, 10)) {
 				waitForSeconds(5);
 				if (btnOverrideAssignmentRuleNo.getAttribute("class").contains("selected")) {
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'No' button already enabled");
 				} else {
+					scrollToElement(btnOverrideAssignmentRuleNo);
 					clickTheElement(btnOverrideAssignmentRuleNo);
+					if (isElementLoaded(overridePopup, 10) && isElementLoaded(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")),10)){
+						clickTheElement(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")));
+					}
 					Actions actions = new Actions(getDriver());
-					actions.moveByOffset(0, 0).click().build().perform();
-					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");
+					actions.moveByOffset(0, 300).click().build().perform();
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'No' button selected!");
 					displaySuccessMessage();
 				}
 			} else {
@@ -5245,12 +5409,11 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = ".lg-user-locations-new__item-name")
 	private List<WebElement> userLocation;
 
-	@FindBy(css = "[ng-if=\"tm.engagement.engagementGroup\"]")
+	@FindBy(xpath = "//ng-transclude/div[1][@class='legion-information ng-scope']//div[2]/span")
 	private WebElement schedulingPolicyGroup;
 
 	@FindBy(css = "[form-title=\"Scheduling Policy Groups\"] lg-tabs lg-tab")
 	private List<WebElement> schedulingPolicyGroupsTabContent;
-
 
 	@FindBy(css = "[label=\"Cancel Deactivate\"] button")
 	private WebElement cancelDeactivateBtn;
@@ -5288,7 +5451,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(className = "selected-day")
 	private WebElement selectedDayInCalendar;
 
-	@FindBy(xpath = "//span[contains(text(),\"HOME STORE\")]/../../following-sibling::div[1]/div[2]")
+	@FindBy(xpath = "//span[contains(text(),\"HOME STORE\")]/../following-sibling::div[1]")
 	private WebElement homeStoreLocation;
 
 	@Override
@@ -5296,7 +5459,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		HashMap<String, List<String>> userNLocationNSchedulingPolicyGroup = new HashMap<>();
 		if (areListElementVisible(usersAndRolesAllUsersRows, 10)) {
 			int index = (new Random()).nextInt(usersAndRolesAllUsersRows.size());
-			WebElement userName = usersAndRolesAllUsersRows.get(index).findElement(By.cssSelector("lg-button button span span"));
+			WebElement userName = usersAndRolesAllUsersRows.get(index).findElement(By.cssSelector("lg-button[list] button span span"));
 			String userNameText = userName.getText();
 			click(userName);
 			if (isElementLoaded(homeStoreLocation, 5) && isElementLoaded(schedulingPolicyGroup, 5)) {
@@ -5536,6 +5699,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy (css = "[aria-label=\"State\"]")
 	private WebElement state;
 
+	@FindBy (css = "[aria-label=\"Province\"]")
+	private WebElement province;
+
 	@FindBy (css = ".lg-form-section-action")
 	private WebElement editLocationButton;
 
@@ -5578,13 +5744,18 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		String cityStr = "";
 		String locationAddressStr = "";
 
-		if (isElementLoaded(locationAddress, 10) && isElementLoaded(zipCode, 10) &&
-				isElementLoaded(state, 10)) {
-			stateStr = state.getAttribute("value").contains(" ")? state.getAttribute("value").split(" ")[0].substring(0,1) + state.getAttribute("value").split(" ")[1].substring(0,1): state.getAttribute("value").substring(0,1);
+		if (isElementLoaded(locationAddress, 10) && isElementLoaded(city, 10)
+				&& (isElementLoaded(state, 10) || isElementLoaded(province,10)) ) {
 			cityStr = city.getAttribute("value");
 			locationAddressStr = locationAddress.getAttribute("value");
 		} else {
 			SimpleUtils.fail("Locations page: Elements in location page not Loaded", false);
+		}
+		if (isElementLoaded(state, 10)) {
+			stateStr = state.getAttribute("value").contains(" ")? state.getAttribute("value").split(" ")[0].substring(0,1) + state.getAttribute("value").split(" ")[1].substring(0,1): state.getAttribute("value").substring(0,1);
+		}
+		if (isElementLoaded(province,10)) {
+			stateStr = province.getAttribute("value").contains(" ")? province.getAttribute("value").split(" ")[0].substring(0,1) + province.getAttribute("value").split(" ")[1].substring(0,1): province.getAttribute("value").substring(0,1);
 		}
 		locationDetailInfo = locationAddressStr + ", " + cityStr + " " + stateStr ;
 		return locationDetailInfo;
@@ -6011,7 +6182,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	// Added By Julie
-	@FindBy(css = "input-field[value=\"sp.weeklySchedulePreference.publishDayWindow\"]")
+	@FindBy(css = "[question-title=\"How many days in advance would you typically publish schedules? (this is the Schedule Publish Window).\"] input-field")
 	private WebElement schedulingPoliciesDaysInAdvancePublishSchedules;
 
 	@FindBy(className = "lg-override-popup")
@@ -6027,6 +6198,116 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		} else
 			SimpleUtils.fail("Scheduling Policies: 'How many days in advance would you typically publish schedules?' not loaded", false);
 		return days;
+	}
+
+	@FindBy(css = "question-input[question-title=\"Auto Publish Legion Schedule\"]")
+	private WebElement autoPublishSection;
+	@FindBy(css = "question-input[question-title=\"Schedule Publish Day of Week\"]")
+	private WebElement autoPublishSchedulePublishDayOfWeek;
+	@FindBy(css = "question-input[question-title=\"Schedule Publish Time of Day (in minutes)\"]")
+	private WebElement autoPublishSchedulePublishTimeOfDay;
+	@FindBy(css = "question-input[question-title=\"Schedule Republish Day of Week\"]")
+	private WebElement autoPublishScheduleRepublishDayOfWeek;
+	@FindBy(css = "question-input[question-title=\"Schedule Republish Time of Day (in minutes)\"]")
+	private WebElement autoPublishScheduleRepublishTimeOfDay;
+	@Override
+	public void updateAndVerifyAutoPublishSettings(String option) throws Exception {
+		String expectedTitle = "Auto Publish Legion Schedule";
+		String expectedExplainer = "'Auto publish after date' will account for late schedules that were created after 'Schedule Publish Day of Week'";
+		if (isElementLoaded(autoPublishSection, 10) && isElementLoaded(autoPublishSection.findElement(By.cssSelector(".lg-question-input__text")), 10)){
+			SimpleUtils.assertOnFail("The title is not expected!", autoPublishSection.findElement(By.cssSelector(".lg-question-input__text")).getText().equalsIgnoreCase(expectedTitle), false);
+			SimpleUtils.assertOnFail("The explainer is not expected!", autoPublishSection.getAttribute("explainer").equalsIgnoreCase(expectedExplainer), false);
+			selectByVisibleText(autoPublishSection.findElement(By.tagName("select")), option);
+		} else{
+			SimpleUtils.fail("Fail to find this setting!", false);
+		}
+	}
+
+	@Override
+	public String getAutoPublishSettings() throws Exception {
+		if (isElementLoaded(autoPublishSection.findElement(By.cssSelector("option[selected=\"selected\"]")), 10)){
+			return autoPublishSection.findElement(By.cssSelector("option[selected=\"selected\"]")).getText();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAutoPublishSchedulePublishDayOfWeek(String option) throws Exception {
+		String expectedTitle = "Schedule Publish Day of Week";
+		if (isElementLoaded(autoPublishSchedulePublishDayOfWeek, 10) && isElementLoaded(autoPublishSchedulePublishDayOfWeek.findElement(By.cssSelector(".lg-question-input__text")), 10)){
+			SimpleUtils.assertOnFail("The title is not expected!", autoPublishSchedulePublishDayOfWeek.findElement(By.cssSelector(".lg-question-input__text")).getText().equalsIgnoreCase(expectedTitle), false);
+			selectByVisibleText(autoPublishSchedulePublishDayOfWeek.findElement(By.tagName("select")), option);
+		} else{
+			SimpleUtils.fail("Fail to find this setting: "+ expectedTitle, false);
+		}
+	}
+
+	@Override
+	public String getAutoPublishSchedulePublishDayOfWeek() throws Exception {
+		if (isElementLoaded(autoPublishSchedulePublishDayOfWeek.findElement(By.cssSelector("option[selected=\"selected\"]")), 10)){
+			return autoPublishSchedulePublishDayOfWeek.findElement(By.cssSelector("option[selected=\"selected\"]")).getText();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAutoPublishScheduleRepublishDayOfWeek(String option) throws Exception {
+		String expectedTitle = "Schedule Republish Day of Week";
+		if (isElementLoaded(autoPublishScheduleRepublishDayOfWeek, 10) && isElementLoaded(autoPublishScheduleRepublishDayOfWeek.findElement(By.cssSelector(".lg-question-input__text")), 10)){
+			SimpleUtils.assertOnFail("The title is not expected!", autoPublishScheduleRepublishDayOfWeek.findElement(By.cssSelector(".lg-question-input__text")).getText().equalsIgnoreCase(expectedTitle), false);
+			selectByVisibleText(autoPublishScheduleRepublishDayOfWeek.findElement(By.tagName("select")), option);
+		} else{
+			SimpleUtils.fail("Fail to find this setting: "+ expectedTitle, false);
+		}
+	}
+
+	@Override
+	public String getAutoPublishScheduleRepublishDayOfWeek() throws Exception {
+		if (isElementLoaded(autoPublishScheduleRepublishDayOfWeek.findElement(By.cssSelector("option[selected=\"selected\"]")), 10)){
+			return autoPublishScheduleRepublishDayOfWeek.findElement(By.cssSelector("option[selected=\"selected\"]")).getText();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAutoPublishSchedulePublishTimeOfDay(String mins) throws Exception {
+		String expectedTitle = "Schedule Publish Time of Day (in minutes)";
+		if (isElementLoaded(autoPublishSchedulePublishTimeOfDay, 10) && isElementLoaded(autoPublishSchedulePublishTimeOfDay.findElement(By.cssSelector(".lg-question-input__text")), 10)){
+			SimpleUtils.assertOnFail("The title is not expected!", autoPublishSchedulePublishTimeOfDay.findElement(By.cssSelector(".lg-question-input__text")).getText().equalsIgnoreCase(expectedTitle), false);
+			autoPublishSchedulePublishTimeOfDay.findElement(By.tagName("input")).clear();
+			autoPublishSchedulePublishTimeOfDay.findElement(By.tagName("input")).sendKeys(mins);
+		} else{
+			SimpleUtils.fail("Fail to find this setting: "+ expectedTitle, false);
+		}
+	}
+
+	@Override
+	public String getAutoPublishSchedulePublishTimeOfDay() throws Exception {
+		waitForSeconds(2);
+		if (isElementLoaded(autoPublishSchedulePublishTimeOfDay.findElement(By.cssSelector("input")), 10)){
+			return autoPublishSchedulePublishTimeOfDay.findElement(By.cssSelector("input")).getAttribute("value");
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAutoPublishScheduleRepublishTimeOfDay(String mins) throws Exception {
+		String expectedTitle = "Schedule Republish Time of Day (in minutes)";
+		if (isElementLoaded(autoPublishScheduleRepublishTimeOfDay, 10) && isElementLoaded(autoPublishScheduleRepublishTimeOfDay.findElement(By.cssSelector(".lg-question-input__text")), 10)){
+			SimpleUtils.assertOnFail("The title is not expected!", autoPublishScheduleRepublishTimeOfDay.findElement(By.cssSelector(".lg-question-input__text")).getText().equalsIgnoreCase(expectedTitle), false);
+			autoPublishScheduleRepublishTimeOfDay.findElement(By.tagName("input")).clear();
+			autoPublishScheduleRepublishTimeOfDay.findElement(By.tagName("input")).sendKeys(mins);
+		} else{
+			SimpleUtils.fail("Fail to find this setting: "+ expectedTitle, false);
+		}
+	}
+
+	@Override
+	public String getAutoPublishScheduleRepublishTimeOfDay() throws Exception {
+		if (isElementLoaded(autoPublishScheduleRepublishTimeOfDay.findElement(By.cssSelector("input")), 10)){
+			return autoPublishScheduleRepublishTimeOfDay.findElement(By.cssSelector("input")).getAttribute("value");
+		}
+		return null;
 	}
 
 	@Override
@@ -6388,5 +6669,250 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
         // todo: Blocked by bug https://legiontech.atlassian.net/browse/SCH-4355
 		click(allDayCheckBox);
         click(saveBtnWhenEditRegular);
+	}
+
+
+	@FindBy(css = "[form-title=\"Spread of Hours\"]")
+	private WebElement spreadOfHoursSection;
+	@FindBy(css = "[form-title=\"Spread of Hours\"] [label=\"Edit\"]")
+	private WebElement spreadOfHoursEditBtn;
+	@FindBy(css = ".modal-dialog")
+	private WebElement editDialog;
+	@Override
+	public void turnOnOrTurnOffSpreadOfHoursToggle(boolean action) throws Exception {
+		String content = getSpreadOfHoursContent();
+		if (isElementLoaded(spreadOfHoursSection, 10)
+				&&spreadOfHoursSection.findElement(By.cssSelector(".info")).getText().equalsIgnoreCase("Spread Of Hours")
+				&&content.contains("An employee will receive a ")
+				&&content.contains(" hour premium if the total time from the beginning and end of the work day is greater than ")
+				&&content.contains(" hours.")){
+			if (isElementLoaded(spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+				if (action && spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+					scrollToElement(spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input__toggle")));
+					clickTheElement(spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Toggle is turned on!");
+				} else if (!action && !spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+					clickTheElement(spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Toggle is turned off!");
+				} else {
+					SimpleUtils.pass("Toggle status is expected!");
+				}
+			} else {
+				SimpleUtils.fail("Toggle fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Spread Of Hours section fail to load!", false);
+		}
+	}
+
+	public String getSpreadOfHoursContent() throws Exception{
+		if (isElementLoaded(spreadOfHoursSection, 10)){
+			return spreadOfHoursSection.findElement(By.cssSelector(".lg-question-input__text")).getText();
+		}
+		return "";
+	}
+
+
+	@Override
+	public void editSpreadOfHoursPremium(String numOfPremiumHrs, String greaterThan, boolean saveOrNot) throws Exception {
+		if (isElementLoaded(spreadOfHoursEditBtn, 5)){
+			String contentBefore = getSpreadOfHoursContent();
+			clickTheElement(spreadOfHoursEditBtn);
+			if (isElementLoaded(editDialog, 10)){
+				//check the title.
+				if (editDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Spread Shift Premium")){
+					SimpleUtils.pass("Dialog title is expected!");
+				} else {
+					SimpleUtils.fail("Dialog title is not correct", false);
+				}
+				//Check setting content.
+				if(editDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("An employee will receive a")
+						&&editDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("hour premium if the total time from the beginning and end of the work day is greater than")
+						&&editDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("hours.")){
+					SimpleUtils.pass("Setting content in the dialog is expected!");
+				} else {
+					SimpleUtils.fail("Setting content is not expected!", false);
+				}
+				//edit the content, input the parameters.
+				if (editDialog.findElements(By.cssSelector("input")).size() == 2){
+					editDialog.findElements(By.cssSelector("input")).get(0).clear();
+					editDialog.findElements(By.cssSelector("input")).get(0).sendKeys(numOfPremiumHrs);
+					editDialog.findElements(By.cssSelector("input")).get(1).clear();
+					editDialog.findElements(By.cssSelector("input")).get(1).sendKeys(greaterThan);
+				} else {
+					SimpleUtils.fail("inputs are not shown as expected!", false);
+				}
+				//save or cancel.
+				if (isElementLoaded(editDialog.findElement(By.cssSelector("[label=\"Cancel\"]")), 5)
+						&&isElementLoaded(editDialog.findElement(By.cssSelector("[label=\"Save\"]")), 5)){
+					if (saveOrNot){
+						clickTheElement(editDialog.findElement(By.cssSelector("[label=\"Save\"] button")));
+						SimpleUtils.assertOnFail("Setting is not saved successfully!", getSpreadOfHoursContent().contains(numOfPremiumHrs)&&getSpreadOfHoursContent().contains(greaterThan), false);
+					} else {
+						clickTheElement(editDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
+						SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getSpreadOfHoursContent()), false);
+					}
+				} else {
+					SimpleUtils.fail("Save or Cancel button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.fail("Spread Of Hours dialog fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit Spread Of Hours button is not loaded!", false);
+		}
+	}
+
+
+	@FindBy(css = "lg-close.dismiss")
+	private WebElement closeButtonOnDialog;
+	@Override
+	public void verifyCloseSplitShiftPremiumDialogButton () throws Exception {
+		if (isElementLoaded(spreadOfHoursEditBtn, 5)){
+			String contentBefore = getSpreadOfHoursContent();
+			clickTheElement(spreadOfHoursEditBtn);
+			if (isElementLoaded(editDialog, 10)){
+
+				//edit the content, input the parameters.
+				if (editDialog.findElements(By.cssSelector("input")).size() == 2){
+					editDialog.findElements(By.cssSelector("input")).get(0).clear();
+					editDialog.findElements(By.cssSelector("input")).get(0).sendKeys("0");
+					editDialog.findElements(By.cssSelector("input")).get(1).clear();
+					editDialog.findElements(By.cssSelector("input")).get(1).sendKeys("0");
+				} else {
+					SimpleUtils.fail("inputs are not shown as expected!", false);
+				}
+				//click X button on the dialog
+				if (isElementLoaded(closeButtonOnDialog, 5)){
+					clickTheElement(closeButtonOnDialog);
+					SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getSpreadOfHoursContent()), false);
+				} else {
+					SimpleUtils.fail("Save or Cancel button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.fail("Spread Of Hours dialog fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit Spread Of Hours button is not loaded!", false);
+		}
+	}
+
+	@FindBy(css = "[form-title=\"Meal & Rest Breaks\"]")
+	private WebElement mealRestBreaksSection;
+
+	@FindBy(xpath = "//question-input[contains(@question-title, 'Meal Break for every')]/div")
+	private WebElement mealBreakSetting;
+
+	@FindBy(xpath = "//question-input[contains(@question-title, 'Meal Break for every')]/div/div/ng-transclude/lg-button")
+	private WebElement mealBreakEditButton;
+
+	@Override
+	public void turnOnOrTurnOffMealBreakToggle(boolean action) throws Exception {
+		String content = getMealBreakContent();
+		if (isElementLoaded(mealRestBreaksSection, 10)
+				&&mealRestBreaksSection.findElement(By.cssSelector(".info")).getText().equalsIgnoreCase("Meal & Rest Breaks")
+				&&content.contains("An employee should be scheduled for")
+				&&content.contains("Meal Break for every")
+				&&content.contains(" of work.")){
+			if (isElementLoaded(mealBreakSetting.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+				if (action && mealBreakSetting.getAttribute("class").contains("off")){
+					scrollToElement(mealBreakSetting.findElement(By.cssSelector(".lg-question-input__toggle")));
+					clickTheElement(mealBreakSetting.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Toggle is turned on!");
+				} else if (!action && !mealBreakSetting.getAttribute("class").contains("off")){
+					clickTheElement(mealBreakSetting.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+					displaySuccessMessage();
+					SimpleUtils.pass("Toggle is turned off!");
+				} else {
+					SimpleUtils.pass("Toggle status is expected!");
+				}
+			} else {
+				SimpleUtils.fail("Toggle fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Meal and Rest Breaks section fail to load!", false);
+		}
+	}
+
+
+	public String getMealBreakContent() throws Exception{
+		if (isElementLoaded(mealBreakSetting, 10)){
+			return mealBreakSetting.getText();
+		}
+		return "";
+	}
+
+
+	@FindBy(css = "[options=\"$ctrl.selections.duration\"] select")
+	private WebElement mealBreakDurationSelector;
+
+	@FindBy(css = "[options=\"$ctrl.selections.type\"] select")
+	private WebElement mealBreakPaidTypeSelector;
+
+	@Override
+	public void editMealBreak(String mealBreakDuration, String paidType, String scheduleHoursLimit, boolean saveOrNot) throws Exception {
+		if (isElementLoaded(mealBreakEditButton, 5)){
+			String contentBefore = getMealBreakContent();
+			clickTheElement(mealBreakEditButton);
+			if (isElementLoaded(editDialog, 10)){
+				//check the title.
+				if (editDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Meal & Rest Breaks")){
+					SimpleUtils.pass("Dialog title is expected!");
+				} else {
+					SimpleUtils.fail("Dialog title is not correct", false);
+				}
+				//Check setting content.
+				String settingContent = editDialog.findElement(By.cssSelector(".lg-modal__body")).getText();
+				if(settingContent.contains("Your state compliance laws are the default settings for this section, you can further edit the settings to fit your business.")
+						&& settingContent.contains("An employee should be scheduled for")
+						&& settingContent.contains("Meal Break for every")
+						&&settingContent.contains("hours of work.")){
+					SimpleUtils.pass("Setting content in the dialog is expected!");
+				} else {
+					SimpleUtils.fail("Setting content is not expected!", false);
+				}
+				//edit the content, input the parameters.
+				if (isElementLoaded(mealBreakDurationSelector, 10)
+						&& isElementLoaded(mealBreakPaidTypeSelector, 10)
+						&& isElementLoaded(editDialog.findElement(By.cssSelector("input")))) {
+					//set Meal break duration selector
+					selectByVisibleText(mealBreakDurationSelector,mealBreakDuration);
+
+					//set Meal break paid type selector
+					selectByVisibleText(mealBreakPaidTypeSelector,paidType);
+
+					//set schedule Hours Limit hour
+					editDialog.findElement(By.cssSelector("input")).clear();
+					editDialog.findElement(By.cssSelector("input")).sendKeys(scheduleHoursLimit);
+				} else {
+					SimpleUtils.fail("Parameters are not shown as expected!", false);
+				}
+
+				//save or cancel.
+				if (isElementLoaded(editDialog.findElement(By.cssSelector("[label=\"Cancel\"]")), 5)
+						&&isElementLoaded(editDialog.findElement(By.cssSelector("[ng-if=\"$ctrl.submitLabel\"]")), 5)){
+					if (saveOrNot){
+						clickTheElement(editDialog.findElement(By.cssSelector("[ng-if=\"$ctrl.submitLabel\"] button")));
+						String mealBreakSettingContent = getMealBreakContent();
+						SimpleUtils.assertOnFail("Setting is not saved successfully!",
+								mealBreakSettingContent.contains(mealBreakDuration)
+										&& mealBreakSettingContent.contains(paidType)
+										&& mealBreakSettingContent.contains(scheduleHoursLimit), false);
+					} else {
+						clickTheElement(editDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
+						SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getMealBreakContent()), false);
+					}
+				} else {
+					SimpleUtils.fail("Save or Cancel button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.fail("Meal Break dialog fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Edit Meal Break button is not loaded!", false);
+		}
 	}
 }

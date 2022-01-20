@@ -26,7 +26,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	// Added by Estelle
 	@FindBy(css="[class='console-navigation-item-label Labor Model']")
 	private WebElement laborModelTab;
-	@FindBy(css="[title='Labor Model']")
+	@FindBy(css="lg-dashboard-card[title='Labor Model']")
 	private WebElement laborModelTile;
 	@FindBy(css="[title='Labor Model Repository']")
 	private WebElement laborModelRepositoryTile;
@@ -671,7 +671,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 					if (isItMultipVersion(i)) {
 						expandTemplate(i);
 					}
-					configurationPage.archivePublishedOrDeleteDraftTemplate(templateName,action);
+					configurationPage.archiveOrDeleteTemplate(templateName);
 					break;
 
 				}
@@ -684,7 +684,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}
 	}
 
-	private boolean isItMultipVersion(int i) {
+	public boolean isItMultipVersion(int i) {
 		String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
 		if (classValue != null && classValue.contains("hasChildren")) {
 			return true;
@@ -692,7 +692,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 			return false;
 	}
 
-	private void expandTemplate(int i) {
+	public void expandTemplate(int i) {
 		clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 		waitForSeconds(3);
 	}
@@ -793,6 +793,134 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}else
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
 	}
+	// added by Fiona
+    @FindBy(css="nav.lg-tabs__nav>div:nth-last-child(2)")
+    private WebElement templateAssociationBTN;
+	@FindBy(xpath="//img[contains(@src, 'location')]/following-sibling::span")
+	private WebElement locationSubscription;
+	@FindBy(css="lg-button[label=\"Import\"] button")
+	private WebElement locationSubscriptionImportButton;
+	@FindBy(css="lg-button[label=\"Export\"] button")
+	private WebElement locationSubscriptionExportButton;
+
+	@Override
+	public void verifyEntryOfLaborModelSubscription() throws Exception {
+		scrollToBottom();
+		if(isElementLoaded(locationSubscription,5) && isElementEnabled(locationSubscriptionImportButton,5) && isElementEnabled(locationSubscriptionExportButton,5)){
+			SimpleUtils.pass("The Labor Model Subscription can show well");
+		}else {
+			SimpleUtils.fail("The Labor Model Subscription can NOT show well",false);
+		}
+	}
+
+	@Override
+	public void exportLaborModelSubscriptionCsv() throws Exception{
+		scrollToBottom();
+		if (isElementEnabled(locationSubscriptionExportButton,5) ) {
+			click(locationSubscriptionExportButton);
+			SimpleUtils.pass("Export button is clickable and can download file");
+		}else
+			SimpleUtils.fail("Export button load failed",false);
+	}
+
+	@FindBy(css="div.lg-modal__title-icon")
+	private WebElement importLocationsWorkRolePageTitle;
+	@FindBy(css="div [ng-if=\"!chooseFile && !checkValid\"]")
+	private WebElement contextOfUpload;
+	@FindBy(css = "lg-button[label=\"Cancel\"]")
+	private WebElement cancelBtnInImportLocationPage;
+	@FindBy(css = "lg-button[label=\"Import\"]")
+	private WebElement importBtnInImportLocationPage;
+	@FindBy(css = "input[type=\"file\"]")
+	private WebElement uploaderFileInputBtn;
+	@FindBy(css = "lg-button[label=\"OK\"]")
+	private WebElement okBtnInImportLocationPage;
+
+	@Override
+	public void verifyImportLocationLevelWorkRoleSubscription() {
+//		String pth = System.getProperty("user.dir");
+		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
+			click(locationSubscriptionImportButton);
+			if (verifyImportLocationWorkRolePageShow()) {
+				SimpleUtils.pass("Import location level work role page show well");
+			} else
+				SimpleUtils.fail("Import location level work role page load failed", true);
+			uploaderFileInputBtn.sendKeys( "/src/test/resources/WorkerRoleSubscription.csv");
+			waitForSeconds(5);
+			click(importBtnInImportLocationPage);
+			SimpleUtils.pass("File import action done");
+
+		} else
+			SimpleUtils.fail("Import button load failed", true);
+	}
+
+	@Override
+	public boolean verifyImportLocationWorkRolePageShow(){
+		String uploadText = "Upload csv file here";
+		if (isElementEnabled(importLocationsWorkRolePageTitle, 5) && isElementEnabled(contextOfUpload)
+				&& isElementEnabled(importBtnInImportLocationPage) &&
+				isElementEnabled(cancelBtnInImportLocationPage)) {
+			if (contextOfUpload.getText().trim().contains(uploadText)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate() {
+//		String pth = System.getProperty("user.dir");
+		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
+			click(locationSubscriptionImportButton);
+			if (verifyImportLocationWorkRolePageShow()) {
+				SimpleUtils.pass("Import location level work role page show well");
+			} else
+				SimpleUtils.fail("Import location level work role page load failed", true);
+			uploaderFileInputBtn.sendKeys("/src/test/resources/AutoUsingForLaborBudgetDisable.csv");
+			waitForSeconds(5);
+			click(importBtnInImportLocationPage);
+			SimpleUtils.pass("File import action done");
+		}
+	}
+
+	@Override
+	public void enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate() {
+		String pth = System.getProperty("user.dir");
+		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
+			click(locationSubscriptionImportButton);
+			if (verifyImportLocationWorkRolePageShow()) {
+				SimpleUtils.pass("Import location level work role page show well");
+			} else
+				SimpleUtils.fail("Import location level work role page load failed", true);
+			uploaderFileInputBtn.sendKeys("/src/test/resources/AutoUsingForLaborBudgetEnable.csv");
+			waitForSeconds(5);
+			click(importBtnInImportLocationPage);
+			SimpleUtils.pass("File import action done");
+		} else
+			SimpleUtils.fail("Import button load failed", true);
+	}
+
+	@Override
+	public boolean verifyWorkRoleStatusInLocationLevel(String workRole) {
+		boolean flag = false;
+		waitForSeconds(5);
+		if (workRolesInLocationLevel.size() > 0) {
+			for (WebElement workRolesInLocationLevel : workRolesInLocationLevel) {
+				String workRoleName = workRolesInLocationLevel.findElement(By.cssSelector("div.workRole")).getText().trim();
+				if (workRoleName.equalsIgnoreCase(workRole)) {
+					if (workRolesInLocationLevel.findElement(By.cssSelector("input")).getAttribute("class").contains("not-empty")) {
+						flag = true;
+					}
+					break;
+				}else {
+					continue;
+				}
+			}
+		} else
+			SimpleUtils.report("There is no assignment rule");
+		return flag;
+	}
+
 
 }
 

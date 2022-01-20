@@ -68,8 +68,6 @@ public interface PageFactory {
 
     OnboardingPage createOnboardingPage();
 
-    ComplianceDMViewPage createComplianceDMViewPage();
-
     NewsPage createNewsPage();
 
     ReportPage createConsoleReportPage();
@@ -83,4 +81,28 @@ public interface PageFactory {
     UserManagementPage createOpsPortalUserManagementPage();
 
     LaborModelPage createOpsPortalLaborModelPage();
+
+    ScheduleCommonPage createScheduleCommonPage();
+
+    AnalyzePage createAnalyzePage();
+
+    CreateSchedulePage createCreateSchedulePage();
+
+    DragAndDropPage createDragAndDropPage();
+
+    MySchedulePage createMySchedulePage();
+
+    ScheduleMainPage createScheduleMainPage();
+
+    ScheduleShiftTablePage createScheduleShiftTablePage();
+
+    ShiftOperatePage createShiftOperatePage();
+
+    SmartCardPage createSmartCardPage();
+
+    ToggleSummaryPage createToggleSummaryPage();
+
+    NewShiftPage createNewShiftPage();
+
+    SettingsAndAssociationPage createSettingsAndAssociationPage();
 }
