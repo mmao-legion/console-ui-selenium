@@ -14,6 +14,11 @@
         <classes>
             <class name="com.legion.tests.core.OpsPortal.LocationsTest">
                 <methods>
+                    <include name="verifyLocationCommonFeatureAsInternalAdmin" />
+                </methods>
+            </class>
+            <class name="com.legion.tests.core.OpsPortal.LaborModelTest">
+                <methods>
                     <include name="verifyImportLocationSubscriptionOfLaborModelTemplateAsInternalAdmin" />
                     <include name="verifyLocationCommonFeatureAsInternalAdmin" />
                 </methods>
