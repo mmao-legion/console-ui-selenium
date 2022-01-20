@@ -27,7 +27,10 @@ public class ConsoleWebPageFactory implements PageFactory {
     public TeamPage createConsoleTeamPage() {
     	return new ConsoleTeamPage();
     }
-
+	@Override
+	public PlanPage createConsolePlanPage() {
+		return new ConsolePlanPage();
+	}
     @Override
     public AnalyticsPage createConsoleAnalyticsPage() {
     	return new ConsoleAnalyticsPage();

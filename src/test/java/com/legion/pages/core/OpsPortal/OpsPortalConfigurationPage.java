@@ -12,9 +12,9 @@ import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
-
 import java.util.*;
-
+import static com.legion.utils.MyThreadLocal.driver;
+import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.tests.TestBase.*;
 import static com.legion.utils.MyThreadLocal.*;
 import static org.apache.commons.lang.math.RandomUtils.nextInt;
@@ -786,6 +786,49 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		return exsiting;
 	}
+
+	@FindBy(css=".slider")
+	private List<WebElement> radios;
+
+	public void changeOHtemp() throws Exception{
+		if (radios.size()>0)
+			clickTheElement(radios.get(0));
+		    //tap ok
+		    if(isElementLoaded(editTemplatePopupPage,3)){
+				clickTheElement(okButton);
+			}
+		//click save as draft
+		scrollToBottom();
+		if(isElementEnabled(saveAsDraftButton)) {
+			SimpleUtils.pass("User can click continue button successfully!");
+			clickTheElement(saveAsDraftButton);
+			waitForSeconds(3);
+		}
+	}
+
+	@FindBy(css="lg-button[icon=\"'img/legion/audithistory.svg'\"]")
+	private WebElement historyButton;
+	@FindBy(css="li.allow")
+	private List<WebElement> historyRecords;
+
+	public int historyRecordLimitCheck(String templateName) throws Exception {
+		int current=0;
+		searchTemplate(templateName);
+		if (templateNameList.size() > 0) {
+			clickTheElement(templateNameList.get(0));
+			wait(3);
+			//click the history button ond detail
+			clickTheElement(historyButton);
+			wait(2);
+			if (areListElementVisible(historyRecords, 5)) {
+				current=historyRecords.size();
+			}
+		}else
+				SimpleUtils.fail("No searched results for the remplate", false);
+		return 	current;
+
+	}
+
 
 	//open the specify template to edit or view details
 	@Override

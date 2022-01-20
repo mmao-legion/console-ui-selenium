@@ -6,6 +6,8 @@ import java.util.Map;
 
 public interface ConfigurationPage {
     public void goToConfigurationPage() throws Exception;
+    public int historyRecordLimitCheck(String templateName) throws Exception;
+    public void changeOHtemp() throws Exception;
     public void checkAllTemplateCards() throws Exception;
     public boolean isTemplateListPageShow() throws Exception;
     public void clickOnConfigurationCrad(String templateType) throws Exception;

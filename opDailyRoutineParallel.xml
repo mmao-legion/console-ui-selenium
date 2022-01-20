@@ -10,13 +10,14 @@
 
     <test name="Legion Test">
         <classes>
-            <class name="com.legion.tests.core.OpsPortal.LocationsTest"/>
-            <class name="com.legion.tests.core.OpsPortal.LocationsGroupTestInOP"/>
-            <class name="com.legion.tests.core.OpsPortal.JobTest"/>
-            <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest"/>
-            <class name="com.legion.tests.core.OpsPortal.ConfigurationTest"/>
-            <class name="com.legion.tests.core.OpsPortal.UserManagementTest"/>
-            <class name="com.legion.tests.core.OpsPortal.LaborModelTest"/>
+            <class name = "com.legion.tests.core.OpsPortal.LocationsTest"/>
+            <class name = "com.legion.tests.core.OpsPortal.LocationsGroupTestInOP"/>
+            <class name = "com.legion.tests.core.OpsPortal.JobTest"/>
+            <class name = "com.legion.tests.core.OpsPortal.NewNavigationFlowTest"/>
+            <class name = "com.legion.tests.core.OpsPortal.ConfigurationTest"/>
+            <class name = "com.legion.tests.core.OpsPortal.UserManagementTest"/>
+            <class name = "com.legion.tests.core.OpsPortal.LaborModelTest"/>
+            <class name = "com.legion.tests.core.PlanTest"/>
             <class name="com.legion.tests.core.opEmployeeManagement.AbsentManagementTemplateTest"/>
         </classes>
     </test>
