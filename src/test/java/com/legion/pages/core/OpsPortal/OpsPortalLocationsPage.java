@@ -304,7 +304,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		   SimpleUtils.pass("Search location with location country successfully!");
 
 		 */
-		//check search with location Distrcit
+		//check search with location District
 		if(searchOutLocation("ClearDistrict"));
 		   SimpleUtils.pass("Search location with location District successfully!");
 		//Check the 10 records in a page
@@ -339,21 +339,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Page back to location landing page after cancel from create location page");
 		}
 
-		/*----close the run of image upload, as it can not run at remote selenium grid master server
+		//---close the run of image upload, as it can not run at remote selenium grid master server
         clickTheElement(addLocationBtn);
 		waitForSeconds(2);
 		//check the import and remove picture at create location page
 		if (isElementEnabled(uploadImageBtn, 5)&&isElementEnabled(getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(0), 5)) {
 			WebElement inputEle=getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(0);
 			String filePath = imageFilePath.get("FilePath");
-			uploadFiles(inputEle,filePath);
-
-//			String filePath = imageFilePath.get("FilePath");
-//			File file = new File(filePath);
-//			getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(0).sendKeys(file.getCanonicalPath());
-
+			File file = new File(filePath);
+			getDriver().findElements(By.cssSelector("input[type=\"file\"]")).get(0).sendKeys(file.getCanonicalPath());
 			// wait for the picture to be loaded
-
 			waitForSeconds(6);
 			//check the image uploaded success
 			if(isElementDisplayed(locationUploadedImg)){
@@ -372,7 +367,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		clickTheElement(leaveThisPage);
 		waitForSeconds(3);
 
-		 */
 
 	}
 

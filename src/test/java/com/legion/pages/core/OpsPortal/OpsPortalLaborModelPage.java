@@ -45,9 +45,9 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}else
 			SimpleUtils.fail("Work Roles Tile load failed",false);
 	}
-	@FindBy(css="[class=\"lg-table ng-scope\"] tbody")
+	@FindBy(css="div.lg-templates-table-improved__grid-row")
 	private List<WebElement> templatesList;
-	@FindBy(css="[class=\"lg-table ng-scope\"] button span.ng-binding")
+	@FindBy(css="lg-button.name button span.ng-binding")
 	private List<WebElement> templateNameList;
 	@FindBy(css="span[class=\"lg-paged-search__showing top-right-action-button ng-scope\"] button")
 	private WebElement newTemplateBTN;

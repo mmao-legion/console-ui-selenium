@@ -1954,13 +1954,11 @@ public class LocationsTest extends TestBase {
         String locationName1 = "AutoTestLocationCheck"+currentTime1;
         int index = 0;
         String searchCharactor = "No touch";
-
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
         SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
         //go to locations tab
         locationsPage.clickOnLocationsTab();
         //check locations item

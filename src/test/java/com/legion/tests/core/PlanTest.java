@@ -318,7 +318,6 @@ public class PlanTest extends TestBase {
             String scPlanName = "Scenario Plan DoNot Delete";
             String regionName="RegionForPlan_Auto";
             String copiedPlanName="Test Copy To Generate Plan";
-
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
