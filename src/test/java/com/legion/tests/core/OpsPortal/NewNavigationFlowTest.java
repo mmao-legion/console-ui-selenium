@@ -353,9 +353,7 @@ public class NewNavigationFlowTest extends TestBase {
         loginPage.logOut();
 
         //verify navigation function by SM
-        Object[][]teamMemberCredentialsF=userCredentials.get("StoreManager");
-        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String.valueOf(teamMemberCredentialsF[0][0]),String.valueOf(teamMemberCredentialsF[0][1])
-                ,String.valueOf(teamMemberCredentialsF[0][2]));
+        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
         dashboardPage.clickOnSubMenuOnProfile("My Profile");
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         HashMap<String, String> userHRProfileInfo  = profileNewUIPage.getOneUserHRProfileInfo();
@@ -633,9 +631,7 @@ public class NewNavigationFlowTest extends TestBase {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
 
-        locationSelectorPage.changeDistrict(districtName);
-        Thread.sleep(4000);
-        locationSelectorPage.changeLocation(locationName);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
 
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
