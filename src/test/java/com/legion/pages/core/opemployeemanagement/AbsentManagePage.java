@@ -49,7 +49,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement templateSearchBox;
     @FindBy(css = "div.lg-search-icon.ng-scope")
     private WebElement searchIcon;
-    @FindBy(css = "table.lg-table.ng-scope>tbody>tr:first-child>td:nth-child(2)>lg-button>button")
+    @FindBy(css = "[class*=\"lg-table\"] .lg-templates-table-improved__grid-row.ng-scope .name span.ng-binding")
     private List<WebElement> templateNameOfSearchResult;
     @FindBy(css = "table.lg-table.ng-scope>tbody>tr:first-child>td:nth-child(4)")
     private List<WebElement> creatorOfSearchResult;

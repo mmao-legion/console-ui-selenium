@@ -47,7 +47,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="[class*=\"lg-table\"] .lg-templates-table-improved__grid-row")
 	private List<WebElement> templatesList;
 
-	@FindBy(css="[class=\"lg-table ng-scope\"] button span.ng-binding")
+	@FindBy(css="[class*=\"lg-table\"] .lg-templates-table-improved__grid-row.ng-scope .name span.ng-binding")
 	private List<WebElement> templateNameList;
 	@FindBy(css="lg-eg-status[type='Draft']")
 	private List<WebElement> templateDraftStatusList;
@@ -354,7 +354,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public void clickOnTemplateName(String templateType) throws Exception {
 		if(isTemplateListPageShow()){
-			String classValue = templatesList.get(0).findElement(By.cssSelector("tr")).getAttribute("class");
+			String classValue = templatesList.get(0).getAttribute("class");
 			if(classValue!=null && classValue.contains("hasChildren")){
 				clickTheElement(templateToggleButton);
 				waitForSeconds(3);
@@ -838,12 +838,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
-							clickTheElement(templatesList.get(i).findElement(By.cssSelector("tr.child-row.ng-scope button")));
+							clickTheElement(templateNameList.get(i));
 						}else{
 							clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
 						}
@@ -3527,7 +3527,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	private boolean isItMultipVersion() {
-		String classValue = templatesList.get(0).findElement(By.cssSelector("tr")).getAttribute("class");
+		String classValue = templatesList.get(0).getAttribute("class");
 		if (classValue != null && classValue.contains("hasChildren")) {
 			return true;
 		} else
@@ -3541,7 +3541,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				&& templateNameList.size()>0) {
 			for (int i = 0; i< templateNameList.size(); i++) {
 				if (templateNameList.get(i).getText().equalsIgnoreCase(templateName)) {
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templateToggleButton);
 						waitForSeconds(3);
@@ -3615,11 +3615,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
-						clickTheElement(templatesList.get(i).findElement(By.cssSelector("tr.child-row.ng-scope button")));
+						clickTheElement(templateNameList.get(i));
 						waitForSeconds(15);
 						if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 								&&isElementEnabled(templateDetailsPageForm)){

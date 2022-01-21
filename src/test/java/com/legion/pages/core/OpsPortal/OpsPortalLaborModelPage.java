@@ -93,12 +93,12 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 			searchTemplate(template_name);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(template_name)){
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
-							clickTheElement(templatesList.get(i).findElement(By.cssSelector("tr.child-row.ng-scope button")));
+							clickTheElement(templateNameList.get(i));
 						}else{
 							clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
 						}
@@ -685,7 +685,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	}
 
 	public boolean isItMultipVersion(int i) {
-		String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+		String classValue = templatesList.get(i).getAttribute("class");
 		if (classValue != null && classValue.contains("hasChildren")) {
 			return true;
 		} else
