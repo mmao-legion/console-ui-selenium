@@ -964,6 +964,7 @@ public class CinemarkMinorTest extends TestBase {
             String scheduleFromToTime = "8am - 4pm";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Mon";
+            setStrictlyEnforceMinorViolationSetting("No");
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
                     workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
         } catch (Exception e){

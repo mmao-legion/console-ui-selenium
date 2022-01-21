@@ -1997,32 +1997,56 @@ public class DMViewTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+            controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
+
+            //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
+            controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption("Yes, all unassigned shifts");
+
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //Validate the schedule status and hours on schedule list
-            if (!createSchedulePage.isWeekGenerated()){
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             }
             createSchedulePage.publishActiveSchedule();
 
             //Validate the schedule status and hours on schedule list
             scheduleCommonPage.navigateToNextWeek();
-            if (!createSchedulePage.isWeekGenerated()){
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             }
             createSchedulePage.publishActiveSchedule();
 
             //Validate the schedule status and hours on schedule list
             scheduleCommonPage.navigateToPreviousWeek();
             scheduleCommonPage.navigateToPreviousWeek();
-            if (!createSchedulePage.isWeekGenerated()){
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             }
             createSchedulePage.publishActiveSchedule();
 

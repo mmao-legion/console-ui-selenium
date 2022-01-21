@@ -97,7 +97,7 @@
             <class name="com.legion.tests.core.CinemarkMinorTest">
                 <methods>
                     <!--                           <include name="verifyTurnOnAndSetMinorRuleAsInternalAdmin" />Due to new template -->
-<!--                    <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" /> https://legiontech.atlassian.net/browse/OPS-4123-->
+                    <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
                     <include name="verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin" />
                     <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />

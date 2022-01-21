@@ -17,9 +17,9 @@
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <!--                   <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5413 -->
                     <!--<include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" /> we don't have open shifts widget for now-->
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewForNotStartedScheduleOnNonTAEnvAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewForInProgressScheduleOnNonTAEnvAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewForPublishedScheduleOnNonTAEnvAsInternalAdmin" />
+                    <!--                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewForNotStartedScheduleOnNonTAEnvAsInternalAdmin" />
+                                        <include name="verifyScheduleStatusAndHoursOnScheduleDMViewForInProgressScheduleOnNonTAEnvAsInternalAdmin" />
+                                        <include name="verifyScheduleStatusAndHoursOnScheduleDMViewForPublishedScheduleOnNonTAEnvAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5988 -->
                 </methods>
             </class>
         </classes>
