@@ -187,7 +187,6 @@
                     <include name="verifyActionRequiredSmartCardDisplayCorrectlyWhenScheduleCreatedByCopyPartialAsInternalAdmin" />
                     <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember" />
                     <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" />
-                    <include name="verifyPTORequestInScheduleAsInternalAdmin" />
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
                     <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" />

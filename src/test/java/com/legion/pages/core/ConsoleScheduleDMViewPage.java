@@ -458,11 +458,6 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         float projectedTotalHours = 0;
         if (areListElementVisible(schedulesInDMView, 10) && schedulesInDMView.size() != 0){
             for (WebElement schedule : schedulesInDMView){
-//                budgetedTotalHours += Float.parseFloat(schedule.findElement(By.xpath("./div[3]")).getText().replace(",",""));
-//                scheduledTotalHours += Float.parseFloat(schedule.findElement(By.xpath("./div[4]")).getText().replace(",",""));
-                // projectedTotalHours += Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_CLOCKED_HOURS\"]")).getText().replace(",",""));
-                // todo: failed due to https://legiontech.atlassian.net/browse/SCH-2524
-
                 if (areListElementVisible(budgetHours, 5) && areListElementVisible(publishedHours, 5)){
                     budgetedTotalHours += Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_BUDGET_HOURS\"]")).getText().replace(",",""));
                     scheduledTotalHours += Float.parseFloat(schedule.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_PUBLISHED_HOURS\"]")).getText().replace(",",""));
@@ -1748,6 +1743,151 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             SimpleUtils.fail("Schedule Week View Page: Budget and Scheduled smart card not loaded Successfully!", false);
         }
         return budgetNScheduledHours;
+    }
+
+    @FindBy(css = "div.analytics-new-table-group")
+    private List<WebElement> DMtableRowCount;
+
+    @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row')]//span/img/following-sibling::span")
+    private List<WebElement> locationName;
+
+    @FindBy(css = ".sc-iLcRtq.eQbIAU")
+    private List<WebElement> hoursOnDashboardPage;
+
+    @FindBy(css = ".sc-cxFVwQ.hxUXAv")
+    private List<WebElement> titleOnDashboardPage;
+
+    @FindBy(xpath = "//*[name()='svg']//*[name()='text' and @text-anchor='end']")
+    private List<WebElement> projectedOverBudget;
+
+    @FindBy(css = "span.dms-box-item-unit-trend")
+    private WebElement projectedWithinOrOverBudget;
+
+    @Override
+    public List<Float> validateScheduleAndBudgetedHours() throws Exception {
+        HashMap<String,List<String>> budgetHours = new HashMap<>();
+        HashMap<String,List<String>> publishHours = new HashMap<>();
+        HashMap<String,List<String>> clockHours = new HashMap<>();
+        List<Float> totalHoursFromSchTbl = new ArrayList<>();
+        List<String> budgetHrs = new ArrayList<>();
+        List<String> publishedHrs = new ArrayList<>();
+        List<String> clockedHrs = new ArrayList<>();
+        if(areListElementVisible(DMtableRowCount,10) && DMtableRowCount.size()!=0){
+            for(int i=0; i<DMtableRowCount.size();i++){
+                List<WebElement> divs = DMtableRowCount.get(i).findElements(By.cssSelector(".analytics-new-table-group-row-open div"));
+                if(areListElementVisible(divs,10) && divs.size()!=0){
+                    SimpleUtils.report("Budget Hours for " + locationName.get(i).getText() + " is : " + divs.get(3).getText());
+                    SimpleUtils.report("Publish Hours for " + locationName.get(i).getText() + " is : " + divs.get(4).getText());
+                    SimpleUtils.report("Clocked Hours for " + locationName.get(i).getText() + " is : " + divs.get(5).getText());
+                    budgetHrs.add(divs.get(3).getText());
+                    publishedHrs.add(divs.get(3).getText());
+                    clockedHrs.add(divs.get(3).getText());
+                    budgetHours.put("Budgeted Hours",budgetHrs);
+                    publishHours.put("Published Hours",publishedHrs);
+                    clockHours.put("Clocked Hours",clockedHrs);
+                }
+            }
+            Float totalBudgetHoursFromSchTbl = calculateTotalHoursFromScheduleTable(budgetHours);
+            Float totalPublishedHoursFromSchTbl = calculateTotalHoursFromScheduleTable(publishHours);
+            Float totalClockedHoursFromSchTbl = calculateTotalHoursFromScheduleTable(clockHours);
+            totalHoursFromSchTbl.add(totalBudgetHoursFromSchTbl);
+            totalHoursFromSchTbl.add(totalPublishedHoursFromSchTbl);
+            totalHoursFromSchTbl.add(totalClockedHoursFromSchTbl);
+
+        }else{
+            SimpleUtils.fail("No data available on Schedule table in DM view",false);
+        }
+
+        return totalHoursFromSchTbl;
+    }
+
+    public Float calculateTotalHoursFromScheduleTable(HashMap<String,List<String>> hoursCalulationFromSchTbl){
+        Float totalActualHours = 0.0f;
+        Float totalActualHoursFromSchTbl = 0.0f;
+        for (Map.Entry<String, List<String>> entry : hoursCalulationFromSchTbl.entrySet()) {
+            String key = entry.getKey();
+
+            List<String> value = entry.getValue();
+            for(String aString : value){
+                totalActualHours = Float.parseFloat(aString.replace(",",""));
+                totalActualHoursFromSchTbl = totalActualHoursFromSchTbl + totalActualHours;
+            }
+        }
+        return totalActualHoursFromSchTbl;
+    }
+
+    @Override
+    public void compareHoursFromScheduleAndDashboardPage(List<Float> totalHoursFromSchTbl) throws Exception{
+
+        List<Float> totalHoursFromDashboardTbl = new ArrayList<>();
+        if(areListElementVisible(hoursOnDashboardPage,10) && hoursOnDashboardPage.size()!=0){
+            for(int i =0; i < hoursOnDashboardPage.size();i++){
+                totalHoursFromDashboardTbl.add(Float.parseFloat(hoursOnDashboardPage.get(i).getText().replace(",","")));
+            }
+            for(int j=0; j < totalHoursFromSchTbl.size();j++){
+                if(totalHoursFromSchTbl.get(j).equals(totalHoursFromDashboardTbl.get(j))){
+                    SimpleUtils.pass(titleOnDashboardPage.get(j).getText() +
+                            " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
+                            + " matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j));
+                }else{
+                    SimpleUtils.fail(titleOnDashboardPage.get(j).getText() +
+                            " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
+                            + " not matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j),true);
+                }
+            }
+        }else{
+            SimpleUtils.fail("No data available for Hours on Dashboard page in DM view",false);
+        }
+    }
+
+    public float getProjectedOverBudget(){
+        float totalCountProjectedOverBudget = 0.0f;
+        if(areListElementVisible(projectedOverBudget,10) && projectedOverBudget.size()!=0){
+            for(int i=0;i<projectedOverBudget.size();i++){
+                float countProjectedOverBudget = Float.parseFloat(projectedOverBudget.get(i).getText());
+                totalCountProjectedOverBudget = totalCountProjectedOverBudget + countProjectedOverBudget;
+            }
+        }else{
+            SimpleUtils.fail("No data available for Projected Over Budget section on location specific date in DM view",false);
+        }
+        return totalCountProjectedOverBudget;
+    }
+
+    @Override
+    public void compareHoursFromScheduleSmartCardAndDashboardSmartCard(List<Float> totalHoursFromSchTbl) throws Exception{
+
+        List<Float> totalHoursFromDashboardTbl = new ArrayList<>();
+        if(areListElementVisible(hoursOnDashboardPage,10) && hoursOnDashboardPage.size()!=0){
+            for(int i =0; i < hoursOnDashboardPage.size();i++){
+                totalHoursFromDashboardTbl.add(Float.parseFloat(hoursOnDashboardPage.get(i).getText().replace(",","")));
+            }
+            for(int j=0; j < totalHoursFromSchTbl.size();j++){
+                if(totalHoursFromSchTbl.get(j).equals(totalHoursFromDashboardTbl.get(j))){
+                    SimpleUtils.pass(titleOnDashboardPage.get(j).getText().replace(",","") +
+                            " Hours from Dashboard page " + totalHoursFromDashboardTbl.get(j)
+                            + " matching with the hours present on Schedule Page " + totalHoursFromSchTbl.get(j));
+                }
+            }
+        }else{
+            SimpleUtils.fail("No data available for Hours on Dashboard page in DM view",false);
+        }
+    }
+
+    @Override
+    public void compareProjectedWithinBudget(float totalCountProjectedOverBudget) throws Exception{
+        if(isElementLoaded(projectedWithinOrOverBudget,10)){
+            String ProjectedWithinOrOverBudget = (projectedWithinOrOverBudget.getText().split(" "))[0];
+            if(totalCountProjectedOverBudget == Float.parseFloat(ProjectedWithinOrOverBudget)){
+                SimpleUtils.pass("Count of Projected Over/Under Budget on Dashboard page" +
+                        " " + Float.parseFloat(ProjectedWithinOrOverBudget) + " is same as Schedule page " + totalCountProjectedOverBudget);
+            }else{
+                SimpleUtils.fail("Count of Projected Over/Under Budget on Dashboard page" +
+                        " " + Float.parseFloat(ProjectedWithinOrOverBudget) + " not matching with Schedule page " + totalCountProjectedOverBudget,false);
+            }
+        }else{
+            SimpleUtils.fail("No data available for Projected Over/Under Budget section on Dashboard in DM view",false);
+        }
+
     }
 
 }
