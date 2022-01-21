@@ -44,7 +44,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="div.lg-tab-toolbar__search")
 	private WebElement searchField;
 
-	@FindBy(css="[class=\"lg-table ng-scope\"] tbody")
+	@FindBy(css="[class*=\"lg-table\"] .lg-templates-table-improved__grid-row")
 	private List<WebElement> templatesList;
 
 	@FindBy(css="[class=\"lg-table ng-scope\"] button span.ng-binding")
