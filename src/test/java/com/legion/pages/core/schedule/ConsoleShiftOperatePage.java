@@ -911,9 +911,6 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css="div.noUi-handle.noUi-handle-upper")
     private WebElement shiftEndTimeButton;
 
-    @FindBy(css="div.slider-section-description-break-time-item-blue")
-    private WebElement shiftTimeInEditShiftWindow;
-
     @FindBy(css = ".noUi-marker")
     private List<WebElement> noUiMakers;
 
@@ -939,9 +936,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public List<String> editShiftTime() throws Exception {
         List<String> shiftTimes= new ArrayList<>();
         if (isElementEnabled(shiftStartAndEndTimeContainer, 5) && isElementEnabled(shiftStartTimeButton, 5)
-                && isElementEnabled(shiftEndTimeButton, 5) && isElementEnabled(shiftTimeInEditShiftWindow, 5)) {
-
-            String shiftTimeBeforeUpdate = shiftTimeInEditShiftWindow.getText();
+                && isElementEnabled(shiftEndTimeButton, 5) && isElementEnabled(shiftCardOnEditShiftTimePage, 5)) {
+            String shiftTimeBeforeUpdate = getInfoFromCardOnEditShiftTimePage().get("shiftTime");
             shiftTimes.add(0, shiftTimeBeforeUpdate);
             if (areListElementVisible(noUiMakers, 5) && areListElementVisible(noUiValues, 5) && noUiMakers.size() == noUiValues.size()) {
                 String currentNow = shiftEndTimeButton.getAttribute("aria-valuenow");
@@ -949,7 +945,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 mouseHoverDragandDrop(shiftEndTimeButton, noUiMakers.get(currentValue - 1));
                 waitForSeconds(2);
             }
-            String shiftTimeAfterUpdate = shiftTimeInEditShiftWindow.getText();
+            String shiftTimeAfterUpdate = getInfoFromCardOnEditShiftTimePage().get("shiftTime");
             if (!shiftTimeBeforeUpdate.equals(shiftTimeAfterUpdate)) {
                 SimpleUtils.pass("Edit Shift Time successfully");
                 shiftTimes.add(1, shiftTimeAfterUpdate);
@@ -997,7 +993,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     public void verifyShiftTime(String shiftTime) throws Exception {
         if (isElementEnabled(shiftStartAndEndTimeContainer, 5)) {
-            if (shiftTimeInEditShiftWindow.getText().equals(shiftTime)) {
+            if (getInfoFromCardOnEditShiftTimePage().get("shiftTime").equals(shiftTime)) {
                 SimpleUtils.pass("Edit Shift Time PopUp window load successfully");
             }
 
@@ -2712,6 +2708,29 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("The offer list is null!",false);
         }
         return status;
+    }
+
+
+    @FindBy(css = "div.worker-shift-container")
+    private WebElement shiftCardOnEditShiftTimePage;
+
+    public HashMap<String, String> getInfoFromCardOnEditShiftTimePage () throws Exception {
+        HashMap<String, String> shiftInfo = new HashMap<>();
+        if (isElementLoaded(shiftCardOnEditShiftTimePage, 5)) {
+            WebElement workNameAndWorkRole = shiftCardOnEditShiftTimePage.findElement(By.cssSelector("div.sch-day-view-shift-worker-name"));
+            shiftInfo.put("workName",
+                    workNameAndWorkRole.getText().split("\\(")[0]);
+            shiftInfo.put("workRole",
+                    workNameAndWorkRole.getText().split("\\(")[1].replace("(","").replace(")",""));
+            shiftInfo.put("shiftTime",
+                    shiftCardOnEditShiftTimePage.findElement(By.cssSelector(".sch-day-view-shift-time [ng-if=\"isLongShift(shift)\"]")).getText());
+            List<WebElement> shiftHrs = shiftCardOnEditShiftTimePage.findElements(By.cssSelector(".sch-day-view-worker-time span"));
+            shiftInfo.put("workCurrentShiftHrs", shiftHrs.get(0).getText());
+            shiftInfo.put("workWeekShiftsHrs", shiftHrs.get(1).getText().replace("| ",""));
+            shiftInfo.put("jobTitle", shiftCardOnEditShiftTimePage.findElement(By.cssSelector(".sch-day-view-shift-worker-title-role")).getText());
+        } else
+            SimpleUtils.fail("The shift card on edit shift time page fail to load! ", false);
+        return shiftInfo;
     }
 }
 

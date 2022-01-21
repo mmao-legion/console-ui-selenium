@@ -3190,6 +3190,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			}
 
 		} else{
+			scrollToBottom();
 			if (isElementLoaded(sendUsernameInActionsSection, 5) && isElementLoaded(resetPasswordInActionsSection, 5)){
 				SimpleUtils.pass("User Profile page: The Send Username and Reset Password buttons in Actions section display correctly! ");
 			} else {

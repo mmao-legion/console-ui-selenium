@@ -666,13 +666,13 @@ public class SplitAndSpreadTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             List<String> shiftInfo =  scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
             String tmFirstName = shiftInfo.get(0);
-            String tmLastName = shiftInfo.get(5);
             int i=0;
             while (i< 200 && (tmFirstName.equalsIgnoreCase("open") || tmFirstName.equalsIgnoreCase("Unassigned"))) {
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
                 tmFirstName  = shiftInfo.get(0);
                 i++;
             }
+            String tmLastName = shiftInfo.get(5);
             String workRole = shiftInfo.get(4);
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();

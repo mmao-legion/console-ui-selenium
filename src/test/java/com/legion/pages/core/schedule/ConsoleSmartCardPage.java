@@ -708,7 +708,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         }
     }
 
-    @FindBy(css = "[ng-if=\"controlPanel.editMode !== 'edit' || controlPanel.isPublished\"] .card-carousel-card-smart-card-required")
+    @FindBy(css = "[ng-if=\"controlPanel.fns.getVisibility('PUBLISH') && hasSchedule() && controlPanel.canPublish\"] .card-carousel-card-smart-card-required")
     private WebElement scheduleNotPublishedSmartCard;
 
     @Override

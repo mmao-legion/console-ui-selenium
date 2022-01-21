@@ -355,7 +355,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public void clickOnTemplateName(String templateType) throws Exception {
 		if(isTemplateListPageShow()){
-			String classValue = templatesList.get(0).findElement(By.cssSelector("tr")).getAttribute("class");
+			String classValue = templatesList.get(0).getAttribute("class");
 			if(classValue!=null && classValue.contains("hasChildren")){
 				clickTheElement(templateToggleButton);
 				waitForSeconds(3);
@@ -441,7 +441,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
-							clickTheElement(templatesList.get(i).findElement(By.cssSelector("tr.child-row.ng-scope button")));
+							clickTheElement(getDriver().findElement(By.cssSelector("[ng-repeat=\"child in item.childTemplate\"] button")));
 						}else{
 							clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
 						}
@@ -3100,7 +3100,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	private boolean isItMultipVersion() {
-		String classValue = templatesList.get(0).findElement(By.cssSelector("tr")).getAttribute("class");
+		String classValue = templatesList.get(0).getAttribute("class");
 		if (classValue != null && classValue.contains("hasChildren")) {
 			return true;
 		} else
@@ -3188,7 +3188,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
