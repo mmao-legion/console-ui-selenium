@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
@@ -1133,7 +1134,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
         cinemarkMinorPage.saveOrPublishTemplate(CinemarkMinorTest.templateAction.Save_As_Draft.getValue());
 
         //delete the template.
-        cinemarkMinorPage.findDefaultTemplate(templateName);
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.clickOnSpecifyTemplateName(templateName, "view");
         cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Delete.getValue());
         cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.OKWhenPublish.getValue());
     }
@@ -1187,7 +1189,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
         cinemarkMinorPage.saveOrPublishTemplate(CinemarkMinorTest.templateAction.Save_As_Draft.getValue());
 
         //delete the template.
-        cinemarkMinorPage.findDefaultTemplate(templateName);
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.clickOnSpecifyTemplateName(templateName, "view");
         cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Delete.getValue());
         cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.OKWhenPublish.getValue());
     }
