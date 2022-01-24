@@ -232,7 +232,15 @@ public class AbsentManagePage extends BasePage {
     }
 
     public boolean isNewTemplateButtonDisplayedAndEnabled() {
-        return newTemplateButton.isDisplayed() && newTemplateButton.isEnabled();
+        try {
+            if (isElementLoaded(newTemplateButton, 20) && isElementEnabled(newTemplateButton, 20)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void createANewTemplate(String tempName, String tempDesc) {

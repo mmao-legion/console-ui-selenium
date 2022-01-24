@@ -1,5 +1,6 @@
 package com.legion.tests.core.opEmployeeManagement;
 
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.opemployeemanagement.AbsentManagePage;
 import com.legion.pages.core.opemployeemanagement.EmployeeManagementPanelPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffReasonConfigurationPage;
@@ -28,7 +29,9 @@ public class AbsentManagementTemplateTest extends TestBase {
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String) params[1], (String) params[2], (String) params[3]);
         RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         modelSwitchPage.switchToOpsPortal();
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
     }
 
     @Automated(automated = "Automated")
