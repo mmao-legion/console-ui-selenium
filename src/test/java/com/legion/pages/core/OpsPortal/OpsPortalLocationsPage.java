@@ -1777,18 +1777,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public List<String> getLocationsInDistrict(String districtName) throws Exception {
+	public List<String> getLocationsInDistrict(String upperFieldName) throws Exception {
 		List<WebElement> locationsInManageLocation = new ArrayList<>();
 		List<String> locations = new ArrayList<>();
-		if (isElementLoaded(upperfieldsInLocations, 15)) {
-			if (districtName != null && !districtName.isEmpty()) {
-				upperfieldsInLocations.clear();
-				searchUpperFields(districtName);
+		if (isElementLoaded(upperfieldsSearchInputBox, 15)) {
+			if (upperfieldsSearchInputBox != null) {
+				upperfieldsSearchInputBox.clear();
+				searchUpperFields(upperFieldName);
 				waitForSeconds(10);
 				if (upperfieldRows.size() > 0) {
 					click(upperfieldRows.get(0).findElement(By.cssSelector("lg-button")));
 					waitUntilElementIsVisible(editUpperfieldBtn);
 					click(editUpperfieldBtn);
+					waitForSeconds(3);
+					scrollToBottom();
 					click(managementLocationBtn);
 					if (isElementLoaded(locationsInManageLocationPopup, 5)) {
 						SimpleUtils.pass("Manage location popup window is showing Now");
@@ -1797,7 +1799,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 							String locationName = location.getText();
 							locations.add(locationName);
 						}
-						SimpleUtils.pass("There is " + locations.size() + " locations in " + districtName);
+						SimpleUtils.pass("There is " + locations.size() + " locations in " + upperFieldName);
 					} else {
 						SimpleUtils.pass("Manage location popup window is not showing");
 					}
