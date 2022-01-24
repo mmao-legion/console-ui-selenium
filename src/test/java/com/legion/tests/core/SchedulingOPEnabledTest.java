@@ -1178,7 +1178,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
         cinemarkMinorPage.saveOrPublishTemplate(CinemarkMinorTest.templateAction.Save_As_Draft.getValue());
 
         //Open the template to check if the values saved successfully.
-        cinemarkMinorPage.findDefaultTemplate(templateName);
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.clickOnSpecifyTemplateName(templateName, "view");
         cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
         cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.OKWhenEdit.getValue());
         SimpleUtils.assertOnFail("Auto publish option was not saved successfully!", option.equalsIgnoreCase(controlsNewUIPage.getAutoPublishSettings()), false);
@@ -1189,7 +1190,6 @@ public class SchedulingOPEnabledTest  extends TestBase {
         cinemarkMinorPage.saveOrPublishTemplate(CinemarkMinorTest.templateAction.Save_As_Draft.getValue());
 
         //delete the template.
-        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
         configurationPage.clickOnSpecifyTemplateName(templateName, "view");
         cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Delete.getValue());
         cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.OKWhenPublish.getValue());
