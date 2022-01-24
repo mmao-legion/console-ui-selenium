@@ -981,7 +981,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the hierarchy/priority order for all smart cards")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -1089,8 +1089,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             scheduleMainPage.saveSchedule();
             //Check the Schedule Not Publish smart card will display
-            SimpleUtils.assertOnFail("Schedule not published smart card should display for new generate schedule! ",
-                    smartCardPage.isScheduleNotPublishedSmartCardLoaded(),false);
+            SimpleUtils.assertOnFail("Schedule not published smart card should not display for generate schedule! ",
+                    !smartCardPage.isScheduleNotPublishedSmartCardLoaded(),false);
             createSchedulePage.publishActiveSchedule();
             //Check the Change Not Publish smart card will not display after publish
             SimpleUtils.assertOnFail("Change not published smart card should not display after publish! ",
