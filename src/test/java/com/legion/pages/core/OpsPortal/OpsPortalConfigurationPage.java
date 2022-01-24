@@ -358,7 +358,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(classValue!=null && classValue.contains("hasChildren")){
 				clickTheElement(templateToggleButton);
 				waitForSeconds(3);
-				clickTheElement(templatesList.get(0).findElements(By.cssSelector("button")).get(1));
+				clickTheElement(templateNameList.get(0));
 				waitForSeconds(20);
 				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 				&&isElementEnabled(templateDetailsPageForm)){
@@ -367,7 +367,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					SimpleUtils.fail("User open one " + templateType + " template failed",false);
 				}
 			}else{
-				clickTheElement(templatesList.get(0).findElement(By.cssSelector("button")));
+				clickTheElement(templateNameList.get(0));
 				waitForSeconds(20);
 				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 						&&isElementEnabled(templateDetailsPageForm)){
