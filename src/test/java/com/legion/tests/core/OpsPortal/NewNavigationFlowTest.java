@@ -621,8 +621,8 @@ public class NewNavigationFlowTest extends TestBase {
     @TestName(description = "Validated navigation bar show after switch to other tabs and then return to dashboard page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String districtName="OMDistrict1";
-        String locationName="OMLocation2";
+        String districtName="Fiona";
+        String locationName="FionaUsingLocation";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
