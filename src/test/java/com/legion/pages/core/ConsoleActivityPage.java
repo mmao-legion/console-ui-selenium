@@ -551,7 +551,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
     @Override
     public void verifyNotificationForUpdateAvailability(String requestName,String isApprovalRequired,String requestOrCancelLabel,String weekInfo,String repeatChange) throws Exception {
-        String expectedMessage = requestName+" updated availability.";
+        String expectedMessage = requestName+" updated work preferences.";
         String actualMessage = "";
         if (isApprovalRequired.toLowerCase().contains("not required")){
             if (areListElementVisible(activityCards, 15)) {
