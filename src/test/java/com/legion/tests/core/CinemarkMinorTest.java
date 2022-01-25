@@ -2899,9 +2899,12 @@ public class CinemarkMinorTest extends TestBase {
             cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), fromTimeAfterChanged, cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
             configurationPage.publishNowTheTemplate();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            Thread.sleep(360000);
-
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            int j = 0;
+            while (j<6) {
+                Thread.sleep(60000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                j++;
+            }
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
