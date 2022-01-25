@@ -44,6 +44,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="div.lg-tab-toolbar__search")
 	private WebElement searchField;
 
+
 	@FindBy(css="[ng-repeat-start=\"item in $ctrl.sortedRows\"]")
 	private List<WebElement> templatesList;
 
@@ -51,7 +52,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private List<WebElement> templateNameList;
 	@FindBy(css="lg-eg-status[type='Draft']")
 	private List<WebElement> templateDraftStatusList;
-	@FindBy(css="td.toggle i[class=\"fa fa-caret-right\"]")
+	@FindBy(css=".toggle i[class=\"fa fa-caret-right\"]")
 	private WebElement templateToggleButton;
 
 	@FindBy(css="lg-button[label=\"Edit\"]")
@@ -340,14 +341,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public boolean isTemplateListPageShow() throws Exception {
 		boolean flag = false;
-			if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
-				SimpleUtils.pass("Template landing page shows well");
-				flag = true;
-			}else{
-				SimpleUtils.fail("Template landing page was NOT loading well",false);
-				flag = false;
-			}
-			return flag;
+		if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
+			SimpleUtils.pass("Template landing page shows well");
+			flag = true;
+		}
+		return flag;
 	}
 
 // open the first one template on template list page
@@ -2034,7 +2032,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	}
 
-	@FindBy(css = "[ng-if=\"$ctrl.saveAsLabel\"]")
+	@FindBy(css = "[ng-if=\"$ctrl.saveAsLabel\"] button.pre-saveas")
 	private WebElement publishTemplateButton;
 
 	@FindBy(css = "div.modal-dialog")
@@ -3543,20 +3541,46 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if (templateNameList.get(i).getText().equalsIgnoreCase(templateName)) {
 					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
+						//expand the template.
 						clickTheElement(templateToggleButton);
 						waitForSeconds(3);
-						clickTheElement(templatesList.get(i).findElements(By.cssSelector("button")).get(0));
+						clickTheElement(templateNameList.get(i));
 						if (isElementLoaded(templateDetailsBTN, 20)) {
 							SimpleUtils.pass("Go to template detail page successfully! ");
 						} else
 							SimpleUtils.fail("Go to template detail page fail! ", false);
+						if (isElementLoaded(archiveBtn, 10)) {
+							clickTheElement(archiveBtn);
+							if(isElementEnabled(archiveTemplateDialog,10)){
+								clickTheElement(okButton);
+								displaySuccessMessage();
+							} else
+								SimpleUtils.fail("Archive template dialog pop up window load failed.",false);
+						} else if (isElementLoaded(deleteTemplateButton, 10)) {
+							clickTheElement(deleteTemplateButton);
+							if (isElementEnabled(deleteTemplateDialog,10)){
+								clickTheElement(okButton);
+								displaySuccessMessage();
+							} else {
+								SimpleUtils.fail("Delete template dialog pop up window load failed.",false);
+							}
+						} else {
+							SimpleUtils.fail("Archive and delete button fail to load! ", false);
+						}
+						clickTheElement(templateNameList.get(i));
+						if (isElementLoaded(templateDetailsBTN, 20)) {
+							SimpleUtils.pass("Go to template detail page successfully! ");
+						} else {
+							SimpleUtils.fail("Go to template detail page fail! ", false);
+						}
 					}else{
-						clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
+						clickTheElement(templateNameList.get(i));
 						if (isElementLoaded(templateDetailsBTN, 20)) {
 							SimpleUtils.pass("Go to template detail page successfully! ");
 						} else
 							SimpleUtils.fail("Go to template detail page fail! ", false);
 					}
+					//delete the draft version.
 					if (isElementLoaded(archiveBtn, 10)) {
 						clickTheElement(archiveBtn);
 						if(isElementEnabled(archiveTemplateDialog,10)){
@@ -3888,9 +3912,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}
 
 			}else
-				SimpleUtils.fail("There are no template in the list",false);
+				SimpleUtils.report("There are no template in the list");
 		}else {
-			SimpleUtils.fail("Labor model template list is not loaded well",false);
+			SimpleUtils.report("Labor model template list is not loaded well");
 		}
 	}
 
