@@ -2511,10 +2511,16 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		shiftOperatePage.convertToOpenShiftDirectly();
 		scheduleMainPage.saveSchedule();
 		createSchedulePage.publishActiveSchedule();
-		BasePage.waitForSeconds(30);
-		shiftOperatePage.clickOnProfileIconOfOpenShift();
-		scheduleShiftTablePage.clickViewStatusBtn();
-		shiftOperatePage.verifyListOfOfferNotNull();
+		int i = 0;
+		boolean hasOffers = false;
+		while (i < 10 && !hasOffers) {
+			BasePage.waitForSeconds(10);
+			shiftOperatePage.clickOnProfileIconOfOpenShift();
+			scheduleShiftTablePage.clickViewStatusBtn();
+			hasOffers = shiftOperatePage.checkIfOfferListHasOffers();
+			shiftOperatePage.closeViewStatusContainer();
+			i++;
+		}
 	}
 
 	@Automated(automated = "Automated")

@@ -569,10 +569,17 @@ public class SchedulingOPEnabledTest  extends TestBase {
             shiftOperatePage.convertToOpenShiftDirectly();
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
-            BasePage.waitForSeconds(30);
-            shiftOperatePage.clickOnProfileIconOfOpenShift();
-            scheduleShiftTablePage.clickViewStatusBtn();
-            shiftOperatePage.verifyListOfOfferNotNull();
+            int i = 0;
+            boolean hasOffers = false;
+            while (i < 10 && !hasOffers) {
+                BasePage.waitForSeconds(10);
+                shiftOperatePage.clickOnProfileIconOfOpenShift();
+                scheduleShiftTablePage.clickViewStatusBtn();
+                hasOffers = shiftOperatePage.checkIfOfferListHasOffers();
+                shiftOperatePage.closeViewStatusContainer();
+                i++;
+            }
+            SimpleUtils.assertOnFail("he offer list should not null!", hasOffers, false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
