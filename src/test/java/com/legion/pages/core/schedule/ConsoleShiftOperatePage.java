@@ -2210,12 +2210,15 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css = "div.tma-scroll-table tr")
     private List<WebElement> numberOfOffersMade;
     @Override
-    public void verifyListOfOfferNotNull() throws Exception {
+    public boolean checkIfOfferListHasOffers() throws Exception {
+        boolean hasOffer = false;
         if (areListElementVisible(numberOfOffersMade,20)){
+            hasOffer = true;
             SimpleUtils.pass("There is a offer list which is not null!");
         } else {
-            SimpleUtils.fail("The offer list is null!",false);
+            SimpleUtils.report("The offer list is null!");
         }
+        return hasOffer;
     }
 
 

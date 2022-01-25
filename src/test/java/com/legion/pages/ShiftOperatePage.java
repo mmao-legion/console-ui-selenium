@@ -78,7 +78,7 @@ public interface ShiftOperatePage {
     public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
     public void switchSearchTMAndRecommendedTMsTab() throws Exception;
     public void verifyEditShiftTimePopUpDisplay() throws Exception;
-    public void verifyListOfOfferNotNull() throws Exception;
+    public boolean checkIfOfferListHasOffers() throws Exception;
     public String getTheMessageOfTMScheduledStatus() throws Exception;
     public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception;
     public void verifyTMNotSelected() throws Exception;
