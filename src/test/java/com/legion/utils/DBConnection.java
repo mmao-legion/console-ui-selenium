@@ -6,8 +6,8 @@ public class DBConnection {
     public static void updateDB(String sql) {
         Connection con;
         String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://rds.release.legion.local:3306";
-        //String url = "jdbc:mysql://dev-eks-shared-rc-mysql8.cijomzi1o1vu.us-west-2.rds.amazonaws.com:3306";
+        //String url = "jdbc:mysql://rds.release.legion.local:3306";
+        String url = "jdbc:mysql://dev-eks-shared-rc-mysql8.cijomzi1o1vu.us-west-2.rds.amazonaws.com:3306";
         String user = "legion";
         String password = "legionwork";
         try {
@@ -15,6 +15,7 @@ public class DBConnection {
             con = DriverManager.getConnection(url, user, password);
             if (!con.isClosed())
                 System.out.println("------Connect DB successfully!------");
+            System.out.println(sql);
             Statement statement = con.createStatement();
             int result = statement.executeUpdate(sql);
             if (result > 0) {
@@ -42,8 +43,8 @@ public class DBConnection {
     public static String queryDB(String table, String columnLabel, String condition) {
         Connection con;
         String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://rds.release.legion.local:3306";
-        //String url = "jdbc:mysql://rds.shared.legion.local:3306";
+        //String url = "jdbc:mysql://rds.release.legion.local:3306";
+        String url = "jdbc:mysql://dev-eks-shared-rc-mysql8.cijomzi1o1vu.us-west-2.rds.amazonaws.com:3306";
         String user = "legion";
         String password = "legionwork";
         String value = null;
@@ -54,11 +55,14 @@ public class DBConnection {
                 System.out.println("------Connect DB successfully!------");
             Statement statement = con.createStatement();
             String sql = "Select " + columnLabel + " from " + table + " where " + condition;
+            System.out.println(sql);
             ResultSet rs = statement.executeQuery(sql);
-            while (rs.next()) {
+            if (rs.next()) {
                 value = rs.getString(columnLabel);
                 System.out.println(columnLabel + ": " + value + "\t");
                 System.out.println("--------Query successfully---------");
+            } else {
+                value = "No item returned!";
             }
             rs.close();
             statement.close();
