@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static java.lang.Integer.parseInt;
 
 public class TimeOffPage extends BasePage {
     public TimeOffPage() {
@@ -46,6 +47,8 @@ public class TimeOffPage extends BasePage {
     private WebElement nextMonth;
     @FindBy(css = "div.ranged-calendar__day.ng-binding.ng-scope.real-day")
     private List<WebElement> daysOnCalendar;
+    @FindBy(css = "div.real-day.is-today")
+    private WebElement today;
     @FindBy(css = "div.ranged-calendar__day.ng-binding.ng-scope.real-day")
     private WebElement timeOffEndDay;
     @FindBy(css = "all-day-control[options='startOptions'] lgn-check-box[checked='options.fullDay']>div")
@@ -66,6 +69,8 @@ public class TimeOffPage extends BasePage {
     //balance board
     @FindBy(css = "div.balance-wrapper>div>span.count-block-label")
     private List<WebElement> timeOffTypes;
+    @FindBy(css = "div.balance-wrapper>div:nth-child(1) span.count-block-counter-hours")
+    private WebElement annualLeaveBal;
 
     //Edit time off balance
     @FindBy(css = "div.balance-action lg-button[label='Edit']>button")
@@ -80,6 +85,12 @@ public class TimeOffPage extends BasePage {
     //history
     @FindBy(css = "div.balance-action lg-button[label='History']>button")
     private WebElement historyButton;
+
+    //time off request
+    @FindBy(css = "span.request-status.request-status-Approved")
+    private WebElement approveStatus;
+    @FindBy(css = "span.request-buttons-reject")
+    private WebElement rejectButton;
 
     public void goToTeamMemberDetail() {
         teamMember.click();
@@ -164,14 +175,17 @@ public class TimeOffPage extends BasePage {
         return requestErrorMessage.getText();
     }
 
-    public void editTimeOffBalance(String annualB, String floatingB, String sickB) {
+    public void editTimeOffBalance(String timeOffName, String bal) {
         editButton.click();
-        annualLeaveInput.click();
-        annualLeaveInput.sendKeys("annualB");
-        floatingHolidayInput.clear();
-        floatingHolidayInput.sendKeys("floatingB");
-        sickInput.clear();
-        sickInput.sendKeys("sickB");
+        if (timeOffName.equalsIgnoreCase("Annual Leave")) {
+            annualLeaveInput.clear();
+            annualLeaveInput.sendKeys(bal);
+        } else if (timeOffName.equalsIgnoreCase("Floating holiday")) {
+            floatingHolidayInput.clear();
+            floatingHolidayInput.sendKeys(bal);
+        } else {
+            System.out.println("No this type of time off!");
+        }
     }
 
     public ArrayList<String> getTimeOffTypes() {
@@ -185,6 +199,24 @@ public class TimeOffPage extends BasePage {
             timeOffOpts.add(e.getAttribute("title"));
         });
         return timeOffOpts;
+    }
+
+    public String getAnnualLeaveBalance() {
+        return annualLeaveBal.getText();
+    }
+
+    public void rejectTimeOffRequest() {
+        approveStatus.click();
+        if (isElementDisplayed(rejectButton)) {
+            rejectButton.click();
+        } else {
+            System.out.println("The reject button doesn't displayed!");
+        }
+    }
+
+    public int getToday(){
+        String day=today.getText();
+        return parseInt(day);
     }
 
 
