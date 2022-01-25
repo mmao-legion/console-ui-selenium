@@ -44,7 +44,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="div.lg-tab-toolbar__search")
 	private WebElement searchField;
 
-	@FindBy(css="[class*=\"lg-table\"] .lg-templates-table-improved__grid-row")
+	@FindBy(css="[ng-repeat-start=\"item in $ctrl.sortedRows\"]")
 	private List<WebElement> templatesList;
 
 	@FindBy(css="[class*=\"lg-table\"] .lg-templates-table-improved__grid-row.ng-scope .name span.ng-binding")
@@ -845,7 +845,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
 							clickTheElement(templateNameList.get(i));
 						}else{
-							clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
+							clickTheElement(templatesList.get(i).findElement(By.tagName("button")));
 						}
 						waitForSeconds(15);
 						if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)

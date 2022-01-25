@@ -816,7 +816,7 @@ public class ConfigurationTest extends TestBase {
             for(String dayAbbr:daysAbbr){
                 String hoursAndTeamMembersCount = hoursNTeamMembersCount.get(dayAbbr);
                 String tms = hoursAndTeamMembersCount.trim().split(" ")[1];
-                String numberOfTM = tms.substring(3);
+                String numberOfTM = tms.replaceAll("TMs", "");
                 numbersOfShifts.add(numberOfTM);
             }
             for(String numbersOfShift:numbersOfShifts){
