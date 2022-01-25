@@ -14,4 +14,5 @@ public interface NewsPage {
     public void clickModerationTab() throws Exception;
     public void clickOnConsoleNewsMenu() throws Exception;
     public boolean isNewsTabLoadWell() throws Exception;
+    public void enableViewing() throws Exception;
 }

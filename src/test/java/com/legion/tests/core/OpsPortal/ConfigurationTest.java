@@ -8,7 +8,7 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
-import com.legion.tests.core.ScheduleNewUITest;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
@@ -24,7 +24,7 @@ public class ConfigurationTest extends TestBase {
 
     public enum modelSwitchOperation{
         Console("Console"),
-        OperationPortal("Operation Portal");
+        OperationPortal("Control Center");
 
         private final String value;
         modelSwitchOperation(final String newValue) {
@@ -43,7 +43,7 @@ public class ConfigurationTest extends TestBase {
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
 
@@ -53,7 +53,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Dynamic Group Function->In Template Association")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDynamicGroupFunctionAsAInternalAdminForAssociation(String browser, String username, String password, String location) throws Exception {
+    public void verifyDynamicGroupFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
             //scheduling rules is not included as some exception, will added later
@@ -86,7 +86,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Create Each Template with Dynamic Group Association ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateEachTemplateWithDynamicGroupAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateEachTemplateWithDynamicGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
             //scheduling rules is not included as some exception, will added later
@@ -106,12 +106,36 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Operating Hours")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOperatiingHoursAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String OHtemplate = "Operating Hours";
+            String mode = "edit";
+            String templateName = "OHTemplateCreationCheck";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OHtemplate);
+            //check the operating hours list
+            configurationPage.OHListPageCheck();
+            //create a OH template and check create page
+            configurationPage.createOHTemplateUICheck(templateName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add country field to holidays")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddCountryFieldToHolidayAsAInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddCountryFieldToHolidayAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String OHtemplate = "Operating Hours";
             //scheduling rules is not included as some exception, will added later
@@ -136,7 +160,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify open each type template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyUserCanOpenEachTypeTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             List<String> templateTypeList = new ArrayList<String>(){{
@@ -164,7 +188,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "New advanced staffing rules page verify")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyNewAdvancedStaffingRulePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -190,7 +214,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Days of Week check box validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCheckBoxOfDaysOfWeekAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyCheckBoxOfDaysOfWeekAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -217,7 +241,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Days of Week formula validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyInputFormulaForDaysOfWeekAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyInputFormulaForDaysOfWeekAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -240,12 +264,44 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    //requirement from ops-3151
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void ceateMultipleHistortForOHTempInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Operating Hours";
+            String mode = "edit";
+            //OH templaye  3153 on RC OPauto
+            String templateName = "3153";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            int now=configurationPage.historyRecordLimitCheck(templateName);
+            if (now<101) {
+                SimpleUtils.pass("History records displayed successfully!");
+                //create another 100 records
+                for (int i = 0; i < 103-now; i++) {
+                    configurationPage.clickOnSpecifyTemplateName(templateName, mode);
+                    configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                    configurationPage.changeOHtemp();
+                }
+            } else {
+                SimpleUtils.fail("History records excedded 100!", false);
+            }
+        }
+        catch(Exception e){
+                SimpleUtils.fail(e.getMessage(), false);
+            }
+        }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time of Day Start Section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOfDayStartSectionAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOfDayStartSectionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -297,7 +353,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time of Day During Section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOfDayDuringSectionAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOfDayDuringSectionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -327,7 +383,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time of Day End Section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOfDayEndSectionAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOfDayEndSectionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -357,7 +413,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time of Day Formula Section")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOfDayFormulaSectionAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOfDayFormulaSectionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -386,7 +442,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Meal and Rest Breaks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyMealAndRestBreaksAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyMealAndRestBreaksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -426,7 +482,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Number of Shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyNumberOfShiftsAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyNumberOfShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try{
             String templateType = "Scheduling Rules";
@@ -457,7 +513,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Badges")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyBadgesOfAdvanceStaffingRulesAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyBadgesOfAdvanceStaffingRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -483,7 +539,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "X button and Check Mark button")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCrossAndCheckMarkButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyCrossAndCheckMarkButtonOfAdvanceStaffingRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -518,7 +574,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Cancel button and Save button")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifySaveAndCancelButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifySaveAndCancelButtonOfAdvanceStaffingRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -547,7 +603,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add Edit and Delete advance staffing rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditDeleteFunctionOfAdvanceStaffingRulesAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddEditDeleteFunctionOfAdvanceStaffingRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -577,7 +633,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Create all type template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateAllTypeTemplateAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateAllTypeTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
 
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -598,7 +654,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate advance staffing rule should be shown correct")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAdvancedStaffingRulesShowWellAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyAdvancedStaffingRulesShowWellAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType = "Scheduling Rules";
             String mode = "edit";
@@ -657,7 +713,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E days of week validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void daysOfWeekE2EAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void daysOfWeekE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
             List<String> days = new ArrayList<String>(){{
@@ -667,25 +723,29 @@ public class ConfigurationTest extends TestBase {
             List<String> daysAbbr = new ArrayList<String>();
             List<String> daysHasShifts = new ArrayList<String>();
 
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             //Back to console
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             //go to schedule function
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            daysHasShifts = schedulePage.verifyDaysHasShifts();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            daysHasShifts = scheduleShiftTablePage.verifyDaysHasShifts();
 
             for(String day:days){
                 String dayAbbr = day.substring(0,3);
@@ -710,7 +770,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E Verify number of shift function in advance staffing rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void numberOfShiftsInADVRuleE2EAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void numberOfShiftsInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
             String shiftsNumber = "9";
@@ -721,26 +781,30 @@ public class ConfigurationTest extends TestBase {
             List<String> daysAbbr = new ArrayList<String>();
             HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
 
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             //Back to console to select one location
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
 
             //go to schedule function
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            hoursNTeamMembersCount = schedulePage.getTheHoursNTheCountOfTMsForEachWeekDays();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            hoursNTeamMembersCount = scheduleShiftTablePage.getTheHoursNTheCountOfTMsForEachWeekDays();
 
             List<String> numbersOfShifts = new ArrayList<String>();
             //get abbr for each work day which have shifts
@@ -772,34 +836,42 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E -> Verify the time of day setting in advance staffing rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void timeOfDayInADVRuleE2EAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void timeOfDayInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
             String shiftTime = "8:30am - 5pm";
             List<String> indexes = new ArrayList<String>();
 
-            //Back to console to select one location
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            //back to console mode
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
 
             //go to schedule function
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
-            indexes = schedulePage.getIndexOfDaysHaveShifts();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+            indexes = scheduleShiftTablePage.getIndexOfDaysHaveShifts();
             for(String index:indexes){
-                schedulePage.verifyShiftTimeInReadMode(index,shiftTime);
+                scheduleShiftTablePage.verifyShiftTimeInReadMode(index,shiftTime);
             }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -811,44 +883,52 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E Verify meal and rest break function in advance staffing rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void mealAndRestBreakInADVRuleE2EAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void mealAndRestBreakInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
             String mealBreakTime = "1:30pm - 2:15pm";
             String restBreakTime = "2:30pm - 3:15pm";
             HashMap<String,String> mealRestBreaks= new HashMap<String,String>();
 
-            //Back to console to select one location
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            //back to console mode
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
 
             //go to schedule function
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             // Navigate to a week
-            schedulePage.navigateToNextWeek();
-            schedulePage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             // create the schedule if not created
-            boolean isWeekGenerated = schedulePage.isWeekGenerated();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
-                schedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            schedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
 //          Click on edit button on week view
-            schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , schedulePage.verifyContextOfTMDisplay(), false);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+            SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , shiftOperatePage.verifyContextOfTMDisplay(), false);
 //          Click On Profile icon -> Breaks
-            schedulePage.clickOnProfileIcon();
-            schedulePage.clickOnEditMeaLBreakTime();
-            mealRestBreaks = schedulePage.getMealAndRestBreaksTime();
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            mealRestBreaks = shiftOperatePage.getMealAndRestBreaksTime();
 
             if(mealRestBreaks.get("Meal Break").compareToIgnoreCase(mealBreakTime) == 0){
                 SimpleUtils.pass("The Meal Break info is correct");
             }else
-                SimpleUtils.fail("The Meal Break info is correct",false);
+                SimpleUtils.fail("The Meal Break info is incorrect",false);
             if(mealRestBreaks.get("Rest Break").compareToIgnoreCase(restBreakTime) == 0){
                 SimpleUtils.pass("The Rest Break info is correct");
             }else
@@ -863,7 +943,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Location Level Advance Staffing Rule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void locationLevelAdvanceStaffingRuleAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void locationLevelAdvanceStaffingRuleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String shiftsNumber = "9";
             List<String> days = new ArrayList<String>(){{
@@ -900,7 +980,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify archive published template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyArchivePublishedTemplateAsInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void verifyArchivePublishedTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String action = "Archive";
             String templateType = "Scheduling Policies";

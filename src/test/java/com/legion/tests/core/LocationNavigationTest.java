@@ -22,21 +22,15 @@ import static com.legion.utils.MyThreadLocal.*;
 
 public class LocationNavigationTest extends TestBase {
 
-    private static String nyCentralLocation = "NY CENTRAL";
-    private static String austinDownTownLocation = "AUSTIN DOWNTOWN";
-    private static String liftOpsParentLocation = "Lift Ops_Parent";
-    private static String location00127 = "00127";
-    private static String location00364 = "00364";
-    private static String location00808 = "00808";
-    private static String hQ = "HQ";
-    private static String rockVilleLocation = "Rock ville";
-    private static String mountainViewLocation = "Mountain View";
 
-    public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpperfieldsForDifferentEnterprises.json");
 
+    //The location that has same BU and  different region with the default location
+    private static String location2 = "5751200 - Ticket POS";
+    private static String Location = "Location";
     private static String District = "District";
     private static String Region = "Region";
     private static String BusinessUnit = "Business Unit";
+    private static String hQ = "HQ";
 
     @Override
     @BeforeMethod()
@@ -53,7 +47,7 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify changing location on SM schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
@@ -61,35 +55,26 @@ public class LocationNavigationTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                locationSelectorPage.changeLocationDirect(austinDownTownLocation);
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                locationSelectorPage.changeLocationDirect(location00364);
-            }
+            String anotherLocation = locationSelectorPage.changeAnotherLocation();
+
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                locationSelectorPage.changeLocationDirect(nyCentralLocation);
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                locationSelectorPage.changeLocationDirect(location00127);
-            }
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            locationSelectorPage.changeLocationDirect(location);
+
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                locationSelectorPage.changeLocationDirect(austinDownTownLocation);
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                locationSelectorPage.changeLocationDirect(location00364);
-            }
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            locationSelectorPage.changeLocationDirect(anotherLocation);
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -99,7 +84,7 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify searching and selecting the location on SM schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
@@ -107,141 +92,128 @@ public class LocationNavigationTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            String[] upperFields = null;
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                upperFields = districtsMap.get("KendraScott2_Enterprise2").split(">");
-                searchAndCheckTheUpperFields(liftOpsParentLocation, upperFields);
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                upperFields = districtsMap.get("CinemarkWkdy_Enterprise2").split(">");
-                searchAndCheckTheUpperFields(location00808, upperFields);
-            }
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
 
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                upperFields = districtsMap.get("KendraScott2_Enterprise").split(">");
-                searchAndCheckTheUpperFields(austinDownTownLocation, upperFields);
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                upperFields = districtsMap.get("CinemarkWkdy_Enterprise").split(">");
-                searchAndCheckTheUpperFields(location00364, upperFields);
-            }
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            //Get the upperfield info of current location
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields1 = locationSelectorPage.getSelectedUpperFields();
 
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                upperFields = districtsMap.get("KendraScott2_Enterprise2").split(">");
-                searchAndCheckTheUpperFields(liftOpsParentLocation, upperFields);
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                upperFields = districtsMap.get("CinemarkWkdy_Enterprise2").split(">");
-                searchAndCheckTheUpperFields(location00808, upperFields);
-            }
+            //Get the upperfield info of another location
+            locationSelectorPage.changeAnotherDistrict();
+            locationSelectorPage.changeAnotherLocation();
+            Map<String, String> upperFields2 = locationSelectorPage.getSelectedUpperFields();
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            searchAndCheckTheUpperFields(upperFields2);
+
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            searchAndCheckTheUpperFields(upperFields1);
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            searchAndCheckTheUpperFields(upperFields2);
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-    private void searchAndCheckTheUpperFields (String locationName, String[] upperFields) throws Exception {
+    private void searchAndCheckTheUpperFields (Map<String, String> upperFields) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
-
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields.get(Location));
+        Thread.sleep(2000);
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-        if (upperFields.length > 1) {
-            SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get("Location").equalsIgnoreCase(locationName)
-                            && selectedUpperFields.get("District").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
-                            && selectedUpperFields.get("Region").equalsIgnoreCase(upperFields[upperFields.length-2].trim()), false);
-        } else {
-            SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get("Location").equalsIgnoreCase(locationName)
-                            && selectedUpperFields.get("District").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
-                            && selectedUpperFields.get("HQ").equalsIgnoreCase(hQ), false);
-        }
+        SimpleUtils.assertOnFail("The selected upperfields is incorrect",
+                selectedUpperFields.get(Location).equalsIgnoreCase(upperFields.get(Location))
+                        && selectedUpperFields.get(District).equalsIgnoreCase(upperFields.get(District))
+                        && selectedUpperFields.get(Region).equalsIgnoreCase(upperFields.get(Region)), false);
     }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify changing district on SM schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyChangingDistrictOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+
+            //Get the upperfield info of current location
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields1 = locationSelectorPage.getSelectedUpperFields();
+
+            //Get the upperfield info of another location
+            locationSelectorPage.changeAnotherRegionInRegionView();
+            locationSelectorPage.changeAnotherDistrict();
+            locationSelectorPage.changeAnotherLocation();
+            Map<String, String> upperFields2 = locationSelectorPage.getSelectedUpperFields();
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            //Go to Schedule tab -> Overview page
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             //Click on change district button to change the district
-            String[] upperFields = null;
-            String locationName = "";
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                upperFields = districtsMap.get("KendraScott2_Enterprise2").split(">");
-                locationName = liftOpsParentLocation;
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                upperFields = districtsMap.get("CinemarkWkdy_Enterprise2").split(">");
-                locationName = location00808;
-            }
-            String districtName = upperFields[upperFields.length-1].trim();
+            String regionName = upperFields2.get(Region);
+            String districtName = upperFields2.get(District);
+            String locationName = upperFields2.get(Location);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
 
             //Go to Schedule tab -> Schedule page
             locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //Click on change district button to change the district
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                upperFields = districtsMap.get("KendraScott2_Enterprise").split(">");
-                locationName = austinDownTownLocation;
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                upperFields = districtsMap.get("CinemarkWkdy_Enterprise").split(">");
-                locationName = location00127;
-            }
-            districtName = upperFields[upperFields.length-1].trim();
+            regionName = upperFields1.get(Region);
+            districtName = upperFields1.get(District);
+            locationName = upperFields1.get(Location);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
 
             //Go to Schedule tab -> Forecast page
             locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             //Click on change district button to change the district
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                upperFields = districtsMap.get("KendraScott2_Enterprise2").split(">");
-                locationName = liftOpsParentLocation;
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                upperFields = districtsMap.get("CinemarkWkdy_Enterprise2").split(">");
-                locationName = location00808;
-            }
-            districtName = upperFields[upperFields.length-1].trim();
+            regionName = upperFields2.get(Region);
+            districtName = upperFields2.get(District);
+            locationName = upperFields2.get(Location);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
 
@@ -252,7 +224,7 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify searching and selecting the district on SM schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
@@ -260,153 +232,140 @@ public class LocationNavigationTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Get the upperfield info of current location
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields1 = locationSelectorPage.getSelectedUpperFields();
+
+            //Get the upperfield info of another location
+            locationSelectorPage.changeAnotherRegionInRegionView();
+            locationSelectorPage.changeAnotherDistrict();
+            locationSelectorPage.changeAnotherLocation();
+            Map<String, String> upperFields2 = locationSelectorPage.getSelectedUpperFields();
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-            String[] upperFields = null;
-            String locationName = "";
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+
             //Click on Search button to search the district and select
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                upperFields = districtsMap.get("KendraScott2_Enterprise2").split(">");
-                searchDistrictAndCheckTheUpperFields(upperFields);
-                locationName = liftOpsParentLocation;
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                upperFields = districtsMap.get("CinemarkWkdy_Enterprise2").split(">");
-                searchDistrictAndCheckTheUpperFields(upperFields);
-                locationName = location00808;
-            }
+            searchDistrictAndCheckTheUpperFields(upperFields2);
+
             //Verify the locations listed
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields2.get(Location));
 
             //Go to Schedule tab -> Forecast page
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            locationSelectorPage.changeLocationDirect(upperFields2.get(Location));
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             //Click on Search button to search the district and select
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                upperFields = districtsMap.get("KendraScott2_Enterprise").split(">");
-                searchDistrictAndCheckTheUpperFields(upperFields);
-                locationName = austinDownTownLocation;
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                upperFields = districtsMap.get("CinemarkWkdy_Enterprise").split(">");
-                searchDistrictAndCheckTheUpperFields(upperFields);
-                locationName = location00127;
-            }
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
+            searchDistrictAndCheckTheUpperFields(upperFields1);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields1.get(Location));
             //Go to Schedule tab -> Schedule page
-            locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            locationSelectorPage.changeLocationDirect(upperFields1.get(Location));
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //Click on Search button to search the district and select
-            if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-                upperFields = districtsMap.get("KendraScott2_Enterprise2").split(">");
-                searchDistrictAndCheckTheUpperFields(upperFields);
-                locationName = liftOpsParentLocation;
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-                upperFields = districtsMap.get("CinemarkWkdy_Enterprise2").split(">");
-                searchDistrictAndCheckTheUpperFields(upperFields);
-                locationName = location00808;
-            }
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
+            searchDistrictAndCheckTheUpperFields(upperFields2);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields2.get(Location));
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-    private void searchDistrictAndCheckTheUpperFields (String[] upperFields) throws Exception {
+    private void searchDistrictAndCheckTheUpperFields (Map<String, String> upperFields) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        if (upperFields.length > 1) {
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields[1].trim());
-        } else {
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields[0].trim());
-        }
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields.get(District));
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
 
         //Verify the upperfiled should be correct
         //Verify district is selected in the navigation bar
-        if (upperFields.length > 1) {
-            SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get("District").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
-                            && selectedUpperFields.get("Region").equalsIgnoreCase(upperFields[upperFields.length-2].trim()), false);
-        } else {
-            SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                    selectedUpperFields.get("Region").equalsIgnoreCase(upperFields[upperFields.length-1].trim())
-                            && selectedUpperFields.get("HQ").equalsIgnoreCase(hQ), false);
-        }
+        SimpleUtils.assertOnFail("The selected upperfields is incorrect",
+                selectedUpperFields.get(District).equalsIgnoreCase(upperFields.get(District))
+                        && selectedUpperFields.get(Region).equalsIgnoreCase(upperFields.get(Region)), false);
         //Verify the DM page loaded
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         SimpleUtils.assertOnFail("Schedule page DM page not loaded Successfully!",
-                schedulePage.isScheduleDMView(), false);
+                scheduleDMViewPage.isScheduleDMView(), false);
     }
 
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify changing Region on SM schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyChangingRegionOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+            //Get the upperfield info of current region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+
+            //Get the upperfield info of another region
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName2 = location2;
+            String regionName2 = upperFields.get(Region);
+            String districtName2 = upperFields.get(District);
+
+            //Go back the the default location
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            //Go to Schedule tab -> Overview page
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+
             //Click on change region button to change the region
-            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            String locationName = mountainViewLocation;
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
-            //Verify the locations listed
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+                    scheduleDMViewPage.isScheduleDMView(), false);
+            //Verify the district listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
 
             //Go to Schedule tab -> Schedule page
-            locationSelectorPage.changeUpperFieldsByName("District", districtName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            //Click on change region button to change the region
-            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            locationName = rockVilleLocation;
-            regionName = upperFields[upperFields.length-2].trim();
-            districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            //Click on change region button to change region to another one
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName2);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
-            //Verify the locations listed
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
+                    scheduleDMViewPage.isScheduleDMView(), false);
+            //Verify the district listed
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName2);
 
             //Go to Schedule tab -> Forecast page
-            locationSelectorPage.changeUpperFieldsByName("District", districtName);
-            locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-            //Click on change region button to change the region
-            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            regionName = upperFields[upperFields.length-2].trim();
-            districtName = upperFields[upperFields.length-1].trim();
+            locationSelectorPage.changeUpperFieldDirect(District, districtName2);
+            locationSelectorPage.changeLocationDirect(locationName2);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+
+            //Click on change region button to change back to the default region
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the locations listed
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
@@ -418,62 +377,75 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify searching and selecting the region on SM schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySearchingAndSelectingTheRegionOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Get the upperfield info of current location
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            Map<String, String> upperFields1 = upperFields;
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields.get(Region));
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            upperFields1.put(BusinessUnit, upperFields.get(BusinessUnit));
+
+            //Get the upperfield info of another location
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            Map<String, String> upperFields2 = upperFields;
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields.get(Region));
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             //Click on change region button to change the region
-            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            String locationName = mountainViewLocation;
-            searchRegionAndCheckTheUpperFields(upperFields, locationName);
+            searchRegionAndCheckTheUpperFields(upperFields2, location2);
 
             //Go to Schedule tab -> Forecast page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-            locationName = rockVilleLocation;
-            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            searchRegionAndCheckTheUpperFields(upperFields, locationName);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            searchRegionAndCheckTheUpperFields(upperFields1, location);
 
             //Go to Schedule tab -> Schedule page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            locationName = mountainViewLocation;
-            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            searchRegionAndCheckTheUpperFields(upperFields, locationName);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            searchRegionAndCheckTheUpperFields(upperFields2, location2);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-    private void searchRegionAndCheckTheUpperFields (String[] upperFields, String locationName) throws Exception {
+    private void searchRegionAndCheckTheUpperFields (Map<String, String> upperFields, String locationName) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields[upperFields.length-2].trim());
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields.get(Region));
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-        String bUName = upperFields[upperFields.length-3].trim();
-        String regionName = upperFields[upperFields.length-2].trim();
-        String districtName = upperFields[upperFields.length-1].trim();
+        String bUName = upperFields.get(BusinessUnit);
+        String regionName = upperFields.get(Region);
+        String districtName = upperFields.get(District);
         //Verify the upperfield should be correct
         //Verify district is selected in the navigation bar
         SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                selectedUpperFields.get("Region").equalsIgnoreCase(regionName)
-                        && selectedUpperFields.get("BU").equalsIgnoreCase(bUName), false);
+                selectedUpperFields.get(Region).equalsIgnoreCase(regionName)
+                        && selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(bUName), false);
 
         //Verify the Region page loaded
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+
         SimpleUtils.assertOnFail("Schedule page Region view not loaded Successfully!",
-                schedulePage.isScheduleDMView(), false);
+                scheduleDMViewPage.isScheduleDMView(), false);
 
         //Verify the district listed
-        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
 
         locationSelectorPage.changeUpperFieldDirect(District, districtName);
@@ -482,76 +454,82 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify changing business unit on SM schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyChangingBusinessUnitOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+
+            //Get the upperfield info of current location
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            Map<String, String> upperFields1 = upperFields;
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields.get(Region));
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            upperFields1.put(BusinessUnit, upperFields.get(BusinessUnit));
+
+            //Get the upperfield info of another location
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            Map<String, String> upperFields2 = upperFields;
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields.get(Region));
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+
+            //Go to Schedule tab -> Overview page
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             //Click on change region button to change the region
-            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            String locationName = mountainViewLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields2.get(Region));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, upperFields2.get(BusinessUnit));
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page BU view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the region listed
-            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields2.get(Region));
 
 
             //Go to Schedule tab -> Schedule page
-            locationSelectorPage.changeUpperFieldsByName(Region, regionName);
-            locationSelectorPage.changeUpperFieldsByName(District, districtName);
-            locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields2.get(Region));
+            locationSelectorPage.changeUpperFieldDirect(District, upperFields2.get(District));
+            locationSelectorPage.changeLocationDirect(location2);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //Click on change BU button to change the region
-            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            buName = upperFields[upperFields.length-3].trim();
-            locationName = rockVilleLocation;
-            regionName = upperFields[upperFields.length-2].trim();
-            districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields1.get(Region));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, upperFields1.get(BusinessUnit));
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the Region listed
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields1.get(Region));
 
             //Go to Schedule tab -> Forecast page
-            locationSelectorPage.changeUpperFieldsByName(Region, regionName);
-            locationSelectorPage.changeUpperFieldsByName(District, districtName);
-            locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields1.get(Region));
+            locationSelectorPage.changeUpperFieldDirect(District, upperFields1.get(District));
+            locationSelectorPage.changeLocationDirect(location);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             //Click on change region button to change the region
-            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            buName = upperFields[upperFields.length-3].trim();
-            regionName = upperFields[upperFields.length-2].trim();
-            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
-            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields2.get(Region));
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, upperFields2.get(BusinessUnit));
 
             //Verify the page loaded
             SimpleUtils.assertOnFail("Schedule page Region view page not loaded Successfully!",
-                    schedulePage.isScheduleDMView(), false);
+                    scheduleDMViewPage.isScheduleDMView(), false);
             //Verify the region listed
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
+            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(upperFields2.get(Region));
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -561,60 +539,73 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify searching and selecting the business unit on SM schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySearchingAndSelectingTheBusinessUnitOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Get the upperfield info of current location
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            Map<String, String> upperFields1 = upperFields;
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields.get(Region));
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            upperFields1.put(BusinessUnit, upperFields.get(BusinessUnit));
+
+            //Get the upperfield info of another location
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            Map<String, String> upperFields2 = upperFields;
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields.get(Region));
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Go to Schedule tab -> Overview page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             //Click on change BU button to change the BU
-            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            String locationName = mountainViewLocation;
-            searchBusinessUnitAndCheckTheUpperFields(upperFields, locationName);
+            searchBusinessUnitAndCheckTheUpperFields(upperFields2, location2);
 
             //Go to Schedule tab -> Forecast page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
-            locationName = rockVilleLocation;
-            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            searchBusinessUnitAndCheckTheUpperFields(upperFields, locationName);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            searchBusinessUnitAndCheckTheUpperFields(upperFields1, location);
 
             //Go to Schedule tab -> Schedule page
-            schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-            locationName = mountainViewLocation;
-            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            searchBusinessUnitAndCheckTheUpperFields(upperFields, locationName);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            searchBusinessUnitAndCheckTheUpperFields(upperFields2, location2);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-    private void searchBusinessUnitAndCheckTheUpperFields (String[] upperFields, String locationName) throws Exception {
+    private void searchBusinessUnitAndCheckTheUpperFields (Map<String, String> upperFields, String locationName) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields[upperFields.length-3].trim());
+        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(upperFields.get(BusinessUnit));
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-        String bUName = upperFields[upperFields.length-3].trim();
-        String regionName = upperFields[upperFields.length-2].trim();
-        String districtName = upperFields[upperFields.length-1].trim();
+        String bUName = upperFields.get(BusinessUnit);
+        String regionName = upperFields.get(Region);
+        String districtName = upperFields.get(District);
+
         //Verify the upperfield should be correct
         SimpleUtils.assertOnFail("The selected upperfields is incorrect",
-                selectedUpperFields.get("BU").equalsIgnoreCase(bUName), false);
+                selectedUpperFields.get(BusinessUnit).equalsIgnoreCase(bUName), false);
 
         //Verify the BU page loaded
-        SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
         SimpleUtils.assertOnFail("Schedule page BU view not loaded Successfully!",
-                schedulePage.isScheduleDMView(), false);
+                scheduleDMViewPage.isScheduleDMView(), false);
 
         //Verify the region listed
-        ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
         scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
         locationSelectorPage.changeUpperFieldDirect(Region, regionName);
         locationSelectorPage.changeUpperFieldDirect(District, districtName);
@@ -623,25 +614,41 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify selecting HQ on business unit schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySelectingHQOnBusinessUnitScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
 
+            //Get the upperfield info of current location
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            Map<String, String> upperFields1 = upperFields;
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields.get(Region));
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            upperFields1.put(BusinessUnit, upperFields.get(BusinessUnit));
+
+            //Get the upperfield info of another location
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            Map<String, String> upperFields2 = upperFields;
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields.get(Region));
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+
             //Click on change HQ button to change the HQ
-            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            String locationName = mountainViewLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
-            locationSelectorPage.selectCurrentUpperFieldAgain(BusinessUnit);
+            String locationName = location2;
+            String buName = upperFields2.get(BusinessUnit);
+            String regionName = upperFields2.get(Region);
+            String districtName = upperFields2.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
 
             //Verify the No data page loaded
@@ -649,20 +656,19 @@ public class LocationNavigationTest extends TestBase {
                     locationSelectorPage.isNoDataToShowPageLoaded(), false);
 
             //Go to Schedule tab
-            locationSelectorPage.changeUpperFieldsByName(BusinessUnit, buName);
-            locationSelectorPage.changeUpperFieldsByName(Region, regionName);
-            locationSelectorPage.changeUpperFieldsByName(District, districtName);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Click on change BU button to change the BU
-            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            buName = upperFields[upperFields.length-3].trim();
-            locationName = rockVilleLocation;
-            regionName = upperFields[upperFields.length-2].trim();
-            districtName = upperFields[upperFields.length-1].trim();
-            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
-            locationSelectorPage.selectCurrentUpperFieldAgain(BusinessUnit);
+            buName = upperFields1.get(BusinessUnit);
+            locationName = location;
+            regionName = upperFields1.get(Region);
+            districtName = upperFields1.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
 
             //Verify the No data page loaded
@@ -670,15 +676,16 @@ public class LocationNavigationTest extends TestBase {
                     locationSelectorPage.isNoDataToShowPageLoaded(), false);
 
             //Go to Schedule tab
-            locationSelectorPage.changeUpperFieldsByName(BusinessUnit, buName);
-            locationSelectorPage.changeUpperFieldsByName(Region, regionName);
-            locationSelectorPage.changeUpperFieldsByName(District, districtName);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
             locationSelectorPage.changeLocationDirect(locationName);
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             //Click on change Bu button to change the BU
-            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            locationSelectorPage.selectCurrentUpperFieldAgain(Region);
-            locationSelectorPage.selectCurrentUpperFieldAgain(BusinessUnit);
+            buName = upperFields2.get(BusinessUnit);
+            regionName = upperFields2.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
 
             //Verify the No data page loaded
@@ -692,43 +699,56 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify searching HQ on different level of schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySearchingAndSelectingTheHQOnSMScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            //Get the upperfield info of current location
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            Map<String, String> upperFields1 = upperFields;
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields.get(Region));
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            upperFields1.put(BusinessUnit, upperFields.get(BusinessUnit));
+
+            //Get the upperfield info of another location
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            Map<String, String> upperFields2 = upperFields;
+            locationSelectorPage.changeUpperFieldDirect(Region, upperFields.get(Region));
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            upperFields2.put(BusinessUnit, upperFields.get(BusinessUnit));
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Click on change region button to change the region
-            String[] upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            String locationName = mountainViewLocation;
-            searchHQAndCheckTheUpperFields(upperFields, locationName);
+            searchHQAndCheckTheUpperFields(upperFields2, location2);
 
             //Go to Schedule tab -> Forecast page
-            locationName = rockVilleLocation;
-            upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            searchHQAndCheckTheUpperFields(upperFields, locationName);
+            searchHQAndCheckTheUpperFields(upperFields1, location);
 
             //Go to Schedule tab -> Schedule page
-            locationName = mountainViewLocation;
-            upperFields = districtsMap.get("Coffee_Enterprise2").split(">");
-            searchHQAndCheckTheUpperFields(upperFields, locationName);
+            searchHQAndCheckTheUpperFields(upperFields2, location2);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-    private void searchHQAndCheckTheUpperFields (String[] upperFields, String locationName) throws Exception {
+    private void searchHQAndCheckTheUpperFields (Map<String, String> upperFields, String locationName) throws Exception {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+        Thread.sleep(3000);
         Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-        String bUName = upperFields[upperFields.length-3].trim();
-        String regionName = upperFields[upperFields.length-2].trim();
-        String districtName = upperFields[upperFields.length-1].trim();
+        String bUName = upperFields.get(BusinessUnit);
+        String regionName = upperFields.get(Region);
+        String districtName = upperFields.get(District);
         //Verify the upperfield should be correct
         SimpleUtils.assertOnFail("The selected upperfields is incorrect",
                 selectedUpperFields.get(hQ).equalsIgnoreCase(hQ), false);
@@ -747,28 +767,31 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify selecting different level of upperfields and locations on HQ schedule tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQScheduleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String,String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
+
+            //Click on change HQ button to change the HQ
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
             //Verify the No data page loaded
             SimpleUtils.assertOnFail("The No data to show page fail to load! ",
                     locationSelectorPage.isNoDataToShowPageLoaded(), false);
-
-            //Click on change HQ button to change the HQ
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
 
             //Go to Schedule tab
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
@@ -782,7 +805,7 @@ public class LocationNavigationTest extends TestBase {
             scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(locationName);
             locationSelectorPage.changeLocationDirect(locationName);
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
 
 
         } catch (Exception e){
@@ -793,7 +816,7 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify selecting different level of upperfields and locations on HQ compliance tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQComplianceTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -805,26 +828,27 @@ public class LocationNavigationTest extends TestBase {
             compliancePage.clickOnComplianceConsoleMenu();
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String,String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+
             //Verify the No data page loaded
             SimpleUtils.assertOnFail("The No data to show page fail to load! ",
                     locationSelectorPage.isNoDataToShowPageLoaded(), false);
 
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
-
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
-            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
 
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
 
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(locationName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(locationName);
             locationSelectorPage.changeLocationDirect(locationName);
             //Verify the No data page loaded
             SimpleUtils.assertOnFail("The No data to show page fail to load! ",
@@ -838,7 +862,7 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify selecting different level of upperfields on SM compliance tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySelectingDifferentLevelOfUpperFieldsOnSMComplianceTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -852,21 +876,22 @@ public class LocationNavigationTest extends TestBase {
             //Verify the No data page loaded
             SimpleUtils.assertOnFail("The No data to show page fail to load! ",
                     locationSelectorPage.isNoDataToShowPageLoaded(), false);
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
-            ComplianceDMViewPage complianceDMViewPage = pageFactory.createComplianceDMViewPage();
+            Map<String,String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
 
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(locationName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(locationName);
 
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(districtName);
 
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
-            complianceDMViewPage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
+            compliancePage.getAllUpperFieldInfoFromComplianceDMViewByUpperField(regionName);
 
             locationSelectorPage.changeUpperFieldDirect(hQ, hQ);
             //Verify the No data page loaded
@@ -881,12 +906,22 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify selecting different level of upperfields and locations on HQ Report tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQReportTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String,String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             dashboardPage.isConsoleNavigationBarIsGray("Report");
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             //Check Report page is display after click Report tab
@@ -894,18 +929,13 @@ public class LocationNavigationTest extends TestBase {
             analyticsPage.clickOnAnalyticsConsoleMenu();
             SimpleUtils.assertOnFail("Report Page not loaded Successfully!", analyticsPage.isReportsPageLoaded(), false);
 
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
 
             //Verify the No data page loaded
             SimpleUtils.assertOnFail("The No data to show page fail to load! ",
                     locationSelectorPage.isNoDataToShowPageLoaded(), false);
 
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
             String reportMenuTab = "Report";
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
             SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
@@ -947,23 +977,28 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify selecting different level of upperfields on location Report tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String,String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+
             AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
             analyticsPage.clickOnAnalyticsConsoleMenu();
             String reportMenuTab = "Report";
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
 
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             SimpleUtils.assertOnFail("Report Page not loaded Successfully!",
                     analyticsPage.isReportsPageLoaded(), false);
             SimpleUtils.assertOnFail("Report is not selected Successfully!",
@@ -1008,33 +1043,38 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify selecting different level of upperfields and locations on HQ News tab - Newsfeed page")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             NewsPage newsPage = pageFactory.createNewsPage();
             newsPage.clickOnNewsConsoleMenu();
+            newsPage.enableViewing();
             List<String> postInfo = newsPage.createPost();
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 
-            String newsMenuTab = "News";
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
+            loginAsDifferentRole("InternalAdmin");
 
-            LoginAsDifferentRole("InternalAdmin");
+            String newsMenuTab = "News";
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            Thread.sleep(3000);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
 
             //Check Report page is display after click Report tab
             newsPage.clickOnNewsConsoleMenu();
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
 
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
+            newsPage.enableViewing();
             SimpleUtils.assertOnFail("The news page fail to load! ",
                     newsPage.checkIfNewsPageLoaded(), false);
             SimpleUtils.assertOnFail("The location level post fail to load! ",
@@ -1074,7 +1114,6 @@ public class LocationNavigationTest extends TestBase {
                     newsPage.checkIfPostExists(postInfo.get(0)), false);
             SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
                     dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
-
             newsPage.deletePost(postInfo.get(0));
 
         } catch (Exception e){
@@ -1086,7 +1125,7 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify selecting different level of upperfields on location Newsfeed page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -1099,15 +1138,19 @@ public class LocationNavigationTest extends TestBase {
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
-
+            loginAsDifferentRole("InternalAdmin");
             String newsMenuTab = "News";
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            Thread.sleep(3000);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
 
-            LoginAsDifferentRole("InternalAdmin");
             newsPage.clickOnNewsConsoleMenu();
             SimpleUtils.assertOnFail("The news page fail to load! ",
                     newsPage.checkIfNewsPageLoaded(), false);
@@ -1115,8 +1158,6 @@ public class LocationNavigationTest extends TestBase {
                     newsPage.checkIfPostExists(postInfo.get(0)), false);
             SimpleUtils.assertOnFail("News menu tab is not selected Successfully!",
                     dashboardPage.isConsoleNavigationBarBeenSelected(newsMenuTab), false);
-
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldDirect(District, districtName);
             SimpleUtils.assertOnFail("The news page fail to load! ",
                     newsPage.checkIfNewsPageLoaded(), false);
@@ -1160,7 +1201,7 @@ public class LocationNavigationTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify location navigation should not show on Moderation page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1171,14 +1212,17 @@ public class LocationNavigationTest extends TestBase {
             newsPage.clickOnNewsConsoleMenu();
 
             String newsMenuTab = "News";
-            String[] upperFields = districtsMap.get("Coffee_Enterprise").split(">");
-            String locationName = rockVilleLocation;
-            String buName = upperFields[upperFields.length-3].trim();
-            String regionName = upperFields[upperFields.length-2].trim();
-            String districtName = upperFields[upperFields.length-1].trim();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+            String locationName = location;
+            String regionName = upperFields.get(Region);
+            String districtName = upperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            Thread.sleep(3000);
+            upperFields = locationSelectorPage.getSelectedUpperFields();
+            String buName = upperFields.get(BusinessUnit);
 
             newsPage.clickOnNewsConsoleMenu();
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(hQ);
             SimpleUtils.assertOnFail("The news page fail to load! ",
                     newsPage.checkIfNewsPageLoaded(), false);

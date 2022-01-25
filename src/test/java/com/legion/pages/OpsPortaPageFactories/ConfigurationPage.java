@@ -2,9 +2,12 @@ package com.legion.pages.OpsPortaPageFactories;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface ConfigurationPage {
     public void goToConfigurationPage() throws Exception;
+    public int historyRecordLimitCheck(String templateName) throws Exception;
+    public void changeOHtemp() throws Exception;
     public void checkAllTemplateCards() throws Exception;
     public boolean isTemplateListPageShow() throws Exception;
     public void clickOnConfigurationCrad(String templateType) throws Exception;
@@ -46,6 +49,8 @@ public interface ConfigurationPage {
     public void addMultipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
     public void editAdvanceStaffingRule(String shiftsNumber) throws Exception;
     public void deleteAdvanceStaffingRule() throws Exception;
+    public void OHListPageCheck() throws Exception;
+    public void createOHTemplateUICheck(String tpname) throws Exception;
     public void verifyClockInDisplayAndSelect(List<String> clockInGroup) throws Exception;
     public void setWFS(String wfsMode);
     public void selectWFSGroup(String wfsName) throws Exception;
@@ -74,6 +79,8 @@ public interface ConfigurationPage {
     public void selectDaypart(String dayPart) throws Exception;
     public void setDaypart(String day, String dayPart, String startTime, String endTime) throws Exception;
     public HashMap<String, List<String>> getDayPartsDataFromBusinessHours() throws Exception;
+    public void enableOrDisableApproveShiftInHomeLocationSetting(String yesOrNo) throws Exception;
+    public void enableOrDisableApproveShiftInNonHomeLocationSetting(String yesOrNo) throws Exception;
     public void publishNowTemplate() throws Exception;
     public void goToWorkRolesWithStaffingRules();
     public void deleteBasicStaffingRule() throws Exception;
@@ -96,4 +103,18 @@ public interface ConfigurationPage {
     public void commitTypeCheck() throws Exception;
     public void verifyArchivePopUpShowWellOrNot() throws Exception;
     public void cancelArchiveDeleteWorkWell(String templateName) throws Exception;
+    public void archiveOrDeleteTemplate(String templateName) throws Exception;
+    public void setMoveExistingShiftWhenTransfer(String yesOrNo) throws Exception;
+    public boolean isMoveExistingShiftWhenTransferSettingEnabled() throws Exception;
+    public void deleteTemplate(String templateName) throws Exception;
+    public void clearSearchTemplateBox() throws Exception;
+    public boolean isWFSEnabled();
+    public boolean hasCompanyMobilePolicyURLOrNotOnOP () throws Exception;
+    public void goToDynamicEmployeeGroupPage();
+    public void deleteAllDynamicEmployeeGroupsInList() throws Exception;
+    public void createNewDynamicEmployeeGroup(String groupTitle, String description, String groupLabels, List<String> groupCriteria) throws Exception;
+    public void archiveOrDeleteAllTemplates() throws Exception;
+    public void clickOnTemplateDetailTab() throws Exception;
+    public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception;
+    public void deleteSpecifyDynamicEmployeeGroupsInList(String groupName) throws Exception;
 }

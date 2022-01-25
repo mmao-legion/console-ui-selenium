@@ -44,7 +44,7 @@ public class ModelSwitchPage extends BasePage {
             waitForSeconds(5);
             if (modelSwitchOption.size() != 0) {
                 for (WebElement subOption : modelSwitchOption) {
-                    if (subOption.getText().equalsIgnoreCase("Operation Portal")) {
+                    if (subOption.getText().equalsIgnoreCase("Control Center")) {
                         click(subOption);
                         waitForSeconds(5);
                     }

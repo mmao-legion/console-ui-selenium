@@ -1,5 +1,6 @@
 package com.legion.tests.core.opEmployeeManagement;
 
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.opemployeemanagement.AbsentManagePage;
 import com.legion.pages.core.opemployeemanagement.EmployeeManagementPanelPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffReasonConfigurationPage;
@@ -28,7 +29,9 @@ public class AbsentManagementTemplateTest extends TestBase {
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String) params[1], (String) params[2], (String) params[3]);
         RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         modelSwitchPage.switchToOpsPortal();
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
     }
 
     @Automated(automated = "Automated")
@@ -36,7 +39,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Employee manage tab and absence management tile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyEmployeeManagementModuleAndDashboardAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyEmployeeManagementModuleAndDashboardAsInternalAdmin(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
         navigationPage.navigateToEmployeeManagement();
@@ -57,7 +60,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Templates list page validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditSearchAndDisableTemplateAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyAddEditSearchAndDisableTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -78,6 +81,15 @@ public class AbsentManagementTemplateTest extends TestBase {
         SimpleUtils.pass("Succeeded in canceling creation!");
 
         //verify new template works well
+        absentManagePage.search("AutoTest01");
+        if (!absentManagePage.getResult().equalsIgnoreCase("")) {
+            absentManagePage.clickInDetails();
+            SimpleUtils.pass("Succeeded in validating removing time off rules works well!");
+
+            absentManagePage.deleteTheTemplate();
+            absentManagePage.okToActionInModal(true);
+        }
+
         absentManagePage.createANewTemplate("AutoTest01", "for test");
         absentManagePage.submit();
         absentManagePage.saveTemplateAs("Save as draft");
@@ -141,7 +153,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Settings page validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyActionsInSettingsTabAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyActionsInSettingsTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -161,6 +173,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.cancelCreatingTimeOff();
         //cancel adding new time off
         String timeOffName = "ZZ-vacation";
+        absentManagePage.removeTimeOffReasons(timeOffName);
         absentManagePage.addTimeOff(timeOffName);
         absentManagePage.cancelCreatingTimeOff();
         Assert.assertFalse(absentManagePage.isTimeOffReasonDisplayed(timeOffName), "Failed to cancel adding!");
@@ -232,18 +245,29 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTemplateDetailsAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyTemplateDetailsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
         panelPage.goToAbsentManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
 
+        absentManagePage.search("AutoTest_Accrual");
+        int i = 0;
+        while (i< 100 && !absentManagePage.getResult().equalsIgnoreCase("")) {
+            absentManagePage.clickInDetails();
+            SimpleUtils.pass("Succeeded in validating removing time off rules works well!");
+
+            absentManagePage.deleteTheTemplate();
+            absentManagePage.okToActionInModal(true);
+            absentManagePage.search("AutoTest_Accrual");
+            i++;
+        }
         Random random = new Random();
         String tempName = "AutoTest_Accrual" + random.nextInt(100);
         absentManagePage.createANewTemplate(tempName, "accrual test");
         absentManagePage.submit();
-        absentManagePage.closeWelcomeModal();
+//        absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
@@ -262,7 +286,7 @@ public class AbsentManagementTemplateTest extends TestBase {
 
         //switch between details and associations
         absentManagePage.switchToAssociation();
-        Assert.assertEquals(absentManagePage.getTemplateAssociationTitle(), "Dynamic Groups", "Failed to switch to association page!");
+        Assert.assertEquals(absentManagePage.getTemplateAssociationTitle(), "Dynamic Employee Groups", "Failed to switch to association page!");
         absentManagePage.switchToDetails();
         Assert.assertEquals(absentManagePage.getCanEmployeeRequestLabel(), "Can employees request time off ?", "Failed to switch to details page!");
         SimpleUtils.pass("Succeeded in validating switch between details and association!");
@@ -362,7 +386,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffConfigurationAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyTimeOffConfigurationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -374,7 +398,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         String tempName = "AutoTest_Accrual" + random.nextInt(1000);
         absentManagePage.createANewTemplate(tempName, "accrual test");
         absentManagePage.submit();
-        absentManagePage.closeWelcomeModal();
+//        absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
@@ -448,7 +472,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffRequestRulesAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyTimeOffRequestRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -460,7 +484,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         String tempName = "AutoTest_Accrual" + random.nextInt(1000);
         absentManagePage.createANewTemplate(tempName, "accrual test");
         absentManagePage.submit();
-        absentManagePage.closeWelcomeModal();
+//        absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
@@ -582,6 +606,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         distribution.add("Weekly");
         distribution.add("Worked Hours");
         distribution.add("Lump Sum");
+        distribution.add("None");
         return distribution;
     }
 
@@ -608,6 +633,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         ArrayList<String> proUnit = new ArrayList<String>();
         proUnit.add("Days");
         proUnit.add("Months");
+        proUnit.add("Hours Worked");
         return proUnit;
     }
 

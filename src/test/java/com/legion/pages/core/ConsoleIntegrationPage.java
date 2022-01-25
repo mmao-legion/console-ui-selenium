@@ -15,9 +15,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.net.SocketImpl;
+import java.util.*;
 
 import java.util.List;
 
@@ -53,6 +52,12 @@ public class ConsoleIntegrationPage extends BasePage implements IntegrationPage 
 
 	@FindBy (css = "lg-button[label=\"Create Config\"]")
 	private WebElement createConfigButton;
+
+	@FindBy (css = "[label=\"Cancel\"]")
+	private WebElement cancalBtn;
+
+	@FindBy (css = "[type=\"submit\"]")
+	private WebElement saveBtn;
 
 	@Override
 	public boolean checkIsConfigExists(String channel, String application) throws Exception {
@@ -139,5 +144,82 @@ public class ConsoleIntegrationPage extends BasePage implements IntegrationPage 
 				SimpleUtils.fail("Integration Page: It doesn't navigate to Integration console menu after clicking", false);
 		} else
 			SimpleUtils.fail("Integration Console Menu not loaded Successfully!", false);
+	}
+
+	/**
+	 * Click on the Edit button according to the Channel and Application
+	 * @param channel, integration channel
+	 * @param application, integration application
+	 * @throws Exception
+	 */
+	@Override
+	public void clickOnEditButtonByChannelAndApplication(String channel, String application) throws Exception {
+		if (areListElementVisible(configs, 10) && configs.size() > 0) {
+			for (WebElement config : configs) {
+				if (config.getText().contains(channel) && config.getText().contains(application)) {
+					WebElement editBtn = config.findElement(By.cssSelector("[label=\"Edit\"]"));
+					clickTheElement(editBtn);
+					SimpleUtils.pass("Click on Edit button successfully!");
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.report("There is no configs in Integration tab!");
+		}
+	}
+
+	/**
+	 * Check if edit config page is loaded
+	 * @return true or false
+	 * @throws Exception
+	 */
+	@Override
+	public boolean isEditConfigPageLoaded() throws Exception {
+		boolean isLoaded = false;
+		try {
+			if (isElementLoaded(cancalBtn, 5) && isElementLoaded(saveBtn)) {
+				isLoaded = true;
+			}
+		} catch (Exception e) {
+			isLoaded = false;
+		}
+		return isLoaded;
+	}
+
+	/**
+	 * Edit the config by names
+	 * @param names
+	 * @throws Exception
+	 */
+	@Override
+	public void editTheConfigByName(HashMap<String, String> names) throws Exception {
+		if (isElementLoaded(channelDropDown, 5) &&
+				isElementLoaded(applicationTypeDropDown, 5) &&
+				isElementLoaded(statusDropDown, 5) &&
+				isElementLoaded(timeZoneOptionDropDown, 5) && names.size() >= 0) {
+
+
+			Select channel = new Select(channelDropDown);
+			Select applicationType = new Select(applicationTypeDropDown);
+			Select status = new Select(statusDropDown);
+			Select timeZoneOption = new Select(timeZoneOptionDropDown);
+
+			for (String key : names.keySet()) {
+				if (key.equalsIgnoreCase("channel")) {
+					channel.selectByVisibleText(names.get("channel"));
+				}
+				if (key.equalsIgnoreCase("aplicationType")) {
+					applicationType.selectByVisibleText(names.get("applicationType"));
+				}
+				if (key.equalsIgnoreCase("status")) {
+					status.selectByVisibleText(names.get("status"));
+				}
+				if (key.equalsIgnoreCase("timeZoneOption")) {
+					timeZoneOption.selectByVisibleText(names.get("timeZoneOption"));
+				}
+			}
+			clickTheElement(saveBtn);
+		} else
+			SimpleUtils.fail("Cannot find the config options! ", false);
 	}
 }

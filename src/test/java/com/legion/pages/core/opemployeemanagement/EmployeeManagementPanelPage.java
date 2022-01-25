@@ -1,9 +1,13 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -13,13 +17,21 @@ public class EmployeeManagementPanelPage extends BasePage {
     }
 
     // Added by Sophia
-    @FindBy(css = "[title='Absence Management']")
+    @FindBy(css = "[title='Absence Management'] .lg-dashboard-card__title")
     private WebElement absentManagement;
 
 
     public void goToAbsentManagementPage() {
-        absentManagement.click();
-        waitForSeconds(5);
+        try {
+            waitForPageLoaded(getDriver());
+            if (isElementLoaded(absentManagement, 10)) {
+                clickTheElement(absentManagement);
+            }
+        } catch (NoSuchElementException e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getDashboardCardContent(){

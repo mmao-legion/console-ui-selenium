@@ -2,16 +2,17 @@ package com.legion.pages;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface CompliancePage {
     public String getTheTotalViolationHrsFromSmartCard() throws Exception;
     public String getTheTotalLocationsFromSmartCard() throws Exception;
     public String getTheTotalLocationsWithViolationsFromSmartCard() throws Exception;
-    public List<String> getComplianceViolationsOnDMViewSmartCard() throws Exception;
+    public List<String> getComplianceViolationsOnSmartCard() throws Exception;
     public boolean isCompliancePageLoaded() throws Exception;
     public HashMap<String, Float> getValuesAndVerifyInfoForTotalViolationSmartCardInDMView() throws Exception;
     public void verifyDiffFlag(String upOrDown) throws Exception;
-    public HashMap<String, Integer> getValueOnLocationsWithViolationCardAndVerifyInfo() throws Exception;
+    public HashMap<String, Integer> getValueOnLocationsWithViolationCardAndVerifyInfo(String upperFieldType) throws Exception;
     public HashMap<String, Float> getViolationHrsFromTop1ViolationCardAndVerifyInfo() throws Exception;
     public float getTopOneViolationHrsOrNumOfACol(List<Float> list) throws Exception;
     public void validateThePresenceOfRefreshButton() throws Exception;
@@ -26,10 +27,16 @@ public interface CompliancePage {
     public void navigateToNextWeek() throws Exception;
     public List<String> getDataFromComplianceTableForGivenLocationInDMView(String location) throws Exception;
     public boolean isLocationInCompliancePageClickable() throws Exception;
-    public void verifyFieldNamesInAnalyticsTable() throws Exception;
+    public void verifyFieldNamesInAnalyticsTable(String upperFieldType) throws Exception;
     public void verifySortByColForLocationsInDMView(int index) throws Exception;
     public List<Float> transferStringToFloat(List<String> listString) throws Exception;
     public List<String> getListByColInTimesheetDMView(int index) throws Exception;
     public List<String> getLocationsInScheduleDMViewLocationsTable() throws Exception;
-    public boolean isComplianceDMView() throws Exception;
+    public boolean isComplianceUpperFieldView() throws Exception;
+    public List<String> getAllUpperFieldNamesOnAnalyticsTable() throws Exception;
+    public boolean isRefreshButtonDisplay() throws Exception;
+    public Map<String, String> getAllUpperFieldInfoFromComplianceDMViewByUpperField(String upperFieldName) throws Exception;
+    public List<String> getAllUpperFieldNames();
+    public boolean isUpperFieldsWithViolationSmartCardDisplay () throws Exception;
+    public boolean isTop1ViolationSmartCardDisplay () throws Exception;
 }

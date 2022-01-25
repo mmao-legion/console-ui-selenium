@@ -28,6 +28,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
         ReviewCompanyPolicy("Review Company Policy"),
         VerifyProfile("Verify Profile"),
         SetAvailability("Set Availability"),
+        WorkLocations("Work Locations"),
         ThatsIt("That's it!");
         private final String value;
         onboardingStepsText(final String newValue){
@@ -82,7 +83,7 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     private WebElement resendEmailBtn;
     @FindBy (css = ".header-blue h1")
     private WebElement blueHeader;
-    @FindBy (css = "[steps*=\"onboaridngSteps\"]")
+    @FindBy (css = "[steps*=\"onboardingSteps\"]")
     private WebElement onboardingSteps;
     @FindBy (css = ".user-onboarding-step-current")
     private WebElement currentOnboardingStep;
@@ -223,19 +224,12 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     private boolean isOnboardingStepsLoaded() throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(onboardingSteps, 10)) {
-            if (getCompanyPolicy()) {
-                if (onboardingSteps.getText().contains(onboardingStepsText.ReviewCompanyPolicy.getValue()) &&
-                onboardingSteps.getText().contains(onboardingStepsText.VerifyProfile.getValue()) &&
-                        onboardingSteps.getText().contains(onboardingStepsText.SetAvailability.getValue()) &&
-                        onboardingSteps.getText().contains(onboardingStepsText.ThatsIt.getValue())) {
-                    isLoaded = true;
-                }
-            } else {
-                if (onboardingSteps.getText().contains(onboardingStepsText.VerifyProfile.getValue()) &&
-                        onboardingSteps.getText().contains(onboardingStepsText.SetAvailability.getValue()) &&
-                        onboardingSteps.getText().contains(onboardingStepsText.ThatsIt.getValue())) {
-                    isLoaded = true;
-                }
+            if ((getCompanyPolicy()? onboardingSteps.getText().contains(onboardingStepsText.ReviewCompanyPolicy.getValue()): true) &&
+                    onboardingSteps.getText().contains(onboardingStepsText.VerifyProfile.getValue()) &&
+                    onboardingSteps.getText().contains(onboardingStepsText.SetAvailability.getValue()) &&
+                    (getWFSStatus()? onboardingSteps.getText().contains(onboardingStepsText.WorkLocations.getValue()): true) &&
+                    onboardingSteps.getText().contains(onboardingStepsText.ThatsIt.getValue())) {
+                isLoaded = true;
             }
         }
         return isLoaded;
@@ -352,7 +346,8 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     @Override
     public void verifyTheContentOfCreateAccountPage(String firstName, String invitationCode) throws Exception {
         try {
-            if (isElementLoaded(enterpriseInviteMsg, 10) && enterpriseInviteMsg.getText().equalsIgnoreCase(invitingMessage)) {
+            if (isElementLoaded(enterpriseInviteMsg, 10) && enterpriseInviteMsg.getText().
+                    equalsIgnoreCase(invitingMessage.replace("-", " "))) {
                 SimpleUtils.pass(enterpriseInviteMsg.getText() + loadSuccessfully);
             } else {
                 SimpleUtils.fail(invitingMessage + failedLoad, false);
@@ -399,10 +394,10 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
     @FindBy (css = "form-section[form-title=\"My availability\"]")
     private WebElement myAvailabilitySection;
 
-    @FindBy (css = "[ng-show=\"index === 2\"] lg-button[label=\"Back\"]")
+    @FindBy (css = "[ng-if=\"canViewSchedule\"] [label=\"Back\"] button")
     private WebElement backButtonOnSetAvailabilityPage;
 
-    @FindBy (css = "[ng-show=\"index === 2\"] lg-button[label=\"Next\"] button")
+    @FindBy (css = "[ng-if=\"canViewSchedule\"] [label=\"Next\"] button")
     private WebElement nextButtonOnSetAvailabilityPage;
 
     @FindBy (css = "div.text-center.user-onboarding-steps__final")
@@ -467,5 +462,94 @@ public class ConsoleOnboardingPage extends BasePage implements OnboardingPage {
             SimpleUtils.pass("Click Done button on That's It page successfully! ");
         } else
             SimpleUtils.fail("Done button on That's It page fail to load! ", false);
+    }
+
+
+    @FindBy (css = "h1.user-onboarding-steps-work-locations-title")
+    private WebElement workLocationTitle;
+
+    @FindBy (css = "p.user-onboarding-steps-work-locations-text")
+    private List<WebElement> workLocationContent;
+
+    @FindBy (css = "[question-title=\"Get shift offers from other locations and maximize your paycheck\"] div")
+    private WebElement workLocationSwitch;
+
+    @FindBy (css = ".user-onboarding-steps-work-locations-buttons [label=\"Next\"]")
+    private WebElement workLocationNextButton;
+
+    @FindBy (css = ".user-onboarding-steps-work-locations-buttons [label=\"Back\"]")
+    private WebElement workLocationBackButton;
+
+    @Override
+    public void verifyWorkLocationsPageLoaded() throws Exception {
+        String titleMessage = "Take more shifts - get more money!";
+        String contentMessage1 = "When a location is understaffed or a colleague can’t work their shift, you may get an offer to take the shift. If it fits your schedule, grab it and earn more money.";
+        String contentMessage2 = "Update your locations anytime in My Profile ";
+        String contentMessage3 = " My Work Locations.";
+        String toggleMessage = "Get shift offers from other locations and maximize your paycheck";
+        try {
+            if (isOnboardingStepsLoaded()
+                    && isElementLoaded(blueHeader, 10)
+                    && blueHeader.getText().equalsIgnoreCase(onboarding)
+                    && isOnboardingStepsLoaded()
+                    && isElementLoaded(currentOnboardingStep, 10)
+                    && currentOnboardingStep.getText().contains(onboardingStepsText.WorkLocations.getValue())
+                    && isElementLoaded(workLocationTitle, 10)
+                    && workLocationTitle.getText().equalsIgnoreCase(titleMessage)
+                    && areListElementVisible(workLocationContent, 10)
+                    && workLocationContent.get(0).getText().contains(contentMessage1)
+                    && workLocationContent.get(1).getText().contains(contentMessage2)
+                    && workLocationContent.get(1).getText().contains(contentMessage3)
+                    && isElementLoaded(workLocationSwitch, 10)
+                    && !workLocationSwitch.getAttribute("class").contains("off")
+                    && workLocationSwitch.getText().equalsIgnoreCase(toggleMessage)
+                    && isElementLoaded(workLocationNextButton, 10)
+                    && isElementLoaded(workLocationBackButton, 10)) {
+                SimpleUtils.pass(onboarding +onboardingStepsText.WorkLocations.getValue() + " page " + loadSuccessfully);
+            } else {
+                SimpleUtils.fail(onboarding +onboardingStepsText.WorkLocations.getValue() + " page " + failedLoad, false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Get Exception: " + e.getMessage() + "in Method: verifyWorkLocationsPageLoaded()", false);
+        }
+    }
+
+    @Override
+    public void clickOnNextButtonOnWorkLocationsPage() throws Exception {
+        if (isElementLoaded(workLocationNextButton, 10)) {
+            clickTheElement(workLocationNextButton);
+            SimpleUtils.pass("Click Next button on work locations page successfully! ");
+        } else
+            SimpleUtils.fail("Next button on work locations page fail to load! ", false);
+    }
+
+    @Override
+    public void clickOnBackButtonOnWorkLocationsPage() throws Exception {
+        if (isElementLoaded(workLocationBackButton, 10)) {
+            clickTheElement(workLocationBackButton);
+            SimpleUtils.pass("Click Back button on work locations page successfully! ");
+        } else
+            SimpleUtils.fail("Back button on work locations page fail to load! ", false);
+    }
+
+    @Override
+    public void setOtherPreferredLocationsToggleOnWorkLocationsPage(String yesOrNo) throws Exception {
+        if (isElementLoaded(workLocationSwitch, 10)) {
+            if (yesOrNo.equalsIgnoreCase("yes")) {
+                if (workLocationSwitch.getAttribute("class").contains("off")){
+                    clickTheElement(workLocationSwitch);
+                    SimpleUtils.pass("Turn on other preferred location toggle successfully! ");
+                } else
+                    SimpleUtils.pass("Other preferred location toggle is already turned on! ");
+            } else {
+                if (workLocationSwitch.getAttribute("class").contains("off")){
+                    SimpleUtils.pass("Other preferred location toggle is already turned off! ");
+                } else {
+                    clickTheElement(workLocationSwitch.findElement(By.cssSelector("[class=\"switch\"]")));
+                    SimpleUtils.pass("Turn off other preferred location toggle successfully! ");
+                }
+            }
+        } else
+            SimpleUtils.fail("Other preferred location toggle on work locations page fail to load! ", false);
     }
 }

@@ -46,12 +46,10 @@ public class UsersAndRolesPage extends BasePage {
         for (int i = 1; i <= pageNum; i++) {
             for (WebElement bad : badgesList) {
                 badges.add(bad.getAttribute("label"));
-                System.out.println(bad.getAttribute("label"));
             }
             if (i < pageNum) {
                 nextPageArrow.click();
             }
-
         }
         return badges;
     }

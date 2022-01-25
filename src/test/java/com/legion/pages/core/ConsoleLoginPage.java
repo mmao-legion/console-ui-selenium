@@ -23,7 +23,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     /* Aug 03- Zorang Team- Variables declaration*/
     
-    @FindBy(css="input[placeholder*='Usernam']")
+    @FindBy(css="input[ng-model=\"username\"]")
     private WebElement userNameField;
     
     @FindBy(css="[ng-model='password']")
@@ -60,7 +60,17 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     public void loginToLegionWithCredential(String userName, String Password) throws InterruptedException
     {
-    	checkElementVisibility(userNameField);
+		int retryTime = 0;
+		boolean isLoaded = isUserNameInputLoaded();
+		while (!isLoaded) {
+			getDriver().navigate().refresh();
+			isLoaded = isUserNameInputLoaded();
+			retryTime = retryTime + 1;
+			if (retryTime == 6) {
+				SimpleUtils.fail("Login page failed to load after waiting for several minutes!", false);
+				break;
+			}
+		}
     	getActiveConsoleName(loginButton);
     	userNameField.clear();
     	passwordField.clear();
@@ -80,11 +90,23 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			}
 		}
 	}
+	private boolean isUserNameInputLoaded() {
+		boolean isLoaded = false;
+		try {
+			if (isElementLoaded(userNameField, 90)) {
+				isLoaded = true;
+			}
+		} catch (Exception e) {
+			isLoaded = false;
+		}
+		return isLoaded;
+	}
+    
     public boolean isLoginDone() throws Exception
     {
     	WebDriverWait tempWait = new WebDriverWait(getDriver(), 20); 
     	try {
-    	    tempWait.until(ExpectedConditions.visibilityOf(legionDashboardSection)); 
+    	    tempWait.until(ExpectedConditions.visibilityOf(legionHeaderIcon));
     	    return true;
     	}
     	catch (TimeoutException te) {
@@ -96,7 +118,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	private WebElement legionHeaderIcon;
 	@Override
 	public boolean isLoginSuccess() throws Exception {
-		WebDriverWait tempWait = new WebDriverWait(getDriver(), 30);
+		WebDriverWait tempWait = new WebDriverWait(getDriver(), 60);
 		try {
 			tempWait.until(ExpectedConditions.visibilityOf(legionHeaderIcon));
 			return true;

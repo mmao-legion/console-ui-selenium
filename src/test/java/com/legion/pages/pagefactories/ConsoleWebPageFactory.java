@@ -4,6 +4,7 @@ import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.*;
 import com.legion.pages.core.*;
 import com.legion.pages.core.OpsPortal.*;
+import com.legion.pages.core.schedule.*;
 import org.testng.Reporter;
 
 /**
@@ -26,7 +27,10 @@ public class ConsoleWebPageFactory implements PageFactory {
     public TeamPage createConsoleTeamPage() {
     	return new ConsoleTeamPage();
     }
-
+	@Override
+	public PlanPage createConsolePlanPage() {
+		return new ConsolePlanPage();
+	}
     @Override
     public AnalyticsPage createConsoleAnalyticsPage() {
     	return new ConsoleAnalyticsPage();
@@ -137,10 +141,6 @@ public class ConsoleWebPageFactory implements PageFactory {
 	@Override
 	public OnboardingPage createOnboardingPage() { return new ConsoleOnboardingPage(); }
 
-
-	@Override
-	public ComplianceDMViewPage createComplianceDMViewPage() { return new ConsoleComplianceDMViewPage(); }
-
 	@Override
 	public NewsPage createNewsPage (){ return new ConsoleNewsPage() ;}
 	@Override
@@ -163,4 +163,39 @@ public class ConsoleWebPageFactory implements PageFactory {
 		return new OpsPortalLaborModelPage();
 	}
 
+	@Override
+	public AnalyzePage createAnalyzePage() { return new ConsoleAnalyzePage(); }
+
+	@Override
+	public CreateSchedulePage createCreateSchedulePage() { return new ConsoleCreateSchedulePage(); }
+
+	@Override
+	public DragAndDropPage createDragAndDropPage() { return new ConsoleDragAndDropPage(); }
+
+	@Override
+	public MySchedulePage createMySchedulePage() { return new ConsoleMySchedulePage(); }
+
+	@Override
+	public ScheduleCommonPage createScheduleCommonPage() { return new ConsoleScheduleCommonPage(); }
+
+	@Override
+	public ScheduleMainPage createScheduleMainPage() { return new ConsoleScheduleMainPage(); }
+
+	@Override
+	public ScheduleShiftTablePage createScheduleShiftTablePage() { return new ConsoleScheduleShiftTablePage(); }
+
+	@Override
+	public ShiftOperatePage createShiftOperatePage() { return new ConsoleShiftOperatePage(); }
+
+	@Override
+	public SmartCardPage createSmartCardPage() { return new ConsoleSmartCardPage(); }
+
+	@Override
+	public ToggleSummaryPage createToggleSummaryPage() { return new ConsoleToggleSummaryPage(); }
+
+	@Override
+	public NewShiftPage createNewShiftPage() { return new ConsoleNewShiftPage(); }
+
+	@Override
+	public SettingsAndAssociationPage createSettingsAndAssociationPage() {	return new OpsPortalSettingsAndAssociationPage(); }
 }

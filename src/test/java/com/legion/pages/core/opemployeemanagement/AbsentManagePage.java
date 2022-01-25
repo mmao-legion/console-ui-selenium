@@ -1,10 +1,14 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
+import org.glassfish.grizzly.impl.SafeFutureImpl;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +49,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement templateSearchBox;
     @FindBy(css = "div.lg-search-icon.ng-scope")
     private WebElement searchIcon;
-    @FindBy(css = "table.lg-table.ng-scope>tbody>tr:first-child>td:nth-child(2)>lg-button>button")
+    @FindBy(css = "[class*=\"lg-table\"] .lg-templates-table-improved__grid-row.ng-scope .name span.ng-binding")
     private List<WebElement> templateNameOfSearchResult;
     @FindBy(css = "table.lg-table.ng-scope>tbody>tr:first-child>td:nth-child(4)")
     private List<WebElement> creatorOfSearchResult;
@@ -228,7 +232,15 @@ public class AbsentManagePage extends BasePage {
     }
 
     public boolean isNewTemplateButtonDisplayedAndEnabled() {
-        return newTemplateButton.isDisplayed() && newTemplateButton.isEnabled();
+        try {
+            if (isElementLoaded(newTemplateButton, 20) && isElementEnabled(newTemplateButton, 20)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void createANewTemplate(String tempName, String tempDesc) {
@@ -242,9 +254,13 @@ public class AbsentManagePage extends BasePage {
     public void cancel() {
         cancelCreatingTemp.click();
     }
-
-    public void submit() {
+    @FindBy(css = ".walkme-action-destroy-1.wm-close-link")
+    private WebElement closeWakeme;
+    public void submit() throws Exception {
         continueCreatingTemp.click();
+        if (isElementLoaded(closeWakeme,10)){
+            click(closeWakeme);
+        }
     }
 
     public void closeWelcomeModal() {
@@ -270,7 +286,10 @@ public class AbsentManagePage extends BasePage {
     }
 
     public String getResult() {
-        String name = templateNameOfSearchResult.get(0).getText();
+        String name = "";
+        if (areListElementVisible(templateNameOfSearchResult, 10)) {
+            name = templateNameOfSearchResult.get(0).getText();
+        }
         return name;
     }
 
@@ -609,13 +628,19 @@ public class AbsentManagePage extends BasePage {
     }
 
 
-    public void editTimeOffReason(String reaName) {
-        editTimeOff.click();
-        reasonName.clear();
-        reasonName.sendKeys(reaName);
+    public void editTimeOffReason(String reaName) throws Exception {
+        if (isElementLoaded(editTimeOff, 10)) {
+            clickTheElement(editTimeOff);
+            if (isElementLoaded(reasonName, 5)) {
+                reasonName.clear();
+                reasonName.sendKeys(reaName);
+            }
+        } else
+            SimpleUtils.fail("Edit button or reason name input box fail to load! ", false);
     }
 
     public String removeTimeOffInSettings() {
+        scrollToElement(removeButton);
         removeButton.click();
         return removeConfirmMes.getText();
     }
@@ -630,4 +655,20 @@ public class AbsentManagePage extends BasePage {
         waitForSeconds(3);
     }
 
+
+    @FindBy(css = ".time-off-reason-setting tr.ng-scope")
+    private List<WebElement> timeOffReasons;
+    public void removeTimeOffReasons(String timeOffReasonName) {
+        if (areListElementVisible(timeOffReasons, 10) && timeOffReasons.size()>0) {
+            for (WebElement reason: timeOffReasons) {
+                if (reason.findElement(By.cssSelector(".one-line-overflow")).getText().equalsIgnoreCase(timeOffReasonName)){
+                    clickTheElement(reason.findElement(By.cssSelector("[label=\"Remove\"]")));
+                    okCreatingTimeOff();
+                    System.out.println("Delete the time off reason successfull!");
+                    break;
+                }
+            }
+        } else
+            System.out.println("There is no time off reason been listed!");
+    }
 }

@@ -186,20 +186,13 @@ public class InboxTest extends TestBase {
             loginPage.logOut();
 
             //login as TM to get nickName
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise") + fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String nickNameOfTM = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
             //go to Inbox page create GFE announcement.
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             InboxPage inboxPage = pageFactory.createConsoleInboxPage();
             inboxPage.clickOnInboxConsoleMenuItem();
             inboxPage.createGFEAnnouncement();
@@ -222,8 +215,7 @@ public class InboxTest extends TestBase {
             loginPage.logOut();
 
             //login as TM to check the gfe
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             inboxPage.clickOnInboxConsoleMenuItem();
             inboxPage.clickFirstGFEInList();
             inboxPage.clickAcknowledgeBtn();
@@ -233,8 +225,7 @@ public class InboxTest extends TestBase {
             loginPage.logOut();
 
             //login as SM to export the report.
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("Dashboard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             AnalyticsPage analyticsPage = pageFactory.createConsoleAnalyticsPage();
             analyticsPage.clickOnAnalyticsConsoleMenu();
@@ -521,6 +512,9 @@ public class InboxTest extends TestBase {
             inboxPage.clickOnInboxConsoleMenuItem();
             inboxPage.createGFEAnnouncement();
             inboxPage.sendToTM(nickName1);
+            inboxPage.clickOnInboxConsoleMenuItem();
+            inboxPage.createGFEAnnouncement();
+            inboxPage.sendToTM(nickName1);
             HashMap<String, String> contentOfWeekSummary_TM1 = inboxPage.getTheContentOfWeekSummaryInGFE();
             inboxPage.clickOnInboxConsoleMenuItem();
             inboxPage.createGFEAnnouncement();
@@ -664,7 +658,7 @@ public class InboxTest extends TestBase {
     //Added by Haya
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify the content of GFE is consistent between SM and TM")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyContentOfGFEAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -681,20 +675,13 @@ public class InboxTest extends TestBase {
         loginPage.logOut();
 
         //login as TM to get nickName
-        String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-        Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                , String.valueOf(teamMemberCredentials[0][2]));
+        loginAsDifferentRole(AccessRoles.TeamMember.getValue());
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String nickNameOfTM = profileNewUIPage.getNickNameFromProfile();
         loginPage.logOut();
 
         //go to Inbox page create GFE announcement.
-        Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                , String.valueOf(storeManagerCredentials[0][2]));
+        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
         String nickNameOfSM = profileNewUIPage.getNickNameFromProfile();
         InboxPage inboxPage = pageFactory.createConsoleInboxPage();
         inboxPage.clickOnInboxConsoleMenuItem();
@@ -721,7 +708,7 @@ public class InboxTest extends TestBase {
         loginPage.logOut();
 
         //login as TM to check the gfe
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1]), String.valueOf(teamMemberCredentials[0][2]));
+        loginAsDifferentRole(AccessRoles.TeamMember.getValue());
         inboxPage.clickOnInboxConsoleMenuItem();
         inboxPage.clickFirstGFEInList();
         inboxPage.verifyMessageIsExpected(message);
@@ -734,16 +721,10 @@ public class InboxTest extends TestBase {
         loginPage.logOut();
 
         //login as SM to check the comment TM sent.
-        loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                , String.valueOf(storeManagerCredentials[0][2]));
+        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
         inboxPage.clickOnInboxConsoleMenuItem();
         inboxPage.clickFirstGFEInList();
         inboxPage.verifyComment(commentFromTM, nickNameOfTM);
-        try {
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
     }
 
     @Automated(automated ="Automated")
@@ -767,20 +748,13 @@ public class InboxTest extends TestBase {
             loginPage.logOut();
 
             //login as TM to get nickName
-            String fileName = "UsersCredentials.json";
-            fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String nickNameOfTM = profileNewUIPage.getNickNameFromProfile();
             loginPage.logOut();
 
             //go to Inbox page create GFE announcement.
-            Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-                    , String.valueOf(storeManagerCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             String nickNameOfSM = profileNewUIPage.getNickNameFromProfile();
             InboxPage inboxPage = pageFactory.createConsoleInboxPage();
             inboxPage.clickOnInboxConsoleMenuItem();
@@ -790,8 +764,7 @@ public class InboxTest extends TestBase {
             loginPage.logOut();
 
             //login as TM to check the gfe
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             inboxPage.clickOnInboxConsoleMenuItem();
             inboxPage.clickFirstGFEInList();
             inboxPage.verifyVSLTooltip();

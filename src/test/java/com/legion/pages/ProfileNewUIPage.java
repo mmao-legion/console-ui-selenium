@@ -1,5 +1,7 @@
 package com.legion.pages;
 
+import org.openqa.selenium.WebElement;
+
 import java.util.*;
 
 public interface ProfileNewUIPage {
@@ -9,6 +11,7 @@ public interface ProfileNewUIPage {
 	public boolean isProfilePageLoaded() throws Exception;
 
 	public void selectProfilePageSubSectionByLabel(String profilePageSubSectionLabel) throws Exception;
+	public void verifyAvailabilityWeek(String weekinfo) throws Exception;
 
 	public void clickOnCreateTimeOffBtn() throws Exception;
 
@@ -17,6 +20,8 @@ public interface ProfileNewUIPage {
 	public void updateTimeOffExplanation(String explanationText) throws Exception;
 
 	public void selectTimeOffReason(String reasonLabel) throws Exception;
+
+	public boolean isReasonLoad(String timeOffReasonLabel) throws Exception;
 
 	public void createNewTimeOffRequest(String timeOffReasonLabel, String timeOffExplanationText) throws Exception;
 
@@ -92,7 +97,7 @@ public interface ProfileNewUIPage {
 	public void updateLockedAvailabilityPreferredOrBusyHoursSlider(String hoursType, int sliderIndex,
 			String leftOrRightSliderArrow, int durationMinutes, String repeatChanges) throws Exception;
 
-	public void updateMyAvailability(String hoursType, int sliderIndex,
+	public String updateMyAvailability(String hoursType, int sliderIndex,
 												   String leftOrRightSliderArrow, double durationHours, String repeatChanges) throws Exception;
 
 	public HashMap<String, Integer> getTimeOffRequestsStatusCount() throws Exception;
@@ -111,6 +116,8 @@ public interface ProfileNewUIPage {
 	public void selectProfileSubPageByLabelOnProfileImage(String profilePageSubSectionLabel) throws Exception;
 
 	public List<String> selectStartAndEndDate() throws Exception;
+
+	public List<String> selectStartAndEndDate(int daysInadvance, int startDays, int endDays) throws Exception;
 
 	public String selectStartAndEndDateAtSameDay() throws Exception;
 
@@ -161,6 +168,8 @@ public interface ProfileNewUIPage {
 	public String getTimeOffRequestStatusByExplanationText(String timeOffExplanationText) throws Exception;
 
 	public void approveAllPendingAvailabilityRequest() throws Exception;
+
+	public void verifyTheLatestAvailabilityRequestInfo(String weekInfo, double hours, String repeatChanges ) throws Exception;
 
 	public void clickOnEditUserProfilePencilIcon() throws Exception;
 
@@ -251,5 +260,35 @@ public interface ProfileNewUIPage {
 	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception;
 
 	public String getStatusOnProfilePage () throws Exception;
+
 	public HashMap<String, String> getOneUserHRProfileInfo() throws Exception;
+
+	public List<WebElement> getChangedPreferredAvailabilities() throws Exception;
+
+	public List<WebElement> getChangedBusyAvailabilities () throws Exception;
+
+	public void approveOrRejectSpecificPendingAvailabilityRequest(String availabilityWeek, String action) throws Exception;
+
+	public void deleteAllAvailabilitiesForCurrentWeek() throws Exception;
+
+	public void clickPreviousWeek() throws Exception;
+
+	public void cancelSpecificPendingAvailabilityRequest(String availabilityWeek) throws Exception;
+
+	public void cancelAllPendingAvailabilityRequest() throws Exception;
+
+	public String getCountForStatus(String status) throws Exception;
+
+	public String getAvailableHoursForSpecificWeek() throws Exception;
+
+	public void rejectSpecificApprovedAvailabilityRequest(String availabilityWeek) throws Exception;
+
+	public void approveSpecificRejectedAvailabilityRequest(String availabilityWeek) throws Exception;
+
+	public void verifyClickCancelledAvalabilityRequest() throws Exception;
+
+	public boolean isAlertDialogLoaded() throws Exception;
+
+	public String getMessageFromAlertDialog () throws Exception;
+	public String getMinorRuleTemplateName () throws Exception;
 }

@@ -67,4 +67,18 @@ public interface LaborModelPage {
     public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtTemplateLevel() throws Exception;
 
     public void publishNowTemplate() throws Exception;
+
+    public void verifyEntryOfLaborModelSubscription() throws Exception;
+
+    public void exportLaborModelSubscriptionCsv() throws Exception;
+
+    public void verifyImportLocationLevelWorkRoleSubscription();
+
+    public boolean verifyImportLocationWorkRolePageShow();
+
+    public void disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+
+    public void enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+
+    public boolean verifyWorkRoleStatusInLocationLevel(String workRole);
 }

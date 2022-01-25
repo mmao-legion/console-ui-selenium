@@ -5,6 +5,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.InboxPage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -273,7 +274,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
             String expectedTextInOperatingHoursSection= "Select Days to be Included in Good Faith Estimate"
                     + "Click on any Day & Scheduling Window to select and deselect working days."
                     + "Note that edits in the good faith estimate will not change the Legion suggested schedule.";
-            String expectedTextOfVSL = "Team members will be informed regarding opting in to the Volntary Standby List.";
+            String expectedTextOfVSL = "Team members will be informed regarding opting in to the Voluntary Standby List.";
 
             if (messageInCreateGFETemplate != null){
                 if (messageInCreateGFETemplate.getAttribute("value").equals(expectedTextInMessageSection)){
@@ -386,7 +387,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
 
     @Override
     public void checkCreateAnnouncementPageWithGFETurnOnOrTurnOff(boolean isTurnOn) throws Exception {
-        if (isElementLoaded(createAnnouncementIcon,5)) {
+        if (isElementLoaded(createAnnouncementIcon,10)) {
             clickTheElement(createAnnouncementIcon);
             if(isElementLoaded(newAnnouncementModal,5)){
                 // check 'Create new announcement' text
@@ -484,11 +485,11 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     private List<WebElement> tmOptions;
     @Override
     public void sendToTM(String nickName) throws Exception {
-        if (isElementLoaded(sendToInput,5)){
+        if (isElementLoaded(sendToInput,10)){
             clickTheElement(sendToInput);
             sendToInput.sendKeys(nickName);
-            waitForSeconds(1);
-            if (areListElementVisible(tmOptions, 5)) {
+            waitForSeconds(10);
+            if (areListElementVisible(tmOptions, 10)) {
                 for (WebElement tmOption : tmOptions) {
                     if (tmOption.getText().contains(nickName)) {
                         click(tmOption);
@@ -497,7 +498,9 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                     }
                 }
             } else {
-                SimpleUtils.report("GFE Announcement: Cannot find " + nickName + "!");
+                SimpleUtils.report("GFE Announcement: Cannot find " + nickName + "!, try again");
+                sendToInput.clear();
+                sendToInput.sendKeys(nickName, Keys.ENTER);
             }
         } else {
             SimpleUtils.fail("GFE Announcement: Send to element failed to load!", false);
@@ -741,7 +744,8 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         if (isElementLoaded(commentForm,5)){
             commentForm.findElement(By.cssSelector("input")).clear();
             commentForm.findElement(By.cssSelector("input")).sendKeys(comment);
-            click(commentForm.findElement(By.cssSelector(".invite-icon")));
+            scrollToElement(commentForm.findElement(By.cssSelector(".invite-icon")));
+            clickTheElement(commentForm.findElement(By.cssSelector(".invite-icon")));
             SimpleUtils.pass("Comment is added!");
         } else {
             SimpleUtils.fail("Comment form is not loaded!", false);

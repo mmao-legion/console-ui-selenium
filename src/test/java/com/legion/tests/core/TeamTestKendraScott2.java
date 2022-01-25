@@ -14,6 +14,14 @@ import java.util.Map;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.tests.core.OpsPortal.LocationsTest;
+import com.legion.pages.core.ConsoleGmailPage;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
+import com.legion.utils.Constants;
+import cucumber.api.java.hu.Ha;
+import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.formula.ptg.ControlPtg;
+import org.apache.xpath.operations.Bool;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -58,8 +66,11 @@ public class TeamTestKendraScott2 extends TestBase{
 	private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
 	private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     private static HashMap<String, String> imageFilePath = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ProfileImageFilePath.json");
-	private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
-	private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
+	//	private static HashMap<String, Object[][]> kendraScott2TeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("KendraScott2TeamMembers.json");
+	private static HashMap<String, Object[][]> controlTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("VailqacnTeamMembers.json");
+	private static HashMap<String, Object[][]> opTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
+	private static String controlEnterprice = "Vailqacn_Enterprise";
+	private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
 
 	@Override
@@ -141,7 +152,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		
         // Login as Store Manager
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise(controlEnterprice)+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -214,7 +225,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		
         // Login as Store Manager
         String fileName = "UsersCredentials.json";
-        fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
+        fileName = SimpleUtils.getEnterprise(controlEnterprice)+fileName;
         HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
         Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
         loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
@@ -257,8 +268,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Functionality > In Update Info")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInUpdateInfo(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInUpdateInfoAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			dashboardPage.verifyDashboardPageLoadedProperly();
@@ -294,8 +305,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality>In Roster")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInRoster(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInRosterAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -341,26 +352,28 @@ public class TeamTestKendraScott2 extends TestBase{
 	}
 
 	@Automated(automated ="Automated")
-	@Owner(owner = "Nora")
+	@Owner(owner = "Nora&Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the team functionality in Roster - Sort")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			// Check whether the location is location group or not
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-			schedulePage.clickOnScheduleConsoleMenuItem();
-			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue());
-			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , true);
-			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-			boolean isActiveWeekGenerated = schedulePage.isWeekGenerated();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if(isActiveWeekGenerated){
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-			boolean isLocationGroup = schedulePage.isLocationGroup();
+			boolean isLocationGroup = toggleSummaryPage.isLocationGroup();
 
 			// Verify TM Count is correct from roster
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -378,6 +391,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			teamPage.verifyTheSortFunctionInRosterByColumnName("EMPLOYEE ID");
 			// Verify JOB TITLE column can be sorted in ascending or descending order
 			teamPage.verifyTheSortFunctionInRosterByColumnName("JOB TITLE");
+			// Verify EMPLOYMENT column can be sorted in ascending or descending order
+			teamPage.verifyTheSortFunctionInRosterByColumnName("EMPLOYMENT");
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
@@ -387,8 +402,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality>In Transfer")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInTransfer(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInTransferAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -429,8 +444,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team functionality > In Badges")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInBadges(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInBadgesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			dashboardPage.isDashboardPageLoaded();
@@ -458,8 +473,8 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify the Team Functionality > Invite Team Member")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	public void verifyTheTeamFunctionalityInInviteTeamMember(String browser, String username, String password, String location) throws Exception {
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheTeamFunctionalityInInviteTeamMemberAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			dashboardPage.isDashboardPageLoaded();
@@ -681,56 +696,455 @@ public class TeamTestKendraScott2 extends TestBase{
 	@TestName(description = "Remove access to Employee Profile in Team Schedule view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		try {
-			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+		// Create schedule and publish it.
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
 
-			// Create schedule and publish it.
-			schedulePage.clickOnScheduleConsoleMenuItem();
-			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Overview.getValue()) , false);
-			schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue());
-			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-					schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Schedule.getValue()) , false);
-
-			if (schedulePage.isWeekGenerated()){
-				schedulePage.unGenerateActiveScheduleScheduleWeek();
-			}
-			schedulePage.createScheduleForNonDGFlowNewUI();
-			schedulePage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			schedulePage.deleteTMShiftInWeekView("unassigned");
-			schedulePage.saveSchedule();
-			schedulePage.publishActiveSchedule();
-			LoginPage loginPage = pageFactory.createConsoleLoginPage();
-			loginPage.logOut();
-
-			// Login as Store Manager
-			String fileName  = "UsersCredentials.json";
-			fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			Object[][] storeManagerCredentials = userCredentials.get("StoreManager");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
-			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-			profileNewUIPage.clickOnUserProfileImage();//.getNickNameFromProfile();
-			dashboardPage.clickOnSwitchToEmployeeView();
-			schedulePage.clickOnScheduleConsoleMenuItem();
-			schedulePage.clickOnScheduleSubTab("Team Schedule");
-			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
-			loginPage.logOut();
-
-
-
-			Object[][] teamMemberCredentials = userCredentials.get("TeamMember");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-					, String.valueOf(teamMemberCredentials[0][2]));
-			schedulePage.clickOnScheduleConsoleMenuItem();
-			schedulePage.clickOnScheduleSubTab("Team Schedule");
-			SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !schedulePage.isProfileIconsClickable(), false);
-		} catch (Exception e){
-			SimpleUtils.fail(e.getMessage(), false);
+		if (createSchedulePage.isWeekGenerated()){
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
+		createSchedulePage.createScheduleForNonDGFlowNewUI();
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		shiftOperatePage.deleteTMShiftInWeekView("unassigned");
+		scheduleMainPage.saveSchedule();
+		createSchedulePage.publishActiveSchedule();
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		// Login as Store Manager
+		loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		profileNewUIPage.clickOnUserProfileImage();//.getNickNameFromProfile();
+		dashboardPage.clickOnSwitchToEmployeeView();
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		scheduleCommonPage.clickOnScheduleSubTab("Team Schedule");
+		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !scheduleShiftTablePage.isProfileIconsClickable(), false);
+		loginPage.logOut();
+
+
+		// Login as Team Member
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		scheduleCommonPage.clickOnScheduleSubTab("Team Schedule");
+		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !scheduleShiftTablePage.isProfileIconsClickable(), false);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate create change availability request")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateCreateChangeAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		dashboardPage.navigateToDashboard();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		String weekInfo = profileNewUIPage.getAvailabilityWeek();
+		int sliderIndex = 1;
+		double hours = 0.5;//move 1 metric 0.5h right----increase
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours*2, repeatChanges);
+
+		//cancel all availability change requests again.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		hours = -0.5;//move 1 metric 0.5h left----decrease
+		leftOrRightDuration = "Left";
+		hoursType = "Preferred";
+		repeatChanges = "repeat forward";
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours*2, repeatChanges);
+		SimpleUtils.assertOnFail("Pending count should be 1.", "1".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate cancel Change Availability Request")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateCancelAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		dashboardPage.navigateToDashboard();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		String weekInfo = profileNewUIPage.getAvailabilityWeek();
+		int sliderIndex = 1;
+		double hours = 0.5;//move 1 metric 0.5h right----increase
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
+		SimpleUtils.assertOnFail("Pending count should be 1.", "1".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
+		//cancel availability change requests.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate SM approve change availability request")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateApproveAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		dashboardPage.navigateToDashboard();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		String weekInfo = profileNewUIPage.getAvailabilityWeek();
+		String oldAvailableHrs = profileNewUIPage.getAvailableHoursForSpecificWeek();
+		int sliderIndex = 1;
+		double hours = -0.5;//move 1 metric 0.5h left----decrease
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		loginPage.logOut();
+
+		//Login as store manager to approve the request.
+		loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(requestUserName);
+		String workPreferencesLabel = "Work Preferences";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+		String approvedCount = profileNewUIPage.getCountForStatus("approved");
+		profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(weekInfo, "Approve");
+		if (SimpleUtils.isNumeric(approvedCount)){
+			int approvedNum = Integer.valueOf(approvedCount);
+			SimpleUtils.assertOnFail("Approved count should be 1 more than before.", String.valueOf((approvedNum+1)).equalsIgnoreCase(profileNewUIPage.getCountForStatus("approved").trim()), false);
+		} else {
+			SimpleUtils.fail("Count is not numeric", false);
+		}
+		while (!weekInfo.equalsIgnoreCase(profileNewUIPage.getAvailabilityWeek())){
+			profileNewUIPage.clickNextWeek();
+		}
+		SimpleUtils.assertOnFail("Available hours didn't change to the new version!", newAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
+		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
+
+		//SCH-4997
+		//Go to reject a approved request.
+//		profileNewUIPage.rejectSpecificApprovedAvailabilityRequest(weekInfo);
+//		SimpleUtils.assertOnFail("Available hours should change back to the old version!", oldAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
+//		SimpleUtils.assertOnFail("Approved count should be the same as before.", approvedCount.equalsIgnoreCase(profileNewUIPage.getCountForStatus("approved").trim()), false);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate cancelled/approved/rejected and dated request has no option when clicking the request")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateCancelledAvailabilityHasNoOptionRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		dashboardPage.navigateToDashboard();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		int sliderIndex = 1;
+		double hours = -0.5;//move 1 metric 0.5h left----decrease
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		loginPage.logOut();
+
+		//Login as store manager to check cancelled request.
+		loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(requestUserName);
+		String workPreferencesLabel = "Work Preferences";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+		profileNewUIPage.verifyClickCancelledAvalabilityRequest();
+
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate SM reject change availability request")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateRejectAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		dashboardPage.navigateToDashboard();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		String weekInfo = profileNewUIPage.getAvailabilityWeek();
+		String oldAvailableHrs = profileNewUIPage.getAvailableHoursForSpecificWeek();
+		int sliderIndex = 1;
+		double hours = 0.5;//move 1 metric 0.5h left----decrease
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		loginPage.logOut();
+
+		//Login as store manager to reject the request.
+		loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(requestUserName);
+		String workPreferencesLabel = "Work Preferences";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+		String rejectedCount = profileNewUIPage.getCountForStatus("rejected");
+		profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(weekInfo, "Reject");
+		if (SimpleUtils.isNumeric(rejectedCount)){
+			int rejectedNum = Integer.valueOf(rejectedCount);
+			SimpleUtils.assertOnFail("Rejected count should be 1 more than before.", String.valueOf((rejectedNum+1)).equalsIgnoreCase(profileNewUIPage.getCountForStatus("rejected").trim()), false);
+		} else {
+			SimpleUtils.fail("Count is not numeric", false);
+		}
+		while (!weekInfo.equalsIgnoreCase(profileNewUIPage.getAvailabilityWeek())){
+			profileNewUIPage.clickNextWeek();
+		}
+		SimpleUtils.assertOnFail("Available hours didn't change to the old version!", oldAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
+		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate create change Availability request without approval")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateCreateAvailabilityRequestWithoutApprovalAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		// Login with Internal Admin Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		String isApprovalRequired = "Not required";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		String weekInfo = profileNewUIPage.getAvailabilityWeek();
+		int sliderIndex = 1;
+		double hours = 0.5;//move 1 metric 0.5h left----decrease
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		SimpleUtils.assertOnFail("Available hours should be the new version.", newAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
+		loginPage.logOut();
+
+		//Login as admin to check and set back the setting.
+		loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(requestUserName);
+		String workPreferencesLabel = "Work Preferences";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+		while (!profileNewUIPage.getAvailabilityWeek().equalsIgnoreCase(weekInfo)){
+			profileNewUIPage.clickNextWeek();
+		}
+		SimpleUtils.assertOnFail("Available hours should be the new version.", newAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
+
+
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+		isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
 	}
 
 	@Automated(automated ="Automated")
@@ -743,20 +1157,19 @@ public class TeamTestKendraScott2 extends TestBase{
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
 
 			//Grant Invite Employee permission for DM SM and TL
 			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			String accessRoleTab = "Access Roles";
-			String rolePermissionForDM = "District Manager";
+			String rolePermissionForDM = "Area Manager";
 			String rolePermissionForSM = "Store Manager";
 			String rolePermissionForTL = "Team Lead";
 			String section = "Team";
 			String permission = "Invite Employee";
 			String actionOff = "off";
 			String actionOn = "on";
-			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
+			if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
 				controlsPage.gotoControlsPage();
 				controlsNewUIPage.isControlsPageLoaded();
 				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
@@ -767,7 +1180,7 @@ public class TeamTestKendraScott2 extends TestBase{
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOn);
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOn);
 
-			} else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+			} else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
 				OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
 				opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
 				ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -785,17 +1198,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			loginPage.logOut();
 
 			//Login as DM
-			String fileName = "UsersCredentials.json";
-			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-				fileName = SimpleUtils.getEnterprise("KendraScott2_Enterprise")+fileName;
-			} else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
-				fileName = SimpleUtils.getEnterprise("CinemarkWkdy_Enterprise")+fileName;
-			}
-
-			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-			Object[][] storeManagerCredentials = userCredentials.get("DistrictManager");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -804,10 +1208,10 @@ public class TeamTestKendraScott2 extends TestBase{
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			teamPage.goToTeam();
 			HashMap<String, Object[][]> teamMembers = null;
-			if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
-				teamMembers = kendraScott2TeamMembers;
+			if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+				teamMembers = controlTeamMembers;
 			} else {
-				teamMembers = cinemarkWkdyTeamMembers;
+				teamMembers = opTeamMembers;
 			}
 
 			String tm = teamMembers.get("TeamMember1")[0][0].toString();
@@ -817,9 +1221,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as SM
-			storeManagerCredentials = userCredentials.get("StoreManager");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -829,10 +1232,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			teamPage.searchAndSelectTeamMemberByName(tm);
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
-
-			storeManagerCredentials = userCredentials.get("TeamLead");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.TeamLead.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -843,9 +1244,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as admin
-			storeManagerCredentials = userCredentials.get("InternalAdmin");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			Thread.sleep(3000);
+			loginToLegionAndVerifyIsLoginDone(username, password, location);
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -861,9 +1261,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			loginPage.logOut();
 
 			//Login as DM
-			storeManagerCredentials = userCredentials.get("DistrictManager");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -874,9 +1273,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", !profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as SM
-			storeManagerCredentials = userCredentials.get("StoreManager");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -887,9 +1285,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The invite buttons fail to load on profile page! ", !profileNewUIPage.isInviteToLegionButtonLoaded(), false);
 			loginPage.logOut();
 			//Login as TL
-			storeManagerCredentials = userCredentials.get("TeamLead");
-			loginToLegionAndVerifyIsLoginDone(String.valueOf(storeManagerCredentials[0][0]), String.valueOf(storeManagerCredentials[0][1])
-					, String.valueOf(storeManagerCredentials[0][2]));
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.TeamLead.getValue());
 			dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -903,5 +1300,281 @@ public class TeamTestKendraScott2 extends TestBase{
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
+	}
+
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Verify upcoming shifts when TM has access to multiple locations")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember (String browser, String username, String password, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			//Get two locations of TM
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			String tmName = profileNewUIPage.getNickNameFromProfile();
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			String location1 = location;
+			String location2 = "";
+			int i = 0;
+			while (i <20 && (location2 == "" || location2.equalsIgnoreCase(location))) {
+				location2 = locationSelectorPage.getOneRandomNameFromUpperFieldDropdownList("Location").split("\n")[0];
+			}
+
+			// Team Member logout
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			// Login as Admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+
+			//Ungenerate the first week schedule
+			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			//Go to next week and create schedule
+			scheduleCommonPage.navigateToNextWeek();
+			isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+
+			//Delete all the shifts of TM
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView(tmName);
+			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+
+			//Create shift for TM on first day
+			String workRole = shiftOperatePage.getRandomWorkRole();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectSpecificWorkDay(1);
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+			scheduleCommonPage.clickOnDayView();
+			scheduleCommonPage.navigateDayViewWithIndex(0);
+			String weekDay1 = scheduleCommonPage.getScheduleWeekStartDayMonthDate();
+
+			//Select another location
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location1);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			//Ungenerate the first week schedule
+			isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			//Go to next week and create schedule
+			scheduleCommonPage.navigateToNextWeek();
+			isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView(tmName);
+			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+
+			//Create shift for TM on second day
+			workRole = shiftOperatePage.getRandomWorkRole();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectDaysByIndex(1, 1, 1);
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+
+			//Get second shift info
+			scheduleCommonPage.clickOnDayView();
+			scheduleCommonPage.navigateDayViewWithIndex(1);
+			String weekDay2 = scheduleCommonPage.getScheduleWeekStartDayMonthDate();
+			scheduleCommonPage.clickOnWeekView();
+
+			// All the shifts that are assigned to this TM should show, if it is created in another location, these shifts should be gray
+			scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyTM.getValue());
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage(tmName);
+			List<WebElement> shifts = scheduleShiftTablePage.getOneDayShiftByName(0, tmName);
+			SimpleUtils.assertOnFail("The shift display correctly on the first day!",
+					shifts.size() == 1 && shifts.get(0).getAttribute("class").contains("no-drag"), false);
+
+			shifts = scheduleShiftTablePage.getOneDayShiftByName(1, tmName);
+			SimpleUtils.assertOnFail("The shift dislay correctly on the first day!",
+					shifts.size() == 1 && !shifts.get(0).getAttribute("class").contains("no-drag"), false);
+			loginPage.logOut();
+
+			//Login as TM, select the first location, observe the upcoming shifts
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			List<HashMap<String, String>> shiftsInfo1= dashboardPage.getAllUpComingShiftsInfo();
+			String shift1Time = "11:00am - 4:00pm";
+			String shift2Time = "10:00am - 3:00pm";
+			//Upcoming shifts are shown
+			SimpleUtils.assertOnFail("The TM's upcoming shifts should equal or more than 2! ", shiftsInfo1.size() > 1, false);
+			//Shift info, shift location should be correct
+			SimpleUtils.assertOnFail("The first upcoming shift's location name should be: "+location2 +" , but actual is: " +shiftsInfo1.get(0).get("locationName"),
+					shiftsInfo1.get(0).get("locationName").equalsIgnoreCase(location2), false);
+			SimpleUtils.assertOnFail("The first upcoming shift's shift info should be: "+weekDay1 + " "+ shift1Time +" , but actual is: " +shiftsInfo1.get(0).get("shiftInfo").replace(",", ""),
+					shiftsInfo1.get(0).get("shiftInfo").replace(",", "").equalsIgnoreCase(weekDay1 + " "+ shift1Time), false);
+			SimpleUtils.assertOnFail("The second upcoming shift's location name should be: "+location1 +" , but actual is: " +shiftsInfo1.get(1).get("locationName"),
+					shiftsInfo1.get(1).get("locationName").equalsIgnoreCase(location1), false);
+			SimpleUtils.assertOnFail("The second upcoming shift's shift info should be: "+weekDay2 + " "+ shift2Time +" , but actual is: " +shiftsInfo1.get(1).get("shiftInfo").replace(",", ""),
+					shiftsInfo1.get(1).get("shiftInfo").replace(",", "").equalsIgnoreCase(weekDay2 + " "+ shift2Time), false);
+			//All the shifts assigned to this TM should show here
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.navigateToNextWeek();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			SimpleUtils.assertOnFail("All the shifts assigned to this TM should show here! ",
+					scheduleShiftTablePage.getAvailableShiftsInDayView().size() == 2, false);
+			//select the second location, the upcoming shifts should be consistent with the first location
+			dashboardPage.clickOnDashboardConsoleMenu();
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location2);
+			List<HashMap<String, String>> shiftsInfo2= dashboardPage.getAllUpComingShiftsInfo();
+			SimpleUtils.assertOnFail("", shiftsInfo2.equals(shiftsInfo1), false);
+			//All the shifts assigned to this TM should show here
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.navigateToNextWeek();
+			SimpleUtils.assertOnFail("All the shifts assigned to this TM should show here! ",
+					scheduleShiftTablePage.getAvailableShiftsInDayView().size() == 2, false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Verify can update the config in integration")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyCanUpdateTheHRConfigInIntegrationAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		dashboardPage.clickOnIntegrationConsoleMenu();
+		dashboardPage.verifyIntegrationPageIsLoaded();
+		IntegrationPage integrationPage = pageFactory.createIntegrationPage();
+		if (integrationPage.checkIsConfigExists(Constants.Ftp, Constants.Hr)) {
+			integrationPage.clickOnEditButtonByChannelAndApplication(Constants.Ftp, Constants.Hr);
+			SimpleUtils.assertOnFail("Edit Config page failed to load!", integrationPage.isEditConfigPageLoaded(), false);
+			HashMap<String, String> disable = new HashMap<>();
+			disable.put("status", Constants.Disabled);
+			integrationPage.editTheConfigByName(disable);
+			dashboardPage.verifyIntegrationPageIsLoaded();
+			SimpleUtils.assertOnFail("FTP HR still enabled!", !integrationPage.checkIsConfigExists(Constants.Ftp, Constants.Hr), false);
+		}
+		if(!integrationPage.checkIsConfigExists(Constants.Custom, Constants.Hr)){
+			Map<String, String> configInfo = new HashMap<>();
+			configInfo.put("channel", Constants.Custom);
+			configInfo.put("applicationType", Constants.Hr);
+			configInfo.put("status", Constants.Enabled);
+			configInfo.put("timeZoneOption", Constants.Utc);
+
+			integrationPage.createConfig(configInfo);
+		}
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Nora")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Verify the buttons for employee in different status")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void verifyTheButtonsForEmployeeInDifferentStatusAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+		List<String> expectedButtons = new ArrayList<>();
+
+		// Verify Terminate, Transfer, Manual Onboard buttons should show for new employee
+		teamPage.searchAndSelectTeamMemberByName("New");
+		SimpleUtils.assertOnFail("Profile page not loaded successfully!", teamPage.isProfilePageLoaded(), false);
+		expectedButtons.add(Constants.Terminate);
+		expectedButtons.add(Constants.Transfer);
+		expectedButtons.add(Constants.ManualOnboard);
+		teamPage.verifyTheButtonsInActions(expectedButtons);
+
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+		// Verify Activate, Terminate, Transfer buttons should show in Actions for onboarded employee
+		teamPage.searchAndSelectTeamMemberByName("Onboarded");
+		SimpleUtils.assertOnFail("Profile page not loaded successfully!", teamPage.isProfilePageLoaded(), false);
+		expectedButtons = new ArrayList<>();
+		expectedButtons.add(Constants.Terminate);
+		expectedButtons.add(Constants.Transfer);
+		expectedButtons.add(Constants.Activate);
+		teamPage.verifyTheButtonsInActions(expectedButtons);
+
+		loginPage.logOut();
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		String firstName = profileNewUIPage.getNickNameFromProfile();
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+		SimpleUtils.assertOnFail("Profile page not loaded successfully!", teamPage.isProfilePageLoaded(), false);
+
+		// Verify Change Password button should show in Actions in TM view
+		expectedButtons = new ArrayList<>();
+		expectedButtons.add(Constants.ChangePassword);
+		teamPage.verifyTheButtonsInActions(expectedButtons);
+
+		loginPage.logOut();
+
+		loginToLegionAndVerifyIsLoginDone(username, password, location);
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+
+		// Verify Deactivate, Terminate, Transfer, Send Username, Reset Password buttons should show in Actions for active employee
+		teamPage.searchAndSelectTeamMemberByName(firstName);
+		SimpleUtils.assertOnFail("Profile page not loaded successfully!", teamPage.isProfilePageLoaded(), false);
+		expectedButtons = new ArrayList<>();
+		expectedButtons.add(Constants.Terminate);
+		expectedButtons.add(Constants.Transfer);
+		expectedButtons.add(Constants.Deactivate);
+		expectedButtons.add(Constants.SendUsername);
+		expectedButtons.add(Constants.ResetPassword);
+		teamPage.verifyTheButtonsInActions(expectedButtons);
 	}
 }

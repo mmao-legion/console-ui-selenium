@@ -10,6 +10,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.apache.commons.collections.ListUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,7 +22,7 @@ public class NewNavigationFlowTest extends TestBase {
     public enum modelSwitchOperation{
 
         Console("Console"),
-        OperationPortal("Operation Portal");
+        OperationPortal("Control Center");
 
         private final String value;
         modelSwitchOperation(final String newValue) {
@@ -44,7 +45,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate manager location for one user in controls")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow(String browser, String username, String password, String location) throws Exception {
+    public void verifyManagerLocationForOneUserInControlsInControlsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -141,8 +142,8 @@ public class NewNavigationFlowTest extends TestBase {
 
 
             // Go to schedule page, schedule tab
-            SchedulePage schedulePage = pageFactory.createConsoleScheduleNewUIPage();
-            schedulePage.clickOnScheduleConsoleMenuItem();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             if (locationSelectorPage.isCurrentPageEmptyInHQView()) {
                 SimpleUtils.pass("Schedule tab is grey out and show empty page successfully");
             }else
@@ -353,9 +354,7 @@ public class NewNavigationFlowTest extends TestBase {
         loginPage.logOut();
 
         //verify navigation function by SM
-        Object[][]teamMemberCredentialsF=userCredentials.get("StoreManager");
-        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String.valueOf(teamMemberCredentialsF[0][0]),String.valueOf(teamMemberCredentialsF[0][1])
-                ,String.valueOf(teamMemberCredentialsF[0][2]));
+        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
         dashboardPage.clickOnSubMenuOnProfile("My Profile");
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         HashMap<String, String> userHRProfileInfo  = profileNewUIPage.getOneUserHRProfileInfo();
@@ -374,8 +373,8 @@ public class NewNavigationFlowTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate location profile page in controls")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationProfilePageInControls(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationProfilePageInControlsAsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -399,8 +398,8 @@ public class NewNavigationFlowTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate location list in Timesheet page")
-    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationListFunctionInTimesheet(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationListFunctionInTimesheetAsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -495,19 +494,20 @@ public class NewNavigationFlowTest extends TestBase {
 //            SimpleUtils.fail("After back to dashboard page the location info was changed",true);
 //
 //    }
-    @Automated(automated = "Automated")
-    @Owner(owner = "Fiona")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate navigation bar view for admin user")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDashboardViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
-        locationSelectorPage.isDMView();
-    }
+//    This case is not applicable for new navigator
+//    @Automated(automated = "Automated")
+//    @Owner(owner = "Fiona")
+//    @Enterprise(name = "Op_Enterprise")
+//    @TestName(description = "Validate navigation bar view for admin user")
+//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+//    public void verifyDashboardViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+//
+//        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
+//        locationSelectorPage.isDMView();
+//    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
@@ -532,38 +532,33 @@ public class NewNavigationFlowTest extends TestBase {
     @TestName(description = "Validate search district function in navigation bar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarSearchDistrictFunctionInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-        String searchDistrictText = "*";
-
-        List<Integer> districtsCountOnDashboardPage = new ArrayList<>();
-
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
 
-        //Search districts in Navigation
-        districtsCountOnDashboardPage = locationSelectorPage.searchDistrict(searchDistrictText);
+//        get current Region name
+        Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+        String regionName = upperFields.get("Region");
+
+//        get all districts in this region
+        List<String> districtsNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList("District");
 
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         //go to locations tab
         locationsPage.clickOnLocationsTab();
-        //go to sub-district tab
+        //go to upperField tab
         locationsPage.goToUpperFieldsPage();
-
-        //get the count of all enabled status districts in location-district smart card
-        int alldistrictsCountOnDistrcitsPage = locationsPage.getTotalEnabledDistrictsCount();
-
-        //get the count of search result of distrcits in navigation
-        int allLocationsInDashboardPage = districtsCountOnDashboardPage.get(0);
+        List<String> districtListInRegionDetailsPage = locationsPage.getLocationsInDistrict(regionName);
+        Collections.sort(districtListInRegionDetailsPage);
 
         //compare above two data
-        if (allLocationsInDashboardPage == alldistrictsCountOnDistrcitsPage) {
-            SimpleUtils.pass("User can search district on dashboard page successfully");
+        if (ListUtils.isEqualList(districtsNames, districtListInRegionDetailsPage)) {
+            SimpleUtils.pass("The districts can show well in navigator");
         } else {
-            SimpleUtils.fail("The district searching function can't works", true);
+            SimpleUtils.fail("The district list is not correct!", false);
         }
     }
 
@@ -594,7 +589,7 @@ public class NewNavigationFlowTest extends TestBase {
         //go to OPS -> Locations -> District function
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         //go to locations tab
         locationsPage.clickOnLocationsTab();
         //go to sub-district tab
@@ -626,16 +621,14 @@ public class NewNavigationFlowTest extends TestBase {
     @TestName(description = "Validated navigation bar show after switch to other tabs and then return to dashboard page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String districtName="OMDistrict1";
-        String locationName="OMLocation2";
+        String districtName="Fiona";
+        String locationName="FionaUsingLocation";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
 
-        locationSelectorPage.changeDistrict(districtName);
-        Thread.sleep(4000);
-        locationSelectorPage.changeLocation(locationName);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
 
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();

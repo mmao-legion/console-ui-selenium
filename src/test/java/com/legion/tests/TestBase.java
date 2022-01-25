@@ -30,6 +30,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.*;
 import org.testng.Assert;
 import org.testng.ITestContext;
@@ -100,6 +101,25 @@ public abstract class TestBase {
     public static String testRailReportingFlag = null;
     public static Integer testRailRunId = null;
     public static String testRailProjectID = null;
+
+    public enum AccessRoles {
+        InternalAdmin("InternalAdmin"),
+        StoreManager("StoreManager"),
+        StoreManagerOtherLocation1("StoreManagerOtherLocation1"),
+        TeamLead("TeamLead"),
+        TeamMember("TeamMember"),
+        TeamMemberOtherLocation1("TeamMemberOtherLocation1"),
+        TeamMember2("TeamMember2"),
+        StoreManagerLG("StoreManagerLG"),
+        DistrictManager("DistrictManager");
+        private final String role;
+        AccessRoles(final String accessRole) {
+            role = accessRole;
+        }
+        public String getValue() {
+            return role;
+        }
+    }
 
     @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName","testRailRunName"})
     @BeforeSuite
@@ -191,6 +211,30 @@ public abstract class TestBase {
         setCurrentTestMethodName(method.getName());
         setSessionTimestamp(date.toString().replace(":", "_").replace(" ", "_"));
     }
+
+
+         /**
+         * upload file with the input element
+         * @param fileName file name with relative path xxx/xxx.png
+         */
+        public static void uploadFiles(WebElement ele, String fileName) throws Exception {
+            Actions actions = new Actions(getDriver());
+            // if linux system
+         if (System.getProperty("os.name").contains("Linux")) {
+                String filePath = null;
+                // change the inputBy element as block
+                filePath = new File(fileName).getAbsolutePath();
+                ele.sendKeys(filePath);
+                actions.sendKeys(Keys.ENTER).build().perform();
+            }
+         else {
+             //run at local
+             String absolutePath = new File(fileName).getCanonicalPath();
+             ele.sendKeys(absolutePath);
+             //return
+             actions.sendKeys(Keys.ENTER).build().perform();
+         }
+        }
 
     protected void createDriver (String browser, String version, String os) throws Exception {
         if (getBrowserNeeded() && browser != null) {
@@ -387,8 +431,9 @@ public abstract class TestBase {
 //        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
 //        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
-        loginPage.verifyLoginDone(isLoginDone, location);
-        MyThreadLocal.setIsNeedEditingOperatingHours(false);
+        SimpleUtils.assertOnFail("Not able to Login to Legion Application Successfully!", isLoginDone, false);
+        setConsoleWindowHandle(getDriver().getWindowHandle());
+        //loginPage.verifyLoginDone(isLoginDone, location);
     }
 
     public synchronized void loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String username, String Password, String location) throws Exception
@@ -419,19 +464,65 @@ public abstract class TestBase {
         if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
             locationSelectorPage.changeUpperFields(districtsMap.get("CinemarkWkdy_Enterprise"));
         }
+        if (getDriver().getCurrentUrl().contains(propertyMap.get("Vailqacn_Enterprise"))) {
+            locationSelectorPage.changeUpperFields(districtsMap.get("Vailqacn_Enterprise"));
+        }
     }
 
-    public void LoginAsDifferentRole(String roleName) throws Exception {
+    public void loginAsDifferentRole(String roleName) throws Exception {
         try {
+            Object[][] credentials = null;
+            StackTraceElement[] stacks = (new Throwable()).getStackTrace();
+            String simpleClassName = stacks[1].getFileName().replace(".java", "");
             String fileName = "UsersCredentials.json";
-            fileName = MyThreadLocal.getEnterprise() + fileName;
+            if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("rel")){
+                fileName = "Release"+MyThreadLocal.getEnterprise()+fileName;
+            } else {
+                fileName = MyThreadLocal.getEnterprise() + fileName;
+            }
             HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] teamMemberCredentials = userCredentials.get(roleName);
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(teamMemberCredentials[0][0]), String.valueOf(teamMemberCredentials[0][1])
-                    , String.valueOf(teamMemberCredentials[0][2]));
+            if (userCredentials.containsKey(roleName + "Of" + simpleClassName)) {
+                credentials = userCredentials.get(roleName + "Of" + simpleClassName);
+            } else {
+                credentials = userCredentials.get(roleName);
+            }
+            loginToLegionAndVerifyIsLoginDone(String.valueOf(credentials[0][0]), String.valueOf(credentials[0][1])
+                    , String.valueOf(credentials[0][2]));
         } catch (Exception e) {
             SimpleUtils.fail("Login as: " + roleName + " failed!", false);
         }
+    }
+
+    public String getCrendentialInfo(String roleName) throws Exception {
+            Object[][] credentials = null;
+            StackTraceElement[] stacks = (new Throwable()).getStackTrace();
+            String simpleClassName = stacks[1].getFileName().replace(".java", "");
+            String fileName = "UsersCredentials.json";
+            fileName = MyThreadLocal.getEnterprise() + fileName;
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            if (userCredentials.containsKey(roleName + "Of" + simpleClassName)) {
+                credentials = userCredentials.get(roleName + "Of" + simpleClassName);
+            } else {
+                credentials = userCredentials.get(roleName);
+            }
+            return String.valueOf(credentials[0][0]);
+    }
+
+    public HashMap<String, Object[][]> getSwapCoverUserCredentials(String locationName) throws Exception {
+        HashMap<String, Object[][]> swapCoverCredentials = new HashMap<>();
+        try {
+            String fileName = "UserCredentialsForComparableSwapShifts.json";
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            for (Map.Entry<String, Object[][]> entry : userCredentials.entrySet()) {
+                if (String.valueOf(entry.getValue()[0][2]).contains(locationName)) {
+                    swapCoverCredentials.put(entry.getKey(), entry.getValue());
+                    SimpleUtils.pass("Get Swap/Cover User Credential:" + entry.getKey());
+                }
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Failed to get the swap/cover name list for Location: " + locationName, false);
+        }
+        return swapCoverCredentials;
     }
 
     public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
@@ -505,6 +596,10 @@ public abstract class TestBase {
         }
     }
 
+    public static void closeCurrentWindow() {
+        getDriver().close();
+    }
+
     public static void switchToConsoleWindow() {
         try {
             Set<String> winHandles = getDriver().getWindowHandles();
@@ -526,5 +621,10 @@ public abstract class TestBase {
         return currentTime;
     }
 
-
+    public String getCurrentClassName() {
+        String className = "";
+        StackTraceElement[] stacks = (new Throwable()).getStackTrace();
+        className = stacks[1].getFileName().replace(".java", "");
+        return className;
+    }
 }

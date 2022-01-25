@@ -34,7 +34,7 @@ public class APIClient
 	private String m_user;
 	private String m_password;
 	private String m_url;
-	private static final int DEFAULT_RETRY_TIME = 2;
+	private static final int DEFAULT_RETRY_TIME = 3;
 	private int retryTime = DEFAULT_RETRY_TIME;
 
 	public APIClient(String base_url)
