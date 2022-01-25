@@ -1,6 +1,7 @@
 package com.legion.pages.core.oplabormodel;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -82,7 +83,7 @@ public class LaborModelRepositoryPage extends BasePage {
         addTaskButton.click();
     }
 
-    public void editAnExistingTask(String oldTaskName) {
+    public void editAnExistingTask(String oldTaskName) throws Exception {
         searchByTaskORLabel(oldTaskName);
         edit();
         clickInToDetails();
@@ -111,10 +112,16 @@ public class LaborModelRepositoryPage extends BasePage {
     }
 
     //search a task or label
-    public void searchByTaskORLabel(String taskOrLabelName) {
-        searchBoxOfTask.clear();
-        searchBoxOfTask.sendKeys(taskOrLabelName);
-        searchButton.click();
+    public void searchByTaskORLabel(String taskOrLabelName) throws Exception {
+        if (isElementLoaded(searchBoxOfTask, 15) && isElementLoaded(searchButton, 10)) {
+            clickTheElement(searchBoxOfTask);
+            waitForSeconds(1);
+            searchBoxOfTask.clear();
+            searchBoxOfTask.sendKeys(taskOrLabelName);
+            searchButton.click();
+        } else {
+            SimpleUtils.fail("Labor Standard Repository: Search Box and Search Icon failed to load!", false);
+        }
     }
 
     public void clickInToDetails() {

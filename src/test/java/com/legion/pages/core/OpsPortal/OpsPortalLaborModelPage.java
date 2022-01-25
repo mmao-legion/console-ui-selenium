@@ -45,7 +45,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}else
 			SimpleUtils.fail("Work Roles Tile load failed",false);
 	}
-	@FindBy(css="div.lg-templates-table-improved__grid-row")
+	@FindBy(css="[ng-repeat-start=\"item in $ctrl.sortedRows\"]")
 	private List<WebElement> templatesList;
 	@FindBy(css="lg-button.name button span.ng-binding")
 	private List<WebElement> templateNameList;
@@ -100,7 +100,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
 							clickTheElement(templateNameList.get(i));
 						}else{
-							clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
+							clickTheElement(templatesList.get(i).findElement(By.tagName("button")));
 						}
 						waitForSeconds(15);
 						if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
