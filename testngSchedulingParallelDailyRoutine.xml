@@ -35,10 +35,10 @@
                     <!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" /> SCH-4720-->
                     <include name="verifyTheNotificationForCancelTimeOffAsTeamMember" />
                     <include name="verifyTheNotificationForRequestTimeOffAsTeamMember" />
-                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
-                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />
-                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
-                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
+<!--                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsInternalAdmin" />added to AvailabilityApprovalRequiredTest-->
+<!--                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" /> added to AvailabilityApprovalRequiredTest-->
                     <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                 </methods>
@@ -152,12 +152,12 @@
                     <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                     <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin" />
 <!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5674-->
-                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
+<!--                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" /> added to AvailabilityApprovalRequiredTest-->
 <!--                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5657-->
                     <include name="verifyCanUpdateTheHRConfigInIntegrationAsInternalAdmin" />
 <!--                    <include name="verifyTheButtonsForEmployeeInDifferentStatusAsInternalAdmin" Blocked by SCH-5660/>-->
-                    <include name="validateErrorMessageWhenThereIsRecurringPendingAvailabilityRequestAsStoreManager" />
-                    <!--                    <include name="validateErrorMessageWhenThereIsNoRecurringPendingAvailabilityRequestAsStoreManager" Blocked by SCH-5388/>-->
+<!--                    <include name="validateErrorMessageWhenThereIsRecurringPendingAvailabilityRequestAsStoreManager" /> added to-->
+                    <!--                    <include name="validateErrorMessageWhenThereIsNoRecurringPendingAvailabilityRequestAsStoreManager" added to AvailabilityApprovalRequiredTest Blocked by SCH-5388/>-->
                 </methods>
             </class>
         </classes>
@@ -204,9 +204,9 @@
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
                     <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
-                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
+<!--                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsInternalAdmin" />
-                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />
+                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />added to AvailabilityApprovalRequiredTest-->
                     <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
                 </methods>
             </class>
@@ -478,6 +478,33 @@
                 <methods>
                     <include name="verifyActivityOfClaimOpenShiftNoNeedApprovalForHomeManagerWhenSetOpenShiftSettingToNonHomeLocationOnlyAsTeamMember" />
 
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Availability Approval Required Test">
+        <classes>
+            <class name="com.legion.tests.core.AvailabilityApprovalRequiredTest">
+                <methods>
+                    <!-- set AvailabilityApprovalRequired to NotRequired -->
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfNOAsInternalAdmin"/>
+                    <include name="validateCreateAvailabilityRequestWithoutApprovalAsInternalAdmin" />
+
+                    <!-- set AvailabilityApprovalRequired to RequiredForAllChanged -->
+                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
+                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsInternalAdmin" />
+                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsTeamMember" />
+                    <include name="validateCreateChangeAvailabilityRequestAsStoreManager" />
+                    <include name="validateCancelAvailabilityRequestAsStoreManager" />
+                    <include name="validateApproveAvailabilityRequestAsStoreManager" />
+                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
+                    <include name="validateRejectAvailabilityRequestAsStoreManager" />
+                    <include name="validateErrorMessageWhenThereIsRecurringPendingAvailabilityRequestAsStoreManager" />
+                    <!--                    <include name="validateErrorMessageWhenThereIsNoRecurringPendingAvailabilityRequestAsStoreManager" Blocked by SCH-5388/>-->
                 </methods>
             </class>
         </classes>
