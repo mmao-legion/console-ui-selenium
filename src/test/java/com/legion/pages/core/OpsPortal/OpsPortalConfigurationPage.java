@@ -841,7 +841,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
-							clickTheElement(templateNameList.get(i));
+							clickTheElement(getDriver().findElement(By.cssSelector(".child-row button")));
 						}else{
 							clickTheElement(templatesList.get(i).findElement(By.tagName("button")));
 						}
@@ -875,7 +875,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void clickOnEditButtonOnTemplateDetailsPage() throws Exception {
-		if(isElementEnabled(editButton, 10)){
+		if(isElementLoaded(editButton, 20)){
 			clickTheElement(editButton);
 			waitForSeconds(3);
 			if(isElementEnabled(editTemplatePopupPage)){
