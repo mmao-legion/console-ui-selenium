@@ -476,12 +476,12 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		if (timeOffCard != null) {
 			//check the go to profile link
 			if (isElementLoaded(timeOffCard.findElement(By.cssSelector(".pushout-button")))) {
-				SimpleUtils.pass("The go to pofil link loaded Successfully!");
+				SimpleUtils.pass("The go to pofile link loaded Successfully!");
 				clickTheElement(timeOffCard.findElement(By.cssSelector(".pushout-button")));
 				if(isElementLoaded(workPreferTab))
 					SimpleUtils.pass("The TM's prifile page loaded Successfully!");
 				else
-					SimpleUtils.pass("The TM's prifile page failed to load!");
+					SimpleUtils.fail("The TM's prifile page failed to load!", false);
 			} else {
 				SimpleUtils.fail("The go to profile link failed to load!", false);
 			}

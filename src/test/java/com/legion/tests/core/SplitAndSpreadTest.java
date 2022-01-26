@@ -901,12 +901,14 @@ public class SplitAndSpreadTest extends TestBase {
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
+            Thread.sleep(3000);
             teamPage.searchAndSelectTeamMemberByName(firstNameOfTM1);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String myTimeOffLabel = "Time Off";
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
             teamPage.rejectAllTheTimeOffRequests();
             teamPage.goToTeam();
+            Thread.sleep(3000);
             teamPage.searchAndSelectTeamMemberByName(firstNameOfTM2);
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
             teamPage.rejectAllTheTimeOffRequests();
