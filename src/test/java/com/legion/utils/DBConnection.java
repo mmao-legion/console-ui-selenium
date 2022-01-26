@@ -6,7 +6,6 @@ public class DBConnection {
     public static void updateDB(String sql) {
         Connection con;
         String driver = "com.mysql.jdbc.Driver";
-        //String url = "jdbc:mysql://rds.release.legion.local:3306";
         String url = "jdbc:mysql://dev-eks-shared-rc-mysql8.cijomzi1o1vu.us-west-2.rds.amazonaws.com:3306";
         String user = "legion";
         String password = "legionwork";
@@ -43,7 +42,6 @@ public class DBConnection {
     public static String queryDB(String table, String columnLabel, String condition) {
         Connection con;
         String driver = "com.mysql.jdbc.Driver";
-        //String url = "jdbc:mysql://rds.release.legion.local:3306";
         String url = "jdbc:mysql://dev-eks-shared-rc-mysql8.cijomzi1o1vu.us-west-2.rds.amazonaws.com:3306";
         String user = "legion";
         String password = "legionwork";
