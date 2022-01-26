@@ -243,13 +243,19 @@ public class AbsentManagePage extends BasePage {
         }
     }
 
-    public void createANewTemplate(String tempName, String tempDesc) {
+    public void createANewTemplate(String tempName, String tempDesc) throws Exception {
         if (isElementLoaded(newTemplateButton, 20)) {
             newTemplateButton.click();
-            templateName.clear();
-            templateName.sendKeys(tempName);
-            templateDesc.clear();
-            templateDesc.sendKeys(tempDesc);
+            if (isElementLoaded(templateName, 10) && isElementLoaded(templateDesc, 10)) {
+                templateName.clear();
+                templateName.sendKeys(tempName);
+                templateDesc.clear();
+                templateDesc.sendKeys(tempDesc);
+            } else {
+                SimpleUtils.fail("Absence Management Page: Click on New Template button failed!", false);
+            }
+        } else {
+            SimpleUtils.fail("Absence Management Page: New Template button failed to load!", false);
         }
     }
 
