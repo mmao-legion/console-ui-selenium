@@ -134,7 +134,8 @@ public class AccessRoleTest extends TestBase {
         Assert.assertTrue(accessRolePage.getOptionsOfRolePermission().contains(roleTitle), "Failed to assert customer Access role was in the optional list!");
 
         //delete the Access Role just create successfully.
-        DBConnection.updateDB("delete from legionrc.Role where name='" + roleTitle + "'");
+        String sql="delete from legionrc.Role where name like \"AutoAccessRole%\" and enterpriseId=\"aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95\"";
+        DBConnection.updateDB(sql);
         String queryResult = DBConnection.queryDB("legionrc.Role", "name", "name='" + roleTitle + "'");
         Assert.assertEquals(queryResult, "No item returned!", "Failed to clear the data just generated in DB!");
     }
