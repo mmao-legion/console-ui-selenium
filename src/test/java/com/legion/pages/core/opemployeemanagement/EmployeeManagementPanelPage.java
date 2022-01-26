@@ -2,6 +2,7 @@ package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -17,7 +18,7 @@ public class EmployeeManagementPanelPage extends BasePage {
     }
 
     // Added by Sophia
-    @FindBy(css = "[title='Absence Management'] .lg-dashboard-card__title")
+    @FindBy(css = "[title='Absence Management']")
     private WebElement absentManagement;
 
 
@@ -25,7 +26,7 @@ public class EmployeeManagementPanelPage extends BasePage {
         try {
             waitForPageLoaded(getDriver());
             if (isElementLoaded(absentManagement, 10)) {
-                clickTheElement(absentManagement);
+                clickTheElement(absentManagement.findElement(By.tagName("h1")));
             }
         } catch (NoSuchElementException e) {
             SimpleUtils.fail(e.getMessage(), false);

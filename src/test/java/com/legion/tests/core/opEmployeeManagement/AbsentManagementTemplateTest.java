@@ -54,12 +54,12 @@ public class AbsentManagementTemplateTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating Absent Management dashboard card content!");
     }
 
-
+    // Blocked by https://legiontech.atlassian.net/browse/OPS-4196
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Templates list page validation")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyAddEditSearchAndDisableTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
@@ -240,11 +240,12 @@ public class AbsentManagementTemplateTest extends TestBase {
 
     }
 
+    // Blocked by https://legiontech.atlassian.net/browse/OPS-4196
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyTemplateDetailsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();

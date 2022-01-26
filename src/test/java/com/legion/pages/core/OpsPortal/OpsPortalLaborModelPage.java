@@ -98,7 +98,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
-							clickTheElement(templateNameList.get(i));
+							clickTheElement(getDriver().findElement(By.cssSelector(".child-row button")));
 						}else{
 							clickTheElement(templatesList.get(i).findElement(By.tagName("button")));
 						}
