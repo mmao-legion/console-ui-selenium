@@ -283,14 +283,10 @@ public class AbsentManagePage extends BasePage {
         return getWebElementsLabels(templateTableHeaders);
     }
 
-    public void search(String searchText) throws Exception {
-        if (isElementLoaded(templateSearchBox, 20) && isElementLoaded(searchIcon, 20)) {
+    public void search(String searchText){
             templateSearchBox.clear();
             templateSearchBox.sendKeys(searchText);
             searchIcon.click();
-        } else {
-            SimpleUtils.fail("Absence Management page: Search box failed to load!", false);
-        }
     }
 
     public String noMatch() {
