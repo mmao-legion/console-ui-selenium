@@ -946,5 +946,83 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.report("There is no assignment rule");
 	}
 
+	@FindBy(css = "div.table-row:nth-child(2)>div:nth-child(1)")
+	private WebElement createBudgetPlanScenario;
+	@FindBy(css = "div.table-row:nth-child(3)>div:nth-child(1)")
+	private WebElement archiveBudgetPlanScenario;
+	@FindBy(css = "div.table-row:nth-child(4)>div:nth-child(1)")
+	private WebElement viewBudgetPlan;
+	@FindBy(css = "div.table-row:nth-child(5)>div:nth-child(1)")
+	private WebElement setBudgetPlanInEffect;
+	@FindBy(css = "div.table-row:nth-child(6)>div:nth-child(1)")
+	private WebElement createBudgetPlan;
+	@FindBy(css = "div.table-row:nth-child(7)>div:nth-child(1)")
+	private WebElement approveBudgetPlan;
+	@FindBy(css = "div.table-row:nth-child(8)>div:nth-child(1)")
+	private WebElement submitForReview;
+	@FindBy(css="div.table-row:nth-child(1)>div[ng-repeat]")
+	private List<WebElement> accessRolesList;
+	@FindBy(css="div.table-container.ng-scope div[ng-repeat=\"permission in value\"]")
+	private List<WebElement> permissionsList;
+
+
+	@Override
+	public void verifyPlanItemInUserManagementAccessRoleTab() throws Exception {
+		if (areListElementVisible(accessRolePermissions,5)) {
+			for (WebElement element: accessRolePermissions){
+				if (element.getText().equalsIgnoreCase("Plan")){
+					clickTheElement(element);
+					if (createBudgetPlanScenario.getText().contains("Create Budget Plan Scenario")&& archiveBudgetPlanScenario.getText().contains("Archive Budget Plan Scenario")
+							&& viewBudgetPlan.getText().contains("View Budget Plan") && setBudgetPlanInEffect.getText().contains("Set Budget Plan in Effect")
+							&& createBudgetPlan.getText().contains("Create Budget Plan") && approveBudgetPlan.getText().contains("Approve Budget Plan")
+					        && submitForReview.getText().contains("Submit for Review")) {
+						SimpleUtils.pass("Plan permission items loaded successfully!");
+					}else
+						SimpleUtils.fail("Plan permission items loaded failed",false);
+				}
+			}
+		}else
+			SimpleUtils.fail("Access Role Permissions items load failed",false);
+	}
+
+	@Override
+	public int getIndexOfRolesInPermissionsTable(String role) throws Exception {
+		int index = 0;
+		if(areListElementVisible(accessRolesList,5)){
+			for(WebElement accessRole:accessRolesList){
+				if(accessRole.getText().trim().equalsIgnoreCase(role)){
+					index  = accessRolesList.indexOf(accessRole);
+					break;
+				}
+			}
+		}
+		return index;
+	}
+
+    @Override
+	public boolean verifyPermissionIsCheckedOrNot(int index) throws Exception{
+		boolean flag = false;
+		if(areListElementVisible(permissionsList,5)){
+			for(WebElement permission:permissionsList){
+				WebElement permissionValue = permission.findElements(By.cssSelector("div[ng-repeat]")).get(index);
+				String permissionName = permission.findElement(By.cssSelector("div[title]")).getText().trim();
+				if(permissionValue.getAttribute("checked") != null){
+					SimpleUtils.pass(permissionName + " is checked already!");
+					flag = true;
+				}else {
+					SimpleUtils.fail(permissionName + " is not checked!", false);
+				}
+			}
+		}
+		return flag;
+	}
+
+
+
+
+
+
+
+
 }
 
