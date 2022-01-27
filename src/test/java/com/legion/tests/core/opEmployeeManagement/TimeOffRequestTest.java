@@ -20,8 +20,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.time.LocalDate;
-import java.util.Random;
 
 public class TimeOffRequestTest extends TestBase {
 
@@ -44,7 +42,7 @@ public class TimeOffRequestTest extends TestBase {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
         //search template
         String tempName = "AccrualAuto-Don't touch!!!";

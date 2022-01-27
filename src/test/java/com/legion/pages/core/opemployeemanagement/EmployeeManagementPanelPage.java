@@ -7,8 +7,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.util.List;
-
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class EmployeeManagementPanelPage extends BasePage {
@@ -17,15 +15,14 @@ public class EmployeeManagementPanelPage extends BasePage {
     }
 
     // Added by Sophia
-    @FindBy(css = "[title='Absence Management'] .lg-dashboard-card__title")
-    private WebElement absentManagement;
+    @FindBy(css = "lg-dashboard-card[title='Time Off Management']")
+    private WebElement timeOffManagement;
 
-
-    public void goToAbsentManagementPage() {
+    public void goToTimeOffManagementPage() {
         try {
-            waitForPageLoaded(getDriver());
-            if (isElementLoaded(absentManagement, 10)) {
-                clickTheElement(absentManagement);
+            if(timeOffManagement.isDisplayed()){
+                timeOffManagement.click();
+                waitForSeconds(3);
             }
         } catch (NoSuchElementException e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -34,8 +31,8 @@ public class EmployeeManagementPanelPage extends BasePage {
         }
     }
 
-    public String getDashboardCardContent(){
-        return absentManagement.getText();
+    public String getDashboardCardContent() {
+        return timeOffManagement.getText();
     }
 
 }
