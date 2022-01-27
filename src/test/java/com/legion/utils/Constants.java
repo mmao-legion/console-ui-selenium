@@ -20,4 +20,11 @@ public class Constants {
     public static final String ManualOnboard = "Manual Onboard";
     public static final String ControlEnterprice = "Vailqacn_Enterprise";
     public static final String OpEnterprice = "CinemarkWkdy_Enterprise";
+
+    //accrual
+    public static final String loginUrlRC ="https://rc-enterprise.dev.legion.work/legion/authentication/login";
+    public static final String getTemplateByWorkerId ="https://rc-enterprise.dev.legion.work/legion/configTemplate/getTemplateByWorkerAndType";
+    public static final String deleteAccrualByWorkerId ="https://rc-enterprise.dev.legion.work/legion/accrual/deleteAccrualByWorkerId";
+    public static final String runAccrualJobWithSimulateDateAndWorkerId="https://rc-enterprise.dev.legion.work/legion/accrual/runAccrualJobWithSimulateDateAndWorkerId";
+    public static final String toggles ="https://rc-enterprise.dev.legion.work/legion/toggles";
 }
