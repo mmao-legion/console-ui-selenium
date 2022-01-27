@@ -394,14 +394,21 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     @Override
     public boolean isLocationInCompliancePageClickable() throws Exception {
         boolean isLocationClickable = true;
-        if (areListElementVisible(rowsInAnalyticsTable,10)) {
-            for (WebElement row: rowsInAnalyticsTable) {
-                click(row);
-                if (row.getCssValue("cursor").contains("pointer"))
-                    break;
-                else
-                    isLocationClickable = false;
+        WebElement element = (new WebDriverWait(getDriver(), 60))
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[label=\"Refresh\"]")));
+        if (element.isDisplayed()) {
+            SimpleUtils.pass("Compliance Page: Page refreshes within 1 minute successfully");
+            if (areListElementVisible(rowsInAnalyticsTable,10)) {
+                for (WebElement row: rowsInAnalyticsTable) {
+                    click(row);
+                    if (row.getCssValue("cursor").contains("pointer"))
+                        break;
+                    else
+                        isLocationClickable = false;
+                }
             }
+        } else {
+            SimpleUtils.fail("Compliance Page: Page doesn't refresh within 1 minute", false);
         }
         return isLocationClickable;
     }
