@@ -206,8 +206,8 @@
                     <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
 <!--                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsInternalAdmin" />
-                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />added to AvailabilityApprovalRequiredTest-->
-                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
+                    <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />
+                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" /> added to AvailabilityApprovalRequiredTest-->
                 </methods>
             </class>
         </classes>
@@ -496,10 +496,11 @@
                     <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsInternalAdmin" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />
+                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsTeamMember" />
-                    <include name="validateCreateChangeAvailabilityRequestAsStoreManager" />
-                    <include name="validateCancelAvailabilityRequestAsStoreManager" />
+<!--                    <include name="validateCreateChangeAvailabilityRequestAsStoreManager" />
+                    <include name="validateCancelAvailabilityRequestAsStoreManager" /> Need fix-->
                     <include name="validateApproveAvailabilityRequestAsStoreManager" />
                     <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" />
                     <include name="validateRejectAvailabilityRequestAsStoreManager" />
