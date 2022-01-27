@@ -2,6 +2,7 @@ package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -20,7 +21,7 @@ public class EmployeeManagementPanelPage extends BasePage {
 
     public void goToTimeOffManagementPage() {
         try {
-            if(timeOffManagement.isDisplayed()){
+            if (timeOffManagement.isDisplayed()) {
                 timeOffManagement.click();
                 waitForSeconds(3);
             }

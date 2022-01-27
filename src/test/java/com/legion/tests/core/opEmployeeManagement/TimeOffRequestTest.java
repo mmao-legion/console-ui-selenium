@@ -38,7 +38,7 @@ public class TimeOffRequestTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time Off Request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyEmployeeCanRequestAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) {
+    public void verifyEmployeeCanRequestAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();

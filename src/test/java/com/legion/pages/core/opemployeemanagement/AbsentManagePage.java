@@ -243,12 +243,20 @@ public class AbsentManagePage extends BasePage {
         }
     }
 
-    public void createANewTemplate(String tempName, String tempDesc) {
-        newTemplateButton.click();
-        templateName.clear();
-        templateName.sendKeys(tempName);
-        templateDesc.clear();
-        templateDesc.sendKeys(tempDesc);
+    public void createANewTemplate(String tempName, String tempDesc) throws Exception {
+        if (isElementLoaded(newTemplateButton, 20)) {
+            newTemplateButton.click();
+            if (isElementLoaded(templateName, 10) && isElementLoaded(templateDesc, 10)) {
+                templateName.clear();
+                templateName.sendKeys(tempName);
+                templateDesc.clear();
+                templateDesc.sendKeys(tempDesc);
+            } else {
+                SimpleUtils.fail("Absence Management Page: Click on New Template button failed!", false);
+            }
+        } else {
+            SimpleUtils.fail("Absence Management Page: New Template button failed to load!", false);
+        }
     }
 
     public void cancel() {
@@ -275,10 +283,14 @@ public class AbsentManagePage extends BasePage {
         return getWebElementsLabels(templateTableHeaders);
     }
 
-    public void search(String searchText) {
-        templateSearchBox.clear();
-        templateSearchBox.sendKeys(searchText);
-        searchIcon.click();
+    public void search(String searchText) throws Exception {
+        if (isElementLoaded(templateSearchBox, 20) && isElementLoaded(searchIcon, 20)) {
+            templateSearchBox.clear();
+            templateSearchBox.sendKeys(searchText);
+            searchIcon.click();
+        } else {
+            SimpleUtils.fail("Absence Management page: Search box failed to load!", false);
+        }
     }
 
     public String noMatch() {
@@ -441,7 +453,7 @@ public class AbsentManagePage extends BasePage {
         return titleBreadCrumb.getText();
     }
 
-    public void configureTemplate(String templateName) {
+    public void configureTemplate(String templateName) throws Exception {
         search(templateName);
         clickInDetails();
         waitForSeconds(5);
@@ -495,14 +507,14 @@ public class AbsentManagePage extends BasePage {
         return weeklyLimitHrs.getText();
     }
 
-    public void viewTimeOffConfigure(String timeOff) {
+    public void viewTimeOffConfigure(String timeOff) throws Exception {
         search(timeOff);
         isButtonClickable(view);
         System.out.println("View button is shown and clickable!");
         view.click();
     }
 
-    public void configureTimeOffRules(String timeOff) {
+    public void configureTimeOffRules(String timeOff) throws Exception {
         search(timeOff);
         waitForSeconds(3);
         if (isButtonClickable(configure)) {
@@ -528,7 +540,7 @@ public class AbsentManagePage extends BasePage {
         }
     }
 
-    public void removeTimeOffRules(String timeOff) {
+    public void removeTimeOffRules(String timeOff) throws Exception {
         search(timeOff);
         if (isButtonClickable(remove)) {
             System.out.println("Remove button is shown and clickable!");
