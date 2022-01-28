@@ -151,7 +151,7 @@ public class AccessRolePage extends BasePage {
     public void createNewAccessRole() {
         scrollToBottom();
         createButton.click();
-        waitForSeconds(3);
+        waitForSeconds(5);
     }
 
     public ArrayList<String> getOptionsOfRolePermission() {
