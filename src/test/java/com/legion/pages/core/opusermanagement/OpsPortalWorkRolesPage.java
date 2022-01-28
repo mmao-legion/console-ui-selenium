@@ -1,6 +1,7 @@
 package com.legion.pages.core.opusermanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -56,20 +57,31 @@ public class OpsPortalWorkRolesPage extends BasePage {
     private WebElement cancelDisableAction;
     @FindBy(css = "div.modal-content lg-button[label='OK']")
     private WebElement okToDisableAction;
+    @FindBy(css = "div.lg-toast")
+    private WebElement popUpMsg;
 
 
     public void goBack() {
         backButton.click();
     }
 
-    public void searchByWorkRole(String workRole) {
-        searchBox.clear();
-        searchBox.sendKeys(workRole);
-        searchButton.click();
+    public void searchByWorkRole(String workRole) throws Exception {
+        if (isElementLoaded(searchBox, 15)) {
+            searchBox.clear();
+            searchBox.sendKeys(workRole);
+            searchButton.click();
+        } else {
+            SimpleUtils.fail("Work Role Page: Search box failed to load!", false);
+        }
     }
 
-    public String getTheFirstWorkRoleInTheList() {
-        String workRoleLabel = theFirstWorkRoleInTheList.getAttribute("label");
+    public String getTheFirstWorkRoleInTheList() throws Exception {
+        String workRoleLabel = "";
+        if (isElementLoaded(theFirstWorkRoleInTheList, 15)) {
+            workRoleLabel = theFirstWorkRoleInTheList.getAttribute("label");
+        } else {
+            SimpleUtils.fail("Work Role Page: The first work role failed to load in the list!", false);
+        }
         return workRoleLabel;
     }
 
@@ -78,8 +90,12 @@ public class OpsPortalWorkRolesPage extends BasePage {
         return notice;
     }
 
-    public void goToWorkRoleDetails() {
-        theFirstWorkRoleInTheList.click();
+    public void goToWorkRoleDetails() throws Exception {
+        if (isElementLoaded(theFirstWorkRoleInTheList, 15)) {
+            clickTheElement(theFirstWorkRoleInTheList);
+        } else {
+            SimpleUtils.fail("Work Role Page: The first work role failed to load in the list!", false);
+        }
     }
 
     public void clickEditButton() {
@@ -94,7 +110,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
         }
     }
 
-    public void editAnExistingWorkRole(String oldName) {
+    public void editAnExistingWorkRole(String oldName) throws Exception {
         clickEditButton();
         searchByWorkRole(oldName);
         goToWorkRoleDetails();//go to work role details page
@@ -105,8 +121,17 @@ public class OpsPortalWorkRolesPage extends BasePage {
         addWorkRoleButton.click();//go to work role details page
     }
 
-    public void save() {
-        saveButton.click();
+    public void save() throws Exception {
+        if (isElementLoaded(saveButton, 10)) {
+            saveButton.click();
+            if (isElementLoaded(popUpMsg, 5) && popUpMsg.getText().contains("Success")) {
+                SimpleUtils.pass("Work Role Page: Click on Save button successfully!");
+            } else {
+                SimpleUtils.fail("Work Role Page: Failed to Save!", false);
+            }
+        } else {
+            SimpleUtils.fail("Work Role Page: Save button failed to load!", false);
+        }
     }
 
     //cancel editing
@@ -128,7 +153,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
 
 
     //disable action
-    public void disableAWorkRole(String name) {
+    public void disableAWorkRole(String name) throws Exception {
         clickEditButton();
         searchByWorkRole(name);
         clickDisableButton();

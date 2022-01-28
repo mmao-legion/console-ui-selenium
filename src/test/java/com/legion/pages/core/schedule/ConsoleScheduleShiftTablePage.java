@@ -1546,8 +1546,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception {
         HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
-        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
-            for (int i = 0; i < weekDayDimensions.size(); i++) {
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 14) {
+            for (int i = 0; i < weekDayDimensions.size()/2; i++) {
                 WebElement weekDay = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-label"));
                 WebElement hoursNCount = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-summary"));
                 List<WebElement> shiftsInSameDay = getDriver().findElements(By.cssSelector("[data-day-index=\"" + i +"\"] .week-schedule-shift-wrapper"));
