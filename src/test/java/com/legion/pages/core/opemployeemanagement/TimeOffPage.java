@@ -19,8 +19,6 @@ public class TimeOffPage extends BasePage {
     }
 
     // Added by Sophia
-    @FindBy(css = "span[title=' Allene Mante']")
-    private WebElement teamMember;
     @FindBy(css = "timeoff-management div.collapsible-title")
     private WebElement timeOffTab;
     //
@@ -111,15 +109,11 @@ public class TimeOffPage extends BasePage {
     private List<WebElement> balances;
 
 
-    public void goToTeamMemberDetailDemo(String memberName) {
+    public void goToTeamMemberDetail(String memberName) {
         String teamMemCssLocator = "span[title=' " + memberName + "']";
         WebElement teamMem = getDriver().findElement(By.cssSelector(teamMemCssLocator));
         scrollToElement(teamMem);
         teamMem.click();
-    }
-
-    public void goToTeamMemberDetail() {
-        teamMember.click();
     }
 
     public void switchToTimeOffTab() {

@@ -155,7 +155,7 @@ public class TimeOffRequestTest extends TestBase {
         consoleNavigationPage.searchLocation("Newark-Mock");
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        timeOffPage.goToTeamMemberDetail();
+        timeOffPage.goToTeamMemberDetail("Allene Mante");
         timeOffPage.switchToTimeOffTab();
         //Edit annual leave balance
         timeOffPage.editTimeOffBalance("Annual Leave", "5");
@@ -276,7 +276,7 @@ public class TimeOffRequestTest extends TestBase {
         //switch to console.
         switchToNewWindow();
         consoleNavigationPage.navigateTo("Team");
-        timeOffPage.goToTeamMemberDetail();
+        timeOffPage.goToTeamMemberDetail("Allene Mante");
         timeOffPage.switchToTimeOffTab();
 
         //Days request at one time.

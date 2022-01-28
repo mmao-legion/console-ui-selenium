@@ -35,7 +35,7 @@ public class AccessRoleTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Custom access role")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAccessRoleAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) {
+    public void verifyAccessRoleAsInternalAdminOfAccessRole(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToUserManagement();
         OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
