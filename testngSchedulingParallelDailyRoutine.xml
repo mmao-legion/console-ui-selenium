@@ -497,8 +497,8 @@
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsInternalAdmin" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />
                     <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
-                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
-                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsTeamMember" />
+<!--                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
+                    <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsTeamMember" /> SCH-6008-->
 <!--                    <include name="validateCreateChangeAvailabilityRequestAsStoreManager" />
                     <include name="validateCancelAvailabilityRequestAsStoreManager" /> Need fix-->
                     <include name="validateApproveAvailabilityRequestAsStoreManager" />

@@ -13,6 +13,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 
 public class AvailabilityApprovalRequiredTest extends TestBase {
@@ -586,13 +587,20 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
                 profileNewUIPage.clickNextWeek();
             }
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
-            int sliderIndex = 1;
-            double hours = -0.5;//move 1 metric 0.5h left
+            String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
             String hoursType = "Preferred";
-            String repeatChanges = "This week only";
-            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                    hours, repeatChanges);
+            HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
+            if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+                int sliderIndex = 1;
+                double hours = -0.5;//move 1 metric 0.5h left
+                profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+                        hours, repeatChanges);
+            } else {
+                profileNewUIPage.clickAvailabilityEditButton();
+                profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+                profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+            }
             loginPage.logOut();
 
             // Login as Store Manager again to check message
@@ -603,8 +611,6 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             //check and click the go to profile link
             activityPage.goToProfileLinkOnActivity();
             //check the week data
-            profileNewUIPage.getNickNameFromProfile();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
             profileNewUIPage.verifyAvailabilityWeek(weekInfo);
             //click the activity bell to view the profile update again
             activityPage.verifyClickOnActivityIcon();
@@ -688,8 +694,6 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
             activityPage.verifyClickOnActivityIcon();
             //check and click the go to profile link
-            profileNewUIPage.getNickNameFromProfile();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
             activityPage.goToProfileLinkOnActivity();
             //check the week data
             profileNewUIPage.verifyAvailabilityWeek(weekInfo);

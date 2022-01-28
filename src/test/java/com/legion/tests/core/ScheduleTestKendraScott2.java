@@ -4494,7 +4494,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
 				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-
 		scheduleCommonPage.navigateToNextWeek();
 		boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
 		if (isWeekGenerated) {
@@ -5149,8 +5148,16 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickOnOfferOrAssignBtn();
 
 			//Get TM full name from view profile page
-			List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-			String nameOfSelectedTM3 = shiftInfo.get(0) +" " + shiftInfo.get(5);
+			List<String> shiftInfo = new ArrayList<>();
+			String nameOfSelectedTM3 = "";
+			int i = 0;
+			while (i < 50 && (nameOfSelectedTM3.equals("") || nameOfSelectedTM3.equalsIgnoreCase("Open")
+					|| nameOfSelectedTM3.equalsIgnoreCase("Unassigned"))) {
+				shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+				//Search shift by TM names: first name and last name
+				nameOfSelectedTM3 = shiftInfo.get(0);
+				i++;
+			}
 
 			scheduleMainPage.saveSchedule();
 			Thread.sleep(3000);
@@ -6201,8 +6208,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "Vailqacn_Enterprise")
-//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Validate the overnight shift can be drag to other day")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin(String username, String password, String browser, String location) throws Exception {

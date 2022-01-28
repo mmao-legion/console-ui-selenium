@@ -367,7 +367,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
-            newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount3.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"),
+                    ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount3.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.selectWorkRole(scheduleWorkRoles.get("GENERAL MANAGER"));
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
@@ -375,7 +376,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
             //generate and save, should not display number of changes, we set it as 0.
             int changesNotPublished = 1;
             //Verify changes not publish smart card.
-            SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",smartCardPage.isSpecificSmartCardLoaded("UNPUBLISHED CHANGES"),false);
+            SimpleUtils.assertOnFail("Changes not publish smart card is not loaded!",
+                    smartCardPage.isSpecificSmartCardLoaded("UNPUBLISHED CHANGES"),false);
             smartCardPage.verifyChangesNotPublishSmartCard(changesNotPublished);
             createSchedulePage.verifyLabelOfPublishBtn("Republish");
             String activeWeek = scheduleCommonPage.getActiveWeekText();

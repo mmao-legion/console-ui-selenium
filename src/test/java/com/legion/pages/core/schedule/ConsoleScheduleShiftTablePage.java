@@ -1828,7 +1828,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public void clickViewStatusBtn() throws Exception {
         if(isElementLoaded(viewStatusBtn,15)){
-            click(viewStatusBtn);
+            clickTheElement(viewStatusBtn);
             SimpleUtils.pass("clicked view status button!");
         } else {
             SimpleUtils.fail("view status button is not loaded!",false);
