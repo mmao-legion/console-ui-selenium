@@ -733,7 +733,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     private WebElement acknowledgeBtn;
     @Override
     public void clickAcknowledgeBtn() throws Exception {
-        if (isElementLoaded(acknowledgeBtn,5)){
+        if (isElementLoaded(acknowledgeBtn,10)){
             click(acknowledgeBtn);
             SimpleUtils.pass("Acknowledge button has been clicked!");
         } else {

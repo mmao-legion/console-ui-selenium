@@ -902,7 +902,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css="[ng-click=\"closeModal()\"]")
     private WebElement cancelButtonInEditShiftTimeWindow;
 
-    @FindBy(css="[ng-click=\"confirm()\"]")
+    @FindBy(css=".modal-instance-button.confirm.ng-binding")
     private WebElement updateButtonInEditShiftTimeWindow;
 
     @FindBy(css="div.noUi-handle.noUi-handle-lower")
@@ -935,16 +935,26 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     public List<String> editShiftTime() throws Exception {
         List<String> shiftTimes= new ArrayList<>();
-        if (isElementEnabled(shiftStartAndEndTimeContainer, 5) && isElementEnabled(shiftStartTimeButton, 5)
-                && isElementEnabled(shiftEndTimeButton, 5) && isElementEnabled(shiftCardOnEditShiftTimePage, 5)) {
+        if (isElementEnabled(shiftStartAndEndTimeContainer, 5)
+                && (isElementEnabled(shiftStartTimeButton, 5) || isElementLoaded(shiftStartInput, 5))
+                && isElementEnabled(shiftEndTimeButton, 5) || isElementLoaded(shiftEndInput, 5)
+                && isElementEnabled(shiftCardOnEditShiftTimePage, 5)) {
             String shiftTimeBeforeUpdate = getInfoFromCardOnEditShiftTimePage().get("shiftTime");
             shiftTimes.add(0, shiftTimeBeforeUpdate);
-            if (areListElementVisible(noUiMakers, 5) && areListElementVisible(noUiValues, 5) && noUiMakers.size() == noUiValues.size()) {
-                String currentNow = shiftEndTimeButton.getAttribute("aria-valuenow");
-                int currentValue = Integer.parseInt(currentNow.substring(0, currentNow.indexOf('.')));
-                mouseHoverDragandDrop(shiftEndTimeButton, noUiMakers.get(currentValue - 1));
-                waitForSeconds(2);
+            if (isElementEnabled(shiftEndTimeButton, 5)) {
+                if (areListElementVisible(noUiMakers, 5) && areListElementVisible(noUiValues, 5) && noUiMakers.size() == noUiValues.size()) {
+                    String currentNow = shiftEndTimeButton.getAttribute("aria-valuenow");
+                    int currentValue = Integer.parseInt(currentNow.substring(0, currentNow.indexOf('.')));
+                    mouseHoverDragandDrop(shiftEndTimeButton, noUiMakers.get(currentValue - 1));
+                    waitForSeconds(2);
+                }
+            } else {
+                String oldEndTime = shiftTimeBeforeUpdate.split("-")[1];
+                String newEndTime = Integer.parseInt(oldEndTime.split(":")[0])+1+oldEndTime.split(":")[1];
+                shiftEndInput.clear();
+                shiftEndInput.sendKeys(newEndTime);
             }
+
             String shiftTimeAfterUpdate = getInfoFromCardOnEditShiftTimePage().get("shiftTime");
             if (!shiftTimeBeforeUpdate.equals(shiftTimeAfterUpdate)) {
                 SimpleUtils.pass("Edit Shift Time successfully");
@@ -1134,7 +1144,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public void clickonAssignTM() throws Exception{
         if(isAssignTMEnable())
         {
-            click(assignTM);
+            clickTheElement(assignTM);
             SimpleUtils.pass("Clicked on Assign TM ");
         }
         else
@@ -1580,6 +1590,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     private WebElement editShiftTimePopUp;
     @FindBy(css = ".modal-instance-button.confirm.ng-binding")
     private WebElement confirmBtnOnDragAndDropConfirmPage;
+    @FindBy(className = "slider-container")
+    private WebElement sliderContainer;
+    @FindBy(css = "[aria-label=\"Shift start\"]")
+    private WebElement shiftStartInput;
+    @FindBy(css = "[aria-label=\"Shift end\"]")
+    private WebElement shiftEndInput;
     public void editTheShiftTimeForSpecificShift(WebElement shift, String startTime, String endTime) throws Exception {
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         By isUnAssignedShift = null;
@@ -1596,10 +1612,26 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     scrollToElement(editShiftTimeOption);
                     click(editShiftTimeOption);
                     if (isElementEnabled(editShiftTimePopUp, 5)) {
-                        moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
-                        moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
-                        waitForSeconds(2);
-                        click(confirmBtnOnDragAndDropConfirmPage);
+                        if (isElementLoaded(sliderContainer, 10)) {
+                            moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
+                            moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
+                            waitForSeconds(2);
+                            click(confirmBtnOnDragAndDropConfirmPage);
+                        } else {
+                            if (!startTime.contains(":")) {
+                                startTime = startTime.replace("am", ":00am").replace("pm", ":00pm");
+                            }
+                            if (!endTime.contains(":")){
+                                endTime = endTime.replace("am", ":00am").replace("pm", ":00pm");
+                            }
+                            shiftStartInput.clear();
+                            shiftStartInput.sendKeys(startTime);
+                            shiftEndInput.clear();
+                            shiftEndInput.sendKeys(endTime);
+                            waitForSeconds(2);
+                            click(confirmBtnOnDragAndDropConfirmPage);
+                        }
+
                     } else {
                         SimpleUtils.fail("Edit Shift Time PopUp window load failed", false);
                     }
