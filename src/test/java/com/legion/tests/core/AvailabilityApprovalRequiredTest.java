@@ -375,7 +375,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
     @TestName(description = "Verify the notification when TM updates availability from a week onwards with config Not required")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
     public void verifyNotificationForUpdateAvailabilityRepeatForwardWithConfNOAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             // Login with Store Manager Credentials
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -424,13 +424,20 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
                 profileNewUIPage.clickNextWeek();
             }
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
-            int sliderIndex = 1;
-            double hours = -0.5;//move 1 metric 0.5h left
+            String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
             String hoursType = "Preferred";
-            String repeatChanges = "repeat forward";
-            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                    hours, repeatChanges);
+            HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
+            if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+                int sliderIndex = 1;
+                double hours = -0.5;//move 1 metric 0.5h left
+                profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+                        hours, repeatChanges);
+            } else {
+                profileNewUIPage.clickAvailabilityEditButton();
+                profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+                profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+            }
             loginPage.logOut();
 
             // Login as Store Manager again to check message
@@ -441,9 +448,9 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String requestAwailabilityChangeLabel = "request";
             activityPage.verifyNotificationForUpdateAvailability(requestUserName,AvailabilityApprovalRequiredOptions.NotRequired.getValue(),
                     requestAwailabilityChangeLabel,weekInfo,repeatChanges);
-//        } catch (Exception e){
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
 
@@ -503,13 +510,20 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
                 profileNewUIPage.clickNextWeek();
             }
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
-            int sliderIndex = 1;
-            double hours = -0.5;//move 1 metric 0.5h left
-            String leftOrRightDuration = "Right"; //move the right bar
-            String hoursType = "Preferred";
             String repeatChanges = "This week only";
-            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                    hours, repeatChanges);
+            String leftOrRightDuration = "Right";
+            String hoursType = "Preferred";
+            HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
+            if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+                int sliderIndex = 1;
+                double hours = -0.5;//move 1 metric 0.5h left
+                profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+                        hours, repeatChanges);
+            } else {
+                profileNewUIPage.clickAvailabilityEditButton();
+                profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+                profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+            }
             loginPage.logOut();
 
             // Login as Store Manager again to check message
@@ -681,13 +695,20 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
                 profileNewUIPage.clickNextWeek();
             }
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
-            int sliderIndex = 1;
-            double hours = -0.5;//move 1 metric 0.5h left
+            String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
             String hoursType = "Preferred";
-            String repeatChanges = "repeat forward";
-            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                    hours, repeatChanges);
+            HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
+            if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+                int sliderIndex = 1;
+                double hours = -0.5;//move 1 metric 0.5h left
+                profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+                        hours, repeatChanges);
+            } else {
+                profileNewUIPage.clickAvailabilityEditButton();
+                profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+                profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+            }
             loginPage.logOut();
             // Login as Store Manager again to check message
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
@@ -875,14 +896,22 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             profileNewUIPage.clickNextWeek();
         }
         String weekInfo = profileNewUIPage.getAvailabilityWeek();
-        String oldAvailableHrs = profileNewUIPage.getAvailableHoursForSpecificWeek();
-        int sliderIndex = 1;
-        double hours = -0.5;//move 1 metric 0.5h left----decrease
+        String repeatChanges = "This week only";
         String leftOrRightDuration = "Right";
         String hoursType = "Preferred";
-        String repeatChanges = "This week only";
-        String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                hours, repeatChanges);
+        HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
+
+        if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+            int sliderIndex = 1;
+            double hours = -0.5;//move 1 metric 0.5h left
+            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+                    hours, repeatChanges);
+        } else {
+            profileNewUIPage.clickAvailabilityEditButton();
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+            profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+        }
+        String newAvailableHrs = profileNewUIPage.getAvailableHoursForSpecificWeek();
         loginPage.logOut();
 
         //Login as store manager to approve the request.
@@ -954,13 +983,20 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
             profileNewUIPage.clickNextWeek();
         }
-        int sliderIndex = 1;
-        double hours = -0.5;//move 1 metric 0.5h left----decrease
+        String repeatChanges = "This week only";
         String leftOrRightDuration = "Right";
         String hoursType = "Preferred";
-        String repeatChanges = "This week only";
-        profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-                hours, repeatChanges);
+        HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
+        if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+            int sliderIndex = 1;
+            double hours = -0.5;//move 1 metric 0.5h left
+            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+                    hours, repeatChanges);
+        } else {
+            profileNewUIPage.clickAvailabilityEditButton();
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+            profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+        }
         loginPage.logOut();
 
         //Login as store manager to check cancelled request.
