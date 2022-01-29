@@ -1771,7 +1771,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         String scheduleWeekText = "";
         String year = "";
         if (isElementLoaded(weekPeriod, 5) && isElementLoaded(calMonthYear, 5)) {
-            if (calMonthYear.getText().trim().contains("-")) {
+            if (calMonthYear.getText().split(" ").length == 5) {
                 year = calMonthYear.getText().trim().substring(4, 8);
             } else {
                 year = calMonthYear.getText().trim().substring(calMonthYear.getText().trim().length() - 4);

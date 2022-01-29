@@ -1541,8 +1541,8 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
-            // Wait for 60 seconds when the shift offer is offered
-            Thread.sleep(60000);
+            // Wait for 80 seconds when the shift offer is offered
+            Thread.sleep(80000);
             loginPage.logOut();
 
             loginToLegionAndVerifyIsLoginDone(username, password, location);
