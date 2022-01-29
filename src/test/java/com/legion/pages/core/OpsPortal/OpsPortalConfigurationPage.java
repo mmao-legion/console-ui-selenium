@@ -899,55 +899,68 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css="table[ng-if*=\"$ctrl.sortedRows.length\"] tbody")
 	private List<WebElement> workRoleList;
+	@FindBy(css = "input[placeholder='Search by Work Role']")
+	private WebElement searchByWorkRoleInput;
 
 	@Override
 	public void selectWorkRoleToEdit(String workRole) throws Exception {
-		if(workRoleList.size()!=0){
-			for(WebElement workRoleItem:workRoleList){
-				String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
-				//get first char of the work role name
-				char fir = workRole.charAt(0);
-				String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
-				if(workRoleName.equals(newWorkRole)){
-					WebElement staffingRulesAddButton = workRoleItem.findElement(By.cssSelector("lg-button"));
-					clickTheElement(staffingRulesAddButton);
-					waitForSeconds(5);
-					if(isElementEnabled(addIconOnRulesListPage)){
-						SimpleUtils.pass("Successful to select " + workRole + " to edit");
+		if (isElementLoaded(searchByWorkRoleInput, 10)) {
+			searchByWorkRoleInput.sendKeys(workRole);
+			waitForSeconds(1);
+			if (areListElementVisible(workRoleList, 3) && workRoleList.size() != 0) {
+				for (WebElement workRoleItem : workRoleList) {
+					String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
+					//get first char of the work role name
+					char fir = workRole.charAt(0);
+					String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
+					if (workRoleName.equals(newWorkRole)) {
+						WebElement staffingRulesAddButton = workRoleItem.findElement(By.cssSelector("lg-button"));
+						clickTheElement(staffingRulesAddButton);
+						waitForSeconds(5);
+						if (isElementEnabled(addIconOnRulesListPage)) {
+							SimpleUtils.pass("Successful to select " + workRole + " to edit");
+						} else {
+							SimpleUtils.fail("Failed to select " + workRole + " to edit", false);
+						}
+						break;
 					}
-					else{
-						SimpleUtils.fail("Failed to select " + workRole + " to edit",false);
-					}
-					break;
 				}
+			} else {
+				SimpleUtils.fail("There is no work role for enterprise now", false);
 			}
-		}else{
-			SimpleUtils.fail("There is no work role for enterprise now",false);
+		} else {
+			SimpleUtils.fail("Search by Work Role input failed to load!", false);
 		}
 	}
 
-	public String getCountOfStaffingRules(String workRole) {
+	public String getCountOfStaffingRules(String workRole) throws Exception {
 		String count = null;
-		if (workRoleList.size() != 0) {
-			for (WebElement workRoleItem : workRoleList) {
-				String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
-				//get first char of the work role name
-				char fir = workRole.charAt(0);
-				String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
-				if (workRoleName.equals(newWorkRole)) {
-					String firstLetter = workRoleItem.findElement(By.cssSelector("lg-button span.ng-binding")).getText().trim().split(" ")[0];
-					if(firstLetter.equals("+")){
-						count = "0";
-						SimpleUtils.pass("There is no staffing rules for this work role");
-					}else  {
-						count = firstLetter;
-						SimpleUtils.pass(workRole + " have " + count + " staffing rules now!");
+		if (isElementLoaded(searchByWorkRoleInput, 10)) {
+			searchByWorkRoleInput.sendKeys(workRole);
+			waitForSeconds(1);
+			if (areListElementVisible(workRoleList, 10) && workRoleList.size() != 0) {
+				for (WebElement workRoleItem : workRoleList) {
+					String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
+					//get first char of the work role name
+					char fir = workRole.charAt(0);
+					String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
+					if (workRoleName.equals(newWorkRole)) {
+						String firstLetter = workRoleItem.findElement(By.cssSelector("lg-button span.ng-binding")).getText().trim().split(" ")[0];
+						if (firstLetter.equals("+")) {
+							count = "0";
+							SimpleUtils.pass("There is no staffing rules for this work role");
+						} else {
+							count = firstLetter;
+							SimpleUtils.pass(workRole + " have " + count + " staffing rules now!");
+						}
+						break;
 					}
-					break;
 				}
+			} else {
+				SimpleUtils.fail("There is no work role for enterprise now", false);
 			}
 		} else {
-			SimpleUtils.fail("There is no work role for enterprise now", false);
+			SimpleUtils.fail("Search by Work Role input failed to load!", false);
 		}
 		return count;
 	}
