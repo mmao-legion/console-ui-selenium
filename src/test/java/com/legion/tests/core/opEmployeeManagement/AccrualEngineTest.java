@@ -72,7 +72,7 @@ public class AccrualEngineTest extends TestBase {
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
         String teamMemName = "Olaf Kuhic";
-        timeOffPage.goToTeamMemberDetailDemo(teamMemName);//which one do you need to
+        timeOffPage.goToTeamMemberDetail(teamMemName);//which one do you need to
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
