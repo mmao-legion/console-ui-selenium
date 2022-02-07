@@ -3379,7 +3379,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				newTemplateDescription.sendKeys(templateName);
 				clickTheElement(continueBTN);
 				waitForSeconds(4);
-				if(isElementEnabled(welcomeCloseButton)){
+				if(isElementEnabled(welcomeCloseButton, 5)){
 					clickTheElement(welcomeCloseButton);
 				}
 				//change to association tan

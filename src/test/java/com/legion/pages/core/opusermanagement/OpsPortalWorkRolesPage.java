@@ -171,10 +171,19 @@ public class OpsPortalWorkRolesPage extends BasePage {
         okToDisableAction.click();
     }
 
-    public List<String> getWorkRoleList() {
+    @FindBy (css = ".lg-pagination__arrow--right")
+    private WebElement pageRightBtn;
+    public List<String> getWorkRoleList() throws Exception {
         ArrayList<String> wr = new ArrayList<String>();
         for(WebElement workRole:workRoleList){
             wr.add(workRole.getAttribute("label"));
+        }
+        while (isElementLoaded(pageRightBtn, 5)
+                && !pageRightBtn.getAttribute("class").contains("disabled")){
+            clickTheElement(pageRightBtn);
+            for(WebElement workRole:workRoleList){
+                wr.add(workRole.getAttribute("label"));
+            }
         }
         return wr;
     }
