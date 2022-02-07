@@ -111,8 +111,6 @@ public class SplitAndSpreadTest extends TestBase {
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
         // Navigate to a week
         scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.navigateToNextWeek();
         // create the schedule and pick up roles and employee.
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -187,8 +185,6 @@ public class SplitAndSpreadTest extends TestBase {
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
         // Navigate to a week
-        scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.navigateToNextWeek();
         scheduleCommonPage.navigateToNextWeek();
         // create the schedule and pick up roles and employee.
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
@@ -294,8 +290,6 @@ public class SplitAndSpreadTest extends TestBase {
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
         // Navigate to a week
-        scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.navigateToNextWeek();
         scheduleCommonPage.navigateToNextWeek();
         // create the schedule and pick up roles and employee.
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
@@ -407,8 +401,6 @@ public class SplitAndSpreadTest extends TestBase {
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
         // Navigate to a week
         scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.navigateToNextWeek();
         // create the schedule and pick up roles and employee.
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -513,8 +505,6 @@ public class SplitAndSpreadTest extends TestBase {
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
         // Navigate to a week
         scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.navigateToNextWeek();
         // create the schedule and pick up roles and employee.
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
@@ -575,8 +565,6 @@ public class SplitAndSpreadTest extends TestBase {
         loginPage.logOut();
         loginAsDifferentRole(AccessRoles.TeamMember.getValue());
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        scheduleCommonPage.navigateToNextWeek();
-        scheduleCommonPage.navigateToNextWeek();
         scheduleCommonPage.navigateToNextWeek();
         smartCardPage.clickLinkOnSmartCardByName("View Shifts");
         List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));

@@ -77,13 +77,6 @@ public class CopyScheduleWithoutAssignmentsTest extends TestBase {
             String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
-                if (firstWeekInfo.contains("-")) {
-                    String[] temp = firstWeekInfo.split("-");
-                    if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
-                        firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
-                                + " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
-                    }
-                }
             }
             scheduleCommonPage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
@@ -166,13 +159,6 @@ public class CopyScheduleWithoutAssignmentsTest extends TestBase {
             String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
-                if (firstWeekInfo.contains("-")) {
-                    String[] temp = firstWeekInfo.split("-");
-                    if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
-                        firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
-                                + " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
-                    }
-                }
             }
             scheduleCommonPage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
