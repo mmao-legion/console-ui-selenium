@@ -429,7 +429,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String hoursType = "Preferred";
             HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
             if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
-                int sliderIndex = 1;
+                int sliderIndex = 0;
                 double hours = -0.5;//move 1 metric 0.5h left
                 profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                         hours, repeatChanges);
@@ -515,7 +515,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String hoursType = "Preferred";
             HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
             if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
-                int sliderIndex = 1;
+                int sliderIndex = 0;
                 double hours = -0.5;//move 1 metric 0.5h left
                 profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                         hours, repeatChanges);

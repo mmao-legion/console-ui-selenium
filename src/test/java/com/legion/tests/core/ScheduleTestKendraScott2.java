@@ -5089,7 +5089,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
 	@TestName(description = "Validate the first name and last name are all display on Search TM , Recommended TMs and View profile page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTMFullNameDisplayOnSearchTMRecommendedAndViewProfilePageAsInternalAdmin(String username, String password, String browser, String location) {
@@ -5153,12 +5153,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			int i = 0;
 			while (i < 50 && (nameOfSelectedTM3.equals("") || nameOfSelectedTM3.equalsIgnoreCase("Open")
 					|| nameOfSelectedTM3.equalsIgnoreCase("Unassigned"))) {
-				shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				//Search shift by TM names: first name and last name
 				nameOfSelectedTM3 = shiftInfo.get(0);
 				i++;
 			}
-
+			nameOfSelectedTM3 = shiftInfo.get(0) +" " + shiftInfo.get(5);
 			scheduleMainPage.saveSchedule();
 			Thread.sleep(3000);
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
