@@ -1778,8 +1778,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             }
             String [] items = weekPeriod.getText().split(" ");
             if (items.length == 7) {
-                scheduleWeekText = "Delete " + items[0] + " " + items[1] + " " + items[2].substring(0, 3) + " " + (items[3].length() == 2 ? items[3] : ("0" + items[3]))
-                        + " " + items[4] + " " + items[5].substring(0, 3) + " " + (items[6].length() == 2 ? items[6] : ("0" + items[6])) + ", " + year;
+                scheduleWeekText = "Delete " + items[0] + " " + items[1] + " " + items[2].substring(0, 3) + " " + items[3]
+                        + " " + items[4] + " " + items[5].substring(0, 3) + " " + items[6] + ", " + year;
                 SimpleUtils.report("Delete Schedule For Which Weeek Text: " + scheduleWeekText);
             }
         }

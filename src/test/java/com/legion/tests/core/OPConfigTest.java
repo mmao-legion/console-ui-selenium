@@ -156,6 +156,7 @@ public class OPConfigTest extends TestBase {
     public void verifyTheMealAndRestTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String meal = "Meal";
+            String rest = "Rest";
             String templateName = TestBase.getCurrentTime().substring(0, 8);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -182,6 +183,15 @@ public class OPConfigTest extends TestBase {
             configurationPage.verifyXbuttonOnMealOrRest(meal);
             // Verify the content on Rest Breaks section
             configurationPage.verifyTheContentOnRestBreaksSection();
+            // Verify Yes/No button is clickable on Rest Breaks section
+            configurationPage.selectYesOrNoOnMealOrRest(rest, "Yes");
+            configurationPage.selectYesOrNoOnMealOrRest(rest, "No");
+            // Verify + Add button is clickable on Rest Breaks section
+            configurationPage.clickOnAddButtonOnMealOrRestSection(rest);
+            // Verify the functionality of 3 input boxes on Rest Breaks section
+            configurationPage.verifyTheFunctionalityOfInputsInMealOrRest(rest);
+            // Verify X button is clickable on Rest Breaks section
+            configurationPage.verifyXbuttonOnMealOrRest(rest);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

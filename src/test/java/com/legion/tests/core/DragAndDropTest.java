@@ -277,7 +277,6 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
             List<Integer> dayIndexes = newShiftPage.selectDaysByCountAndCannotSelectedDate(2, "");
-            //newShiftPage.selectWorkRole("MOD");
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();

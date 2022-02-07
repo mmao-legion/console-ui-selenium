@@ -3585,6 +3585,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "[form-title=\"Meal Breaks\"] th.ng-binding")
 	private List<WebElement> mealBreakTableTitles;
 
+	@FindBy(css = "[form-title=\"Rest Breaks\"] th.ng-binding")
+	private List<WebElement> restBreakTableTitles;
+
 	@FindBy(css = "[form-title=\"Meal Breaks\"] [label=\"+ Add\"]")
 	private WebElement mealAddBtn;
 
@@ -3680,8 +3683,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public void verifyTheContentOnRestBreaksSection() throws Exception {
 		if (isElementLoaded(restBreakSection, 5) && isElementLoaded(restBreakSection.findElement(By.className("info"))) &&
-				restBreakSection.findElement(By.className("info")).getText().equalsIgnoreCase("Rest Breaks")) {
-
+				restBreakSection.findElement(By.className("info")).getText().equalsIgnoreCase("Rest Breaks") &&
+		areListElementVisible(restBreakTexts, 5) && restBreakTexts.size() == 4 && restBreakTexts.get(0).equals("Are rest breaks paid?")
+		&& restBreakTexts.get(1).equals("Maximum allowed minutes between 2 consecutive breaks") && restBreakTexts.get(2).equals("Rest break duration")
+		&& restBreakTexts.get(3).equals("Rest Breaks") && areListElementVisible(restBreakPaidBtns, 5) && restBreakPaidBtns.size() == 2
+		&& areListElementVisible(restBreakTableTitles, 5) && restBreakTableTitles.size() == 3 && restBreakTableTitles.get(0).equals(
+				"Min Shift Length (inclusive)") && restBreakTableTitles.get(1).equals("Max Shift Length (exclusive)") &&
+				restBreakTableTitles.get(2).equals("Number of Rest Breaks") && isElementLoaded(restAddBtn, 5)) {
+			SimpleUtils.pass("The content on Rest Breaks section is correct!");
 		} else {
 			SimpleUtils.fail("Rest Breaks section not loaded on Meal And Rest template!", false);
 		}
