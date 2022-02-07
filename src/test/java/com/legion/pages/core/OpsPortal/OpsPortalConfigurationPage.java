@@ -3972,4 +3972,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}else
 			SimpleUtils.fail("Published template was archived",false);
 	}
+
+	@Override
+	public void clickOnBackBtnOnTheTemplateDetailPage() throws Exception {
+		if (isElementLoaded(backButton, 10)){
+			clickTheElement(backButton);
+			SimpleUtils.pass("Back button is clicked!");
+		} else {
+			SimpleUtils.fail("Back button fail to load!", false);
+		}
+	}
 }

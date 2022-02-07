@@ -7,6 +7,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -145,13 +147,27 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
     public void clickOnDoneBtnForDynamicGroupOnAssociationPage() throws Exception {
         if (isElementLoaded(doneDynamicGroupBtn, 10)){
             clickTheElement(doneDynamicGroupBtn);
-            if (isElementLoaded(removeDynamicGroupBtn, 10)){
-                SimpleUtils.pass("Saved!");
-            } else {
-                SimpleUtils.fail("Fail to save the group!", false);
-            }
         } else {
             SimpleUtils.fail("Save dynamic group button fail to load!", false);
+        }
+    }
+
+    @FindBy(css = ".modal-dialog [modal-title=\"Conflict Detected\"]")
+    private WebElement conflictDetectedWindow;
+    @Override
+    public boolean ifConflictDetectedWindowShowUP() throws Exception {
+        if (isElementLoaded(conflictDetectedWindow, 10)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void clickOnTheSaveBtnOnConflictDetectedWindow() throws Exception {
+        if (isElementLoaded(conflictDetectedWindow.findElement(By.cssSelector("[label=\"Save\"]")), 10)){
+            clickTheElement(conflictDetectedWindow.findElement(By.cssSelector("[label=\"Save\"]")));
+        } else {
+            SimpleUtils.fail("Fail to find Save button!", false);
         }
     }
 
@@ -219,6 +235,17 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
     }
 
+    @Override
+    public List<String> getCriteriaListFromTheAssociationPage() throws Exception {
+        List<String> resultList = new ArrayList<>();
+        if (areListElementVisible(criteriaOnTheAssociationPage, 10)){
+            for (WebElement criteriaLine: criteriaOnTheAssociationPage){
+                resultList.add(criteriaLine.findElement(By.cssSelector("lg-select[class=\"ng-scope ng-isolate-scope\"] div.input-faked.ng-binding")).getAttribute("innerText").replace("\n","").trim());
+            }
+        }
+        return resultList;
+    }
+
     @FindBy(css = "i[ng-click*=\"deleteCondition\"]")
     private List<WebElement> deleteCriteriaBtnsOnTheAssociationPage;
     @Override
@@ -239,5 +266,72 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }else {
             SimpleUtils.fail("Failed to find Association Tab!",false);
         }
+    }
+
+    @FindBy(css = "lg-template-setting div.setting-box:first-of-type [ng-repeat*=\"baseFieldList\"]")
+    private List<WebElement> fieldListFromSettingsTab;
+
+    @Override
+    public List<String> getFieldListFromSettingsTab() throws Exception {
+        List<String> resultList = new ArrayList<>();
+        if (areListElementVisible(fieldListFromSettingsTab, 10)){
+            for (WebElement fieldRow: fieldListFromSettingsTab){
+                if (isElementLoaded(fieldRow.findElement(By.cssSelector("td.ng-binding")), 10)){
+                    resultList.add(fieldRow.findElement(By.cssSelector("td.ng-binding")).getText());
+                }
+            }
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+        return resultList;
+    }
+
+    @Override
+    public void setupRequiredFields(List<String> fields) throws Exception {
+        if (areListElementVisible(fieldListFromSettingsTab, 10)){
+            clearUpSelectedRequiredFields();
+            for (WebElement fieldRow: fieldListFromSettingsTab){
+                if (isElementLoaded(fieldRow.findElement(By.cssSelector("td.ng-binding"))) && fields.contains(fieldRow.findElement(By.cssSelector("td.ng-binding")).getText())){
+                    if (isElementLoaded(fieldRow.findElement(By.tagName("input")), 10) && fieldRow.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")){
+                        waitForSeconds(2);
+                        clickTheElement(fieldRow.findElement(By.tagName("input")));
+                    }
+                }
+            }
+            SimpleUtils.assertOnFail("There is fields failed to be selected!", getDriver().findElements(By.cssSelector("lg-template-setting div.setting-box:first-of-type [ng-repeat*=\"baseFieldList\"] input[class*=\"not-empty\"]")).size() == fields.size(), false);
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+    }
+
+    private void clearUpSelectedRequiredFields() throws Exception{
+        if (areListElementVisible(fieldListFromSettingsTab, 10)){
+            for (WebElement fieldRow: fieldListFromSettingsTab){
+                if (isElementLoaded(fieldRow.findElement(By.tagName("input")), 10)
+                    && fieldRow.findElement(By.tagName("input")).getAttribute("class").contains("not-empty")){
+                    waitForSeconds(2);
+                    clickTheElement(fieldRow.findElement(By.tagName("input")));
+                }
+            }
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+    }
+
+    @FindBy(css = "lg-button[label=\"Test\"] button")
+    private WebElement testButton;
+    @FindBy(css = "[ng-if*=\"testMappingNum\"]")
+    private WebElement testMappingResult;
+    @Override
+    public String clickOnTestBtnAndGetResultString() throws Exception {
+        if (isElementLoaded(testButton, 10)){
+            clickTheElement(testButton);
+            if (isElementLoaded(testMappingResult, 10)){
+                return testMappingResult.getText();
+            }
+        } else {
+            SimpleUtils.fail("Test button is not on the page!", false);
+        }
+        return null;
     }
 }
