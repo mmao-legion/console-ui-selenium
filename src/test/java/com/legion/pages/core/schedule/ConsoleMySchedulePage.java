@@ -189,16 +189,16 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @Override
     public void verifyTheAvailabilityOfClaimOpenShiftPopup() throws Exception {
         SmartCardPage smartCardPage = new ConsoleSmartCardPage();
-        List<String> claimShift = new ArrayList<>(Arrays.asList("Claim Shift"));
+        List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
         if (smartCardPage.isViewShiftsBtnPresent()) {
             if (areListElementVisible(dayViewAvailableShifts, 10)) {
                 int randomIndex = (new Random()).nextInt(dayViewAvailableShifts.size());
-                moveToElementAndClick(dayViewAvailableShifts.get(randomIndex));
+                moveToElementAndClick(dayViewAvailableShifts.get(randomIndex).findElement(By.cssSelector(".sch-day-view-shift-worker-detail")));
                 if (isPopOverLayoutLoaded()) {
                     if (verifyShiftRequestButtonOnPopup(claimShift))
                         SimpleUtils.pass("My Schedule Page: A popup to claim the open shift shows successfully");
-                    else SimpleUtils.fail("My Schedule Page: A popup to claim the open shift doesn't show", true);
-                } else SimpleUtils.fail("My Schedule Page: No popup appears", true);
+                    else SimpleUtils.fail("My Schedule Page: A popup to claim the open shift doesn't show", false);
+                } else SimpleUtils.fail("My Schedule Page: No popup appears", false);
             } else SimpleUtils.fail("My Schedule Page: Open shifts failed to load in the schedule table", true);
         }
     }
@@ -657,7 +657,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
 
     @Override
     public void verifyClickAgreeBtnOnClaimShiftOfferWithMessage(String expectedMessage) throws Exception {
-        if (isElementLoaded(agreeClaimBtn, 5)) {
+        if (isElementLoaded(agreeClaimBtn, 25)) {
             click(agreeClaimBtn);
             verifyThePopupMessageOnTop(expectedMessage);
         }else {
@@ -704,10 +704,10 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
                 for (WebElement shiftType : shiftTypes) {
                     WebElement filterCheckBox = shiftType.findElement(By.tagName("input"));
                     if (filterCheckBox.getAttribute("class").contains("ng-not-empty")) {
-                        if (shiftType.getText().equals("Open"))
+                        if (shiftType.getText().contains("Offered"))
                             SimpleUtils.pass("My Schedule Page: only open shifts for the selected week should show successfully");
                         else
-                            SimpleUtils.fail("My Schedule Page: Not only open shifts for the selected week show", true);
+                            SimpleUtils.fail("My Schedule Page: Not only open shifts for the selected week show", false);
                     }
                 }
             }

@@ -215,7 +215,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
                 for (int i = 0; i < templateList.size(); i++) {
                     WebElement template = getDriver().findElements(By.cssSelector("[ng-repeat-start=\"item in $ctrl.sortedRows\"]")).get(i);
                     if (template.findElement(By.cssSelector("span.ng-binding")).getText().equalsIgnoreCase(templateName)) {
-                        if (!template.getAttribute("class").contains("hasChildren")) {
+                        if (template.getAttribute("class").contains("hasChildren")) {
                             waitForSeconds(3);
                             moveToElementAndClick(template.findElement(By.cssSelector(".toggle")));
                         }
