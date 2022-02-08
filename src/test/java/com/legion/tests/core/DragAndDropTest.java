@@ -1050,15 +1050,19 @@ public class DragAndDropTest extends TestBase {
             shiftOperatePage.deleteTMShiftInWeekView("open");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            int i = 0;
             List<String> shiftInfo = new ArrayList<>();
-            while (shiftInfo.size() == 0) {
+            while (i< 50 &&shiftInfo.size() == 0) {
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+                i++;
             }
             String firstNameOfTM1 = shiftInfo.get(0);
             String workRoleOfTM1 = shiftInfo.get(4);
             List<String> shiftInfo2 = new ArrayList<>();
-            while (shiftInfo2.size() == 0 || workRoleOfTM1.equals(shiftInfo2.get(4))) {
+            i = 0;
+            while (i < 50 && (shiftInfo2.size() == 0 || workRoleOfTM1.equals(shiftInfo2.get(4)))) {
                 shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                i++;
             }
             String firstNameOfTM2 = shiftInfo2.get(0);
             String workRoleOfTM2 = shiftInfo2.get(4);
