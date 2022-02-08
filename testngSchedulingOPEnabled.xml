@@ -293,8 +293,8 @@
                                             <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/TA-5507-->
                     <include name="verifyUnplannedClocksOnTimesheetInBUViewAsInternalAdmin" />
                     <include name="verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin" />
-                    <include name="verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin" />
-                    <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" />
+<!--                    <include name="verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6131-->
                     <!--                    <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
                     <!--                    <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
                     <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />

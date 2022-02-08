@@ -573,7 +573,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             createSchedulePage.publishActiveSchedule();
             int i = 0;
             boolean hasOffers = false;
-            while (i < 10 && !hasOffers) {
+            while (i < 20 && !hasOffers) {
                 BasePage.waitForSeconds(10);
                 shiftOperatePage.clickOnProfileIconOfOpenShift();
                 scheduleShiftTablePage.clickViewStatusBtn();
@@ -581,7 +581,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
                 shiftOperatePage.closeViewStatusContainer();
                 i++;
             }
-            SimpleUtils.assertOnFail("he offer list should not null!", hasOffers, false);
+            SimpleUtils.assertOnFail("The offer list should not null!", hasOffers, false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

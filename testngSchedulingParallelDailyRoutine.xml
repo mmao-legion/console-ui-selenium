@@ -203,7 +203,7 @@
                 <methods>
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
-                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />
+<!--                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-6118-->
 <!--                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsInternalAdmin" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />
