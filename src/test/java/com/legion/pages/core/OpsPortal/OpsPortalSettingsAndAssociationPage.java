@@ -268,7 +268,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
     }
 
-    @FindBy(css = "lg-template-setting div.setting-box:first-of-type [ng-repeat*=\"baseFieldList\"]")
+    @FindBy(css = "[ng-repeat*=\"baseFieldList\"]")
     private List<WebElement> fieldListFromSettingsTab;
 
     @Override
@@ -333,5 +333,19 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             SimpleUtils.fail("Test button is not on the page!", false);
         }
         return null;
+    }
+
+    @Override
+    public boolean areFieldsCheckInputEnabled() throws Exception {
+        if (areListElementVisible(fieldListFromSettingsTab, 10)){
+            for (WebElement fieldRow: fieldListFromSettingsTab){
+                if (!isElementLoaded(fieldRow.findElement(By.cssSelector("input[disabled]")), 10)){
+                    return true;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+        return false;
     }
 }

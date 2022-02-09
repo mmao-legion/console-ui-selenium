@@ -215,7 +215,6 @@ public class DynamicGroupV2Test extends TestBase {
 
         //======verify Setting tab for dynamic location group========
         configurationPage.goToConfigurationPage();
-        //======verify Setting tab for dynamic employee group========
         configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.Compliance.getValue());
         //Go to the Settings tab.
         settingsAndAssociationPage.goToTemplateListOrSettings("setting");
@@ -244,7 +243,7 @@ public class DynamicGroupV2Test extends TestBase {
         ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
         SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
         configurationPage.goToConfigurationPage();
-        //======verify Setting tab for dynamic employee group========
+
         configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
         //Go to the Settings tab.
         settingsAndAssociationPage.goToTemplateListOrSettings("setting");
@@ -262,7 +261,7 @@ public class DynamicGroupV2Test extends TestBase {
         configurationPage.createNewTemplate(templateName);
         configurationPage.clickOnTemplateName(templateName);
         configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        //Go to the Association page to create a dynamic employee group and save it.
+        //Go to the Association page to create a dynamic employee group and check the fields.
         settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
         settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
         settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
@@ -298,7 +297,7 @@ public class DynamicGroupV2Test extends TestBase {
         configurationPage.createNewTemplate(templateName2);
         configurationPage.clickOnTemplateName(templateName2);
         configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        //Go to the Association page to create a dynamic employee group and save it.
+        //Go to the Association page to create a dynamic employee group and check the fields.
         settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
         settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
         settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName2);
@@ -308,6 +307,129 @@ public class DynamicGroupV2Test extends TestBase {
         configurationPage.clickOnBackBtnOnTheTemplateDetailPage();
         //delete the template.
         configurationPage.archiveOrDeleteTemplate(templateName2);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate criteria selection and usage for dynamic location group criteria")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCriteriaSelectionAndUsageForDynamicLocationGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.Communications.getValue());
+        //Go to the Settings tab.
+        settingsAndAssociationPage.goToTemplateListOrSettings("setting");
+        List<String> ExpectedFieldsFromSettingsTab = new ArrayList<>();
+        ExpectedFieldsFromSettingsTab.add("Country");
+        ExpectedFieldsFromSettingsTab.add("State");
+        ExpectedFieldsFromSettingsTab.add("City");
+        settingsAndAssociationPage.setupRequiredFields(ExpectedFieldsFromSettingsTab);
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+        //delete all template.
+        configurationPage.archiveOrDeleteAllTemplates();
+
+        //Create new template.
+        String templateName = "AutoTest"+String.valueOf(System.currentTimeMillis());
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Go to the Association page to create a dynamic employee group and check the fields.
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        List<String> ActualFieldsFromTheAssociationPage = settingsAndAssociationPage.getCriteriaListFromTheAssociationPage();
+        SimpleUtils.assertOnFail("Criteria on the Association page are not all expected!", ExpectedFieldsFromSettingsTab.containsAll(ActualFieldsFromTheAssociationPage), false);
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Country.getValue(), "IN", "United States");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.State.getValue(), "IN", "Texas");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.City.getValue(), "IN", "ANY");
+        String testResult = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
+        SimpleUtils.assertOnFail("Test result is not coming up!", testResult != null, false);
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailPage();
+
+        //delete the template.
+        configurationPage.archiveOrDeleteTemplate(templateName);
+
+        //Go to another type of template.
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.Compliance.getValue());
+
+        //Go to the Settings tab.
+        settingsAndAssociationPage.goToTemplateListOrSettings("setting");
+        List<String> ExpectedFieldsFromSettingsTabForAnotherTemplate = new ArrayList<>();
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Location Type");
+        settingsAndAssociationPage.setupRequiredFields(ExpectedFieldsFromSettingsTabForAnotherTemplate);
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+
+        //Create new template.
+        String templateName2 = "AutoTest"+String.valueOf(System.currentTimeMillis());
+        configurationPage.createNewTemplate(templateName2);
+        configurationPage.clickOnTemplateName(templateName2);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Go to the Association page to create a dynamic employee group and check the fields.
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName2);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        List<String> ActualFieldsFromTheAssociationPageForAnotherTemplate = settingsAndAssociationPage.getCriteriaListFromTheAssociationPage();
+        SimpleUtils.assertOnFail("Criteria on the Association page are not all expected!", ExpectedFieldsFromSettingsTabForAnotherTemplate.containsAll(ActualFieldsFromTheAssociationPageForAnotherTemplate), false);
+        configurationPage.clickOnBackBtnOnTheTemplateDetailPage();
+        //delete the template.
+        configurationPage.archiveOrDeleteTemplate(templateName2);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate criteria selection and usage for dynamic location group criteria")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCriteriaSelectionAndUsageForDynamicLocationGroupAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        //======verify Setting tab for dynamic location group========
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.Communications.getValue());
+        //Go to the Settings tab.
+        settingsAndAssociationPage.goToTemplateListOrSettings("setting");
+        List<String> ExpectedFieldsFromSettingsTab = new ArrayList<>();
+        ExpectedFieldsFromSettingsTab.add("Config Type");
+        ExpectedFieldsFromSettingsTab.add("District");
+        ExpectedFieldsFromSettingsTab.add("Country");
+        ExpectedFieldsFromSettingsTab.add("State");
+        ExpectedFieldsFromSettingsTab.add("City");
+        ExpectedFieldsFromSettingsTab.add("Location Name");
+        ExpectedFieldsFromSettingsTab.add("Location Id");
+        ExpectedFieldsFromSettingsTab.add("Location Type");
+        ExpectedFieldsFromSettingsTab.add("UpperField");
+        List<String> ActualFieldsFromSettingsTab = settingsAndAssociationPage.getFieldListFromSettingsTab();
+        SimpleUtils.assertOnFail("Fields are not all expected!", ExpectedFieldsFromSettingsTab.containsAll(ActualFieldsFromSettingsTab), false);
+        SimpleUtils.assertOnFail("There should not be fields enabled!", !settingsAndAssociationPage.areFieldsCheckInputEnabled(), false);
+
+        //======verify Setting tab for dynamic employee group========
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
+
+        //Go to the Settings tab.
+        settingsAndAssociationPage.goToTemplateListOrSettings("setting");
+        List<String> ExpectedFieldsFromSettingsTabForAnotherTemplate = new ArrayList<>();
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Work Role");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Country");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("State");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("City");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Location Name");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Location Id");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Employment Type");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Employment Status");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Minor");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Exempt");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Badge");
+        ExpectedFieldsFromSettingsTabForAnotherTemplate.add("Job Title");
+        ActualFieldsFromSettingsTab = settingsAndAssociationPage.getFieldListFromSettingsTab();
+        SimpleUtils.assertOnFail("Fields are not all expected!", ExpectedFieldsFromSettingsTabForAnotherTemplate.containsAll(ActualFieldsFromSettingsTab), false);
+        SimpleUtils.assertOnFail("There should not be fields enabled!", !settingsAndAssociationPage.areFieldsCheckInputEnabled(), false);
     }
 //--------------Tests for Settings tab------------ End-------------
 

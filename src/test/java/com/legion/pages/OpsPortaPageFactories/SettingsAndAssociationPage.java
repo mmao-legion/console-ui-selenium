@@ -20,4 +20,5 @@ public interface SettingsAndAssociationPage {
     public void setupRequiredFields(List<String> fields) throws Exception;
     public List<String> getCriteriaListFromTheAssociationPage() throws Exception;
     public String clickOnTestBtnAndGetResultString() throws Exception;
+    public boolean areFieldsCheckInputEnabled() throws Exception;
 }
