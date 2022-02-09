@@ -422,9 +422,9 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         String expectedCancelInfo = "Cancelled on ";
     	String expectedMessage = "";
     	if (startTime.equalsIgnoreCase(endTime)) {
-			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4)) + ".";
+			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","") + ".";
 		} else {
-			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
+			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","") +" - " + endTime.replace(",","") + ".";
 		}
 
         String actualMessage = "";
