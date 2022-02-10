@@ -133,7 +133,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	@Override
 	public void clickOnLaborModelTab() throws Exception {
 		if(isElementLoaded(laborModelTab,15)){
-			click(laborModelTab);
+			clickTheElement(laborModelTab);
 			if (isElementLoaded(laborModelTile,5)) {
 				SimpleUtils.pass("Labor model tab is clickable");
 			}
@@ -838,14 +838,14 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 
 	@Override
 	public void verifyImportLocationLevelWorkRoleSubscription() {
-//		String pth = System.getProperty("user.dir");
+		String pth = System.getProperty("user.dir");
 		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
 			click(locationSubscriptionImportButton);
 			if (verifyImportLocationWorkRolePageShow()) {
 				SimpleUtils.pass("Import location level work role page show well");
 			} else
 				SimpleUtils.fail("Import location level work role page load failed", true);
-			uploaderFileInputBtn.sendKeys( "/src/test/resources/WorkerRoleSubscription.csv");
+			uploaderFileInputBtn.sendKeys( pth+"/src/test/resources/WorkerRoleSubscription.csv");
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			SimpleUtils.pass("File import action done");

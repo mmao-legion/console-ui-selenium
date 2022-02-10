@@ -3101,6 +3101,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public boolean searchOneDynamicGroup(String dynamicGroupName) throws Exception{
 		boolean dataExist=false;
 		clickOnAssociationTabOnTemplateDetailsPage();
+		waitForSeconds(2);
 		if (isElementLoaded(searchAssociateFiled, 10)) {
 			searchAssociateFiled.clear();
 			searchAssociateFiled.sendKeys(dynamicGroupName);
@@ -3391,13 +3392,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				else{
 					createDynamicGroup(name,criteria,formula);
 				    selectOneDynamicGroup(name);}
-				locationSelectorPage.refreshTheBrowser();
 				waitForSeconds(4);
 				if(isElementEnabled(taTemplateSpecialField,20)){
 					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
 					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
 					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 				}
+				clickOnTemplateDetailTab();
 				publishNowTemplate();
 			}else {
 				SimpleUtils.fail("User can't click new template button successfully!",false);
