@@ -30,7 +30,7 @@
                       <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
                     <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCardAsStoreManager" />
-                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" />
+<!--                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6149-->
  <!--                   <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView" />
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView" />-->
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsStoreManager" />
