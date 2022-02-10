@@ -128,13 +128,6 @@
                     <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
                     <include name="verifyAutoScheduleRespectTheMinorsRulesAsInternalAdmin" />
                     <include name="verifyRecommendationRespectTheMinorsRulesAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
-                    <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
-                    <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -388,4 +381,19 @@ SCH-5862-->
     </test>
 
 
+    <test name="Hard Stop For Minor Violation Test">
+        <classes>
+            <class name="com.legion.tests.core.HardStopForMinorViolation">
+                <methods>
+                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
+                    <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
+                    <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
     </suite> <!-- Suite -->
