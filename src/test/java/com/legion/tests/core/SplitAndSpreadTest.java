@@ -1272,6 +1272,7 @@ public class SplitAndSpreadTest extends TestBase {
             //TM should not show
             SimpleUtils.assertOnFail("TM should not show in recommended tab! ",
                     !shiftOperatePage.checkIfTMExistsInRecommendedTab(tmFullName), false);
+            Thread.sleep(3000);
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             newShiftPage.searchTeamMemberByName(tmFullName);
             newShiftPage.clickOnOfferOrAssignBtn();
