@@ -905,6 +905,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public void selectWorkRoleToEdit(String workRole) throws Exception {
 		if (isElementLoaded(searchByWorkRoleInput, 10)) {
+			searchByWorkRoleInput.clear();
 			searchByWorkRoleInput.sendKeys(workRole);
 			waitForSeconds(1);
 			if (areListElementVisible(workRoleList, 3) && workRoleList.size() != 0) {
@@ -925,6 +926,29 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						break;
 					}
 				}
+				int i = 0;
+				while (i <10 && areListElementVisible(paginationRightArrow, 5)
+						&& !paginationRightArrow.get(0).getAttribute("class").contains("disabled")) {
+					clickTheElement(paginationRightArrow.get(0));
+					for (WebElement workRoleItem : workRoleList) {
+						String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
+						//get first char of the work role name
+						char fir = workRole.charAt(0);
+						String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
+						if (workRoleName.equals(newWorkRole)) {
+							WebElement staffingRulesAddButton = workRoleItem.findElement(By.cssSelector("lg-button"));
+							clickTheElement(staffingRulesAddButton);
+							waitForSeconds(5);
+							if (isElementEnabled(addIconOnRulesListPage)) {
+								SimpleUtils.pass("Successful to select " + workRole + " to edit");
+							} else {
+								SimpleUtils.fail("Failed to select " + workRole + " to edit", false);
+							}
+							break;
+						}
+					}
+					i++;
+				}
 			} else {
 				SimpleUtils.fail("There is no work role for enterprise now", false);
 			}
@@ -933,6 +957,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css = "[tab-title=\"Details\"] div.lg-pagination__arrow--right")
+	private List<WebElement> paginationRightArrow;
 	public String getCountOfStaffingRules(String workRole) throws Exception {
 		String count = null;
 		if (isElementLoaded(searchByWorkRoleInput, 10)) {
@@ -955,6 +981,29 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						}
 						break;
 					}
+				}
+				int i = 0;
+				while (i < 10 && areListElementVisible(paginationRightArrow, 10)
+						&& !paginationRightArrow.get(0).getAttribute("class").contains("disabled")) {
+					clickTheElement(paginationRightArrow.get(0));
+					for (WebElement workRoleItem : workRoleList) {
+						String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
+						//get first char of the work role name
+						char fir = workRole.charAt(0);
+						String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
+						if (workRoleName.equals(newWorkRole)) {
+							String firstLetter = workRoleItem.findElement(By.cssSelector("lg-button span.ng-binding")).getText().trim().split(" ")[0];
+							if (firstLetter.equals("+")) {
+								count = "0";
+								SimpleUtils.pass("There is no staffing rules for this work role");
+							} else {
+								count = firstLetter;
+								SimpleUtils.pass(workRole + " have " + count + " staffing rules now!");
+							}
+							break;
+						}
+					}
+					i++;
 				}
 			} else {
 				SimpleUtils.fail("There is no work role for enterprise now", false);
