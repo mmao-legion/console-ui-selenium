@@ -55,6 +55,15 @@ public class BasePage {
         }
     }
 
+    public void highLight(WebElement element, boolean... shouldWait) {
+        try {
+            waitUntilElementIsVisible(element);
+            highLight(element);
+        } catch (TimeoutException te) {
+            ExtentTestManager.getTest().log(Status.WARNING,te);
+        }
+    }
+
     public void doubleClick(WebElement element, boolean... shouldWait) {
         try {
             waitUntilElementIsVisible(element);
@@ -322,7 +331,7 @@ public class BasePage {
         }
     }
 
-    public void waitForSeconds(long waitSeconds) {
+    public static void waitForSeconds(long waitSeconds) {
         waitSeconds = waitSeconds * 1000;
         Calendar currentTime = Calendar.getInstance();
         long currentTimeMillis = currentTime.getTimeInMillis();
