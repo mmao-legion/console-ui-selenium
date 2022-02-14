@@ -243,7 +243,7 @@ public class AbsentManagePage extends BasePage {
         }
     }
 
-    public void createANewTemplate(String tempName, String tempDesc) {
+    public void createANewTemplate(String tempName, String tempDesc) throws Exception{
         if (isElementLoaded(newTemplateButton, 20)) {
             newTemplateButton.click();
             templateName.clear();
