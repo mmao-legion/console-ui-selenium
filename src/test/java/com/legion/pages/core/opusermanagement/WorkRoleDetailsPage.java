@@ -100,7 +100,6 @@ public class WorkRoleDetailsPage extends BasePage {
     }
 
     public void addAssignmentRule(String num, String pri, String badgeText) {
-        BasePage.waitForSeconds(2);
         assignmentRuleAddButton.click();
         teamMemberTitleButton.click();
         teamMemberTitleOption.click();
@@ -119,7 +118,6 @@ public class WorkRoleDetailsPage extends BasePage {
     }
 
     public void saveAssignRule() {
-        waitForSeconds(2);
         scrollToBottom();
         saveAssignRuleIcon.click();
     }
@@ -143,4 +141,6 @@ public class WorkRoleDetailsPage extends BasePage {
     public void cancel() {
         cancelButton.click();
     }
+
+
 }

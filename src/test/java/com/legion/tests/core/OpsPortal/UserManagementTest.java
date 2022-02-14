@@ -3,6 +3,7 @@ package com.legion.tests.core.OpsPortal;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
+import com.legion.pages.core.OpsPortal.OpsPortalUserManagementPage;
 import com.legion.pages.core.opusermanagement.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -315,6 +316,8 @@ public class UserManagementTest extends TestBase {
         dynamicEmployeePage.cancelCreating();
 
         //create a new employee group
+        dynamicEmployeePage.removeSpecificGroup("AutoTestCreating");
+        dynamicEmployeePage.removeSpecificGroup("TestEdit");
         dynamicEmployeePage.addGroup();
         Assert.assertEquals(dynamicEmployeePage.getModalTitle(), manageDynamicEmployeeGroup, "Failed to open manage dynamic group modal!");
         dynamicEmployeePage.editEmployeeGroup("AutoTestCreating", "create a new group", "autoTest", "Work Role");
@@ -328,7 +331,6 @@ public class UserManagementTest extends TestBase {
 
         //search a group
         dynamicEmployeePage.searchGroup("AutoTestCreating");
-
         //edit an existing group
         dynamicEmployeePage.edit();
         Assert.assertEquals(dynamicEmployeePage.getModalTitle(), manageDynamicEmployeeGroup, "Failed to open manage dynamic group modal!");
@@ -353,6 +355,33 @@ public class UserManagementTest extends TestBase {
         dynamicEmployeePage.removeTheGroup();
         SimpleUtils.pass("Succeeded in removing dynamic group!");
 
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Plan permissions showing and default value")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPlanPermissionsShowingAndDefaultValueAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        List<String> rolesList = new ArrayList<>(Arrays.asList("Admin","Budget Planner"));
+        int index = 0;
+        UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+        //go to user management tab -> Users and Roles -> Access Roles sub tab
+        userManagementPage.clickOnUserManagementTab();
+        userManagementPage.goToUserAndRoles();
+        userManagementPage.goToAccessRolesTab();
+        //Verify plan permission group showing
+        userManagementPage.verifyPlanItemInUserManagementAccessRoleTab();
+        //Verify Admin and planner should have all plan permissions by default
+        for(String role:rolesList){
+            index = userManagementPage.getIndexOfRolesInPermissionsTable(role);
+//            Assert.assertTrue(userManagementPage.verifyPermissionIsCheckedOrNot(index),role + " has all plan permissions by default");
+            if(userManagementPage.verifyPermissionIsCheckedOrNot(index)){
+                SimpleUtils.pass(role + " has all plan permissions by default.");
+            }else {
+                SimpleUtils.fail(role + " Don't has all plan permissions by default.", false);
+            }
+        }
     }
 
 }

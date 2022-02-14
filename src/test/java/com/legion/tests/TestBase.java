@@ -213,28 +213,28 @@ public abstract class TestBase {
     }
 
 
-         /**
-         * upload file with the input element
-         * @param fileName file name with relative path xxx/xxx.png
-         */
-        public static void uploadFiles(WebElement ele, String fileName) throws Exception {
-            Actions actions = new Actions(getDriver());
-            // if linux system
-         if (System.getProperty("os.name").contains("Linux")) {
-                String filePath = null;
-                // change the inputBy element as block
-                filePath = new File(fileName).getAbsolutePath();
-                ele.sendKeys(filePath);
-                actions.sendKeys(Keys.ENTER).build().perform();
-            }
-         else {
-             //run at local
-             String absolutePath = new File(fileName).getCanonicalPath();
-             ele.sendKeys(absolutePath);
-             //return
-             actions.sendKeys(Keys.ENTER).build().perform();
-         }
+    /**
+     * upload file with the input element
+     * @param fileName file name with relative path xxx/xxx.png
+     */
+    public static void uploadFiles(WebElement ele, String fileName) throws Exception {
+        Actions actions = new Actions(getDriver());
+        // if linux system
+        if (System.getProperty("os.name").contains("Linux")) {
+            String filePath = null;
+            // change the inputBy element as block
+            filePath = new File(fileName).getAbsolutePath();
+            ele.sendKeys(filePath);
+            actions.sendKeys(Keys.ENTER).build().perform();
         }
+        else {
+            //run at local
+            String absolutePath = new File(fileName).getCanonicalPath();
+            ele.sendKeys(absolutePath);
+            //return
+            actions.sendKeys(Keys.ENTER).build().perform();
+        }
+    }
 
     protected void createDriver (String browser, String version, String os) throws Exception {
         if (getBrowserNeeded() && browser != null) {
@@ -494,18 +494,18 @@ public abstract class TestBase {
     }
 
     public String getCrendentialInfo(String roleName) throws Exception {
-            Object[][] credentials = null;
-            StackTraceElement[] stacks = (new Throwable()).getStackTrace();
-            String simpleClassName = stacks[1].getFileName().replace(".java", "");
-            String fileName = "UsersCredentials.json";
-            fileName = MyThreadLocal.getEnterprise() + fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            if (userCredentials.containsKey(roleName + "Of" + simpleClassName)) {
-                credentials = userCredentials.get(roleName + "Of" + simpleClassName);
-            } else {
-                credentials = userCredentials.get(roleName);
-            }
-            return String.valueOf(credentials[0][0]);
+        Object[][] credentials = null;
+        StackTraceElement[] stacks = (new Throwable()).getStackTrace();
+        String simpleClassName = stacks[1].getFileName().replace(".java", "");
+        String fileName = "UsersCredentials.json";
+        fileName = MyThreadLocal.getEnterprise() + fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        if (userCredentials.containsKey(roleName + "Of" + simpleClassName)) {
+            credentials = userCredentials.get(roleName + "Of" + simpleClassName);
+        } else {
+            credentials = userCredentials.get(roleName);
+        }
+        return String.valueOf(credentials[0][0]);
     }
 
     public HashMap<String, Object[][]> getSwapCoverUserCredentials(String locationName) throws Exception {
@@ -626,5 +626,9 @@ public abstract class TestBase {
         StackTraceElement[] stacks = (new Throwable()).getStackTrace();
         className = stacks[1].getFileName().replace(".java", "");
         return className;
+    }
+
+    public static void refreshPage() {
+        getDriver().navigate().refresh();
     }
 }

@@ -1,11 +1,13 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -17,8 +19,6 @@ public class TimeOffPage extends BasePage {
     }
 
     // Added by Sophia
-    @FindBy(css = "span[title=' Allene Mante']")
-    private WebElement teamMember;
     @FindBy(css = "timeoff-management div.collapsible-title")
     private WebElement timeOffTab;
     //
@@ -81,10 +81,19 @@ public class TimeOffPage extends BasePage {
     private WebElement floatingHolidayInput;
     @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr:nth-child(4)>td:nth-child(3) input")
     private WebElement sickInput;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tr:last-child>td:nth-child(3) input")
+    private WebElement theLastTimeOffInputInEditModal;
 
     //history
     @FindBy(css = "div.balance-action lg-button[label='History']>button")
     private WebElement historyButton;
+    @FindBy(css = "h1.lg-slider-pop__title img.lg-slider-pop__title-dismiss")
+    private WebElement historyCloseButton;
+    @FindBy(css = "div.logInfoContainer>div.templateInfo")
+    private List<WebElement> historyEntries;
+    @FindBy(css = "div.logInfoContainer>p")
+    private List<WebElement> accrualDates;
+
 
     //time off request
     @FindBy(css = "span.request-status.request-status-Approved")
@@ -92,12 +101,24 @@ public class TimeOffPage extends BasePage {
     @FindBy(css = "span.request-buttons-reject")
     private WebElement rejectButton;
 
-    public void goToTeamMemberDetail() {
-        teamMember.click();
-        waitForSeconds(5);
+
+    //balance check
+    @FindBy(css = "div.balance-wrapper Span.count-block-label.ng-binding")
+    private List<WebElement> timeOffKeys;
+    @FindBy(css = "div.balance-wrapper Span.count-block-counter-hours")
+    private List<WebElement> balances;
+
+
+    public void goToTeamMemberDetail(String memberName) {
+        String teamMemCssLocator = "span[title=' " + memberName + "']";
+        WebElement teamMem = getDriver().findElement(By.cssSelector(teamMemCssLocator));
+        scrollToElement(teamMem);
+        teamMem.click();
     }
 
     public void switchToTimeOffTab() {
+        waitForSeconds(5);
+        scrollToElement(timeOffTab);
         timeOffTab.click();
     }
 
@@ -214,9 +235,39 @@ public class TimeOffPage extends BasePage {
         }
     }
 
-    public int getToday(){
-        String day=today.getText();
+    public int getToday() {
+        String day = today.getText();
         return parseInt(day);
+    }
+
+    public HashMap<String, String> getTimeOffBalance() {
+        ArrayList<String> keys = getWebElementsText(timeOffKeys);
+        ArrayList<String> values = getWebElementsText(balances);
+        HashMap timeOffBalance = new HashMap();
+        int mapSize = keys.size();
+        for (int i = 0; i < mapSize; i++) {
+            timeOffBalance.put(keys.get(i), values.get(i));
+        }
+        return timeOffBalance;
+    }
+
+    public HashMap<String, String> getAccrualHistory() {
+        historyButton.click();
+        ArrayList<String> entries = getWebElementsText(historyEntries);
+        ArrayList<String> dates = getWebElementsText(accrualDates);
+        HashMap history = new HashMap();
+        int mapSize = entries.size();
+        for (int i = 0; i < mapSize; i++) {
+            history.put(entries.get(i), dates.get(i));
+        }
+        historyCloseButton.click();
+        return history;
+    }
+
+    public void editTheLastTimeOff(String balance) {
+        editButton.click();
+        theLastTimeOffInputInEditModal.clear();
+        theLastTimeOffInputInEditModal.sendKeys(balance);
     }
 
 

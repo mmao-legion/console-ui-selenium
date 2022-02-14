@@ -454,7 +454,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify location group common function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyNoLocationGroupSettingForMockAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
+    public void verifyNoLocationGroupSettingForMockAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -471,6 +471,35 @@ public class LocationsGroupTestInOP extends TestBase {
             locationsPage.goToSubLocationsInLocationsPage();
             //check location group setting filed when type is mock
             locationsPage.checkThereIsNoLocationGroupSettingFieldWhenLocationTypeIsMock();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify can not change location relationship for location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCannotChangeRelationSettingforLocationGroupAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String[] testLocationsName = {"Phoenix AirportPHX","Checkpoint C","LGMS0830233014toP2PorMS","TestchildLocationForMS00830233014"};
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
+            //go to sub-locations tab
+            locationsPage.goToSubLocationsInLocationsPage();
+            for(String locname:testLocationsName)
+               //check the location relation can not be modified for location group
+               locationsPage.checkLocationGroupSetting(locname);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

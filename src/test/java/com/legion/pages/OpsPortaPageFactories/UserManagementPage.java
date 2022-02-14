@@ -81,4 +81,11 @@ public interface UserManagementPage {
     public void enableAssignmentRulesInLocationLevel(int index);
 
     public void overriddenAssignmentRule(int index);
+
+    public void verifyPlanItemInUserManagementAccessRoleTab() throws Exception;
+
+    public int getIndexOfRolesInPermissionsTable(String role) throws Exception;
+
+    public boolean verifyPermissionIsCheckedOrNot(int index) throws Exception;
+
 }

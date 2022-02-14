@@ -9,18 +9,15 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.tests.TestBase.switchToNewWindow;
-import static com.legion.tests.TestBase.uploadFiles;
 import static com.legion.utils.MyThreadLocal.*;
 
 public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
@@ -3248,6 +3245,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
 	private List<WebElement> workRolesInSchedulingRulesInLocationLevel;
 
+	@FindBy(css = "input[placeholder=\"Search by Work Role\"]")
+	private WebElement searchByWorkRoleInput;
+
 	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
 	private List<WebElement> workRolesInAssignmentRulesInLocationLevel;
 	@Override
@@ -3540,6 +3540,25 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
+	public void checkLocationGroupSetting(String locationName) throws Exception {
+		goToLocationDetailsPage(locationName);
+		editLocationBtnIsClickableInLocationDetails();
+		//check the Location Group Setting
+		clickTheElement(locationGroupSelect);
+		waitForSeconds(2);
+		List<WebElement> options=locationGroupSelect.findElements(By.cssSelector("option"));
+		int enabledCount=0;
+		for(WebElement op:options){
+			if(op.isEnabled())
+				enabledCount++;
+		}
+		//Assert only one option is enabled
+		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option",enabledCount==1,false);
+        //back to list
+		clickTheElement(locationBackLink);
+		}
+
+	@Override
 	public void actionsForEachTypeOfTemplate(String template_type, String action) {
 		if (templateRows.size() > 0) {
 			switch (template_type) {
@@ -3729,19 +3748,42 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Ok button load failed",false);
 	}
 
+	@FindBy(css = "[tab-title=\"Details\"] div.lg-pagination__arrow--right")
+	private List<WebElement> paginationRightArrow;
 	@Override
-	public void  goToScheduleRulesListAtLocationLevel(String workRole) {
-		if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel, 5)) {
-			for (WebElement s : workRolesInSchedulingRulesInLocationLevel) {
-				String workRoleName = s.findElement(By.cssSelector("tr>td:nth-child(1)")).getText().trim();
-				if(workRoleName.contains(workRole)){
-					clickTheElement(s.findElement(By.cssSelector("tr>td:nth-child(2) button")));
-					waitForSeconds(5);
-					break;
+	public void  goToScheduleRulesListAtLocationLevel(String workRole) throws Exception {
+		if (isElementLoaded(searchByWorkRoleInput, 10)) {
+			searchByWorkRoleInput.clear();
+			searchByWorkRoleInput.sendKeys(workRole);
+			waitForSeconds(1);
+			if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel, 5)) {
+				for (WebElement s : workRolesInSchedulingRulesInLocationLevel) {
+					String workRoleName = s.findElement(By.cssSelector("tr>td:nth-child(1)")).getText().trim();
+					if (workRoleName.contains(workRole)) {
+						clickTheElement(s.findElement(By.cssSelector("tr>td:nth-child(2) button")));
+						waitForSeconds(5);
+						break;
+					}
 				}
-			}
-		} else
-			SimpleUtils.fail("Failed to loading the work role list", false);
+				int i = 0;
+				while (i <10 && areListElementVisible(paginationRightArrow, 5)
+						&& !paginationRightArrow.get(0).getAttribute("class").contains("disabled")) {
+					clickTheElement(paginationRightArrow.get(0));
+					for (WebElement s : workRolesInSchedulingRulesInLocationLevel) {
+						String workRoleName = s.findElement(By.cssSelector("tr>td:nth-child(1)")).getText().trim();
+						if (workRoleName.contains(workRole)) {
+							clickTheElement(s.findElement(By.cssSelector("tr>td:nth-child(2) button")));
+							waitForSeconds(5);
+							break;
+						}
+					}
+					i++;
+				}
+			} else
+				SimpleUtils.fail("Failed to loading the work role list", false);
+		} else {
+			SimpleUtils.fail("Search Work Role Input box failed to load!", false);
+		}
 	}
 
 	@FindBy(css = "lg-button[label=\"Edit\"]")

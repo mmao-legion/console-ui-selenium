@@ -55,15 +55,6 @@ public class BasePage {
         }
     }
 
-    public void highLight(WebElement element, boolean... shouldWait) {
-        try {
-            waitUntilElementIsVisible(element);
-            highLight(element);
-        } catch (TimeoutException te) {
-            ExtentTestManager.getTest().log(Status.WARNING,te);
-        }
-    }
-
     public void doubleClick(WebElement element, boolean... shouldWait) {
         try {
             waitUntilElementIsVisible(element);

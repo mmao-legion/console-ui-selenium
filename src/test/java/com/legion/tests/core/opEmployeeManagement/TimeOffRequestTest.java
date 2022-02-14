@@ -20,8 +20,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.time.LocalDate;
-import java.util.Random;
 
 public class TimeOffRequestTest extends TestBase {
 
@@ -44,7 +42,7 @@ public class TimeOffRequestTest extends TestBase {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
         //search template
         String tempName = "AccrualAuto-Don't touch!!!";
@@ -157,7 +155,7 @@ public class TimeOffRequestTest extends TestBase {
         consoleNavigationPage.searchLocation("Newark-Mock");
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        timeOffPage.goToTeamMemberDetail();
+        timeOffPage.goToTeamMemberDetail("Allene Mante");
         timeOffPage.switchToTimeOffTab();
         //Edit annual leave balance
         timeOffPage.editTimeOffBalance("Annual Leave", "5");
@@ -278,7 +276,7 @@ public class TimeOffRequestTest extends TestBase {
         //switch to console.
         switchToNewWindow();
         consoleNavigationPage.navigateTo("Team");
-        timeOffPage.goToTeamMemberDetail();
+        timeOffPage.goToTeamMemberDetail("Allene Mante");
         timeOffPage.switchToTimeOffTab();
 
         //Days request at one time.

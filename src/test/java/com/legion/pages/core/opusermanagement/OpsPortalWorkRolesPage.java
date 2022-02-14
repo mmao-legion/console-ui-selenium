@@ -1,6 +1,7 @@
 package com.legion.pages.core.opusermanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -56,21 +57,32 @@ public class OpsPortalWorkRolesPage extends BasePage {
     private WebElement cancelDisableAction;
     @FindBy(css = "div.modal-content lg-button[label='OK']")
     private WebElement okToDisableAction;
+    @FindBy(css = "div.lg-toast")
+    private WebElement popUpMsg;
 
 
     public void goBack() {
         backButton.click();
     }
 
-    public void searchByWorkRole(String workRole) {
+    public void searchByWorkRole(String workRole) throws Exception {
         waitForSeconds(2);
-        searchBox.clear();
-        searchBox.sendKeys(workRole);
-        searchButton.click();
+        if (isElementLoaded(searchBox, 15)) {
+            searchBox.clear();
+            searchBox.sendKeys(workRole);
+            searchButton.click();
+        } else {
+            SimpleUtils.fail("Work Role Page: Search box failed to load!", false);
+        }
     }
 
-    public String getTheFirstWorkRoleInTheList() {
-        String workRoleLabel = theFirstWorkRoleInTheList.getAttribute("label");
+    public String getTheFirstWorkRoleInTheList() throws Exception {
+        String workRoleLabel = "";
+        if (isElementLoaded(theFirstWorkRoleInTheList, 15)) {
+            workRoleLabel = theFirstWorkRoleInTheList.getAttribute("label");
+        } else {
+            SimpleUtils.fail("Work Role Page: The first work role failed to load in the list!", false);
+        }
         return workRoleLabel;
     }
 
@@ -79,8 +91,12 @@ public class OpsPortalWorkRolesPage extends BasePage {
         return notice;
     }
 
-    public void goToWorkRoleDetails() {
-        theFirstWorkRoleInTheList.click();
+    public void goToWorkRoleDetails() throws Exception {
+        if (isElementLoaded(theFirstWorkRoleInTheList, 15)) {
+            clickTheElement(theFirstWorkRoleInTheList);
+        } else {
+            SimpleUtils.fail("Work Role Page: The first work role failed to load in the list!", false);
+        }
     }
 
     public void clickEditButton() {
@@ -95,23 +111,39 @@ public class OpsPortalWorkRolesPage extends BasePage {
         }
     }
 
-    public void editAnExistingWorkRole(String oldName) {
+    public void editAnExistingWorkRole(String oldName) throws Exception {
+        waitForSeconds(2);
         clickEditButton();
         searchByWorkRole(oldName);
         goToWorkRoleDetails();//go to work role details page
     }
 
     public void addNewWorkRole() {
+        waitForSeconds(2);
         clickEditButton();
         addWorkRoleButton.click();//go to work role details page
     }
 
-    public void save() {
-        saveButton.click();
+    public void save() throws Exception {
+        if (isElementLoaded(saveButton, 10)) {
+            saveButton.click();
+            if (isElementLoaded(popUpMsg, 5) ) {
+                String successMessage = popUpMsg.getText();
+                if (successMessage.contains("Success")) {
+                    SimpleUtils.pass("Work Role Page: Click on Save button successfully!");
+                } else
+                    SimpleUtils.fail("The Success message display incorrectly! the actual message is: " + successMessage, false);
+            } else {
+                SimpleUtils.fail("Work Role Page: Failed to Save!", false);
+            }
+        } else {
+            SimpleUtils.fail("Work Role Page: Save button failed to load!", false);
+        }
     }
 
     //cancel editing
     public void cancel() {
+        waitForSeconds(2);
         cancelButton.click();
     }
 
@@ -124,12 +156,14 @@ public class OpsPortalWorkRolesPage extends BasePage {
     }
 
     public void cancelEditing() {
+        waitForSeconds(2);
         yesToCancelEditing.click();
     }
 
 
     //disable action
-    public void disableAWorkRole(String name) {
+    public void disableAWorkRole(String name) throws Exception {
+        waitForSeconds(2);
         clickEditButton();
         searchByWorkRole(name);
         clickDisableButton();
@@ -144,13 +178,23 @@ public class OpsPortalWorkRolesPage extends BasePage {
     }
 
     public void okToDisableAction() {
+        waitForSeconds(2);
         okToDisableAction.click();
     }
 
-    public List<String> getWorkRoleList() {
+    @FindBy (css = ".lg-pagination__arrow--right")
+    private WebElement pageRightBtn;
+    public List<String> getWorkRoleList() throws Exception {
         ArrayList<String> wr = new ArrayList<String>();
         for(WebElement workRole:workRoleList){
             wr.add(workRole.getAttribute("label"));
+        }
+        while (isElementLoaded(pageRightBtn, 5)
+                && !pageRightBtn.getAttribute("class").contains("disabled")){
+            clickTheElement(pageRightBtn);
+            for(WebElement workRole:workRoleList){
+                wr.add(workRole.getAttribute("label"));
+            }
         }
         return wr;
     }

@@ -47,7 +47,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         //verify the absent management dashboard card content
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
         String dashboardText = panelPage.getDashboardCardContent();
-        Assert.assertEquals(dashboardText, "Absence Management\n" +
+        Assert.assertEquals(dashboardText, "Time Off Management\n" +
                 "Configure Time Offs\n" +
                 "Time Off Reasons\n" +
                 "Time Off Accrual Rules", "Invalid content on dashboard card!");
@@ -64,7 +64,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
         //verify that there are 2 tabs in absent manage
         AbsentManagePage absentManagePage = new AbsentManagePage();
         Assert.assertTrue(absentManagePage.isTemplateTabDisplayed(), "Template tab on absent manage page didn't show!");
@@ -157,7 +157,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
 
         AbsentManagePage absentManagePage = new AbsentManagePage();
         absentManagePage.switchToSettings();
@@ -250,7 +250,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
 
         absentManagePage.search("AutoTest_Accrual");
@@ -382,16 +382,17 @@ public class AbsentManagementTemplateTest extends TestBase {
 
     }
 
+    // Blocked by https://legiontech.atlassian.net/browse/OPS-4196
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyTimeOffConfigurationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
 
         //Create a new template
@@ -468,16 +469,17 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.okToActionInModal(true);
     }
 
+    // Blocked by https://legiontech.atlassian.net/browse/OPS-4196
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyTimeOffRequestRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
 
         //Create a new template
