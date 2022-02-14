@@ -267,4 +267,5 @@ public interface LocationsPage {
     public void verifyTitleForWorkforceSharingLocationGroup() throws Exception;
 
     public void clickOnCancelBtnOnSharingDynamicLocationGroupWindow() throws Exception;
+    public void checkLocationGroupSetting(String locationName) throws Exception;
 }
