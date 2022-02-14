@@ -63,6 +63,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
     }
 
     public void searchByWorkRole(String workRole) {
+        waitForSeconds(2);
         searchBox.clear();
         searchBox.sendKeys(workRole);
         searchButton.click();
