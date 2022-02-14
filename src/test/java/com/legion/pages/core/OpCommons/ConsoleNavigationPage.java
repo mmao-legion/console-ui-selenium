@@ -50,6 +50,7 @@ public class ConsoleNavigationPage extends BasePage {
         searchBox.clear();
         searchBox.sendKeys(locationName);
         searchIcon.click();
+        waitForSeconds(3);
         if (isElementDisplayed(searchResult)) {
             searchResult.click();
             waitForSeconds(5);
