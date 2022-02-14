@@ -158,7 +158,7 @@ public class DynamicGroupV2Test extends TestBase {
         //Go to the Association page to create a dynamic employee group and save it.
         settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
         settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
-        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage("group-test4");
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
         settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
         settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Minor.getValue(), "IN", "15");
         settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
@@ -176,7 +176,137 @@ public class DynamicGroupV2Test extends TestBase {
         configurationPage.publishNowTemplate();
 
         //delete the template.
-        configurationPage.clickOnSpecifyTemplateName(templateName, "view");
+        configurationPage.archiveOrDeleteTemplate(templateName);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate the Association page for Dynamic employee group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheAssociationPageForDynamicEmployeeGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
+
+        //delete all template.
+        configurationPage.archiveOrDeleteAllTemplates();
+        //Go to the settings tab to select a field.
+        settingsAndAssociationPage.goToTemplateListOrSettings("setting");
+        List<String> ExpectedFieldsFromSettingsTab = new ArrayList<>();
+        ExpectedFieldsFromSettingsTab.add("Minor");
+        settingsAndAssociationPage.setupRequiredFields(ExpectedFieldsFromSettingsTab);
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+
+        //==========verify there is only one dynamic group displaying, add button should be disabled after adding one============
+        //Create new template.
+        String templateName = "AutoTest"+System.currentTimeMillis();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Go to the Association page to create a dynamic employee group and save it.
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Minor.getValue(), "IN", "15");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        SimpleUtils.assertOnFail("Add button should be disabled now!", !settingsAndAssociationPage.isAddGroupBtnEnabled(), false);
+        settingsAndAssociationPage.clickOnRemoveBtnToRemoveDynamicGroupOnAssociationPage();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+        //delete the template.
+        configurationPage.archiveOrDeleteTemplate(templateName);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate creation for \"Dynamic Location Group\"")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheCreationForDynamicLocationGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.Communications.getValue());
+
+        //delete all template.
+        configurationPage.archiveOrDeleteAllTemplates();
+
+        settingsAndAssociationPage.goToTemplateListOrSettings("setting");
+        List<String> ExpectedFieldsFromSettingsTab = new ArrayList<>();
+        ExpectedFieldsFromSettingsTab.add("Country");
+        settingsAndAssociationPage.setupRequiredFields(ExpectedFieldsFromSettingsTab);
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+
+        //Create new template.
+        String templateName = "AutoTest"+String.valueOf(System.currentTimeMillis());
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Go to the Association page to create a dynamic employee group and save it.
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "IN", "United States");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+
+        //Go into that template again to update the group.
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnEditBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "IN", "Japan");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+
+        //delete the template.
+        configurationPage.archiveOrDeleteTemplate(templateName);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate the Assocition page for Dynamic location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheAssociationPageForDynamicLocationGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.Communications.getValue());
+
+        //delete all template.
+        configurationPage.archiveOrDeleteAllTemplates();
+        //Go to the settings tab to select a field.
+        settingsAndAssociationPage.goToTemplateListOrSettings("setting");
+        List<String> ExpectedFieldsFromSettingsTab = new ArrayList<>();
+        ExpectedFieldsFromSettingsTab.add("Country");
+        settingsAndAssociationPage.setupRequiredFields(ExpectedFieldsFromSettingsTab);
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+
+        //==========verify there is only one dynamic group displaying, add button should be disabled after adding one============
+        //Create new template.
+        String templateName = "AutoTest"+System.currentTimeMillis();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Go to the Association page to create a dynamic employee group and save it.
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "IN", "United States");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        SimpleUtils.assertOnFail("Add button should be disabled now!", !settingsAndAssociationPage.isAddGroupBtnEnabled(), false);
+        settingsAndAssociationPage.clickOnRemoveBtnToRemoveDynamicGroupOnAssociationPage();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+        //delete the template.
         configurationPage.archiveOrDeleteTemplate(templateName);
     }
 
@@ -274,7 +404,7 @@ public class DynamicGroupV2Test extends TestBase {
         String testResult = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
         SimpleUtils.assertOnFail("Test result is not coming up!", testResult != null, false);
         settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
-        configurationPage.clickOnBackBtnOnTheTemplateDetailPage();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
         //delete the template.
         configurationPage.archiveOrDeleteTemplate(templateName);
@@ -304,7 +434,7 @@ public class DynamicGroupV2Test extends TestBase {
         settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
         List<String> ActualFieldsFromTheAssociationPageForAnotherTemplate = settingsAndAssociationPage.getCriteriaListFromTheAssociationPage();
         SimpleUtils.assertOnFail("Criteria on the Association page are not all expected!", ExpectedFieldsFromSettingsTabForAnotherTemplate.containsAll(ActualFieldsFromTheAssociationPageForAnotherTemplate), false);
-        configurationPage.clickOnBackBtnOnTheTemplateDetailPage();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
         //delete the template.
         configurationPage.archiveOrDeleteTemplate(templateName2);
     }
@@ -348,7 +478,7 @@ public class DynamicGroupV2Test extends TestBase {
         String testResult = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
         SimpleUtils.assertOnFail("Test result is not coming up!", testResult != null, false);
         settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
-        configurationPage.clickOnBackBtnOnTheTemplateDetailPage();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
         //delete the template.
         configurationPage.archiveOrDeleteTemplate(templateName);
@@ -376,7 +506,7 @@ public class DynamicGroupV2Test extends TestBase {
         settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
         List<String> ActualFieldsFromTheAssociationPageForAnotherTemplate = settingsAndAssociationPage.getCriteriaListFromTheAssociationPage();
         SimpleUtils.assertOnFail("Criteria on the Association page are not all expected!", ExpectedFieldsFromSettingsTabForAnotherTemplate.containsAll(ActualFieldsFromTheAssociationPageForAnotherTemplate), false);
-        configurationPage.clickOnBackBtnOnTheTemplateDetailPage();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
         //delete the template.
         configurationPage.archiveOrDeleteTemplate(templateName2);
     }

@@ -7,9 +7,10 @@ public interface SettingsAndAssociationPage {
     public void verifyTitleOnTheSettingsPage(String groupType) throws Exception;
     public void verifyTitleOnTheSAssociationPage(String groupType) throws Exception;
     public void clickOnEditBtnForDynamicGroupOnAssociationPage() throws Exception;
-    public void clickOnRemoveBtnForDynamicGroupOnAssociationPage() throws Exception;
+    public void clickOnRemoveBtnToRemoveDynamicGroupOnAssociationPage() throws Exception;
     public void clickOnDoneBtnForDynamicGroupOnAssociationPage() throws Exception;
     public void clickOnAddBtnForDynamicGroupOnAssociationPage() throws Exception;
+    public boolean isAddGroupBtnEnabled() throws Exception;
     public void inputGroupNameForDynamicGroupOnAssociationPage(String groupName) throws Exception;
     public void selectAnOptionForCriteria(String criteria, String operator, String option) throws Exception;
     public void deleteAllCriteriaOnTheAssociationPageIfExist() throws Exception;

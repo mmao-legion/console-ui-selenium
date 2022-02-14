@@ -129,10 +129,16 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
     }
 
+    @FindBy(css = "lg-button[label=\"Remove\"] button")
+    private WebElement removeConfirmButton;
     @Override
-    public void clickOnRemoveBtnForDynamicGroupOnAssociationPage() throws Exception {
+    public void clickOnRemoveBtnToRemoveDynamicGroupOnAssociationPage() throws Exception {
         if (isElementLoaded(removeDynamicGroupBtn, 10)){
             clickTheElement(removeDynamicGroupBtn);
+            if (isElementLoaded(removeConfirmButton, 10)){
+                clickTheElement(removeConfirmButton);
+                waitForSeconds(1);
+            }
             if (isElementLoaded(addDynamicGroupBtn, 10)){
                 SimpleUtils.pass("Deleted!");
             } else {
@@ -175,12 +181,20 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
     private WebElement addDynamicGroupBtn;
     @Override
     public void clickOnAddBtnForDynamicGroupOnAssociationPage() throws Exception {
-        if (isElementLoaded(addDynamicGroupBtn, 10)){
+        if (isAddGroupBtnEnabled()){
             clickTheElement(addDynamicGroupBtn);
             SimpleUtils.pass("Create dynamic group button is clicked!");
         } else {
             SimpleUtils.fail("Create dynamic group button is not loaded!", false);
         }
+    }
+
+    @Override
+    public boolean isAddGroupBtnEnabled() throws Exception {
+        if (isElementLoaded(addDynamicGroupBtn, 10)){
+            return true;
+        }
+        return false;
     }
 
     @FindBy(css = "input[aria-label=\"Group Name\"]")

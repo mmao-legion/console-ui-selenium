@@ -3665,7 +3665,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 
 		} else
-			SimpleUtils.report("There is no template in the list! ");
+			SimpleUtils.warn("There is no template in the list! ");
 	}
 
 	@FindBy(css ="question-input[question-title=\"Move existing shifts to Open when transfers occur within the Workforce Sharing Group.\"] > div > div.lg-question-input__wrapper > ng-transclude > yes-no > ng-form > lg-button-group >div>div")
@@ -4024,7 +4024,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void clickOnBackBtnOnTheTemplateDetailPage() throws Exception {
+	public void clickOnBackBtnOnTheTemplateDetailAndListPage() throws Exception {
 		if (isElementLoaded(backButton, 10)){
 			clickTheElement(backButton);
 			SimpleUtils.pass("Back button is clicked!");
