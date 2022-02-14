@@ -88,7 +88,7 @@ public class WorkRoleDetailsPage extends BasePage {
     private WebElement saveButton;
 
     public void editWorkRoleDetails(String workRoleName, int colorIndex, String roleClass, String hRate) {
-        BasePage.waitForSeconds(2);
+        waitForSeconds(2);
         name.clear();
         name.sendKeys(workRoleName);
         color.click();
@@ -136,7 +136,7 @@ public class WorkRoleDetailsPage extends BasePage {
     }
 
     public void submit() {
-        BasePage.waitForSeconds(2);
+        waitForSeconds(2);
         saveButton.click();
     }
 
