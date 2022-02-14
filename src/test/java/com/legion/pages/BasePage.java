@@ -322,7 +322,7 @@ public class BasePage {
         }
     }
 
-    public void waitForSeconds(long waitSeconds) {
+    public static void waitForSeconds(long waitSeconds) {
         waitSeconds = waitSeconds * 1000;
         Calendar currentTime = Calendar.getInstance();
         long currentTimeMillis = currentTime.getTimeInMillis();
