@@ -316,6 +316,8 @@ public class UserManagementTest extends TestBase {
         dynamicEmployeePage.cancelCreating();
 
         //create a new employee group
+        dynamicEmployeePage.removeSpecificGroup("AutoTestCreating");
+        dynamicEmployeePage.removeSpecificGroup("TestEdit");
         dynamicEmployeePage.addGroup();
         Assert.assertEquals(dynamicEmployeePage.getModalTitle(), manageDynamicEmployeeGroup, "Failed to open manage dynamic group modal!");
         dynamicEmployeePage.editEmployeeGroup("AutoTestCreating", "create a new group", "autoTest", "Work Role");
@@ -329,7 +331,6 @@ public class UserManagementTest extends TestBase {
 
         //search a group
         dynamicEmployeePage.searchGroup("AutoTestCreating");
-
         //edit an existing group
         dynamicEmployeePage.edit();
         Assert.assertEquals(dynamicEmployeePage.getModalTitle(), manageDynamicEmployeeGroup, "Failed to open manage dynamic group modal!");

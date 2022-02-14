@@ -69,6 +69,8 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     private WebElement runBudgetButton;
     @FindBy(css = "modal[modal-title=\"Generate demand forecast\"]>div.lg-modal")
     private WebElement forecastRunDialog;
+    @FindBy(css = "modal[modal-title=\"Re-generate demand forecast\"]>div")
+    private WebElement forecastReRunDialog;
     @FindBy(css = "lg-button[label=\"Generate\"]")
     private WebElement forecastGenerateBTNOnDialog;
     @FindBy(css = "a[href*='DemandForecastSample']")
@@ -105,6 +107,8 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     private WebElement editParentPlanDialog;
     @FindBy(css = "input-field[value=\"plan.name\"] input")
     private WebElement editParentPlanName;
+    @FindBy(css = "input-field[value=\"scenario.name\"] input")
+    private WebElement editScenarioPlanName;
     @FindBy(css = "p.location-display span")
     private WebElement locationInCreatePlanDialog;
     @FindBy(css = "div.ranged-calendar__day.real-day.can-not-select")
@@ -131,7 +135,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     private WebElement scenarioPlanBackLink;
     @FindBy(css = "span.status-highlight")
     private WebElement scenarioPlanStatusInDetail;
-    @FindBy(css = "lg-button[label=\"Re-run\"]")
+    @FindBy(css = "lg-button[label=\"Re-run\"] button")
     private List<WebElement> scenarioPlanReRunBTNs;
     @FindBy(css = "div.banner-content p.mr-30")
     private List<WebElement> scenarioPlanContents;
@@ -151,9 +155,16 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     private WebElement scenarioPlanSetInEffectBTN;
     @FindBy(css = "modal[modal-title=\"Reject Budget\"]>div")
     private WebElement scenarioPlanRejectDialog;
-
-
-
+    @FindBy(css = "lg-button[label=\"Stop\"] button")
+    private WebElement scenarioPlanForecastStopToRunLink;
+    @FindBy(css = ".scenario-jobs-budget-details__progress-bar-inner")
+    private List<WebElement> scenarioPlanForecastRunProgressBar;
+    @FindBy(css = "modal[modal-title=\"Stop demand forecast\"]>div")
+    private WebElement scenarioPlanStopForecastDialog;
+    @FindBy(css = "div.progress-info .ml-5")
+    private List<WebElement> scenarioPlanJobsStatus;
+    @FindBy(css = "modal[modal-title=\"Edit Labor Budget Scenario\"]>div")
+    private WebElement scenarioPlanEditDialog;
 
 
 
@@ -252,11 +263,10 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                     //assert the scenario plane name
                     if (scenarioPlanNameInDeatil.getText().equals(scenarioName))
                         SimpleUtils.pass("Scenario plan created successfully with right name!");
-                    //click back lin to list
+                    //click back link to list
                     clickTheElement(scenarioPlanBackLink);
                     //check page auto back to plan list
                     if (isElementLoaded(planSearchInputField, 3))
-
                         SimpleUtils.pass("Page back to plan list after saved the scenario plan!");
                 }
             } else
@@ -264,6 +274,132 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
 
         }
     }
+
+    @Override
+    public void verifyRunBTNInPlanDetail(String planName, String scenarioName) throws Exception {
+        //search the plan
+        if (searchAPlan(planName)) {
+            //find the scenario plan and enter its detail
+            if(goToScenarioPlanDetail(planName,scenarioName)){
+                //check the run forecast button
+                if(isElementLoaded(generateForecastButton,5)){
+                    //click the generate forecast button to begin to run forecast
+                    clickTheElement(generateForecastButton);
+                    if(isElementLoaded(forecastRunDialog,5))
+                        //click generate
+                        clickTheElement(forecastGenerateBTNOnDialog);
+                    //check the stop link and progress bar displayed.
+                    if(isElementLoaded(scenarioPlanForecastStopToRunLink,5)&&areListElementVisible(scenarioPlanForecastRunProgressBar,10)) {
+                        SimpleUtils.pass("The forecast begin to run and show the in progress bar and can be stopped");
+                        //click the stop link to stop it
+                        clickTheElement(scenarioPlanForecastStopToRunLink);
+                        if(isElementLoaded(scenarioPlanStopForecastDialog)) {
+                            //click stop to stop the job
+                            clickTheElement(scenarioPlanStopForecastDialog.findElement(By.cssSelector("lg-button[label=\"Stop\"] button")));
+                            //check the stop link changed to re-run
+                            if(areListElementVisible(scenarioPlanReRunBTNs,5)){
+                                SimpleUtils.pass("The Re-run link is show after stop the forecast job");
+                                //click re-run link to re-run
+                                clickTheElement(scenarioPlanReRunBTNs.get(0));
+                                if(isElementLoaded(forecastReRunDialog,5)){
+                                    SimpleUtils.pass("The Re-generate demand forecast dialog pops up successfully!");
+                                    clickTheElement(forecastGenerateBTNOnDialog);
+                                    //check the stop link and progress bar show again.
+                                    if(isElementLoaded(scenarioPlanForecastStopToRunLink)&&areListElementVisible(scenarioPlanForecastRunProgressBar,10))
+                                        SimpleUtils.pass("The forecast job is re runing again!");
+                                }
+                                //click back to navigate back to plan list page
+                                clickTheElement(scenarioPlanBackLink);
+                                waitForSeconds(3);
+
+                            }
+                        }
+
+
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean checkScenarioPlanExist(String planName,String scplanName ) throws Exception{
+        boolean scenarioPlanExist=false;
+        if(searchAPlan(planName)) {
+            if (!areListElementVisible(scenarioPlans, 5))
+                //click the plan to expand
+                clickTheElement(planSearchedResults.get(0).findElement(By.cssSelector("div:nth-child(1)")));
+            waitForSeconds(2);
+            if (areListElementVisible(scenarioPlans)) {
+                SimpleUtils.pass("Plan with scenario plans loaded successfully after it was expanded!");
+                for (WebElement scplan : scenarioPlans) {
+                    if (scplan.findElement(By.cssSelector(" div:nth-child(1)")).getText().trim().equals(scplanName)) {
+                        scenarioPlanExist = true;
+                        SimpleUtils.pass("Find the scenario plan successfully!");
+                        break;
+                    }
+                }
+            }
+        }
+        return scenarioPlanExist;
+    }
+
+
+    @Override
+    public void editAScenarioPlan(String planName,String scplanName) throws Exception {
+        if (searchAPlan(planName)) {
+            if (!areListElementVisible(scenarioPlans, 5))
+                //click the plan to expand
+                clickTheElement(planSearchedResults.get(0).findElement(By.cssSelector("div:nth-child(1)")));
+            waitForSeconds(2);
+            if (areListElementVisible(scenarioPlans)) {
+                SimpleUtils.pass("Plan with scenario plans loaded successfully after it was expanded!");
+                for (WebElement scplan : scenarioPlans) {
+                    if (scplan.findElement(By.cssSelector(" div:nth-child(1)")).getText().trim().equals(scplanName)) {
+                        SimpleUtils.pass("Find the scenario plan successfully!");
+                        //get the scenario plan title in list
+                        String scplanNameInList = scplan.findElement(By.cssSelector("div:nth-child(1)")).getText().trim();
+                        //click the edit to edit the scenario plan
+                        if (isElementLoaded(scplan.findElement(By.cssSelector(" lg-button[label=\"Edit\"]")))) {
+                            clickTheElement(scplan.findElement(By.cssSelector(" lg-button[label=\"Edit\"]")));
+                            if (isElementLoaded(scenarioPlanEditDialog, 5)) {
+                                SimpleUtils.pass("The scenario plan edit dialog pops up successfully");
+                                //input the scenario plan name
+                                editScenarioPlanName.clear();
+                                editScenarioPlanName.sendKeys(scplanName + "-Updated");
+                                //click ok
+                                planSaveButton.click();
+                                waitForSeconds(3);
+                                //check the updated successfully
+                                boolean planupdated=checkScenarioPlanExist(planName, scplanName + "-Updated");
+                                SimpleUtils.assertOnFail("The scenario plan does not updated successfully!",planupdated,false);
+                                //do archive the scenario plan
+                                archiveAPlan(planName, scplanName + "-Updated");
+                            }
+                        }
+                    }
+                    break;
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public void checkCompleteForecastPlan(String planName,String scplanName) throws Exception{
+        if(goToScenarioPlanDetail(planName,scplanName)){
+            //check the status of the plan
+            if(getScenarioPlanStatus().equals("Completed")){
+                //check the forecast status is complete and progress bar is 100%
+                boolean forecastStatus=areListElementVisible(scenarioPlanJobsStatus,10)&&scenarioPlanJobsStatus.get(0).getText().equals("Status:Completed");
+                SimpleUtils.assertOnFail("The forecast status of complete scenario plan not loaded or status is incorrect!",forecastStatus,false);
+                //continue to check the progress bar
+                boolean forecastProgressBar=(areListElementVisible(scenarioPlanForecastRunProgressBar,10)&& scenarioPlanForecastRunProgressBar.get(0).getAttribute("style").contains("width: 250px"));
+                SimpleUtils.assertOnFail("The forecast status progress bar for complete scenario plan is incorrect!",forecastProgressBar,false);
+
+                }
+
+            }
+        }
 
     @Override
     public boolean verifyCreatePlanButtonAvail(String upperfieldName) throws Exception {
@@ -277,6 +413,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     @Override
     public boolean searchAPlan(String keywords) throws Exception {
         Boolean isExist = false;
+        //click the plan navigation to make sure you are in plan list page
         if (isElementLoaded(planSearchInputField, 3)) {
             SimpleUtils.pass("Plan search input field loaded successfully!");
             waitForSeconds(5);
@@ -331,8 +468,6 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                             SimpleUtils.pass("The latest updated data show as the first of record successfully!");
                         //recover the data
                         if (searchAPlan(planName + "-Updated")) {
-//                            planSearchedResults.get(0).click();
-//                            planSearchedResults.get(0).findElement(By.cssSelector("div:nth-child(1)")).click();
                             planSearchedResults.get(0).findElement(By.cssSelector("lg-button[label=\"Edit\"]")).click();
                             waitForSeconds(2);
                             editParentPlanName.clear();
@@ -609,6 +744,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
         //check the latest updated data will show as the first one
         if (searchAPlan(planName)) {
             if (!areListElementVisible(scenarioPlans, 5))
+                //click the plan to expand
                 clickTheElement(planSearchedResults.get(0).findElement(By.cssSelector("div:nth-child(1)")));
             waitForSeconds(2);
             if (areListElementVisible(scenarioPlans)) {

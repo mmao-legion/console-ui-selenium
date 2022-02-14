@@ -37,7 +37,7 @@ public class LaborModelPage extends BasePage {
     private WebElement searchBox;
     @FindBy(css = "div.lg-search-icon")
     private WebElement searchIcon;
-    @FindBy(css = "table.lg-table>tbody:nth-child(2)>tr>td:nth-child(2)>lg-button")//label
+    @FindBy(css = "div.lg-table>div.lg-templates-table-improved__grid-row:nth-child(2)>div.lg-templates-table-improved__grid-column:nth-child(2)>lg-button")//label
     private WebElement firstTemplateNameOfList;
     @FindBy(css = "table.lg-table>tbody:nth-child(2)>tr>td:nth-child(3)>lg-eg-status") //type
     private WebElement firstTemplateStatusOfList;

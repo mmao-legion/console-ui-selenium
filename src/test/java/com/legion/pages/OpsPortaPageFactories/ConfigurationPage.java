@@ -117,4 +117,5 @@ public interface ConfigurationPage {
     public void clickOnTemplateDetailTab() throws Exception;
     public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception;
     public void deleteSpecifyDynamicEmployeeGroupsInList(String groupName) throws Exception;
+    public void clickOnBackBtnOnTheTemplateDetailAndListPage() throws Exception;
 }

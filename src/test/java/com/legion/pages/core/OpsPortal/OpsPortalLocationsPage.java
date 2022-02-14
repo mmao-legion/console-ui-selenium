@@ -3248,6 +3248,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
 	private List<WebElement> workRolesInSchedulingRulesInLocationLevel;
 
+	@FindBy(css = "input[placeholder=\"Search by Work Role\"]")
+	private WebElement searchByWorkRoleInput;
+
 	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
 	private List<WebElement> workRolesInAssignmentRulesInLocationLevel;
 	@Override
@@ -3729,19 +3732,42 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Ok button load failed",false);
 	}
 
+	@FindBy(css = "[tab-title=\"Details\"] div.lg-pagination__arrow--right")
+	private List<WebElement> paginationRightArrow;
 	@Override
-	public void  goToScheduleRulesListAtLocationLevel(String workRole) {
-		if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel, 5)) {
-			for (WebElement s : workRolesInSchedulingRulesInLocationLevel) {
-				String workRoleName = s.findElement(By.cssSelector("tr>td:nth-child(1)")).getText().trim();
-				if(workRoleName.contains(workRole)){
-					clickTheElement(s.findElement(By.cssSelector("tr>td:nth-child(2) button")));
-					waitForSeconds(5);
-					break;
+	public void  goToScheduleRulesListAtLocationLevel(String workRole) throws Exception {
+		if (isElementLoaded(searchByWorkRoleInput, 10)) {
+			searchByWorkRoleInput.clear();
+			searchByWorkRoleInput.sendKeys(workRole);
+			waitForSeconds(1);
+			if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel, 5)) {
+				for (WebElement s : workRolesInSchedulingRulesInLocationLevel) {
+					String workRoleName = s.findElement(By.cssSelector("tr>td:nth-child(1)")).getText().trim();
+					if (workRoleName.contains(workRole)) {
+						clickTheElement(s.findElement(By.cssSelector("tr>td:nth-child(2) button")));
+						waitForSeconds(5);
+						break;
+					}
 				}
-			}
-		} else
-			SimpleUtils.fail("Failed to loading the work role list", false);
+				int i = 0;
+				while (i <10 && areListElementVisible(paginationRightArrow, 5)
+						&& !paginationRightArrow.get(0).getAttribute("class").contains("disabled")) {
+					clickTheElement(paginationRightArrow.get(0));
+					for (WebElement s : workRolesInSchedulingRulesInLocationLevel) {
+						String workRoleName = s.findElement(By.cssSelector("tr>td:nth-child(1)")).getText().trim();
+						if (workRoleName.contains(workRole)) {
+							clickTheElement(s.findElement(By.cssSelector("tr>td:nth-child(2) button")));
+							waitForSeconds(5);
+							break;
+						}
+					}
+					i++;
+				}
+			} else
+				SimpleUtils.fail("Failed to loading the work role list", false);
+		} else {
+			SimpleUtils.fail("Search Work Role Input box failed to load!", false);
+		}
 	}
 
 	@FindBy(css = "lg-button[label=\"Edit\"]")

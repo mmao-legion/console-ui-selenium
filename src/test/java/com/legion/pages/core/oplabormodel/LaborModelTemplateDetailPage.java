@@ -1,9 +1,12 @@
 package com.legion.pages.core.oplabormodel;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import javax.xml.crypto.dsig.SignatureMethod;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -81,8 +84,11 @@ public class LaborModelTemplateDetailPage extends BasePage {
         backButton.click();
     }
 
-    public void edit() {
-        editButton.click();
+    public void edit() throws Exception {
+        if (isElementLoaded(editButton, 5)) {
+            clickTheElement(editButton);
+        } else
+            SimpleUtils.fail("Edit button fail to load! ", false);
     }
 
     public void close() {
@@ -136,7 +142,7 @@ public class LaborModelTemplateDetailPage extends BasePage {
     }
 
     public void okInModal() {
-        okButtonInModal.click();
+        clickTheElement(okButtonInModal);
     }
 
     public void selectTasks(String taskName) {
@@ -168,8 +174,8 @@ public class LaborModelTemplateDetailPage extends BasePage {
     }
 
     public void cancel() {
-        cancelButton.click();
-        cancelEditing.click();
+        clickTheElement(cancelButton);
+        clickTheElement(cancelEditing);
     }
 
 }
