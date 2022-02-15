@@ -336,7 +336,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Page back to location landing page after cancel from create location page");
 		}
 
-		//---close the run of image upload, as it can not run at remote selenium grid master server
+		/*---close the run of image upload, as it can not run at remote selenium grid master server
         clickTheElement(addLocationBtn);
 		waitForSeconds(2);
 		//check the import and remove picture at create location page
@@ -363,6 +363,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		clickTheElement(backBtnInLocationDetailsPage);
 		clickTheElement(leaveThisPage);
 		waitForSeconds(3);
+		 */
 
 
 	}
