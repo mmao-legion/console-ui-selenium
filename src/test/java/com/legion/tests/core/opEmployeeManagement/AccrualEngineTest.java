@@ -98,6 +98,7 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Pandemic3", "0");//Specified~Specified/worked hours/Rate /allowance in days 126(out of)
         expectedTOBalance.put("Pandemic4", "0");//Specified~Specified/lump-sum /allowance in days 127(in)
         expectedTOBalance.put("Spring Festival", "0");//None distribution
+
         //Delete a worker's accrual
         String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
         Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
@@ -106,6 +107,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
         Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to assert clear the accrual balance!");
+
         //Edit the None distribution time off to 20 hours
         timeOffPage.editTheLastTimeOff("20");
         OpsCommonComponents opsCommonPon = new OpsCommonComponents();
@@ -227,12 +229,9 @@ public class AccrualEngineTest extends TestBase {
         //expected accrual
         expectedTOBalance.put("Annual Leave3", "2");// balance 7  max carryover: 2
         expectedTOBalance.put("Bereavement3", "3");// balance 33  max carryover: 2   +1hour accrued
-        expectedTOBalance.put("Covid3", "0");// balance 0  max carryover: 2
         expectedTOBalance.put("Grandparents Day Off3", "2");//balance 8  max carryover: 2  //HireDate~Specified/lump-sum
         expectedTOBalance.put("Pandemic1", "2");//7 hours  max carryover: 2  //Specified~Specified/Monthly /calendar month/begin /allowance in days 126(out of)
         expectedTOBalance.put("Pandemic2", "2");//52 hours  max carryover: 2 //Specified~Specified/weekly /allowance in days 127(in)
-        //expectedTOBalance.put("Pandemic3", "2");//2.02 hours max carryover: 2 //Specified~Specified/worked hours/Rate /allowance in days 126(out of)
-        expectedTOBalance.put("Pandemic3", "1.01");
         expectedTOBalance.put("Pandemic4", "2");//8 hours  max carryover: 2  //Specified~Specified/lump-sum /allowance in days 127(in)
         //and verify the result in UI
         refreshPage();
@@ -248,7 +247,8 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertEquals(getHttpStatusCode(accrualResponse7), 200, "Failed to run accrual job!");
         //expected accrual
         expectedTOBalance.put("Annual Leave2", "8");//5 +3hours(newly accrued)
-        expectedTOBalance.put("Grandparents Day Off3", "10");//2(max carryover)+8(newly accrued)//HireDate~Specified/lump-sum
+        //expectedTOBalance.put("Grandparents Day Off3", "10");//2(max carryover)+8(newly accrued)//HireDate~Specified/lump-sum
+        //not granted 8 hours on Jan-1st
         expectedTOBalance.put("Pandemic1", "3");//2(max carryover)+1(newly accrued) //Specified~Specified/Monthly /calendar month/begin /allowance in days 126(out of)
         expectedTOBalance.put("Pandemic4", "10");//2(max carryover)+8(newly accrued) //Specified~Specified/lump-sum /allowance in days 127(in)
         //and verify the result in UI
@@ -265,6 +265,7 @@ public class AccrualEngineTest extends TestBase {
         //expected accrual
         expectedTOBalance.put("Annual Leave3", "3");//2 +1hours(newly accrued)
         expectedTOBalance.put("Bereavement3", "7");//3 +4hours(newly accrued)
+        expectedTOBalance.put("Grandparents Day Off3", "10");//need to delete
         expectedTOBalance.put("Pandemic2", "6");//2 +4hours
         //and verify the result in UI
         refreshPage();
