@@ -3191,7 +3191,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(isElementLoaded(manageDynamicGroupPopupTitle)){
 				SimpleUtils.pass("The edit dynamic group dialog pop up successfully!");
 				//cancel
-				clickTheElement(okButtonOnManageDynamicGroupPopup.findElement(By.xpath("./preceding-sibling::lg-button/button")));
+				clickTheElement(cancelButtonOnManageDynamicGroupPopup);
+				waitForSeconds(1);
 			}
 			else
 			   SimpleUtils.fail("The edit dynamic group dialog not pop up!",true);
@@ -3254,7 +3255,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement formulaTextAreaOfDynamicGroup;
 	@FindBy(css="lg-button[label=\"OK\"]")
 	private WebElement okButtonOnManageDynamicGroupPopup;
-	@FindBy(css="lg-button[label=\"Cancel\"]")
+	@FindBy(css="modal[modal-title=\"Manage Dynamic Location Group\"] lg-button[label=\"Cancel\"]")
 	private WebElement cancelButtonOnManageDynamicGroupPopup;
 	@Override
 	public void createDynamicGroup(String name,String criteria,String formula) throws Exception{
