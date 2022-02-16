@@ -38,7 +38,7 @@ public class TimeOffRequestTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time Off Request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyEmployeeCanRequestAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyEmployeeCanRequestAsInternalAdminOfTimeOffRequestTest(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
@@ -67,7 +67,8 @@ public class TimeOffRequestTest extends TestBase {
         configurationPage.setValueForTimeOffRequestRules("Probation Period", "190");
         configurationPage.setProbationUnitAs("Days");
         configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "9999");
-        configurationPage.setMaxAvailableHours("120");
+        configurationPage.addServiceLever();
+        configurationPage.setMaxAvailableHours("N/A");
         configurationPage.saveTimeOffConfiguration(true);
 
         //configure time off reason2
