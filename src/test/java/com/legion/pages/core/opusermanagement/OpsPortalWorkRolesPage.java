@@ -66,6 +66,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
     }
 
     public void searchByWorkRole(String workRole) throws Exception {
+        waitForSeconds(2);
         if (isElementLoaded(searchBox, 15)) {
             searchBox.clear();
             searchBox.sendKeys(workRole);
@@ -111,12 +112,14 @@ public class OpsPortalWorkRolesPage extends BasePage {
     }
 
     public void editAnExistingWorkRole(String oldName) throws Exception {
+        waitForSeconds(2);
         clickEditButton();
         searchByWorkRole(oldName);
         goToWorkRoleDetails();//go to work role details page
     }
 
     public void addNewWorkRole() {
+        waitForSeconds(2);
         clickEditButton();
         addWorkRoleButton.click();//go to work role details page
     }
@@ -140,6 +143,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
 
     //cancel editing
     public void cancel() {
+        waitForSeconds(2);
         cancelButton.click();
     }
 
@@ -152,12 +156,14 @@ public class OpsPortalWorkRolesPage extends BasePage {
     }
 
     public void cancelEditing() {
+        waitForSeconds(2);
         yesToCancelEditing.click();
     }
 
 
     //disable action
     public void disableAWorkRole(String name) throws Exception {
+        waitForSeconds(2);
         clickEditButton();
         searchByWorkRole(name);
         clickDisableButton();
@@ -172,6 +178,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
     }
 
     public void okToDisableAction() {
+        waitForSeconds(2);
         okToDisableAction.click();
     }
 

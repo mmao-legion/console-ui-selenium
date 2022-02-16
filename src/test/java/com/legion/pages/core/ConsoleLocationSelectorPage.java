@@ -470,7 +470,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                                     }
                                 }
                                 if (!isDistrictMatched) {
-                                    SimpleUtils.fail("District does matched with '" + districtName + "'", true);
+                                    SimpleUtils.fail("District does matched with '" + districtName + "'", false);
                                 }
                             }
                         }
@@ -960,7 +960,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                     }
                 }
                 if (!isDistrictMatched) {
-                    SimpleUtils.fail("District does matched with '" + districtName + "'", true);
+                    SimpleUtils.fail("District does matched with '" + districtName + "'", false);
                 }
             }
         }
@@ -1137,7 +1137,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
                         }
                     }
                     if (!isDistrictMatched) {
-                        SimpleUtils.fail("District does matched with '" + districtName + "'", true);
+                        SimpleUtils.fail("District does matched with '" + districtName + "'", false);
                     }
                 }
             }

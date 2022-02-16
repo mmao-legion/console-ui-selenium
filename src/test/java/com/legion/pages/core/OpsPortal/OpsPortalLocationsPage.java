@@ -9,18 +9,15 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.tests.TestBase.switchToNewWindow;
-import static com.legion.tests.TestBase.uploadFiles;
 import static com.legion.utils.MyThreadLocal.*;
 
 public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
@@ -339,7 +336,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Page back to location landing page after cancel from create location page");
 		}
 
-		//---close the run of image upload, as it can not run at remote selenium grid master server
+		/*---close the run of image upload, as it can not run at remote selenium grid master server
         clickTheElement(addLocationBtn);
 		waitForSeconds(2);
 		//check the import and remove picture at create location page
@@ -366,6 +363,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		clickTheElement(backBtnInLocationDetailsPage);
 		clickTheElement(leaveThisPage);
 		waitForSeconds(3);
+		 */
 
 
 	}
@@ -3541,6 +3539,25 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		} else
 			SimpleUtils.fail("Edit location button load failed", false);
 	}
+
+	@Override
+	public void checkLocationGroupSetting(String locationName) throws Exception {
+		goToLocationDetailsPage(locationName);
+		editLocationBtnIsClickableInLocationDetails();
+		//check the Location Group Setting
+		clickTheElement(locationGroupSelect);
+		waitForSeconds(2);
+		List<WebElement> options=locationGroupSelect.findElements(By.cssSelector("option"));
+		int enabledCount=0;
+		for(WebElement op:options){
+			if(op.isEnabled())
+				enabledCount++;
+		}
+		//Assert only one option is enabled
+		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option",enabledCount==1,false);
+        //back to list
+		clickTheElement(locationBackLink);
+		}
 
 	@Override
 	public void actionsForEachTypeOfTemplate(String template_type, String action) {

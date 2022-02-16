@@ -1969,7 +1969,7 @@ public class LocationsTest extends TestBase {
             SimpleUtils.report("New created location with today as effective day status is incorrect");
         String currentTime2 = dfs.format(new Date());
         String locationName2 = "AutoTestLocationCheck"+currentTime2;
-        //create a regular location with effective day as a future daya
+        //create a regular location with effective day as a future date
         locationsPage.addNewRegularLocationWithDate(locationName2,searchCharactor, index,-5);
         //check the location status
         if(locationsPage.searchLocationAndGetStatus(currentTime2).equals("CREATED"))
