@@ -362,4 +362,29 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
         return false;
     }
+
+    @Override
+    public void verifyConflictDetectionInfo() throws Exception {
+        if (isElementLoaded(conflictDetectedWindow.findElement(By.cssSelector(".lg-modal__title-icon")), 10)
+                && conflictDetectedWindow.findElement(By.cssSelector(".lg-modal__title-icon")).getAttribute("innerText").equalsIgnoreCase("conflict detected")
+                && conflictDetectedWindow.findElement(By.cssSelector(".dynamic-group-conflict-title")).getAttribute("innerText").trim().contains("The Dynamic Group is conflicting with the dynamic groups below")
+                && conflictDetectedWindow.findElements(By.cssSelector(".dynamic-group-conflict-list")).size() > 0){
+            SimpleUtils.pass("Title and text and content are expected!");
+        } else {
+            SimpleUtils.fail("Title and text and content are not expected!", false);
+        }
+    }
+
+    @Override
+    public void clickOnButtonOnTheConflictDetectedWindow(String cancelOrSave) throws Exception {
+        if (cancelOrSave.toLowerCase().contains("save") && isElementLoaded(conflictDetectedWindow.findElement(By.cssSelector("lg-button[label=\"Save\"] button")))){
+            clickTheElement(conflictDetectedWindow.findElement(By.cssSelector("lg-button[label=\"Save\"] button")));
+            SimpleUtils.pass("Save button is clicked!");
+        } else if (cancelOrSave.toLowerCase().contains("cancel") && isElementLoaded(conflictDetectedWindow.findElement(By.cssSelector("lg-button[label=\"Cancel\"] button")))){
+            clickTheElement(conflictDetectedWindow.findElement(By.cssSelector("lg-button[label=\"Cancel\"] button")));
+            SimpleUtils.pass("Cancel button is clicked!");
+        } else {
+            SimpleUtils.fail("Input string is not expected or buttons are not loaded!", false);
+        }
+    }
 }

@@ -22,4 +22,6 @@ public interface SettingsAndAssociationPage {
     public List<String> getCriteriaListFromTheAssociationPage() throws Exception;
     public String clickOnTestBtnAndGetResultString() throws Exception;
     public boolean areFieldsCheckInputEnabled() throws Exception;
+    public void verifyConflictDetectionInfo() throws Exception;
+    public void clickOnButtonOnTheConflictDetectedWindow(String cancelOrSave) throws Exception;
 }

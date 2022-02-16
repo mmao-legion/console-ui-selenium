@@ -2177,6 +2177,26 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
+	public void chooseSaveOrPublishBtnAndClickOnTheBtn(String button) throws Exception {
+		if (isElementLoaded(dropdownArrowButton,5)) {
+			scrollToElement(dropdownArrowButton);
+			click(dropdownArrowButton);
+			if (button.toLowerCase().contains("save")){
+				clickTheElement(saveAsDraftButton);
+			} else if (button.toLowerCase().contains("publish now")){
+				clickTheElement(publishNowButton);
+			} else if (button.toLowerCase().contains("different time")){
+				clickTheElement(publishLaterButton);
+			} else {
+
+			}
+			click(publishTemplateButton);
+		}else{
+			SimpleUtils.fail("Publish template dropdown button load failed",false);
+		}
+	}
+
+	@Override
 	public void validateAdvanceStaffingRuleShowing(String startEvent,String startOffsetTime,String startEventPoint,String startTimeUnit,
 															 String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
 															 List<String> days,String shiftsNumber) throws Exception{
