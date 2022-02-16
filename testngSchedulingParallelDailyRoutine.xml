@@ -476,7 +476,7 @@
         <classes>
             <class name="com.legion.tests.core.ApproveActivitiesByHomeOrNonHomeManagerTest">
                 <methods>
-                    <include name="verifyActivityOfClaimOpenShiftNeedApprovalWhenSetOpenShiftSettingToAlwaysAsTeamMember" />
+ <!--                   <include name="verifyActivityOfClaimOpenShiftNeedApprovalWhenSetOpenShiftSettingToAlwaysAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-4832-->
                     <include name="verifyActivityOfClaimOpenShiftNoNeedApprovalForHomeManagerWhenSetOpenShiftSettingToNonHomeLocationOnlyAsTeamMember" />
                 </methods>
             </class>

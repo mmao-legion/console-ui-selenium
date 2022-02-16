@@ -307,7 +307,7 @@ public class HardStopForMinorViolation extends TestBase {
                 shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            String minorName = cinemarkMinors.get("Minor16");
+            String minorName = cinemarkMinors.get("Minor16-2");
             shiftOperatePage.deleteTMShiftInWeekView("minor");
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             shiftOperatePage.deleteTMShiftInWeekView("open");
@@ -350,21 +350,8 @@ public class HardStopForMinorViolation extends TestBase {
             //Login as TM to claim the open shift that has minor violation
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
-            loginPage.loginToLegionWithCredential("nora+minor16a@legion.co", "legionco1");
-            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            loginPage.loginToLegionWithCredential("nora+minor16@legion.co", "legionco1");
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-////            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-//            i = 0;
-//            while (i <5 && !scheduleShiftTablePage.areShiftsPresent()) {
-//                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-//                scheduleCommonPage.navigateToNextWeek();
-//                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-//                String cardName = "WANT MORE HOURS?";
-//                SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
-//                String linkName = "View Shifts";
-//                smartCardPage.clickLinkOnSmartCardByName(linkName);
-//                i++;
-//            }
             SimpleUtils.assertOnFail("Open shift should not loaded!", !scheduleShiftTablePage.areShiftsPresent(), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
