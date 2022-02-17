@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+
 public interface PlanPage {
     
     public void clickOnPlanConsoleMenuItem() throws Exception;
@@ -19,6 +20,9 @@ public interface PlanPage {
     public void checkCompleteForecastPlan(String planName,String scplanName) throws Exception;
     public void editAScenarioPlan(String planName,String scplanName) throws Exception;
 //    public int getAllPlansInList() throws Exception;
+    public boolean verifyPlanConsoleTabShowing() throws Exception;
+    public boolean verifyCreatePlanButtonShowing() throws Exception;
+
 
 
 }

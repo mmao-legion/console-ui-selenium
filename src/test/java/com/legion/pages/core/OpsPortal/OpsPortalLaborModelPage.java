@@ -10,6 +10,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,8 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}else
 			SimpleUtils.fail("Work Roles Tile load failed",false);
 	}
-	@FindBy(css="[ng-repeat-start=\"item in $ctrl.sortedRows\"]")
+	@FindBy(css="div.lg-templates-table-improved__grid-row.ng-scope")
+// @FindBy(css="[ng-repeat-start=\"item in $ctrl.sortedRows\"]")
 	private List<WebElement> templatesList;
 	@FindBy(css="lg-button.name button span.ng-binding")
 	private List<WebElement> templateNameList;
@@ -98,7 +100,8 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
-							clickTheElement(getDriver().findElement(By.cssSelector(".child-row button")));
+							clickTheElement(templateNameList.get(i+1));
+// 							clickTheElement(getDriver().findElement(By.cssSelector(".child-row button")));
 						}else{
 							clickTheElement(templatesList.get(i).findElement(By.tagName("button")));
 						}
@@ -828,13 +831,15 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	@FindBy(css="div [ng-if=\"!chooseFile && !checkValid\"]")
 	private WebElement contextOfUpload;
 	@FindBy(css = "lg-button[label=\"Cancel\"]")
-	private WebElement cancelBtnInImportLocationPage;
+	private WebElement cancelBtnInImportSubscribedLocationsPage;
 	@FindBy(css = "lg-button[label=\"Import\"]")
-	private WebElement importBtnInImportLocationPage;
+	private WebElement importBtnInSubscribedLocationsPage;
 	@FindBy(css = "input[type=\"file\"]")
 	private WebElement uploaderFileInputBtn;
 	@FindBy(css = "lg-button[label=\"OK\"]")
 	private WebElement okBtnInImportLocationPage;
+	@FindBy(css=".lg-toast>span")
+	private WebElement toast;
 
 	@Override
 	public void verifyImportLocationLevelWorkRoleSubscription() {
@@ -845,11 +850,15 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 				SimpleUtils.pass("Import location level work role page show well");
 			} else
 				SimpleUtils.fail("Import location level work role page load failed", true);
-			uploaderFileInputBtn.sendKeys( pth+"/src/test/resources/WorkerRoleSubscription.csv");
+			uploaderFileInputBtn.sendKeys( pth + "/src/test/resources/WorkerRoleSubscription.csv");
 			waitForSeconds(5);
-			click(importBtnInImportLocationPage);
-			SimpleUtils.pass("File import action done");
-
+			click(importBtnInSubscribedLocationsPage);
+			waitUntilElementIsVisible(toast);
+			if(toast.getText().trim().contains("Success")){
+				SimpleUtils.pass("Import location work role successfully!");
+			}else {
+				SimpleUtils.fail("Import location work role failed!",false);
+			}
 		} else
 			SimpleUtils.fail("Import button load failed", true);
 	}
@@ -858,8 +867,8 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	public boolean verifyImportLocationWorkRolePageShow(){
 		String uploadText = "Upload csv file here";
 		if (isElementEnabled(importLocationsWorkRolePageTitle, 5) && isElementEnabled(contextOfUpload)
-				&& isElementEnabled(importBtnInImportLocationPage) &&
-				isElementEnabled(cancelBtnInImportLocationPage)) {
+				&& isElementEnabled(importBtnInSubscribedLocationsPage) &&
+				isElementEnabled(cancelBtnInImportSubscribedLocationsPage)) {
 			if (contextOfUpload.getText().trim().contains(uploadText)) {
 				return true;
 			}
@@ -869,17 +878,22 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 
 	@Override
 	public void disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate() {
-//		String pth = System.getProperty("user.dir");
+		String pth = System.getProperty("user.dir");
 		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
 			click(locationSubscriptionImportButton);
 			if (verifyImportLocationWorkRolePageShow()) {
 				SimpleUtils.pass("Import location level work role page show well");
 			} else
 				SimpleUtils.fail("Import location level work role page load failed", true);
-			uploaderFileInputBtn.sendKeys("/src/test/resources/AutoUsingForLaborBudgetDisable.csv");
+			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/AutoUsingForLaborBudgetDisable.csv");
 			waitForSeconds(5);
-			click(importBtnInImportLocationPage);
-			SimpleUtils.pass("File import action done");
+			click(importBtnInSubscribedLocationsPage);
+			waitUntilElementIsVisible(toast);
+			if(toast.getText().trim().contains("Success")){
+				SimpleUtils.pass("Import location work role successfully!");
+			}else {
+				SimpleUtils.fail("Import location work role failed!",false);
+			}
 		}
 	}
 
@@ -892,10 +906,15 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 				SimpleUtils.pass("Import location level work role page show well");
 			} else
 				SimpleUtils.fail("Import location level work role page load failed", true);
-			uploaderFileInputBtn.sendKeys("/src/test/resources/AutoUsingForLaborBudgetEnable.csv");
+			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/AutoUsingForLaborBudgetEnable.csv");
 			waitForSeconds(5);
-			click(importBtnInImportLocationPage);
-			SimpleUtils.pass("File import action done");
+			click(importBtnInSubscribedLocationsPage);
+			waitUntilElementIsVisible(toast);
+			if(toast.getText().trim().contains("Success")){
+				SimpleUtils.pass("Import location work role successfully!");
+			}else {
+				SimpleUtils.fail("Import location work role failed!",false);
+			}
 		} else
 			SimpleUtils.fail("Import button load failed", true);
 	}
