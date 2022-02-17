@@ -482,7 +482,7 @@
             </class>
         </classes>
     </test>
-https://legiontech.atlassian.net/browse/SCH-4832-->verifyScheduleFunctionalityWeekViewAsInternalAdmin
+https://legiontech.atlassian.net/browse/SCH-4832-->
     <test name="Availability Approval Required Test">
         <classes>
             <class name="com.legion.tests.core.AvailabilityApprovalRequiredTest">
