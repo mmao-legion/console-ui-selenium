@@ -2,10 +2,12 @@ package com.legion.pages.core.opusermanagement;
 
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 
 
 import java.util.ArrayList;
@@ -191,19 +193,36 @@ public class DynamicEmployeePage extends BasePage {
         removeInRemoveModal.click();
     }
 
-    public void cancelRemove() {
-        cancelInRemoveModal.click();
+    public void cancelRemove() throws Exception {
+        if (isElementLoaded(cancelInRemoveModal, 5)) {
+            clickTheElement(cancelInRemoveModal);
+        }
     }
 
     //create
-    public void cancelCreating() {
-        cancelButtonInModal.click();
+    public void cancelCreating() throws Exception {
+        if (isElementLoaded(cancelButtonInModal, 5)) {
+            clickTheElement(cancelButtonInModal);
+        }
     }
 
     public void saveCreating() {
-        waitForSeconds(1);
+        waitForSeconds(3);
         clickTheElement(okButtonInModal);
     }
 
-
+    @FindBy(css = "[ng-repeat=\"group in filterdynamicGroups\"]")
+    private List<WebElement> dynamicGroups;
+    public void removeSpecificGroup(String groupName) {
+        String removeWarningMsg = "Are you sure you want to remove this dynamic employee group?";
+        searchGroup(groupName);
+        if (areListElementVisible(dynamicGroups, 5)) {
+            for (WebElement group : dynamicGroups){
+                clickTheElement(group.findElement(By.cssSelector("td.tr lg-button:nth-child(2)>button")));
+                Assert.assertEquals(getContentOfRemoveModal(), removeWarningMsg, "Failed to open the remove modal!");
+                removeTheGroup();
+            }
+        } else
+            SimpleUtils.report("The group: " +groupName +" is not exists! ");
+    }
 }

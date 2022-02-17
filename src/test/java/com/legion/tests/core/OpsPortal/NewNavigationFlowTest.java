@@ -573,7 +573,7 @@ public class NewNavigationFlowTest extends TestBase {
 
         //change district to show all locations
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("add district via con");
+        locationSelectorPage.changeDistrict("Fiona");
 
         String searchLocationText = "*";
         Thread.sleep(4000);
@@ -686,12 +686,11 @@ public class NewNavigationFlowTest extends TestBase {
     public void verifyNavigationBarRecentlyViewListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         List<String> searchDistrictsList = new ArrayList<String>(){{
-            add("District1002");
-            add("District1003");
-            add("OMDistrict1");
-            add("1204-1");
-            add("add district via con");
-            add("DistrictEmpty001");
+            add("Fiona");
+            add("FromRegionToDistrict1223212405");
+            add("FromRegionToDistrict1227212704");
+            add("DistrictNavigation1");
+            add("DistrictNavigation2");
         }};
 
         List<String> finalDistrictsList = new ArrayList<String>();
@@ -715,12 +714,12 @@ public class NewNavigationFlowTest extends TestBase {
             if(finalDistrictsList.get(i).equals(searchDistrictsList.get(i))){
                 SimpleUtils.pass("The " + (i+1) + " location is " + finalDistrictsList.get(i));
             }else{
-                SimpleUtils.fail("The order of districts list is NOT correct",true);
+                SimpleUtils.fail("The order of districts list is NOT correct",false);
 
             }
         }
         }else {
-            SimpleUtils.fail("The count of districts is NOT correct",true);
+            SimpleUtils.fail("The count of districts is NOT correct",false);
         }
     }
 }

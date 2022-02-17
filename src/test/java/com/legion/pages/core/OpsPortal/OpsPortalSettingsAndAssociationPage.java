@@ -7,6 +7,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -127,10 +129,16 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
     }
 
+    @FindBy(css = "lg-button[label=\"Remove\"] button")
+    private WebElement removeConfirmButton;
     @Override
-    public void clickOnRemoveBtnForDynamicGroupOnAssociationPage() throws Exception {
+    public void clickOnRemoveBtnToRemoveDynamicGroupOnAssociationPage() throws Exception {
         if (isElementLoaded(removeDynamicGroupBtn, 10)){
             clickTheElement(removeDynamicGroupBtn);
+            if (isElementLoaded(removeConfirmButton, 10)){
+                clickTheElement(removeConfirmButton);
+                waitForSeconds(1);
+            }
             if (isElementLoaded(addDynamicGroupBtn, 10)){
                 SimpleUtils.pass("Deleted!");
             } else {
@@ -145,13 +153,27 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
     public void clickOnDoneBtnForDynamicGroupOnAssociationPage() throws Exception {
         if (isElementLoaded(doneDynamicGroupBtn, 10)){
             clickTheElement(doneDynamicGroupBtn);
-            if (isElementLoaded(removeDynamicGroupBtn, 10)){
-                SimpleUtils.pass("Saved!");
-            } else {
-                SimpleUtils.fail("Fail to save the group!", false);
-            }
         } else {
             SimpleUtils.fail("Save dynamic group button fail to load!", false);
+        }
+    }
+
+    @FindBy(css = ".modal-dialog [modal-title=\"Conflict Detected\"]")
+    private WebElement conflictDetectedWindow;
+    @Override
+    public boolean ifConflictDetectedWindowShowUP() throws Exception {
+        if (isElementLoaded(conflictDetectedWindow, 10)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void clickOnTheSaveBtnOnConflictDetectedWindow() throws Exception {
+        if (isElementLoaded(conflictDetectedWindow.findElement(By.cssSelector("[label=\"Save\"]")), 10)){
+            clickTheElement(conflictDetectedWindow.findElement(By.cssSelector("[label=\"Save\"]")));
+        } else {
+            SimpleUtils.fail("Fail to find Save button!", false);
         }
     }
 
@@ -159,12 +181,20 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
     private WebElement addDynamicGroupBtn;
     @Override
     public void clickOnAddBtnForDynamicGroupOnAssociationPage() throws Exception {
-        if (isElementLoaded(addDynamicGroupBtn, 10)){
+        if (isAddGroupBtnEnabled()){
             clickTheElement(addDynamicGroupBtn);
             SimpleUtils.pass("Create dynamic group button is clicked!");
         } else {
             SimpleUtils.fail("Create dynamic group button is not loaded!", false);
         }
+    }
+
+    @Override
+    public boolean isAddGroupBtnEnabled() throws Exception {
+        if (isElementLoaded(addDynamicGroupBtn, 10)){
+            return true;
+        }
+        return false;
     }
 
     @FindBy(css = "input[aria-label=\"Group Name\"]")
@@ -219,6 +249,17 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
     }
 
+    @Override
+    public List<String> getCriteriaListFromTheAssociationPage() throws Exception {
+        List<String> resultList = new ArrayList<>();
+        if (areListElementVisible(criteriaOnTheAssociationPage, 10)){
+            for (WebElement criteriaLine: criteriaOnTheAssociationPage){
+                resultList.add(criteriaLine.findElement(By.cssSelector("lg-select[class=\"ng-scope ng-isolate-scope\"] div.input-faked.ng-binding")).getAttribute("innerText").replace("\n","").trim());
+            }
+        }
+        return resultList;
+    }
+
     @FindBy(css = "i[ng-click*=\"deleteCondition\"]")
     private List<WebElement> deleteCriteriaBtnsOnTheAssociationPage;
     @Override
@@ -238,6 +279,112 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             clickTheElement(templateAssociationBTN);
         }else {
             SimpleUtils.fail("Failed to find Association Tab!",false);
+        }
+    }
+
+    @FindBy(css = "[ng-repeat*=\"baseFieldList\"]")
+    private List<WebElement> fieldListFromSettingsTab;
+
+    @Override
+    public List<String> getFieldListFromSettingsTab() throws Exception {
+        List<String> resultList = new ArrayList<>();
+        if (areListElementVisible(fieldListFromSettingsTab, 10)){
+            for (WebElement fieldRow: fieldListFromSettingsTab){
+                if (isElementLoaded(fieldRow.findElement(By.cssSelector("td.ng-binding")), 10)){
+                    resultList.add(fieldRow.findElement(By.cssSelector("td.ng-binding")).getText());
+                }
+            }
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+        return resultList;
+    }
+
+    @Override
+    public void setupRequiredFields(List<String> fields) throws Exception {
+        if (areListElementVisible(fieldListFromSettingsTab, 10)){
+            clearUpSelectedRequiredFields();
+            for (WebElement fieldRow: fieldListFromSettingsTab){
+                if (isElementLoaded(fieldRow.findElement(By.cssSelector("td.ng-binding"))) && fields.contains(fieldRow.findElement(By.cssSelector("td.ng-binding")).getText())){
+                    if (isElementLoaded(fieldRow.findElement(By.tagName("input")), 10) && fieldRow.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")){
+                        waitForSeconds(2);
+                        clickTheElement(fieldRow.findElement(By.tagName("input")));
+                    }
+                }
+            }
+            SimpleUtils.assertOnFail("There is fields failed to be selected!", getDriver().findElements(By.cssSelector("lg-template-setting div.setting-box:first-of-type [ng-repeat*=\"baseFieldList\"] input[class*=\"not-empty\"]")).size() == fields.size(), false);
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+    }
+
+    private void clearUpSelectedRequiredFields() throws Exception{
+        if (areListElementVisible(fieldListFromSettingsTab, 10)){
+            for (WebElement fieldRow: fieldListFromSettingsTab){
+                if (isElementLoaded(fieldRow.findElement(By.tagName("input")), 10)
+                    && fieldRow.findElement(By.tagName("input")).getAttribute("class").contains("not-empty")){
+                    waitForSeconds(2);
+                    clickTheElement(fieldRow.findElement(By.tagName("input")));
+                }
+            }
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+    }
+
+    @FindBy(css = "lg-button[label=\"Test\"] button")
+    private WebElement testButton;
+    @FindBy(css = "[ng-if*=\"testMappingNum\"]")
+    private WebElement testMappingResult;
+    @Override
+    public String clickOnTestBtnAndGetResultString() throws Exception {
+        if (isElementLoaded(testButton, 10)){
+            clickTheElement(testButton);
+            if (isElementLoaded(testMappingResult, 10)){
+                return testMappingResult.getText();
+            }
+        } else {
+            SimpleUtils.fail("Test button is not on the page!", false);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean areFieldsCheckInputEnabled() throws Exception {
+        if (areListElementVisible(fieldListFromSettingsTab, 10)){
+            for (WebElement fieldRow: fieldListFromSettingsTab){
+                if (!isElementLoaded(fieldRow.findElement(By.cssSelector("input[disabled]")), 10)){
+                    return true;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+        return false;
+    }
+
+    @Override
+    public void verifyConflictDetectionInfo() throws Exception {
+        if (isElementLoaded(conflictDetectedWindow.findElement(By.cssSelector(".lg-modal__title-icon")), 10)
+                && conflictDetectedWindow.findElement(By.cssSelector(".lg-modal__title-icon")).getAttribute("innerText").equalsIgnoreCase("conflict detected")
+                && conflictDetectedWindow.findElement(By.cssSelector(".dynamic-group-conflict-title")).getAttribute("innerText").trim().contains("The Dynamic Group is conflicting with the dynamic groups below")
+                && conflictDetectedWindow.findElements(By.cssSelector(".dynamic-group-conflict-list")).size() > 0){
+            SimpleUtils.pass("Title and text and content are expected!");
+        } else {
+            SimpleUtils.fail("Title and text and content are not expected!", false);
+        }
+    }
+
+    @Override
+    public void clickOnButtonOnTheConflictDetectedWindow(String cancelOrSave) throws Exception {
+        if (cancelOrSave.toLowerCase().contains("save") && isElementLoaded(conflictDetectedWindow.findElement(By.cssSelector("lg-button[label=\"Save\"] button")))){
+            clickTheElement(conflictDetectedWindow.findElement(By.cssSelector("lg-button[label=\"Save\"] button")));
+            SimpleUtils.pass("Save button is clicked!");
+        } else if (cancelOrSave.toLowerCase().contains("cancel") && isElementLoaded(conflictDetectedWindow.findElement(By.cssSelector("lg-button[label=\"Cancel\"] button")))){
+            clickTheElement(conflictDetectedWindow.findElement(By.cssSelector("lg-button[label=\"Cancel\"] button")));
+            SimpleUtils.pass("Cancel button is clicked!");
+        } else {
+            SimpleUtils.fail("Input string is not expected or buttons are not loaded!", false);
         }
     }
 }

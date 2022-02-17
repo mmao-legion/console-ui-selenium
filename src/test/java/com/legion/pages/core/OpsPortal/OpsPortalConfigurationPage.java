@@ -44,14 +44,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="div.lg-tab-toolbar__search")
 	private WebElement searchField;
 
-	@FindBy(css="[class*=\"lg-table\"] .lg-templates-table-improved__grid-row")
+
+	@FindBy(css="[ng-repeat-start=\"item in $ctrl.sortedRows\"]")
 	private List<WebElement> templatesList;
 
 	@FindBy(css="[class*=\"lg-table\"] .lg-templates-table-improved__grid-row.ng-scope .name span.ng-binding")
 	private List<WebElement> templateNameList;
 	@FindBy(css="lg-eg-status[type='Draft']")
 	private List<WebElement> templateDraftStatusList;
-	@FindBy(css="td.toggle i[class=\"fa fa-caret-right\"]")
+	@FindBy(css=".toggle i[class=\"fa fa-caret-right\"]")
 	private WebElement templateToggleButton;
 
 	@FindBy(css="lg-button[label=\"Edit\"]")
@@ -340,14 +341,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public boolean isTemplateListPageShow() throws Exception {
 		boolean flag = false;
-			if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
-				SimpleUtils.pass("Template landing page shows well");
-				flag = true;
-			}else{
-				SimpleUtils.fail("Template landing page was NOT loading well",false);
-				flag = false;
-			}
-			return flag;
+		if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
+			SimpleUtils.pass("Template landing page shows well");
+			flag = true;
+		}
+		return flag;
 	}
 
 // open the first one template on template list page
@@ -843,9 +841,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
-							clickTheElement(templateNameList.get(i));
+							clickTheElement(getDriver().findElement(By.cssSelector(".child-row button")));
 						}else{
-							clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
+							clickTheElement(templatesList.get(i).findElement(By.tagName("button")));
 						}
 						waitForSeconds(15);
 						if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
@@ -877,7 +875,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void clickOnEditButtonOnTemplateDetailsPage() throws Exception {
-		if(isElementEnabled(editButton, 10)){
+		if(isElementLoaded(editButton, 20)){
 			clickTheElement(editButton);
 			waitForSeconds(3);
 			if(isElementEnabled(editTemplatePopupPage)){
@@ -901,55 +899,117 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css="table[ng-if*=\"$ctrl.sortedRows.length\"] tbody")
 	private List<WebElement> workRoleList;
+	@FindBy(css = "input[placeholder='Search by Work Role']")
+	private WebElement searchByWorkRoleInput;
 
 	@Override
 	public void selectWorkRoleToEdit(String workRole) throws Exception {
-		if(workRoleList.size()!=0){
-			for(WebElement workRoleItem:workRoleList){
-				String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
-				//get first char of the work role name
-				char fir = workRole.charAt(0);
-				String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
-				if(workRoleName.equals(newWorkRole)){
-					WebElement staffingRulesAddButton = workRoleItem.findElement(By.cssSelector("lg-button"));
-					clickTheElement(staffingRulesAddButton);
-					waitForSeconds(5);
-					if(isElementEnabled(addIconOnRulesListPage)){
-						SimpleUtils.pass("Successful to select " + workRole + " to edit");
+		if (isElementLoaded(searchByWorkRoleInput, 10)) {
+			searchByWorkRoleInput.clear();
+			searchByWorkRoleInput.sendKeys(workRole);
+			waitForSeconds(1);
+			if (areListElementVisible(workRoleList, 3) && workRoleList.size() != 0) {
+				for (WebElement workRoleItem : workRoleList) {
+					String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
+					//get first char of the work role name
+					char fir = workRole.charAt(0);
+					String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
+					if (workRoleName.equals(newWorkRole)) {
+						WebElement staffingRulesAddButton = workRoleItem.findElement(By.cssSelector("lg-button"));
+						clickTheElement(staffingRulesAddButton);
+						waitForSeconds(5);
+						if (isElementEnabled(addIconOnRulesListPage)) {
+							SimpleUtils.pass("Successful to select " + workRole + " to edit");
+						} else {
+							SimpleUtils.fail("Failed to select " + workRole + " to edit", false);
+						}
+						break;
 					}
-					else{
-						SimpleUtils.fail("Failed to select " + workRole + " to edit",false);
-					}
-					break;
 				}
+				int i = 0;
+				while (i <10 && areListElementVisible(paginationRightArrow, 5)
+						&& !paginationRightArrow.get(0).getAttribute("class").contains("disabled")) {
+					clickTheElement(paginationRightArrow.get(0));
+					for (WebElement workRoleItem : workRoleList) {
+						String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
+						//get first char of the work role name
+						char fir = workRole.charAt(0);
+						String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
+						if (workRoleName.equals(newWorkRole)) {
+							WebElement staffingRulesAddButton = workRoleItem.findElement(By.cssSelector("lg-button"));
+							clickTheElement(staffingRulesAddButton);
+							waitForSeconds(5);
+							if (isElementEnabled(addIconOnRulesListPage)) {
+								SimpleUtils.pass("Successful to select " + workRole + " to edit");
+							} else {
+								SimpleUtils.fail("Failed to select " + workRole + " to edit", false);
+							}
+							break;
+						}
+					}
+					i++;
+				}
+			} else {
+				SimpleUtils.fail("There is no work role for enterprise now", false);
 			}
-		}else{
-			SimpleUtils.fail("There is no work role for enterprise now",false);
+		} else {
+			SimpleUtils.fail("Search by Work Role input failed to load!", false);
 		}
 	}
 
-	public String getCountOfStaffingRules(String workRole) {
+	@FindBy(css = "[tab-title=\"Details\"] div.lg-pagination__arrow--right")
+	private List<WebElement> paginationRightArrow;
+	public String getCountOfStaffingRules(String workRole) throws Exception {
 		String count = null;
-		if (workRoleList.size() != 0) {
-			for (WebElement workRoleItem : workRoleList) {
-				String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
-				//get first char of the work role name
-				char fir = workRole.charAt(0);
-				String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
-				if (workRoleName.equals(newWorkRole)) {
-					String firstLetter = workRoleItem.findElement(By.cssSelector("lg-button span.ng-binding")).getText().trim().split(" ")[0];
-					if(firstLetter.equals("+")){
-						count = "0";
-						SimpleUtils.pass("There is no staffing rules for this work role");
-					}else  {
-						count = firstLetter;
-						SimpleUtils.pass(workRole + " have " + count + " staffing rules now!");
+		if (isElementLoaded(searchByWorkRoleInput, 10)) {
+			searchByWorkRoleInput.sendKeys(workRole);
+			waitForSeconds(1);
+			if (areListElementVisible(workRoleList, 10) && workRoleList.size() != 0) {
+				for (WebElement workRoleItem : workRoleList) {
+					String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
+					//get first char of the work role name
+					char fir = workRole.charAt(0);
+					String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
+					if (workRoleName.equals(newWorkRole)) {
+						String firstLetter = workRoleItem.findElement(By.cssSelector("lg-button span.ng-binding")).getText().trim().split(" ")[0];
+						if (firstLetter.equals("+")) {
+							count = "0";
+							SimpleUtils.pass("There is no staffing rules for this work role");
+						} else {
+							count = firstLetter;
+							SimpleUtils.pass(workRole + " have " + count + " staffing rules now!");
+						}
+						break;
 					}
-					break;
 				}
+				int i = 0;
+				while (i < 10 && areListElementVisible(paginationRightArrow, 10)
+						&& !paginationRightArrow.get(0).getAttribute("class").contains("disabled")) {
+					clickTheElement(paginationRightArrow.get(0));
+					for (WebElement workRoleItem : workRoleList) {
+						String workRoleName = workRoleItem.findElement(By.cssSelector("td.ng-binding")).getText().trim();
+						//get first char of the work role name
+						char fir = workRole.charAt(0);
+						String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
+						if (workRoleName.equals(newWorkRole)) {
+							String firstLetter = workRoleItem.findElement(By.cssSelector("lg-button span.ng-binding")).getText().trim().split(" ")[0];
+							if (firstLetter.equals("+")) {
+								count = "0";
+								SimpleUtils.pass("There is no staffing rules for this work role");
+							} else {
+								count = firstLetter;
+								SimpleUtils.pass(workRole + " have " + count + " staffing rules now!");
+							}
+							break;
+						}
+					}
+					i++;
+				}
+			} else {
+				SimpleUtils.fail("There is no work role for enterprise now", false);
 			}
 		} else {
-			SimpleUtils.fail("There is no work role for enterprise now", false);
+			SimpleUtils.fail("Search by Work Role input failed to load!", false);
 		}
 		return count;
 	}
@@ -2034,7 +2094,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	}
 
-	@FindBy(css = "[ng-if=\"$ctrl.saveAsLabel\"]")
+	@FindBy(css = "[ng-if=\"$ctrl.saveAsLabel\"] button.pre-saveas")
 	private WebElement publishTemplateButton;
 
 	@FindBy(css = "div.modal-dialog")
@@ -2114,6 +2174,26 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}else
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
+	}
+
+	@Override
+	public void chooseSaveOrPublishBtnAndClickOnTheBtn(String button) throws Exception {
+		if (isElementLoaded(dropdownArrowButton,5)) {
+			scrollToElement(dropdownArrowButton);
+			click(dropdownArrowButton);
+			if (button.toLowerCase().contains("save")){
+				clickTheElement(saveAsDraftButton);
+			} else if (button.toLowerCase().contains("publish now")){
+				clickTheElement(publishNowButton);
+			} else if (button.toLowerCase().contains("different time")){
+				clickTheElement(publishLaterButton);
+			} else {
+
+			}
+			click(publishTemplateButton);
+		}else{
+			SimpleUtils.fail("Publish template dropdown button load failed",false);
+		}
 	}
 
 	@Override
@@ -3090,6 +3170,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public boolean searchOneDynamicGroup(String dynamicGroupName) throws Exception{
 		boolean dataExist=false;
 		clickOnAssociationTabOnTemplateDetailsPage();
+		waitForSeconds(2);
 		if (isElementLoaded(searchAssociateFiled, 10)) {
 			searchAssociateFiled.clear();
 			searchAssociateFiled.sendKeys(dynamicGroupName);
@@ -3130,7 +3211,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(isElementLoaded(manageDynamicGroupPopupTitle)){
 				SimpleUtils.pass("The edit dynamic group dialog pop up successfully!");
 				//cancel
-				clickTheElement(okButtonOnManageDynamicGroupPopup.findElement(By.xpath("./preceding-sibling::lg-button/button")));
+				clickTheElement(cancelButtonOnManageDynamicGroupPopup);
+				waitForSeconds(1);
 			}
 			else
 			   SimpleUtils.fail("The edit dynamic group dialog not pop up!",true);
@@ -3193,7 +3275,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement formulaTextAreaOfDynamicGroup;
 	@FindBy(css="lg-button[label=\"OK\"]")
 	private WebElement okButtonOnManageDynamicGroupPopup;
-	@FindBy(css="lg-button[label=\"Cancel\"]")
+	@FindBy(css="modal[modal-title=\"Manage Dynamic Location Group\"] lg-button[label=\"Cancel\"]")
 	private WebElement cancelButtonOnManageDynamicGroupPopup;
 	@Override
 	public void createDynamicGroup(String name,String criteria,String formula) throws Exception{
@@ -3368,7 +3450,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				newTemplateDescription.sendKeys(templateName);
 				clickTheElement(continueBTN);
 				waitForSeconds(4);
-				if(isElementEnabled(welcomeCloseButton)){
+				if(isElementEnabled(welcomeCloseButton, 5)){
 					clickTheElement(welcomeCloseButton);
 				}
 				//change to association tan
@@ -3380,13 +3462,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				else{
 					createDynamicGroup(name,criteria,formula);
 				    selectOneDynamicGroup(name);}
-				locationSelectorPage.refreshTheBrowser();
 				waitForSeconds(4);
 				if(isElementEnabled(taTemplateSpecialField,20)){
 					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
 					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
 					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 				}
+				clickOnTemplateDetailTab();
 				publishNowTemplate();
 			}else {
 				SimpleUtils.fail("User can't click new template button successfully!",false);
@@ -3543,20 +3625,46 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if (templateNameList.get(i).getText().equalsIgnoreCase(templateName)) {
 					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
+						//expand the template.
 						clickTheElement(templateToggleButton);
 						waitForSeconds(3);
-						clickTheElement(templatesList.get(i).findElements(By.cssSelector("button")).get(0));
+						clickTheElement(templateNameList.get(i));
 						if (isElementLoaded(templateDetailsBTN, 20)) {
 							SimpleUtils.pass("Go to template detail page successfully! ");
 						} else
 							SimpleUtils.fail("Go to template detail page fail! ", false);
+						if (isElementLoaded(archiveBtn, 10)) {
+							clickTheElement(archiveBtn);
+							if(isElementEnabled(archiveTemplateDialog,10)){
+								clickTheElement(okButton);
+								displaySuccessMessage();
+							} else
+								SimpleUtils.fail("Archive template dialog pop up window load failed.",false);
+						} else if (isElementLoaded(deleteTemplateButton, 10)) {
+							clickTheElement(deleteTemplateButton);
+							if (isElementEnabled(deleteTemplateDialog,10)){
+								clickTheElement(okButton);
+								displaySuccessMessage();
+							} else {
+								SimpleUtils.fail("Delete template dialog pop up window load failed.",false);
+							}
+						} else {
+							SimpleUtils.fail("Archive and delete button fail to load! ", false);
+						}
+						clickTheElement(templateNameList.get(i));
+						if (isElementLoaded(templateDetailsBTN, 20)) {
+							SimpleUtils.pass("Go to template detail page successfully! ");
+						} else {
+							SimpleUtils.fail("Go to template detail page fail! ", false);
+						}
 					}else{
-						clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
+						clickTheElement(templateNameList.get(i));
 						if (isElementLoaded(templateDetailsBTN, 20)) {
 							SimpleUtils.pass("Go to template detail page successfully! ");
 						} else
 							SimpleUtils.fail("Go to template detail page fail! ", false);
 					}
+					//delete the draft version.
 					if (isElementLoaded(archiveBtn, 10)) {
 						clickTheElement(archiveBtn);
 						if(isElementEnabled(archiveTemplateDialog,10)){
@@ -3578,7 +3686,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 
 		} else
-			SimpleUtils.report("There is no template in the list! ");
+			SimpleUtils.warn("There is no template in the list! ");
 	}
 
 	@FindBy(css ="question-input[question-title=\"Move existing shifts to Open when transfers occur within the Workforce Sharing Group.\"] > div > div.lg-question-input__wrapper > ng-transclude > yes-no > ng-form > lg-button-group >div>div")
@@ -3888,9 +3996,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}
 
 			}else
-				SimpleUtils.fail("There are no template in the list",false);
+				SimpleUtils.report("There are no template in the list");
 		}else {
-			SimpleUtils.fail("Labor model template list is not loaded well",false);
+			SimpleUtils.report("Labor model template list is not loaded well");
 		}
 	}
 
@@ -3934,5 +4042,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.pass("Cancel archive template successfully");
 		}else
 			SimpleUtils.fail("Published template was archived",false);
+	}
+
+	@Override
+	public void clickOnBackBtnOnTheTemplateDetailAndListPage() throws Exception {
+		if (isElementLoaded(backButton, 10)){
+			clickTheElement(backButton);
+			SimpleUtils.pass("Back button is clicked!");
+		} else {
+			SimpleUtils.fail("Back button fail to load!", false);
+		}
 	}
 }

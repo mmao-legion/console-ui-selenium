@@ -405,6 +405,7 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         addButtonForServiceLever.click();
         firstServiceLeverInput.get(1).clear();
         firstServiceLeverInput.get(1).sendKeys("120");
+        firstServiceLeverInput.get(2).sendKeys("0");
     }
 
     public void setMaxAvailableHours(String maxAvailableHours){

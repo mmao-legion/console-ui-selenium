@@ -43,13 +43,13 @@ public class AbsentManagePage extends BasePage {
     private WebElement cancelCreatingTemp;
     @FindBy(css = "lg-button[label='Continue']>button")
     private WebElement continueCreatingTemp;
-    @FindBy(css = "table.lg-table.ng-scope>thead>tr>th")
+    @FindBy(css = "div.lg-templates-table-improved__grid-row--header>div span")
     private List<WebElement> templateTableHeaders;
     @FindBy(css = "lg-search>input-field input")
     private WebElement templateSearchBox;
     @FindBy(css = "div.lg-search-icon.ng-scope")
     private WebElement searchIcon;
-    @FindBy(css = "[class*=\"lg-table\"] .lg-templates-table-improved__grid-row.ng-scope .name span.ng-binding")
+    @FindBy(css = "div.lg-templates-table-improved__grid-row.ng-scope>div>lg-button.name")
     private List<WebElement> templateNameOfSearchResult;
     @FindBy(css = "table.lg-table.ng-scope>tbody>tr:first-child>td:nth-child(4)")
     private List<WebElement> creatorOfSearchResult;
@@ -64,14 +64,14 @@ public class AbsentManagePage extends BasePage {
     private List<WebElement> smartCardTitle;
     @FindBy(css = "span.card-carousel-link.ng-binding.ng-scope")
     private List<WebElement> smartCardLink;
-    @FindBy(css = "table.lg-table.ng-scope>tbody>tr>td:nth-child(3)>lg-eg-status")
+    @FindBy(css = "lg-eg-status")
     private List<WebElement> templateStatus;
 
     @FindBy(css = "i.fa.fa-caret-right")
     private WebElement caretRight;
     @FindBy(css = "i.fa.fa-caret-down")
     private WebElement caretDown;
-    @FindBy(css = "tbody>tr.child-row>td:nth-child(2)>lg-button")
+    @FindBy(css = "div.lg-templates-table-improved__grid-row.child-row>div>lg-button")
     private WebElement theChildTemplate;
 
     @FindBy(css = "div.lg-paged-search h4")
@@ -232,15 +232,31 @@ public class AbsentManagePage extends BasePage {
     }
 
     public boolean isNewTemplateButtonDisplayedAndEnabled() {
-        return newTemplateButton.isDisplayed() && newTemplateButton.isEnabled();
+        try {
+            if (isElementLoaded(newTemplateButton, 20) && isElementEnabled(newTemplateButton, 20)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public void createANewTemplate(String tempName, String tempDesc) {
-        newTemplateButton.click();
-        templateName.clear();
-        templateName.sendKeys(tempName);
-        templateDesc.clear();
-        templateDesc.sendKeys(tempDesc);
+    public void createANewTemplate(String tempName, String tempDesc) throws Exception {
+        if (isElementLoaded(newTemplateButton, 20)) {
+            newTemplateButton.click();
+            if (isElementLoaded(templateName, 10) && isElementLoaded(templateDesc, 10)) {
+                templateName.clear();
+                templateName.sendKeys(tempName);
+                templateDesc.clear();
+                templateDesc.sendKeys(tempDesc);
+            } else {
+                SimpleUtils.fail("Absence Management Page: Click on New Template button failed!", false);
+            }
+        } else {
+            SimpleUtils.fail("Absence Management Page: New Template button failed to load!", false);
+        }
     }
 
     public void cancel() {
@@ -267,14 +283,23 @@ public class AbsentManagePage extends BasePage {
         return getWebElementsLabels(templateTableHeaders);
     }
 
-    public void search(String searchText) {
-        templateSearchBox.clear();
-        templateSearchBox.sendKeys(searchText);
-        searchIcon.click();
+    public void search(String searchText){
+            templateSearchBox.clear();
+            templateSearchBox.sendKeys(searchText);
+            searchIcon.click();
+            waitForSeconds(2);
     }
 
     public String noMatch() {
         return noMatchMessage.getText();
+    }
+
+    public boolean isNoMatchMessageDisplayed(){
+        return isElementDisplayed(noMatchMessage);
+    }
+
+    public int templateNumber(){
+        return templateNameOfSearchResult.size();
     }
 
     public String getResult() {
@@ -383,6 +408,7 @@ public class AbsentManagePage extends BasePage {
 
     public void archivePublishedTemplate() {
         archiveButton.click();
+
     }
 
     public boolean isDeleteButtonDisplayed() {
@@ -433,7 +459,7 @@ public class AbsentManagePage extends BasePage {
         return titleBreadCrumb.getText();
     }
 
-    public void configureTemplate(String templateName) {
+    public void configureTemplate(String templateName) throws Exception {
         search(templateName);
         clickInDetails();
         waitForSeconds(5);
@@ -487,14 +513,14 @@ public class AbsentManagePage extends BasePage {
         return weeklyLimitHrs.getText();
     }
 
-    public void viewTimeOffConfigure(String timeOff) {
+    public void viewTimeOffConfigure(String timeOff) throws Exception {
         search(timeOff);
         isButtonClickable(view);
         System.out.println("View button is shown and clickable!");
         view.click();
     }
 
-    public void configureTimeOffRules(String timeOff) {
+    public void configureTimeOffRules(String timeOff) throws Exception {
         search(timeOff);
         waitForSeconds(3);
         if (isButtonClickable(configure)) {
@@ -520,7 +546,7 @@ public class AbsentManagePage extends BasePage {
         }
     }
 
-    public void removeTimeOffRules(String timeOff) {
+    public void removeTimeOffRules(String timeOff) throws Exception {
         search(timeOff);
         if (isButtonClickable(remove)) {
             System.out.println("Remove button is shown and clickable!");

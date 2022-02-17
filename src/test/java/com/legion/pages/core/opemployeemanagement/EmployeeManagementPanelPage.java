@@ -1,6 +1,9 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -13,17 +16,24 @@ public class EmployeeManagementPanelPage extends BasePage {
     }
 
     // Added by Sophia
-    @FindBy(css = "[title='Absence Management']")
-    private WebElement absentManagement;
+    @FindBy(css = "lg-dashboard-card[title='Time Off Management']")
+    private WebElement timeOffManagement;
 
-
-    public void goToAbsentManagementPage() {
-        absentManagement.click();
-        waitForSeconds(5);
+    public void goToTimeOffManagementPage() {
+        try {
+            if (timeOffManagement.isDisplayed()) {
+                timeOffManagement.click();
+                waitForSeconds(3);
+            }
+        } catch (NoSuchElementException e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public String getDashboardCardContent(){
-        return absentManagement.getText();
+    public String getDashboardCardContent() {
+        return timeOffManagement.getText();
     }
 
 }

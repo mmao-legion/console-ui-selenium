@@ -1,16 +1,11 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
-import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
-import com.legion.pages.OpsPortaPageFactories.JobsPage;
-import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
-import com.legion.tests.core.OpsPortal.ConfigurationTest;
-import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -23,8 +18,6 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.legion.utils.MyThreadLocal.getTimeOffEndTime;
-import static com.legion.utils.MyThreadLocal.getTimeOffStartTime;
 
 public class PlanTest extends TestBase {
 
@@ -321,18 +314,18 @@ public class PlanTest extends TestBase {
         }
     }
 
-
+    //it was blocked by https://legiontech.atlassian.net/browse/OPS-4153--specific parent plan issue,will open this case
     @Automated(automated = "Automated")
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Scenarios Creation-Scenario details page UI")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyScenarioPlanDetailAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyScenarioPlanCreateLandingDetailAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            String planName = "checkPlanCount";
-            String scPlanName = "Scenario Plan DoNot Delete";
+            String planName = "testPlan-Not Delete";
+            String scPlanName = "Scenario Plan Not Delete";
             String regionName="RegionForPlan_Auto";
-            String copiedPlanName="Test Copy To Generate Plan";
+            String copiedPlanName="Test Copy Generate Plan";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
@@ -343,6 +336,99 @@ public class PlanTest extends TestBase {
             planPage.clickOnPlanConsoleMenuItem();
             //check the created scenario plan detail UI
             planPage.verifyCreatePlanDetailUICheck(planName,scPlanName,copiedPlanName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "scenario plan detail")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScenarioDetailAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String planName = "checkPlanCount";
+            String scPlanName = "TestCompletePlan-not delete";
+            String regionName="RegionForPlan_Auto";
+            String scToTestArchiveInprogress="check archive-not delete";
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            //navigate to some region
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            //navigate to plan page
+            PlanPage planPage = pageFactory.createConsolePlanPage();
+            planPage.clickOnPlanConsoleMenuItem();
+            //check the created scenario plan detail UI
+            planPage.verifyPlanDetail(planName,scPlanName);
+            //check user can not archive an in-progress plan
+            boolean arch=planPage.archiveAPlan(planName,scToTestArchiveInprogress);
+            if(!arch)
+                SimpleUtils.pass("User can not archive a plan which is in progress status!");
+            else
+                SimpleUtils.fail("User can archive a plan which is in progress status!",false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "scenario plan-run budget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRerunScenarioPlanAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime = dfs.format(new Date()).trim();
+            String planName = "PlanUsedToCheckRunAction";
+            String scPlanName = "TestRerunBudget"+currentTime;
+            String regionName="RegionForPlan_Auto";
+            String compleleForecastPlan="CompleteForecastPlan";
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            //navigate to some region
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            //navigate to plan page
+            PlanPage planPage = pageFactory.createConsolePlanPage();
+            planPage.clickOnPlanConsoleMenuItem();
+            //create a new scenario plan
+            planPage.verifyScenarioPlanAutoCreated(planName,scPlanName);
+            //check the budget run ,stop,rerun link
+            planPage.verifyRunBTNInPlanDetail(planName,scPlanName);
+            //check a complete plan
+            planPage.checkCompleteForecastPlan(planName,compleleForecastPlan);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "scenario plan edit")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEditScenarioPlanAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String planName = "checkPlanCount";
+            String scPlanName = "TestScenarioPlanEdit";
+            String regionName="RegionForPlan_Auto";
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            //navigate to some region
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            //navigate to plan page
+            PlanPage planPage = pageFactory.createConsolePlanPage();
+            planPage.clickOnPlanConsoleMenuItem();
+            //create a new scenario plan
+            planPage.verifyScenarioPlanAutoCreated(planName,scPlanName);
+            //edit the scenario plan and archive it
+            planPage.editAScenarioPlan(planName,scPlanName);
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

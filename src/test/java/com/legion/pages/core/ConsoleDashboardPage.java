@@ -991,6 +991,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy(css = "lg-select[search-hint=\"Search District\"]")
 	private WebElement currentDistrict;
+
+	@FindBy(css = ".search-icon")
+	private WebElement searchIcon;
+
 	@Override
 	public String getCurrentDistrict() throws Exception {
 		if (isElementLoaded(currentDistrict,5)) {
@@ -1329,17 +1333,19 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
-	@FindBy(css = "div.lg-search-options__scroller div.lg-search-options__option.lg-search-options__subLabel")
+	@FindBy(css = "div.lg-search-options__option")
 	private List<WebElement> distrcitsListInDashboardPage;
 	@Override
 	public List<String> getDistrcitListInDashboard() throws Exception{
-		click(currentDistrict);
+		click(searchIcon);
 		waitForSeconds(3);
 		if (locationsListInDashboardPage.size()>0) {
 			List<String> districtList = new ArrayList<String>();
 			for (WebElement district: distrcitsListInDashboardPage
 			) {
-				districtList.add(district.getText().split("\n")[0]);
+				if (district.isDisplayed()) {
+					districtList.add(district.getText().split("\n")[0]);
+				}
 			}
 			return districtList;
 		}

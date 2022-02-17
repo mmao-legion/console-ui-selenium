@@ -242,7 +242,7 @@ public interface LocationsPage {
 
     public void okBtnIsClickable() throws Exception;
 
-    public void goToScheduleRulesListAtLocationLevel(String workRole);
+    public void goToScheduleRulesListAtLocationLevel(String workRole) throws Exception;
 
     public void editBtnIsClickableInBusinessHours();
 
@@ -267,4 +267,5 @@ public interface LocationsPage {
     public void verifyTitleForWorkforceSharingLocationGroup() throws Exception;
 
     public void clickOnCancelBtnOnSharingDynamicLocationGroupWindow() throws Exception;
+    public void checkLocationGroupSetting(String locationName) throws Exception;
 }
