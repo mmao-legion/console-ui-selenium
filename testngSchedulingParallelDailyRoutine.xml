@@ -471,18 +471,18 @@
             </class>
         </classes>
     </test>
-
-    <test name="Approve Activities By Home Or Non Home Manager Test">
-        <classes>
-            <class name="com.legion.tests.core.ApproveActivitiesByHomeOrNonHomeManagerTest">
-                <methods>
- <!--                   <include name="verifyActivityOfClaimOpenShiftNeedApprovalWhenSetOpenShiftSettingToAlwaysAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-4832-->
+    <!--
+       <test name="Approve Activities By Home Or Non Home Manager Test">
+           <classes>
+               <class name="com.legion.tests.core.ApproveActivitiesByHomeOrNonHomeManagerTest">
+                   <methods>
+                    <include name="verifyActivityOfClaimOpenShiftNeedApprovalWhenSetOpenShiftSettingToAlwaysAsTeamMember" />
                     <include name="verifyActivityOfClaimOpenShiftNoNeedApprovalForHomeManagerWhenSetOpenShiftSettingToNonHomeLocationOnlyAsTeamMember" />
                 </methods>
             </class>
         </classes>
     </test>
-
+https://legiontech.atlassian.net/browse/SCH-4832-->verifyScheduleFunctionalityWeekViewAsInternalAdmin
     <test name="Availability Approval Required Test">
         <classes>
             <class name="com.legion.tests.core.AvailabilityApprovalRequiredTest">

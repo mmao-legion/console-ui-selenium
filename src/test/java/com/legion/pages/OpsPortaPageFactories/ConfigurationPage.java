@@ -124,4 +124,5 @@ public interface ConfigurationPage {
     public void verifyTheContentOnRestBreaksSection() throws Exception;
     public void setStrictlyEnforceMinorViolations(String yesOrNo) throws Exception;
     public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception;
+    public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
 }

@@ -350,7 +350,7 @@ public class HardStopForMinorViolation extends TestBase {
             //Login as TM to claim the open shift that has minor violation
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
-            loginPage.loginToLegionWithCredential("nora+minor16@legion.co", "legionco1");
+            loginPage.loginToLegionWithCredential("nora+aminor16@legion.co", "legionco1");
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             SimpleUtils.assertOnFail("Open shift should not loaded!", !scheduleShiftTablePage.areShiftsPresent(), false);
         } catch (Exception e) {

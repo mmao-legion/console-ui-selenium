@@ -3876,4 +3876,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		return isStrictlyEnforceMinorViolationSettingEnabled;
 	}
+
+	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee''s home location has published the schedule?\"] input-field")
+	private WebElement canManagerAddAnotherLocationsEmployeeInSchedule;
+	@Override
+	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception {
+
+		WebElement confSelect = canManagerAddAnotherLocationsEmployeeInSchedule.findElement(By.cssSelector("select"));
+		if(isElementLoaded(confSelect,5)) {
+			selectByVisibleText(confSelect,option);
+			displaySuccessMessage();
+		} else{
+			SimpleUtils.fail("Can a manager add another locations' employee in schedule before the employee's home location has published the schedule? input field not loaded.", false);
+		}
+	}
 }
