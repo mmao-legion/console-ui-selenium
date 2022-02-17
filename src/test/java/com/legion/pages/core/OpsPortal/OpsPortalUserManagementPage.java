@@ -1010,7 +1010,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 					SimpleUtils.pass(permissionName + " is checked already!");
 					flag = true;
 				}else {
-					SimpleUtils.fail(permissionName + " is not checked!", false);
+					SimpleUtils.report(permissionName + " is NOT checked!");
 				}
 			}
 		}

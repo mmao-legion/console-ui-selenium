@@ -15,6 +15,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import org.junit.Ignore;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -77,6 +78,20 @@ public class PlanTest extends TestBase {
 
         public String getValue() {
             return value;
+        }
+    }
+
+    public enum AccessRoles {
+        InternalAdmin("InternalAdmin"),
+        DistrictManager("DistrictManager"),
+        StoreManager("StoreManager"),
+        Planner("Planner");
+        private final String role;
+        AccessRoles(final String accessRole) {
+            role = accessRole;
+        }
+        public String getValue() {
+            return role;
         }
     }
 
@@ -333,4 +348,81 @@ public class PlanTest extends TestBase {
         }
     }
 
-}
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify different user can see plan tab or not")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDifferentUserCanSeePlanTabOrNotAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        PlanPage planPage = pageFactory.createConsolePlanPage();
+        if(planPage.verifyPlanConsoleTabShowing()){
+            SimpleUtils.pass("Admin can see plan tab");
+            locationSelectorPage.changeLocation("Loc1ForDistrict2");
+            planPage.clickOnPlanConsoleMenuItem();
+            Assert.assertFalse(planPage.verifyCreatePlanButtonShowing(),"There is no create plan button at Location level");
+            locationSelectorPage.changeDistrict("DistrcitForPlan1");
+            planPage.clickOnPlanConsoleMenuItem();
+            Assert.assertTrue(planPage.verifyCreatePlanButtonShowing(),"There is create plan button at District level");
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("RegionForPlan_Auto");
+            planPage.clickOnPlanConsoleMenuItem();
+            Assert.assertTrue(planPage.verifyCreatePlanButtonShowing(),"There is create plan button at Region level");
+        }else {
+            SimpleUtils.fail("Admin can't see plan tab",false);
+        }
+
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+
+        // Login as Planner
+        loginAsDifferentRole(AccessRoles.Planner.getValue());
+        dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        if(planPage.verifyPlanConsoleTabShowing()){
+            SimpleUtils.pass("Planner can see plan tab");
+            locationSelectorPage.changeLocation("Loc1ForDistrict2");
+            planPage.clickOnPlanConsoleMenuItem();
+            Assert.assertFalse(planPage.verifyCreatePlanButtonShowing(),"There is no create plan button at Location level");
+            locationSelectorPage.changeDistrict("DistrcitForPlan1");
+            planPage.clickOnPlanConsoleMenuItem();
+            Assert.assertTrue(planPage.verifyCreatePlanButtonShowing(),"There is create plan button at District level");
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("RegionForPlan_Auto");
+            planPage.clickOnPlanConsoleMenuItem();
+            Assert.assertTrue(planPage.verifyCreatePlanButtonShowing(),"There is create plan button at Region level");
+        }else {
+            SimpleUtils.fail("Planner can't see plan tab",false);
+        }
+
+        loginPage.logOut();
+
+        // Login as District Manager
+        loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+        dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        if(!planPage.verifyPlanConsoleTabShowing()){
+            SimpleUtils.pass("District Manager can't see plan tab");
+        }else {
+            SimpleUtils.fail("District Manager can see plan tab",false);
+        }
+
+        loginPage.logOut();
+
+        // Login as StoreManager
+        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+        dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        if(!planPage.verifyPlanConsoleTabShowing()){
+            SimpleUtils.pass("Store Manager can't see plan tab");
+        }else {
+            SimpleUtils.fail("Store Manager can see plan tab",false);
+        }
+    }
+
+
+    }

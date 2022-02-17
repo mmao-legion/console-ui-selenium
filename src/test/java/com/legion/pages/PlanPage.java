@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+
 public interface PlanPage {
     
     public void clickOnPlanConsoleMenuItem() throws Exception;
@@ -13,6 +14,9 @@ public interface PlanPage {
     public void verifyCreatePlanDetailUICheck(String planName, String scplan,String newSCplan) throws Exception;
     public String getCurrentLocationsForCreatePlan() throws Exception;
 //    public int getAllPlansInList() throws Exception;
+    public boolean verifyPlanConsoleTabShowing() throws Exception;
+    public boolean verifyCreatePlanButtonShowing() throws Exception;
+
 
 
 }

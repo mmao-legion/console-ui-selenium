@@ -363,7 +363,9 @@ public class UserManagementTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyPlanPermissionsShowingAndDefaultValueAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         List<String> rolesList = new ArrayList<>(Arrays.asList("Admin","Budget Planner"));
+        List<String> rolesList1 = new ArrayList<>(Arrays.asList("Area Manager","Store Manager"));
         int index = 0;
+        int index1 = 0;
         UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
         //go to user management tab -> Users and Roles -> Access Roles sub tab
         userManagementPage.clickOnUserManagementTab();
@@ -379,6 +381,14 @@ public class UserManagementTest extends TestBase {
                 SimpleUtils.pass(role + " has all plan permissions by default.");
             }else {
                 SimpleUtils.fail(role + " Don't has all plan permissions by default.", false);
+            }
+        }
+        for(String role:rolesList1){
+            index1 = userManagementPage.getIndexOfRolesInPermissionsTable(role);
+           if(!userManagementPage.verifyPermissionIsCheckedOrNot(index1)){
+                SimpleUtils.pass(role + " DON'T have all plan permissions by default.");
+            }else {
+                SimpleUtils.fail(role + " has all plan permissions by default.", false);
             }
         }
     }

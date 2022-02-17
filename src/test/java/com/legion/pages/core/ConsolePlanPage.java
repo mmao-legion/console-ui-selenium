@@ -134,7 +134,31 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
 
 
 
+    @Override
+    public boolean verifyPlanConsoleTabShowing() throws Exception{
+        boolean flag = false;
+        if(isElementLoaded(goToPlanButton, 10)){
+            SimpleUtils.pass("User can see Plan tab");
+            flag = true;
+        }else {
+            SimpleUtils.report("Plan tab is not shown");
+            flag = false;
+        }
+        return flag;
+    }
 
+    @Override
+    public boolean verifyCreatePlanButtonShowing() throws Exception {
+        boolean flag = false;
+        if (isElementLoaded(createPlanBtn, 10)) {
+            flag = true;
+            SimpleUtils.pass("User can see create plan button");
+        }else {
+            flag = false;
+            SimpleUtils.report("User can't see create plan button");
+        }
+        return flag;
+    }
 
 
     @Override
