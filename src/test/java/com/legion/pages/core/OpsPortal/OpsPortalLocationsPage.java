@@ -748,7 +748,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement comparableStoreDateSelecter;
 	@FindBy(css = "input-field[label=\"Location for Demand Channel\"] > ng-form > div.input-choose > span[ng-click]")
 	private WebElement selectOneComparableLocation;
-	@FindBy(css = "td[ng-repeat=\"item in value\"]>input-field>ng-form>input")
+	@FindBy(css = "[type=\"percent\"] input")
 	private List<WebElement> itemsAndTransactionInoutField;
 
 	@Override
