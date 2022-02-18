@@ -509,7 +509,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to MS parent")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled =  false)
     public void verifyChangeNoneLocationToMSParentAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -538,9 +538,9 @@ public class LocationsGroupTestInOP extends TestBase {
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
             //change None to MS parent
-//            String  locationRelationship = "Parent location";
-//            String locationGroupType= locationGroupSwitchOperation.MS.getValue();
-//            locationsPage.changeOneLocationToParent(locationName, locationRelationship,locationGroupType);
+            String  locationRelationship = "Parent location";
+            String locationGroupType= locationGroupSwitchOperation.MS.getValue();
+            locationsPage.changeOneLocationToParent(locationName, locationRelationship,locationGroupType);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -551,7 +551,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to P2P parent")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyChangeNoneLocationToP2PParentAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -580,9 +580,9 @@ public class LocationsGroupTestInOP extends TestBase {
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
             //change None to MS parent
-//            String  locationRelationship = "Parent location";
-//            String locationGroupType= locationGroupSwitchOperation.PTP.getValue();
-//            locationsPage.changeOneLocationToParent(locationName, locationRelationship,locationGroupType);
+            String  locationRelationship = "Parent location";
+            String locationGroupType= locationGroupSwitchOperation.PTP.getValue();
+            locationsPage.changeOneLocationToParent(locationName, locationRelationship,locationGroupType);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -593,7 +593,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to P2P child")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyChangeNoneLocationToChildAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -622,9 +622,9 @@ public class LocationsGroupTestInOP extends TestBase {
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
 //            //change None to child
-//            String  locationRelationship = "Part of a location group";
-//            String parentLocation = "PTP";
-//            locationsPage.changeOneLocationToChild(locationName,locationRelationship,parentLocation);
+            String  locationRelationship = "Part of a location group";
+            String parentLocation = "PTP";
+            locationsPage.changeOneLocationToChild(locationName,locationRelationship,parentLocation);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
