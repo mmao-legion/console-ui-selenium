@@ -152,15 +152,15 @@ public class LocationsGroupTestInOP extends TestBase {
             }
 
             //verify to change MS child location to None
-            String locationToNone = locationInfoDetails.get(1).get("locationName");
-            locationsPage.changeOneLocationToNone(locationToNone);
+//            String locationToNone = locationInfoDetails.get(1).get("locationName");
+//            locationsPage.changeOneLocationToNone(locationToNone);
             //search this location group again
-            ArrayList<HashMap<String, String>> locationInfoDetailsAftToNone =locationsPage.getLocationInfo(locationName);
+//            ArrayList<HashMap<String, String>> locationInfoDetailsAftToNone =locationsPage.getLocationInfo(locationName);
 
-            if (locationInfoDetailsAftToNone.size() < locationInfoDetailsSec.size()) {
-                SimpleUtils.pass("Child location:"+locationInfoDetailsAftToNone.get(locationInfoDetailsAftToNone.size()-1).get("locationName") +" was removed from this location group:");
-            }else
-                SimpleUtils.fail("Update child location to None failed",true);
+//            if (locationInfoDetailsAftToNone.size() < locationInfoDetailsSec.size()) {
+//                SimpleUtils.pass("Child location:"+locationInfoDetailsAftToNone.get(locationInfoDetailsAftToNone.size()-1).get("locationName") +" was removed from this location group:");
+//            }else
+//                SimpleUtils.fail("Update child location to None failed",true);
 
 //
         } catch (Exception e){ //check location group navigation
@@ -320,18 +320,18 @@ public class LocationsGroupTestInOP extends TestBase {
                 locationsPage.disableEnableLocation(locationInfoDetails.get(1).get("locationName"),actionEnable);
 
                 //verify to change p2p child location to None
-                String locationToNone = locationInfoDetails.get(1).get("locationName");
-                locationsPage.changeOneLocationToNone(locationToNone);
+//                String locationToNone = locationInfoDetails.get(1).get("locationName");
+//                locationsPage.changeOneLocationToNone(locationToNone);
                 //search this location group again
-                ArrayList<HashMap<String, String>> locationInfoDetailsAftToNone =locationsPage.getLocationInfo(locationName);
+//                ArrayList<HashMap<String, String>> locationInfoDetailsAftToNone =locationsPage.getLocationInfo(locationName);
 
-                if (locationInfoDetailsAftToNone.size() < locationInfoDetails.size()) {
-                    SimpleUtils.pass("Child location:"+locationInfoDetailsAftToNone.get(locationInfoDetailsAftToNone.size()-1).get("locationName") +" was removed from this location group:");
-                }else
-                    SimpleUtils.fail("Update child location to None failed",true);
+//                if (locationInfoDetailsAftToNone.size() < locationInfoDetails.size()) {
+//                    SimpleUtils.pass("Child location:"+locationInfoDetailsAftToNone.get(locationInfoDetailsAftToNone.size()-1).get("locationName") +" was removed from this location group:");
+//                }else
+//                    SimpleUtils.fail("Update child location to None failed",true);
 
                 //change parent location to None
-                locationsPage.changeOneLocationToNone(locationName);
+//                locationsPage.changeOneLocationToNone(locationName);
 //                //check location group navigation
 //                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
 //                LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
