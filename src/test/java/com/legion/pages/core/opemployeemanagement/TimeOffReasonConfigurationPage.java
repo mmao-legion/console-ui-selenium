@@ -400,26 +400,37 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         select.selectByVisibleText(distributionMethod);
     }
 
-    public void addServiceLever() {
-        scrollToElement(addButtonForServiceLever);
-        addButtonForServiceLever.click();
-        firstServiceLeverInput.get(1).clear();
-        firstServiceLeverInput.get(1).sendKeys("120");
-        firstServiceLeverInput.get(2).sendKeys("0");
+    public void setAnnualEarn(List<WebElement> serviceLeverInput, String annualEarn) {
+        serviceLeverInput.get(1).clear();
+        serviceLeverInput.get(1).sendKeys(annualEarn);
     }
 
-    public void setMaxAvailableHours(String maxAvailableHours){
-        firstServiceLeverInput.get(3).clear();
-        firstServiceLeverInput.get(3).sendKeys(maxAvailableHours);
+    public void setMaxCarryover(List<WebElement> serviceLeverInput, String maxCarryover) {
+        serviceLeverInput.get(2).clear();
+        serviceLeverInput.get(2).sendKeys(maxCarryover);
     }
 
-    public void addSecondServiceLever() {
+    public void setMaxAvailableHours(List<WebElement> serviceLeverInput, String maxAvailableHours) {
+        serviceLeverInput.get(3).clear();
+        serviceLeverInput.get(3).sendKeys(maxAvailableHours);
+    }
+
+    public void addSpecifiedServiceLever(int serviceLever, String annualEarn, String maxCarryover, String maxAvailableHours) {
         scrollToElement(addButtonForServiceLever);
         addButtonForServiceLever.click();
-        secondServiceLeverInput.get(0).clear();
-        secondServiceLeverInput.get(0).sendKeys("5");
-        secondServiceLeverInput.get(1).clear();
-        secondServiceLeverInput.get(1).sendKeys("240");
+        List<WebElement> serviceLeverInput = null;
+        if (serviceLever == 0) {
+            serviceLeverInput = firstServiceLeverInput;
+        } else if (serviceLever == 2) {
+            serviceLeverInput = secondServiceLeverInput;
+            serviceLeverInput.get(0).clear();
+            serviceLeverInput.get(0).sendKeys("2");
+        } else {
+            System.out.println("Need to add new serviceLeverInput locator!");
+        }
+        setAnnualEarn(serviceLeverInput, annualEarn);
+        setMaxCarryover(serviceLeverInput, maxCarryover);
+        setMaxAvailableHours(serviceLeverInput, maxAvailableHours);
     }
 
     public int getServiceLeverNum() {

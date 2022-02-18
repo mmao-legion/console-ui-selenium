@@ -631,4 +631,8 @@ public abstract class TestBase {
     public static void refreshPage() {
         getDriver().navigate().refresh();
     }
+
+    public static String getUrl() {
+      return getDriver().getCurrentUrl();
+    }
 }

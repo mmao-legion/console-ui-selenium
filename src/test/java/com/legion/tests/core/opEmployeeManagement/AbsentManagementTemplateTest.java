@@ -432,8 +432,10 @@ public class AbsentManagementTemplateTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating distribution method options!");
 
         //add service lever
-        configurationPage.addServiceLever();
-        configurationPage.addSecondServiceLever();
+        /*configurationPage.addServiceLever();
+        configurationPage.addSecondServiceLever();*/
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
+        configurationPage.addSpecifiedServiceLever(2, "24", "6", "30");
 
         configurationPage.saveTimeOffConfiguration(true);
 
@@ -526,7 +528,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         configurationPage.setProbationUnitAsMonths();
         configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "5");
 
-        configurationPage.addServiceLever();
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
         //verify results of above action
         absentManagePage.configureTimeOffRules(timeOffReason);
