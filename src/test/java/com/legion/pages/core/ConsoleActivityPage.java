@@ -764,4 +764,50 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
             SimpleUtils.fail("Failed to find a new Shift Cover activity!", false);
         }
     }
+
+	@FindBy (className = "notification-buttons-button")
+	private List<WebElement> allActivityButtons;
+
+	@FindBy (css = ".notification-container.unread")
+	private List<WebElement> unreadActivityCards;
+	@Override
+	public void approveOrRejectMultipleShiftOfferRequestOnActivity(String requestUserName, String action, int count) throws Exception {
+    	if (areListElementVisible(unreadActivityCards, 5)
+				&& areListElementVisible(unreadActivityCards, 5)
+				&& unreadActivityCards.size() >= count
+				&& allActivityButtons.size() >=count*2) {
+			int i = 0;
+
+    		for (int j=0; j< activityCards.size(); j++) {
+    			while (i< count) {
+    				if (activityCards.get(j).getAttribute("class").contains("unread")) {
+    					i++;
+						List<WebElement> actionButtons = activityCards.get(j).findElements(By.className("notification-buttons-button"));
+						if (actionButtons != null && actionButtons.size() == 2) {
+							for (WebElement button : actionButtons) {
+								if (action.equalsIgnoreCase(button.getText())) {
+									scrollToElement(button);
+									clickTheElement(button);
+									break;
+								}
+							}
+							// Wait for the card to change the status message, such as approved or rejected
+							waitForSeconds(3);
+							scrollToElement(activityCards.get(j));
+							WebElement approveOrRejectMessage = activityCards.get(j).findElement(By.className("notification-approved"));
+							if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {
+								SimpleUtils.pass(action + " the shift offer request for: " + requestUserName +  " Successfully!");
+							} else {
+								SimpleUtils.fail(action + " message failed to load!", false);
+							}
+						}else {
+							SimpleUtils.report("Action buttons: Approve and Reject failed to load!");
+						}
+					} else {
+    					break;
+					}
+				}
+			}
+		}
+	}
 }

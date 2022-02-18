@@ -32,7 +32,7 @@ public interface MySchedulePage {
     public void verifyClickOnSubmitButton() throws Exception;
     public void clickOnShiftByIndex(int index) throws Exception;
     public void	verifyComparableShiftsAreLoaded() throws Exception;
-    public String selectOneTeamMemberToSwap() throws Exception;
+    public void selectOneTeamMemberToSwap(String tmName) throws Exception;
     public void goToSchedulePageAsTeamMember() throws Exception;
     public void gotoScheduleSubTabByText(String subTitle) throws Exception;
     public void	verifyTeamScheduleInViewMode() throws Exception;
@@ -70,4 +70,8 @@ public interface MySchedulePage {
     public void clickCloseDialogButton () throws Exception;
     public void verifyClickAgreeBtnOnClaimShiftOfferWithMessage(String expectedMessage) throws Exception;
     public void clickOnDeclineButton() throws Exception;
+    public void selectSchedulFilter(String option) throws Exception;
+    public boolean checkIfTMExitsInCoverOrSwapRequestList (String tmName);
+    public void verifyClickAgreeBtnForSwapWithMessage(String expectedMessage) throws Exception;
+    public int getCountOfCoverOrSwapRequestsInList();
 }
