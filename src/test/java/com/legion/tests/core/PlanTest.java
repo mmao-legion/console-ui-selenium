@@ -102,22 +102,6 @@ public class PlanTest extends TestBase {
         }
     }
 
-    public enum indexOfActivityType {
-        TimeOff(0),
-        ShiftOffer(1),
-        ShiftSwap(2),
-        ProfileUpdate(3),
-        Schedule(4);
-        private final int value;
-
-        indexOfActivityType(final int newValue) {
-            value = newValue;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
 
     public enum approveRejectAction {
         Approve("APPROVE"),
@@ -144,7 +128,6 @@ public class PlanTest extends TestBase {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime =  dfs.format(new Date()).trim();
             String planName = "AutomationCreatedPlanName" +currentTime;
-            String scePlanName = "ScenarioPlanName" +currentTime;
             String regionName="RegionForPlan_Auto";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

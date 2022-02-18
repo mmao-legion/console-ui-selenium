@@ -1056,8 +1056,9 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                         SimpleUtils.pass("The budget hours run out the value for complete/ready review/approved scenario plan");
                     else
                         SimpleUtils.fail("The budget hours is not run out the value for complete/ready review/approved scenario plan", false);
-                } else if (budgetValue == null)
-                    SimpleUtils.pass("The budget hours show as blank for not started/in progress plan ");
+                }
+                else if (budgetValue.equals("--"))
+                    SimpleUtils.pass("The budget hours show as blank for not started or in progress plan ");
                 else
                     SimpleUtils.fail("The plan status show as empty", false);
 
