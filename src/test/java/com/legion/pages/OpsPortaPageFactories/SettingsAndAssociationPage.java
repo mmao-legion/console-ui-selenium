@@ -17,6 +17,7 @@ public interface SettingsAndAssociationPage {
     public void goToAssociationTabOnTemplateDetailsPage() throws Exception;
     public boolean ifConflictDetectedWindowShowUP() throws Exception;
     public void clickOnTheSaveBtnOnConflictDetectedWindow() throws Exception;
+    public boolean isSaveBtnEnabledOnConflictDetectedWindow() throws Exception;
     public List<String> getFieldListFromSettingsTab() throws Exception;
     public void setupRequiredFields(List<String> fields) throws Exception;
     public List<String> getCriteriaListFromTheAssociationPage() throws Exception;
