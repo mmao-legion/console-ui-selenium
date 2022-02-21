@@ -276,6 +276,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement locationUploadedImg;
 	@FindBy(css = "lg-button[ng-click=\"$ctrl.removeImage()\"]")
 	private WebElement locationRemovePicLink;
+	@FindBy(css = "lg-button[label=\"Close\"] button")
+	private WebElement locationDetailCloseBTN;
+
 
 
 	@Override
@@ -842,6 +845,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "page-heading > div > div.title-breadcrumbs.limit")
 	private WebElement locationNameText;
+	@FindBy(css = ".input-choose.ng-scope span.disabled")
+	private WebElement childLocationRelationSelectLink;
+	@FindBy(css = ".input-choose.ng-scope span.locationDefault.link-action")
+	private WebElement parentLocationOfChild;
 
 	@Override
 	public String disableLocation(String searchInputText) throws Exception {
@@ -3558,6 +3565,30 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
         //back to list
 		clickTheElement(locationBackLink);
 		}
+
+	@Override
+	public void checkLocationNavigation(String locationName) throws Exception{
+		goToLocationDetailsPage(locationName);
+		//get the current location and type
+		String curLocaName=locationNameText.getText();
+		if(isElementLoaded(childLocationRelationSelectLink)&&isElementLoaded(parentLocationOfChild)) {
+			SimpleUtils.pass("Current location is a child location of location group, it's is:" + curLocaName);
+			//get the parent location name
+			String parentAtDetail=parentLocationOfChild.getText().trim();
+			//click the link of parent
+			clickTheElement(parentLocationOfChild);
+			//check to get the navigated location
+			if(isElementLoaded(locationNameText,10)) {
+				String navigatedLocName =locationNameText.getText().trim();
+				if(!navigatedLocName.equals(curLocaName)&&navigatedLocName.equals(parentAtDetail))
+					SimpleUtils.pass("Click the link of parent location will navigate to the detail of parent location detail, it is:"+navigatedLocName);
+				else
+					SimpleUtils.fail("The link of parent location navigate the parent location detail failed!",false);
+			}
+			//click close to quit location detail
+			clickTheElement(locationDetailCloseBTN);
+		}
+	}
 
 	@Override
 	public void actionsForEachTypeOfTemplate(String template_type, String action) {
