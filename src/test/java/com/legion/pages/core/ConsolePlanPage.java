@@ -181,6 +181,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
 
     @Override
     public boolean verifyCreatePlanButtonShowing() throws Exception {
+        waitForSeconds(5);
         boolean flag = false;
         if (isElementLoaded(createPlanBtn, 10)) {
             flag = true;
