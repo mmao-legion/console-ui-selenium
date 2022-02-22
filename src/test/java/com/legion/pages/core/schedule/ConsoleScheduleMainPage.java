@@ -1994,4 +1994,18 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
         return workRoleInfo;
     }
+
+    public void selectJobTitleFilterByText(String filterText) throws Exception {
+        String filterKey = "jobtitle";
+        ArrayList<WebElement> jobTitleFilters = getAvailableFilters().get(filterKey);
+        unCheckFilters(jobTitleFilters);
+        for (WebElement jobTitleOption : jobTitleFilters) {
+            if (jobTitleOption.getText().toLowerCase().contains(filterText.toLowerCase())) {
+                click(jobTitleOption);
+                break;
+            }
+        }
+        if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+            click(filterButton);
+    }
 }

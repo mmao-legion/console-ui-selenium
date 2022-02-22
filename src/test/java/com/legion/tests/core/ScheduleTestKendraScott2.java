@@ -4543,7 +4543,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnOpenSearchBoxButton();
 		scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
 		List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
-		SimpleUtils.assertOnFail("Daily OT violation is not showing!", complianceMessage.contains("1.5 hr daily overtime"), false);
+		SimpleUtils.assertOnFail("Daily OT violation is not showing!", complianceMessage.contains("1.5 hrs daily overtime"), false);
 
 		// set configuration in controls
 		controlsNewUIPage.clickOnControlsConsoleMenu();
@@ -4592,7 +4592,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnOpenSearchBoxButton();
 		scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
 		complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
-		SimpleUtils.assertOnFail("Daily OT violation is not showing!", complianceMessage.contains("1.5 hr daily overtime"), false);
+		SimpleUtils.assertOnFail("Daily OT violation is not showing!", complianceMessage.contains("1.5 hrs daily overtime"), false);
 	}
 
 	@Automated(automated = "Automated")
@@ -4672,7 +4672,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnOpenSearchBoxButton();
 		scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
 		List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
-		SimpleUtils.assertOnFail("Daily OT violation is not showing!", complianceMessage.contains("0.5 hr daily overtime"), false);
+		SimpleUtils.assertOnFail("Daily OT violation is not showing!", complianceMessage.contains("0.5 hrs daily overtime"), false);
 	}
 
 	@Automated(automated = "Automated")
@@ -4745,7 +4745,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnOpenSearchBoxButton();
 		scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
 		List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
-		SimpleUtils.assertOnFail("Daily OT violation is not showing!", complianceMessage.contains("1.5 hr daily overtime"), false);
+		SimpleUtils.assertOnFail("Daily OT violation is not showing!", complianceMessage.contains("1.5 hrs daily overtime"), false);
 	}
 
 	@Automated(automated = "Automated")
@@ -4819,7 +4819,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnOpenSearchBoxButton();
 		scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
 		List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
-		SimpleUtils.assertOnFail("Daily OT violation is not showing!", !complianceMessage.contains("1.5 hr daily overtime"), false);
+		SimpleUtils.assertOnFail("Daily OT violation is not showing!", !complianceMessage.contains("1.5 hrs daily overtime"), false);
 	}
 
 	@Automated(automated = "Automated")
@@ -5220,13 +5220,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
 		if (firstWeekInfo.length() > 11) {
 			firstWeekInfo = firstWeekInfo.trim().substring(10);
-			if (firstWeekInfo.contains("-")) {
-				String[] temp = firstWeekInfo.split("-");
-				if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
-					firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
-							+ " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
-				}
-			}
 		}
 		scheduleCommonPage.navigateToNextWeek();
 		if (createSchedulePage.isWeekGenerated()){

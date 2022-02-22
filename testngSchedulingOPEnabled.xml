@@ -396,4 +396,34 @@ SCH-5862-->
             </class>
         </classes>
     </test>
+    <test name="Seventh Consecutive Day Test">
+        <classes>
+            <class name="com.legion.tests.core.SeventhConsecutiveDayTest">
+                <methods>
+                    <!-- enable 7thConsecutive OT Toggle -->
+                    <include name="verifyConsecutiveOTSettingAsInternalAdmin" />
+                    <!--Always-->
+                    <include name="verifyViolationWhenSetConsecutiveOTSettingAsAlwaysAsInternalAdmin" />
+                    <include name="verifyTMCannotReceiveAutoOpenShiftOfferWithConsecutiveOTViolationAsTeamMember" />
+                    <!--                    <include name="verifySMCannotApproveAutoOpenShiftActivityWithConsecutiveOTViolationAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-6149-->
+                    <!--                    <include name="verifyTMCannotAcceptAutoOpenShiftActivityWithConsecutiveOTViolationAsTeamMember" />
+                                        <include name="verifyTMCannotAcceptManualOpenShiftOfferWithConsecutiveOTViolationAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-6149-->
+                    <include name="verifyTMWillNotDisplayInSwapRequestListWhenHasOTViolationAsTeamMember" />
+                    <!--                    <include name="verifyTMCannotAcceptTheShiftSwapRequestThatHasOTViolationAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-6149-->
+                    <include name="verifyTMWillNotDisplayInCoverRequestListWhenHasOTViolationAsTeamMember" />
+                    <!--                    <include name="verifyTMCannotAcceptTheShiftCoverRequestThatHasOTViolationAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-6149-->
+                    <!--WorkweekLessThan40Hrs-->
+                    <!--                    <include name="verifyViolationWhenSetConsecutiveOTSettingAsWorkweekLessThan40HrsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6172-->
+                    <include name="verifyViolationWhen7thConsecutiveDayShiftHourExceedDTPayHrsAsInternalAdmin" />
+                    <include name="verifyViolationWhen7thConsecutiveDayShiftHourNotExceedDTPayHrsAsInternalAdmin" />
+                    <include name="verifyViolationWhenShiftHoursExceedWeeklyDTHoursAsInternalAdmin" />
+                    <include name="verifyViolationWhenDisable7thConsecutiveDayDTSettingAsInternalAdmin" />
+
+                    <!-- disable 7th Consecutive OT Toggle and Consecutive DT -->
+                    <include name="verify7thConsecutiveDayViolationWillNotDisplayWhenDisableTheRuleAsInternalAdmin" />
+
+                </methods>
+            </class>
+        </classes>
+    </test>
     </suite> <!-- Suite -->
