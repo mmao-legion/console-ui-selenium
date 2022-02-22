@@ -39,4 +39,13 @@ public interface CompliancePage {
     public List<String> getAllUpperFieldNames();
     public boolean isUpperFieldsWithViolationSmartCardDisplay () throws Exception;
     public boolean isTop1ViolationSmartCardDisplay () throws Exception;
+    public void turnOnOrTurnOff7thConsecutiveOTToggle(boolean action) throws Exception;
+    public String getConsecutiveOTSettingContent() throws Exception;
+    public void editConsecutiveOTSetting(String daysCount, String condition, boolean saveOrNot) throws Exception;
+    public void turnOnOrTurnOffConsecutiveDTToggle(boolean action) throws Exception;
+    public String getConsecutiveDTSettingContent() throws Exception;
+    public void turnOnOrTurnOffWeelyDTToggle(boolean action) throws Exception;
+    public String getWeeklyDTSettingContent() throws Exception;
+    public void turnOnOrTurnOffDailyDTToggle(boolean action) throws Exception;
+    public String getDailyDTSettingContent() throws Exception;
 }

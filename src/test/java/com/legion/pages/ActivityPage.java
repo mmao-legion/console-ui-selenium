@@ -36,4 +36,5 @@ public interface ActivityPage{
     public void verifyCancelledMessageOnTheBottomOfTheNotification() throws Exception;
     public void verifyNotificationForUpdateAvailability(String requestName,String isApprovalRequired,String requestOrCancelLabel,String weekInfo,String repeatChange) throws Exception;
     public List<String> getShiftSwapDataFromActivity(String requestUserName, String respondUserName) throws Exception;
+    public void approveOrRejectMultipleShiftOfferRequestOnActivity(String requestUserName, String action, int count) throws Exception;
 }

@@ -252,7 +252,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     private WebElement okBtnOnConfirm;
     @FindBy(css = "[ng-repeat*=\"shift in results\"]")
     private List<WebElement> comparableShifts;
-    @FindBy(css = "[label=\"Next\"]")
+    @FindBy(css = "[label=\"Next\"] button")
     private WebElement nextButton;
     @FindBy(css = "[label=\"Cancel Cover Request\"]")
     private WebElement cancelCoverBtn;
@@ -499,7 +499,8 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
                     if (verifyShiftRequestButtonOnPopup(claimShift)) {
                         index = i;
                         break;
-                    }
+                    } else
+                        moveToElementAndClick(tmIcons.get(i)); //to close the pop up
                 }
             }
             if (index == -1) {
@@ -665,6 +666,25 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         }
     }
 
+
+    @Override
+    public void verifyClickAgreeBtnForSwapWithMessage(String expectedMessage) throws Exception {
+        if (areListElementVisible(acceptButtons, 5) && acceptButtons.size()>0) {
+            clickTheElement(acceptButtons.get(0));
+            if (isElementLoaded(agreeButton, 5)) {
+                click(agreeButton);
+                verifyThePopupMessageOnTop(expectedMessage);
+                verifySwapRequestDeclinedDialogPopUp();
+                if (isElementLoaded(closeDialogBtn, 5)) {
+                    clickTheElement(closeDialogBtn);
+                }
+            }else
+                SimpleUtils.fail("I Agree button not loaded Successfully!", false);
+        }else {
+            SimpleUtils.fail("Agree Button not loaded Successfully!", false);
+        }
+    }
+
     @Override
     public void verifyTheColorOfCancelClaimRequest(String cancelClaim) throws Exception {
         String red = "#ff0000";
@@ -771,21 +791,28 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     }
 
     @Override
-    public String selectOneTeamMemberToSwap() throws Exception {
-        String tmName = "";
+    public void selectOneTeamMemberToSwap(String tmName) throws Exception {
         if (areListElementVisible(comparableShifts, 5) && isElementLoaded(nextButton, 5)) {
-            int randomIndex = (new Random()).nextInt(comparableShifts.size());
-            WebElement selectBtn = comparableShifts.get(randomIndex).findElement(By.cssSelector("td.shift-swap-modal-shift-table-select>div"));
-            WebElement name = comparableShifts.get(randomIndex).findElement(By.className("shift-swap-modal-table-name"));
-            click(selectBtn);
-            tmName = name.getText();
-            SimpleUtils.pass("Select team member: " + tmName + " Successfully!");
-            click(nextButton);
+            boolean isTMExists = false;
+            for (WebElement comparableShift: comparableShifts) {
+                WebElement name = comparableShift.findElement(By.className("shift-swap-modal-table-name"));
+                if (name.getText().equalsIgnoreCase(tmName)) {
+                    WebElement selectBtn = comparableShift.findElement(By.cssSelector("td.shift-swap-modal-shift-table-select>div"));
+                    clickTheElement(selectBtn);
+                    SimpleUtils.pass("Select team member: " + tmName + " Successfully!");
+                    isTMExists = true;
+                    break;
+                }
+            }
+            if (!isTMExists) {
+                SimpleUtils.fail("The TM is not exits in the comparable shifts list!", false);
+            }
+            scrollToElement(nextButton);
+            clickTheElement(nextButton);
             verifyClickOnSubmitButton();
         }else {
             SimpleUtils.fail("Comparable Shifts not loaded Successfully!", false);
         }
-        return tmName;
     }
 
     @Override
@@ -1702,5 +1729,74 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             clickTheElement(closeDialogBtn);
         } else
             SimpleUtils.report("Close button fail to load! ");
+    }
+
+
+    @Override
+    public void selectSchedulFilter(String option) throws Exception {
+        if (isElementLoaded(filterButton, 5)) {
+            clickTheElement(filterButton);
+            if (areListElementVisible(shiftTypes, 10) && shiftTypes.size() > 0) {
+                for (WebElement shiftType : shiftTypes) {
+                    if (shiftType.getText().contains(option)) {
+                        WebElement filterCheckBox = shiftType.findElement(By.tagName("input"));
+                        if (filterCheckBox.getAttribute("class").contains("ng-empty")) {
+                            click(filterCheckBox);
+                        }
+                    } else {
+                        WebElement filterCheckBox = shiftType.findElement(By.tagName("input"));
+                        if (filterCheckBox.getAttribute("class").contains("ng-not-empty")) {
+                            clickTheElement(filterCheckBox);
+                        }
+                    }
+                }
+            } else
+                SimpleUtils.fail("My Schedule Page: No schedule shift type can be applied", true);
+            //Click again to close the pop up menu
+            clickTheElement(filterButton);
+        } else
+            SimpleUtils.fail("My Schedule Page: Filter button failed to load", true);
+    }
+    @FindBy(css = "[ng-repeat-start*=\"shift in results\"]")
+    private List<WebElement> coverRequestStatus;
+    public boolean checkIfTMExitsInCoverOrSwapRequestList (String tmName) {
+        boolean isExists = false;
+        if ((areListElementVisible(comparableShifts, 10) && comparableShifts.size()!=0 )
+                || (areListElementVisible(coverRequestStatus, 10) && coverRequestStatus.size() != 0)) {
+            if (areListElementVisible(comparableShifts)) {
+                for (WebElement shift: comparableShifts) {
+                    WebElement name = shift.findElement(By.cssSelector(".shift-swap-modal-table-name"));
+                    if (name.getText().equalsIgnoreCase(tmName)) {
+                        isExists = true;
+                        break;
+                    }
+                }
+            } else {
+                for (WebElement shift: coverRequestStatus) {
+                    WebElement name = shift.findElement(By.cssSelector(".shift-swap-modal-table-name"));
+                    if (name.getText().equalsIgnoreCase(tmName)) {
+                        isExists = true;
+                        break;
+                    }
+                }
+            }
+        } else
+            SimpleUtils.report("Comparable shifts or cover request list are fail to load! ");
+        return isExists;
+    }
+
+    @Override
+    public int getCountOfCoverOrSwapRequestsInList() {
+        int count = 0;
+        if ((areListElementVisible(comparableShifts, 10) && comparableShifts.size()!=0 )
+                || (areListElementVisible(coverRequestStatus, 10) && coverRequestStatus.size() != 0)) {
+            if (areListElementVisible(comparableShifts)) {
+                count = comparableShifts.size();
+            } else {
+                count = coverRequestStatus.size();
+            }
+        } else
+            SimpleUtils.report("Comparable shifts or cover request list are fail to load! ");
+        return count;
     }
 }
