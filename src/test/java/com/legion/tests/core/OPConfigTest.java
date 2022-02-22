@@ -192,6 +192,9 @@ public class OPConfigTest extends TestBase {
             configurationPage.verifyTheFunctionalityOfInputsInMealOrRest(rest);
             // Verify X button is clickable on Rest Breaks section
             configurationPage.verifyXbuttonOnMealOrRest(rest);
+            // Clear data
+            configurationPage.saveADraftTemplate();
+            configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

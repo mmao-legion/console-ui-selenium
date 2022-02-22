@@ -3603,7 +3603,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "[form-title=\"Meal Breaks\"] .delete-action")
 	private List<WebElement> mealDeleteBtns;
 
-	@FindBy(css = "[form-title=\"Meal Breaks\"] .delete-action")
+	@FindBy(css = "[form-title=\"Rest Breaks\"] .delete-action")
 	private List<WebElement> restDeleteBtns;
 
 	public boolean checkIfMinorSectionsLoaded () throws Exception {
@@ -3796,7 +3796,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		} else if (mealOrRest.equalsIgnoreCase("Rest")) {
 			if (areListElementVisible(restInputs, 5) && restInputs.size() == 3) {
 				clickTheElement(restInputs.get(0));
-				mealInputs.get(0).clear();
+				restInputs.get(0).clear();
 				restInputs.get(0).sendKeys(String.valueOf(number));
 				if (restInputs.get(0).getAttribute("value").equalsIgnoreCase(String.valueOf(number))) {
 					SimpleUtils.pass("Rest inputs: number is supported!");
