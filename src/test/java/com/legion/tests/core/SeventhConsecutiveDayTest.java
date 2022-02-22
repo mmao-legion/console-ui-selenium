@@ -1046,7 +1046,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
         smartCardPage.clickLinkOnSmartCardByName(linkName);
         mySchedulePage.verifySwapRequestShiftsLoaded();
         //Error message should display as: We're sorry. You're not eligible to take this shift, as it will trigger overtime.
-        mySchedulePage.verifyClickAgreeBtnForSwapWithMessage(Constants.WillTriggerOTErrorMessage);
+        mySchedulePage.verifyClickAgreeBtnForSwapWithMessage(Constants.WillTriggerWeeklyOTErrorMessage);
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
