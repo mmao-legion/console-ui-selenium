@@ -147,15 +147,15 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             String startTime = "11am";
             String endTime = "2pm";
-            String consecutiveOTViolation = "3 hr daily overtime";
+            String consecutiveOTViolation = "3 hrs daily overtime";
             createShiftsForConsecutiveOT(startTime, endTime, consecutiveOTViolation, true);
             startTime = "9am";
             endTime = "3pm";
-            consecutiveOTViolation = "5.5 hr daily overtime";
+            consecutiveOTViolation = "5.5 hrs daily overtime";
             createShiftsForConsecutiveOT(startTime, endTime, consecutiveOTViolation, true);
             startTime = "7am";
             endTime = "5pm";
-            consecutiveOTViolation = "9.5 hr daily overtime";
+            consecutiveOTViolation = "9.5 hrs daily overtime";
             createShiftsForConsecutiveOT(startTime, endTime, consecutiveOTViolation, true);
 
         } catch (Exception e) {
@@ -191,11 +191,11 @@ public class SeventhConsecutiveDayTest extends TestBase {
             createShiftsForConsecutiveOT(startTime, endTime, consecutiveOTViolation, false);
             startTime = "9am";
             endTime = "4pm";
-            consecutiveOTViolation = "6.5 hr daily overtime";
+            consecutiveOTViolation = "6.5 hrs daily overtime";
             createShiftsForConsecutiveOT(startTime, endTime, consecutiveOTViolation, true);
             startTime = "7am";
             endTime = "5pm";
-            consecutiveOTViolation = "26.5 hr daily overtime";
+            consecutiveOTViolation = "26.5 hrs daily overtime";
             createShiftsForConsecutiveOT(startTime, endTime, consecutiveOTViolation, true);
 
         } catch (Exception e) {
@@ -256,7 +256,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
                     SimpleUtils.assertOnFail("The consecutive OT Violation display incorrectly, the expected is: "+ consecutiveOTViolation
                                     + " The actual is: "+ scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfSevenDays.get(0)),
                             !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfSevenDays.get(0)).
-                                    contains("hr daily overtime"), false);
+                                    contains("hrs daily overtime"), false);
                 }
 
             } else {
@@ -1471,8 +1471,8 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             String firstSixDaysTime = "8am-2pm";
             String seventhConsecutiveDayTime  = "8am-10pm";
-            String consecutiveOTViolation1 = "8 hr daily overtime";
-            String consecutiveOTViolation2 = "5.5 hr daily double overtime";
+            String consecutiveOTViolation1 = "8 hrs daily overtime";
+            String consecutiveOTViolation2 = "5.5 hrs daily double overtime";
             List<String> consecutiveOTViolations = new ArrayList<>();
             consecutiveOTViolations.add(consecutiveOTViolation1);
             consecutiveOTViolations.add(consecutiveOTViolation2);
@@ -1539,7 +1539,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             String firstSixDaysTime = "8am-2pm";
             String seventhConsecutiveDayTime  = "8am-4pm";
-            String consecutiveOTViolation1 = "7.5 hr daily overtime";
+            String consecutiveOTViolation1 = "7.5 hrs daily overtime";
             List<String> consecutiveOTViolations = new ArrayList<>();
             consecutiveOTViolations.add(consecutiveOTViolation1);
             createShiftsForConsecutiveOTAndDT(firstSixDaysTime, seventhConsecutiveDayTime, consecutiveOTViolations);
@@ -1609,7 +1609,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             String firstSixDaysTime = "8am-2pm";
             String seventhConsecutiveDayTime  = "8am-10pm";
-            String consecutiveOTViolation1 = "13.5 hr daily overtime";
+            String consecutiveOTViolation1 = "13.5 hrs daily overtime";
             List<String> consecutiveOTViolations = new ArrayList<>();
             consecutiveOTViolations.add(consecutiveOTViolation1);
             createShiftsForConsecutiveOTAndDT(firstSixDaysTime, seventhConsecutiveDayTime, consecutiveOTViolations);
@@ -1683,10 +1683,10 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             String firstSixDaysTime = "8am-6pm";
             String seventhConsecutiveDayTime  = "8am-10pm";
-            String consecutiveOTViolation1 = "8 hr daily overtime";
-            String consecutiveOTViolation2 = "5.5 hr daily double overtime";
-            String consecutiveOTViolation3 = "8 hr weekly overtime";
-            String consecutiveOTViolation4 = "9 hr weekly double overtime";
+            String consecutiveOTViolation1 = "8 hrs daily overtime";
+            String consecutiveOTViolation2 = "5.5 hrs daily double overtime";
+            String consecutiveOTViolation3 = "8 hrs weekly overtime";
+            String consecutiveOTViolation4 = "9 hrs weekly double overtime";
             List<String> consecutiveOTViolations = new ArrayList<>();
             consecutiveOTViolations.add(consecutiveOTViolation1);
             consecutiveOTViolations.add(consecutiveOTViolation2);
