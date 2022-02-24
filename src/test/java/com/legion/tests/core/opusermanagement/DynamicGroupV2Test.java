@@ -944,6 +944,118 @@ public class DynamicGroupV2Test extends TestBase {
         configurationPage.publishNowTemplate();
     }
 
+    //===========================================================================
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate detection when there is conflict among Dynamic employee group---create new Dynamic group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDetectionForCreatingNewDynamicEmployeeGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
+        //Go to the Settings tab and set required fields.
+        settingsAndAssociationPage.goToTemplateListOrSettings("setting");
+        List<String> ExpectedFieldsFromSettingsTab = new ArrayList<>();
+        ExpectedFieldsFromSettingsTab.add("Country");
+        ExpectedFieldsFromSettingsTab.add("State");
+        settingsAndAssociationPage.setupRequiredFields(ExpectedFieldsFromSettingsTab);
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+        //delete all template.
+        configurationPage.archiveOrDeleteAllTemplates();
+
+        //Create new template.
+        String templateName = "AutoTest"+System.currentTimeMillis();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Go to the Association page to create a dynamic employee group and check the fields.
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Country.getValue(), "IN", "United States");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.State.getValue(), "IN", "Texas");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+
+        //Create new template.
+        String templateName2 = "AutoTest"+System.currentTimeMillis();
+        configurationPage.createNewTemplate(templateName2);
+        configurationPage.clickOnTemplateName(templateName2);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Go to the Association page to create a dynamic employee group and check the fields.
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName2);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Country.getValue(), "IN", "United States");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.State.getValue(), "IN", "Texas");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        SimpleUtils.assertOnFail("Conflict detection window should show up!", settingsAndAssociationPage.ifConflictDetectedWindowShowUP(), false);
+        settingsAndAssociationPage.verifyConflictDetectionInfo();
+        settingsAndAssociationPage.clickOnButtonOnTheConflictDetectedWindow("save");
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.chooseSaveOrPublishBtnAndClickOnTheBtn("publish now");
+        SimpleUtils.assertOnFail("Conflict detection window should show up!", settingsAndAssociationPage.ifConflictDetectedWindowShowUP(), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Haya")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate detection when there is no conflict among Dynamic employee group---create new Dynamic group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyNoConflictDetectedForCreatingNewDynamicEmployeeGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
+        //Go to the Settings tab and set required fields.
+        settingsAndAssociationPage.goToTemplateListOrSettings("setting");
+        List<String> ExpectedFieldsFromSettingsTab = new ArrayList<>();
+        ExpectedFieldsFromSettingsTab.add("Country");
+        ExpectedFieldsFromSettingsTab.add("State");
+        settingsAndAssociationPage.setupRequiredFields(ExpectedFieldsFromSettingsTab);
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+        //delete all template.
+        configurationPage.archiveOrDeleteAllTemplates();
+
+        //Create new template.
+        String templateName = "AutoTest"+System.currentTimeMillis();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Go to the Association page to create a dynamic employee group and check the fields.
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Country.getValue(), "IN", "United States");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.State.getValue(), "IN", "Texas");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+
+        //Create new template.
+        String templateName2 = "AutoTest"+System.currentTimeMillis();
+        configurationPage.createNewTemplate(templateName2);
+        configurationPage.clickOnTemplateName(templateName2);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Go to the Association page to create a dynamic employee group and check the fields.
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName2);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Country.getValue(), "IN", "United States");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.State.getValue(), "IN", "Washington");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        SimpleUtils.assertOnFail("Conflict detection window should not show up!", !settingsAndAssociationPage.ifConflictDetectedWindowShowUP(), false);
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+    }
+
     //--------------Tests for Conflict Detection------------ End---------------
 
 }
