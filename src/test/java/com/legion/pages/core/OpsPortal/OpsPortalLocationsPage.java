@@ -3239,7 +3239,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void goToConfigurationTabInLocationLevel() {
-		if (areListElementVisible(tabsInLocations, 5)) {
+		if (areListElementVisible(tabsInLocations, 10)) {
 			click(tabsInLocations.get(1));
 			if (areListElementVisible(templateRows, 5)) {
 				SimpleUtils.pass("Go to Configuration tab in locations level page successfully");
@@ -3498,7 +3498,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(backBtnInLocationDetailsPage, 5)) {
 			click(backBtnInLocationDetailsPage);
 			waitForSeconds(8);
-			if (isElementEnabled(editLocationBtn, 5)) {
+			if (isElementEnabled(editLocationBtn, 10)) {
 				SimpleUtils.pass("Back to location configuration page successfully");
 			} else
 				SimpleUtils.fail("Back to location configuration page failed", false);
