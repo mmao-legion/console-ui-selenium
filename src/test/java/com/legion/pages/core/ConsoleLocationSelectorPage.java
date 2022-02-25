@@ -1493,7 +1493,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     @Override
     public List<String> getNavigatorValue() {
         List<String> navigatorText =new ArrayList<>() ;
-        if (areListElementVisible(levelDisplay,5)) {
+        if (areListElementVisible(levelDisplay,15)) {
             for (WebElement each:levelDisplay) {
                 navigatorText.add(each.getText().trim());
             }
