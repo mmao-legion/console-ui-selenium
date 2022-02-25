@@ -116,13 +116,8 @@ public interface ConfigurationPage {
     public boolean checkIfMinorSectionsLoaded () throws Exception;
     public void clickOnBackButton () throws Exception;
     public void verifyTheContentOnSpecificCard(String cardName, List<String> content) throws Exception;
-    public void verifyTheContentOnMealBreaksSection() throws Exception;
-    public void selectYesOrNoOnMealOrRest(String mealOrRest, String yesOrNo) throws Exception;
-    public void clickOnAddButtonOnMealOrRestSection(String mealOrRest) throws Exception;
-    public void verifyTheFunctionalityOfInputsInMealOrRest(String mealOrRest) throws Exception;
-    public void verifyXbuttonOnMealOrRest(String mealOrRest) throws Exception;
-    public void verifyTheContentOnRestBreaksSection() throws Exception;
     public void setStrictlyEnforceMinorViolations(String yesOrNo) throws Exception;
     public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception;
     public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
+    public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception;
 }

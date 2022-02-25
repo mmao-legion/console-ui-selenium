@@ -1,8 +1,10 @@
 package com.legion.tests.core;
 
+import com.legion.pages.CinemarkMinorPage;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
+import com.legion.pages.core.opConfiguration.MealAndRestPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -16,6 +18,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -162,6 +165,7 @@ public class OPConfigTest extends TestBase {
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            MealAndRestPage mealAndRestPage = (MealAndRestPage) pageFactory.createMealAndRestPage();
             configurationPage.goToConfigurationPage();
 
             configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MealAndRest.getValue());
@@ -171,30 +175,79 @@ public class OPConfigTest extends TestBase {
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             // Verify the content on Meal Breaks section
-            configurationPage.verifyTheContentOnMealBreaksSection();
+            mealAndRestPage.verifyTheContentOnMealBreaksSection();
             // Verify Yes/No button is clickable on Meal Breaks section
-            configurationPage.selectYesOrNoOnMealOrRest(meal, "Yes");
-            configurationPage.selectYesOrNoOnMealOrRest(meal, "No");
+            mealAndRestPage.selectYesOrNoOnMealOrRest(meal, "Yes");
+            mealAndRestPage.selectYesOrNoOnMealOrRest(meal, "No");
             // Verify + Add button is clickable on Meal Breaks section
-            configurationPage.clickOnAddButtonOnMealOrRestSection(meal);
+            mealAndRestPage.clickOnAddButtonOnMealOrRestSection(meal);
             // Verify the functionality of 7 input boxes on Meal Breaks section
-            configurationPage.verifyTheFunctionalityOfInputsInMealOrRest(meal);
+            mealAndRestPage.verifyTheFunctionalityOfInputsInMealOrRest(meal);
             // Verify X button is clickable on Meal Breaks section
-            configurationPage.verifyXbuttonOnMealOrRest(meal);
+            mealAndRestPage.verifyXbuttonOnMealOrRest(meal);
             // Verify the content on Rest Breaks section
-            configurationPage.verifyTheContentOnRestBreaksSection();
+            mealAndRestPage.verifyTheContentOnRestBreaksSection();
             // Verify Yes/No button is clickable on Rest Breaks section
-            configurationPage.selectYesOrNoOnMealOrRest(rest, "Yes");
-            configurationPage.selectYesOrNoOnMealOrRest(rest, "No");
+            mealAndRestPage.selectYesOrNoOnMealOrRest(rest, "Yes");
+            mealAndRestPage.selectYesOrNoOnMealOrRest(rest, "No");
             // Verify + Add button is clickable on Rest Breaks section
-            configurationPage.clickOnAddButtonOnMealOrRestSection(rest);
+            mealAndRestPage.clickOnAddButtonOnMealOrRestSection(rest);
             // Verify the functionality of 3 input boxes on Rest Breaks section
-            configurationPage.verifyTheFunctionalityOfInputsInMealOrRest(rest);
+            mealAndRestPage.verifyTheFunctionalityOfInputsInMealOrRest(rest);
             // Verify X button is clickable on Rest Breaks section
-            configurationPage.verifyXbuttonOnMealOrRest(rest);
+            mealAndRestPage.verifyXbuttonOnMealOrRest(rest);
             // Clear data
             configurationPage.saveADraftTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify can set the value for Meal and Rest template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCanSetValueForMealAndRestTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String meal = "Meal";
+            String rest = "Rest";
+            String dynamicEmployeeGroup = "Meal14";
+            String templateName = TestBase.getCurrentTime().substring(0, 8);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            MealAndRestPage mealAndRestPage = (MealAndRestPage) pageFactory.createMealAndRestPage();
+            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+            configurationPage.goToConfigurationPage();
+
+            configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MealAndRest.getValue());
+            // Verify the content on Meal and Rest page
+            configurationPage.isTemplateListPageShow();
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            // Verify can set the meal breaks
+            List<Integer> settings = new ArrayList<>(Arrays.asList(1, 240, 480, 20, 120, 120, 0));
+            mealAndRestPage.clickOnAddButtonOnMealOrRestSection(meal);
+            mealAndRestPage.verifyCanSetTheValueForInputs(meal, settings);
+            // Verify can set the rest breaks
+            settings = new ArrayList<>(Arrays.asList(180, 360, 1));
+            mealAndRestPage.clickOnAddButtonOnMealOrRestSection(rest);
+            mealAndRestPage.verifyCanSetTheValueForInputs(rest, settings);
+            // Verify can select the Association
+            configurationPage.clickOnAssociationTabOnTemplateDetailsPage();
+            configurationPage.selectOneDynamicGroup(dynamicEmployeeGroup);
+            configurationPage.clickOnTemplateDetailTab();
+            // Verify can publish the template successfully
+            cinemarkMinorPage.saveOrPublishTemplate(CinemarkMinorTest.templateAction.Publish_Now.getValue());
+            // Verify the value is saved successfully
+            configurationPage.clickOnSpecifyTemplateName(templateName, "view");
+            // Clear data
+            // configurationPage.saveADraftTemplate();
+            // configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }
