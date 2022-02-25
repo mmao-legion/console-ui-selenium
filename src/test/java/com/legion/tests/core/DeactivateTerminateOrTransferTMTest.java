@@ -64,6 +64,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             configurationPage.setWFS("Yes");
             configurationPage.selectWFSGroup(districtName);
             configurationPage.setMoveExistingShiftWhenTransfer("Yes");
+            Thread.sleep(3000);
             configurationPage.publishNowTheTemplate();
             Thread.sleep(3000);
 

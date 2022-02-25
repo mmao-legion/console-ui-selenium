@@ -1769,10 +1769,10 @@ public class SeventhConsecutiveDayTest extends TestBase {
             } else {
                 for (int k= 0; k< consecutiveOTViolations.size(); k++) {
                     if (consecutiveOTViolations.get(k).contains("weekly")) {
-                        SimpleUtils.assertOnFail("The consecutive OT Violation display incorrectly, it should not contains: "+ consecutiveOTViolations,
+                        SimpleUtils.assertOnFail("The consecutive OT Violation display incorrectly, it should not contains: "+ consecutiveOTViolations +" The actual message is: "+violations,
                                 violations.contains(consecutiveOTViolations.get(k)), false);
                     } else
-                        SimpleUtils.assertOnFail("The consecutive OT Violation display incorrectly, it should not contains: "+ consecutiveOTViolations,
+                        SimpleUtils.assertOnFail("The consecutive OT Violation display incorrectly, it should not contains: "+ consecutiveOTViolations +" The actual message is: "+violations,
                                 !violations.contains(consecutiveOTViolations.get(k)), false);
                 }
             }

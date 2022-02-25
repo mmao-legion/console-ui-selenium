@@ -7169,7 +7169,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement saveBtn;
 	public void clickOnSaveBtn() throws Exception {
 		if (isElementLoaded(saveBtn)) {
-			click(saveBtn);
+			clickTheElement(saveBtn);
 			displaySuccessMessage();
 		} else
 			SimpleUtils.report("Save Button not loaded.");
@@ -7180,7 +7180,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement manageBtn;
 	public void clickOnManageBtn() throws Exception {
 		if (isElementLoaded(manageBtn)) {
-			click(manageBtn);
+			clickTheElement(manageBtn);
 			SimpleUtils.pass("Manage button clicked successfully.");
 		} else
 			SimpleUtils.report("Manage Button not loaded.");

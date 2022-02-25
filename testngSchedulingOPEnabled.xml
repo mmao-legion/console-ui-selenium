@@ -416,7 +416,7 @@ SCH-5862-->
                     <!--                    <include name="verifyViolationWhenSetConsecutiveOTSettingAsWorkweekLessThan40HrsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6172-->
                     <include name="verifyViolationWhen7thConsecutiveDayShiftHourExceedDTPayHrsAsInternalAdmin" />
                     <include name="verifyViolationWhen7thConsecutiveDayShiftHourNotExceedDTPayHrsAsInternalAdmin" />
-                    <include name="verifyViolationWhenShiftHoursExceedWeeklyDTHoursAsInternalAdmin" />
+<!--                    <include name="verifyViolationWhenShiftHoursExceedWeeklyDTHoursAsInternalAdmin" /> -->
                     <include name="verifyViolationWhenDisable7thConsecutiveDayDTSettingAsInternalAdmin" />
 
                     <!-- disable 7th Consecutive OT Toggle and Consecutive DT -->
