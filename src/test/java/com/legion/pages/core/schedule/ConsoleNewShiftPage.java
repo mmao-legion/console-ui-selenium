@@ -1028,7 +1028,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         if(areListElementVisible(btnSearchteamMember,5)) {
             if (btnSearchteamMember.size() == 2) {
                 //click(btnSearchteamMember.get(1));
-                if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
+                if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 15)) {
                     textSearch.clear();
                     textSearch.sendKeys(name);
                     click(searchIcon);

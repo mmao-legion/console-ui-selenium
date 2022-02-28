@@ -27,7 +27,6 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.loc;
 
 public class SeventhConsecutiveDayTest extends TestBase {
-    private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     private static String controlEnterprice = "Vailqacn_Enterprise";
     private static String opEnterprice = "CinemarkWkdy_Enterprise";
     public enum consecutiveOTDaysCount{
