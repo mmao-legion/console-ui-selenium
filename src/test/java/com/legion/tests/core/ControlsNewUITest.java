@@ -1653,15 +1653,15 @@ public class ControlsNewUITest extends TestBase{
             String myWorkPreferencesLabel = "My Work Preferences";
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
             profileNewUIPage.clickNextWeek();
-            for (int i = 0; i< schedulePlanningWindowWeeks ; i++) {
+            for (int i = 0; i< schedulePlanningWindowWeeks; i++) {
+                profileNewUIPage.clickNextWeek();
                 SimpleUtils.assertOnFail("The My Availability should be locked! ",
                         profileNewUIPage.isMyAvailabilityLockedNewUI(), false);
                 SimpleUtils.assertOnFail("The My Availability lock message display incorrectly! It should be: " + lockMessage2
                                 + " But the actual is: " + profileNewUIPage.getToolTipMessageOfAvailabilityLockIcon(),
                         lockMessage2.equalsIgnoreCase(profileNewUIPage.getToolTipMessageOfAvailabilityLockIcon()), false);
-                profileNewUIPage.clickNextWeek();
             }
-
+            profileNewUIPage.clickNextWeek();
             SimpleUtils.assertOnFail("The My Availability should not be locked! ",
                     !profileNewUIPage.isMyAvailabilityLockedNewUI(), false);
 

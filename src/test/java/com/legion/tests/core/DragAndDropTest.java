@@ -1002,7 +1002,7 @@ public class DragAndDropTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate Assignment rule violation with Yes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin(String browser, String username, String password, String location) {
@@ -1126,6 +1126,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.searchTeamMemberByName(firstNameOfTM2);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
+            Thread.sleep(2000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0, firstNameOfTM1, 1, firstNameOfTM2);
             scheduleShiftTablePage.verifyConfirmStoreOpenCloseHours();

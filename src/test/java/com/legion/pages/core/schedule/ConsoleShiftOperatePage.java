@@ -2372,7 +2372,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
                 clickTheElement(image);
                 waitForSeconds(3);
-                if (isElementLoaded(deleteShift, 5)) {
+                if (isElementLoaded(deleteShift, 15)) {
                     clickTheElement(deleteShift);
                     if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
                         click(deleteBtnInDeleteWindows);
