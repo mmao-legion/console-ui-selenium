@@ -2439,30 +2439,27 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         int publishedForTheWeekAfterNext = (Double.valueOf(schedulePublishStatus.get(9).getAttribute("height"))).intValue();
 
         Map<String, Integer> scheduleStatusFromSchedulePublisStatusWidget = new HashMap<>();
-        int r = 10;
-        r = rate(scheduleNumber, notStartedNumberForCurrentWeek, inProgressForCurrentWeek, publishedForCurrentWeek);
-        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForCurrentWeek", notStartedNumberForCurrentWeek / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForCurrentWeek", inProgressForCurrentWeek / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForCurrentWeek", publishedForCurrentWeek / r);
+        float r = rate(scheduleNumber, notStartedNumberForCurrentWeek, inProgressForCurrentWeek, publishedForCurrentWeek);
+        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForCurrentWeek", Math.round(notStartedNumberForCurrentWeek / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForCurrentWeek", Math.round(inProgressForCurrentWeek / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForCurrentWeek", Math.round(publishedForCurrentWeek / r));
 
         r = rate(scheduleNumber, notStartedNumberForNextWeek, inProgressForNextWeek, publishedForNextWeek);
-        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForNextWeek", notStartedNumberForNextWeek / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForNextWeek", inProgressForNextWeek / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForNextWeek", publishedForNextWeek / r);
+        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForNextWeek", Math.round(notStartedNumberForNextWeek / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForNextWeek", Math.round(inProgressForNextWeek / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForNextWeek", Math.round(publishedForNextWeek / r));
 
         r = rate(scheduleNumber, notStartedNumberForTheWeekAfterNext, inProgressForTheWeekAfterNext, publishedForTheWeekAfterNext);
-        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForTheWeekAfterNext", notStartedNumberForTheWeekAfterNext / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForTheWeekAfterNext", inProgressForTheWeekAfterNext / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForTheWeekAfterNext", publishedForTheWeekAfterNext / r);
+        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForTheWeekAfterNext", Math.round(notStartedNumberForTheWeekAfterNext / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForTheWeekAfterNext", Math.round(inProgressForTheWeekAfterNext / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForTheWeekAfterNext", Math.round(publishedForTheWeekAfterNext / r));
 
         return scheduleStatusFromSchedulePublisStatusWidget;
 
     }
 
-    private int rate(int sum, int a, int b, int c) throws Exception {
-        int r = 10;
-		while (a + b + c != sum * r)
-			r++;
+    private float rate(int sum, int a, int b, int c) throws Exception {
+		float r = Float.valueOf(a + b + c) / sum;
         return r;
     }
 
