@@ -2755,6 +2755,27 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		waitForSeconds(10);
 	}
 
+	@Override
+	public void verifySpecificAssociationIsSaved(String name) throws Exception {
+		boolean isSelected = false;
+		searchOneDynamicGroup(name);
+		if (areListElementVisible(templateAssociationRows, 5) && templateAssociationRows.size() > 0) {
+			for (WebElement row: templateAssociationRows) {
+				String associationName = row.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+				if (associationName.equals(name)) {
+					WebElement radioBtn = row.findElement(By.cssSelector("[type=\"radio\"]"));
+					if (radioBtn.getAttribute("checked").equals("true")) {
+						isSelected = true;
+						SimpleUtils.pass("Dynamic Group: " + name + " is selected successfully!");
+					}
+				}
+			}
+		}
+		if (!isSelected) {
+			SimpleUtils.fail("Dynamic Group: " + name + " is not selected!", false);
+		}
+	}
+
 	@FindBy(css="div.groupAction lg-button[ng-click=\"$ctrl.addDynamicGroup()\"] button")
 	private WebElement addDynamicGroupButton;
 	@FindBy(css="div.lg-modal h1.lg-modal__title")

@@ -282,4 +282,35 @@ public class MealAndRestPage extends BasePage implements com.legion.pages.opConf
         }
     }
 
+    @Override
+    public Boolean verifyMealAndRestValueAreSaved(String mealOrRest, List<Integer> settings) throws Exception {
+        boolean isSaved = true;
+        if (mealOrRest.equalsIgnoreCase("Meal")) {
+            if (areListElementVisible(mealInputs, 5) && mealInputs.size() == 7 && settings.size() == 7) {
+                for (int i = 0; i < mealInputs.size(); i++) {
+                    if (!mealInputs.get(i).getAttribute("value").equals(String.valueOf(settings.get(i)))) {
+                        isSaved = false;
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Seven inputs failed to show when clicking + Add button!", false);
+            }
+        } else if (mealOrRest.equalsIgnoreCase("Rest")) {
+            if (areListElementVisible(restInputs, 5) && restInputs.size() == 3 && settings.size() == 3) {
+                for (int i = 0; i < restInputs.size(); i++) {
+                    if (!restInputs.get(i).getAttribute("value").equals(String.valueOf(settings.get(i)))) {
+                        isSaved = false;
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Three inputs failed to show when clicking + Add button!", false);
+            }
+        } else {
+            SimpleUtils.fail("Please send the correct Param: Meal Or Rest!", false);
+        }
+        return isSaved;
+    }
+
 }

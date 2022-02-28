@@ -120,4 +120,5 @@ public interface ConfigurationPage {
     public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception;
     public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
     public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception;
+    public void verifySpecificAssociationIsSaved(String name) throws Exception;
 }
