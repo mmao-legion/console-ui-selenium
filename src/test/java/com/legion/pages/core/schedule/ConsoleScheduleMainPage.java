@@ -760,7 +760,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         if (isClearWorkRoleFilters)
             unCheckFilters(availableWorkRoleFilters);
         for (WebElement availableWorkRoleFilter : availableWorkRoleFilters) {
-            if (availableWorkRoleFilter.getText().equalsIgnoreCase(workRoleLabel.toLowerCase())) {
+            if (availableWorkRoleFilter.getText().split("\\(")[0].trim().equalsIgnoreCase(workRoleLabel.toLowerCase())) {
                 click(availableWorkRoleFilter);
                 SimpleUtils.pass("Schedule Work Role:'" + availableWorkRoleFilter.getText() + "' Filter selected Successfully!");
                 break;
