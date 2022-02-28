@@ -102,7 +102,7 @@ public class TimeOffRequestTest extends TestBase {
         configurationPage.setTimeOffRequestRuleAs("Employee can request ?", true);
         configurationPage.setTimeOffRequestRuleAs("Employee can request partial day ?", false);
         configurationPage.setTimeOffRequestRuleAs("Manager can submit in timesheet ?", false);
-        configurationPage.setValueForTimeOffRequestRules("Weekly limits(hours)", "40");
+        configurationPage.setValueForTimeOffRequestRules("Weekly limits(hours)", "20");
         configurationPage.setValueForTimeOffRequestRules("Days request must be made in advance", "2");
         configurationPage.setValueForTimeOffRequestRules("Configure all day time off default", "7");
         configurationPage.setValueForTimeOffRequestRules("Days an employee can request at one time", "3");
@@ -113,7 +113,7 @@ public class TimeOffRequestTest extends TestBase {
         configurationPage.setTimeOffRequestRuleAs("Enforce Yearly Limits", true);
         configurationPage.setValueForTimeOffRequestRules("Probation Period", "3");
         configurationPage.setProbationUnitAsMonths();
-        configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "4");
+        configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "10");
         configurationPage.addSpecifiedServiceLever(0, "12", "3", "20");
         configurationPage.saveTimeOffConfiguration(true);
 
@@ -203,19 +203,19 @@ public class TimeOffRequestTest extends TestBase {
         Assert.assertEquals(timeOffPage.getRequestErrorMessage(), "Time off request cannot be submitted during probation period");
         //out of probation period
         commonComponents.okToActionInModal(false);
-        timeOffPage.createTimeOff("PTO", false, 3, 3);
+        timeOffPage.createTimeOff("PTO", false, 3, 3);//-7hours
         commonComponents.okToActionInModal(true);
 
         //Assert.assertEquals(timeOffPage.getRequestErrorMessage(), "Time off request cannot be submitted during probation period");
-        //get the employee workerId
+        /*//get the employee workerId
         String workId = getWorkId();
         //delete time off request
-        deleteRequestedTimeOffDateByWorkerId(workId);
+        deleteRequestedTimeOffDateByWorkerId(workId);*/
 
 
-        //4 Weekly limits(hours)  request 2 days 2*6=12; less than balance: 5+8=13, but more than weekly limit 10 hours;
-        commonComponents.okToActionInModal(false);
-        timeOffPage.createTimeOff("Annual Leave", true, 16, 17);
+        //4 Weekly limits(hours)  request 2 days 2*7=14; 7hours have been requested last time,3*7=21 hours, more than weekly limit 20 hours;
+        /*commonComponents.okToActionInModal(false);*/
+        timeOffPage.createTimeOff("PTO", true, 16, 17);
         commonComponents.okToActionInModal(true);
         Assert.assertEquals(timeOffPage.getRequestErrorMessage(), "Above weekly max");
 
@@ -338,11 +338,11 @@ public class TimeOffRequestTest extends TestBase {
     public void deleteRequestedTimeOffDateByWorkerId(String workerId) {
         //delete the Access Role just create successfully.
         String enterpriseId = "aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95";
-        String sql1 = "delete from TimeOffRequest where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        String sql1 = "delete from legionrc.TimeOffRequest where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
         System.out.println("sql1： "+sql1);
-        String sql2 = "delete from TimeOffRequestHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        String sql2 = "delete from legionrc.TimeOffRequestHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
         System.out.println("sql2： "+sql2);
-        String sql3 = "delete from WorkerAccrualHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        String sql3 = "delete from legionrc.WorkerAccrualHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
         System.out.println("sql3： "+sql3);
         DBConnection.updateDB(sql1);
         DBConnection.updateDB(sql2);

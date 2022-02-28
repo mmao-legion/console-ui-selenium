@@ -58,6 +58,7 @@ import static com.legion.utils.MyThreadLocal.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.test.testrail.TestRailOperation.addResultForTest;
 import static com.legion.test.testrail.TestRailOperation.addTestRun;
+import static java.lang.Thread.sleep;
 
 //import org.apache.log4j.Logger;
 
@@ -172,7 +173,7 @@ public abstract class TestBase {
         caps.setCapability("newCommandTimeout", "360");
         setAndroidDriver( new AndroidDriver<MobileElement>(new URL("https://127.0.0.1:4723/wd/hub"), caps));
         getAndroidDriver().manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
-        Thread.sleep(10000);
+        sleep(10000);
         ExtentTestManager.getTest().log(Status.PASS, "Launched Mobile Application Successfully!");
     }
 

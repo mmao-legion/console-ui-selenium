@@ -1,12 +1,15 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -154,10 +157,18 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     private List<WebElement> accrualStartDate;
     @FindBy(css = "question-input[question-title='Accrual End Date'] select")
     private List<WebElement> accrualEndDate;
+
     @FindBy(css = "question-input[question-title='Reinstatement Months'] input")
     private WebElement reinstatementMonth;
     @FindBy(css = "question-input[question-title='Distribution Method'] select")
     private WebElement distributionMethods;
+
+    //Allowance in days
+    @FindBy(css = "question-input[question-title='Allowance in days'] input-field input")
+    private WebElement allowanceInPut;
+    @FindBy(css = "question-input[question-title='Allowance in days'] input-field select")
+    private WebElement allowanceInSelect;
+
     //Distribution type
     @FindBy(css = "question-input[question-title='Distribution type'] select")
     private WebElement distributionType;
@@ -174,9 +185,6 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     private List<WebElement> secondServiceLeverInput;
     @FindBy(css = "table.lg-table.service-level tr")
     private List<WebElement> serviceLeverNum; //size-1
-
-
-    //service lever
     @FindBy(css = "table.lg-table.service-level td.add-button>lg-button[label='+ Add']>button")
     private WebElement addButtonForServiceLever;
     @FindBy(css = "table.lg-table.service-level td>div>span.remove")
@@ -376,13 +384,39 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         }
     }
 
-    //Accrual part
+    //Accrual engine part
     public ArrayList<String> getAccrualStartOptions() {
         return getSelectOptions(accrualStartDate.get(0));
     }
 
     public ArrayList<String> getAccrualEndOptions() {
         return getSelectOptions(accrualEndDate.get(0));
+    }
+
+    public void setAccrualPeriod(String startDateType, String endDateType, String sMonth, String sDate, String eMonth, String eDate) {
+        Select startType = new Select(accrualStartDate.get(0));
+        startType.selectByVisibleText(startDateType);//"Hire Date","Specified Date"
+        if (startDateType.contains("Specified")) {
+            Select monSelect = new Select(accrualStartDate.get(1));
+            monSelect.selectByVisibleText(sMonth);
+            Select dateSelect = new Select(accrualStartDate.get(2));
+            dateSelect.selectByVisibleText(sDate);
+        }
+        Select endType = new Select(accrualEndDate.get(0));
+        endType.selectByVisibleText(endDateType);//"","Hire Date","Specified Date"
+        if (endDateType.contains("Specified")) {
+            Select monSelect = new Select(accrualEndDate.get(1));
+            monSelect.selectByVisibleText(eMonth);
+            Select dateSelect = new Select(accrualEndDate.get(2));
+            dateSelect.selectByVisibleText(eDate);
+        }
+    }
+
+    public void setAllowanceInDays(String allowanceType, String days) {
+        Select typeSelect = new Select(allowanceInSelect);
+        typeSelect.selectByVisibleText(allowanceType);
+        allowanceInPut.clear();
+        allowanceInPut.sendKeys(days);
     }
 
     public void setReinstatementMonth(String reinMonth) {

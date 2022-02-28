@@ -83,6 +83,11 @@ public class TimeOffPage extends BasePage {
     private WebElement sickInput;
     @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tr:last-child>td:nth-child(3) input")
     private WebElement theLastTimeOffInputInEditModal;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] table.lg-table tr.ng-scope>td:first-child")
+    private List<WebElement> timeOffs;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] table.lg-table td>input-field input")
+    private List<WebElement> editInputs;
+
 
     //history
     @FindBy(css = "div.balance-action lg-button[label='History']>button")
@@ -109,6 +114,7 @@ public class TimeOffPage extends BasePage {
     private List<WebElement> balances;
 
 
+
     public void goToTeamMemberDetail(String memberName) {
         String teamMemCssLocator = "span[title=' " + memberName + "']";
         WebElement teamMem = getDriver().findElement(By.cssSelector(teamMemCssLocator));
@@ -117,7 +123,7 @@ public class TimeOffPage extends BasePage {
     }
 
     public void switchToTimeOffTab() {
-        waitForSeconds(6);
+        waitForSeconds(15);
         scrollToElement(timeOffTab);
         timeOffTab.click();
     }
@@ -270,5 +276,14 @@ public class TimeOffPage extends BasePage {
         theLastTimeOffInputInEditModal.sendKeys(balance);
     }
 
-
+    public void editTimeOff(HashMap<String, String> editNameValues) {
+        editButton.click();
+        ArrayList<String> timeOffNames = getWebElementsText(timeOffs);
+        for (String key : editNameValues.keySet()
+        ) {
+            int index = timeOffNames.indexOf(key);
+            editInputs.get(index).clear();
+            editInputs.get(index).sendKeys(editNameValues.get(key));
+        }
+    }
 }
