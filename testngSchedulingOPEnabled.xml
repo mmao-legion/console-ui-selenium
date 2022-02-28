@@ -426,4 +426,20 @@ SCH-5862-->
             </class>
         </classes>
     </test>
+    <test name="Overnight Test">
+        <classes>
+            <class name="com.legion.tests.core.OvernightTest">
+                <methods>
+                    <!-- select Continuous Operation -->
+                    <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" />
+                    <include name="verifyShiftWhenEnableContinuousOperationOptionAsInternalAdmin" />
+
+                    <!-- unselect Continuous Operation -->
+                    <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
+                    <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" />
+
+                </methods>
+            </class>
+        </classes>
+    </test>
     </suite> <!-- Suite -->
