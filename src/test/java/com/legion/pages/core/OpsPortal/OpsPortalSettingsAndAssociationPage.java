@@ -68,8 +68,10 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         if (areListElementVisible(tabsOnTheTemplateListPage, 10)){
             if (tab.toLowerCase().contains("setting") && tabsOnTheTemplateListPage.size()==2){
                 clickTheElement(tabsOnTheTemplateListPage.get(1));
+                SimpleUtils.pass("Clicked on settings tab!");
             } else {
                 clickTheElement(tabsOnTheTemplateListPage.get(0));
+                SimpleUtils.pass("Clicked on template list tab!");
             }
         } else {
             SimpleUtils.fail("There is no tab showing!", false);
@@ -174,6 +176,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
     public void clickOnTheSaveBtnOnConflictDetectedWindow() throws Exception {
         if (isElementLoaded(saveBtnOnConflictDetectedWindow, 10)){
             clickTheElement(saveBtnOnConflictDetectedWindow);
+            SimpleUtils.pass("Clicked on save button!");
         } else {
             SimpleUtils.fail("Fail to find Save button!", false);
         }
@@ -214,6 +217,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         if (isElementLoaded(groupNameInput, 10)){
             groupNameInput.clear();
             groupNameInput.sendKeys(groupName);
+            SimpleUtils.pass("Input group name!");
         } else {
             SimpleUtils.fail("Create dynamic group button is not loaded!", false);
         }
@@ -287,6 +291,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
     public void goToAssociationTabOnTemplateDetailsPage() throws Exception{
         if(isElementEnabled(templateAssociationBTN,10)){
             clickTheElement(templateAssociationBTN);
+            SimpleUtils.pass("Clicked on the Association tab!");
         }else {
             SimpleUtils.fail("Failed to find Association Tab!",false);
         }
@@ -350,6 +355,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
     public String clickOnTestBtnAndGetResultString() throws Exception {
         if (isElementLoaded(testButton, 10)){
             clickTheElement(testButton);
+            SimpleUtils.pass("Clicked on test button!");
             if (isElementLoaded(testMappingResult, 10)){
                 return testMappingResult.getText();
             }
