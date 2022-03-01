@@ -739,7 +739,7 @@ public class LocationsTest extends TestBase {
         String templateName = "UsedByAuto_NoTouchNoDelete";
         String wfsMode = "Yes";
         String wfsName = "WFS";
-        String locationName = "OMLocation16";
+        String locationName = "EstelleUsingLocation";
         String criteria = "Custom";
 
         List<String> wfsGroup = new ArrayList<>();
@@ -767,7 +767,7 @@ public class LocationsTest extends TestBase {
             }
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName("aglae");
+            newShiftPage.searchTeamMemberByName("Aglae");
             if (!shiftOperatePage.verifyWFSFunction()) {
                 //to check WFS group exist or not
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -819,6 +819,7 @@ public class LocationsTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName("Aglae");
+
             if (!shiftOperatePage.verifyWFSFunction()) {
                 SimpleUtils.fail("Workforce sharing function work failed", false);
             } else
@@ -837,7 +838,7 @@ public class LocationsTest extends TestBase {
         String templateName = "ParentFormular";
         String wfsMode = "Yes";
         String wfsName = "WFS";
-        String locationName = "SeaTac AirportSEA";
+        String locationName = "EstelleUsingLocation";
         String criteria = "Custom";
 
         List<String> wfsGroup = new ArrayList<>();
