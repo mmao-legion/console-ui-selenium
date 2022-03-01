@@ -859,6 +859,7 @@ public class BasePage {
 
     public void clickTheElement(WebElement element) {
         ((JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", element);
+        waitForSeconds(2);
     }
 
     public void moveElement(WebElement webElement, int yOffSet)
