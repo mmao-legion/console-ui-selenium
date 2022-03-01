@@ -384,7 +384,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     public void selectWorkRole(String workRoles) throws Exception {
         if (isElementLoaded(btnWorkRole, 20)) {
-            click(btnWorkRole);
+            clickTheElement(btnWorkRole);
             SimpleUtils.pass("Work Role button clicked Successfully");
         } else {
             SimpleUtils.fail("Work Role button is not clickable", false);
