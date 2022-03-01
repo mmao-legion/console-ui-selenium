@@ -79,7 +79,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             // Checking configuration in controls
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
 
                 ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
                 controlsNewUIPage.clickOnControlsConsoleMenu();
@@ -113,7 +113,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
                     consecutiveOTOptions.WorkweekLessThan40Hrs.getValue(), false);
             compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount.Seventh.getValue(),
                     consecutiveOTOptions.Always.getValue(), true);
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
             }
@@ -269,7 +269,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
     private void setConsecutiveOTAndDTSettings (String consecutiveOTDaysCount, String consecutiveOTOptions, String location) throws Exception {
         CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-        if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice).toLowerCase())){
+        if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             controlsNewUIPage.clickOnControlsConsoleMenu();
@@ -295,7 +295,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
         compliancePage.turnOnOrTurnOffConsecutiveDTToggle(false);
         compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
         compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount, consecutiveOTOptions, true);
-        if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice).toLowerCase())){
+        if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
             String contentAfterChange = compliancePage.getConsecutiveOTSettingContent();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.publishNowTheTemplate();
@@ -1354,7 +1354,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
                 controlsNewUIPage.clickOnControlsConsoleMenu();
                 controlsNewUIPage.clickOnControlsComplianceSection();
             } else {
@@ -1376,7 +1376,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             }
             compliancePage.turnOnOrTurnOffConsecutiveDTToggle(false);
             compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(false);
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
@@ -1424,7 +1424,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
                 controlsNewUIPage.clickOnControlsConsoleMenu();
                 controlsNewUIPage.clickOnControlsComplianceSection();
             } else {
@@ -1449,7 +1449,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
             compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount.Seventh.getValue(),
                     consecutiveOTOptions.WorkweekLessThan40Hrs.getValue(), true);
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
@@ -1497,7 +1497,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
                 controlsNewUIPage.clickOnControlsConsoleMenu();
                 controlsNewUIPage.clickOnControlsComplianceSection();
             } else {
@@ -1522,7 +1522,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
             compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount.Seventh.getValue(),
                     consecutiveOTOptions.WorkweekLessThan40Hrs.getValue(), true);
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
@@ -1562,7 +1562,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
                 controlsNewUIPage.clickOnControlsConsoleMenu();
                 controlsNewUIPage.clickOnControlsComplianceSection();
             } else {
@@ -1587,7 +1587,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
             compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount.Seventh.getValue(),
                     consecutiveOTOptions.WorkweekLessThan40Hrs.getValue(), true);
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
@@ -1633,7 +1633,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
                 controlsNewUIPage.clickOnControlsConsoleMenu();
                 controlsNewUIPage.clickOnControlsComplianceSection();
             } else {
@@ -1660,7 +1660,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
             compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount.Seventh.getValue(),
                     consecutiveOTOptions.WorkweekLessThan40Hrs.getValue(), true);
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
