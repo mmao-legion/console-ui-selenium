@@ -504,7 +504,7 @@ public class LaborModelTest extends TestBase {
             laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
             laborModelPage.verifyEntryOfLaborModelSubscription();
-            laborModelPage.verifyImportLocationLevelWorkRoleSubscription();
+//            laborModelPage.verifyImportLocationLevelWorkRoleSubscription();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

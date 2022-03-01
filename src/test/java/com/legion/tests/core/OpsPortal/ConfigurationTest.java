@@ -748,7 +748,7 @@ public class ConfigurationTest extends TestBase {
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdateOH();
             daysHasShifts = scheduleShiftTablePage.verifyDaysHasShifts();
 
             for(String day:days){
@@ -918,14 +918,12 @@ public class ConfigurationTest extends TestBase {
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdateOH();
 //          Click on edit button on week view
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleMainPage.clickOnFilterBtn();
-            scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+            shiftOperatePage.clickOnProfileIcon();
             SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , shiftOperatePage.verifyContextOfTMDisplay(), false);
 //          Click On Profile icon -> Breaks
-            shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.clickOnEditMeaLBreakTime();
             mealRestBreaks = shiftOperatePage.getMealAndRestBreaksTime();
 
