@@ -1673,6 +1673,8 @@ public class LocationsTest extends TestBase {
         scheduleOverviewPage.loadScheduleOverview();
         ForecastPage ForecastPage = pageFactory.createForecastPage();
         ForecastPage.clickForecast();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.navigateToNextWeek();
         ForecastPage.clickOnLabor();
         ForecastPage.verifyLaborForecastCanLoad();
         //After click on refresh, page should get refresh and back to previous page only
