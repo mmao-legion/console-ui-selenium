@@ -2,13 +2,11 @@ package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
-import org.glassfish.grizzly.impl.SafeFutureImpl;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 import java.util.ArrayList;
 import java.util.List;
 

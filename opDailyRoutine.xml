@@ -231,7 +231,9 @@
             <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest">
                 <methods>
                     <include name="verifyAccrualEngineWorksAsInternalAdminOfAccrualEngineTest"/>
+                    <include name="verifyAccrualEngineWorksWellAfterEditOrImportAsInternalAdminOfAccrualEngineTest"/>
                     <include name="verifyAccrualEngineLookBackAsInternalAdminOfAccrualEngineTest"/>
+                    <include name="verifyAccrualHistoryAsInternalAdminOfAccrualEngineTest"/>
                 </methods>
             </class>
         </classes>

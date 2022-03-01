@@ -94,11 +94,12 @@ public class TimeOffPage extends BasePage {
     private WebElement historyButton;
     @FindBy(css = "h1.lg-slider-pop__title img.lg-slider-pop__title-dismiss")
     private WebElement historyCloseButton;
-    @FindBy(css = "div.logInfoContainer>div.templateInfo")
-    private List<WebElement> historyEntries;
-    @FindBy(css = "div.logInfoContainer>p")
+    @FindBy(css = "ul.session>li")
+    private List<WebElement> historyItems;
+    @FindBy(css = "ul.session>li div.templateInfo")
+    private List<WebElement> balanceChanges;
+    @FindBy(css = "ul.session>li p")
     private List<WebElement> accrualDates;
-
 
     //time off request
     @FindBy(css = "span.request-status.request-status-Approved")
@@ -257,19 +258,6 @@ public class TimeOffPage extends BasePage {
         return timeOffBalance;
     }
 
-    public HashMap<String, String> getAccrualHistory() {
-        historyButton.click();
-        ArrayList<String> entries = getWebElementsText(historyEntries);
-        ArrayList<String> dates = getWebElementsText(accrualDates);
-        HashMap history = new HashMap();
-        int mapSize = entries.size();
-        for (int i = 0; i < mapSize; i++) {
-            history.put(entries.get(i), dates.get(i));
-        }
-        historyCloseButton.click();
-        return history;
-    }
-
     public void editTheLastTimeOff(String balance) {
         editButton.click();
         theLastTimeOffInputInEditModal.clear();
@@ -285,5 +273,20 @@ public class TimeOffPage extends BasePage {
             editInputs.get(index).clear();
             editInputs.get(index).sendKeys(editNameValues.get(key));
         }
+    }
+
+    public HashMap<String, String> getAccrualHistory() {
+        historyButton.click();
+        HashMap<String, String> history = new HashMap();
+        int size = getAccrualHistorySize();
+        for (int i = 0; i < size; i++) {
+            history.put(balanceChanges.get(i).getText(), accrualDates.get(i).getText());
+        }
+        historyCloseButton.click();
+        return history;
+    }
+
+    public int getAccrualHistorySize() {
+        return historyItems.size();
     }
 }
