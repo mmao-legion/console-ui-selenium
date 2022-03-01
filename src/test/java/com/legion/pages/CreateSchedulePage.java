@@ -56,5 +56,6 @@ public interface CreateSchedulePage {
     public void clickOnSchedulePublishButton() throws Exception;
     public void clickConfirmBtnOnPublishConfirmModal() throws Exception;
     public void copyAllPartialSchedule () throws Exception;
+    public void createScheduleForNonDGFlowNewUIWithoutUpdateOH() throws Exception;
 
 }
