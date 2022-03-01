@@ -327,26 +327,30 @@ public class AbsentManagementTemplateTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating template lever--can employee request toggle!");
         absentManagePage.back();
 
-        //publish later after associating
-        /*absentManagePage.configureTemplate(tempName);
-        absentManagePage.associateTemplate();
+        //publish after associating
+        absentManagePage.configureTemplate(tempName);
+        absentManagePage.associateTemplate("OML16ForAuto");
         SimpleUtils.pass("Succeeded in associating the template!");
         absentManagePage.switchToDetails();
-        absentManagePage.saveTemplateAs("Publish later");
+        //configure a rule before publish
+        absentManagePage.configureTimeOffRules("Annual Leave");
+        TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
+        configurationPage.setTimeOffRequestRuleAs("Employee can request ?", true);
+        configurationPage.setTimeOffRequestRuleAs("Employee can request partial day ?", true);
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
+        configurationPage.saveTimeOffConfiguration(true);
+        absentManagePage.saveTemplateAs("Publish now");
 
         absentManagePage.search(tempName);
-        Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Pending"), "Failed to save the template as publish later!");
-        SimpleUtils.pass("Succeeded in saving as publish later!");*/
+        Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Published"), "Failed to save the template as publish later!");
+        SimpleUtils.pass("Succeeded in saving as publish now!");
 
-        //publish now
-        absentManagePage.configureTemplate(tempName);
-        absentManagePage.associateTemplate();
-        SimpleUtils.pass("Succeeded in associating the template!");
-        absentManagePage.switchToDetails();
-        absentManagePage.saveTemplateAs("Publish now");
+        //Publish at different time
+        /*absentManagePage.configureTemplate(tempName);
+        absentManagePage.saveTemplateAs("Publish later");
         absentManagePage.search(tempName);
         Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Published"), "Failed to save the template as publish now!");
-        SimpleUtils.pass("Succeeded in saving as publish now!");
+        SimpleUtils.pass("Succeeded in saving as publish now!");*/
 
         //validate there are 2 versions
         absentManagePage.configureTemplate(tempName);
@@ -374,7 +378,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         SimpleUtils.pass("Succeeded in marking as default template!");
 
         //archive
-        absentManagePage.search(tempName);
+        //absentManagePage.search(tempName);
         absentManagePage.clickInDetails();
         //verify archive button displays well!
         Assert.assertTrue(absentManagePage.isArchiveButtonDisplayed(), "Archive button should display here!");

@@ -85,7 +85,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement historyCloseButton;
     @FindBy(css = "div.lg-slider-pop>div.lg-slider-pop__content li:last-child")
     private WebElement createdRecordInHistory;
-    @FindBy(css = "lg-button[label='Archive']>button")
+    @FindBy(css = "form-buttons lg-button[label='Archive']>button")
     private WebElement archiveButton;
     @FindBy(css = "lg-button[label='Delete']>button")
     private WebElement deleteButton;
@@ -122,9 +122,9 @@ public class AbsentManagePage extends BasePage {
     //template lever
     @FindBy(css = "question-input[question-title='Can employees request time off ?'] h3")
     private WebElement canEmployeeRequestLabel;
-    @FindBy(css = "yes-no lg-button-group>div>div:nth-child(1)")
+    @FindBy(css = "yes-no lg-button-group>div>div.lg-button-group-first")
     private WebElement templateLeverCanRequestYes;
-    @FindBy(css = "yes-no lg-button-group>div>div:nth-child(2)")
+    @FindBy(css = "yes-no lg-button-group>div>div.lg-button-group-last")
     private WebElement templateLeverCanRequestNo;
     @FindBy(css = "question-input[question-title='Weekly limit (Time Off + Hours Worked)'] h3")
     private WebElement weeklyLimitLabel;
@@ -209,6 +209,11 @@ public class AbsentManagePage extends BasePage {
     private WebElement removeButton;
     @FindBy(css = "modal form p.lg-modal__content.lg-modal__text")
     private WebElement removeConfirmMes;
+
+    //associate
+    @FindBy(css = "lg-search[placeholder='You can search by name, label and description']>input-field input")
+    private WebElement associateSearch;
+
 
     //home page methods
     public void back() {
@@ -427,8 +432,10 @@ public class AbsentManagePage extends BasePage {
         associationTab.click();
     }
 
-    public void associateTemplate() {
+    public void associateTemplate(String groupName) {
         switchToAssociation();
+        associateSearch.clear();
+        associateSearch.sendKeys(groupName);
         theFirstAssociateGroup.click();
         scrollToBottom();
         saveAssociate.click();

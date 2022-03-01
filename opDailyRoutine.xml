@@ -224,15 +224,28 @@
                     <include name="verifyTimeOffRequestRulesAsInternalAdminForEmployeeManagement"/>
                 </methods>
             </class>
+        </classes>
+    </test>
+    <test name="Accrual Engine Test">
+        <classes>
             <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest">
                 <methods>
                     <include name="verifyAccrualEngineWorksAsInternalAdminOfAccrualEngineTest"/>
                     <include name="verifyAccrualEngineLookBackAsInternalAdminOfAccrualEngineTest"/>
                 </methods>
             </class>
-
         </classes>
     </test>
+    <test name="Time Off Request Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.TimeOffRequestTest">
+                <methods>
+                    <include name="verifyEmployeeCanRequestAsInternalAdminOfTimeOffRequestTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->
 
 
