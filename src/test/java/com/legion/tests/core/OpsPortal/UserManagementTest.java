@@ -191,9 +191,9 @@ public class UserManagementTest extends TestBase {
             Assert.assertTrue(workRolesPage.getTheFirstWorkRoleInTheList().equalsIgnoreCase("Ambassador"));
 
             //testcase2: partial matching
-            workRolesPage.searchByWorkRole("test");
-            Assert.assertFalse(workRolesPage.getTheFirstWorkRoleInTheList().equalsIgnoreCase("test"));
-            Assert.assertTrue(workRolesPage.getTheFirstWorkRoleInTheList().contains("test"));
+            workRolesPage.searchByWorkRole("Key");
+            Assert.assertFalse(workRolesPage.getTheFirstWorkRoleInTheList().equalsIgnoreCase("Key"));
+            Assert.assertTrue(workRolesPage.getTheFirstWorkRoleInTheList().contains("Key"));
 
             //testcase3: no matching item
             workRolesPage.searchByWorkRole("m*");
