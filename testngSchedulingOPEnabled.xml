@@ -192,6 +192,11 @@
                     <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />
                     <!--                   <include name="verifyShiftsCanBeDraggedInDayViewAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5728 -->
 <!--                    <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" /> will move to the overnight test file-->
+                    <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
+                    <include name="verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin" />
+                    <!--                    <include name="verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6247-->
+                    <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" />
+                    <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
