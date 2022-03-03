@@ -541,5 +541,28 @@ public class PlanTest extends TestBase {
         Assert.assertTrue(planPage.verifyPlanConsoleTabShowing(),"There is plan tab for customer access role that assigned view plan permission.");
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Plan Status")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPlanStatusAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("RegionForPlan_Auto");
+        locationSelectorPage.changeDistrict("DistrcitForPlan2");
+
+        PlanPage planPage = pageFactory.createConsolePlanPage();
+        planPage.clickOnPlanConsoleMenuItem();
+
+        List<String> plans = new ArrayList<>(Arrays.asList("AutoUsing-ReadyForReview","AutoUsing-Inprogress","AutoUsing-Approved",
+                "AutoUsing-Rejected","AutoUsing-NotStart"));
+
+        for(String plan:plans){
+            planPage.verifyPlanStatus(plan);
+        }
+    }
 
     }

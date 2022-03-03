@@ -22,6 +22,7 @@ public interface PlanPage {
 //    public int getAllPlansInList() throws Exception;
     public boolean verifyPlanConsoleTabShowing() throws Exception;
     public boolean verifyCreatePlanButtonShowing() throws Exception;
+    public void verifyPlanStatus(String planName) throws Exception;
 
 
 

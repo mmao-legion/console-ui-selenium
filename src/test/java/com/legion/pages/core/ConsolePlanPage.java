@@ -221,7 +221,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     }
 
 
-    private void planDurationSetting(int fromDay, int toDay) throws Exception {
+    private void  planDurationSetting(int fromDay, int toDay) throws Exception {
         selectDate(fromDay);
         selectDate(toDay);
 
@@ -1092,6 +1092,141 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
         clickTheElement(scenarioPlanBackLink);
         waitForSeconds(2);
 
+    }
+
+    @FindBy(css="span[ng-class=\"getPlanStatusClass(plan)\"]")
+    private WebElement planStatusInList;
+
+    @FindBy(css="span[ng-class=\"getPlanStatusClass(s)\"]")
+    private List<WebElement> scenarioStatusInList;
+
+    @Override
+    public void verifyPlanStatus(String planName) throws Exception {
+        if(isElementEnabled(createPlanBtn,5)&&isElementEnabled(planSearchInputField)){
+            if(searchAPlan(planName)){
+                List<String> scStatusList = new ArrayList<>();
+                String planStatusInList=planSearchedResults.get(0).findElement(By.cssSelector("span.status-highlight")).getText().trim();
+                clickTheElement(planSearchedResults.get(0).findElement(By.cssSelector("div[title]")));
+                if(areListElementVisible(scenarioStatusInList,5) && scenarioStatusInList.size()!=0){
+                    for(WebElement scenarioStatus:scenarioStatusInList){
+                        String scStatus = scenarioStatus.getText().trim();
+                        scStatusList.add(scStatus);
+                    }
+                }
+                //check whether the Reviewed-Approved plan status is correct or not?
+                if(planStatusInList.equalsIgnoreCase("Reviewed-Approved")){
+                    boolean flag = false;
+                    for(String scStatus:scStatusList){
+                        if(scStatus.equalsIgnoreCase("Reviewed-Approved")){
+                            SimpleUtils.pass("There is one scenario status is Reviewed-Approved.");
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if(flag){
+                        SimpleUtils.pass("When there is one scenario is Reviewed-Approved status, then the plan status will be Reviewed-Approved!");
+                    }
+                    else {
+                        SimpleUtils.fail("The Plan status is not correct!",false);
+                    }
+                }
+                //check whether the Reviewed-Rejected plan status is correct or not?
+                if(planStatusInList.equalsIgnoreCase("Reviewed-Rejected")){
+                    boolean flag = false;
+                    for(String scStatus:scStatusList){
+                        if(scStatus.equalsIgnoreCase("Reviewed-Rejected")){
+                            SimpleUtils.pass("There is one scenario status is Reviewed-Rejected.");
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if(flag){
+                        SimpleUtils.pass("When there is one scenario is Reviewed-Rejected status, then the plan status will be Reviewed-Rejected!");
+                    }
+                    else {
+                        SimpleUtils.fail("The Plan status is not correct!",false);
+                    }
+                }
+                //check whether the In Progress plan status is correct or not?
+                if(planStatusInList.equalsIgnoreCase("In Progress")){
+                    List<String> status = new ArrayList<>(Arrays.asList("Not Started","Completed","In Progress"));
+                    boolean flag = false;
+                //remove duplicated status
+                    HashSet<String> set = new HashSet<String>();
+                    List<String> result = new ArrayList<String>();
+                    for(String scStatus:scStatusList){
+                        if(set.add(scStatus)){
+                            result.add(scStatus);
+                        }
+                    }
+                //if list has only one type of status then the status should not be "Not Started","Reviewed-Rejected","Reviewed-Approved"
+                    if(result.size() == 1 && result.get(0) != "Not Started" && result.get(0) != "Reviewed-Rejected"
+                            && result.get(0) != "Reviewed-Approved" && result.get(0) != "Ready For Review"){
+                        SimpleUtils.pass("All Scenarios status are not Not Started|Reviewed-Rejected|Reviewed-Approved|Ready For Review");
+                        flag = true;
+                    }else if((result.size() > 1 && result.size() < 4) && status.containsAll(result)){
+                        flag = true;
+                        SimpleUtils.pass("All Scenarios are Not Started or Completed or In Progress status");
+                    }else {
+                        flag = false;
+                    }
+
+                    if(flag){
+                        SimpleUtils.pass("All Scenarios are not Not Started and No single Scenario is Approved | Rejected | Ready For Review," +
+                                " Then the plan status is In Progress");
+                    }
+                    else {
+                        SimpleUtils.fail("The Plan status is not correct!",false);
+                    }
+                }
+
+                //check whether the Not Started plan status is correct or not?
+                if(planStatusInList.equalsIgnoreCase("Not Started")){
+                    boolean flag = false;
+                    //remove duplicated status
+                    HashSet<String> set = new HashSet<String>();
+                    List<String> result = new ArrayList<String>();
+                    for(String scStatus:scStatusList){
+                        if(set.add(scStatus)){
+                            result.add(scStatus);
+                        }
+                    }
+                    if(result.size()==1 && result.get(0).contains("Not Started")){
+                        flag = true;
+                    }
+
+                    if(flag){
+                        SimpleUtils.pass("When all scenarios are Not Started status, then the plan status will be Not Started!");
+                    }
+                    else {
+                        SimpleUtils.fail("The Plan status is not correct!",false);
+                    }
+                }
+
+                //check whether the Ready For Review plan status is correct or not?
+                if(planStatusInList.equalsIgnoreCase("Ready For Review")){
+                    boolean flag = false;
+                    for(String scStatus:scStatusList){
+                        if(scStatus.equalsIgnoreCase("Ready For Review")){
+                            SimpleUtils.pass("There is one scenario status is Ready For Review.");
+                            flag = true;
+                            break;
+                        }
+                    }
+
+                    if(flag){
+                        SimpleUtils.pass("There is one scenario status is Ready For Review, so the plan status is Ready For Review!");
+                    }
+                    else {
+                        SimpleUtils.fail("The Plan status is not correct!",false);
+                    }
+                }
+            }else {
+                SimpleUtils.fail("This Plan is not existing!",false);
+            }
+        }else {
+            SimpleUtils.fail("The Plan landing page doesn't show well!",false);
+        }
     }
 
 
