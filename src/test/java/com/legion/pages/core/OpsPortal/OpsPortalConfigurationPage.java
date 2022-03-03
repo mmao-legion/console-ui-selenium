@@ -1648,9 +1648,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement successMsg;
 
 	public void displaySuccessMessage() throws Exception {
-		if (isElementLoaded(successMsg, 20) && successMsg.getText().contains("Success!")) {
-			SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
-			waitForSeconds(2);
+		if (isElementLoaded(successMsg, 20)) {
+			if ( successMsg.getText().contains("Success!")) {
+				SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
+				waitForSeconds(2);
+			} else
+				SimpleUtils.fail("The message should include 'Success', but the actual is: "+successMsg, false);
 		} else {
 			SimpleUtils.report("Success pop up not displayed successfully.");
 			waitForSeconds(3);

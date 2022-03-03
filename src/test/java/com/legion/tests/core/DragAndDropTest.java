@@ -601,10 +601,10 @@ public class DragAndDropTest extends TestBase {
 
             // Create schedule if it is not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated){
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             // Edit the Schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 

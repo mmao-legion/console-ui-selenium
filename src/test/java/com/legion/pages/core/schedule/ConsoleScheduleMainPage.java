@@ -424,13 +424,13 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         unCheckFilters(shiftTypeFilters);
         for (WebElement shiftTypeOption : shiftTypeFilters) {
             if (shiftTypeOption.getText().toLowerCase().contains(filterText.toLowerCase())) {
-                clickTheElement(shiftTypeOption);
+                click(shiftTypeOption);
                 SimpleUtils.pass("Click the shift type successfully! ");
                 break;
             }
         }
         if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
-            clickTheElement(filterButton);
+            click(filterButton);
     }
 
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters() {
