@@ -807,7 +807,7 @@ public class ConfigurationTest extends TestBase {
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdateOH();
             hoursNTeamMembersCount = scheduleShiftTablePage.getTheHoursNTheCountOfTMsForEachWeekDays();
 
             List<String> numbersOfShifts = new ArrayList<String>();
@@ -870,7 +870,7 @@ public class ConfigurationTest extends TestBase {
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdateOH();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Assigned");
             indexes = scheduleShiftTablePage.getIndexOfDaysHaveShifts();
