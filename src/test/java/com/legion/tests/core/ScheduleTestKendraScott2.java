@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.*;
 
+import com.legion.api.abSwitch.ABSwitchAPI;
+import com.legion.api.abSwitch.AbSwitches;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
@@ -23,6 +25,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import sun.rmi.runtime.Log;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -37,7 +40,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
 	private static String opWorkRole = scheduleWorkRoles.get("RETAIL_ASSOCIATE");
 	private static String controlWorkRole = scheduleWorkRoles.get("RETAIL_RENTAL_MGMT");
-
+	private static String controlEnterprice = "Vailqacn_Enterprise";
+	private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
 	public enum weekCount {
 		Zero(0),
@@ -284,6 +288,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@BeforeMethod()
 	public void firstTest(Method testMethod, Object[] params) {
 		try {
+			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
+
 			this.createDriver((String) params[0], "69", "Window");
 			visitPage(testMethod);
 			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
@@ -6280,6 +6286,315 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.saveSchedule();
 			scheduleShiftTablePage.verifyShiftIsMovedToAnotherDay(2,firstNameOfTM1,1);
 
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate ScheduleEditShiftTimeNew abswitch")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+		try {
+			//Disable the ScheduleEditShiftTimeNew
+			ABSwitchAPI.disableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
+			Thread.sleep(300000);
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+			//Go to one schedule page day view
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			shiftOperatePage.clickOnProfileIcon();
+			shiftOperatePage.clickOnEditShiftTime();
+			SimpleUtils.assertOnFail("The new edit shift time page should not display! ",
+					!shiftOperatePage.isEditShiftTimeNewUIDisplay(), false);
+			shiftOperatePage.clickOnCancelEditShiftTimeButton();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
+			Thread.sleep(300000);
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+			//Go to one schedule page day view
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.clickOnProfileIcon();
+			shiftOperatePage.clickOnEditShiftTime();
+			SimpleUtils.assertOnFail("The new edit shift time page should display! ",
+					shiftOperatePage.isEditShiftTimeNewUIDisplay(), false);
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the shift times always consistent on edit shift time page")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+		try {
+			//Enable the ScheduleEditShiftTimeNew
+			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+			//Go to one schedule page day view
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isActiveWeekGenerated) {
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			WebElement shift = shiftOperatePage.clickOnProfileIcon();
+			String id = shift.getAttribute("id");
+			shiftOperatePage.clickOnEditShiftTime();
+			String shiftTime = "8:00am-9:00pm";
+			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], true);
+			HashMap<String, String> shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
+			String shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
+			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
+
+			shiftTime = "8:45am-11:45am";
+			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
+			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
+			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
+			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
+
+			shiftTime = "1:00pm-10:00pm";
+			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], true);
+			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
+			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
+			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
+
+			shiftTime = "10:00pm-6:00am";
+			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
+			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
+			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
+			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
+
+			shiftTime = "11:00am-2:00pm";
+			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
+			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
+			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
+			SimpleUtils.assertOnFail("The shift times on inputs and shift card should consistent, the time in inputs: "
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
+			Thread.sleep(5000);
+			shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+			String shiftInfoOnIIcon = scheduleShiftTablePage.getIIconTextInfo(scheduleShiftTablePage.getShiftById(id));
+			SimpleUtils.assertOnFail("The shift times on edit shift page and i icon should consistent, the time on edit shift time page: "
+							+shiftTime + " the time on i icon: "+ shiftInfoOnIIcon,
+					shiftInfoOnIIcon.contains(shiftTime) , false);
+			scheduleMainPage.saveSchedule();
+			shiftInfoOnIIcon = scheduleShiftTablePage.getIIconTextInfo(scheduleShiftTablePage.getShiftById(id));
+			SimpleUtils.assertOnFail("The shift times on edit shift page and i icon should consistent, the time on edit shift time page: "
+							+shiftTime + " the time on i icon: "+ shiftInfoOnIIcon,
+					shiftInfoOnIIcon.contains(shiftTime) , false);
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the shift times can be set more than 24 hrs by shift time input")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+		try {
+			//Enable the ScheduleEditShiftTimeNew
+			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			WebElement shift = shiftOperatePage.clickOnProfileIcon();
+			String id = shift.getAttribute("id");
+			shiftOperatePage.clickOnEditShiftTime();
+			String shiftTime = "8:00am-9:00am";
+			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], true);
+
+			Thread.sleep(5000);
+			shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+			String shiftInfoOnIIcon = scheduleShiftTablePage.getIIconTextInfo(scheduleShiftTablePage.getShiftById(id));
+			SimpleUtils.assertOnFail("The shift times on edit shift page and i icon should consistent, the time on edit shift time page: "
+							+shiftTime + " the time on i icon: "+ shiftInfoOnIIcon,
+					shiftInfoOnIIcon.contains(shiftTime) , false);
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate shift time cannot be earlier or later than the operating hours")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+		try {
+			//Enable the ScheduleEditShiftTimeNew
+			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "6:00PM");
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			shiftOperatePage.clickOnProfileIcon();
+			shiftOperatePage.clickOnEditShiftTime();
+			String shiftTime = "3:00am-9:00am";
+			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
+			HashMap<String, String> shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
+			String shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
+			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
+			String compliance = "Shift starts too early (min: 6:00 AM)";
+			String complianceFromEditShiftTimePage = shiftOperatePage.getEditShiftTimeCompliance();
+			SimpleUtils.assertOnFail("The compliance on edit shift time page display incorrectly. The expected: "
+					+ compliance + " the actual: "+complianceFromEditShiftTimePage,
+					complianceFromEditShiftTimePage.contains(compliance), false);
+			SimpleUtils.assertOnFail("The update button should disable! ",
+					!shiftOperatePage.checkIfUpdateButtonEnabled(),false);
+
+
+			shiftTime = "8:00am-11:00pm";
+			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
+			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
+			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
+			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
+			compliance = "Shift ends too late (max: 9:00 PM)";
+			complianceFromEditShiftTimePage = shiftOperatePage.getEditShiftTimeCompliance();
+			SimpleUtils.assertOnFail("The compliance on edit shift time page display incorrectly. The expected: "
+							+ compliance + " the actual: "+complianceFromEditShiftTimePage,
+					complianceFromEditShiftTimePage.contains(compliance), false);
+			SimpleUtils.assertOnFail("The update button should disable! ",
+					!shiftOperatePage.checkIfUpdateButtonEnabled(),false);
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the Next day checkbox on edit shift time page")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+		try {
+			//Enable the ScheduleEditShiftTimeNew
+			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			shiftOperatePage.clickOnProfileIcon();
+			shiftOperatePage.clickOnEditShiftTime();
+			String shiftTime = "8:00am-2:00pm";
+			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
+			HashMap<String, String> shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
+			String shiftHrsBeforeCheckNextDay = shiftInfo.get("workCurrentShiftHrs").split(" ")[0];
+			shiftOperatePage.checkOrUnCheckNextDayOnEditShiftTimePage(true);
+			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
+			String shiftHrsAfterCheckNextDay = shiftInfo.get("workCurrentShiftHrs").split(" ")[0];
+			SimpleUtils.assertOnFail("The shift hrs display incorrectly on edit shift time page, the expected is:"
+							+Float.parseFloat(shiftHrsBeforeCheckNextDay)+24 + " the actual is: "+Float.parseFloat(shiftHrsAfterCheckNextDay),
+					Float.parseFloat(shiftHrsBeforeCheckNextDay)+24 == Float.parseFloat(shiftHrsAfterCheckNextDay),false);
+
+			shiftOperatePage.checkOrUnCheckNextDayOnEditShiftTimePage(false);
+			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
+			shiftHrsAfterCheckNextDay = shiftInfo.get("workCurrentShiftHrs").split(" ")[0];
+			SimpleUtils.assertOnFail("The shift hrs display incorrectly on edit shift time page, the expected is:"
+							+shiftHrsBeforeCheckNextDay+ " the actual is: "+ shiftHrsAfterCheckNextDay,
+					shiftHrsBeforeCheckNextDay.equals(shiftHrsAfterCheckNextDay),false);
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
 		}

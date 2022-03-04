@@ -974,7 +974,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public void clickOnUpdateEditShiftTimeButton() throws Exception{
         if(isElementLoaded(updateButtonInEditShiftTimeWindow,5))
         {
-            click(updateButtonInEditShiftTimeWindow);
+            if (checkIfUpdateButtonEnabled()) {
+                click(updateButtonInEditShiftTimeWindow);
+            } else
+                SimpleUtils.fail("The Update button is disabled! ", false);
             try {
                 if (isElementLoaded(okButton, 10)) {
                     clickTheElement(okButton);
@@ -2766,6 +2769,111 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         } else
             SimpleUtils.fail("The shift card on edit shift time page fail to load! ", false);
         return shiftInfo;
+    }
+
+    public boolean isEditShiftTimeNewUIDisplay () throws Exception {
+        boolean isNewUIDisplay = false;
+        if (isElementLoaded(editShiftTimePopUp, 5)
+                &&isElementLoaded(shiftStartInput, 10)
+                && isElementLoaded(shiftEndInput, 10)
+                && !isElementLoaded(shiftEndTimeButton, 5)
+                && !isElementLoaded(shiftStartTimeButton, 5)) {
+            isNewUIDisplay = true;
+            SimpleUtils.report("The new edit shift time page display correctly! ");
+        } else {
+            SimpleUtils.report("The new edit shift time page is not display! ");
+        }
+        return isNewUIDisplay;
+    }
+
+
+    public void setShiftTimesOnEditShiftTimePage (String startTime, String endTime, boolean checkTheNextDay) throws Exception {
+        if (isElementLoaded(editShiftTimePopUp, 15)
+                &&isElementLoaded(shiftStartInput, 10)
+                && isElementLoaded(shiftEndInput, 10)) {
+            SimpleUtils.report("The new edit shift time page display correctly! ");
+            shiftStartInput.clear();
+            moveToElementAndClick(shiftStartInput);
+            shiftStartInput.sendKeys(startTime);
+            shiftEndInput.clear();
+            moveToElementAndClick(shiftStartInput);
+            shiftEndInput.sendKeys(endTime);
+            if (checkTheNextDay) {
+                checkOrUnCheckNextDayOnEditShiftTimePage(true);
+            } else
+                checkOrUnCheckNextDayOnEditShiftTimePage(false);
+            SimpleUtils.pass("Set the shift times successfully! ");
+        } else if (isElementLoaded(editShiftTimePopUp, 15)
+                && !isElementLoaded(shiftEndTimeButton, 5)
+                && !isElementLoaded(shiftStartTimeButton, 5)){
+            SimpleUtils.report("The old edit shift time page display correctly! ");
+            moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
+            moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
+            SimpleUtils.pass("Set the shift times successfully! ");
+        } else
+            SimpleUtils.fail("Edit shift times popup, inputs or buttons fail to load! ", false);
+    }
+
+
+    @FindBy(css=".edit-shift-time-toggle-next-day img")
+    private WebElement nextDayImg;
+    @FindBy(css=".popover.fade")
+    private WebElement nextDayPopup;
+    public void checkOrUnCheckNextDayOnEditShiftTimePage (boolean isCheck) throws Exception {
+        if (isElementLoaded(editShiftTimePopUp, 15)) {
+            SimpleUtils.report("The new edit shift time page display correctly! ");
+            if (isCheck) {
+                if (isElementLoaded(nextDayImg, 10)) {
+                    if (nextDayImg.getAttribute("src").contains("next-day")) {
+                        clickTheElement(nextDayImg);
+                        clickTheElement(nextDayPopup.findElement(By.cssSelector(".input-form input")));
+                        if (!nextDayImg.getAttribute("src").contains("next-day")) {
+                            SimpleUtils.pass("The next day checkbox been checked successfully! ");
+                        } else
+                            SimpleUtils.fail("The next day checkbox been checked fail! ", false);
+                    } else
+                        SimpleUtils.pass("The next day checkbox already checked! ");
+                } else
+                    SimpleUtils.fail("The next day img fail to load! ", false);
+
+            } else {
+                if (isElementLoaded(nextDayImg, 10)) {
+                    if (!nextDayImg.getAttribute("src").contains("next-day")) {
+                        clickTheElement(nextDayImg);
+                        clickTheElement(nextDayPopup.findElement(By.cssSelector(".input-form input")));
+                        if (nextDayImg.getAttribute("src").contains("next-day")) {
+                            SimpleUtils.pass("The next day checkbox been unchecked successfully! ");
+                        } else
+                            SimpleUtils.fail("The next day checkbox been unchecked fail! ", false);
+                    } else
+                        SimpleUtils.pass("The next day checkbox already unchecked! ");
+                } else
+                    SimpleUtils.report("The next day img is not loaded! ");
+            }
+        } else
+            SimpleUtils.fail("Edit shift times popup fail to load! ", false);
+    }
+
+    @FindBy(css=".edit-time-compliance")
+    private WebElement editShiftTimeCompliance;
+    public String getEditShiftTimeCompliance() throws Exception {
+        String compliance = "";
+        if (isElementLoaded(editShiftTimeCompliance, 10)) {
+            compliance = editShiftTimeCompliance.getText();
+        } else
+            SimpleUtils.report("Edit shift time compliance fail to load! ");
+        return compliance;
+    }
+
+    public boolean checkIfUpdateButtonEnabled () throws Exception {
+        boolean isEnabled = false;
+        if (isElementLoaded(updateButtonInEditShiftTimeWindow, 10)) {
+            if (!updateButtonInEditShiftTimeWindow.getAttribute("class").contains("disabled")) {
+                isEnabled = true;
+            }
+        } else
+            SimpleUtils.fail("Update button on edit shift time page fail to load! ", false);
+        return isEnabled;
     }
 }
 

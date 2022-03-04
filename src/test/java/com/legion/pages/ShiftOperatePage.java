@@ -107,4 +107,10 @@ public interface ShiftOperatePage {
     public void moveMealAndRestBreaksOnEditBreaksPage(String breakTime, int index, boolean isMealBreak) throws Exception;
     public void moveSliderAtCertainPointOnEditShiftTimePage(String shiftTime, String startingPoint) throws Exception;
     public String getOfferStatusFromOpenShiftStatusList (String tmName);
+    public boolean isEditShiftTimeNewUIDisplay () throws Exception;
+    public void setShiftTimesOnEditShiftTimePage (String startTime, String endTime, boolean checkTheNextDay) throws Exception;
+    public HashMap<String, String> getInfoFromCardOnEditShiftTimePage () throws Exception;
+    public void checkOrUnCheckNextDayOnEditShiftTimePage (boolean isCheck) throws Exception;
+    public String getEditShiftTimeCompliance() throws Exception;
+    public boolean checkIfUpdateButtonEnabled () throws Exception;
 }
