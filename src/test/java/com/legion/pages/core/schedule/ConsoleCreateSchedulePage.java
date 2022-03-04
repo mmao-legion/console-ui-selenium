@@ -794,13 +794,14 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
-                editOperatingHoursWithGivingPrameters("Sunday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Monday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Tuesday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Wednesday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Thursday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Friday", startTime, endTime);
-                editOperatingHoursWithGivingPrameters("Saturday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Sunday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Monday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Tuesday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Wednesday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Thursday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Friday", startTime, endTime);
+//                editOperatingHoursWithGivingPrameters("Saturday", startTime, endTime);
+                editOperatingHoursWithGivingPrameters(startTime, endTime);
                 waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
                 waitForSeconds(2);

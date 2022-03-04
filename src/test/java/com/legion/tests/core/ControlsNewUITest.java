@@ -1652,7 +1652,7 @@ public class ControlsNewUITest extends TestBase{
             profileNewUIPage.getNickNameFromProfile();
             String myWorkPreferencesLabel = "My Work Preferences";
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-            profileNewUIPage.clickNextWeek();
+            Thread.sleep(5000);
             for (int i = 0; i< schedulePlanningWindowWeeks; i++) {
                 profileNewUIPage.clickNextWeek();
                 SimpleUtils.assertOnFail("The My Availability should be locked! ",

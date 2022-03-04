@@ -2739,11 +2739,17 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception {
         if (areListElementVisible(profileIconsRingsInDayView, 15)){
             for (WebElement element: profileIconsRingsInDayView){
-                SimpleUtils.assertOnFail("No colered ring representing minors", element.getAttribute("class").contains(minorsType), false);
+                if (element.getAttribute("class").contains(minorsType)) {
+                    SimpleUtils.pass("The color ring display correctly! ");
+                } else
+                    SimpleUtils.fail("No colered ring representing minors", false);
             }
         } else if (areListElementVisible(profileIconsRingsInWeekView, 15)){
             for (WebElement element: profileIconsRingsInWeekView){
-                SimpleUtils.assertOnFail("No colered ring representing minors", element.getAttribute("class").contains(minorsType), false);
+                if (element.getAttribute("class").contains(minorsType)) {
+                    SimpleUtils.pass("The color ring display correctly! ");
+                } else
+                    SimpleUtils.fail("No colered ring representing minors",false);
             }
         } else {
             SimpleUtils.fail("No profile icons!", false);
