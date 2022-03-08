@@ -901,6 +901,14 @@ public class BasePage {
         });
         return list;
     }
+
+    public void highlightElement(WebElement element){
+        try{
+            ((JavascriptExecutor) getDriver()).executeScript("arguments[0].setAttribute('style',arguments[1])",element,"background:yellow;border:2px solid red");
+        }catch(Exception NoSuchElementException){
+            System.out.println("element" +element+ "is not found");
+        }
+    }
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){
