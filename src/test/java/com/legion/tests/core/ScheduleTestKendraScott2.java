@@ -4995,10 +4995,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.clickOnProfileIcon();
 			shiftOperatePage.clickOnEditShiftTime();
 			shiftOperatePage.verifyEditShiftTimePopUpDisplay();
-			List<String> startAndEndHrsOnEditShiftPage = shiftOperatePage.getStartAndEndOperatingHrsOnEditShiftPage();
-			SimpleUtils.assertOnFail("The operating hours on create shift page display incorrectly! ",
-					startAndEndHrsOnEditShiftPage.get(0).equalsIgnoreCase("6")
-							&& startAndEndHrsOnEditShiftPage.get(1).equalsIgnoreCase("11"),false);
+			if (!shiftOperatePage.isEditShiftTimeNewUIDisplay()) {
+				List<String> startAndEndHrsOnEditShiftPage = shiftOperatePage.getStartAndEndOperatingHrsOnEditShiftPage();
+				SimpleUtils.assertOnFail("The operating hours on create shift page display incorrectly! ",
+						startAndEndHrsOnEditShiftPage.get(0).equalsIgnoreCase("6")
+								&& startAndEndHrsOnEditShiftPage.get(1).equalsIgnoreCase("11"),false);
+			}
 			shiftOperatePage.clickOnCancelEditShiftTimeButton();
 			scheduleMainPage.clickOnCancelButtonOnEditMode();
 

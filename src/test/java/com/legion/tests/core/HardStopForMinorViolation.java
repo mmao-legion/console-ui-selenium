@@ -235,7 +235,7 @@ public class HardStopForMinorViolation extends TestBase {
                 shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            String minorName = cinemarkMinors.get("Minor15");
+            String minorName = cinemarkMinors.get("Minor15-2");
             shiftOperatePage.deleteTMShiftInWeekView("minor");
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
