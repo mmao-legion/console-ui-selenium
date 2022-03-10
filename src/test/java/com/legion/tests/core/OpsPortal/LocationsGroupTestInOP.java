@@ -739,7 +739,7 @@ public class LocationsGroupTestInOP extends TestBase {
 
             String parentChildLocationName = "ParentChildLG";
             String p2pParentLocationName = "P2PLG";
-            String p2pChildLocationName = "JFK Enrollment";
+            String p2pChildLocationName = "JFK Enrollment--Don't touch!!!";
 
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
