@@ -125,7 +125,7 @@ public class HardStopForMinorViolation extends TestBase {
                 shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            String minorName = cinemarkMinors.get("Minor15");
+            String minorName = cinemarkMinors.get("Minor15-2");
             shiftOperatePage.deleteTMShiftInWeekView("minor");
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
@@ -400,7 +400,7 @@ public class HardStopForMinorViolation extends TestBase {
 
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            String minorName = cinemarkMinors.get("Minor16");
+            String minorName = cinemarkMinors.get("Minor16-2");
             shiftOperatePage.deleteTMShiftInWeekView("minor");
             shiftOperatePage.deleteTMShiftInWeekView("open");
             scheduleMainPage.saveSchedule();
@@ -532,7 +532,7 @@ public class HardStopForMinorViolation extends TestBase {
             }
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            String minorName = cinemarkMinors.get("Minor16");
+            String minorName = cinemarkMinors.get("Minor16-2");
             shiftOperatePage.deleteTMShiftInWeekView("minor");
             shiftOperatePage.deleteTMShiftInWeekView("unassigned");
             shiftOperatePage.deleteTMShiftInWeekView("open");
@@ -671,7 +671,7 @@ public class HardStopForMinorViolation extends TestBase {
             createSchedulePage.publishActiveSchedule();
 
             //Create open shift with no minor violation
-            String minorName = cinemarkMinors.get("Minor15");
+            String minorName = cinemarkMinors.get("Minor15-2");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();

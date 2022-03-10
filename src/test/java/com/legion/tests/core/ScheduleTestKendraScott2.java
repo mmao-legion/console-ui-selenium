@@ -6304,14 +6304,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		try {
 			//Disable the ScheduleEditShiftTimeNew
 			ABSwitchAPI.disableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
-			Thread.sleep(300000);
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 			//Go to one schedule page day view
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			int i = 0;
+			while (i< 5) {
+				scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+				Thread.sleep(60000);
+				i++;
+			}
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
 					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
