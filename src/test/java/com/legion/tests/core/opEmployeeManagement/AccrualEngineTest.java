@@ -1,5 +1,6 @@
 package com.legion.tests.core.opEmployeeManagement;
 
+import com.alibaba.fastjson.JSONObject;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
 import com.legion.pages.core.OpCommons.OpsCommonComponents;
@@ -15,6 +16,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -40,8 +42,8 @@ public class AccrualEngineTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Accrual engine")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @TestName(description = "Accrual Engine Distribution Types")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyAccrualEngineWorksAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
@@ -229,7 +231,7 @@ public class AccrualEngineTest extends TestBase {
         //expectedTOBalance.put("Grandparents Day Off3", "2");//balance 8  max carryover: 2  //HireDate~Specified/lump-sum
         expectedTOBalance.put("Pandemic1", "2");//7 hours  max carryover: 2  //Specified~Specified/Monthly /calendar month/begin /allowance in days 126(out of)
         expectedTOBalance.put("Pandemic2", "2");//52 hours  max carryover: 2 //Specified~Specified/weekly /allowance in days 127(in)
-        expectedTOBalance.put("Pandemic4", "2");//8 hours  max carryover: 2  //Specified~Specified/lump-sum /allowance in days 127(in)
+        //expectedTOBalance.put("Pandemic4", "2");//8 hours  max carryover: 2  //Specified~Specified/lump-sum /allowance in days 127(in)
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -269,6 +271,8 @@ public class AccrualEngineTest extends TestBase {
         HashMap<String, String> accrualBalance0131 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory0131 = timeOffPage.getAccrualHistory();
         String verification8 = validateTheAccrualResults(accrualBalance0131, expectedTOBalance);
+        System.out.println(accrualBalance0131);
+        System.out.println(expectedTOBalance);
         Assert.assertTrue(verification8.contains("Succeeded in validating"), verification8);
 
         //Run engine to Date9 2022-05-07
@@ -436,9 +440,9 @@ public class AccrualEngineTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Accrual engine")
+    @TestName(description = "Accrual Engine Distribution Types")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAccrualEngineWorksWellAfterEditOrImportAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+    public void verifyAccrualEngineWorksWellAfterEditingAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
 
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
@@ -572,7 +576,7 @@ public class AccrualEngineTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Accrual engine")
+    @TestName(description = "Accrual Look Back")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualEngineLookBackAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //worked hours look back function
@@ -703,7 +707,7 @@ public class AccrualEngineTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Accrual engine")
+    @TestName(description = "Accrual Engine Distribution Types")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualHistoryAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
@@ -811,8 +815,8 @@ public class AccrualEngineTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Accrual engine")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @TestName(description = "Accrual Engine Distribution Types")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyAccrualTimeOffHistoryAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //take time off
         //Verify the time off history
@@ -822,14 +826,131 @@ public class AccrualEngineTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Accrual engine")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @TestName(description = "Accrual Engine Distribution Types")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyAccrualLimitationsAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //do limitation
         //Verify the limitation history
 
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Accrual Engine Distribution Types")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyAccrualEngineWorksWellAfterImportingAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        //verify that employee management is enabled.
+        navigationPage.navigateToEmployeeManagement();
+        SimpleUtils.pass("EmployeeManagement Module is enabled!");
+        //go to the time off management page
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        String templateName = "AccrualAutoTest(Don't touch!!!)";
+        absentManagePage.search(templateName);
+        SimpleUtils.assertOnFail("Failed the find the target template!", absentManagePage.getResult().equals(templateName), false);
 
+        //switch to console
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToNewTab();
+        //search and go to the target location
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("Newark");
+        //go to team member details and switch to the time off tab.
+        consoleNavigationPage.navigateTo("Team");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        String teamMemName = "Olaf Kuhic";
+        timeOffPage.goToTeamMemberDetail(teamMemName);
+        timeOffPage.switchToTimeOffTab();
+
+        //get session id via login
+        String sessionId = logIn();
+        //set UseAbsenceMgmtConfiguration Toggle On
+        if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
+            String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
+            Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
+        }
+        //confirm template
+        String workerId = "77b9bfb2-3e2a-4cfd-ad40-34c49c27e2b6";
+        String targetTemplate = "AccrualAutoTest(Don't touch!!!)";
+        String tempName = getUserTemplate(workerId, sessionId);
+        Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
+        //create a time off balance map to store the expected time off balances.
+        HashMap<String, String> expectedTOBalance = new HashMap<>();
+        expectedTOBalance.put("Annual Leave2", "0");// HireDate~HireDate/Monthly /calendar month/begin
+        expectedTOBalance.put("Annual Leave3", "0");// HireDate~Specified/Monthly /hire month/end
+        expectedTOBalance.put("Bereavement3", "0");// HireDate~Specified/weekly
+        expectedTOBalance.put("Covid2", "0");// HireDate~HireDate/worked hours/Rate
+        expectedTOBalance.put("Covid3", "0");// HireDate~Specified/worked hours/total hour
+        expectedTOBalance.put("Grandparents Day Off2", "0");//HireDate~HireDate/lump-sum
+        expectedTOBalance.put("Grandparents Day Off3", "0");//HireDate~Specified/lump-sum
+        expectedTOBalance.put("Pandemic1", "0");//Specified~Specified/Monthly /calendar month/begin /allowance in days 126(out of)
+        expectedTOBalance.put("Pandemic2", "0");//Specified~Specified/weekly /allowance in days 127(in)
+        expectedTOBalance.put("Pandemic3", "0");//Specified~Specified/worked hours/Rate /allowance in days 126(out of)
+        expectedTOBalance.put("Pandemic4", "0");//Specified~Specified/lump-sum /allowance in days 127(in)
+        expectedTOBalance.put("Spring Festival", "0");//None distribution
+
+        //Delete the worker's accrual balance
+        String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
+        System.out.println("Delete worker's accrual balance successfully!");
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to assert clear the accrual balance!");
+
+        //import accrual balance via CSV file.
+        importAccrualBalance(sessionId);
+
+        expectedTOBalance.put("Annual Leave2", "5");// HireDate~HireDate/Monthly /calendar month/begin
+        expectedTOBalance.put("Annual Leave3", "7");// HireDate~Specified/Monthly /hire month/end
+        expectedTOBalance.put("Bereavement3", "23");// HireDate~Specified/weekly
+        expectedTOBalance.put("Covid2", "6");// HireDate~HireDate/worked hours/Rate
+        expectedTOBalance.put("Covid3", "9");// HireDate~Specified/worked hours/total hour
+        expectedTOBalance.put("Grandparents Day Off2", "12.65");//HireDate~HireDate/lump-sum
+        expectedTOBalance.put("Grandparents Day Off3", "6");//HireDate~Specified/lump-sum
+        expectedTOBalance.put("Spring Festival", "20");//None distribution
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> importedBalance = timeOffPage.getTimeOffBalance();
+        String verification1 = validateTheAccrualResults(importedBalance, expectedTOBalance);
+        Assert.assertTrue(verification1.contains("Succeeded in validating"), verification1);
+
+
+        //run engine to a specified date
+        String date1 = "2022-05-01";
+        String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, date1, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Annual Leave2", "12");// HireDate~HireDate/Monthly /calendar month/begin
+        expectedTOBalance.put("Annual Leave3", "10");// HireDate~Specified/Monthly /hire month/end
+        expectedTOBalance.put("Bereavement3", "52");// HireDate~Specified/weekly
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance050122 = timeOffPage.getTimeOffBalance();
+        String verification2 = validateTheAccrualResults(accrualBalance050122, expectedTOBalance);
+        Assert.assertTrue(verification2.contains("Succeeded in validating"), verification2);
+
+    }
+
+    public void importAccrualBalance(String sessionId) {
+        String url="https://rc-enterprise.dev.legion.work/legion/integration/testUploadAccrualLedgerData?isTest=false&fileName=/Users/sophiazhang/Desktop/AccrualLedger_auto.csv&encrypted=false";
+        String filePath = "/Users/sophiazhang/Desktop/AccrualLedger_auto.csv";
+        String responseInfo = HttpUtil.fileUploadByHttpPost(url, sessionId, filePath);
+        if (StringUtils.isNotBlank(responseInfo)) {
+            //转json数据
+            JSONObject json = JSONObject.parseObject(responseInfo);
+            if (!json.isEmpty()) {
+                //数据处理
+                String value = json.getString("responseStatus");
+                System.out.println(value);
+            }
+        }
+    }
 
 }

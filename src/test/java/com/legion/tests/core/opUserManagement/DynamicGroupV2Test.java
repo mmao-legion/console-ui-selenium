@@ -1,4 +1,4 @@
-package com.legion.tests.core.opusermanagement;
+package com.legion.tests.core.opUserManagement;
 
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
@@ -7,7 +7,6 @@ import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalSettingsAndAssociationPage;
 import com.legion.tests.TestBase;
-import com.legion.tests.core.CinemarkMinorTest;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -16,7 +15,6 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 

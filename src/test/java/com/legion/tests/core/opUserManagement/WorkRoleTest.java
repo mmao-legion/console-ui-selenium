@@ -1,4 +1,4 @@
-package com.legion.tests.core.opusermanagement;
+package com.legion.tests.core.opUserManagement;
 
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;

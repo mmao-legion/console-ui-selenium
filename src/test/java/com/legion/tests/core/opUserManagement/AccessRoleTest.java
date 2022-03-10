@@ -1,4 +1,4 @@
-package com.legion.tests.core.opusermanagement;
+package com.legion.tests.core.opUserManagement;
 
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
@@ -35,7 +35,7 @@ public class AccessRoleTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Custom access role")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAccessRoleAsInternalAdminOfAccessRole(String browser, String username, String password, String location) {
+    public void verifyAccessRoleAsInternalAdminOfAccessRoleTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToUserManagement();
         OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();

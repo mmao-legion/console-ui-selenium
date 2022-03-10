@@ -151,7 +151,7 @@
 
                 </methods>
             </class>
-            <class name="com.legion.tests.core.opusermanagement.AccessRoleTest">
+            <class name="com.legion.tests.core.opUserManagement.AccessRoleTest">
                 <methods>
                     <include name="verifyAccessRoleAsInternalAdminOfAccessRole"/>
                 </methods>
@@ -196,7 +196,7 @@
     </test>
     <test name="Work Role Test">
         <classes>
-            <class name="com.legion.tests.core.opusermanagement.WorkRoleTest">
+            <class name="com.legion.tests.core.opUserManagement.WorkRoleTest">
                 <methods>
                     <include name="verifyAddEditSearchAndDisableWorkRoleAsInternalAdminForUserManagement"/>
                 </methods>
@@ -224,29 +224,23 @@
                     <include name="verifyTimeOffRequestRulesAsInternalAdminForEmployeeManagement"/>
                 </methods>
             </class>
-        </classes>
-    </test>
-    <test name="Accrual Engine Test">
-        <classes>
             <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest">
                 <methods>
                     <include name="verifyAccrualEngineWorksAsInternalAdminOfAccrualEngineTest"/>
-                    <include name="verifyAccrualEngineWorksWellAfterEditOrImportAsInternalAdminOfAccrualEngineTest"/>
+                    <include name="verifyAccrualEngineWorksWellAfterEditingAsInternalAdminOfAccrualEngineTest"/>
                     <include name="verifyAccrualEngineLookBackAsInternalAdminOfAccrualEngineTest"/>
                     <include name="verifyAccrualHistoryAsInternalAdminOfAccrualEngineTest"/>
                 </methods>
             </class>
-        </classes>
-    </test>
-    <test name="Time Off Request Test">
-        <classes>
             <class name="com.legion.tests.core.opEmployeeManagement.TimeOffRequestTest">
                 <methods>
                     <include name="verifyEmployeeCanRequestAsInternalAdminOfTimeOffRequestTest"/>
                 </methods>
             </class>
+
         </classes>
     </test>
+
 
 </suite> <!-- Suite -->
 
