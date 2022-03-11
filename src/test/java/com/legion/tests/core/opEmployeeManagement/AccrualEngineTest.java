@@ -617,6 +617,9 @@ public class AccrualEngineTest extends TestBase {
         String tempName = getUserTemplate(workerId, sessionId);
         Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
 
+        //data restore after testing.
+        resetTheTimeClocksDataForLookBack();
+
         //create a time off balance map to store the expected time off balances.
         HashMap<String, String> expectedTOBalance = new HashMap<>();
         expectedTOBalance.put("PTO", "0");
@@ -692,7 +695,9 @@ public class AccrualEngineTest extends TestBase {
         String verification2 = validateTheAccrualResults(accrualBalance220205, expectedTOBalance);
         Assert.assertTrue(verification2.contains("Succeeded in validating"), verification2);
 
-        //data restore after testing.
+    }
+
+    public void resetTheTimeClocksDataForLookBack() {
         String sql130R="update legionrc.TimeSheet set status='Pending' where dayOfTheYear='30' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
         String sql131Minus4HrsR="update legionrc.TimeSheet set totalMinutes='840' where dayOfTheYear='31' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
         String sql201AR="update legionrc.TimeSheet set status='Pending' where dayOfTheYear='32' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
@@ -701,7 +706,6 @@ public class AccrualEngineTest extends TestBase {
         DBConnection.updateDB(sql131Minus4HrsR);
         DBConnection.updateDB(sql201AR);
         DBConnection.updateDB(sql204Add5HrsR);
-
     }
 
     @Automated(automated = "Automated")
