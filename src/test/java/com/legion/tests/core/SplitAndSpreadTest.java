@@ -617,6 +617,7 @@ public class SplitAndSpreadTest extends TestBase {
             if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
+                Thread.sleep(120000);
             }
 
 
@@ -702,10 +703,12 @@ public class SplitAndSpreadTest extends TestBase {
             //check the message in warning mode
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage1 = tmFirstName + " will incur spread of hours.";
-                if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)){
+                String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+                if (warningMessage.contains(warningMessage1)){
                     SimpleUtils.pass("The message in warning mode display correctly! ");
                 } else
-                    SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+                    SimpleUtils.fail("The message in warning mode display incorrectly! the expected is: "
+                            + warningMessage+ "The actual is: " + warningMessage1, false);
                 shiftOperatePage.clickOnAssignAnywayButton();
             } else
                 SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);

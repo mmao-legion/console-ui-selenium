@@ -56,17 +56,16 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
-            //Click on one template to view
-            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
-
-            //Observe the setting under Open Shifts section is available
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.setWFS("Yes");
-            configurationPage.selectWFSGroup(districtName);
-            configurationPage.setMoveExistingShiftWhenTransfer("Yes");
-            Thread.sleep(3000);
-            configurationPage.publishNowTheTemplate();
-            Thread.sleep(3000);
+//            //Click on one template to view
+//            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
+//
+//            //Observe the setting under Open Shifts section is available
+//            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+//            configurationPage.setWFS("Yes");
+//            configurationPage.selectWFSGroup(districtName);
+//            configurationPage.setMoveExistingShiftWhenTransfer("Yes");
+//            configurationPage.publishNowTheTemplate();
+//            Thread.sleep(3000);
 
             //Publish the template, click on the template again to check the setting
             configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");

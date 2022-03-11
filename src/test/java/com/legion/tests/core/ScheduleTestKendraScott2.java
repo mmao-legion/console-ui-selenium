@@ -6334,11 +6334,15 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
-			Thread.sleep(300000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 			//Go to one schedule page day view
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			i = 0;
+			while (i< 5) {
+				scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+				Thread.sleep(60000);
+				i++;
+			}
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
 					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);

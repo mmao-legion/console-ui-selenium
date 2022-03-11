@@ -672,6 +672,7 @@ public class SchedulingMinorTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Minor (14-15)");
         scheduleShiftTablePage.verifyShiftsHasMinorsColorRing("minor-14");
+        Thread.sleep(5000);
         SimpleUtils.assertOnFail("There should be minor info in i icon popup!",scheduleShiftTablePage.getIIconTextInfo(scheduleShiftTablePage.getTheShiftByIndex(0)).contains("Minor 14-15"), false);
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Minor (16-17)");
