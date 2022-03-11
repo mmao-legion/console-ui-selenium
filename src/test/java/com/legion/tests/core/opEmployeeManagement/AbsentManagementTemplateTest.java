@@ -251,7 +251,8 @@ public class AbsentManagementTemplateTest extends TestBase {
         panelPage.goToTimeOffManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
         absentManagePage.search("AutoTest_Accrual");
-        for (int i = 0; i < absentManagePage.templateNumber() * 2; i++) {
+        int maxNumOfTemp=absentManagePage.templateNumber() * 2;
+        for (int i = 0; i < maxNumOfTemp; i++) {
             if (!absentManagePage.isNoMatchMessageDisplayed()) {
                 absentManagePage.clickInDetails();
                 if (absentManagePage.isDeleteButtonDisplayed()) {
