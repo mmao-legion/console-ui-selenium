@@ -2426,8 +2426,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 
 	public Map<String, Integer> getAllScheduleStatusFromSchedulePublishStatusWidget() throws Exception {
-
-        int scheduleNumber = Integer.parseInt(widgetsOnUpperFieldDashboard.get(2).findElements(By.cssSelector("[class=\"tick\"]")).get(1).getText());
+        LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+        int scheduleNumber = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList("Location").size();
         int notStartedNumberForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(1).getAttribute("height"))).intValue();
         int inProgressForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(2).getAttribute("height"))).intValue();
         int publishedForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(3).getAttribute("height"))).intValue();
