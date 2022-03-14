@@ -51,7 +51,7 @@
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
                     <include name="verifyComplianceSmartCardFunctionality" />
-                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
+<!--                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/> https://legiontech.atlassian.net/browse/SCH-5994 -->
                     <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
@@ -168,7 +168,7 @@
         </classes>
     </test>
 
-    <test name="Overview Test">
+ <!--   <test name="Overview Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleOverviewTest">
                 <methods>
@@ -176,7 +176,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test> https://legiontech.atlassian.net/browse/SCH-5994 -->
 
     <test name="Schedule Test LegionCoffee">
         <classes>
