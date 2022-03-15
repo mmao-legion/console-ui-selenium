@@ -295,4 +295,6 @@ public interface ProfileNewUIPage {
 	public String getMinorRuleTemplateName () throws Exception;
 	public String getToolTipMessageOfAvailabilityLockIcon() throws Exception;
 	public String getJobTitleFromProfilePage() throws Exception;
+	public List<String> getAvailableShiftsOnAvailabilityTable ();
+	public List<String> getTimeOffsLengthOnAvailabilityTable ();
 }

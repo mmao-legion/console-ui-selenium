@@ -39,7 +39,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement profilePageSection;
 	@FindBy(css="div.collapsible-title-text span")
 	private List<WebElement> profilePageSubSections;
-	@FindBy(css="a[ng-click=\"newTimeOff()\"]")
+	@FindBy(css="[ng-click*=\"TimeOff()\"]")
 	private WebElement newTimeOffBtn;
 	@FindBy(css = "div.reasons-reason ")
 	private List<WebElement> timeOffReasons;
@@ -304,7 +304,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return result;
 	}
-	
+
+
+	@FindBy(css = ".lgn-modal-body .picker-input input")
+	private WebElement timeOffReasonSelector;
+
+	@FindBy(css = ".lgn-modal-body .lg-search-options__option")
+	private List<WebElement> timeOffReasonOptions;
 	@Override
 	public void selectTimeOffReason(String reasonLabel) throws Exception
 	{
@@ -320,7 +326,25 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				SimpleUtils.pass("Controls Page: Time Off Reason '"+ reasonLabel +"' selected successfully.");
 			else
 				SimpleUtils.fail("Controls Page: Time Off Reason '"+ reasonLabel +"' not found.", false);
-		}
+		} else if (isElementLoaded(timeOffReasonSelector, 5)) {
+			clickTheElement(timeOffReasonSelector);
+			if (areListElementVisible(timeOffReasonOptions)) {
+				boolean isTimeOffReasonExists = false;
+				for (WebElement option: timeOffReasonOptions) {
+					if (option.getText().toLowerCase().contains(reasonLabel.toLowerCase())) {
+						clickTheElement(option);
+						SimpleUtils.pass("Select the time off reason: "+reasonLabel +" successfully! ");
+						isTimeOffReasonExists = true;
+						break;
+					}
+				}
+				if (!isTimeOffReasonExists) {
+					SimpleUtils.fail("The time off reason: "+ reasonLabel+ " is not exists in the reason list! ", false);
+				}
+			} else
+				SimpleUtils.fail("There is no reasons in the time off reason selector! ", false);
+		} else
+			SimpleUtils.fail("There is no time off reasons can be select! ", false);
 	}
 	
 	
@@ -412,14 +436,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Controls Page: 'Calendar' not loaded.", false);
 	}
 
+
+	@FindBy(css = "[label=\"OK\"] button")
+	private WebElement OKButtonOnNewTimeOffPage;
 	@Override
 	public void clickOnSaveTimeOffRequestBtn() throws Exception
 	{
 		waitForSeconds(3);
-		if(timeOffApplyBtn.isEnabled()) {
+		if(isElementLoaded(timeOffApplyBtn, 5)) {
 			click(timeOffApplyBtn);
-		}
-		else
+		} else if (isElementLoaded(OKButtonOnNewTimeOffPage, 5)) {
+			click(OKButtonOnNewTimeOffPage);
+		} else
 			SimpleUtils.fail("Profile Page: Unable to save New Time Off Request.", false);
 			
 	}
@@ -1506,8 +1534,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
  
 	@Override
 	public HashMap<String, Object> getMyAvailabilityData() throws Exception {
+		scrollToBottom();
 		HashMap<String, Object> myAvailabilityData = new HashMap<String, Object>();
-
 	      float scheduleHoursValue = 0;
 	      float remainingHoursValue = 0;
 	      float totalHoursValue = 0;
@@ -1566,7 +1594,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement myAvailability;
 	@FindBy(css=".user-profile-section__lock")
 	private WebElement lockIcon;
-	@FindBy(css="user-profile-section[editing-locked] div[class=\"user-profile-section__header\"] span")
+	@FindBy(css="user-profile-section[editing-locked] div[class=\"user-profile-section__header\"] lg-button[label=\"Edit\"] span.ng-binding")
 	private WebElement editBtn;
 
 	@Override
@@ -1629,7 +1657,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				moveElement(hourCellsResizableCursorsLeft.get(rowIndex), xOffSet);
 				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
 			} else if (areListElementVisible(availabilityGrid, 10) && availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).size()==48) {
-				clickTheElement(availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).get(23));
+				click(availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).get(23));
 			} else{
 				SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
 			}
@@ -4149,4 +4177,35 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		}
 		return jobTitle;
 	}
+
+	public List<String> getAvailableShiftsOnAvailabilityTable (){
+		List<String> availableShiftsOnAvailabilityTable = new ArrayList<>();
+		if (areListElementVisible(availableShifts, 10)
+				&& availableShifts.size()>0) {
+			for (WebElement shift: availableShifts) {
+				availableShiftsOnAvailabilityTable.add(shift.getText());
+				SimpleUtils.report("Get the available shifts info successfully! ");
+			}
+		} else
+			SimpleUtils.report("There is no available shifts on Availability Table");
+		return availableShiftsOnAvailabilityTable;
+	}
+
+
+	@FindBy(css = ".availability-zone.pto-zone")
+	private List<WebElement> timeOffsOnAvailabilityTable;
+	public List<String> getTimeOffsLengthOnAvailabilityTable (){
+		List<String> timeOffs = new ArrayList<>();
+		if (areListElementVisible(timeOffsOnAvailabilityTable, 10)
+				&& timeOffsOnAvailabilityTable.size()>0) {
+			for (WebElement timeoff: timeOffsOnAvailabilityTable) {
+				String length = Double.parseDouble(timeoff.getAttribute("style").split(";")[1].split(":")[1].replace("%", ""))/2.08/2 + " Hrs";
+				timeOffs.add(length);
+				SimpleUtils.report("Get the available shifts info successfully! ");
+			}
+		} else
+			SimpleUtils.report("There is no timeoff on Availability Table");
+		return timeOffs;
+	}
+
 }
