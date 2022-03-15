@@ -1095,7 +1095,7 @@ public class SplitAndSpreadTest extends TestBase {
             int dayIndexOfMon = Integer.valueOf(shiftInfo1.get(1));
             // Edit the Schedule and try to drag TM1 on Tue day to Mon day
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            Thread.sleep(3000);
+            Thread.sleep(5000);
             int i=0;
             while (!scheduleShiftTablePage.isDragAndDropConfirmPageLoaded() && i<5){
                 scheduleShiftTablePage.dragOneShiftToAnotherDay(dayIndexOfMon+1,firstNameOfTM1,dayIndexOfMon);
@@ -1299,11 +1299,11 @@ public class SplitAndSpreadTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.WillTriggerDailyOTErrorMessage);
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.NoLongEligibleTakeShiftErrorMessage);
             // Validate the availability of Claim Shift Request popup for the second shift
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.WillTriggerDailyOTErrorMessage);
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.NoLongEligibleTakeShiftErrorMessage);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

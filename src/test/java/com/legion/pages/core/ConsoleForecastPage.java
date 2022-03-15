@@ -2144,7 +2144,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 	public boolean checkIsLocationFilterLoaded() throws Exception {
 		boolean isLocationFilterLoaded = false;
-		if (isElementLoaded(locationsFilter, 10)) {
+		if (isElementLoaded(locationsFilter, 20)) {
 			isLocationFilterLoaded = true;
 			SimpleUtils.report("Location filter on Forecast page is loaded! ");
 		} else

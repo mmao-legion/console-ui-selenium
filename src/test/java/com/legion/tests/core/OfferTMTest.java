@@ -240,8 +240,10 @@ public class OfferTMTest extends TestBase {
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();
+            Thread.sleep(3000);
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             shiftOperatePage.verifyRecommendedTableHasTM();
+            Thread.sleep(3000);
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             newShiftPage.searchTeamMemberByName(firstNameOfTM);
             newShiftPage.clickOnOfferOrAssignBtn();
