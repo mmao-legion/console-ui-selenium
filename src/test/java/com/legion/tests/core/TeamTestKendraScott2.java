@@ -516,7 +516,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
 	@TestName(description = "Verify the Team functionality > Work Preferences")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -1254,6 +1254,10 @@ public class TeamTestKendraScott2 extends TestBase{
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 			teamPage.goToTeam();
 			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String timeOffLabel = "Time Off";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(timeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+			profileNewUIPage.rejectAllTimeOff();
 			String workPreferencesLabel = "Work Preferences";
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
 			profileNewUIPage.cancelAllPendingAvailabilityRequest();
@@ -1323,6 +1327,10 @@ public class TeamTestKendraScott2 extends TestBase{
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 			teamPage.goToTeam();
 			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String timeOffLabel = "Time Off";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(timeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+			profileNewUIPage.rejectAllTimeOff();
 			String workPreferencesLabel = "Work Preferences";
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
 			profileNewUIPage.cancelAllPendingAvailabilityRequest();
@@ -1396,6 +1404,10 @@ public class TeamTestKendraScott2 extends TestBase{
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 			teamPage.goToTeam();
 			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String timeOffLabel = "Time Off";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(timeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+			profileNewUIPage.rejectAllTimeOff();
 			String workPreferencesLabel = "Work Preferences";
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
 			profileNewUIPage.cancelAllPendingAvailabilityRequest();
@@ -1889,7 +1901,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
 			SimpleUtils.assertOnFail("The scheduled hrs should be 44.5 in availability table, but actual is: "+scheduleHoursValue,
-					scheduleHoursValue.equals("44.0"), false);
+					scheduleHoursValue.equals("44.5"), false);
 
 			//Login as TM1
 			loginPage.logOut();
@@ -1904,8 +1916,8 @@ public class TeamTestKendraScott2 extends TestBase{
 					availableShiftsOnAvailabilityTable.size() == 7, false);
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
-			SimpleUtils.assertOnFail("The scheduled hrs should be 44.0 in availability table, but actual is: "+scheduleHoursValue,
-					scheduleHoursValue.equals("44.0"), false);
+			SimpleUtils.assertOnFail("The scheduled hrs should be 44.5 in availability table, but actual is: "+scheduleHoursValue,
+					scheduleHoursValue.equals("44.5"), false);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}

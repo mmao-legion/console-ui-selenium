@@ -2289,7 +2289,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement start : startElements) {
                 scrollToElement(start);
                 WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
-                if (startName != null && startName.getText().split(" ")[0].equalsIgnoreCase(firstName)) {
+                SimpleUtils.report("Check the tm name: "+ startName.getText().split(" ")[0]);
+                if (startName.getText().split(" ")[0].equalsIgnoreCase(firstName)) {
                     mouseHoverDragandDrop(start, endElements.get(0));
                     SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + weekDay.getText() + " days Successfully!");
                     //verifyConfirmStoreOpenCloseHours();
@@ -2298,7 +2299,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 }
             }
             if (!isDragged) {
-                SimpleUtils.fail("Failed to drag the user: " + firstName + " to another Successfully!", false);
+                SimpleUtils.fail("Failed to drag the user: " + firstName + " on day: "
+                        +startIndex+1+" to another day: "+ endIndex+1+" Successfully!", false);
             }
         } else {
             SimpleUtils.fail("Schedule Page: Failed to find the shift elements for index: " + startIndex + " or " + endIndex, false);

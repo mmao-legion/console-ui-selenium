@@ -1089,10 +1089,19 @@ public class SplitAndSpreadTest extends TestBase {
 
             // Save the Schedule
             scheduleMainPage.saveSchedule();
+            Thread.sleep(3000);
             List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1);
-            SimpleUtils.assertOnFail("Failed to add two shifts!", shiftIndexes != null && shiftIndexes.size() == 2, false);
-            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
-            int dayIndexOfMon = Integer.valueOf(shiftInfo1.get(1));
+            SimpleUtils.assertOnFail("Failed to add two shifts!",
+                    shiftIndexes != null && shiftIndexes.size() == 2, false);
+//            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
+//            int dayIndexOfMon = Integer.parseInt(shiftInfo1.get(1));
+            int dayIndexOfMon = 8;
+            for (int i = 0; i<7; i++) {
+                if (scheduleShiftTablePage.getWeekDayTextByIndex(i).equalsIgnoreCase("Mon")){
+                    dayIndexOfMon = i;
+                    break;
+                }
+            }
             // Edit the Schedule and try to drag TM1 on Tue day to Mon day
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             Thread.sleep(5000);
@@ -1299,11 +1308,11 @@ public class SplitAndSpreadTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.NoLongEligibleTakeShiftErrorMessage);
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.WillTriggerDailyOTErrorMessage);
             // Validate the availability of Claim Shift Request popup for the second shift
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.NoLongEligibleTakeShiftErrorMessage);
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.WillTriggerDailyOTErrorMessage);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
