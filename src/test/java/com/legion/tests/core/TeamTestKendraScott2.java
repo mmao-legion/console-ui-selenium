@@ -1261,6 +1261,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			String workPreferencesLabel = "Work Preferences";
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
 			profileNewUIPage.cancelAllPendingAvailabilityRequest();
+			profileNewUIPage.clickNextWeek();
 			profileNewUIPage.clickAvailabilityEditButton();
 			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
@@ -1282,6 +1283,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.clickOnUserProfileImage();
 			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
 			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValue = availabilityData.get("totalHoursValue").toString();
 			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
@@ -1335,6 +1337,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
 			profileNewUIPage.cancelAllPendingAvailabilityRequest();
 			Thread.sleep(3000);
+			profileNewUIPage.clickNextWeek();
 			profileNewUIPage.clickAvailabilityEditButton();
 			for (int i=0; i<7;i++) {
 				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(i, "Preferred");
@@ -1358,6 +1361,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.clickOnUserProfileImage();
 			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
 			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValue = availabilityData.get("totalHoursValue").toString();
 			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
@@ -1412,6 +1416,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
 			profileNewUIPage.cancelAllPendingAvailabilityRequest();
 			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String totalHoursValueBeforeChange = availabilityData.get("totalHoursValue").toString();
 			String remainingHoursValueBeforeChange = availabilityData.get("remainingHoursValue").toString();
@@ -1443,6 +1448,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.clickOnUserProfileImage();
 			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
 			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValueAfterChange = availabilityData.get("totalHoursValue").toString();
 			remainingHoursValueAfterChange = availabilityData.get("remainingHoursValue").toString();
@@ -1471,6 +1477,10 @@ public class TeamTestKendraScott2 extends TestBase{
 			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
 			String firstNameOfTM = tmFullName.split(" ")[0];
 			String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
+			String timeOffLabel = "Time Off";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(timeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+			profileNewUIPage.rejectAllTimeOff();
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -1485,6 +1495,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if(isActiveWeekGenerated){
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -1527,6 +1538,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
 			profileNewUIPage.cancelAllPendingAvailabilityRequest();
 			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
 			profileNewUIPage.clickAvailabilityEditButton();
 			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
 			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
@@ -1568,6 +1580,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
@@ -1576,6 +1589,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			teamPage.goToTeam();
 			teamPage.searchAndSelectTeamMemberByName(tmFullName);
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.clickNextWeek();
 			//The message should display as '24 of 24 Available hrs left'
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValue = availabilityData.get("totalHoursValue").toString();
