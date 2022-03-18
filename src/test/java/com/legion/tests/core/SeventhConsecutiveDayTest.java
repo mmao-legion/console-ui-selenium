@@ -222,7 +222,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             i++;
         }
         String workRole = shiftInfo.get(4);
-
+        String lastName = shiftInfo.get(5);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         shiftOperatePage.deleteTMShiftInWeekView(firstName);
@@ -239,7 +239,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint(startTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchTeamMemberByName(firstName);
+        newShiftPage.searchTeamMemberByName(firstName+ " "+lastName);
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
 
