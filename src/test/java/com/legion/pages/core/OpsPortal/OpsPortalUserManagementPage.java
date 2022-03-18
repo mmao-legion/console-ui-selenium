@@ -1017,12 +1017,57 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		return flag;
 	}
 
+	@FindBy(id = "input652")
+	private WebElement usersSearchBox;
+	@FindBy(css = "lg-button.ng-isolate-scope")
+	private WebElement user;
+
+	@Override
+	public void goToUserDetailPage(String users) throws Exception{
+		if (isElementEnabled(accessRoleTab,5)) {
+			highlightElement(usersSearchBox);
+			usersSearchBox.sendKeys(users);
+			usersSearchBox.sendKeys(Keys.ENTER);
+			waitForSeconds(3);
+			if(isElementEnabled(user,5)){
+				highlightElement(user);
+				click(user);
+			}else
+				SimpleUtils.fail("user " + users + "search failed",false);
+		}else{
+			SimpleUtils.fail("usersSearchBox loaded failed",false);
+		}
+	}
 
 
+	@FindBy(xpath = "//timeoff-management/collapsible/collapsible-base/div/div[1]/div[2]/collapsible-title/span")
+	private WebElement timeOffTab;
+	@FindBy(xpath = "//ng-transclude/div[1]/div[2]/div[2]/lg-button[1]/button/span/span")
+	private WebElement history;
+	@FindBy(css = "div#logContainer.lg-slider-pop__content.mt-20")
+	private WebElement historyDetail;
 
-
-
-
+	@Override
+	public void verifyHistoryDeductType() throws Exception {
+		if(isElementEnabled(timeOffTab,10)){
+			highlightElement(timeOffTab);
+			click(timeOffTab);
+			if(isElementEnabled(history,5)){
+				highlightElement(history);
+				click(history);
+				if(isElementEnabled(historyDetail,5)){
+					highlightElement(historyDetail);
+					if (historyDetail.getText().contains("max carryover") && historyDetail.getText().contains("max available") && historyDetail.getText().contains("annual earn limit")){
+						SimpleUtils.pass("deducted type display");
+					}else
+						SimpleUtils.fail("deducted type doesn't display",false);
+				}else
+					SimpleUtils.fail("user history detail loaded failed",false);
+			}else
+				SimpleUtils.fail("user history loaded failed",false);
+		}else
+			SimpleUtils.fail("user time off tab loaded failed",false);
+	}
 
 }
 
