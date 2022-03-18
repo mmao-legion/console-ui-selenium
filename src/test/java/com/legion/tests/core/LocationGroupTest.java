@@ -3292,8 +3292,8 @@ public class LocationGroupTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
             ForecastPage forecastPage = pageFactory.createForecastPage();
+            Thread.sleep(10000);
             forecastPage.clickOnLabor();
-            Thread.sleep(5000);
             //Location filter dropdown will display on the Labor tab in forecast page
             SimpleUtils.assertOnFail("Location filter dropdown fail to load on the Labor tab in forecast page! ",
                     forecastPage.checkIsLocationFilterLoaded(), false);

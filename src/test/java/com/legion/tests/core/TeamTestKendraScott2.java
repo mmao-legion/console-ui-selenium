@@ -1342,16 +1342,16 @@ public class TeamTestKendraScott2 extends TestBase{
 			for (int i=0; i<7;i++) {
 				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(i, "Preferred");
 			}
+//			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
+//			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
+//			String remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+//			SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
+//							+ totalHoursValue +" and "+ remainingHoursValue,
+//					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
+			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
 			String remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
-			SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
-							+ totalHoursValue +" and "+ remainingHoursValue,
-					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
-			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
-			availabilityData = profileNewUIPage.getMyAvailabilityData();
-			totalHoursValue = availabilityData.get("totalHoursValue").toString();
-			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
 			SimpleUtils.assertOnFail("The total and remaining hrs should be 0, but the actual are: "
 							+ totalHoursValue +" and "+ remainingHoursValue,
 					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
