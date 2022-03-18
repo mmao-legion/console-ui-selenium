@@ -88,4 +88,7 @@ public interface UserManagementPage {
 
     public boolean verifyPermissionIsCheckedOrNot(int index) throws Exception;
 
+    public void goToUserDetailPage(String users) throws Exception;
+
+    public void verifyHistoryDeductType() throws Exception;
 }
