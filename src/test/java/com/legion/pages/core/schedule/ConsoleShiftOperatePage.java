@@ -2217,10 +2217,16 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if (areListElementVisible(selectTeamMembersOption, 10)) {
             if (selectTeamMembersOption.get(0).getAttribute("class").contains("select")) {
                 click(selectTeamMembersOption.get(1));
-                SimpleUtils.pass("Recommended TMs tab been selected");
+                if (selectTeamMembersOption.get(1).getAttribute("class").contains("select")) {
+                    SimpleUtils.pass("Recommended TMs tab been selected");
+                } else
+                    SimpleUtils.fail("Recommended TMs tab fail been selected", false);
             } else {
                 click(selectTeamMembersOption.get(0));
-                SimpleUtils.pass("Search Team Members tab been selected");
+                if (selectTeamMembersOption.get(0).getAttribute("class").contains("select")) {
+                    SimpleUtils.pass("Search Team Members tab been selected");
+                } else
+                    SimpleUtils.fail("Search Team Members tab fail been selected", false);
             }
         } else {
             SimpleUtils.fail("Select Team Member options are not available", false);

@@ -1169,7 +1169,6 @@ public class SplitAndSpreadTest extends TestBase {
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             // Go to Schedule page, Schedule tab
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -1266,6 +1265,7 @@ public class SplitAndSpreadTest extends TestBase {
             scheduleMainPage.selectShiftTypeFilterByText("Open");
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
             shiftOperatePage.clickOnOfferTMOption();
+            Thread.sleep(5000);
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             //TM should not show
             SimpleUtils.assertOnFail("TM should not show in recommended tab! ",
@@ -1280,6 +1280,7 @@ public class SplitAndSpreadTest extends TestBase {
             //  Click on the open shift -> Offer Team Members, click on Recommended TMs, check the TM list
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(1);
             shiftOperatePage.clickOnOfferTMOption();
+            Thread.sleep(5000);
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             //TM should not show
             SimpleUtils.assertOnFail("TM should not show in recommended tab! ",
@@ -1293,6 +1294,36 @@ public class SplitAndSpreadTest extends TestBase {
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             createSchedulePage.publishActiveSchedule();
 
+            //Check if the daily OT setting enabled
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
+                controlsNewUIPage.clickOnControlsConsoleMenu();
+                SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+                controlsNewUIPage.clickOnControlsComplianceSection();
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
+                //Go to OP page
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                locationsPage.clickOnLocationsTab();
+                locationsPage.goToSubLocationsInLocationsPage();
+                locationsPage.searchLocation(location);               ;
+                SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+                locationsPage.clickOnLocationInLocationResult(location);
+                locationsPage.clickOnConfigurationTabOfLocation();
+                HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad("Compliance");
+                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+//                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                Thread.sleep(3000);
+            }
+            boolean isDailyOTEnabled = controlsNewUIPage.checkDailyOTEnabledOrNot();
+
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
+                switchToConsoleWindow();
+            }
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1308,11 +1339,12 @@ public class SplitAndSpreadTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.WillTriggerDailyOTErrorMessage);
+
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(isDailyOTEnabled?Constants.WillTriggerDailyOTErrorMessage:Constants.NoLongEligibleTakeShiftErrorMessage);
             // Validate the availability of Claim Shift Request popup for the second shift
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.WillTriggerDailyOTErrorMessage);
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(isDailyOTEnabled?Constants.WillTriggerDailyOTErrorMessage:Constants.NoLongEligibleTakeShiftErrorMessage);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

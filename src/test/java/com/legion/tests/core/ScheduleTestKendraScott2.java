@@ -6328,6 +6328,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			shiftOperatePage.clickOnProfileIcon();
 			shiftOperatePage.clickOnEditShiftTime();
+			i =0;
+			while (i<5 && shiftOperatePage.isEditShiftTimeNewUIDisplay()) {
+				Thread.sleep(60000);
+				shiftOperatePage.clickOnCancelEditShiftTimeButton();
+				shiftOperatePage.clickOnProfileIcon();
+				shiftOperatePage.clickOnEditShiftTime();
+				i++;
+			}
 			SimpleUtils.assertOnFail("The new edit shift time page should not display! ",
 					!shiftOperatePage.isEditShiftTimeNewUIDisplay(), false);
 			shiftOperatePage.clickOnCancelEditShiftTimeButton();
@@ -6480,6 +6488,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String id = shift.getAttribute("id");
 			shiftOperatePage.clickOnEditShiftTime();
 			String shiftTime = "8:00am-9:00am";
+			Thread.sleep(3000);
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], true);
 
 			Thread.sleep(5000);

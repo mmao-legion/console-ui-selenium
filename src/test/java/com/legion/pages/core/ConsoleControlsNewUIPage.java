@@ -7405,4 +7405,24 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Edit split shift button is not loaded!", false);
 		}
 	}
+
+	@Override
+	public boolean checkDailyOTEnabledOrNot() throws Exception {
+		boolean isEnabled = false;
+		if (isElementLoaded(DailyOvertimePaySection, 10)){
+			if (isElementLoaded(DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+				if (!DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+					isEnabled = true;
+					SimpleUtils.pass("Toggle is turned on!");
+				} else {
+					SimpleUtils.pass("Toggle is turned off!");
+				}
+			} else {
+				SimpleUtils.fail("Toggle fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Daily OT section fail to load!", false);
+		}
+		return isEnabled;
+	}
 }

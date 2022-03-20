@@ -1434,14 +1434,6 @@ public class TeamTestKendraScott2 extends TestBase{
 					!totalHoursValueBeforeChange.equals(totalHoursValueAfterChange), false);
 			SimpleUtils.assertOnFail("The remaining hrs should been changed, the actual is: " +remainingHoursValueAfterChange,
 					!remainingHoursValueBeforeChange.equals(remainingHoursValueAfterChange), false);
-			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
-			availabilityData = profileNewUIPage.getMyAvailabilityData();
-			totalHoursValueAfterChange = availabilityData.get("totalHoursValue").toString();
-			remainingHoursValueAfterChange = availabilityData.get("remainingHoursValue").toString();
-			SimpleUtils.assertOnFail("The total hrs should been changed, the actual is: " +totalHoursValueBeforeChange,
-					!totalHoursValueBeforeChange.equals(totalHoursValueAfterChange), false);
-			SimpleUtils.assertOnFail("The remaining hrs should been changed, the actual is: " +remainingHoursValueAfterChange,
-					!remainingHoursValueBeforeChange.equals(remainingHoursValueAfterChange), false);
 
 			loginPage.logOut();
 			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
@@ -1529,6 +1521,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			newShiftPage.searchTeamMemberByName(tmFullName);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
 
 			//Create all day's avalabilities on the day that has shift scheduled
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
@@ -1584,6 +1577,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
 
 			//Go to Roster, search and go to TM1's preference page, Check the Available left hrs
 			teamPage.goToTeam();

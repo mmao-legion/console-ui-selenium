@@ -359,5 +359,6 @@ public interface ControlsNewUIPage {
 	public LinkedHashMap<String, List<String>> getCompanyHolidaysInSearchResult() throws Exception;
 	public void turnOnOrTurnOffDailyOTToggle(boolean action) throws Exception;
 	public void editDailyOT(String numOfHrs, String singleDayOr24Hrs, boolean saveOrNot) throws Exception;
+	public boolean checkDailyOTEnabledOrNot() throws Exception;
 
 }
