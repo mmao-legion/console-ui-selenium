@@ -78,7 +78,11 @@ public class PlanTest extends TestBase {
         InternalAdmin("InternalAdmin"),
         DistrictManager("DistrictManager"),
         StoreManager("StoreManager"),
-        Planner("Planner");
+        Planner("Planner"),
+        DMPlanner("DMPlanner"),
+        SMPlanner("SMPlanner"),
+        DMWithPlanPermissionPlanner("DMWithPlanPermissionPlanner"),
+        SMWithPlanPermissionPlanner("SMWithPlanPermissionPlanner");
         private final String role;
         AccessRoles(final String accessRole) {
             role = accessRole;
@@ -87,8 +91,6 @@ public class PlanTest extends TestBase {
             return role;
         }
     }
-
-
 
     @Override
     @BeforeMethod()
@@ -102,22 +104,6 @@ public class PlanTest extends TestBase {
         }
     }
 
-    public enum indexOfActivityType {
-        TimeOff(0),
-        ShiftOffer(1),
-        ShiftSwap(2),
-        ProfileUpdate(3),
-        Schedule(4);
-        private final int value;
-
-        indexOfActivityType(final int newValue) {
-            value = newValue;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
 
     public enum approveRejectAction {
         Approve("APPROVE"),
@@ -144,7 +130,6 @@ public class PlanTest extends TestBase {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
             String currentTime =  dfs.format(new Date()).trim();
             String planName = "AutomationCreatedPlanName" +currentTime;
-            String scePlanName = "ScenarioPlanName" +currentTime;
             String regionName="RegionForPlan_Auto";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -447,6 +432,7 @@ public class PlanTest extends TestBase {
         PlanPage planPage = pageFactory.createConsolePlanPage();
         if(planPage.verifyPlanConsoleTabShowing()){
             SimpleUtils.pass("Admin can see plan tab");
+            locationSelectorPage.changeDistrict("DistrcitForPlan2");
             locationSelectorPage.changeLocation("Loc1ForDistrict2");
             planPage.clickOnPlanConsoleMenuItem();
             Assert.assertFalse(planPage.verifyCreatePlanButtonShowing(),"There is no create plan button at Location level");
@@ -470,6 +456,8 @@ public class PlanTest extends TestBase {
 
         if(planPage.verifyPlanConsoleTabShowing()){
             SimpleUtils.pass("Planner can see plan tab");
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("RegionForPlan_Auto");
+            locationSelectorPage.changeDistrict("DistrcitForPlan2");
             locationSelectorPage.changeLocation("Loc1ForDistrict2");
             planPage.clickOnPlanConsoleMenuItem();
             Assert.assertFalse(planPage.verifyCreatePlanButtonShowing(),"There is no create plan button at Location level");
@@ -486,28 +474,54 @@ public class PlanTest extends TestBase {
         loginPage.logOut();
 
         // Login as District Manager
-        loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+        loginAsDifferentRole(AccessRoles.DMPlanner.getValue());
         dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
         if(!planPage.verifyPlanConsoleTabShowing()){
-            SimpleUtils.pass("District Manager can't see plan tab");
+            SimpleUtils.pass("District Manager can't see plan tab by default");
         }else {
-            SimpleUtils.fail("District Manager can see plan tab",false);
+            SimpleUtils.fail("District Manager can see plan tab by default",false);
         }
 
         loginPage.logOut();
 
         // Login as StoreManager
-        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+        loginAsDifferentRole(AccessRoles.SMPlanner.getValue());
         dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
         if(!planPage.verifyPlanConsoleTabShowing()){
-            SimpleUtils.pass("Store Manager can't see plan tab");
+            SimpleUtils.pass("Store Manager can't see plan tab by default");
         }else {
-            SimpleUtils.fail("Store Manager can see plan tab",false);
+            SimpleUtils.fail("Store Manager can see plan tab by default",false);
         }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Store manager can see plan tab after assigned view plan permission")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyStoreManagerCanSeePlanTabAfterAssignedViewPlanPermissionAsSMWithPlanPermissionPlanner (String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        PlanPage planPage = pageFactory.createConsolePlanPage();
+        Assert.assertTrue(planPage.verifyPlanConsoleTabShowing(),"There is create plan button for store manager who has assigned view plan permission.");
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify new customer access role that assigned view plan permission can see plan tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyNewCustomerRoleThatAssignedViewPlanPermissionCanSeePlanTabAsDMWithPlanPermissionPlanner (String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        PlanPage planPage = pageFactory.createConsolePlanPage();
+        Assert.assertTrue(planPage.verifyPlanConsoleTabShowing(),"There is plan tab for customer access role that assigned view plan permission.");
     }
 
 

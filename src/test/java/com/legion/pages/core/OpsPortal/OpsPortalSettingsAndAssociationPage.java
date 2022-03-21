@@ -160,6 +160,8 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
 
     @FindBy(css = ".modal-dialog [modal-title=\"Conflict Detected\"]")
     private WebElement conflictDetectedWindow;
+    @FindBy(css = ".modal-dialog [modal-title=\"Conflict Detected\"] [label=\"Save\"]")
+    private WebElement saveBtnOnConflictDetectedWindow;
     @Override
     public boolean ifConflictDetectedWindowShowUP() throws Exception {
         if (isElementLoaded(conflictDetectedWindow, 10)){
@@ -170,11 +172,19 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
 
     @Override
     public void clickOnTheSaveBtnOnConflictDetectedWindow() throws Exception {
-        if (isElementLoaded(conflictDetectedWindow.findElement(By.cssSelector("[label=\"Save\"]")), 10)){
-            clickTheElement(conflictDetectedWindow.findElement(By.cssSelector("[label=\"Save\"]")));
+        if (isElementLoaded(saveBtnOnConflictDetectedWindow, 10)){
+            clickTheElement(saveBtnOnConflictDetectedWindow);
         } else {
             SimpleUtils.fail("Fail to find Save button!", false);
         }
+    }
+
+    @Override
+    public boolean isSaveBtnEnabledOnConflictDetectedWindow() throws Exception {
+        if (isElementLoaded(saveBtnOnConflictDetectedWindow, 10)){
+            return true;
+        }
+        return false;
     }
 
     @FindBy(css = "lg-button[ng-click*=\"addDynamicGroup\"]")

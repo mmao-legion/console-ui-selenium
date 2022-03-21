@@ -7,7 +7,8 @@ import java.util.List;
 public interface LaborModelPage {
 
     public void goToLaborModelTile() throws Exception;
-
+    public void goToTaskDetail(String taksName) throws Exception;
+    public void checkCustomFormulaCoding(String keyword) throws Exception;
     public void clickOnSpecifyTemplateName(String template_name, String edit) throws Exception;
 
     public void clickOnLaborModelTab() throws Exception;
