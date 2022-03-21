@@ -2794,6 +2794,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
 
     public void setShiftTimesOnEditShiftTimePage (String startTime, String endTime, boolean checkTheNextDay) throws Exception {
+        Thread.sleep(3000);
         if (isElementLoaded(editShiftTimePopUp, 15)
                 &&isElementLoaded(shiftStartInput, 10)
                 && isElementLoaded(shiftEndInput, 10)) {

@@ -1522,7 +1522,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
 			createSchedulePage.publishActiveSchedule();
-
+			Thread.sleep(5000);
 			//Create all day's avalabilities on the day that has shift scheduled
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 			teamPage.goToTeam();

@@ -1882,6 +1882,7 @@ public class CinemarkMinorTest extends TestBase {
             createMinor16N17TemplateAndSetMinorSettings(minor16TemplateName, minor16GroupTitle);
             String minor17TemplateName = "Minor17Template-ForAuto";
             createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
+            Thread.sleep(3000);
             switchToConsoleWindow();
             //wait for 5 mins for catch
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
