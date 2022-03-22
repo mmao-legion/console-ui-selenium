@@ -28,6 +28,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import sun.awt.windows.ThemeReader;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -1321,6 +1322,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if(isActiveWeekGenerated){
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
