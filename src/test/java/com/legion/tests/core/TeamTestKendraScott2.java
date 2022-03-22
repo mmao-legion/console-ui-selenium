@@ -28,7 +28,6 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import sun.awt.windows.ThemeReader;
 
 import static com.legion.utils.MyThreadLocal.*;
 
