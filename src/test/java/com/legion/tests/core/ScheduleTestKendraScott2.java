@@ -25,7 +25,6 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
-import sun.rmi.runtime.Log;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -288,8 +287,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@BeforeMethod()
 	public void firstTest(Method testMethod, Object[] params) {
 		try {
-			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
-
 			this.createDriver((String) params[0], "69", "Window");
 			visitPage(testMethod);
 			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
