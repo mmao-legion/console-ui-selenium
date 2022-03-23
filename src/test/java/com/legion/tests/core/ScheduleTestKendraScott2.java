@@ -4631,17 +4631,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		if (isWeekGenerated) {
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
-		createSchedulePage.clickCreateScheduleBtn();
-		createSchedulePage.editOperatingHoursWithGivingPrameters("Sunday", "8:00PM", "8:00AM");
-		createSchedulePage.editOperatingHoursWithGivingPrameters("Monday", "8:00PM", "8:00AM");
-		createSchedulePage.editOperatingHoursWithGivingPrameters("Tuesday", "8:00PM", "8:00AM");
-		createSchedulePage.editOperatingHoursWithGivingPrameters("Wednesday", "8:00PM", "8:00AM");
-		createSchedulePage.editOperatingHoursWithGivingPrameters("Thursday", "8:00PM", "8:00AM");
-		createSchedulePage.editOperatingHoursWithGivingPrameters("Friday", "8:00PM", "8:00AM");
-		createSchedulePage.editOperatingHoursWithGivingPrameters("Saturday", "8:00PM", "8:00AM");
-		createSchedulePage.clickNextBtnOnCreateScheduleWindow();
-		createSchedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
-		createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
+		createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00PM", "8:00AM");
 		createSchedulePage.switchToManagerViewToCheckForSecondGenerate();
 
 		//delete unassigned shifts.

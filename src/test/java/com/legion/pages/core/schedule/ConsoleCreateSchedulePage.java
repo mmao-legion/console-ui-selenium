@@ -901,6 +901,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                             String openTime = startNEndTimes.get(0).getAttribute("value");
                             String closeTime = startNEndTimes.get(1).getAttribute("value");
                             if (!openTime.equals(startTime) || !closeTime.equals(endTime)) {
+                                waitForSeconds(2000);
                                 startNEndTimes.get(0).clear();
                                 startNEndTimes.get(1).clear();
                                 startNEndTimes.get(0).sendKeys(startTime);
