@@ -90,5 +90,7 @@ public interface UserManagementPage {
 
     public void goToUserDetailPage(String users) throws Exception;
 
+    public int verifyAccessRoleSelected() throws Exception;
+
     public void verifyHistoryDeductType() throws Exception;
 }

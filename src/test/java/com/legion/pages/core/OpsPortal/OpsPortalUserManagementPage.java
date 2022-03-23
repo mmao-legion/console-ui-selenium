@@ -1039,10 +1039,37 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 	}
 
+	@FindBy(css = "input-field[label='HR'] input")
+	private WebElement HR;
+	@FindBy(css = "input-field[label='Operations Manager'] input")
+	private WebElement OperationsManager;
+	@FindBy(css = "input-field[label='Communications'] input")
+	private WebElement Communications;
+	@FindBy(css = "input-field[label='Budget Planner'] input")
+	private WebElement BudgetPlanner;
 
-	@FindBy(xpath = "//timeoff-management/collapsible/collapsible-base/div/div[1]/div[2]/collapsible-title/span")
+	public int verifyAccessRoleSelected() throws Exception{
+		waitForSeconds(10);
+		BasePage.scrollToBottom();
+		if (isElementLoaded(HR,10) && isElementLoaded(OperationsManager,10) && isElementLoaded(Communications,10) && isElementLoaded(BudgetPlanner,10)) {
+			int flag;
+			if(HR.isSelected() && OperationsManager.isSelected() && Communications.isSelected() && BudgetPlanner.isSelected()){
+				flag = 1;
+			}else if(!HR.isSelected() && !OperationsManager.isSelected() && !Communications.isSelected() && !BudgetPlanner.isSelected()){
+				flag = 2;
+			}else
+				flag =3;
+
+			return flag;
+		}else{
+			SimpleUtils.fail("access role loaded failed",false);
+			return 0;
+		}
+	}
+
+	@FindBy(css = "timeoff-management div.collapsible-title")
 	private WebElement timeOffTab;
-	@FindBy(xpath = "//ng-transclude/div[1]/div[2]/div[2]/lg-button[1]/button/span/span")
+	@FindBy(css = "div.balance-action lg-button[label='History']>button")
 	private WebElement history;
 	@FindBy(css = "div#logContainer.lg-slider-pop__content.mt-20")
 	private WebElement historyDetail;
