@@ -289,8 +289,8 @@ public class AbsentManagePage extends BasePage {
     public void search(String searchText){
             templateSearchBox.clear();
             templateSearchBox.sendKeys(searchText);
-            searchIcon.click();
-            waitForSeconds(2);
+            //searchIcon.click();
+            waitForSeconds(3);
     }
 
     public String noMatch() {
