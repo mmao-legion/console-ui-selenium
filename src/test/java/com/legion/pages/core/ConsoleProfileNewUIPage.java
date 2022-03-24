@@ -3016,10 +3016,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "[box-title=\"Actions\"]")
 	private WebElement actionsSection;
 
-	@FindBy(css = "[value=\"tm.worker.pictureUrl\"]")
+	@FindBy(css = "[value=\"userProfileInfo.pictureUrl\"]")
 	private WebElement primaryAvatarInUserProfileSection;
 
-	@FindBy(css = "[value=\"tm.worker.businessPictureUrl\"]")
+	@FindBy(css = "[value=\"userProfileInfo.businessPictureUrl\"]")
 	private WebElement businessAvatarInUserProfileSection;
 
 	@FindBy(css = "div.user-readonly-details")

@@ -167,7 +167,7 @@
                     <include name="validateTheAvailableLeftHrsDisplayAs168WhenAddFullAvailabilitiesAsTeamMember" />
                     <include name="validateTheAvailableLeftHrsDisplayCorrectlyWhenUpdateAvailabilitiesAsTeamMember" />
                     <include name="validateTheAvailableLeftHrsWhenTMHasShiftsOnTheWeekAsTeamMember" />
-                    <include name="validateTimeOffOnAvailabilityTableAsTeamMember" />
+<!--                    <include name="validateTimeOffOnAvailabilityTableAsTeamMember" /> -->
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWithScheduledShiftAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember" />
@@ -429,13 +429,13 @@
                     <include name="verifySpreadOfHoursCanBeConfiguredAsInternalAdmin" />
                     <include name="verifySpreadOfHoursViolationWhenSearchTMAsInternalAdmin" />
                     <include name="verifySpreadOfHoursViolationWhenEditShiftTimeAsInternalAdmin" />
-                    <include name="verifySpreadOfHoursViolationWhenDraggingTheAvatarToChangeTheAssignmentAsInternalAdmin" />
+<!--                    <include name="verifySpreadOfHoursViolationWhenDraggingTheAvatarToChangeTheAssignmentAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6361-->
                     <include name="verifySpreadOfHoursViolationWhenDraggingTheShiftToAnotherDayAsInternalAdmin" />
                     <include name="verifyOpenShiftWithSpreadOfHoursViolationCannotBeClaimedAsTeamMember" />
                     <include name="verifySplitShiftCanBeConfiguredAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWhenSearchTMAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWillShowOnTheSecondShiftAsInternalAdmin" />
-                    <include name="verifySplitShiftViolationWhenDragDropToChangeAssignmentAsInternalAdmin" />
+<!--                    <include name="verifySplitShiftViolationWhenDragDropToChangeAssignmentAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6361-->
                     <include name="verifySplitShiftViolationWhenDragDropToAnotherDayAsInternalAdmin" />
 <!--  SCH-5605                  <include name="verifySplitShiftViolationOpenShiftCannotBeClaimedAsTeamMember" />   -->
                 </methods>
