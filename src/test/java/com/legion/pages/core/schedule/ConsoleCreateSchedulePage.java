@@ -889,6 +889,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
             clickTheElement(operatingHoursEditBtn);
             if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
                 SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
+                waitForSeconds(2);
                 if (areListElementVisible(operatingHoursDayLists, 15)) {
                     for (WebElement dayList : operatingHoursDayLists) {
                         WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
@@ -901,7 +902,6 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                             String openTime = startNEndTimes.get(0).getAttribute("value");
                             String closeTime = startNEndTimes.get(1).getAttribute("value");
                             if (!openTime.equals(startTime) || !closeTime.equals(endTime)) {
-                                waitForSeconds(2000);
                                 startNEndTimes.get(0).clear();
                                 startNEndTimes.get(1).clear();
                                 startNEndTimes.get(0).sendKeys(startTime);
