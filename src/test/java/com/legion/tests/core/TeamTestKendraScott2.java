@@ -12,6 +12,7 @@ import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.pages.core.ConsoleGmailPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.utils.Constants;
+import com.legion.utils.MyThreadLocal;
 import cucumber.api.java.hu.Ha;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.formula.ptg.ControlPtg;
@@ -1527,6 +1528,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			//Create all day's avalabilities on the day that has shift scheduled
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 			teamPage.goToTeam();
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.refreshTheBrowser();
 			teamPage.searchAndSelectTeamMemberByName(tmFullName);
 			String workPreferencesLabel = "Work Preferences";
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);

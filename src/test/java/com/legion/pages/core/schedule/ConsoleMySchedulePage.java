@@ -1085,7 +1085,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @Override
     public void verifyClickOnNextButtonOnSwap() throws Exception {
         verifySelectOneShiftNVerifyNextButtonEnabled();
-        click(nextButton);
+        clickTheElement(nextButton);
     }
 
     @Override
@@ -1095,7 +1095,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             for (WebElement selectBtn : selectBtns) {
                 String className = selectBtn.getAttribute("class");
                 if (className.isEmpty()) {
-                    click(selectBtn);
+                    clickTheElement(selectBtn);
                     className = selectBtn.getAttribute("class");
                     if (className.contains(selected)) {
                         SimpleUtils.pass("Select one shift Successfully!");
