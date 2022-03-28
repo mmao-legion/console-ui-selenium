@@ -2076,7 +2076,7 @@ public class LocationsTest extends TestBase {
 
         String sessionId = logIn();
 
-        String reponse[] = HttpUtil.httpGet(Constants.downloadTransation1,sessionId,null);
+        String reponse[] = HttpUtil.httpGet0(Constants.downloadTransation1,sessionId,null);
 
         if(reponse[0].equals("200")){
             if(reponse[1].contains("locale") && reponse[1].contains("category") && reponse[1].contains("resourceKey") && reponse[1].contains("translation")){
@@ -2108,7 +2108,6 @@ public class LocationsTest extends TestBase {
         String sessionId = logIn();
 
         String reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadTransation,sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\Translationstrings.csv");
-
 
     }
 
