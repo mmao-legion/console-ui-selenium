@@ -72,6 +72,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement subPlanLevelConfigText;
 	@FindBy(css = "input-field[value=\"subPlanLevel\"]")
 	private WebElement subPlanLevelConfigFiled;
+	@FindBy(css = "button.btn.sch-publish-confirm-btn")
+	private WebElement continueBtnInNewTermsOfServicePopUpWindow;
+	@FindBy(css = "div.modal-dialog")
+	private WebElement newTermsOfServicePopUpWindow;
 
 
 	@Override
@@ -121,7 +125,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void clickModelSwitchIconInDashboardPage(String value) {
+	public void clickModelSwitchIconInDashboardPage(String value) throws Exception {
 		waitForSeconds(3);
 		if (isElementEnabled(modeSwitchIcon, 40)) {
 			clickTheElement(modeSwitchIcon);
@@ -136,13 +140,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 			}
 			switchToNewWindow();
-
+			verifyNewTermsOfServicePopUp();
 		} else
 			SimpleUtils.fail("mode switch img load failed", false);
 
 
 	}
 
+	private void verifyNewTermsOfServicePopUp() throws Exception {
+		if (isElementLoaded(newTermsOfServicePopUpWindow,3)
+				&& isElementLoaded(continueBtnInNewTermsOfServicePopUpWindow,3)) {
+			click(continueBtnInNewTermsOfServicePopUpWindow);
+		}else
+			SimpleUtils.report("There is no new terms of service");
+	}
 
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
