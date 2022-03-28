@@ -176,8 +176,8 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 
 	@Override
 	public void verifyNewTermsOfServicePopUp() throws Exception {
-		if (isElementLoaded(newTermsOfServicePopUpWindow,3)
-				&& isElementLoaded(continueBtnInNewTermsOfServicePopUpWindow,3)) {
+		if (isElementLoaded(newTermsOfServicePopUpWindow,5)
+				&& isElementLoaded(continueBtnInNewTermsOfServicePopUpWindow,5)) {
 			click(continueBtnInNewTermsOfServicePopUpWindow);
 		}else
 			SimpleUtils.report("There is no new terms of service");

@@ -2,7 +2,9 @@ package com.legion.pages.core.OpsPortal;
 
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
+import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
@@ -67,7 +69,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void clickModelSwitchIconInDashboardPage(String value) {
+	public void clickModelSwitchIconInDashboardPage(String value) throws Exception {
 		waitForSeconds(3);
 		if (isElementEnabled(modeSwitchIcon, 30)) {
 			clickTheElement(modeSwitchIcon);
@@ -82,7 +84,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 			}
 			switchToNewWindow();
-
+			LoginPage loginPage = new ConsoleLoginPage();
+			loginPage.verifyNewTermsOfServicePopUp();
 		} else
 			SimpleUtils.fail("mode switch img load failed", false);
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface LocationsPage {
 
-    public void clickModelSwitchIconInDashboardPage(String value);
+    public void clickModelSwitchIconInDashboardPage(String value) throws Exception;
 
     public boolean isOpsPortalPageLoaded() throws Exception;
 

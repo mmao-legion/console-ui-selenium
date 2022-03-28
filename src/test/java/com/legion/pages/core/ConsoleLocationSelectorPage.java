@@ -5,6 +5,7 @@ import static com.legion.utils.MyThreadLocal.*;
 
 import java.util.*;
 
+import com.legion.pages.LoginPage;
 import com.legion.utils.JsonUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -1616,7 +1617,10 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     public void refreshTheBrowser() {
         try {
             getDriver().navigate().refresh();
-        } catch (TimeoutException ignored) {
+            LoginPage loginPage = new ConsoleLoginPage();
+            loginPage.verifyNewTermsOfServicePopUp();
+        }catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
