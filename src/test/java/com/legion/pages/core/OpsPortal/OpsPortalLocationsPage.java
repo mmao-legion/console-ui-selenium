@@ -4004,5 +4004,37 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Title fail to load!", false);
 		}
 	}
+
+	@FindBy(css = "lg-button[label='Download translations'] button")
+	private WebElement downloadTranslationButton;
+	public void verifyDownloadTransaltionsButtonisClicked() throws Exception{
+		editOnGlobalConfigPage.click();
+		BasePage.scrollToBottom();
+		if(isElementLoaded(downloadTranslationButton,10)){
+			if(isClickable(downloadTranslationButton,10)){
+				SimpleUtils.pass("Download translations button is clickable");
+			}else{
+				SimpleUtils.fail("Download Translations button is not clickable", false);
+			}
+		}else {
+			SimpleUtils.fail("Download Translations button loaded failed", false);
+		}
+	}
+
+	@FindBy(css = "lg-button[label='Upload translations'] button")
+	private WebElement uploadTranslationButton;
+	public void verifyUploadTransaltionsButtonisClicked() throws Exception{
+		editOnGlobalConfigPage.click();
+		BasePage.scrollToBottom();
+		if(isElementLoaded(uploadTranslationButton,10)){
+			if(isClickable(uploadTranslationButton,10)){
+				SimpleUtils.pass("Upload Translations button is clickable");
+			}else{
+				SimpleUtils.fail("Upload Translations button is not clickable", false);
+			}
+		}else {
+			SimpleUtils.fail("Upload Translations button loaded failed", false);
+		}
+	}
 }
 
