@@ -55,16 +55,19 @@ public class HttpUtil {
      */
     public static String[] httpGet(String url, String session, Map<String, String> parameters) {
         //拼接url
-        Set<String> keys = parameters.keySet();
-        int mark = 1;
-        for (String para : keys) {
-            if (mark == 1) {
-                url = url + "?" + para + "=" + parameters.get(para);
-            } else {
-                url = url + "&" + para + "=" + parameters.get(para);
+        if(parameters != null){
+            Set<String> keys = parameters.keySet();
+            int mark = 1;
+            for (String para : keys) {
+                if (mark == 1) {
+                    url = url + "?" + para + "=" + parameters.get(para);
+                } else {
+                    url = url + "&" + para + "=" + parameters.get(para);
+                }
+                mark++;
             }
-            mark++;
         }
+
         System.out.println("url： " + url);
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -79,8 +82,12 @@ public class HttpUtil {
             if (responseCode == HttpStatus.SC_OK) {
                 System.out.println("The Get request executed successfully!!!");
                 responseStr = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-                JSONObject responseJson = JSON.parseObject(responseStr);
-                System.out.println("Response Json from API： " + responseJson);
+                if(!url.contains("downloadTranslations")){
+                    JSONObject responseJson = JSON.parseObject(responseStr);
+                    System.out.println("Response Json from API： " + responseJson);
+                }else{
+                    System.out.println(responseStr);
+                }
 
                 Header[] headers = httpResponse.getAllHeaders();
                 HashMap<String, String> headerMap = new HashMap<>();
