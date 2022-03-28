@@ -12,12 +12,15 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
+import com.legion.utils.HttpUtil;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -2036,4 +2039,75 @@ public class LocationsTest extends TestBase {
 
     }
 
+    public int getHttpStatusCode(String[] httpResponse) {
+        return Integer.parseInt(httpResponse[0]);
     }
+
+    private String logIn() {
+        //header
+        HashMap<String, String> loginHeader = new HashMap<String, String>();
+        //body
+        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+58@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
+        //post request
+        String[] postResponse = HttpUtil.httpPost(Constants.loginUrlRC, loginHeader, loginString);
+        Assert.assertEquals(getHttpStatusCode(postResponse), 200, "Failed to login!");
+        String sessionId = postResponse[1];
+        return sessionId;
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Download translation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDownloadTranslationAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToGlobalConfigurationInLocations();
+
+        locationsPage.verifyDownloadTransaltionsButtonisClicked();
+
+        String sessionId = logIn();
+
+        String reponse[] = HttpUtil.httpGet(Constants.downloadTransation1,sessionId,null);
+
+        if(reponse[0].equals("200")){
+            if(reponse[1].contains("locale") && reponse[1].contains("category") && reponse[1].contains("resourceKey") && reponse[1].contains("translation")){
+                SimpleUtils.pass("Download translations successfully");
+            }
+        }else{
+            SimpleUtils.fail("Download translations failed",false);
+        }
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Upload translation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUploadTranslationAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToGlobalConfigurationInLocations();
+
+        locationsPage.verifyUploadTransaltionsButtonisClicked();
+
+        String sessionId = logIn();
+
+        String reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadTransation,sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\Translationstrings.csv");
+
+
+    }
+
+}
