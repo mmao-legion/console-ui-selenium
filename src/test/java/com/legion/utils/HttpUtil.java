@@ -55,17 +55,15 @@ public class HttpUtil {
      */
     public static String[] httpGet(String url, String session, Map<String, String> parameters) {
         //拼接url
-        if(parameters != null){
-            Set<String> keys = parameters.keySet();
-            int mark = 1;
-            for (String para : keys) {
-                if (mark == 1) {
-                    url = url + "?" + para + "=" + parameters.get(para);
-                } else {
-                    url = url + "&" + para + "=" + parameters.get(para);
-                }
-                mark++;
+        Set<String> keys = parameters.keySet();
+        int mark = 1;
+        for (String para : keys) {
+            if (mark == 1) {
+                url = url + "?" + para + "=" + parameters.get(para);
+            } else {
+                url = url + "&" + para + "=" + parameters.get(para);
             }
+            mark++;
         }
 
         System.out.println("url： " + url);
@@ -82,12 +80,9 @@ public class HttpUtil {
             if (responseCode == HttpStatus.SC_OK) {
                 System.out.println("The Get request executed successfully!!!");
                 responseStr = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-                if(!url.contains("downloadTranslations")){
-                    JSONObject responseJson = JSON.parseObject(responseStr);
-                    System.out.println("Response Json from API： " + responseJson);
-                }else{
-                    System.out.println(responseStr);
-                }
+
+                JSONObject responseJson = JSON.parseObject(responseStr);
+                System.out.println("Response Json from API： " + responseJson);
 
                 Header[] headers = httpResponse.getAllHeaders();
                 HashMap<String, String> headerMap = new HashMap<>();
@@ -209,6 +204,71 @@ public class HttpUtil {
 
         }
         return null;
+    }
+
+    /**
+     * GET request
+     *
+     * @param url
+     * @param session    header
+     * @param parameters
+     * @return
+     */
+    public static String[] httpGet0(String url, String session, Map<String, String> parameters) {
+        //拼接url
+        if(parameters != null){
+            Set<String> keys = parameters.keySet();
+            int mark = 1;
+            for (String para : keys) {
+                if (mark == 1) {
+                    url = url + "?" + para + "=" + parameters.get(para);
+                } else {
+                    url = url + "&" + para + "=" + parameters.get(para);
+                }
+                mark++;
+            }
+        }
+
+        System.out.println("url： " + url);
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse httpResponse = null;
+        String[] res = new String[2];
+        try {
+            HttpGet httpGet = new HttpGet(url);
+            httpGet.setHeader("sessionId", session);
+            httpResponse = httpClient.execute(httpGet);
+            int responseCode = httpResponse.getStatusLine().getStatusCode();
+            String responseStr = null;
+            if (responseCode == HttpStatus.SC_OK) {
+                System.out.println("The Get request executed successfully!!!");
+                responseStr = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+                if(!url.contains("downloadTranslations")){
+                    JSONObject responseJson = JSON.parseObject(responseStr);
+                    System.out.println("Response Json from API： " + responseJson);
+                }else{
+                    System.out.println(responseStr);
+                }
+
+                Header[] headers = httpResponse.getAllHeaders();
+                HashMap<String, String> headerMap = new HashMap<>();
+                for (Header hd : headers
+                ) {
+                    headerMap.put(hd.getName(), hd.getValue());
+                }
+                System.out.println("Response Headers： " + headerMap);
+
+            } else {
+                System.out.println("The Get request Failed!!!");
+                System.out.println("Status code: " + responseCode);
+            }
+            res = new String[]{Integer.toString(responseCode), responseStr};
+            httpResponse.close();
+            httpClient.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
 }
