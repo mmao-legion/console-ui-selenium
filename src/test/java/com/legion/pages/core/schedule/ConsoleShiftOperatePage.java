@@ -485,9 +485,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             //check the shift role
             if (!isElementEnabled(changeRole, 5)) {
                 if (scheduleCommonPage.isScheduleDayViewActive()) {
-                    clickTheElement(clickedShift.findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
+                    moveToElementAndClick(clickedShift.findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
                 } else
-                    clickTheElement(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+                    moveToElementAndClick(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
             }
             clickOnChangeRole();
             if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >1) {

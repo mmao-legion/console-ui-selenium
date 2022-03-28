@@ -1351,10 +1351,14 @@ public class TeamTestKendraScott2 extends TestBase{
 //							+ totalHoursValue +" and "+ remainingHoursValue,
 //					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.refreshTheBrowser();
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.clickNextWeek();
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
 			String remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
-			SimpleUtils.assertOnFail("The total and remaining hrs should be 0, but the actual are: "
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
 							+ totalHoursValue +" and "+ remainingHoursValue,
 					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
 
