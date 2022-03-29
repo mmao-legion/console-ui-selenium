@@ -415,7 +415,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 			waitForSeconds(3);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
@@ -548,7 +551,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
 			if (!isElementEnabled(stateList, 10)) {
@@ -1236,8 +1242,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 			click(state);
 			if (!isElementEnabled(stateList, 10)) {
 				click(state);
@@ -1391,7 +1400,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
 			if (!isElementEnabled(stateList, 10)) {
