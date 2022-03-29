@@ -843,7 +843,7 @@ public class ConfigurationTest extends TestBase {
     public void timeOfDayInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
-            String shiftTime = "8:30am - 5pm";
+            String shiftTime = "8:30am - 4pm";
             List<String> indexes = new ArrayList<String>();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
