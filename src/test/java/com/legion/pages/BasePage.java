@@ -98,6 +98,10 @@ public class BasePage {
 
     }
 
+    public void scrollOneHeight() {
+        ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+    }
+
     public static void scrollToBottom() {
         ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,10000)");
     }
