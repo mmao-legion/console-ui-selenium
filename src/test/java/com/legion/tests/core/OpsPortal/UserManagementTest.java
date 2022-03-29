@@ -1,6 +1,7 @@
 package com.legion.tests.core.OpsPortal;
 
 import com.legion.pages.BasePage;
+import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
@@ -22,6 +23,8 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 
 public class UserManagementTest extends TestBase {
@@ -48,6 +51,8 @@ public class UserManagementTest extends TestBase {
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.verifyNewTermsOfServicePopUp();
         SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
@@ -502,11 +507,15 @@ public class UserManagementTest extends TestBase {
                 reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRole.csv");
                 System.out.println("uploadAccessRoleReponse:  " + reponse);
                 refreshPage();
+                LoginPage loginPage = pageFactory.createConsoleLoginPage();
+                loginPage.verifyNewTermsOfServicePopUp();
             }
             //upload user access role file
             reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleBlank.csv");
             System.out.println("uploadBlankFileReponse:  " + reponse);
             refreshPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.verifyNewTermsOfServicePopUp();
             //verify whether access role is added successfully
             flag = userManagementPage.verifyAccessRoleSelected();
             if(flag == 2){

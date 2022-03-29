@@ -1017,7 +1017,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		return flag;
 	}
 
-	@FindBy(id = "input653")
+	@FindBy(css = "input[placeholder='You can search by name, job title, location, etc.']")
 	private WebElement usersSearchBox;
 	@FindBy(css = "lg-button.ng-isolate-scope")
 	private WebElement user;
