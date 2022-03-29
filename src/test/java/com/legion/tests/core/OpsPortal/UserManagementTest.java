@@ -457,17 +457,20 @@ public class UserManagementTest extends TestBase {
             //check whether additional access roles are added, if added, delete them
             int flag;
             String reponse;
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
             flag = userManagementPage.verifyAccessRoleSelected();
             if (flag != 2){
                 //upload blank access role file
                 reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleBlank.csv");
                 System.out.println("uploadBalankFileReponse:  " + reponse);
                 refreshPage();
+                loginPage.verifyNewTermsOfServicePopUp();
             }
             //upload user access role file
             reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRole.csv");
             System.out.println("uploadAccessRoleReponse:  " + reponse);
             refreshPage();
+            loginPage.verifyNewTermsOfServicePopUp();
             //verify whether access role is added successfully
             flag = userManagementPage.verifyAccessRoleSelected();
             if(flag == 1){
