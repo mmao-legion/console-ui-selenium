@@ -1790,6 +1790,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			//Go to Roster, search and go to TM1's preference page
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 			teamPage.goToTeam();
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.refreshTheBrowser();
 			teamPage.searchAndSelectTeamMemberByName(tmFullName);
 			String workPreferencesLabel = "Work Preferences";
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
@@ -1807,7 +1809,7 @@ public class TeamTestKendraScott2 extends TestBase{
 					availableShiftsOnAvailabilityTable.size() == 7, false);
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
-			SimpleUtils.assertOnFail("The scheduled hrs should be 42 in availability table, but actual is: "+scheduleHoursValue,
+			SimpleUtils.assertOnFail("The scheduled hrs should be 38.5 in availability table, but actual is: "+scheduleHoursValue,
 					scheduleHoursValue.equals("38.5"), false);
 
 			//Login as TM1

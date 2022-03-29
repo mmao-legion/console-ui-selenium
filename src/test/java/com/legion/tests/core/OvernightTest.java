@@ -219,11 +219,11 @@ public class OvernightTest extends TestBase {
             newShiftPage.searchTeamMemberByName(firstNameOfTM1);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-
             scheduleCommonPage.clickOnDayView();
             scheduleCommonPage.navigateDayViewWithIndex(2);
             //Verify overnight shift can be created
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            Thread.sleep(5000);
             int index = scheduleShiftTablePage.
                     getTheIndexOfShift(scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).get(0));
             scheduleShiftTablePage.moveShiftByIndexInDayView(index, false);

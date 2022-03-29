@@ -9,6 +9,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
@@ -1884,6 +1885,8 @@ public class CinemarkMinorTest extends TestBase {
             createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
             Thread.sleep(3000);
             switchToConsoleWindow();
+            LoginPage loginPage = new ConsoleLoginPage();
+            loginPage.verifyNewTermsOfServicePopUp();
             //wait for 5 mins for catch
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             for (int i = 0; i< 5; i++) {
