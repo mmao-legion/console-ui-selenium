@@ -2573,8 +2573,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(areListElementVisible(holidayItems))
 				SimpleUtils.report("Holiday search with resulted");
 			holidaySearchInput.clear();
-			selectByVisibleText(holidayDialogCountrySelection,"United States");
-			waitForSeconds(2);
+//			selectByVisibleText(holidayDialogCountrySelection,"United States");
+//			waitForSeconds(2);
 			//select a holiday
 			if(areListElementVisible(holidayItems)){
 				SimpleUtils.pass("Holidays options loaded successfully");
