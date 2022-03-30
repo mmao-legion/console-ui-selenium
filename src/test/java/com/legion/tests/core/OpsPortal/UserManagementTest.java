@@ -442,7 +442,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Addition Access Role add by API")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyAddAdditionalAccessRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try{
             String storeManager = "Queen Stehr";
@@ -489,7 +489,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Addition Access Role delete by API")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyDeleteAdditionalAccessRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try{
             String storeManager = "Queen Stehr";
@@ -535,7 +535,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Addition Access Role add by API")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyUploadNotExistEmployeeAndAccessRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try{
             String sessionId = logIn();
