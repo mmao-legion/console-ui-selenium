@@ -1807,13 +1807,16 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 SimpleUtils.pass("Apply and Cancel buttons are enabled");
                 if (scheduleCommonPage.isScheduleDayViewActive()) {
                     scrollToBottom();
-                    click(applyButtonChangeRole);
+                    clickTheElement(applyButtonChangeRole);
+                    SimpleUtils.pass("Click Apply button successfully! ");
                 } else {
                     clickTheElement(applyButtonChangeRole);
+                    SimpleUtils.pass("Click Apply button successfully! ");
                 }
 
                 if (isElementEnabled(roleViolationAlter, 5)) {
-                    click(roleViolationAlterOkButton);
+                    clickTheElement(roleViolationAlterOkButton);
+                    SimpleUtils.pass("Click OK button successfully! ");
                 }
             } else {
                 SimpleUtils.fail("Apply and Cancel buttons are doesn't show well ", false);

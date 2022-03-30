@@ -6391,6 +6391,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			WebElement shift = shiftOperatePage.clickOnProfileIcon();
 			String id = shift.getAttribute("id");
 			shiftOperatePage.clickOnEditShiftTime();
+			Thread.sleep(5000);
 			String shiftTime = "8:00am-9:00pm";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], true);
 			HashMap<String, String> shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();

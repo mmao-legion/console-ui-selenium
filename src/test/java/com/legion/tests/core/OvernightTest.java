@@ -12,6 +12,7 @@ import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.Constants;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -223,7 +224,6 @@ public class OvernightTest extends TestBase {
             scheduleCommonPage.navigateDayViewWithIndex(2);
             //Verify overnight shift can be created
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            Thread.sleep(5000);
             int index = scheduleShiftTablePage.
                     getTheIndexOfShift(scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).get(0));
             scheduleShiftTablePage.moveShiftByIndexInDayView(index, false);
