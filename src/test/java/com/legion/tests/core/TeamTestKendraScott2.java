@@ -1533,7 +1533,6 @@ public class TeamTestKendraScott2 extends TestBase{
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 			teamPage.goToTeam();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-			locationSelectorPage.refreshTheBrowser();
 			teamPage.searchAndSelectTeamMemberByName(tmFullName);
 			String workPreferencesLabel = "Work Preferences";
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
@@ -1544,6 +1543,9 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
 			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+			locationSelectorPage.refreshTheBrowser();
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.clickNextWeek();
 			//The message should display as '18 of 24 Available hrs left'
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String totalHoursValue = availabilityData.get("totalHoursValue").toString();

@@ -3800,7 +3800,7 @@ private List<WebElement> locationColumn;
 		if (isElementLoaded(schoolSessionEndInput,5)) {
 			clickTheElement(schoolSessionEndInput);
 			if (isElementLoaded(setSessionStartAndEndTimeWindow,5))
-				SimpleUtils.pass("School Calendars Page: Click on School Session Start input successfully");
+				SimpleUtils.pass("School Calendars Page: Click on School Session End input successfully");
 			else
 				SimpleUtils.fail("School Calendars Page: Failed to click on School Session Start input",false);
 		} else
@@ -3986,7 +3986,7 @@ private List<WebElement> locationColumn;
 	private List<WebElement> rightArrows;
 	@FindBy(css = ".modal-instance-button.confirm")
 	private WebElement saveSchoolSessionBtn;
-	@FindBy(css = "div.modal-instance-button.ng-binding")
+	@FindBy(css = "div[ng-click=\"dismissPopup()\"]")
 	private WebElement cancelSchoolSessionBtn;
 	@FindBy(css = "[label=\"Delete\"]")
 	private WebElement deleteCalendarBtn;
