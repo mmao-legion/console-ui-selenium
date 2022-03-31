@@ -1,5 +1,7 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.legion.pages.BasePage;
+import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
@@ -11,6 +13,8 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
+import com.legion.utils.HttpUtil;
 import com.legion.utils.SimpleUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -19,6 +23,8 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 
 public class UserManagementTest extends TestBase {
@@ -45,6 +51,8 @@ public class UserManagementTest extends TestBase {
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.verifyNewTermsOfServicePopUp();
         SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
@@ -409,6 +417,133 @@ public class UserManagementTest extends TestBase {
             userManagementPage.goToUserAndRoles();
             userManagementPage.goToUserDetailPage(users);
             userManagementPage.verifyHistoryDeductType();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    public int getHttpStatusCode(String[] httpResponse) {
+        return Integer.parseInt(httpResponse[0]);
+    }
+
+    private String logIn() {
+        //header
+        HashMap<String, String> loginHeader = new HashMap<String, String>();
+        //body
+        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+58@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
+        //post request
+        String[] postResponse = HttpUtil.httpPost(Constants.loginUrlRC, loginHeader, loginString);
+        Assert.assertEquals(getHttpStatusCode(postResponse), 200, "Failed to login!");
+        String sessionId = postResponse[1];
+        return sessionId;
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Addition Access Role add by API")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyAddAdditionalAccessRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try{
+            String storeManager = "Queen Stehr";
+            //get session id via login
+            String sessionId = logIn();
+            //go to User Management tab
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            //go to user profile
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToUserDetailPage(storeManager);
+            //check whether additional access roles are added, if added, delete them
+            int flag;
+            String reponse;
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            flag = userManagementPage.verifyAccessRoleSelected();
+            if (flag != 2){
+                //upload blank access role file
+                reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleBlank.csv");
+                System.out.println("uploadBalankFileReponse:  " + reponse);
+                refreshPage();
+                loginPage.verifyNewTermsOfServicePopUp();
+            }
+            //upload user access role file
+            reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRole.csv");
+            System.out.println("uploadAccessRoleReponse:  " + reponse);
+            refreshPage();
+            loginPage.verifyNewTermsOfServicePopUp();
+            //verify whether access role is added successfully
+            flag = userManagementPage.verifyAccessRoleSelected();
+            if(flag == 1){
+                SimpleUtils.pass("Additional access role added successfully");
+                //delete added additional access role
+                HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleBlank.csv");
+            }else {
+                SimpleUtils.fail("Additional access role added failed", false);
+            }
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Addition Access Role delete by API")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyDeleteAdditionalAccessRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try{
+            String storeManager = "Queen Stehr";
+            //get session id via login
+            String sessionId = logIn();
+            //go to User Management tab
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            //go to user profile
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToUserDetailPage(storeManager);
+            //check whether additional access roles are added, if added, delete them
+            int flag;
+            String reponse;
+            flag = userManagementPage.verifyAccessRoleSelected();
+            if (flag != 1){
+                //upload blank access role file
+                reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRole.csv");
+                System.out.println("uploadAccessRoleReponse:  " + reponse);
+                refreshPage();
+                LoginPage loginPage = pageFactory.createConsoleLoginPage();
+                loginPage.verifyNewTermsOfServicePopUp();
+            }
+            //upload user access role file
+            reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleBlank.csv");
+            System.out.println("uploadBlankFileReponse:  " + reponse);
+            refreshPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.verifyNewTermsOfServicePopUp();
+            //verify whether access role is added successfully
+            flag = userManagementPage.verifyAccessRoleSelected();
+            if(flag == 2){
+                SimpleUtils.pass("Additional access role deleted successfully");
+            }else {
+                SimpleUtils.fail("Additional access role deleted failed", false);
+            }
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Addition Access Role add by API")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyUploadNotExistEmployeeAndAccessRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try{
+            String sessionId = logIn();
+            String reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleNotExist.csv");
+            System.out.println("uploadAccessRoleFileReponse" + reponse);
+            if (reponse.contains("Employee Id not exists") && reponse.contains("User Access Role not exists")){
+                SimpleUtils.pass("upload not exist employee and access role response is as expected");
+            }
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

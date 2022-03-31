@@ -12,6 +12,8 @@ import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 import static com.legion.utils.MyThreadLocal.driver;
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -2571,8 +2573,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(areListElementVisible(holidayItems))
 				SimpleUtils.report("Holiday search with resulted");
 			holidaySearchInput.clear();
-			selectByVisibleText(holidayDialogCountrySelection,"United States");
-			waitForSeconds(2);
+//			selectByVisibleText(holidayDialogCountrySelection,"United States");
+//			waitForSeconds(2);
 			//select a holiday
 			if(areListElementVisible(holidayItems)){
 				SimpleUtils.pass("Holidays options loaded successfully");
@@ -4053,4 +4055,83 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Back button fail to load!", false);
 		}
 	}
+
+	//Added by Fiona
+	@FindBy(tagName="lg-eg-status")
+	private List<WebElement> templateStatus;
+
+	private boolean isMultiplePublishVersion() {
+		String classValue = templatesList.get(0).getAttribute("class");
+		if (classValue != null && classValue.contains("hasChildren")) {
+			expandTemplate();
+			if(areListElementVisible(templateStatus,3) && templateStatus.size()>=3){
+				SimpleUtils.pass("This is a multiple version template");
+			}
+			return true;
+		} else
+			return false;
+	}
+
+	@FindBy(css=".lg-templates-table-improved__grid-row--header~div")
+	private List<WebElement> multipleTemplateList;
+
+	@Override
+	public void verifyMultipleTemplateListUI(String templateName) throws Exception{
+		if(searchTemplate(templateName)){
+			if (isMultiplePublishVersion()) {
+				//expand all future template that has draft template
+				if(areListElementVisible(multipleTemplateList,2)){
+					List<String> effectiveDates = new ArrayList<>();
+
+					//expand template with multiple version
+					for(WebElement multipleTemplate:multipleTemplateList){
+						WebElement toggleBTN = multipleTemplate.findElement(By.cssSelector(".toggle i"));
+						if(toggleBTN.getAttribute("class").trim().equals("fa fa-caret-right")){
+							clickTheElement(toggleBTN);
+						}
+					}
+					//Check each template can show well or not
+					for(WebElement multipleTemplate1:multipleTemplateList){
+						WebElement name = multipleTemplate1.findElement(By.cssSelector("button"));
+						WebElement status = multipleTemplate1.findElement(By.cssSelector("lg-eg-status"));
+						WebElement creator = multipleTemplate1.findElement(By.cssSelector(".creator"));
+						WebElement effectiveDate = multipleTemplate1.findElement(By.cssSelector(".date"));
+						WebElement lastModifiedDate = multipleTemplate1.findElement(By.cssSelector(".date+div"));
+						if(isElementLoaded(name,2)&&isElementLoaded(status,2)
+								&&isElementLoaded(creator,2)&&isElementLoaded(effectiveDate,2)
+								&&isElementLoaded(lastModifiedDate,2)){
+							SimpleUtils.pass("Template can show well in template list page");
+						}else {
+							SimpleUtils.fail("Template can't show well in template list page",false);
+						}
+						//get all effectiveDate
+						if(effectiveDate.getText().trim()!=null || effectiveDate.getText().trim()!=""){
+							effectiveDates.add(effectiveDate.getText().trim());
+						}
+					}
+					List<Date> dates = new ArrayList<Date>();
+					List<Date> dates1 = new ArrayList<Date>();
+					//Verify the effective date should be order by Ascending
+					//format the date and add to list
+					SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy",Locale.ENGLISH);
+					for(String effectiveDate:effectiveDates){
+						Date date = sdf.parse(effectiveDate);
+						dates.add(date);
+						dates1.add(date);
+					}
+					Collections.sort(dates1);
+
+					if(ListUtils.isEqualList(dates,dates1)){
+						SimpleUtils.pass("The date is ordered by ascending");
+					}else{
+						SimpleUtils.fail("The date is not ordered by ascending",false);
+					}
+				}
+			}
+		}
+	}
+
+
+
+
 }

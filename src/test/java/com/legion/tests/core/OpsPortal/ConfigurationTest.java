@@ -46,6 +46,8 @@ public class ConfigurationTest extends TestBase {
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.verifyNewTermsOfServicePopUp();
         SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
@@ -843,7 +845,7 @@ public class ConfigurationTest extends TestBase {
     public void timeOfDayInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
-            String shiftTime = "8:30am - 5pm";
+            String shiftTime = "8:30am - 4pm";
             List<String> indexes = new ArrayList<String>();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -998,6 +1000,26 @@ public class ConfigurationTest extends TestBase {
             configurationPage.verifyArchivePopUpShowWellOrNot();
             configurationPage.cancelArchiveDeleteWorkWell(templateName);
 
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify multiple version template UI and Order")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMultipleVersionTemplateCanShowWellInListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+
+            String templateType = "Operating Hours";
+            String templateName = "ForMultipleAuto";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.verifyMultipleTemplateListUI(templateName);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
