@@ -465,6 +465,7 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void configureTemplate(String templateName) throws Exception {
+        waitForSeconds(3);
         search(templateName);
         clickInDetails();
         waitForSeconds(5);
