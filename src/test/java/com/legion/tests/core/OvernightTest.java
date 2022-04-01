@@ -232,7 +232,7 @@ public class OvernightTest extends TestBase {
             //Verify the overnight shift can display on next day
             scheduleCommonPage.navigateDayViewWithIndex(3);
             SimpleUtils.assertOnFail("The overnight shift also display on the next day! ",
-                    scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size()>0, false);
+                    scheduleShiftTablePage.getShiftById(shiftId)!=null, false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

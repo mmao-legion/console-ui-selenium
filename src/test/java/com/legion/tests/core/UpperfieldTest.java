@@ -1932,7 +1932,6 @@ public class UpperfieldTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();

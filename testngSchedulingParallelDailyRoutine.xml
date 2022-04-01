@@ -355,7 +355,7 @@
                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin" />
 <!--                    <include name="verifySelectingDifferentLevelOfUpperFieldsAndLocationsOnHQNewsTabAsStoreManager" />
                     <include name="verifySelectingDifferentLevelOfUpperFieldsOnLocationsNewsfeedPageAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-6012 -->
-                    <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" />
+<!--                    <include name="verifyLocationNavigationShouldNotShowOnModerationPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/TA-7277-->
                     <include name="verifyChangeLocationOnSchedulePageWhenLoginAsStoreManager" />
                     <include name="verifyChangeLocationOnSchedulePageWhenLoginAsTeamMember" />
                     <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" />
