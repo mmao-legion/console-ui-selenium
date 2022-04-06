@@ -2,7 +2,9 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ForecastPage;
+import com.legion.pages.ScheduleCommonPage;
 import com.legion.pages.SmartCardPage;
+import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
 import com.legion.pages.core.schedule.ConsoleSmartCardPage;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
@@ -2239,5 +2241,51 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		} else
 			SimpleUtils.fail("The locations filter fail to load!", false);
 		return locations;
+	}
+
+	@FindBy(css = "[id=\"forecast-labor-prediction\"] g [style*=\"text\"]")
+	private List<WebElement> attendeesAndHoursInLaborForecastChart;
+	@FindBy(css = "text[text-anchor=\"middle\"]")
+	private List<WebElement> dataOrTimeInLaborForecastChart;
+
+	public HashMap<String, List<String>> getLaborChartCoordinateAxisData() {
+		HashMap<String, List<String>> attendeesAndHoursOfLaborForecast = new HashMap<>();
+		if (areListElementVisible(attendeesAndHoursInLaborForecastChart) && attendeesAndHoursInLaborForecastChart.size()>0) {
+			List<String> attendeesInLaborForecastChart = new ArrayList<>();
+			List<String> hoursInLaborForecastChart = new ArrayList<>();
+			List<String> dataOrTimeInInLaborForecastChart = new ArrayList<>();
+
+			//Get the attendees and hours value
+			for (int i = 0; i<attendeesAndHoursInLaborForecastChart.size(); i++) {
+				if (i%2 == 0) {
+					attendeesInLaborForecastChart.add(attendeesAndHoursInLaborForecastChart.get(i).getText());
+					SimpleUtils.pass("Get a attendee in Labor Forecast chart successfully! ");
+				} else {
+					hoursInLaborForecastChart.add(attendeesAndHoursInLaborForecastChart.get(i).getText());
+					SimpleUtils.pass("Get a hour in Labor Forecast chart successfully! ");
+				}
+			}
+
+			//get the dates or times
+			ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+			if (scheduleCommonPage.isScheduleDayViewActive()) {
+				for (int i = 0; i<dataOrTimeInLaborForecastChart.size()/4; i++) {
+					dataOrTimeInInLaborForecastChart.add(dataOrTimeInLaborForecastChart.get(i*4).getText());
+					SimpleUtils.pass("Get a data/time in Labor Forecast chart successfully! ");
+				}
+			} else {
+				for (int i = 0; i<dataOrTimeInLaborForecastChart.size(); i++) {
+					dataOrTimeInInLaborForecastChart.add(dataOrTimeInLaborForecastChart.get(i).getText());
+					SimpleUtils.pass("Get a data/time in Labor Forecast chart successfully! ");
+				}
+			}
+
+			attendeesAndHoursOfLaborForecast.put("attendees", attendeesInLaborForecastChart);
+			attendeesAndHoursOfLaborForecast.put("hours", hoursInLaborForecastChart);
+			attendeesAndHoursOfLaborForecast.put("dateOrTime", dataOrTimeInInLaborForecastChart);
+			SimpleUtils.pass("Get all attendees and hours in Labor Forecast chart successfully! ");
+		} else
+			SimpleUtils.fail("The attendees and hours in Labor Forecast chart fail to load! ", false);
+		return attendeesAndHoursOfLaborForecast;
 	}
 }
