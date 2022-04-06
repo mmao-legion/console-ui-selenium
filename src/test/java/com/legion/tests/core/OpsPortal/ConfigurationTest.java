@@ -1004,4 +1004,34 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify time off in schedule policy")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimeOffInSchedulePolicyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String action = "Archive";
+            String templateType = "Scheduling Policies";
+            String templateName = "timeOffLimit";
+            String mode = "edit";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickEdit();
+            configurationPage.clickOK();
+            configurationPage.verifyTimeOff();
+            configurationPage.verifymaxNumEmployeesInput("0");
+            configurationPage.verifymaxNumEmployeesInput("-1");
+            configurationPage.verifymaxNumEmployeesInput("-1.0");
+            configurationPage.verifymaxNumEmployeesInput("1.1");
+            configurationPage.verifymaxNumEmployeesInput("1");
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
+

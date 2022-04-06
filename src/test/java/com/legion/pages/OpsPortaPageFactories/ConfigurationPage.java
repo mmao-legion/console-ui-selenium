@@ -119,4 +119,8 @@ public interface ConfigurationPage {
     public void deleteSpecifyDynamicEmployeeGroupsInList(String groupName) throws Exception;
     public void clickOnBackBtnOnTheTemplateDetailAndListPage() throws Exception;
     public void chooseSaveOrPublishBtnAndClickOnTheBtn(String button) throws Exception;
+    public void clickEdit() throws Exception;
+    public void clickOK() throws Exception;
+    public void verifyTimeOff() throws Exception;
+    public void verifymaxNumEmployeesInput(String num) throws Exception;
 }

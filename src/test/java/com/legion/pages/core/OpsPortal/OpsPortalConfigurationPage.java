@@ -4053,4 +4053,67 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Back button fail to load!", false);
 		}
 	}
+
+	@FindBy(css = "lg-button[label=\"Edit\"]")
+	private WebElement editBtn;
+	@Override
+	public void clickEdit() throws Exception {
+		if (isElementLoaded(editBtn,3)) {
+			click(editBtn);
+			SimpleUtils.pass("Edit button is clicked");
+		}else
+			SimpleUtils.fail("Edit button load failed ",false);
+	}
+
+	@FindBy(css = "lg-button[label=\"OK\"]")
+	private WebElement OKBtn;
+	@Override
+	public void clickOK() throws Exception {
+		if (isElementLoaded(OKBtn,3)) {
+			click(OKBtn);
+			SimpleUtils.pass("OK button is clicked");
+		}else
+			SimpleUtils.fail("OKBtn button load failed ",false);
+	}
+
+	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/div/h2")
+	private WebElement timeOffText;
+	@FindBy(css = "div.lg-question-input__wrapper h3")
+	private WebElement maxNumEmployeesText;
+	public void verifyTimeOff() throws Exception {
+		scrollToElement(timeOffText);
+		if(isElementLoaded(timeOffText,5) && isElementLoaded(maxNumEmployeesText,5)){
+			SimpleUtils.pass("Time off loaded successfully");
+			if(timeOffText.getText().equals("Time Off") && maxNumEmployeesText.getText().equals("Max number employees can request time off on the same day.")){
+				SimpleUtils.pass("Time off text is correct");
+			}
+		}else{
+			SimpleUtils.fail("Time off loaded failed",false);
+		}
+	}
+
+//	@FindBy(css = "ng-transclude.lg-question-input__input input-field ng-form input")
+	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/ng-transclude/content-box/ng-transclude/div/div/div/question-input/div/div[1]/ng-transclude/input-field/ng-form/input")
+	private WebElement maxNumEmployeesInput;
+	public void verifymaxNumEmployeesInput(String num) throws Exception {
+		if(isElementLoaded(maxNumEmployeesInput,5)){
+			maxNumEmployeesInput.clear();
+			maxNumEmployeesInput.sendKeys(num);
+			if(!num.contains("-") && !num.contains(".")){
+				if(isClickable(saveAsDraftButton,5)){
+					SimpleUtils.pass("Positive integer is valid");
+				}else{
+					SimpleUtils.fail("Positive integer should be valid",false);
+				}
+			}else{
+				if(!isClickable(saveAsDraftButton,5)){
+					SimpleUtils.pass("Negative interger or decimal is invalid");
+				}else{
+					SimpleUtils.fail("Negative interger or decimal should be invalid",false);
+				}
+			}
+		}else{
+			SimpleUtils.fail("maxNumEmployeesInput loaded failed",false);
+		}
+	}
 }
