@@ -360,5 +360,6 @@ public interface ControlsNewUIPage {
 	public void turnOnOrTurnOffDailyOTToggle(boolean action) throws Exception;
 	public void editDailyOT(String numOfHrs, String singleDayOr24Hrs, boolean saveOrNot) throws Exception;
 	public boolean checkDailyOTEnabledOrNot() throws Exception;
+	public boolean checkIfTheLocationUsingControlsConfiguration() throws Exception;
 
 }

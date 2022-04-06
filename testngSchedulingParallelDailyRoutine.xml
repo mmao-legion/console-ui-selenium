@@ -553,4 +553,20 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
             </class>
         </classes>
     </test>
+
+    <test name="Schedule Coverage Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleCoverageTest">
+                <methods>
+                    <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />
+                    <include name="validateTheContentInThePopupWhenMouseHoveringTheClockIconAsInternalAdmin" />
+                    <include name="validateTheFunctionalityOfCoverageInsightsInWeekViewAsInternalAdmin" />
+                    <include name="validateTheFunctionalityOfCoverageInsightsInDayViewAsInternalAdmin" />
+                    <include name="validateTheUpAndDownArrowsInWeekViewAsInternalAdmin" />
+                    <include name="validateUpAndDownArrowsCheckMarkInDayViewAsInternalAdmin" />
+                    <include name="validateTheGuidanceBudgetHrsWhenFilteringInDayViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

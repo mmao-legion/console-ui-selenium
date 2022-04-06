@@ -225,7 +225,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement maxWorkingDaysBestPracticeInputField;
 	@FindBy(css = "input-field[value=\"sp.hourlyRatePolicy.displayBreakTimeInShift\"]")
 	private WebElement displayBreakTimeInShiftInputField;
-	@FindBy(css = "yes-no[value=\"sp.budgetPreferences.enabled\"]")
+	@FindBy(css = "[question-title*=\"labor budget \"] yes-no")
 	private WebElement applyLaborBudgetToSchedules;
 	@FindBy(css = "input-field[value=\"sp.budgetPreferences.budgetType\"]")
 	private WebElement scheduleBudgetTypeElement;
@@ -7409,9 +7409,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public boolean checkDailyOTEnabledOrNot() throws Exception {
 		boolean isEnabled = false;
-		if (isElementLoaded(DailyOvertimePaySection, 10)){
-			if (isElementLoaded(DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
-				if (!DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+		if (isElementLoaded(DailyOvertimePaySection, 10)) {
+			if (isElementLoaded(DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input__toggle")), 10)) {
+				if (!DailyOvertimePaySection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")) {
 					isEnabled = true;
 					SimpleUtils.pass("Toggle is turned on!");
 				} else {
@@ -7424,5 +7424,23 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Daily OT section fail to load!", false);
 		}
 		return isEnabled;
+	}
+
+	@FindBy(css = "[form-title=\"Configuration\"]")
+	private WebElement configurationSection;
+	public boolean checkIfTheLocationUsingControlsConfiguration() throws Exception {
+		boolean isUsingControlsConfiguration = false;
+		clickOnControlsConsoleMenu();
+		clickOnControlsLocationProfileSection();
+		if (isElementLoaded(configurationSection, 20)) {
+			if (configurationSection.findElement(By.tagName("span")).
+					getText().equalsIgnoreCase("Using Controls Configuration")) {
+				isUsingControlsConfiguration = true;
+				SimpleUtils.report("This location is using Controls Configuration! ");
+			} else
+				SimpleUtils.report("This location is using Control Center Configuration");
+		} else
+			SimpleUtils.fail("The configuration section fail to load! ", false);
+		return isUsingControlsConfiguration;
 	}
 }

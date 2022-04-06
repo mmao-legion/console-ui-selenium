@@ -5,7 +5,6 @@ import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -710,6 +709,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 if (areListElementVisible(infoContainers, 5) && infoContainers.size() >= 3) {
                     String shiftTime = infoContainers.get(infoContainers.size() - 2).getText().split("\n")[0];
                     String totalHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[1];
+                    String shiftHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[0];
                     shiftInfo.add(firstName);
                     shiftInfo.add(dayIndex);
                     shiftInfo.add(shiftTime);
@@ -718,6 +718,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     shiftInfo.add(lastName);
                     shiftInfo.add(shiftTimeWeekView);
                     shiftInfo.add(totalHrs);
+                    shiftInfo.add(shiftHrs);
                 }
                 //To close the info popup
                 clickTheElement(weekShifts.get(index));
@@ -823,6 +824,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 clickTheElement(infoIcon);
                 String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
                 String jobTitle = shiftJobTitleAsWorkRole.getText().split("as")[0].trim();
+                String totalHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[1];
+                String shiftHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[0];
                 if (isElementLoaded(shiftDuration, 10)) {
                     String shiftTime = shiftDuration.getText();
                     shiftInfo.add(firstName);
@@ -832,6 +835,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     shiftInfo.add(workRole);
                     shiftInfo.add(lastName);
                     shiftInfo.add(shiftTimeWeekView);
+                    shiftInfo.add(totalHrs);
+                    shiftInfo.add(shiftHrs);
+                    shiftInfo.add(dayViewAvailableShifts.get(index).getAttribute("id"));
                 }
                 //To close the info popup
                 clickTheElement(dayViewAvailableShifts.get(index));
@@ -867,7 +873,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else {
             SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
         }
-        if (shiftInfo.size() != 7) {
+        if (shiftInfo.size() < 7) {
             SimpleUtils.fail("Failed to get the shift info!", false);
         }
         return shiftInfo;
@@ -957,13 +963,14 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         Map<String, String> shiftInfo = new HashMap<String, String>();
         if (shift != null) {
             //click blank area to close the i icon opened before.
+            scrollToElement(shift);
             Actions actions = new Actions(getDriver());
             actions.moveByOffset(0, 0).click().build().perform();
             if(scheduleCommonPage.isScheduleDayViewActive()){
-                click(shift.findElement(By.className("day-view-shift-hover-info-icon")));
+                clickTheElement(shift.findElement(By.className("day-view-shift-hover-info-icon")));
                 waitForSeconds(2);
             } else
-                click(shift.findElement(By.className("week-schedule-shit-open-popover")));
+                clickTheElement(shift.findElement(By.className("week-schedule-shit-open-popover")));
 
         } else {
             SimpleUtils.fail("Selected shift is null!",true);
@@ -981,7 +988,14 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 //add work role
                 shiftInfo.put("WorkRole", jobTitleAndWorkRole[1].trim());
             }
-
+            String[] shiftHrs = popOverContent.findElements(By.cssSelector(".hover-sub-container")).get(2).findElement(By.cssSelector("div")).getText().split("\\|");
+            if (shiftHrs.length==1) {
+                shiftInfo.put("DailyHrs", shiftHrs[0].split(" ")[0]);
+                shiftInfo.put("WeeklyHrs", "");
+            } else {
+                shiftInfo.put("DailyHrs", shiftHrs[0].split(" ")[0]);
+                shiftInfo.put("WeeklyHrs", shiftHrs[1].trim().split(" ")[0]);
+            }
         }
         return shiftInfo;
     }
@@ -1549,7 +1563,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception {
         HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
-        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() >= 7) {
             for (WebElement weekDayDimension : weekDayDimensions) {
                 WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
                 WebElement hoursNCount = weekDayDimension.findElement(By.className("sch-calendar-day-summary"));
@@ -2161,7 +2175,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         return count;
     }
 
-    @FindBy(className = "sch-calendar-day-label")
+    @FindBy(css = ".drag-target-day-bottom .sch-calendar-day-label")
     private List<WebElement> weekDayLabels;
     @Override
     public String getWeekDayTextByIndex(int index) throws Exception {
@@ -3094,5 +3108,169 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.pass("Click the shift successfully! ");
         }else
             SimpleUtils.fail("The shifts in day view fail to load! ", false);
+    }
+
+    //Total have 14 schedule summary hours in schedule shift table
+    @FindBy(css = "div.week-view-day-distribution-tooltip")
+    private WebElement tooltipOfScheduleSummaryHours;
+
+    @FindBy(css = "div.popover")
+    private WebElement tooltipOfScheduleSummaryHoursInDayView;
+
+    @FindBy(css = ".text img")
+    private List<WebElement> daySummariesInDayView;
+
+    @FindBy(css = "div.guidance-vs-scheduled-helper img")
+    private List<WebElement> clockImgs;
+
+    public String getTheTooltipOfClockImgsByIndex (int index) throws Exception {
+        String tooltip = "";
+        if (areListElementVisible(clockImgs, 10) && clockImgs.size()== 2) {
+            moveToElementAndClick(clockImgs.get(index));
+            if (isElementLoaded(tooltipOfScheduleSummaryHoursInDayView, 5)) {
+                tooltip = tooltipOfScheduleSummaryHoursInDayView.getText();
+            } else
+                SimpleUtils.fail("The tooptip of clock img failed to load!", false);
+        } else
+            SimpleUtils.fail("Clock img failed to load on schedule shift table! ", false);
+        return tooltip;
+    }
+
+    public String getTheTooltipOfScheduleSummaryHoursByIndex (int index) throws Exception {
+        String tooltip = "";
+        if (areListElementVisible(daySummaries, 10) && daySummaries.size()> 0) {
+            clickTheElement(daySummaries.get(index));
+            moveToElementAndClick(daySummaries.get(index));
+            moveToElementAndClick(daySummaries.get(index));
+            moveToElementAndClick(daySummaries.get(index));
+            if (isElementLoaded(tooltipOfScheduleSummaryHours, 10)) {
+                tooltip = tooltipOfScheduleSummaryHours.getText();
+            } else
+                SimpleUtils.fail("The "+index+" tooptip of schedule summary hours failed to load!", false);
+        } else
+            SimpleUtils.fail("Schedule hours failed to load on schedule shift table! ", false);
+        return tooltip;
+    }
+
+
+
+    @FindBy(css = "div.tooltip-for-hours")
+    private WebElement toolTipForScheduleHours;
+    @FindBy(css = "div.tooltip-for-hours img")
+    private WebElement arrowInToolTip;
+
+    public HashMap<String, String> getHrsOnTooltipOfScheduleSummaryHoursByIndex (int index) throws Exception {
+        scrollToBottom();
+        HashMap<String, String> tooltip = new HashMap<>();
+        if (areListElementVisible(daySummaries, 10)
+                && daySummaries.size()> 0
+                && index<daySummaries.size()) {
+            scrollToElement(daySummaries.get(index));
+            moveToElementAndClick(daySummaries.get(index));
+            tooltip = getHrsOnTooltip();
+        } else if (areListElementVisible(daySummariesInDayView, 10)
+                && daySummariesInDayView.size()> 0
+                && index<daySummariesInDayView.size()) {
+            moveToElementAndClick(daySummariesInDayView.get(index));
+            tooltip = getHrsOnTooltip();
+        }else
+            SimpleUtils.fail("Schedule hours failed to load on schedule shift table! ", false);
+        return tooltip;
+    }
+
+    private HashMap<String, String> getHrsOnTooltip() throws Exception {
+        HashMap<String, String> tooltip = new HashMap<>();
+        if (isElementLoaded(toolTipForScheduleHours, 10)) {
+            tooltip.put("date", toolTipForScheduleHours.findElement(By.tagName("b")).getText());
+            tooltip.put("budgetHrs", toolTipForScheduleHours
+                    .findElements(By.cssSelector("span.pull-right")).get(0).getText());
+            tooltip.put("scheduledHrs", toolTipForScheduleHours
+                    .findElements(By.cssSelector("span.pull-right")).get(1).getText());
+            tooltip.put("differenceHrs", toolTipForScheduleHours
+                    .findElements(By.cssSelector("span.pull-right")).get(2).getText());
+            String arrowStatus = "";
+            if (isElementLoaded(arrowInToolTip, 5)) {
+                if (arrowInToolTip.getAttribute("src").contains("yellow")) {
+                    arrowStatus= "yellow ";
+                } else
+                    arrowStatus = "red ";
+                if (arrowInToolTip.getAttribute("class").contains("rotate-90deg")) {
+                    arrowStatus = arrowStatus + "up";
+                } else
+                    arrowStatus = arrowStatus + "down";
+            }
+            tooltip.put("differenceArrow", arrowStatus);
+        } else
+            SimpleUtils.fail("The tooptip of schedule summary hours failed to load!", false);
+        return tooltip;
+    }
+
+
+    public String getTheTooltipOfScheduleSummaryHoursInDayViewByIndex (int index) throws Exception {
+        String tooltip = "";
+        if (areListElementVisible(daySummariesInDayView, 10) && daySummariesInDayView.size()>0) {
+            moveToElementAndClick(daySummariesInDayView.get(index));
+            if (isElementLoaded(tooltipOfScheduleSummaryHoursInDayView, 10)) {
+                tooltip = tooltipOfScheduleSummaryHoursInDayView.getText();
+            } else
+                SimpleUtils.fail("The tooptip of schedule summary hours failed to load in day view!", false);
+        } else
+            SimpleUtils.fail("Schedule hours failed to load on schedule shift table in day view! ", false);
+        return tooltip;
+    }
+
+
+    @Override
+    public float calcTotalScheduledHourForOneDayInWeekView(int indexOfDay) throws Exception {
+        float sumOfAllShiftsLengthOfOneDay = 0;
+        List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
+        if (shifts != null && shifts.size() > 0) {
+            for (WebElement shift : shifts) {
+                float shiftHrs = Float.parseFloat(getShiftInfoFromInfoPopUp(shift).get("DailyHrs"));
+                sumOfAllShiftsLengthOfOneDay += shiftHrs;
+                SimpleUtils.pass("Get one shift hrs successfully! ");
+            }
+        } else {
+            SimpleUtils.report("No shifts on the day");
+        }
+        return sumOfAllShiftsLengthOfOneDay;
+    }
+
+
+    @FindBy (css = ".sch-calendar-day-summary img")
+    private List<WebElement> differenceHrsArrowImgInWeekView;
+    @FindBy (css = "div.sch-day-view-grid-header img")
+    private List<WebElement> differenceHrsArrowImgInDayView;
+    public List<String> getAllDifferenceHrsArrowImg () {
+        List<String> arrowStatus = new ArrayList<>();
+        List<WebElement> arrowImg = new ArrayList<>();
+        if (areListElementVisible(differenceHrsArrowImgInWeekView, 5)) {
+            arrowImg = differenceHrsArrowImgInWeekView;
+        } else if (areListElementVisible(differenceHrsArrowImgInDayView, 5)){
+            arrowImg = differenceHrsArrowImgInDayView;
+        } else
+            SimpleUtils.report("There is no difference hrs arrow img display on schedule table! ");
+        if (areListElementVisible(arrowImg) && arrowImg.size() >0) {
+            for (WebElement img: arrowImg) {
+                String status = "";
+                if (img.getAttribute("src").contains("yellow")) {
+                    status= "yellow ";
+                } else if (img.getAttribute("src").contains("green")) {
+                    status= "green";
+                } else
+                    status = "red ";
+                if (img.getAttribute("class").contains("rotate-90deg")
+                        || img.getAttribute("style").contains("rotate(90deg)")) {
+                    status = status + "up";
+                } else if (img.getAttribute("class").contains("rotate-270deg")
+                        || img.getAttribute("style").contains("rotate(-90deg)")) {
+                    status = status + "down";
+                }
+                arrowStatus.add(status);
+                SimpleUtils.pass("Get one arrow img status successfully! ");
+            }
+        } else
+            SimpleUtils.report("There is no difference hrs arrow img display on schedule table! ");
+        return arrowStatus;
     }
 }
