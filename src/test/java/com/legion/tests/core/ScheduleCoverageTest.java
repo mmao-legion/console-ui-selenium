@@ -41,9 +41,9 @@ public class ScheduleCoverageTest extends TestBase {
     @Owner(owner = "Mary")
     @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Validate the unassigned shifts convert to open shifts setting in Control")
+    @TestName(description = "Verify Guidance label will show when budget is disabled and Budgeted label will show when budget is enabled")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void validateGuidanceAndBudgetLabelOnScheduleHoursAndIconsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -240,7 +240,7 @@ public class ScheduleCoverageTest extends TestBase {
     @TestName(description = "Verify the functionality of coverage insights in week view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheFunctionalityOfCoverageInsightsInWeekViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -309,9 +309,9 @@ public class ScheduleCoverageTest extends TestBase {
 
             }
 
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(),false);
-//        }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
 
@@ -322,7 +322,7 @@ public class ScheduleCoverageTest extends TestBase {
     @TestName(description = "Verify the functionality of coverage insights in day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheFunctionalityOfCoverageInsightsInDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -410,9 +410,9 @@ public class ScheduleCoverageTest extends TestBase {
             } else
                 SimpleUtils.fail("The Apply Labor Budget status is incorrectly, the actual is: " + isBudgetEnabled, false);
 
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(),false);
-//        }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
 
@@ -423,7 +423,7 @@ public class ScheduleCoverageTest extends TestBase {
     @TestName(description = "Verify the up and down arrows in week view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheUpAndDownArrowsInWeekViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -589,9 +589,9 @@ public class ScheduleCoverageTest extends TestBase {
         SimpleUtils.assertOnFail("The arrow img should be red and down, actual is: "+arrowImgs.get(0),
                 arrowImgs.get(0).equalsIgnoreCase("red down"), false);
 
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(),false);
-//        }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
     }
 
     private void calculateShiftTimeAndChangeIt(HashMap<String, String> scheduleHrs, String coverageStatus) throws Exception {
@@ -746,260 +746,260 @@ public class ScheduleCoverageTest extends TestBase {
     @TestName(description = "Verify the up/down arrows/check mark in day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateUpAndDownArrowsCheckMarkInDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-        //Create the schedule if it is not created
-        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (isWeekGenerated) {
-            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-        }
-        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00am", "8:00pm");
-        String workRole = shiftOperatePage.getRandomWorkRole();
-        //go to day view
-        scheduleCommonPage.clickOnDayView();
-        //Get the index of the first grid that has budget hrs
-        ArrayList<String> timeDurations = scheduleShiftTablePage.getScheduleDayViewGridTimeDuration();
-        int index = -1;
-        for (int i=0; i<timeDurations.size(); i++) {
-            if (timeDurations.get(i).replace(" ", "").
-                    toLowerCase().equalsIgnoreCase("8am")) {
-                index = i;
-                break;
-            }
-        }
-        if (index == -1) {
-            SimpleUtils.fail("Fail to found the grid that has budget hrs in schedule table day view! ", false);
-        }
-
-        //Edit the schedule, let the scheduled Hrs equals to Guidance/Budget Hrs
-        HashMap<String, String> toolTipInDayView = scheduleShiftTablePage.getHrsOnTooltipOfScheduleSummaryHoursByIndex(index);
-        if (!toolTipInDayView.get("differenceArrow").equals("")) {
-            int differenceHrs = Integer.parseInt(toolTipInDayView.get("differenceHrs"));
-            if (toolTipInDayView.get("differenceArrow").contains("up")) {
-                //if schedule hrs is less than budget/guidance hrs, then create new shift
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                for (int i=0;i<differenceHrs;i++) {
-
-                    newShiftPage.clickOnDayViewAddNewShiftButton();
-                    newShiftPage.customizeNewShiftPage();
-                    newShiftPage.clearAllSelectedDays();
-                    newShiftPage.selectDaysByIndex(2,2,2);
-                    newShiftPage.selectWorkRole(workRole);
-                    newShiftPage.moveSliderAtCertainPoint("8pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-                    newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
-                    newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
-                    newShiftPage.clickOnCreateOrNextBtn();
+        try {
+                ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+                ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+                CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+                ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+                ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+                ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+                NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+                //Create the schedule if it is not created
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+                boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+                if (isWeekGenerated) {
+                    createSchedulePage.unGenerateActiveScheduleScheduleWeek();
                 }
-            } else {
-                //if schedule hrs is more than budget/guidance hrs, then delete the shift
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                for (int i=0;i<differenceHrs;i++) {
-                    scheduleShiftTablePage.clickOnShiftInDayView(scheduleShiftTablePage.
-                            getAvailableShiftsInDayView().get(i));
-                    scheduleShiftTablePage.clickOnXButtonInDayView();
+                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00am", "8:00pm");
+                String workRole = shiftOperatePage.getRandomWorkRole();
+                //go to day view
+                scheduleCommonPage.clickOnDayView();
+                //Get the index of the first grid that has budget hrs
+                ArrayList<String> timeDurations = scheduleShiftTablePage.getScheduleDayViewGridTimeDuration();
+                int index = -1;
+                for (int i=0; i<timeDurations.size(); i++) {
+                    if (timeDurations.get(i).replace(" ", "").
+                            toLowerCase().equalsIgnoreCase("8am")) {
+                        index = i;
+                        break;
+                    }
                 }
+                if (index == -1) {
+                    SimpleUtils.fail("Fail to found the grid that has budget hrs in schedule table day view! ", false);
+                }
+
+                //Edit the schedule, let the scheduled Hrs equals to Guidance/Budget Hrs
+                HashMap<String, String> toolTipInDayView = scheduleShiftTablePage.getHrsOnTooltipOfScheduleSummaryHoursByIndex(index);
+                if (!toolTipInDayView.get("differenceArrow").equals("")) {
+                    int differenceHrs = Integer.parseInt(toolTipInDayView.get("differenceHrs"));
+                    if (toolTipInDayView.get("differenceArrow").contains("up")) {
+                        //if schedule hrs is less than budget/guidance hrs, then create new shift
+                        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                        for (int i=0;i<differenceHrs;i++) {
+
+                            newShiftPage.clickOnDayViewAddNewShiftButton();
+                            newShiftPage.customizeNewShiftPage();
+                            newShiftPage.clearAllSelectedDays();
+                            newShiftPage.selectDaysByIndex(2,2,2);
+                            newShiftPage.selectWorkRole(workRole);
+                            newShiftPage.moveSliderAtCertainPoint("8pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+                            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
+                            newShiftPage.clickOnCreateOrNextBtn();
+                        }
+                    } else {
+                        //if schedule hrs is more than budget/guidance hrs, then delete the shift
+                        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                        for (int i=0;i<differenceHrs;i++) {
+                            scheduleShiftTablePage.clickOnShiftInDayView(scheduleShiftTablePage.
+                                    getAvailableShiftsInDayView().get(i));
+                            scheduleShiftTablePage.clickOnXButtonInDayView();
+                        }
+                        scheduleMainPage.saveSchedule();
+                    }
+                }
+
+                //Check mark in green shows
+                String img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be green, actual is: "+img,
+                        img.contains("green"), false);
+
+                //Get the 25% coverage
+                int budgetOrGuidanceHrs = Integer.parseInt(toolTipInDayView.get("budgetHrs"));
+                float coverage = budgetOrGuidanceHrs/4;
+
+                String shiftId = scheduleShiftTablePage.getTheShiftByIndex(0).getAttribute("id");
+                //Edit the schedule, increase the shift duration, let the coverage < 25%
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                switch (budgetOrGuidanceHrs) {
+                    case 3:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
+                        break;
+                    case 2:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
+                        break;
+                    case 1:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
+                        break;
+                    default:
+                        SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
+                }
+                //The down arrow in yellow shows in edit mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be yellow down, actual is: "+img,
+                        img.contains("yellow down"), false);
                 scheduleMainPage.saveSchedule();
-            }
+                //The down arrow in yellow shows in save mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be yellow down, actual is: "+img,
+                        img.contains("yellow down"), false);
+
+                //Edit the schedule, increase the shift duration, let the coverage = 25%
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                switch (budgetOrGuidanceHrs) {
+                    case 3:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
+                        break;
+                    case 2:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
+                        break;
+                    case 1:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
+                        break;
+                    default:
+                        SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
+                }
+                //The down arrow in yellow shows in edit mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be yellow down, actual is: "+img,
+                        img.contains("yellow down"), false);
+                scheduleMainPage.saveSchedule();
+                //The down arrow in yellow shows in save mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be yellow down, actual is: "+img,
+                        img.contains("yellow down"), false);
+
+
+                //Edit the schedule, decrease the shift duration, let the coverage > 25%
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                switch (budgetOrGuidanceHrs) {
+                    case 3:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"9:00am", "11:00am");
+                        break;
+                    case 2:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"9:00am", "11:00am");
+                        break;
+                    case 1:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"9:00am", "11:00am");
+                        break;
+                    default:
+                        SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
+                }
+                //The down arrow in red shows in edit mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be red down, actual is: "+img,
+                        img.contains("red down"), false);
+                scheduleMainPage.saveSchedule();
+                //The down arrow in red shows in save mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be red down, actual is: "+img,
+                        img.contains("red down"), false);
+
+
+                //Move the shift back
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                shiftOperatePage.editTheShiftTimeForSpecificShift(
+                        scheduleShiftTablePage.getShiftById(shiftId),"8:00am", "10:00am");
+                scheduleMainPage.saveSchedule();
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be green, actual is: "+img,
+                        img.contains("green"), false);
+
+                //Edit the schedule, decrease the shift duration, let the coverage < 25%
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
+                newShiftPage.selectWorkRole(workRole);
+                newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                //The up arrow in red shows in edit mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be red up, actual is: "+img,
+                        img.contains("red up"), false);
+                scheduleMainPage.saveSchedule();
+                //The up arrow in red shows in save mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be red up, actual is: "+img,
+                        img.contains("red up"), false);
+
+                shiftId = scheduleShiftTablePage.getTheShiftByIndex(0).getAttribute("id");
+
+                //Edit the schedule, increase the shift duration, let the coverage < 25%
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                switch (budgetOrGuidanceHrs) {
+                    case 3:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
+                        break;
+                    case 2:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
+                        break;
+                    case 1:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
+                        break;
+                    default:
+                        SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
+                }
+                //The up arrow in yellow shows in edit mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be yellow up, actual is: "+img,
+                        img.contains("yellow up"), false);
+                scheduleMainPage.saveSchedule();
+                //The up arrow in yellow shows in save mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be yellow up, actual is: "+img,
+                        img.contains("yellow up"), false);
+
+                //Edit the schedule, increase the shift duration, let the coverage = 25%
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                switch (budgetOrGuidanceHrs) {
+                    case 3:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
+                        break;
+                    case 2:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
+                        break;
+                    case 1:
+                        shiftOperatePage.editTheShiftTimeForSpecificShift(
+                                scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
+                        break;
+                    default:
+                        SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
+                }
+                //The up arrow in yellow shows in edit mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be yellow up, actual is: "+img,
+                        img.contains("yellow up"), false);
+                scheduleMainPage.saveSchedule();
+                //The up arrow in yellow shows in save mode
+                img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
+                SimpleUtils.assertOnFail("The img should be yellow up, actual is: "+img,
+                        img.contains("yellow up"), false);
+
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
         }
-
-        //Check mark in green shows
-        String img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be green, actual is: "+img,
-                img.contains("green"), false);
-
-        //Get the 25% coverage
-        int budgetOrGuidanceHrs = Integer.parseInt(toolTipInDayView.get("budgetHrs"));
-        float coverage = budgetOrGuidanceHrs/4;
-
-        String shiftId = scheduleShiftTablePage.getTheShiftByIndex(0).getAttribute("id");
-        //Edit the schedule, increase the shift duration, let the coverage < 25%
-        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        switch (budgetOrGuidanceHrs) {
-            case 3:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
-                break;
-            case 2:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
-                break;
-            case 1:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
-                break;
-            default:
-                SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
-        }
-        //The down arrow in yellow shows in edit mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be yellow down, actual is: "+img,
-                img.contains("yellow down"), false);
-        scheduleMainPage.saveSchedule();
-        //The down arrow in yellow shows in save mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be yellow down, actual is: "+img,
-                img.contains("yellow down"), false);
-
-        //Edit the schedule, increase the shift duration, let the coverage = 25%
-        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        switch (budgetOrGuidanceHrs) {
-            case 3:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
-                break;
-            case 2:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
-                break;
-            case 1:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
-                break;
-            default:
-                SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
-        }
-        //The down arrow in yellow shows in edit mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be yellow down, actual is: "+img,
-                img.contains("yellow down"), false);
-        scheduleMainPage.saveSchedule();
-        //The down arrow in yellow shows in save mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be yellow down, actual is: "+img,
-                img.contains("yellow down"), false);
-
-
-        //Edit the schedule, decrease the shift duration, let the coverage > 25%
-        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        switch (budgetOrGuidanceHrs) {
-            case 3:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"9:00am", "11:00am");
-                break;
-            case 2:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"9:00am", "11:00am");
-                break;
-            case 1:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"9:00am", "11:00am");
-                break;
-            default:
-                SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
-        }
-        //The down arrow in red shows in edit mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be red down, actual is: "+img,
-                img.contains("red down"), false);
-        scheduleMainPage.saveSchedule();
-        //The down arrow in red shows in save mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be red down, actual is: "+img,
-                img.contains("red down"), false);
-
-
-        //Move the shift back
-        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.editTheShiftTimeForSpecificShift(
-                scheduleShiftTablePage.getShiftById(shiftId),"8:00am", "10:00am");
-        scheduleMainPage.saveSchedule();
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be green, actual is: "+img,
-                img.contains("green"), false);
-
-        //Edit the schedule, decrease the shift duration, let the coverage < 25%
-        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        newShiftPage.clickOnDayViewAddNewShiftButton();
-        newShiftPage.customizeNewShiftPage();
-        newShiftPage.selectWorkRole(workRole);
-        newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-        newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
-        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
-        newShiftPage.clickOnCreateOrNextBtn();
-        //The up arrow in red shows in edit mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be red up, actual is: "+img,
-                img.contains("red up"), false);
-        scheduleMainPage.saveSchedule();
-        //The up arrow in red shows in save mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be red up, actual is: "+img,
-                img.contains("red up"), false);
-
-        shiftId = scheduleShiftTablePage.getTheShiftByIndex(0).getAttribute("id");
-
-        //Edit the schedule, increase the shift duration, let the coverage < 25%
-        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        switch (budgetOrGuidanceHrs) {
-            case 3:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
-                break;
-            case 2:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
-                break;
-            case 1:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
-                break;
-            default:
-                SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
-        }
-        //The up arrow in yellow shows in edit mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be yellow up, actual is: "+img,
-                img.contains("yellow up"), false);
-        scheduleMainPage.saveSchedule();
-        //The up arrow in yellow shows in save mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be yellow up, actual is: "+img,
-                img.contains("yellow up"), false);
-
-        //Edit the schedule, increase the shift duration, let the coverage = 25%
-        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        switch (budgetOrGuidanceHrs) {
-            case 3:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
-                break;
-            case 2:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
-                break;
-            case 1:
-                shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
-                break;
-            default:
-                SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
-        }
-        //The up arrow in yellow shows in edit mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be yellow up, actual is: "+img,
-                img.contains("yellow up"), false);
-        scheduleMainPage.saveSchedule();
-        //The up arrow in yellow shows in save mode
-        img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
-        SimpleUtils.assertOnFail("The img should be yellow up, actual is: "+img,
-                img.contains("yellow up"), false);
-
-
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(),false);
-//        }
     }
 
     @Automated(automated = "Automated")
@@ -1009,76 +1009,72 @@ public class ScheduleCoverageTest extends TestBase {
     @TestName(description = "Verify the Guidance/Budget Hrs when filtering in day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheGuidanceBudgetHrsWhenFilteringInDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
-        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        try {
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 
-        //Create the schedule if it is not created
-        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
-        ForecastPage forecastPage = pageFactory.createForecastPage();
-        forecastPage.clickOnLabor();
-        forecastPage.clickOnDayView();
-//        String workRole = shiftOperatePage.getRandomWorkRole();
-//        scheduleMainPage.clickOnFilterBtn();
-//        scheduleMainPage.selectWorkRoleFilterByText(workRole, true);
-       List<String> hoursInLaborForecastChart = (List<String>) forecastPage.getLaborChartCoordinateAxisData().get("hours");
-        //Get budget hrs on labor forecast
-        float budgetHrsOnLaborForecast = 0;
-        for (int i=0; i< hoursInLaborForecastChart.size(); i++) {
-            budgetHrsOnLaborForecast += Float.parseFloat(hoursInLaborForecastChart.get(i));
+            //Create the schedule if it is not created
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            forecastPage.clickOnLabor();
+            forecastPage.clickOnDayView();
+           List<String> hoursInLaborForecastChart = (List<String>) forecastPage.getLaborChartCoordinateAxisData().get("hours");
+            //Get budget hrs on labor forecast
+            float budgetHrsOnLaborForecast = 0;
+            for (int i=0; i< hoursInLaborForecastChart.size(); i++) {
+                budgetHrsOnLaborForecast += Float.parseFloat(hoursInLaborForecastChart.get(i));
+            }
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            scheduleCommonPage.clickOnWeekView();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            //Click on Filter, select one work role
+            scheduleCommonPage.clickOnDayView();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.selectWorkRoleFilterByText(workRole, true);
+
+            //Get budget and scheduled hrs on schedule page
+            float budgetHrsOnSchedulePage = 0;
+            float scheduledHrsOnSchedulePage = 0;
+            for (int i=0; i< scheduleShiftTablePage.getScheduleDayViewGridTimeDuration().size();i++) {
+                HashMap<String, String> scheduleHrs = scheduleShiftTablePage.getHrsOnTooltipOfScheduleSummaryHoursByIndex(i);
+                budgetHrsOnSchedulePage += Float.parseFloat(scheduleHrs.get("budgetHrs"));
+                scheduledHrsOnSchedulePage += Float.parseFloat(scheduleHrs.get("scheduledHrs"));
+                // Difference Hrs should be equal to Absolute value of [Scheduled - Guidance/Budgeted]
+                SimpleUtils.assertOnFail("Difference Hrs should be equal to Absolute value of [Scheduled - Guidance/Budgeted], " +
+                        "but actual different hrs is:" + scheduleHrs.get("differenceHrs")
+                        + " scheduled hrs is: "+ scheduleHrs.get("scheduledHrs")
+                        + " budget hrs is: " + scheduleHrs.get("budgetHrs"), Float.parseFloat(scheduleHrs.get("differenceHrs"))
+                        ==(Math.abs(Float.parseFloat(scheduleHrs.get("budgetHrs")) - Float.parseFloat(scheduleHrs.get("scheduledHrs")))), false);
+            }
+
+            //Guidance/Budgeted Hrs should be consistent with labor forecast for the selected work role
+            SimpleUtils.assertOnFail("The budget hrs should be consistently on labor forecast and schedule page! but actual budget hrs on labor forecast is: "
+                    + budgetHrsOnLaborForecast+ " on schedule page is: "+ budgetHrsOnSchedulePage,
+                    budgetHrsOnLaborForecast == budgetHrsOnSchedulePage, false);
+
+            //Get all shift hrs on current day in day view
+            float shiftHrs = scheduleShiftTablePage.getActiveShiftHoursInDayView();
+
+            //Scheduled Hrs for the selected work role display correctly
+            SimpleUtils.assertOnFail("Scheduled Hrs for the selected work role display incorrectly！ expected is: "
+                            + shiftHrs + " actual is: "+ scheduledHrsOnSchedulePage,
+                    shiftHrs == scheduledHrsOnSchedulePage, false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
         }
-//        List<String> timesInLaborForecastChart = (List<String>) forecastPage.getLaborChartCoordinateAxisData().get("dateOrTime");
-        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (!isWeekGenerated) {
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
-        }
-        scheduleCommonPage.clickOnWeekView();
-        String workRole = shiftOperatePage.getRandomWorkRole();
-        //Click on Filter, select one work role
-        scheduleCommonPage.clickOnDayView();
-        scheduleMainPage.clickOnFilterBtn();
-        scheduleMainPage.selectWorkRoleFilterByText(workRole, true);
-
-        //Get budget and scheduled hrs on schedule page
-        float budgetHrsOnSchedulePage = 0;
-        float scheduledHrsOnSchedulePage = 0;
-        for (int i=0; i< scheduleShiftTablePage.getScheduleDayViewGridTimeDuration().size();i++) {
-            HashMap<String, String> scheduleHrs = scheduleShiftTablePage.getHrsOnTooltipOfScheduleSummaryHoursByIndex(i);
-            budgetHrsOnSchedulePage += Float.parseFloat(scheduleHrs.get("budgetHrs"));
-            scheduledHrsOnSchedulePage += Float.parseFloat(scheduleHrs.get("scheduledHrs"));
-            // Difference Hrs should be equal to Absolute value of [Scheduled - Guidance/Budgeted]
-            SimpleUtils.assertOnFail("Difference Hrs should be equal to Absolute value of [Scheduled - Guidance/Budgeted], " +
-                    "but actual different hrs is:" + scheduleHrs.get("differenceHrs")
-                    + " scheduled hrs is: "+ scheduleHrs.get("scheduledHrs")
-                    + " budget hrs is: " + scheduleHrs.get("budgetHrs"), Float.parseFloat(scheduleHrs.get("differenceHrs"))
-                    ==(Math.abs(Float.parseFloat(scheduleHrs.get("budgetHrs")) - Float.parseFloat(scheduleHrs.get("scheduledHrs")))), false);
-        }
-
-        //Guidance/Budgeted Hrs should be consistent with labor forecast for the selected work role
-        SimpleUtils.assertOnFail("The budget hrs should be consistently on labor forecast and schedule page! but actual budget hrs on labor forecast is: "
-                + budgetHrsOnLaborForecast+ " on schedule page is: "+ budgetHrsOnSchedulePage,
-                budgetHrsOnLaborForecast == budgetHrsOnSchedulePage, false);
-
-        //Get all shift hrs on current day in day view
-        float shiftHrs = scheduleShiftTablePage.getActiveShiftHoursInDayView();
-
-        //Scheduled Hrs for the selected work role display correctly
-        SimpleUtils.assertOnFail("Scheduled Hrs for the selected work role display incorrectly！ expected is: "
-                        + shiftHrs + " actual is: "+ scheduledHrsOnSchedulePage,
-                shiftHrs == scheduledHrsOnSchedulePage, false);
-
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(),false);
-//        }
     }
 }
