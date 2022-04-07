@@ -361,5 +361,6 @@ public interface ControlsNewUIPage {
 	public void editDailyOT(String numOfHrs, String singleDayOr24Hrs, boolean saveOrNot) throws Exception;
 	public boolean checkDailyOTEnabledOrNot() throws Exception;
 	public boolean checkIfTheLocationUsingControlsConfiguration() throws Exception;
+	public boolean checkIfEmployeeCanClaimOTOpenShift() throws Exception;
 
 }

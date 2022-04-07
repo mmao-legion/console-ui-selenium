@@ -1063,6 +1063,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            Thread.sleep(3000);
             String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
             String firstName1 = tmFullName.split(" ")[0];
             String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
@@ -1072,6 +1073,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            Thread.sleep(3000);
             tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
             String firstName2 = tmFullName.split(" ")[0];
             loginPage.logOut();

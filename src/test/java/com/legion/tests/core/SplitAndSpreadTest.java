@@ -454,7 +454,7 @@ public class SplitAndSpreadTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleShiftTablePage.dragOneShiftToAnotherDay(1, firstNameOfTM1, 0);
         String weekday = scheduleShiftTablePage.getWeekDayTextByIndex(0);
-        String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
+        String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday).split(" ")[0];
         String expectedViolationMessage = firstNameOfTM1 + " is scheduled 8am - 10am on "+fullWeekDay+". This will trigger a split shift.";
         scheduleShiftTablePage.verifyMessageOnCopyMoveConfirmPage(expectedViolationMessage,expectedViolationMessage);
         scheduleShiftTablePage.selectCopyOrMoveByOptionName("Move");
@@ -1097,7 +1097,7 @@ public class SplitAndSpreadTest extends TestBase {
 //            int dayIndexOfMon = Integer.parseInt(shiftInfo1.get(1));
             int dayIndexOfMon = 8;
             for (int i = 0; i<7; i++) {
-                if (scheduleShiftTablePage.getWeekDayTextByIndex(i).equalsIgnoreCase("Mon")){
+                if (scheduleShiftTablePage.getWeekDayTextByIndex(i).contains("Mon")){
                     dayIndexOfMon = i;
                     break;
                 }
@@ -1151,6 +1151,7 @@ public class SplitAndSpreadTest extends TestBase {
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            Thread.sleep(3000);
             String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
             String firstNameOfTM = tmFullName.split(" ")[0];
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1299,7 +1300,8 @@ public class SplitAndSpreadTest extends TestBase {
             if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
                 controlsNewUIPage.clickOnControlsConsoleMenu();
                 SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-                controlsNewUIPage.clickOnControlsComplianceSection();
+                controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+                controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
             } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
                 //Go to OP page
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1314,12 +1316,12 @@ public class SplitAndSpreadTest extends TestBase {
                 HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.goToConfigurationPage();
-                configurationPage.clickOnConfigurationCrad("Compliance");
-                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+                configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
 //                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
                 Thread.sleep(3000);
             }
-            boolean isDailyOTEnabled = controlsNewUIPage.checkDailyOTEnabledOrNot();
+            boolean isAllowEmployeeClaimOTOpenShift = controlsNewUIPage.checkIfEmployeeCanClaimOTOpenShift();
 
             if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
                 switchToConsoleWindow();
@@ -1340,11 +1342,11 @@ public class SplitAndSpreadTest extends TestBase {
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
 
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(isDailyOTEnabled?Constants.WillTriggerDailyOTErrorMessage:Constants.NoLongEligibleTakeShiftErrorMessage);
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(isAllowEmployeeClaimOTOpenShift?Constants.NoLongEligibleTakeShiftErrorMessage:Constants.WillTriggerDailyOTErrorMessage);
             // Validate the availability of Claim Shift Request popup for the second shift
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(isDailyOTEnabled?Constants.WillTriggerDailyOTErrorMessage:Constants.NoLongEligibleTakeShiftErrorMessage);
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(isAllowEmployeeClaimOTOpenShift?Constants.NoLongEligibleTakeShiftErrorMessage:Constants.WillTriggerDailyOTErrorMessage);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

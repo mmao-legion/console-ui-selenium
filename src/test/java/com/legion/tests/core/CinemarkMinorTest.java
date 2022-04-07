@@ -1531,7 +1531,6 @@ public class CinemarkMinorTest extends TestBase {
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();

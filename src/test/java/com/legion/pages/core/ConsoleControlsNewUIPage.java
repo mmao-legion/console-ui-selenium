@@ -7443,4 +7443,22 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("The configuration section fail to load! ", false);
 		return isUsingControlsConfiguration;
 	}
+
+
+
+	@FindBy(css = "[question-title=\"Allow employees claim open shift at overtime rate?\"]")
+	private WebElement allowEmployeeClaimOTOpenShift;
+	public boolean checkIfEmployeeCanClaimOTOpenShift() throws Exception {
+		boolean isAllowEmployeeClaimOTOpenShift = false;
+		if (isElementLoaded(allowEmployeeClaimOTOpenShift, 20)) {
+			if (allowEmployeeClaimOTOpenShift.findElement(By.cssSelector(".lg-button-group-first"))
+					.getAttribute("class").contains("selected")) {
+				isAllowEmployeeClaimOTOpenShift = true;
+				SimpleUtils.report("Allow employees claim open shift at overtime rate! ");
+			} else
+				SimpleUtils.report("Not allow employees claim open shift at overtime rate! ");
+		} else
+			SimpleUtils.fail("'Allow employees claim open shift at overtime rate' setting fail to load! ", false);
+		return isAllowEmployeeClaimOTOpenShift;
+	}
 }
