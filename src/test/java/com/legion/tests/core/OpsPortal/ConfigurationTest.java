@@ -198,7 +198,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -224,7 +224,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -251,7 +251,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String formula ="IsDay(p_Truck_Date,-1)";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -311,7 +311,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String offsetTime ="10";
             String startEventPoint = "before";
             List<String> dayPartsInGlobalConfig = new ArrayList<String>();
@@ -363,7 +363,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String duringTime ="10";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -393,7 +393,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String endOffsetTime ="10";
             String endEventPoint = "before";
 
@@ -423,7 +423,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String formulaOfTimeOfDay = "123";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -452,7 +452,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             List<String> mealBreakInfo = new ArrayList<String>(){{
                 add("30");
                 add("60");
@@ -492,7 +492,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String shiftsNumber = "6";
             String shiftsNumberFormula = "5";
 
@@ -522,7 +522,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -548,7 +548,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
                 add("Friday");
@@ -583,7 +583,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole1 = "Auto Using2";
+            String workRole1 = "AutoUsing2";
             String workRole2 = "Mgr on Duty";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
@@ -612,7 +612,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String shiftsNumber = "7";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
@@ -663,7 +663,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String shiftsNumber = "7";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
