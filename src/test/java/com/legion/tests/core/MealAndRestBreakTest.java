@@ -592,7 +592,7 @@ public class MealAndRestBreakTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             // Verify warning dialog will show up when deleting the meal break
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            int count = scheduleMainPage.getShiftsCount();
+            int count = scheduleShiftTablePage.getShiftsCount();
             int index = (new Random()).nextInt(count);
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();
@@ -631,7 +631,7 @@ public class MealAndRestBreakTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             // Verify warning dialog will show up when deleting the meal break
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            int count = scheduleMainPage.getShiftsCount();
+            int count = scheduleShiftTablePage.getShiftsCount();
             int index = (new Random()).nextInt(count);
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();
@@ -674,7 +674,7 @@ public class MealAndRestBreakTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             // Verify warning dialog will show up when deleting the meal break
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            int count = scheduleMainPage.getShiftsCount();
+            int count = scheduleShiftTablePage.getShiftsCount();
             int index = (new Random()).nextInt(count);
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();
@@ -718,7 +718,7 @@ public class MealAndRestBreakTest extends TestBase {
             // Verify warning dialog will show up when deleting the meal break
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.selectWorkRoleFilterByText(WorkRoles.GeneralManager.value, true);
-            int count = scheduleMainPage.getShiftsCount();
+            int count = scheduleShiftTablePage.getShiftsCount();
             int index = (new Random()).nextInt(count);
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();
@@ -760,7 +760,7 @@ public class MealAndRestBreakTest extends TestBase {
             // Verify warning dialog will show up when deleting the meal break
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.selectWorkRoleFilterByText(WorkRoles.GeneralManager.value, true);
-            int count = scheduleMainPage.getShiftsCount();
+            int count = scheduleShiftTablePage.getShiftsCount();
             int index = (new Random()).nextInt(count);
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();
@@ -803,7 +803,7 @@ public class MealAndRestBreakTest extends TestBase {
             // Verify warning dialog will show up when deleting the meal break
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.selectWorkRoleFilterByText(WorkRoles.TeamMember.value, true);
-            int count = scheduleMainPage.getShiftsCount();
+            int count = scheduleShiftTablePage.getShiftsCount();
             int index = (new Random()).nextInt(count);
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
             String shiftStartTime = shiftInfo.get(2).split("-")[0].trim();
