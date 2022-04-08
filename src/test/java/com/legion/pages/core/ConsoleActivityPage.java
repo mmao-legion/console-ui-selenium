@@ -348,7 +348,6 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 						}
 					}
 					// check the status of the card.
-					waitForSeconds(2);
 					SimpleUtils.assertOnFail("Approve and Reject buttons should be there!", areListElementVisible(activityCards.get(i).findElements(By.className("notification-buttons-button"))), false);
 				}
 			}
@@ -528,7 +527,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     @Override
     public void closeActivityWindow() throws Exception {
         if (isElementLoaded(activityBell, 10)) {
-            click(activityBell);
+            clickTheElement(activityBell);
         }else {
             SimpleUtils.fail("Close button is not Loaded Successfully!", false);
         }
@@ -780,7 +779,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
     		for (int j=0; j< activityCards.size(); j++) {
     			while (i< count) {
-    				if (activityCards.get(j).getAttribute("class").contains("unread")) {
+					String activityMessage = activityCards.get(j).findElement(By.className("notification-content-message")).getText();
+    				if (activityCards.get(j).getAttribute("class").contains("unread") && activityMessage.contains(requestUserName)) {
     					i++;
 						List<WebElement> actionButtons = activityCards.get(j).findElements(By.className("notification-buttons-button"));
 						if (actionButtons != null && actionButtons.size() == 2) {

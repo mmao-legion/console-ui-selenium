@@ -2869,8 +2869,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 checkOrUnCheckNextDayOnEditShiftTimePage(false);
             SimpleUtils.pass("Set the shift times successfully! ");
         } else if (isElementLoaded(editShiftTimePopUp, 15)
-                && !isElementLoaded(shiftEndTimeButton, 5)
-                && !isElementLoaded(shiftStartTimeButton, 5)){
+                && isElementLoaded(shiftEndTimeButton, 5)
+                && isElementLoaded(shiftStartTimeButton, 5)){
             SimpleUtils.report("The old edit shift time page display correctly! ");
             moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
             moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");

@@ -41,6 +41,7 @@
                     <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" /> added to AvailabilityApprovalRequiredTest-->
                     <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" />
                 </methods>
             </class>
         </classes>

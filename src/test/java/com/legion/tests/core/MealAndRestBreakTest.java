@@ -320,7 +320,6 @@ public class MealAndRestBreakTest extends TestBase {
     public void verifyTurnOnMealBreakSettingAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 
