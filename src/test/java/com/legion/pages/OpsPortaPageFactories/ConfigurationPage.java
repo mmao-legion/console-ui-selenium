@@ -123,4 +123,5 @@ public interface ConfigurationPage {
     public void clickOK() throws Exception;
     public void verifyTimeOff() throws Exception;
     public void verifymaxNumEmployeesInput(String num) throws Exception;
+    public void switchToControlWindow() throws Exception;
 }

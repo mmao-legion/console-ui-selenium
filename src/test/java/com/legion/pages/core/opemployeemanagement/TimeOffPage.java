@@ -1,6 +1,7 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -114,6 +115,13 @@ public class TimeOffPage extends BasePage {
     @FindBy(css = "div.balance-wrapper Span.count-block-counter-hours")
     private List<WebElement> balances;
 
+    //month
+    @FindBy(css = "ranged-calendar.ng-isolate-scope")
+    private WebElement Month;
+
+    //cancel button
+    @FindBy(css = "lg-button[label=Cancel]" )
+    private WebElement cancelButton;
 
 
     public void goToTeamMemberDetail(String memberName) {
@@ -288,5 +296,15 @@ public class TimeOffPage extends BasePage {
 
     public int getAccrualHistorySize() {
         return historyItems.size();
+    }
+
+    public String getMonth(){
+        return Month.getText().substring(0,3);
+    }
+
+    public void cancelTimeOffRequest() throws Exception{
+        if(isElementLoaded(cancelButton,5)){
+            click(cancelButton);
+        }
     }
 }

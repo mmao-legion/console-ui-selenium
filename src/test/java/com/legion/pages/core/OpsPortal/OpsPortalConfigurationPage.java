@@ -4,6 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
+import com.legion.tests.TestBase;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
@@ -4115,5 +4116,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}else{
 			SimpleUtils.fail("maxNumEmployeesInput loaded failed",false);
 		}
+	}
+	
+	public void switchToControlWindow() throws Exception{
+		TestBase.switchToNewWindow();
 	}
 }
