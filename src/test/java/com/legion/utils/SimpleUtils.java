@@ -216,6 +216,15 @@ public class SimpleUtils {
 		return nextMonthAndYear;
 	}
 
+	public static String getNewTimeByAddingMinutes(String currentTime, int minutes) throws Exception {
+		SimpleDateFormat format = new SimpleDateFormat("hh:mma");
+		Date date = format.parse(currentTime);
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, (date.getMinutes() + minutes)*60);
+		date = calendar.getTime();
+		return format.format(date);
+	}
+
 	public static HashMap<String, String> getDayMonthDateFormatForCurrentPastAndFutureWeek(int dayOfYear, int isoYear) {
 		LocalDate dateBasedOnGivenParameter = Year.of(isoYear).atDay(dayOfYear);
 		LocalDate pastWeekDate = dateBasedOnGivenParameter.minusWeeks(1);
@@ -1980,6 +1989,30 @@ public class SimpleUtils {
 			return false;
 		}
 		return true;
+	}
+
+	public static int getMinutesFromTime(String time) {
+		int minutes = 0;
+		if (time.contains(":")) {
+			String minute = time.split(":")[1].substring(0, time.split(":")[1].length()-2).trim();
+			minutes = (Integer.parseInt(time.split(":")[0].trim())) * 60 + Integer.parseInt(minute);
+		}else {
+			minutes = Integer.parseInt(time.substring(0, time.length()-2)) * 60;
+		}
+		if (time.toLowerCase().endsWith("pm")) {
+			minutes += 12 * 60;
+		}
+		return minutes;
+	}
+
+	public static String convertMinutesToTime(int minutes) {
+		if (minutes == 720) {
+			return "12:00pm";
+		} else if (minutes < 720) {
+			return minutes/60 + ":" + (minutes%60 == 0 ? "00" : minutes%60) + "am";
+		} else {
+			return (minutes - 720)/60 + ":" + ((minutes - 720)%60 == 0 ? "00" : (minutes - 720)%60) + "pm";
+		}
 	}
 
 	public static boolean compareHashMapByEntrySet(HashMap<String, List<String>> map1, HashMap<String, List<String>> map2){
