@@ -82,3 +82,4 @@ public interface ScheduleMainPage {
     public ArrayList<HashMap<String,String>> getToggleSummaryStaffWorkRoleStyleInfo() throws Exception;
     public void selectJobTitleFilterByText(String filterText) throws Exception;
 }
+

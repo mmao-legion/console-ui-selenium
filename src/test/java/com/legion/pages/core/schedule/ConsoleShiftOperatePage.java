@@ -697,6 +697,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = "div[ng-class*='OfferTMs']")
     private WebElement OfferTMS;
+
+    @FindBy(css = ".slider-section-description-break-time-items-editable")
+    private List<WebElement> breakTimeSliders;
+
     public boolean isEditMealBreakEnabled() throws Exception {
         clickOnProfileIcon();
         boolean isEditMealBreakEnabled = false;
@@ -747,7 +751,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 click(deleteMealBreakButtons.get(0));
             }
             click(continueBtnInMealBreakButton);
-            if (isElementEnabled(confirmWindow, 5)) {
+            if (isElementEnabled(confirmWindow, 5) && confirmWindow.getText().contains("An employee should be scheduled for 30 minutes break for their shift")) {
                 click(okBtnOnConfirm);
             }
 
@@ -770,6 +774,25 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }else
             SimpleUtils.fail("Delete meal break window load failed",false);
         click(cannelBtnInMealBreakButton);
+    }
+
+    @Override
+    public void deleteMealOrRestBreaks(boolean isMealBreak) throws Exception {
+        WebElement slider = null;
+        if (isMealBreakTimeWindowDisplayWell(true) && areListElementVisible(breakTimeSliders, 5) && breakTimeSliders.size() == 2) {
+            if (isMealBreak) {
+                slider = breakTimeSliders.get(1);
+            } else {
+                slider = breakTimeSliders.get(0);
+            }
+            while (slider.findElements(By.tagName("i")).size() > 0) {
+                click(slider.findElements(By.tagName("i")).get(0));
+            }
+            click(continueBtnInMealBreakButton);
+            if (isElementEnabled(confirmWindow, 5) && confirmWindow.getText().contains("An employee should be scheduled for 30 minutes break for their shift")) {
+                click(okBtnOnConfirm);
+            }
+        }
     }
 
     public void verifyEditMealBreakTimeFunctionality(boolean isSavedChange) throws Exception {
@@ -1310,6 +1333,28 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return breakTimes;
     }
 
+    @Override
+    public void moveMealOrRestBreak(boolean isMeal, int offset) throws Exception {
+        List<WebElement> durations = null;
+        if (areListElementVisible(mealBreakDurations, 5) || areListElementVisible(restBreakDurations, 5)) {
+            if (isMeal) {
+                durations = mealBreakDurations;
+            } else {
+                durations = restBreakDurations;
+            }
+            moveDayViewCards(durations.get(0), offset);
+        }
+    }
+
+    @Override
+    public void shortenMealOrRestBreak(boolean isMealBreak) throws Exception {
+        if (areListElementVisible(mealStartEndAreas, 5) || areListElementVisible(restStartEndAreas, 5)) {
+            List<WebElement> areas = isMealBreak ? mealStartEndAreas : restStartEndAreas;
+            moveDayViewCards(areas.get(0), 40);
+        } else {
+            SimpleUtils.fail("Meal break start/end area not loaded successfully!", false);
+        }
+    }
 
     @Override
     public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception {
@@ -2717,10 +2762,14 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public void moveMealAndRestBreaksOnEditBreaksPage(String breakTime, int index, boolean isMealBreak) throws Exception {
         if (areListElementVisible(mealBreakDurations, 5) || areListElementVisible(restBreakDurations, 5)) {
             List<WebElement> breaks = null;
-            if (isMealBreak)
+            List<WebElement> breakTimes = null;
+            if (isMealBreak) {
                 breaks = mealBreakDurations;
-            else
+                breakTimes = mealBreakTimes;
+            } else {
                 breaks = restBreakDurations;
+                breakTimes = restBreakTimes;
+            }
             if (areListElementVisible(noUiValues, 10) && noUiValues.size() >0) {
                 //Move break to the start of time line
                 waitForSeconds(3);
@@ -2730,7 +2779,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 boolean moveBreakTimeSuccess = false;
                 for (int i = 0; i< timeLineLength; i++) {
                     moveDayViewCards(mealBreaks.get(index), 10);
-                    mealBreakTimeAfterEdit = mealBreakTimes.get(index).getText().split("-")[0].trim();
+                    mealBreakTimeAfterEdit = breakTimes.get(index).getText().split("-")[0].trim();
                     if (mealBreakTimeAfterEdit.equalsIgnoreCase(breakTime)) {
                         SimpleUtils.pass("Move breaks successfully! ");
                         moveBreakTimeSuccess = true;
@@ -2890,6 +2939,37 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         } else
             SimpleUtils.fail("Update button on edit shift time page fail to load! ", false);
         return isEnabled;
+    }
+
+    @Override
+    public int getTheDurationOfBreaks(boolean isMealBreak) throws Exception {
+        List<WebElement> breakDuration = null;
+        int duration = 0;
+        if (areListElementVisible(mealBreakTimes, 5) || areListElementVisible(restBreakTimes, 5)) {
+            if (isMealBreak) {
+                breakDuration = mealBreakTimes;
+            } else {
+                breakDuration = restBreakTimes;
+            }
+            String[] times = breakDuration.get(0).getText().split("-");
+            int startTime = Integer.valueOf(times[0].split(":")[0].trim()) * 60 +
+                    Integer.valueOf(times[0].split(":")[1].trim().replaceAll("am", "").replaceAll("pm", ""));
+            int endTime = Integer.valueOf(times[1].split(":")[0].trim()) * 60 +
+                    Integer.valueOf(times[1].split(":")[1].trim().replaceAll("am", "").replaceAll("pm", ""));
+            duration = endTime - startTime;
+        } else {
+            SimpleUtils.fail("Meal and Rest Breaks are failed to load!", false);
+        }
+        return duration;
+    }
+
+    @Override
+    public void clickOnOKBtnOnMealBreakDialog() throws Exception {
+        if (isElementLoaded(continueBtnInMealBreakButton, 5)) {
+            clickTheElement(continueBtnInMealBreakButton);
+        } else {
+            SimpleUtils.fail("OK button failed to load on Meal Break Dialog!", false);
+        }
     }
 }
 

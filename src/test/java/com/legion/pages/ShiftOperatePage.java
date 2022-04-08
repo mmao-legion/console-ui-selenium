@@ -113,4 +113,9 @@ public interface ShiftOperatePage {
     public void checkOrUnCheckNextDayOnEditShiftTimePage (boolean isCheck) throws Exception;
     public String getEditShiftTimeCompliance() throws Exception;
     public boolean checkIfUpdateButtonEnabled () throws Exception;
+    public int getTheDurationOfBreaks(boolean isMealBreak) throws Exception;
+    public void clickOnOKBtnOnMealBreakDialog() throws Exception;
+    public void deleteMealOrRestBreaks(boolean isMealBreak) throws Exception;
+    public void shortenMealOrRestBreak(boolean isMealBreak) throws Exception;
+    public void moveMealOrRestBreak(boolean isMeal, int offset) throws Exception;
 }

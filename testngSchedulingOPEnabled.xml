@@ -13,6 +13,7 @@
             <class name="com.legion.tests.core.PrepareSettingsTest">
                 <methods>
                     <include name="prepareSettingsInOPTemplateAsInternalAdmin"/>
+                    <include name="verifyCanPrepareDynamicEmployeeGroupsNTemplatesAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -357,6 +358,13 @@
                     <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
                     <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
 <!--                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" /> -->
+                    <include name="verifySettingsAreAppliedAsInternalAdmin" />
+                    <include name="verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin" />
+                    <include name="verifyMealDurationWhenUsingTemplateAsInternalAdmin" />
+                    <include name="verifyMealPlacementWhenUsingTemplateAsInternalAdmin" />
+                    <include name="verifyMissedRestBreakWhenUsingTemplateAsInternalAdmin" />
+                    <include name="verifyShortRestBreakWhenUsingTemplateAsInternalAdmin" />
+                    <include name="verifyRestTimeNotIdealWhenUsingTemplateAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
