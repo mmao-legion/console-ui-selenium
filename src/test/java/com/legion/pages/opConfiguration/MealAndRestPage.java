@@ -11,4 +11,5 @@ public interface MealAndRestPage {
     public void verifyTheContentOnRestBreaksSection() throws Exception;
     public void verifyCanSetTheValueForInputs(String mealOrRest, List<Integer> settings) throws Exception;
     public Boolean verifyMealAndRestValueAreSaved(String mealOrRest, List<Integer> settings) throws Exception;
+    public void setRestDuration(String restDuration) throws Exception;
 }

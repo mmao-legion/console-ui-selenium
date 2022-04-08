@@ -59,6 +59,9 @@ public class MealAndRestPage extends BasePage implements com.legion.pages.opConf
     @FindBy(css = "[form-title=\"Rest Breaks\"] .delete-action")
     private List<WebElement> restDeleteBtns;
 
+    @FindBy(css = "[question-title=\"Rest break duration\"] input")
+    private WebElement restDurationInput;
+
     @Override
     public void verifyTheContentOnMealBreaksSection() throws Exception {
         if (isElementLoaded(mealBreakSection, 10)) {
@@ -311,6 +314,22 @@ public class MealAndRestPage extends BasePage implements com.legion.pages.opConf
             SimpleUtils.fail("Please send the correct Param: Meal Or Rest!", false);
         }
         return isSaved;
+    }
+
+    @Override
+    public void setRestDuration(String restDuration) throws Exception {
+        if (isElementLoaded(restDurationInput, 5)) {
+            restDurationInput.clear();
+            restDurationInput.sendKeys(restDuration);
+            if (restDurationInput.getAttribute("value").equals(restDuration)) {
+                SimpleUtils.pass("Rest Break Duration: " + restDuration + " is set successfully!");
+            } else {
+                SimpleUtils.fail("Expected Rest Break Duration: " + restDuration + ", but actual is: " +
+                        restDurationInput.getAttribute("value"), false);
+            }
+        } else {
+            SimpleUtils.fail("Rest Break Duration failed to load!", false);
+        }
     }
 
 }

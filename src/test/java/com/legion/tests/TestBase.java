@@ -5,6 +5,7 @@ import com.aventstack.extentreports.Status;
 import com.jayway.restassured.response.Response;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
+import com.legion.pages.ScheduleCommonPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
 import com.legion.pages.pagefactories.mobile.MobilePageFactory;
@@ -12,6 +13,7 @@ import com.legion.pages.pagefactories.mobile.MobileWebPageFactory;
 import com.legion.test.testrail.APIException;
 import com.legion.test.testrail.TestRailOperation;
 import com.legion.tests.annotations.Enterprise;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.testframework.*;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -467,6 +469,17 @@ public abstract class TestBase {
         } catch (Exception e) {
             SimpleUtils.fail("Login as: " + roleName + " failed!", false);
         }
+    }
+
+    protected void goToSchedulePageScheduleTab() throws Exception {
+        // Go to Schedule page, Schedule tab
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
     }
 
     public String getCrendentialInfo(String roleName) throws Exception {

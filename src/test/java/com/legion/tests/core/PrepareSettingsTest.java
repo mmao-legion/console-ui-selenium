@@ -1,10 +1,13 @@
 package com.legion.tests.core;
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
+import com.legion.pages.core.opConfiguration.MealAndRestPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -19,8 +22,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class PrepareSettingsTest extends TestBase {
 
@@ -239,5 +241,95 @@ public class PrepareSettingsTest extends TestBase {
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Prepare the dynamic employee groups and meal rest templates")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyCanPrepareDynamicEmployeeGroupsNTemplatesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ToggleAPI.enableToggle(Toggles.MealAndRestTemplate.getValue(), "stoneman@legion.co", "admin11.a");
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToUserManagementPage();
+            configurationPage.goToDynamicEmployeeGroupPage();
+            // Delete all dynamic employee group
+            configurationPage.deleteSpecifyDynamicEmployeeGroupsInList("MealRest-ForAuto");
+            // Create the dynamic employee group for different work roles
+            List<String> groupCriteriaList = new ArrayList<>();
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.WorkRole.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupWorkRoleCriteria.EventManager.getValue());
+            String eventManagerGroupTitle = "EventManager-MealRest-ForAuto";
+            String eventManagerGroupDescription = "EventManager-ForAuto";
+            configurationPage.createNewDynamicEmployeeGroup(eventManagerGroupTitle, eventManagerGroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MealAndRest.getValue(), groupCriteriaList);
+            String generalManagerGroupTitle = "GeneralManager-MealRest-ForAuto";
+            String generalManagerGroupDescription = "GeneralManager-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.WorkRole.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupWorkRoleCriteria.GeneralManager.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(generalManagerGroupTitle, generalManagerGroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MealAndRest.getValue(), groupCriteriaList);
+            String teamMemberGroupTitle = "TeamMember-MealRest-ForAuto";
+            String teamMemberGroupDescription = "TeamMember-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.WorkRole.getValue()+ "&"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupWorkRoleCriteria.TeamMember.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(teamMemberGroupTitle, teamMemberGroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MealAndRest.getValue(), groupCriteriaList);
+
+            // Now Go to Meal And Rest Template to set the settings for different work roles
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MealAndRest.getValue());
+            String eventManagerTemplate = "EventManager-ForAuto";
+            String generalManagerTemplate = "GeneralManager-ForAuto";
+            String teamMemberTemplate = "TeamMember-ForAuto";
+            configurationPage.archiveOrDeleteTemplate(eventManagerTemplate);
+            configurationPage.archiveOrDeleteTemplate(generalManagerTemplate);
+            configurationPage.archiveOrDeleteTemplate(teamMemberTemplate);
+            List<Integer> mealSettings = new ArrayList<>(Arrays.asList(1, 240, 721, 20, 120, 120, 0));
+            List<Integer> restSettings = new ArrayList<>(Arrays.asList(180, 721, 1));
+            String restDuration = "15";
+            createMealAndRestTemplates(eventManagerTemplate, mealSettings, restSettings, eventManagerGroupTitle, restDuration);
+            mealSettings = new ArrayList<>(Arrays.asList(1, 240, 721, 25, 120, 120, 0));
+            restSettings = new ArrayList<>(Arrays.asList(180, 721, 1));
+            restDuration = "20";
+            createMealAndRestTemplates(generalManagerTemplate, mealSettings, restSettings, generalManagerGroupTitle, restDuration);
+            mealSettings = new ArrayList<>(Arrays.asList(1, 240, 721, 30, 120, 120, 0));
+            restSettings = new ArrayList<>(Arrays.asList(180, 721, 1));
+            restDuration = "25";
+            createMealAndRestTemplates(teamMemberTemplate, mealSettings, restSettings, teamMemberGroupTitle, restDuration);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private void createMealAndRestTemplates(String templateName, List<Integer> mealSettings, List<Integer> restSettings,
+                                            String dynamicGroup, String restDuration) throws Exception {
+        String meal = "Meal";
+        String rest = "Rest";
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        MealAndRestPage mealAndRestPage = (MealAndRestPage) pageFactory.createMealAndRestPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        mealAndRestPage.clickOnAddButtonOnMealOrRestSection(meal);
+        mealAndRestPage.verifyCanSetTheValueForInputs(meal, mealSettings);
+        mealAndRestPage.clickOnAddButtonOnMealOrRestSection(rest);
+        mealAndRestPage.verifyCanSetTheValueForInputs(rest, restSettings);
+        mealAndRestPage.setRestDuration(restDuration);
+        configurationPage.selectOneDynamicGroup(dynamicGroup);
+        configurationPage.clickOnTemplateDetailTab();
+        cinemarkMinorPage.saveOrPublishTemplate(CinemarkMinorTest.templateAction.Publish_Now.getValue());
     }
 }

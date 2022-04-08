@@ -228,8 +228,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     if (isElementLoaded(timeDuration, 5)) {
                         String startTime = timeDuration.getText().split("-")[0];
                         clickTheElement(hoverInfo);
-                        int shiftStartMinutes = scheduleCommonPage.getMinutesFromTime(startTime);
-                        int currentMinutes = scheduleCommonPage.getMinutesFromTime(currentTime);
+                        int shiftStartMinutes = SimpleUtils.getMinutesFromTime(startTime);
+                        int currentMinutes = SimpleUtils.getMinutesFromTime(currentTime);
                         if (shiftStartMinutes > currentMinutes) {
                             name = dayViewAvailableShift.findElement(By.className("sch-day-view-shift-worker-name")).getText().toLowerCase();
                             if (name.contains("(")) {
@@ -515,8 +515,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         String[] startAndEndTime = shiftTime.split("-");
         if (startAndEndTime.length == 2) {
             String startTime = startAndEndTime[0].trim();
-            shiftStartMinutes = scheduleCommonPage.getMinutesFromTime(startTime);
-            currentMinutes = scheduleCommonPage.getMinutesFromTime(currentTime);
+            shiftStartMinutes = SimpleUtils.getMinutesFromTime(startTime);
+            currentMinutes = SimpleUtils.getMinutesFromTime(currentTime);
             SimpleUtils.report(startTime);
             SimpleUtils.report("Convert start time to Minute: " + shiftStartMinutes);
             SimpleUtils.report(currentTime);
@@ -1822,6 +1822,21 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     }
 
+    @Override
+    public void verifyComplianceForShiftByIndex(String violation, int index) throws Exception {
+        List<WebElement> shifts = null;
+        if (areListElementVisible(shiftsInWeekView, 5)) {
+            shifts = shiftsInWeekView;
+        } else if (areListElementVisible(shiftsInDayView, 5)) {
+            shifts = shiftsInDayView;
+        }
+        List<String> messages = getComplianceMessageFromInfoIconPopup(shifts.get(index));
+        if (messages.contains(violation)) {
+            SimpleUtils.pass(violation + " shows correctly");
+        } else {
+            SimpleUtils.fail(violation + " doesn't show on the shift!", false);
+        }
+    }
 
     @FindBy(xpath = "//span[text()=\"View Status\"]")
     private WebElement viewStatusBtn;

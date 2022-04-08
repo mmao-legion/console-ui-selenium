@@ -1,9 +1,13 @@
 package com.legion.tests.core;
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.ConsoleControlsNewUIPage;
+import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
+import com.legion.pages.core.opConfiguration.MealAndRestPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -17,9 +21,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -27,6 +29,8 @@ public class MealAndRestBreakTest extends TestBase {
 
     private String breakOption = "Breaks";
     private String editBreakOption = "Edit Breaks";
+    private String meal = "Meal";
+    private String rest = "Rest";
 
     @Override
     @BeforeMethod()
@@ -37,6 +41,50 @@ public class MealAndRestBreakTest extends TestBase {
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private enum MealBreakDuration {
+        EventManager(20),
+        GeneralManager(25),
+        TeamMember(30);
+        private final int value;
+        private MealBreakDuration(final int duration) {
+            value = duration;
+        }
+    }
+
+    private enum RestBreakDuration {
+        EventManager(15),
+        GeneralManager(20),
+        TeamMember(25);
+        private final int value;
+        private RestBreakDuration(final int duration) {
+            value = duration;
+        }
+    }
+
+    private enum WorkRoles {
+        EventManager("Event Manager"),
+        GeneralManager("General Manager"),
+        TeamMember("Team Member Corporate-Theatre");
+        private final String value;
+        private WorkRoles(final String role) {
+            value = role;
+        }
+    }
+
+    private enum MealRestBreakViolations {
+        MissedMealBreak("Missed Meal Break"),
+        MealDuration("Meal Duration"),
+        MealPlacement("Meal Placement"),
+        NoMealCoverage("No Meal Coverage"),
+        MissedRestBreak("Missed Rest Break"),
+        ShortRestBreak("Short Rest Break"),
+        RestTimeNotIdeal("Rest Time Not Ideal");
+        private final String value;
+        private MealRestBreakViolations(final String violation) {
+            value = violation;
         }
     }
 
@@ -464,5 +512,320 @@ public class MealAndRestBreakTest extends TestBase {
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the settings are applied according to different dynamic employee groups")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifySettingsAreAppliedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+            // Verify the duration of meal/rest for work role: Event Manager
+            verifyDurationForDifferentWorkRoles(WorkRoles.EventManager.value, MealBreakDuration.EventManager.value, RestBreakDuration.EventManager.value);
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+            // Verify the duration of meal/rest for work role: General Manager
+            verifyDurationForDifferentWorkRoles(WorkRoles.GeneralManager.value, MealBreakDuration.GeneralManager.value, RestBreakDuration.GeneralManager.value);
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+            // Verify the duration of meal/rest for work role: Team Member Corporate-Theatre
+            verifyDurationForDifferentWorkRoles(WorkRoles.TeamMember.value, MealBreakDuration.TeamMember.value, RestBreakDuration.TeamMember.value);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private void verifyDurationForDifferentWorkRoles(String workRole, int mealDuration, int restDuration) throws Exception {
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        scheduleMainPage.selectWorkRoleFilterByText(workRole, true);
+        scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+        shiftOperatePage.clickOnEditMeaLBreakTime();
+        SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(false), false);
+        if ((mealDuration == shiftOperatePage.getTheDurationOfBreaks(true)) &&
+                (restDuration == shiftOperatePage.getTheDurationOfBreaks(false))) {
+            SimpleUtils.pass("Meal and Rest break durations for " + workRole + " is correct!");
+        } else {
+            SimpleUtils.fail("Meal and Rest break durations for " + workRole + " is incorrect!", false);
+        }
+        shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify \"Missed Meal Break\" violation when turning on MealAndRestTemplate toggle")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+            // Verify warning dialog will show up when deleting the meal break
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            int count = scheduleMainPage.getShiftsCount();
+            int index = (new Random()).nextInt(count);
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            shiftOperatePage.deleteMealOrRestBreaks(true);
+            scheduleMainPage.saveSchedule();
+            // Verify "Missed Meal Break" violation
+            scheduleShiftTablePage.verifyComplianceForShiftByIndex(MealRestBreakViolations.MissedMealBreak.value, index);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify \"Meal Duration\" violation when turning on MealAndRestTemplate toggle")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMealDurationWhenUsingTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+            // Verify warning dialog will show up when deleting the meal break
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            int count = scheduleMainPage.getShiftsCount();
+            int index = (new Random()).nextInt(count);
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            // Verify warning dialog will show up when shortening the meal break
+            shiftOperatePage.shortenMealOrRestBreak(true);
+            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            // Verify the pencil icon will show
+            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
+            scheduleMainPage.saveSchedule();
+            // Verify "Meal Duration" violation
+            scheduleShiftTablePage.verifyComplianceForShiftByIndex(MealRestBreakViolations.MealDuration.value, index);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify \"Meal Placement\" violation when turning on MealAndRestTemplate toggle")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMealPlacementWhenUsingTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+            // Verify warning dialog will show up when deleting the meal break
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            int count = scheduleMainPage.getShiftsCount();
+            int index = (new Random()).nextInt(count);
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            // Verify warning dialog will show up when shortening the meal break
+            shiftOperatePage.moveMealOrRestBreak(true, 100);
+            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            // Verify the pencil icon will show
+            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
+            scheduleMainPage.saveSchedule();
+            // Verify "Meal Placement" violation
+            scheduleShiftTablePage.verifyComplianceForShiftByIndex(MealRestBreakViolations.MealPlacement.value, index);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify \"Missed Rest Break\" violation when turning on MealAndRestTemplate toggle")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMissedRestBreakWhenUsingTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+            // Verify warning dialog will show up when deleting the meal break
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.selectWorkRoleFilterByText(WorkRoles.GeneralManager.value, true);
+            int count = scheduleMainPage.getShiftsCount();
+            int index = (new Random()).nextInt(count);
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            shiftOperatePage.deleteMealOrRestBreaks(false);
+            // Verify the pencil icon will show
+            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
+            scheduleMainPage.saveSchedule();
+            // Verify "Missed Rest Break" violation
+            scheduleShiftTablePage.verifyComplianceForShiftByIndex(MealRestBreakViolations.MissedRestBreak.value, index);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify \"Short Rest Break\" violation when turning on MealAndRestTemplate toggle")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyShortRestBreakWhenUsingTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+            // Verify warning dialog will show up when deleting the meal break
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.selectWorkRoleFilterByText(WorkRoles.GeneralManager.value, true);
+            int count = scheduleMainPage.getShiftsCount();
+            int index = (new Random()).nextInt(count);
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            shiftOperatePage.shortenMealOrRestBreak(false);
+            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            // Verify the pencil icon will show
+            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
+            scheduleMainPage.saveSchedule();
+            // Verify "Short Rest Break" violation
+            scheduleShiftTablePage.verifyComplianceForShiftByIndex(MealRestBreakViolations.ShortRestBreak.value, index);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify \"Rest Time Not Ideal\" violation when turning on MealAndRestTemplate toggle")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyRestTimeNotIdealWhenUsingTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "11:00PM");
+            // Verify warning dialog will show up when deleting the meal break
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.selectWorkRoleFilterByText(WorkRoles.TeamMember.value, true);
+            int count = scheduleMainPage.getShiftsCount();
+            int index = (new Random()).nextInt(count);
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+            String shiftStartTime = shiftInfo.get(2).split("-")[0].trim();
+            String restBreakStartTime = getRestBreakStartTime(shiftStartTime, 225 + 5);
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            shiftOperatePage.deleteMealOrRestBreaks(true);
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage(restBreakStartTime, 0, false);
+            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            scheduleMainPage.saveSchedule();
+            // Verify "Rest Time Not Ideal" violation when the rest break starts longer than 225 minutes from the shift start time
+            scheduleShiftTablePage.verifyComplianceForShiftByIndex(MealRestBreakViolations.RestTimeNotIdeal.value, index);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private static String getRestBreakStartTime(String shiftStartTime, int minutes) {
+        int tempMinutes = SimpleUtils.getMinutesFromTime(shiftStartTime) + minutes;
+        return SimpleUtils.convertMinutesToTime(tempMinutes);
     }
 }

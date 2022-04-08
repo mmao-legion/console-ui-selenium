@@ -1996,6 +1996,17 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         return workRoleInfo;
     }
 
+    @Override
+    public int getShiftsCount() throws Exception {
+        int count = 0;
+        if (areListElementVisible(shiftsWeekView, 10)) {
+            count = shiftsWeekView.size();
+        } else if (areListElementVisible(dayViewAvailableShifts, 10)) {
+            count = dayViewAvailableShifts.size();
+        }
+        return count;
+    }
+
     public void selectJobTitleFilterByText(String filterText) throws Exception {
         String filterKey = "jobtitle";
         ArrayList<WebElement> jobTitleFilters = getAvailableFilters().get(filterKey);

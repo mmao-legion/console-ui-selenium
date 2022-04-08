@@ -536,22 +536,6 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     }
 
-
-    public int getMinutesFromTime(String time) {
-        int minutes = 0;
-        if (time.contains(":")) {
-            String minute = time.split(":")[1].substring(0, time.split(":")[1].length()-2).trim();
-            minutes = (Integer.parseInt(time.split(":")[0].trim())) * 60 + Integer.parseInt(minute);
-        }else {
-            minutes = Integer.parseInt(time.substring(0, time.length()-2)) * 60;
-        }
-        if (time.toLowerCase().endsWith("pm")) {
-            minutes += 12 * 60;
-        }
-        return minutes;
-    }
-
-
     @FindBy (css = "div.day-week-picker-period")
     private List<WebElement> dayPickerAllDaysInDayView;
     @Override

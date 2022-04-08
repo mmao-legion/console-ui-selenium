@@ -163,6 +163,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public enum DynamicEmployeeGroupLabels {
 
 		MinorRule("Minor Rule"),
+		MealAndRest("MealAndRest"),
 		DifferentialPay("Differential Pay");
 
 		private final String value;
@@ -220,6 +221,24 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			return value;
 		}
 	}
+
+	public enum DynamicEmployeeGroupWorkRoleCriteria {
+
+		EventManager("Event Manager"),
+		GeneralManager("General Manager"),
+		TeamMember("Team Member Corporate-Theatre");
+
+		private final String value;
+
+		DynamicEmployeeGroupWorkRoleCriteria(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
 	@Override
 	public void goToConfigurationPage() throws Exception {
 		if (isElementEnabled(configurationTab,15)) {
@@ -3382,6 +3401,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private List<WebElement> criteriaSelectorItems;
 	@FindBy(css = "[class=\"lg-picker-input__wrapper lg-ng-animate\"]")
 	private WebElement pickerPopup;
+	@FindBy(css = "input[placeholder=\"Search\"]")
+	private WebElement searchInput;
 
 	@Override
 	public void createNewDynamicEmployeeGroup(String groupTitle, String description, String groupLabels, List<String> groupCriteria) throws Exception {
@@ -3426,8 +3447,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				//Select criteria and sub-criteria
 				if (criteriaSelectors.size() == groupCriteria.size()) {
 					for (int i = 0; i< groupCriteria.size(); i++) {
-						String criteria = groupCriteria.get(i).split("-")[0];
-						String subCriteria = groupCriteria.get(i).split("-")[1];
+						String criteria = "";
+						String subCriteria = "";
+						if (groupCriteria.get(i).contains("&")) {
+							criteria = groupCriteria.get(i).split("&")[0];
+							subCriteria = groupCriteria.get(i).split("&")[1];
+						} else if (groupCriteria.get(i).contains("-")) {
+							criteria = groupCriteria.get(i).split("-")[0];
+							subCriteria = groupCriteria.get(i).split("-")[1];
+						}
 						//Select criteria
 						clickTheElement(criteriaSelectors.get(i));
 						if (areListElementVisible(criteriaSelectorItems, 15)) {
@@ -3443,10 +3471,17 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						waitForSeconds(3);
 						//Select sub-criteria
 						clickTheElement(subCriteriaSelector.get(i));
+						/*if (isElementLoaded(searchInput, 5)) {
+							searchInput.sendKeys(subCriteria);
+							waitForSeconds(1);
+							subCriteriaSelectorItems = getDriver().findElements(By.cssSelector(".select-list-item"));
+						}*/
 						for (WebElement item: subCriteriaSelectorItems) {
 							if (item.getText().equalsIgnoreCase(subCriteria)) {
 								clickTheElement(item.findElement(By.tagName("input")));
 								break;
+							} else {
+								SimpleUtils.report("Expected: " + subCriteria + ", actual is: " + item.getText() + ".");
 							}
 						}
 					}
