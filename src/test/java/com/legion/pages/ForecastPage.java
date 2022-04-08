@@ -97,4 +97,5 @@ public interface ForecastPage<pubic> {
 	public boolean checkIfAllLocationBeenSelected ();
 	public void checkOrUncheckLocationInFilter (boolean ifCheck, String locationName) throws Exception;
 	public List<String> getAllLocationsFromFilter () throws Exception;
+	public HashMap<String, List<String>> getLaborChartCoordinateAxisData();
 }

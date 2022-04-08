@@ -122,4 +122,10 @@ public interface ScheduleShiftTablePage {
     public void moveShiftByIndexInDayView (int index, boolean moveForeward) throws Exception;
     public ArrayList<HashMap<String,String>> getGroupByWorkRoleStyleInfo() throws Exception;
     public void verifyComplianceForShiftByIndex(String violation, int index) throws Exception;
+    public String getTheTooltipOfClockImgsByIndex (int index) throws Exception;
+    public String getTheTooltipOfScheduleSummaryHoursByIndex (int index) throws Exception;
+    public String getTheTooltipOfScheduleSummaryHoursInDayViewByIndex (int index) throws Exception;
+    public float calcTotalScheduledHourForOneDayInWeekView(int indexOfDay) throws Exception;
+    public List<String> getAllDifferenceHrsArrowImg ();
+    public HashMap<String, String> getHrsOnTooltipOfScheduleSummaryHoursByIndex (int index) throws Exception;
 }

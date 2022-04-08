@@ -498,10 +498,10 @@ public class ScheduleCopyImprovementTest extends TestBase {
                 unassignedShifts.clear();
                 openShifts.clear();
                 String weekDay = scheduleShiftTablePage.getWeekDayTextByIndex(i);
-                if(weekDay.equalsIgnoreCase("Sun")
-                        || weekDay.equalsIgnoreCase("Mon")
-                        || weekDay.equalsIgnoreCase("Tue")
-                        || weekDay.equalsIgnoreCase("Wed")) {
+                if(weekDay.contains("Sun")
+                        || weekDay.contains("Mon")
+                        || weekDay.contains("Tue")
+                        || weekDay.contains("Wed")) {
 
                     unassignedShifts = scheduleShiftTablePage.getOneDayShiftByName(i, "unassigned");
                     openShifts = scheduleShiftTablePage.getOneDayShiftByName(i, "open");

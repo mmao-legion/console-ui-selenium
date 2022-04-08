@@ -1673,11 +1673,15 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                                 endTime = endTime.replace("am", ":00am").replace("pm", ":00pm");
                             }
                             shiftStartInput.clear();
+                            moveToElementAndClick(shiftStartInput);
+                            waitForSeconds(2);
                             shiftStartInput.sendKeys(startTime);
                             shiftEndInput.clear();
+                            moveToElementAndClick(shiftEndInput);
+                            waitForSeconds(2);
                             shiftEndInput.sendKeys(endTime);
                             waitForSeconds(2);
-                            click(confirmBtnOnDragAndDropConfirmPage);
+                            clickOnUpdateEditShiftTimeButton();
                         }
 
                     } else {
@@ -2852,9 +2856,11 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 && isElementLoaded(shiftEndInput, 10)) {
             SimpleUtils.report("The new edit shift time page display correctly! ");
             shiftStartInput.clear();
+            waitForSeconds(1);
             moveToElementAndClick(shiftStartInput);
             shiftStartInput.sendKeys(startTime);
             shiftEndInput.clear();
+            waitForSeconds(1);
             moveToElementAndClick(shiftStartInput);
             shiftEndInput.sendKeys(endTime);
             if (checkTheNextDay) {
