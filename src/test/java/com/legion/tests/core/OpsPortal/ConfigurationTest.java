@@ -1079,6 +1079,8 @@ public class ConfigurationTest extends TestBase {
             String templateName = "ForMultipleAuto";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
 
             configurationPage.verifyMultipleTemplateListUI(templateName);
 
