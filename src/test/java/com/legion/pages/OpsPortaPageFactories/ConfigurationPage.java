@@ -124,4 +124,5 @@ public interface ConfigurationPage {
     public void verifyTimeOff() throws Exception;
     public void verifymaxNumEmployeesInput(String num) throws Exception;
     public void switchToControlWindow() throws Exception;
+    public void verifyMultipleTemplateListUI(String templateName) throws Exception;
 }

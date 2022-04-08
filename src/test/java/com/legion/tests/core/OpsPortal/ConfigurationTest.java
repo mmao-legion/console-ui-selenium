@@ -848,7 +848,7 @@ public class ConfigurationTest extends TestBase {
     public void timeOfDayInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
-            String shiftTime = "8:30am - 5pm";
+            String shiftTime = "8:30am - 4pm";
             List<String> indexes = new ArrayList<String>();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1014,16 +1014,18 @@ public class ConfigurationTest extends TestBase {
     @TestName(description = "Schedule Policy")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTimeOffInSchedulePolicyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try{
+        try {
             String action = "Archive";
             String templateType = "Scheduling Policies";
             String templateName = "timeOffLimit";
             String mode = "edit";
 
+
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(templateType);
-            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+
+            configurationPage.clickOnSpecifyTemplateName(templateName, mode);
             configurationPage.clickEdit();
             configurationPage.clickOK();
             configurationPage.verifyTimeOff();
@@ -1060,6 +1062,25 @@ public class ConfigurationTest extends TestBase {
             commonComponents.okToActionInModal(true);
             Assert.assertEquals(timeOffPage.getRequestErrorMessage(), "Maximum numbers of workers on time off exceeded on day " + Month + " 11");
             commonComponents.okToActionInModal(false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify multiple version template UI and Order")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMultipleVersionTemplateCanShowWellInListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+
+            String templateType = "Operating Hours";
+            String templateName = "ForMultipleAuto";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+
+            configurationPage.verifyMultipleTemplateListUI(templateName);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
