@@ -1,11 +1,14 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.Constants;
 import com.legion.utils.JsonUtil;
@@ -1831,6 +1834,8 @@ public class ActivityTest extends TestBase {
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             String teamMemberName1 = profileNewUIPage.getNickNameFromProfile();
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -1843,15 +1848,43 @@ public class ActivityTest extends TestBase {
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 
             // Set 'Is approval by Manager required when an employee claims an Open Shift?' as Always
-            String option = "Always";
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            controlsNewUIPage.clickOnControlsConsoleMenu();
-            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-            boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
-            SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
-            //String selectedOption = controlsNewUIPage.getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption();
-            controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
+
+            if (controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration()) {
+                String option = "Always";
+                controlsNewUIPage.clickOnControlsConsoleMenu();
+                controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+                boolean isScheduleCollaboration = controlsNewUIPage.isControlsScheduleCollaborationLoaded();
+                SimpleUtils.assertOnFail("Controls Page: Schedule Collaboration Section not Loaded.", isScheduleCollaboration, true);
+                //String selectedOption = controlsNewUIPage.getIsApprovalByManagerRequiredWhenEmployeeClaimsOpenShiftSelectedOption();
+                controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
+            } else {
+                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                locationsPage.clickOnLocationsTab();
+                locationsPage.goToSubLocationsInLocationsPage();
+                locationsPage.searchLocation(location);               ;
+                SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+                locationsPage.clickOnLocationInLocationResult(location);
+                locationsPage.clickOnConfigurationTabOfLocation();
+                HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+                //Click on the template which is associated to the location to view
+                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
+                //check setting before change
+                boolean isEnabled = configurationPage.checkIfApproveShiftInHomeLocationSettingEnabled();
+                if (!isEnabled) {
+                    //Edit the template
+                    configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                    //enable 'Is approval required by Manager when an employee claims an Open Shift in a home location?'
+                    configurationPage.enableOrDisableApproveShiftInHomeLocationSetting("yes");
+                    //Publish the template, click on the template again to check the setting
+                    configurationPage.publishNowTheTemplate();
+                    Thread.sleep(300000);
+                }
+                switchToConsoleWindow();
+            }
+
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1978,6 +2011,7 @@ public class ActivityTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
+            Thread.sleep(3000);
             SimpleUtils.assertOnFail("The first approved TM's offer should be assigned! ",
                     scheduleShiftTablePage.getAllShiftsOfOneTM(teamMemberName1).size()==1, false);
 

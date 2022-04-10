@@ -1063,6 +1063,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(shiftsWeekView, 20)) {
             for (WebElement shiftWeekView : shiftsWeekView) {
                 WebElement workerName = null;
+                scrollToElement(shiftWeekView);
                 if(scheduleCommonPage.isScheduleDayViewActive()){
                     workerName = shiftWeekView.findElement(By.className("sch-day-view-shift-worker-name"));
                 } else

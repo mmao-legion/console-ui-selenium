@@ -2548,6 +2548,23 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 
 	@Override
+	public boolean checkIfApproveShiftInHomeLocationSettingEnabled() throws Exception {
+		boolean isApproveShiftInHomeLocationSettingEnabled = false;
+		if (isElementLoaded(approveShiftInHomeLocationSetting,10)){
+			scrollToElement(approveShiftInHomeLocationSetting);
+			if (approveShiftInHomeLocationSetting.findElement(By.cssSelector(".lg-button-group-first")).getAttribute("class").contains("selected")){
+				isApproveShiftInHomeLocationSettingEnabled = true;
+				SimpleUtils.pass("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is enabled! ");
+			} else {
+				SimpleUtils.report("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is enabled! ");
+			}
+		} else {
+			SimpleUtils.fail("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is not loaded!", false);
+		}
+		return  isApproveShiftInHomeLocationSettingEnabled;
+	}
+
+	@Override
 	public void enableOrDisableApproveShiftInNonHomeLocationSetting(String yesOrNo) throws Exception {
 		if (isElementLoaded(approveShiftInNonHomeLocationSetting,10)){
 			scrollToElement(approveShiftInNonHomeLocationSetting);

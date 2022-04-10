@@ -121,4 +121,5 @@ public interface ConfigurationPage {
     public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
     public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception;
     public void verifySpecificAssociationIsSaved(String name) throws Exception;
+    public boolean checkIfApproveShiftInHomeLocationSettingEnabled() throws Exception;
 }
