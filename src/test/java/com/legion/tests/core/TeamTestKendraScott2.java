@@ -1805,6 +1805,9 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
 			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+			locationSelectorPage.refreshTheBrowser();
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.clickNextWeek();
 			//There are 7 shifts display and scheduled hrs display as 42
 			List<String> availableShiftsOnAvailabilityTable = profileNewUIPage.getAvailableShiftsOnAvailabilityTable();
 			SimpleUtils.assertOnFail("It should have 7 shifts in availability table, but actual is: "+availableShiftsOnAvailabilityTable.size(),

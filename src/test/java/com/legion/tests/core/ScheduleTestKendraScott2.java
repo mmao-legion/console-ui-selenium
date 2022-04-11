@@ -5727,6 +5727,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 //			"After Click on view profile,then particular TM profile is displayed :1. Personal details 2. Work Preferences 3. Availability
 			shiftOperatePage.clickOnChangeRole();
 			shiftOperatePage.verifyChangeRoleFunctionality();
+			scheduleMainPage.saveSchedule();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			//check the work role by click Apply button
 			shiftOperatePage.changeWorkRoleInPrompt(true);
 			//check the work role by click Cancel button

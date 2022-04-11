@@ -2556,7 +2556,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				isApproveShiftInHomeLocationSettingEnabled = true;
 				SimpleUtils.pass("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is enabled! ");
 			} else {
-				SimpleUtils.report("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is enabled! ");
+				SimpleUtils.report("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is disabled! ");
 			}
 		} else {
 			SimpleUtils.fail("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is not loaded!", false);

@@ -507,7 +507,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
         if (isElementEnabled(saveOnSaveConfirmationPopup, 3)) {
             clickTheElement(saveOnSaveConfirmationPopup);
-            waitForSeconds(3);
+//            waitForSeconds(3);
             try{
                 if (isElementLoaded(msgOnTop, 20) && msgOnTop.getText().contains("Success")) {
                     SimpleUtils.pass("Save the Schedule Successfully!");

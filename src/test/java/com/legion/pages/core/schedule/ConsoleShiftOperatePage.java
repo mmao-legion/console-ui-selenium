@@ -1275,7 +1275,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
         clickOnViewProfile();
         if (isElementEnabled(tmpProfileContainer, 15)) {
-            if (isElementEnabled(personalDetailsName, 5)) {
+            if (isElementEnabled(personalDetailsName, 15)) {
                 tmDetailName = personalDetailsName.getText();
             } else
                 SimpleUtils.fail("TM detail name fail to load!", false);
