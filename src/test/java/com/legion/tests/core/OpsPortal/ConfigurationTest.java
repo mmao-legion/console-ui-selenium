@@ -1022,4 +1022,34 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Multiple version regression")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMultipleVersionRegressionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType="Operating Hours";
+            String templateName = "FionaMultipleTemp";
+            String dynamicGpName = "ForMultipleAutoRegression";
+            String button = "publish at different time";
+            int date = 14;
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            //create Operating Hour template and published it
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.publishNewTemplate(templateName,dynamicGpName,"Custom","AutoCreatedDynamic---Format Script");
+            configurationPage.archivePublishedOrDeleteDraftTemplate(templateName,"Archive");
+            //create Operating Hour template and save as draft
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.archivePublishedOrDeleteDraftTemplate(templateName,"Delete");
+            //create Operating Hour template and publish at different time
+            configurationPage.publishAtDifferentTimeTemplate(templateName,dynamicGpName,"Custom","AutoCreatedDynamic---Format Script",button,date);
+            configurationPage.archivePublishedOrDeleteDraftTemplate(templateName,"Archive");
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
