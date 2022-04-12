@@ -3431,7 +3431,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 
 	@Override
-	public void publishNewTemplate(String templateName,String name,String criteria,String formula) throws Exception{
+	public void publishNewTemplate(String templateName,String dynamicGName,String criteria,String formula) throws Exception{
 		LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
 		if(isTemplateListPageShow()){
 			//check if template existing or not
@@ -3459,12 +3459,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				//change to association tan
 				clickTheElement(templateAssociationBTN);
 				waitForSeconds(3);
-				if(searchOneDynamicGroup(name)){
-					selectOneDynamicGroup(name);
+				if(searchOneDynamicGroup(dynamicGName)){
+					selectOneDynamicGroup(dynamicGName);
 				}
 				else{
-					createDynamicGroup(name,criteria,formula);
-				    selectOneDynamicGroup(name);}
+					createDynamicGroup(dynamicGName,criteria,formula);
+				    selectOneDynamicGroup(dynamicGName);}
 				waitForSeconds(4);
 				if(isElementEnabled(taTemplateSpecialField,20)){
 					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
@@ -4199,4 +4199,69 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+
+	@FindBy(css="modal[modal-title=\"Date of Publish\"]")
+	private WebElement dateOfPublishPopup;
+	@FindBy(css="input-field[placeholder=\"Select...\"]")
+	private WebElement effectiveDate;
+	@FindBy(css="lg-button[label=\"OK\"] button")
+	private WebElement okButtonOnFuturePublishConfirmDialog;
+
+	private void  setEffectiveDate(int effectiveDate) throws Exception {
+		selectDateInTemplate(effectiveDate);
+	}
+
+	@Override
+	public void publishAtDifferentTimeTemplate(String templateName,String dynamicGName,String criteria,String formula,String button,int date) throws Exception{
+		waitForSeconds(2);
+		if(isElementLoaded(newTemplateBTN,2)){
+			clickTheElement(newTemplateBTN);
+			waitForSeconds(1);
+			if(isElementEnabled(createNewTemplatePopupWindow)){
+				SimpleUtils.pass("User can click new template button successfully!");
+				clickTheElement(newTemplateName);
+				newTemplateName.sendKeys(templateName);
+				clickTheElement(newTemplateDescription);
+				newTemplateDescription.sendKeys(templateName);
+				clickTheElement(continueBTN);
+				waitForSeconds(4);
+				if(isElementEnabled(welcomeCloseButton, 5)){
+					clickTheElement(welcomeCloseButton);
+				}
+				//change to association tan
+				clickTheElement(templateAssociationBTN);
+				waitForSeconds(3);
+				if(searchOneDynamicGroup(dynamicGName)){
+					selectOneDynamicGroup(dynamicGName);
+				}
+				else{
+					createDynamicGroup(dynamicGName,criteria,formula);
+					selectOneDynamicGroup(dynamicGName);}
+				waitForSeconds(4);
+				if(isElementEnabled(taTemplateSpecialField,20)){
+					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+				}
+				clickOnTemplateDetailTab();
+				chooseSaveOrPublishBtnAndClickOnTheBtn(button);
+				if(isElementLoaded(dateOfPublishPopup,2)){
+					clickTheElement(effectiveDate);
+					setEffectiveDate(date);
+					clickTheElement(okButtonOnFuturePublishConfirmDialog);
+				}else {
+					SimpleUtils.fail("The future publish template confirm dialog is not displayed.",false);
+				}
+			}else {
+				SimpleUtils.fail("User can't click new template button successfully!",false);
+			}
+		}
+		searchTemplate(templateName);
+		String newTemplateName = templateNameList.get(0).getText().trim();
+		if(newTemplateName.contains(templateName)){
+			SimpleUtils.pass("User can add new template successfully!");
+		}else {
+			SimpleUtils.fail("User can't add new template successfully",false);
+		}
+	}
 }
