@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface LocationsPage {
 
-    public void clickModelSwitchIconInDashboardPage(String value);
+    public void clickModelSwitchIconInDashboardPage(String value) throws Exception;
     public void setLaborBudgetLevel(boolean isCentral,String level);
 
     public boolean isOpsPortalPageLoaded() throws Exception;
@@ -268,4 +268,8 @@ public interface LocationsPage {
 
     public void clickOnCancelBtnOnSharingDynamicLocationGroupWindow() throws Exception;
     public void checkLocationGroupSetting(String locationName) throws Exception;
+    public void checkLocationNavigation(String locationName) throws Exception;
+
+    public void verifyDownloadTransaltionsButtonisClicked() throws Exception;
+    public void verifyUploadTransaltionsButtonisClicked() throws Exception;
 }

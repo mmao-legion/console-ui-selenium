@@ -1,6 +1,7 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -83,17 +84,23 @@ public class TimeOffPage extends BasePage {
     private WebElement sickInput;
     @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tr:last-child>td:nth-child(3) input")
     private WebElement theLastTimeOffInputInEditModal;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] table.lg-table tr.ng-scope>td:first-child")
+    private List<WebElement> timeOffs;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] table.lg-table td>input-field input")
+    private List<WebElement> editInputs;
+
 
     //history
     @FindBy(css = "div.balance-action lg-button[label='History']>button")
     private WebElement historyButton;
     @FindBy(css = "h1.lg-slider-pop__title img.lg-slider-pop__title-dismiss")
     private WebElement historyCloseButton;
-    @FindBy(css = "div.logInfoContainer>div.templateInfo")
-    private List<WebElement> historyEntries;
-    @FindBy(css = "div.logInfoContainer>p")
+    @FindBy(css = "ul.session>li")
+    private List<WebElement> historyItems;
+    @FindBy(css = "ul.session>li div.templateInfo")
+    private List<WebElement> balanceChanges;
+    @FindBy(css = "ul.session>li p")
     private List<WebElement> accrualDates;
-
 
     //time off request
     @FindBy(css = "span.request-status.request-status-Approved")
@@ -108,6 +115,14 @@ public class TimeOffPage extends BasePage {
     @FindBy(css = "div.balance-wrapper Span.count-block-counter-hours")
     private List<WebElement> balances;
 
+    //month
+    @FindBy(css = "ranged-calendar.ng-isolate-scope")
+    private WebElement Month;
+
+    //cancel button
+    @FindBy(css = "lg-button[label=Cancel]" )
+    private WebElement cancelButton;
+
 
     public void goToTeamMemberDetail(String memberName) {
         String teamMemCssLocator = "span[title=' " + memberName + "']";
@@ -117,7 +132,7 @@ public class TimeOffPage extends BasePage {
     }
 
     public void switchToTimeOffTab() {
-        waitForSeconds(6);
+        waitForSeconds(15);
         scrollToElement(timeOffTab);
         timeOffTab.click();
     }
@@ -251,24 +266,45 @@ public class TimeOffPage extends BasePage {
         return timeOffBalance;
     }
 
-    public HashMap<String, String> getAccrualHistory() {
-        historyButton.click();
-        ArrayList<String> entries = getWebElementsText(historyEntries);
-        ArrayList<String> dates = getWebElementsText(accrualDates);
-        HashMap history = new HashMap();
-        int mapSize = entries.size();
-        for (int i = 0; i < mapSize; i++) {
-            history.put(entries.get(i), dates.get(i));
-        }
-        historyCloseButton.click();
-        return history;
-    }
-
     public void editTheLastTimeOff(String balance) {
         editButton.click();
         theLastTimeOffInputInEditModal.clear();
         theLastTimeOffInputInEditModal.sendKeys(balance);
     }
 
+    public void editTimeOff(HashMap<String, String> editNameValues) {
+        editButton.click();
+        ArrayList<String> timeOffNames = getWebElementsText(timeOffs);
+        for (String key : editNameValues.keySet()
+        ) {
+            int index = timeOffNames.indexOf(key);
+            editInputs.get(index).clear();
+            editInputs.get(index).sendKeys(editNameValues.get(key));
+        }
+    }
 
+    public HashMap<String, String> getAccrualHistory() {
+        historyButton.click();
+        HashMap<String, String> history = new HashMap();
+        int size = getAccrualHistorySize();
+        for (int i = 0; i < size; i++) {
+            history.put(balanceChanges.get(i).getText(), accrualDates.get(i).getText());
+        }
+        historyCloseButton.click();
+        return history;
+    }
+
+    public int getAccrualHistorySize() {
+        return historyItems.size();
+    }
+
+    public String getMonth(){
+        return Month.getText().substring(0,3);
+    }
+
+    public void cancelTimeOffRequest() throws Exception{
+        if(isElementLoaded(cancelButton,5)){
+            click(cancelButton);
+        }
+    }
 }

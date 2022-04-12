@@ -72,6 +72,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement subPlanLevelConfigText;
 	@FindBy(css = "input-field[value=\"subPlanLevel\"]")
 	private WebElement subPlanLevelConfigFiled;
+	@FindBy(css = "button.btn.sch-publish-confirm-btn")
+	private WebElement continueBtnInNewTermsOfServicePopUpWindow;
+	@FindBy(css = "div.modal-dialog")
+	private WebElement newTermsOfServicePopUpWindow;
 
 
 	@Override
@@ -121,9 +125,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void clickModelSwitchIconInDashboardPage(String value) {
+	public void clickModelSwitchIconInDashboardPage(String value) throws Exception {
 		waitForSeconds(3);
-		if (isElementEnabled(modeSwitchIcon, 30)) {
+		if (isElementEnabled(modeSwitchIcon, 40)) {
 			clickTheElement(modeSwitchIcon);
 			waitForSeconds(5);
 			if (modelSwitchOption.size() != 0) {
@@ -136,13 +140,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 			}
 			switchToNewWindow();
-
+			verifyNewTermsOfServicePopUp();
 		} else
 			SimpleUtils.fail("mode switch img load failed", false);
 
 
 	}
 
+	private void verifyNewTermsOfServicePopUp() throws Exception {
+		if (isElementLoaded(newTermsOfServicePopUpWindow,3)
+				&& isElementLoaded(continueBtnInNewTermsOfServicePopUpWindow,3)) {
+			click(continueBtnInNewTermsOfServicePopUpWindow);
+		}else
+			SimpleUtils.report("There is no new terms of service");
+	}
 
 	@Override
 	public boolean isOpsPortalPageLoaded() throws Exception {
@@ -217,15 +228,21 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement timeZoonSelect;
 	@FindBy(css = "input[aria-label=\"Location Address\"]")
 	private WebElement LocationAddress1;
-	@FindBy(css = "select[aria-label=\"Country\"]")
+//	@FindBy(css = "select[aria-label=\"Country\"]")
+	@FindBy(css = "input-field[label='Country/Region']")
 	private WebElement countrySelect;
+	@FindBy(css = "input[placeholder='Search']")
+	private WebElement countrySearch;
+	@FindBy(css = "div.lg-search-options__scroller")
+	private WebElement firstCountry;
 	@FindBy(css = "input[aria-label=\"City\"]")
 	private WebElement city;
 	@FindBy(css = "input-field[label=\"State\"]>ng-form")
 	private WebElement state;
 	@FindBy(css = "div.lg-search-options__scroller")
 	private WebElement stateList;
-	@FindBy(css = "div.lg-search-options__scroller>div:nth-child(1)")
+//	@FindBy(css = "div.lg-search-options__scroller>div:nth-child(1)")
+	@FindBy(css = "div[title='Alabama']")
 	private WebElement firstState;
 	@FindBy(css = "input[aria-label=\"Zip Code\"]")
 	private WebElement zipCode;
@@ -276,6 +293,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement locationUploadedImg;
 	@FindBy(css = "lg-button[ng-click=\"$ctrl.removeImage()\"]")
 	private WebElement locationRemovePicLink;
+	@FindBy(css = "lg-button[label=\"Close\"] button")
+	private WebElement locationDetailCloseBTN;
+
 
 
 	@Override
@@ -406,7 +426,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 			waitForSeconds(3);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
@@ -539,7 +562,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
 			if (!isElementEnabled(stateList, 10)) {
@@ -582,7 +608,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
 			if (!isElementEnabled(stateList, 10)) {
@@ -748,7 +777,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement comparableStoreDateSelecter;
 	@FindBy(css = "input-field[label=\"Location for Demand Channel\"] > ng-form > div.input-choose > span[ng-click]")
 	private WebElement selectOneComparableLocation;
-	@FindBy(css = "td[ng-repeat=\"item in value\"]>input-field>ng-form>input")
+	@FindBy(css = "[type=\"percent\"] input")
 	private List<WebElement> itemsAndTransactionInoutField;
 
 	@Override
@@ -763,8 +792,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 			click(state);
 			if (!isElementEnabled(stateList, 10)) {
 				click(state);
@@ -842,6 +874,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "page-heading > div > div.title-breadcrumbs.limit")
 	private WebElement locationNameText;
+	@FindBy(css = ".input-choose.ng-scope span.disabled")
+	private WebElement childLocationRelationSelectLink;
+	@FindBy(css = ".input-choose.ng-scope span.locationDefault.link-action")
+	private WebElement parentLocationOfChild;
 
 	@Override
 	public String disableLocation(String searchInputText) throws Exception {
@@ -1217,8 +1253,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 			click(state);
 			if (!isElementEnabled(stateList, 10)) {
 				click(state);
@@ -1260,8 +1299,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 			click(state);
 			if (!isElementEnabled(stateList, 10)) {
 				click(state);
@@ -1305,7 +1347,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
 			if (!isElementEnabled(stateList, 10)) {
@@ -1366,7 +1411,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
 			LocationAddress1.sendKeys(newLocationParas.get("Location_Address"));
 			setLatitudeAndLongitude();
-			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+//			selectByVisibleText(countrySelect, newLocationParas.get("Country"));
+			click(countrySelect);
+			countrySearch.sendKeys(newLocationParas.get("Country"));
+			click(firstCountry);
 //			selectByVisibleText(stateSelect,newLocationParas.get("State"));
 			click(state);
 			if (!isElementEnabled(stateList, 10)) {
@@ -3232,7 +3280,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void goToConfigurationTabInLocationLevel() {
-		if (areListElementVisible(tabsInLocations, 5)) {
+		if (areListElementVisible(tabsInLocations, 10)) {
 			click(tabsInLocations.get(1));
 			if (areListElementVisible(templateRows, 5)) {
 				SimpleUtils.pass("Go to Configuration tab in locations level page successfully");
@@ -3491,7 +3539,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(backBtnInLocationDetailsPage, 5)) {
 			click(backBtnInLocationDetailsPage);
 			waitForSeconds(8);
-			if (isElementEnabled(editLocationBtn, 5)) {
+			if (isElementEnabled(editLocationBtn, 10)) {
 				SimpleUtils.pass("Back to location configuration page successfully");
 			} else
 				SimpleUtils.fail("Back to location configuration page failed", false);
@@ -3558,6 +3606,30 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
         //back to list
 		clickTheElement(locationBackLink);
 		}
+
+	@Override
+	public void checkLocationNavigation(String locationName) throws Exception{
+		goToLocationDetailsPage(locationName);
+		//get the current location and type
+		String curLocaName=locationNameText.getText();
+		if(isElementLoaded(childLocationRelationSelectLink)&&isElementLoaded(parentLocationOfChild)) {
+			SimpleUtils.pass("Current location is a child location of location group, it's is:" + curLocaName);
+			//get the parent location name
+			String parentAtDetail=parentLocationOfChild.getText().trim();
+			//click the link of parent
+			clickTheElement(parentLocationOfChild);
+			//check to get the navigated location
+			if(isElementLoaded(locationNameText,10)) {
+				String navigatedLocName =locationNameText.getText().trim();
+				if(!navigatedLocName.equals(curLocaName)&&navigatedLocName.equals(parentAtDetail))
+					SimpleUtils.pass("Click the link of parent location will navigate to the detail of parent location detail, it is:"+navigatedLocName);
+				else
+					SimpleUtils.fail("The link of parent location navigate the parent location detail failed!",false);
+			}
+			//click close to quit location detail
+			clickTheElement(locationDetailCloseBTN);
+		}
+	}
 
 	@Override
 	public void actionsForEachTypeOfTemplate(String template_type, String action) {
@@ -3960,6 +4032,38 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		} else {
 			SimpleUtils.fail("Title fail to load!", false);
+		}
+	}
+
+	@FindBy(css = "lg-button[label='Download translations'] button")
+	private WebElement downloadTranslationButton;
+	public void verifyDownloadTransaltionsButtonisClicked() throws Exception{
+		editOnGlobalConfigPage.click();
+		BasePage.scrollToBottom();
+		if(isElementLoaded(downloadTranslationButton,10)){
+			if(isClickable(downloadTranslationButton,10)){
+				SimpleUtils.pass("Download translations button is clickable");
+			}else{
+				SimpleUtils.fail("Download Translations button is not clickable", false);
+			}
+		}else {
+			SimpleUtils.fail("Download Translations button loaded failed", false);
+		}
+	}
+
+	@FindBy(css = "lg-button[label='Upload translations'] button")
+	private WebElement uploadTranslationButton;
+	public void verifyUploadTransaltionsButtonisClicked() throws Exception{
+		editOnGlobalConfigPage.click();
+		BasePage.scrollToBottom();
+		if(isElementLoaded(uploadTranslationButton,10)){
+			if(isClickable(uploadTranslationButton,10)){
+				SimpleUtils.pass("Upload Translations button is clickable");
+			}else{
+				SimpleUtils.fail("Upload Translations button is not clickable", false);
+			}
+		}else {
+			SimpleUtils.fail("Upload Translations button loaded failed", false);
 		}
 	}
 }

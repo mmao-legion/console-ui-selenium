@@ -1017,12 +1017,84 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		return flag;
 	}
 
+	@FindBy(css = "input[placeholder='You can search by name, job title, location, etc.']")
+	private WebElement usersSearchBox;
+	@FindBy(css = "lg-button.ng-isolate-scope")
+	private WebElement user;
 
+	@Override
+	public void goToUserDetailPage(String users) throws Exception{
+		if (isElementEnabled(accessRoleTab,5)) {
+			highlightElement(usersSearchBox);
+			usersSearchBox.sendKeys(users);
+			usersSearchBox.sendKeys(Keys.ENTER);
+			waitForSeconds(3);
+			if(isElementEnabled(user,5)){
+				highlightElement(user);
+				click(user);
+			}else
+				SimpleUtils.fail("user " + users + "search failed",false);
+		}else{
+			SimpleUtils.fail("usersSearchBox loaded failed",false);
+		}
+	}
 
+	@FindBy(css = "input-field[label='HR'] input")
+	private WebElement HR;
+	@FindBy(css = "input-field[label='Operations Manager'] input")
+	private WebElement OperationsManager;
+	@FindBy(css = "input-field[label='Communications'] input")
+	private WebElement Communications;
+	@FindBy(css = "input-field[label='Budget Planner'] input")
+	private WebElement BudgetPlanner;
 
+	public int verifyAccessRoleSelected() throws Exception{
+		waitForSeconds(10);
+		BasePage.scrollToBottom();
+		if (isElementLoaded(HR,10) && isElementLoaded(OperationsManager,10) && isElementLoaded(Communications,10) && isElementLoaded(BudgetPlanner,10)) {
+			int flag;
+			if(HR.isSelected() && OperationsManager.isSelected() && Communications.isSelected() && BudgetPlanner.isSelected()){
+				flag = 1;
+			}else if(!HR.isSelected() && !OperationsManager.isSelected() && !Communications.isSelected() && !BudgetPlanner.isSelected()){
+				flag = 2;
+			}else
+				flag =3;
 
+			return flag;
+		}else{
+			SimpleUtils.fail("access role loaded failed",false);
+			return 0;
+		}
+	}
 
+	@FindBy(css = "timeoff-management div.collapsible-title")
+	private WebElement timeOffTab;
+	@FindBy(css = "div.balance-action lg-button[label='History']>button")
+	private WebElement history;
+	@FindBy(css = "div#logContainer.lg-slider-pop__content.mt-20")
+	private WebElement historyDetail;
 
+	@Override
+	public void verifyHistoryDeductType() throws Exception {
+		if(isElementEnabled(timeOffTab,10)){
+			highlightElement(timeOffTab);
+			click(timeOffTab);
+			if(isElementEnabled(history,5)){
+				highlightElement(history);
+				click(history);
+				if(isElementEnabled(historyDetail,5)){
+					highlightElement(historyDetail);
+					if (historyDetail.getText().contains("max carryover") && historyDetail.getText().contains("max available") && historyDetail.getText().contains("annual earn limit")){
+						SimpleUtils.pass("deducted type display");
+					}else
+						SimpleUtils.fail("deducted type doesn't display",false);
+				}else
+					SimpleUtils.fail("user history detail loaded failed",false);
+			}else
+				SimpleUtils.fail("user history loaded failed",false);
+		}else
+			SimpleUtils.fail("user time off tab loaded failed",false);
+	}
 
 }
 

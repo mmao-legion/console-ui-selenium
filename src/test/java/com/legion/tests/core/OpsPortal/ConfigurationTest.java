@@ -5,6 +5,8 @@ import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.OpCommons.OpsCommonComponents;
+import com.legion.pages.core.opemployeemanagement.TimeOffPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -14,6 +16,7 @@ import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -46,6 +49,8 @@ public class ConfigurationTest extends TestBase {
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.verifyNewTermsOfServicePopUp();
         SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
@@ -1004,6 +1009,65 @@ public class ConfigurationTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Schedule Policy")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimeOffInSchedulePolicyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String action = "Archive";
+            String templateType = "Scheduling Policies";
+            String templateName = "timeOffLimit";
+            String mode = "edit";
+
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+
+            configurationPage.clickOnSpecifyTemplateName(templateName, mode);
+            configurationPage.clickEdit();
+            configurationPage.clickOK();
+            configurationPage.verifyTimeOff();
+            configurationPage.verifymaxNumEmployeesInput("0");
+            configurationPage.verifymaxNumEmployeesInput("-1");
+            configurationPage.verifymaxNumEmployeesInput("-1.0");
+            configurationPage.verifymaxNumEmployeesInput("1.1");
+            configurationPage.verifymaxNumEmployeesInput("1");
+            configurationPage.publishNowTemplate();
+
+            configurationPage.switchToControlWindow();
+
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("Newark-Don't Touch!!!");
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName("Della Murphy");
+            teamPage.navigateToTimeOffPage();
+
+
+            TimeOffPage timeOffPage = new TimeOffPage();
+            OpsCommonComponents commonComponents = new OpsCommonComponents();
+            timeOffPage.createTimeOff("Sick", false, 10, 10);
+            String Month = timeOffPage.getMonth();
+            commonComponents.okToActionInModal(true);
+            timeOffPage.cancelTimeOffRequest();
+
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName("Allene Mante");
+            teamPage.navigateToTimeOffPage();
+
+            timeOffPage.createTimeOff("Sick", false, 10, 10);
+            commonComponents.okToActionInModal(true);
+            Assert.assertEquals(timeOffPage.getRequestErrorMessage(), "Maximum numbers of workers on time off exceeded on day " + Month + " 11");
+            commonComponents.okToActionInModal(false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify multiple version template UI and Order")
@@ -1017,7 +1081,9 @@ public class ConfigurationTest extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(templateType);
+
             configurationPage.verifyMultipleTemplateListUI(templateName);
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1053,3 +1119,4 @@ public class ConfigurationTest extends TestBase {
         }
     }
 }
+

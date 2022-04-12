@@ -228,6 +228,40 @@ public class LaborModelTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Custom formula configuration in task detail")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyColorCodingInTaskDetailAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String taskName="CodeColorTest";
+            String label = "Tasks";
+            //navigate to labor model
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            //go to labor model repository
+            laborModelPage.goToLaborStandardRepositoryTile();
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+            LaborModelRepositoryPage repositoryPage = new LaborModelRepositoryPage();
+            //check the test task
+            repositoryPage.searchByTaskORLabel(taskName);
+            Boolean searched=repositoryPage.getTheSearchedTaskName().equalsIgnoreCase(taskName) || repositoryPage.getTheSearchedLabel().equalsIgnoreCase(taskName);
+            Assert.assertTrue(searched, "Failed to load the task that search by task name or label!");
+            if(searched){
+                SimpleUtils.pass("Find the searched task!");
+                //enter the task detail
+                laborModelPage.goToTaskDetail(taskName);
+                //check custom color coding
+                laborModelPage.checkCustomFormulaCoding("p_OffsetAndStart");}
+            else
+                SimpleUtils.fail("Not find the searched task, please add it!",false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add update disable tasks")

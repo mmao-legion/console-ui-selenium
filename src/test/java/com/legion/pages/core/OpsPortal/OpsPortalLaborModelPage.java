@@ -521,6 +521,9 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	private WebElement deleteAttributeButton;
 	@FindBy(css="div.lg-modal h1 div")
 	private WebElement disableExternalAttributePopupTitle;
+	@FindBy(css="table[ng-if=\"$ctrl.filteredTasks.length\"] tr[ng-repeat=\"task in $ctrl.filteredTasks\"]")
+	private List<WebElement> taskDataRows;
+
 
 	@Override
 	public boolean checkDeleteAttributeButtonForEachAttribute() throws Exception {
@@ -593,6 +596,16 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 
 	@FindBy(css="div.lg-modal lg-button[label=\"Cancel\"] button")
 	private WebElement cancelButtonOnDeleteAttributeDialog;
+    @FindBy(css="sub-content-box[box-title=\"Task Details\"] h2")
+	private  WebElement taskDetailTitle;
+	@FindBy(css="lg-button[label=\"View\"] button")
+	private  List<WebElement> taskViewActions;
+	@FindBy(css="div.task-formula-content.form-control")
+	private  WebElement taskFormulaContent;
+
+
+
+
 
 	@Override
 	public void clickOkBtnOnDeleteAttributeDialog() throws Exception {
@@ -661,6 +674,59 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		} else
 			SimpleUtils.fail("Labor Model Page: Labor Model Details page - sub tabs not loaded.", false);
 	}
+
+	@Override
+	public void goToTaskDetail(String taksName) throws Exception {
+		if (areListElementVisible(taskDataRows,10) && taskDataRows.size() > 0) {
+			for (WebElement taskName : taskDataRows) {
+				if(taskName.findElement(By.cssSelector("lg-button[ng-click=\"$ctrl.gotoDetail(task)\"] button")).getText().equals(taksName)){
+					SimpleUtils.pass("Find the searched task, it's name is:"+taksName);
+					//click the task to enter its detail
+					clickTheElement(taskName.findElement(By.cssSelector("lg-button[ng-click=\"$ctrl.gotoDetail(task)\"] button")));
+					break;
+				}
+				else
+					SimpleUtils.fail("Not find the searched task, pleas add the tested task!",false);
+			}
+		} else
+			SimpleUtils.fail("Labor Model Page not load any tasks data!", false);
+	}
+
+	@Override
+	public void checkCustomFormulaCoding(String keyword) throws Exception {
+		boolean matched=false;
+		if(isElementLoaded(taskDetailTitle,10)){
+			SimpleUtils.pass("Task detail loaded successfully!");
+			//check the view action for configurations
+			if(areListElementVisible(taskViewActions,5)){
+				SimpleUtils.pass("The view actions are supported in taks detail page");
+				//check the color coding
+				for(int ind=0;ind<taskViewActions.size();ind++){
+					clickTheElement(taskViewActions.get(ind));
+					waitForSeconds(2);
+					if (isElementLoaded(taskFormulaContent, 10)) {
+						for (WebElement keywd : taskFormulaContent.findElements(By.cssSelector(".lg-task-timing__custom"))) {
+							if (keywd.getText().trim().equals(keyword)) {
+								SimpleUtils.pass("Find the matched keyword in the formula!");
+								matched = true;
+								//continue to check the style of the keyword
+								String keyStyle = keywd.getAttribute("style");
+								SimpleUtils.assertOnFail("The formula not get colored!", keyStyle.contains("color: rgb(0, 72, 169)"), false);
+							}
+						}
+						SimpleUtils.assertOnFail("There was no keywords matched the colored formula", matched, false);
+					} else
+						SimpleUtils.fail("No custom formula content laoded!", false);
+					//close the detail
+					clickTheElement(cancelBtnInImportSubscribedLocationsPage);
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("Task detail page failed to loaded",false);
+	}
+
+
 
 	@Override
 	public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) throws Exception {

@@ -2,13 +2,11 @@ package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
-import org.glassfish.grizzly.impl.SafeFutureImpl;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +83,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement historyCloseButton;
     @FindBy(css = "div.lg-slider-pop>div.lg-slider-pop__content li:last-child")
     private WebElement createdRecordInHistory;
-    @FindBy(css = "lg-button[label='Archive']>button")
+    @FindBy(css = "form-buttons lg-button[label='Archive']>button")
     private WebElement archiveButton;
     @FindBy(css = "lg-button[label='Delete']>button")
     private WebElement deleteButton;
@@ -122,9 +120,9 @@ public class AbsentManagePage extends BasePage {
     //template lever
     @FindBy(css = "question-input[question-title='Can employees request time off ?'] h3")
     private WebElement canEmployeeRequestLabel;
-    @FindBy(css = "yes-no lg-button-group>div>div:nth-child(1)")
+    @FindBy(css = "yes-no lg-button-group>div>div.lg-button-group-first")
     private WebElement templateLeverCanRequestYes;
-    @FindBy(css = "yes-no lg-button-group>div>div:nth-child(2)")
+    @FindBy(css = "yes-no lg-button-group>div>div.lg-button-group-last")
     private WebElement templateLeverCanRequestNo;
     @FindBy(css = "question-input[question-title='Weekly limit (Time Off + Hours Worked)'] h3")
     private WebElement weeklyLimitLabel;
@@ -210,6 +208,11 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "modal form p.lg-modal__content.lg-modal__text")
     private WebElement removeConfirmMes;
 
+    //associate
+    @FindBy(css = "lg-search[placeholder='You can search by name, label and description']>input-field input")
+    private WebElement associateSearch;
+
+
     //home page methods
     public void back() {
         backButton.click();
@@ -286,8 +289,8 @@ public class AbsentManagePage extends BasePage {
     public void search(String searchText){
             templateSearchBox.clear();
             templateSearchBox.sendKeys(searchText);
-            searchIcon.click();
-            waitForSeconds(2);
+            //searchIcon.click();
+            waitForSeconds(3);
     }
 
     public String noMatch() {
@@ -427,8 +430,10 @@ public class AbsentManagePage extends BasePage {
         associationTab.click();
     }
 
-    public void associateTemplate() {
+    public void associateTemplate(String groupName) {
         switchToAssociation();
+        associateSearch.clear();
+        associateSearch.sendKeys(groupName);
         theFirstAssociateGroup.click();
         scrollToBottom();
         saveAssociate.click();
@@ -460,6 +465,7 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void configureTemplate(String templateName) throws Exception {
+        waitForSeconds(3);
         search(templateName);
         clickInDetails();
         waitForSeconds(5);

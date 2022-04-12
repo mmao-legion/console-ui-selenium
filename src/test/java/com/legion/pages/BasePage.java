@@ -98,8 +98,12 @@ public class BasePage {
 
     }
 
-    public void scrollToBottom() {
+    public void scrollOneHeight() {
         ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+    }
+
+    public static void scrollToBottom() {
+        ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,10000)");
     }
 
     public void scrollToElement(WebElement element) {
@@ -904,6 +908,7 @@ public class BasePage {
 
     public void clickTheElement(WebElement element) {
         ((JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", element);
+        waitForSeconds(2);
     }
 
     public void moveElement(WebElement webElement, int yOffSet)
@@ -944,6 +949,14 @@ public class BasePage {
             list.add(e.getText());
         });
         return list;
+    }
+
+    public void highlightElement(WebElement element){
+        try{
+            ((JavascriptExecutor) getDriver()).executeScript("arguments[0].setAttribute('style',arguments[1])",element,"background:yellow;border:2px solid red");
+        }catch(Exception NoSuchElementException){
+            System.out.println("element" +element+ "is not found");
+        }
     }
 //
 //

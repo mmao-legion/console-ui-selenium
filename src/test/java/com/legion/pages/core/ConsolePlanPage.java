@@ -1049,16 +1049,19 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                 else
                     SimpleUtils.fail("The plan duration not loaded successfully at plan detail page!", false);
                 //Check the status and budget value
-                String status = scenarioPlanContents.get(2).getText().split(":")[1].trim();
-                String budgetValue = scenarioPlanContents.get(1).getText().split("\\$")[1].trim();
+                String status = scenarioPlanContents.get(2).getText().replaceAll(" ","").split(":")[1].trim();
+                String budgetStr=scenarioPlanContents.get(1).getText().split("\\$")[1];
+                String budgetValue =budgetStr.contains(",")? budgetStr.replaceAll(",","").trim():budgetStr.trim();
                 if (status != null && status.equals("Completed") || status.equals("Ready For Review") || status.equals("Reviewed-Rejected") || status.equals("Reviewed-Approved")) {
+                    SimpleUtils.report("The current plan status is:"+status);
                     //get the budget value and assert the budget value is greater than 0
                     if (budgetValue != null && Integer.parseInt(budgetValue) > 0)
-                        SimpleUtils.pass("The budget hours run out the value for complete/ready review/approved scenario plan");
+                        SimpleUtils.pass("The budget dollar values has been generated for complete/ready review/approved scenario plan");
                     else
-                        SimpleUtils.fail("The budget hours is not run out the value for complete/ready review/approved scenario plan", false);
-                } else if (budgetValue == null)
-                    SimpleUtils.pass("The budget hours show as blank for not started/in progress plan ");
+                        SimpleUtils.fail("The budget dollar values has not been generated for complete/ready review/approved scenario plan", false);
+                }
+                else if (budgetValue.equals("--"))
+                    SimpleUtils.pass("The budget hours show as blank for not started or in progress plan ");
                 else
                     SimpleUtils.fail("The plan status show as empty", false);
 
@@ -1067,7 +1070,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                     SimpleUtils.pass("The test scenario plan details loaded successfully!");
                     String planUpdatedInfo = scenarioPlanDetails.get(0).getText().split(":")[1];
                     if (planUpdatedInfo != null && planUpdatedInfo.contains("lizzy100"))
-                        SimpleUtils.pass("The plan plan updated info loaded successfully at plan detail page!");
+                        SimpleUtils.pass("The plan updated info loaded successfully at plan detail page!");
                     else
                         SimpleUtils.fail("The plan plan updated info not loaded successfully at plan detail page!", false);
                     //check the total location count

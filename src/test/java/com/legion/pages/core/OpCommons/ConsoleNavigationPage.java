@@ -20,7 +20,7 @@ public class ConsoleNavigationPage extends BasePage {
     private WebElement searchBox;
     @FindBy(css = "lg-upperfield-search div.lg-search-icon.ng-scope")
     private WebElement searchIcon;
-    @FindBy(css = "lg-upperfield-search div[title='Newark-Mock'].lg-search-options__option.ng-binding")
+    @FindBy(css = "lg-search-options[search-hint='Search'] div.lg-search-options__scroller div.lg-search-options__option-wrapper")
     private WebElement searchResult;
 
     //Console navigation panel

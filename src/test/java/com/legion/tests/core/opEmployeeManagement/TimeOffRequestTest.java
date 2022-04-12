@@ -14,6 +14,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.DBConnection;
 import com.legion.utils.SimpleUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -49,6 +50,7 @@ public class TimeOffRequestTest extends TestBase {
         absentManagePage.configureTemplate(tempName);
         //template details page
         //configure time off reason1
+        absentManagePage.removeTimeOffRules("Annual Leave");
         absentManagePage.configureTimeOffRules("Annual Leave");
         TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
         //set value for request rules
@@ -64,14 +66,14 @@ public class TimeOffRequestTest extends TestBase {
         configurationPage.setTimeOffRequestRuleAs("Does this time off reason track Accruals ?", true);
         configurationPage.setValueForTimeOffRequestRules("Max hours in advance of what you earn", "8");
         configurationPage.setTimeOffRequestRuleAs("Enforce Yearly Limits", false);
-        configurationPage.setValueForTimeOffRequestRules("Probation Period", "190");
+        configurationPage.setValueForTimeOffRequestRules("Probation Period", "1900");
         configurationPage.setProbationUnitAs("Days");
         configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "9999");
-        configurationPage.addServiceLever();
-        configurationPage.setMaxAvailableHours("N/A");
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
 
         //configure time off reason2
+        absentManagePage.removeTimeOffRules("Floating Holiday");
         absentManagePage.configureTimeOffRules("Floating Holiday");
         //set value for request rules
         configurationPage.setTimeOffRequestRuleAs("Employee can request ?", false);
@@ -89,16 +91,18 @@ public class TimeOffRequestTest extends TestBase {
         configurationPage.setValueForTimeOffRequestRules("Probation Period", "3");
         configurationPage.setProbationUnitAsMonths();
         configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "4");
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
 
 
         //configure time off reason3
+        absentManagePage.removeTimeOffRules("PTO");
         absentManagePage.configureTimeOffRules("PTO");
         //set value for request rules
         configurationPage.setTimeOffRequestRuleAs("Employee can request ?", true);
         configurationPage.setTimeOffRequestRuleAs("Employee can request partial day ?", false);
         configurationPage.setTimeOffRequestRuleAs("Manager can submit in timesheet ?", false);
-        configurationPage.setValueForTimeOffRequestRules("Weekly limits(hours)", "40");
+        configurationPage.setValueForTimeOffRequestRules("Weekly limits(hours)", "20");
         configurationPage.setValueForTimeOffRequestRules("Days request must be made in advance", "2");
         configurationPage.setValueForTimeOffRequestRules("Configure all day time off default", "7");
         configurationPage.setValueForTimeOffRequestRules("Days an employee can request at one time", "3");
@@ -109,11 +113,12 @@ public class TimeOffRequestTest extends TestBase {
         configurationPage.setTimeOffRequestRuleAs("Enforce Yearly Limits", true);
         configurationPage.setValueForTimeOffRequestRules("Probation Period", "3");
         configurationPage.setProbationUnitAsMonths();
-        configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "4");
-        configurationPage.setMaxAvailableHours("20");
+        configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "10");
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "20");
         configurationPage.saveTimeOffConfiguration(true);
 
         //configure time off reason4
+        absentManagePage.removeTimeOffRules("Sick");
         absentManagePage.configureTimeOffRules("Sick");
         //set value for request rules
         configurationPage.setTimeOffRequestRuleAs("Employee can request ?", false);
@@ -131,6 +136,7 @@ public class TimeOffRequestTest extends TestBase {
         configurationPage.setValueForTimeOffRequestRules("Probation Period", "3");
         configurationPage.setProbationUnitAsMonths();
         configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "4");
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
 
         //associate
@@ -162,7 +168,7 @@ public class TimeOffRequestTest extends TestBase {
         timeOffPage.editTimeOffBalance("Annual Leave", "5");
         commonComponents.okToActionInModal(true);
         //request rules validation
-        //annualLeave    --can request true   track accrual---true
+        //annual Leave    --can request true   track accrual---true
         //floatingHoliday--can request false  track accrual---true
         //PTO            --can request true   track accrual---false
         //Sick           --can request false  track accrual---false
@@ -190,14 +196,26 @@ public class TimeOffRequestTest extends TestBase {
         Assert.assertFalse(timeOffPage.isPartialDayEnabled(), "The partial day should not be displayed as we set PTO can't request partial day!");
 
         //13 Probation Period
+        //in probation period
         commonComponents.okToActionInModal(false);
         timeOffPage.createTimeOff("Annual Leave", true, 3, 3);
         commonComponents.okToActionInModal(true);
         Assert.assertEquals(timeOffPage.getRequestErrorMessage(), "Time off request cannot be submitted during probation period");
-
-        //4 Weekly limits(hours)  request 2 days 2*6=12; less than balance: 5+8=13, but more than weekly limit 10 hours;
+        //out of probation period
         commonComponents.okToActionInModal(false);
-        timeOffPage.createTimeOff("Annual Leave", true, 16, 17);
+        timeOffPage.createTimeOff("PTO", false, 3, 3);//-7hours
+        commonComponents.okToActionInModal(true);
+
+        //Assert.assertEquals(timeOffPage.getRequestErrorMessage(), "Time off request cannot be submitted during probation period");
+        /*//get the employee workerId
+        String workId = getWorkId();
+        //delete time off request
+        deleteRequestedTimeOffDateByWorkerId(workId);*/
+
+
+        //4 Weekly limits(hours)  request 2 days 2*7=14; 7hours have been requested last time,3*7=21 hours, more than weekly limit 20 hours;
+        /*commonComponents.okToActionInModal(false);*/
+        timeOffPage.createTimeOff("PTO", true, 16, 17);
         commonComponents.okToActionInModal(true);
         Assert.assertEquals(timeOffPage.getRequestErrorMessage(), "Above weekly max");
 
@@ -251,7 +269,7 @@ public class TimeOffRequestTest extends TestBase {
         configurationPage.setValueForTimeOffRequestRules("Max hours in advance of what you earn", "8");
         configurationPage.setTimeOffRequestRuleAs("Enforce Yearly Limits", false);
         configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "4");
-        configurationPage.setMaxAvailableHours("120");
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
 
         //configure time off reason3
@@ -307,6 +325,34 @@ public class TimeOffRequestTest extends TestBase {
         Assert.assertTrue(timeOffPage.getAnnualLeaveBalance().equals("6"), "Incorrect balance!");
         timeOffPage.rejectTimeOffRequest();
         consoleNavigationPage.navigateTo("Logout");
+    }
+
+    public String getWorkId() {
+        String url = getUrl();
+        String workId = url.substring(url.lastIndexOf("/") + 1);
+        System.out.println(workId);
+        return workId;
+    }
+
+
+    public void deleteRequestedTimeOffDateByWorkerId(String workerId) {
+        //delete the Access Role just create successfully.
+        String enterpriseId = "aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95";
+        String sql1 = "delete from legionrc.TimeOffRequest where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        System.out.println("sql1： "+sql1);
+        String sql2 = "delete from legionrc.TimeOffRequestHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        System.out.println("sql2： "+sql2);
+        String sql3 = "delete from legionrc.WorkerAccrualHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        System.out.println("sql3： "+sql3);
+        DBConnection.updateDB(sql1);
+        DBConnection.updateDB(sql2);
+        DBConnection.updateDB(sql3);
+        String queryResult1 = DBConnection.queryDB("legionrc.TimeOffRequest", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        Assert.assertEquals(queryResult1, "No item returned!", "Failed to clear the data just generated in DB!");
+        String queryResult2 = DBConnection.queryDB("legionrc.TimeOffRequestHistory", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        Assert.assertEquals(queryResult2, "No item returned!", "Failed to clear the data just generated in DB!");
+        String queryResult3 = DBConnection.queryDB("legionrc.WorkerAccrualHistory", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        Assert.assertEquals(queryResult3, "No item returned!", "Failed to clear the data just generated in DB!");
     }
 
 }

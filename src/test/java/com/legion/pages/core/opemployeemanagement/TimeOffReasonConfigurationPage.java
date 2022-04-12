@@ -1,12 +1,15 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -154,10 +157,18 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     private List<WebElement> accrualStartDate;
     @FindBy(css = "question-input[question-title='Accrual End Date'] select")
     private List<WebElement> accrualEndDate;
+
     @FindBy(css = "question-input[question-title='Reinstatement Months'] input")
     private WebElement reinstatementMonth;
     @FindBy(css = "question-input[question-title='Distribution Method'] select")
     private WebElement distributionMethods;
+
+    //Allowance in days
+    @FindBy(css = "question-input[question-title='Allowance in days'] input-field input")
+    private WebElement allowanceInPut;
+    @FindBy(css = "question-input[question-title='Allowance in days'] input-field select")
+    private WebElement allowanceInSelect;
+
     //Distribution type
     @FindBy(css = "question-input[question-title='Distribution type'] select")
     private WebElement distributionType;
@@ -174,9 +185,6 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     private List<WebElement> secondServiceLeverInput;
     @FindBy(css = "table.lg-table.service-level tr")
     private List<WebElement> serviceLeverNum; //size-1
-
-
-    //service lever
     @FindBy(css = "table.lg-table.service-level td.add-button>lg-button[label='+ Add']>button")
     private WebElement addButtonForServiceLever;
     @FindBy(css = "table.lg-table.service-level td>div>span.remove")
@@ -376,13 +384,39 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         }
     }
 
-    //Accrual part
+    //Accrual engine part
     public ArrayList<String> getAccrualStartOptions() {
         return getSelectOptions(accrualStartDate.get(0));
     }
 
     public ArrayList<String> getAccrualEndOptions() {
         return getSelectOptions(accrualEndDate.get(0));
+    }
+
+    public void setAccrualPeriod(String startDateType, String endDateType, String sMonth, String sDate, String eMonth, String eDate) {
+        Select startType = new Select(accrualStartDate.get(0));
+        startType.selectByVisibleText(startDateType);//"Hire Date","Specified Date"
+        if (startDateType.contains("Specified")) {
+            Select monSelect = new Select(accrualStartDate.get(1));
+            monSelect.selectByVisibleText(sMonth);
+            Select dateSelect = new Select(accrualStartDate.get(2));
+            dateSelect.selectByVisibleText(sDate);
+        }
+        Select endType = new Select(accrualEndDate.get(0));
+        endType.selectByVisibleText(endDateType);//"","Hire Date","Specified Date"
+        if (endDateType.contains("Specified")) {
+            Select monSelect = new Select(accrualEndDate.get(1));
+            monSelect.selectByVisibleText(eMonth);
+            Select dateSelect = new Select(accrualEndDate.get(2));
+            dateSelect.selectByVisibleText(eDate);
+        }
+    }
+
+    public void setAllowanceInDays(String allowanceType, String days) {
+        Select typeSelect = new Select(allowanceInSelect);
+        typeSelect.selectByVisibleText(allowanceType);
+        allowanceInPut.clear();
+        allowanceInPut.sendKeys(days);
     }
 
     public void setReinstatementMonth(String reinMonth) {
@@ -400,26 +434,37 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         select.selectByVisibleText(distributionMethod);
     }
 
-    public void addServiceLever() {
-        scrollToElement(addButtonForServiceLever);
-        addButtonForServiceLever.click();
-        firstServiceLeverInput.get(1).clear();
-        firstServiceLeverInput.get(1).sendKeys("120");
-        firstServiceLeverInput.get(2).sendKeys("0");
+    public void setAnnualEarn(List<WebElement> serviceLeverInput, String annualEarn) {
+        serviceLeverInput.get(1).clear();
+        serviceLeverInput.get(1).sendKeys(annualEarn);
     }
 
-    public void setMaxAvailableHours(String maxAvailableHours){
-        firstServiceLeverInput.get(3).clear();
-        firstServiceLeverInput.get(3).sendKeys(maxAvailableHours);
+    public void setMaxCarryover(List<WebElement> serviceLeverInput, String maxCarryover) {
+        serviceLeverInput.get(2).clear();
+        serviceLeverInput.get(2).sendKeys(maxCarryover);
     }
 
-    public void addSecondServiceLever() {
+    public void setMaxAvailableHours(List<WebElement> serviceLeverInput, String maxAvailableHours) {
+        serviceLeverInput.get(3).clear();
+        serviceLeverInput.get(3).sendKeys(maxAvailableHours);
+    }
+
+    public void addSpecifiedServiceLever(int serviceLever, String annualEarn, String maxCarryover, String maxAvailableHours) {
         scrollToElement(addButtonForServiceLever);
         addButtonForServiceLever.click();
-        secondServiceLeverInput.get(0).clear();
-        secondServiceLeverInput.get(0).sendKeys("5");
-        secondServiceLeverInput.get(1).clear();
-        secondServiceLeverInput.get(1).sendKeys("240");
+        List<WebElement> serviceLeverInput = null;
+        if (serviceLever == 0) {
+            serviceLeverInput = firstServiceLeverInput;
+        } else if (serviceLever == 2) {
+            serviceLeverInput = secondServiceLeverInput;
+            serviceLeverInput.get(0).clear();
+            serviceLeverInput.get(0).sendKeys("2");
+        } else {
+            System.out.println("Need to add new serviceLeverInput locator!");
+        }
+        setAnnualEarn(serviceLeverInput, annualEarn);
+        setMaxCarryover(serviceLeverInput, maxCarryover);
+        setMaxAvailableHours(serviceLeverInput, maxAvailableHours);
     }
 
     public int getServiceLeverNum() {

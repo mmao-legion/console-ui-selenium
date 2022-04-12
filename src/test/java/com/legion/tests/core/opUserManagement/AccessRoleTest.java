@@ -1,4 +1,4 @@
-package com.legion.tests.core.opusermanagement;
+package com.legion.tests.core.opUserManagement;
 
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
@@ -35,7 +35,7 @@ public class AccessRoleTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Custom access role")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAccessRoleAsInternalAdminOfAccessRole(String browser, String username, String password, String location) {
+    public void verifyAccessRoleAsInternalAdminOfAccessRoleTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToUserManagement();
         OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
@@ -84,7 +84,7 @@ public class AccessRoleTest extends TestBase {
         Assert.assertTrue(accessRolePage.IsNextButtonEnabled(), "The next button is still disabled after all required fields have been filled!");
         //7. verify all the options
         accessRolePage.getOptionsOfRolePermission();
-        Assert.assertTrue(accessRolePage.getOptionsOfRolePermission().equals(rolePermissionOptions()), "Failed to assert all the role permission listed!");
+        Assert.assertTrue(accessRolePage.getOptionsOfRolePermission().containsAll(rolePermissionOptions()), "Failed to assert all the role permission listed!");
 
         //8. also proven that description is optional
         //length=101
@@ -164,10 +164,6 @@ public class AccessRoleTest extends TestBase {
         rolePermissionOpt.add("Communications");
         rolePermissionOpt.add("Operation Store Config");
         rolePermissionOpt.add("Budget Planner");
-        rolePermissionOpt.add("CopyAdmin");
-        rolePermissionOpt.add("CopyFromDM");
-        rolePermissionOpt.add("NewDM12");
-        rolePermissionOpt.add("test TA");
         return rolePermissionOpt;
     }
 
