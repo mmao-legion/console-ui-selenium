@@ -1951,8 +1951,8 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(10000);
             getDriver().navigate().refresh();
-            Thread.sleep(3000);
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             String cardName = "WANT MORE HOURS?";
