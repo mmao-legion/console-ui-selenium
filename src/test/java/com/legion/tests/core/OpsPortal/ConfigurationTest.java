@@ -203,7 +203,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -229,7 +229,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -256,7 +256,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String formula ="IsDay(p_Truck_Date,-1)";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -316,7 +316,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String offsetTime ="10";
             String startEventPoint = "before";
             List<String> dayPartsInGlobalConfig = new ArrayList<String>();
@@ -368,7 +368,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String duringTime ="10";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -398,7 +398,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String endOffsetTime ="10";
             String endEventPoint = "before";
 
@@ -428,7 +428,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String formulaOfTimeOfDay = "123";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -457,7 +457,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             List<String> mealBreakInfo = new ArrayList<String>(){{
                 add("30");
                 add("60");
@@ -497,7 +497,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String shiftsNumber = "6";
             String shiftsNumberFormula = "5";
 
@@ -527,7 +527,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -553,7 +553,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
                 add("Friday");
@@ -588,7 +588,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole1 = "Auto Using2";
+            String workRole1 = "AutoUsing2";
             String workRole2 = "Mgr on Duty";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
@@ -617,7 +617,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String shiftsNumber = "7";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
@@ -668,7 +668,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "Fiona Auto Using";
-            String workRole = "Auto Using2";
+            String workRole = "AutoUsing2";
             String shiftsNumber = "7";
             List<String> days = new ArrayList<String>(){{
                 add("Sunday");
@@ -1083,6 +1083,36 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnConfigurationCrad(templateType);
 
             configurationPage.verifyMultipleTemplateListUI(templateName);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Multiple version regression")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMultipleVersionRegressionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType="Operating Hours";
+            String templateName = "FionaMultipleTemp";
+            String dynamicGpName = "ForMultipleAutoRegression";
+            String button = "publish at different time";
+            int date = 14;
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            //create Operating Hour template and published it
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.publishNewTemplate(templateName,dynamicGpName,"Custom","AutoCreatedDynamic---Format Script");
+            configurationPage.archivePublishedOrDeleteDraftTemplate(templateName,"Archive");
+            //create Operating Hour template and save as draft
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.archivePublishedOrDeleteDraftTemplate(templateName,"Delete");
+            //create Operating Hour template and publish at different time
+            configurationPage.publishAtDifferentTimeTemplate(templateName,dynamicGpName,"Custom","AutoCreatedDynamic---Format Script",button,date);
+            configurationPage.archivePublishedOrDeleteDraftTemplate(templateName,"Archive");
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
