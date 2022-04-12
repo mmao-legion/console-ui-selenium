@@ -2065,7 +2065,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public void navigateToTimeOffPage() throws Exception {
 		if (isElementLoaded(timeOffTab, 5)) {
 			click(timeOffTab);
-			if (isElementLoaded(newTimeOffBtn, 5)) {
+			if (isElementLoaded(newTimeOffBtn, 10)) {
 				SimpleUtils.pass("Navigate to Time Off page Successfully!");
 			}else {
 				SimpleUtils.fail("Time Off page not loaded Successfully!", true);
