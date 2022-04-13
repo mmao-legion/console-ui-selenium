@@ -411,7 +411,7 @@ public class OvernightTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage("Error! We are sorry. You are not eligible to claim this shift, as the Team Member Corporate-Theatre shift can only be claimed by team member with the badge IMAX.");
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage("Error!We are sorry. You are not eligible to claim this shift, as the Team Member Corporate-Theatre shift can only be claimed by team member with the badge IMAX.");
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

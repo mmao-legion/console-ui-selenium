@@ -1099,9 +1099,10 @@ public class SeventhConsecutiveDayTest extends TestBase {
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated){
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectJobTitleFilterByText(jobTitle);
             String workRole = shiftOperatePage.getRandomWorkRole();

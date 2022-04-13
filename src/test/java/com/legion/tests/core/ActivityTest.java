@@ -2000,7 +2000,7 @@ public class ActivityTest extends TestBase {
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftOffer.getValue(), indexOfActivityType.ShiftOffer.name());
             activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName1, ActivityTest.approveRejectAction.Approve.getValue(), 1);
             activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(teamMemberName2);
-            String expectedTopMessage = "Error! Alert is already expired";
+            String expectedTopMessage = "Error!Alert is already expired";
             mySchedulePage.verifyThePopupMessageOnTop(expectedTopMessage);
 
             //To close activity window

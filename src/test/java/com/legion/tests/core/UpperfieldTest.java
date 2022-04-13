@@ -4064,7 +4064,7 @@ public class UpperfieldTest extends TestBase {
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((budgetHourOnSummaryCard - projectedHours)>=0){
+            if ((budgetHourOnSummaryCard - projectedHours)>0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
                         (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             } else {
@@ -4198,7 +4198,7 @@ public class UpperfieldTest extends TestBase {
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((budgetHourOnSummaryCard - projectedHours)>=0){
+            if ((budgetHourOnSummaryCard - projectedHours)>0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
                         (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             } else {
