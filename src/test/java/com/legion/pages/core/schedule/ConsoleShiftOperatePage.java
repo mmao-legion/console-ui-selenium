@@ -2363,7 +2363,17 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             }
         }
     }
+    @FindBy(css = "button.MuiButtonBase-root")
+    private List<WebElement> searchAndRecommendedTMTabs;
 
+    @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")
+    private WebElement textSearchOnNewCreateShiftPage;
+
+    @FindBy(css = "div.MuiBox-root div.MuiBox-root div.MuiBox-root div div div div div div.MuiGrid-root.MuiGrid-container")
+    private List<WebElement> searchResultsOnNewCreateShiftPage;
+
+    @FindBy(css = ".MuiDialogContent-root button")
+    private List<WebElement> buttonsOnWarningMode;
     @Override
     public void clickOnRadioButtonOfSearchedTeamMemberByName(String name) throws Exception {
         if (areListElementVisible(searchResults, 15)) {
@@ -2379,7 +2389,28 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     SimpleUtils.fail("Worker name or option circle not loaded Successfully!", false);
                 }
             }
-        }else {
+        }else if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
+            for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                String tmName = tmInfo.get(0).getText();
+                List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                WebElement assignButton = assignAndOfferButtons.get(0);
+                WebElement offerButton = assignAndOfferButtons.get(1);
+                if (tmName != null && assignButton != null && offerButton != null) {
+                    if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                        if (MyThreadLocal.getAssignTMStatus()) {
+                            clickTheElement(assignButton);
+                        } else
+                            clickTheElement(offerButton);
+                        SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                        waitForSeconds(2);
+                        break;
+                    }
+                }else {
+                    SimpleUtils.fail("Worker name or buttons not loaded Successfully!", false);
+                }
+            }
+        } else {
             SimpleUtils.fail("Failed to find the team member!", false);
         }
 
@@ -2395,7 +2426,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().equalsIgnoreCase("ASSIGN ANYWAY")) {
             click(btnAssignAnyway);
             SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
-        } else{
+        } else if (areListElementVisible(buttonsOnWarningMode, 10)) {
+            click(buttonsOnWarningMode.get(1));
+        }else{
             SimpleUtils.fail("Assign Team Member: 'ASSIGN ANYWAY' button fail to load!", false);
         }
     }
