@@ -44,11 +44,11 @@ public interface NewShiftPage {
     public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
     public void selectWeekDaysByDayName(String dayName) throws Exception;
     public List<String> getAllOperatingHrsOnCreateShiftPage() throws Exception;
-    public void clickOnCloseButtonOnCustomizeShiftPage() throws Exception;
     public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception;
     public void closeCustomizeNewShiftWindow() throws Exception;
     public void clickOnBackButton () throws Exception;
     public boolean checkIfWarningModalDisplay () throws Exception;
     public String getWarningMessageFromWarningModal () throws Exception;
     public void clickOnOkButtonOnWarningModal () throws Exception;
+    public boolean checkIfNewCreateShiftPageDisplay() throws Exception;
 }

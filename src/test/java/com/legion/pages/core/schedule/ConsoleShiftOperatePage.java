@@ -1171,6 +1171,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if(isAssignTMEnable())
         {
             clickTheElement(assignTM);
+            MyThreadLocal.setAssignTMStatus(true);
             SimpleUtils.pass("Clicked on Assign TM ");
         }
         else
