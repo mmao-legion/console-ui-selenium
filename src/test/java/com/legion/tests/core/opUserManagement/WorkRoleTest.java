@@ -9,6 +9,8 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
+import com.legion.utils.HttpUtil;
 import com.legion.utils.SimpleUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -16,6 +18,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 public class WorkRoleTest extends TestBase {
     @Override
@@ -106,6 +109,50 @@ public class WorkRoleTest extends TestBase {
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    public int getHttpStatusCode(String[] httpResponse) {
+        return Integer.parseInt(httpResponse[0]);
+    }
+
+    private String logIn() {
+        //header
+        HashMap<String, String> loginHeader = new HashMap<String, String>();
+        //body
+        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+58@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
+        //post request
+        String[] postResponse = HttpUtil.httpPost(Constants.loginUrlRC, loginHeader, loginString);
+        Assert.assertEquals(getHttpStatusCode(postResponse), 200, "Failed to login!");
+        String sessionId = postResponse[1];
+        return sessionId;
+    }
+
+    private String[] copyWorkRole(String sessionId) {
+        //set headers
+        HashMap<String, String> header = new HashMap<String, String>();
+        header.put("sessionId", sessionId);
+
+        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+58@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
+
+        return HttpUtil.httpPost0(Constants.copyWorkRole,header);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Copy work role")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCopyWorkRoleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String sessionId = logIn();
+            String[] response = copyWorkRole(sessionId);
+            Assert.assertEquals(getHttpStatusCode(response), 200, "Failed to copy work role");
+            if(!response[2].contains("workerRoles are copied from controls to OP")){
+                SimpleUtils.fail("Failed to copy work role",false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Failed to copy work role",false);
         }
     }
 
