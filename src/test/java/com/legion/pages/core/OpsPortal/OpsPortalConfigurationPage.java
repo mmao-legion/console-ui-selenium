@@ -4173,7 +4173,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 							SimpleUtils.fail("Template can't show well in template list page",false);
 						}
 						//get all effectiveDate
-						if(effectiveDate.getText().trim()!=null || effectiveDate.getText().trim()!=""){
+						if(effectiveDate.getText().trim()!=null && effectiveDate.getText().trim()!="" && !effectiveDate.getText().trim().isEmpty()){
 							effectiveDates.add(effectiveDate.getText().trim());
 						}
 					}
