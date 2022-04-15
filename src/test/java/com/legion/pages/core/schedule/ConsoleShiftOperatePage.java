@@ -2858,13 +2858,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             shiftStartInput.clear();
             waitForSeconds(1);
             moveToElementAndClick(shiftEndInput);
-            waitForSeconds(1);
+            waitForSeconds(2);
             moveToElementAndClick(shiftStartInput);
             shiftStartInput.sendKeys(startTime);
             shiftEndInput.clear();
             waitForSeconds(1);
             moveToElementAndClick(shiftStartInput);
-            waitForSeconds(1);
+            waitForSeconds(2);
             moveToElementAndClick(shiftEndInput);
             shiftEndInput.sendKeys(endTime);
             if (checkTheNextDay) {
