@@ -271,6 +271,53 @@ public class HttpUtil {
         return res;
     }
 
+    /**
+     * POST request
+     *
+     * @param url     request url
+     * @return
+     */
+    public static String[] httpPost0(String url, Map<String, String> headers) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        String[] res = new String[3];
+        try {
+            HttpPost httpPost = new HttpPost(url);
+            Set<String> keys = headers.keySet();
+            if (keys.size() > 0) {
+                for (String key : keys) {
+                    httpPost.addHeader(key, headers.get(key));
+                }
+            }
+            httpPost.addHeader("Content-Type", "application/json;charset=UTF-8");
+            response = httpClient.execute(httpPost);
+            int statusCode = response.getStatusLine().getStatusCode();
+            System.out.println("statusCode:   " + statusCode);
+
+            String sessionValue = null;
+            if (response.containsHeader("sessionid")) {
+                Header[] sessionId = response.getHeaders("sessionid");
+                String sessionStr = Arrays.toString(sessionId);
+                sessionValue = sessionStr.substring(sessionStr.lastIndexOf(" ") + 1, sessionStr.length() - 1);
+                System.out.println("sessionId:   " + sessionValue);
+            }
+
+            HttpEntity responseEntity = response.getEntity();
+            String entityString = EntityUtils.toString(responseEntity);
+            System.out.println("entityString:   " + entityString);
+            res = new String[]{Integer.toString(statusCode), sessionValue, entityString};
+
+            response.close();
+            httpClient.close();
+        } catch (UnsupportedCharsetException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
 }
 
 

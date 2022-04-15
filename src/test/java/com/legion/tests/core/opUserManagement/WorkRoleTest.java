@@ -9,6 +9,8 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
+import com.legion.utils.HttpUtil;
 import com.legion.utils.SimpleUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -16,6 +18,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 public class WorkRoleTest extends TestBase {
     @Override
@@ -106,6 +109,35 @@ public class WorkRoleTest extends TestBase {
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private String[] copyWorkRole() {
+
+        //body
+        String payLoad = "{\"enterpriseName\":\"opauto\",\"userName\":\"stoneman@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
+        String sessionId = TestBase.getSessionId(payLoad);
+        //set headers
+        HashMap<String, String> header = new HashMap<String, String>();
+        header.put("sessionId", sessionId);
+
+        return HttpUtil.httpPost0(Constants.copyWorkRole,header);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Copy work role")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCopyWorkRoleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String[] response = copyWorkRole();
+            Assert.assertEquals(response[0], "200", "Failed to copy work role");
+            if(!response[2].contains("workerRoles are copied from controls to OP")){
+                SimpleUtils.fail("Failed to copy work role",false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail("Failed to copy work role",false);
         }
     }
 

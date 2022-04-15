@@ -1044,10 +1044,9 @@ public class ConfigurationTest extends TestBase {
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
             teamPage.searchAndSelectTeamMemberByName("Della Murphy");
-            teamPage.navigateToTimeOffPage();
-
 
             TimeOffPage timeOffPage = new TimeOffPage();
+            timeOffPage.switchToTimeOffTab();
             OpsCommonComponents commonComponents = new OpsCommonComponents();
             timeOffPage.createTimeOff("Sick", false, 10, 10);
             String Month = timeOffPage.getMonth();
@@ -1056,7 +1055,7 @@ public class ConfigurationTest extends TestBase {
 
             teamPage.goToTeam();
             teamPage.searchAndSelectTeamMemberByName("Allene Mante");
-            teamPage.navigateToTimeOffPage();
+            timeOffPage.switchToTimeOffTab();
 
             timeOffPage.createTimeOff("Sick", false, 10, 10);
             commonComponents.okToActionInModal(true);

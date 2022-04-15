@@ -36,4 +36,7 @@ public class Constants {
 
     //uploadTranslation
     public static final String uploadTransation ="https://rc-enterprise.dev.legion.work/legion/translation/uploadTranslations";
+
+    //copyWorkRolesFromControlsToOP
+    public static final String copyWorkRole ="https://rc-enterprise.dev.legion.work/legion/configTemplate/copyWorkRolesFromControlsToOP";
 }
