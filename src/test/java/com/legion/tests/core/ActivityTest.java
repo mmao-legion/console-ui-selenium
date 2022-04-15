@@ -1934,10 +1934,17 @@ public class ActivityTest extends TestBase {
             newShiftPage.searchTeamMemberByName(teamMemberName1);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+            scheduleShiftTablePage.clickViewStatusBtn();
+            shiftOperatePage.verifyTMInTheOfferList(teamMemberName1, "offered");
+            shiftOperatePage.closeViewStatusContainer();
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
             shiftOperatePage.clickOnOfferTMOption();
             newShiftPage.searchTeamMemberByName(teamMemberName2);
             newShiftPage.clickOnOfferOrAssignBtn();
-
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+            scheduleShiftTablePage.clickViewStatusBtn();
+            shiftOperatePage.verifyTMInTheOfferList(teamMemberName2, "offered");
+            shiftOperatePage.closeViewStatusContainer();
             //wait for the offer to send to TMs
             Thread.sleep(10000);
             loginPage.logOut();
@@ -1951,9 +1958,14 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            Thread.sleep(10000);
-            getDriver().navigate().refresh();
             scheduleCommonPage.navigateToNextWeek();
+            int i=0;
+            while (i<5 && !smartCardPage.isViewShiftsBtnPresent()) {
+                Thread.sleep(10000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                scheduleCommonPage.navigateToNextWeek();
+                i++;
+            }
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             String cardName = "WANT MORE HOURS?";
             SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
@@ -1976,8 +1988,13 @@ public class ActivityTest extends TestBase {
             }
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.navigateToNextWeek();
-            getDriver().navigate().refresh();
-            Thread.sleep(10000);
+            i=0;
+            while (i<5 && !smartCardPage.isViewShiftsBtnPresent()) {
+                Thread.sleep(10000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                scheduleCommonPage.navigateToNextWeek();
+                i++;
+            }
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
@@ -2001,9 +2018,8 @@ public class ActivityTest extends TestBase {
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftOffer.getValue(), indexOfActivityType.ShiftOffer.name());
             activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName1, ActivityTest.approveRejectAction.Approve.getValue(), 1);
-            activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(teamMemberName2);
             String expectedTopMessage = "Error!Alert is already expired";
-            mySchedulePage.verifyThePopupMessageOnTop(expectedTopMessage);
+            activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(teamMemberName2, expectedTopMessage);
 
             //To close activity window
             getDriver().navigate().refresh();

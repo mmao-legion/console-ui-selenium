@@ -329,21 +329,32 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		}
 		return false;
 	}
-
+	@FindBy(css = ".lg-toast")
+	private WebElement msgOnTop;
 	@Override
-	public void verifyApproveShiftOfferRequestAndGetErrorOnActivity(String requestUserName) throws Exception {
+	public void verifyApproveShiftOfferRequestAndGetErrorOnActivity(String requestUserName, String expectedMessage) throws Exception {
 		if (activityCards.size()>0) {
 			for (int i = 0; i<activityCards.size(); i++){
 				WebElement shiftSwapCard = activityCards.get(i);
-				if (i>3){
-					SimpleUtils.fail("Didn't find the right notification!", false);
-				}
+//				if (i>3){
+//					SimpleUtils.fail("Didn't find the right notification!", false);
+//				}
 				List<WebElement> actionButtons = shiftSwapCard.findElements(By.className("notification-buttons-button"));
 				WebElement message = shiftSwapCard.findElement(By.className("notification-content-message"));
 				if (actionButtons != null && actionButtons.size() == 2 && message.getText().contains(requestUserName)) {
 					for (WebElement button : actionButtons) {
 						if ("approve".equalsIgnoreCase(button.getText())) {
 							click(button);
+							if (isElementLoaded(msgOnTop, 20)) {
+								String errorMessage = msgOnTop.getText();
+								if (errorMessage.contains(expectedMessage)) {
+									SimpleUtils.pass("Verified Message shows correctly!");
+								}else {
+									SimpleUtils.fail("Message on top is incorrect, expected is: " + expectedMessage + ", but actual is: " + message, false);
+								}
+							}else {
+								SimpleUtils.fail("Message on top not loaded Successfully!", false);
+							}
 							break;
 						}
 					}
