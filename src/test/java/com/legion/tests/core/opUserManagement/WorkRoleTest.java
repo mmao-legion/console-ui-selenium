@@ -112,28 +112,14 @@ public class WorkRoleTest extends TestBase {
         }
     }
 
-    public int getHttpStatusCode(String[] httpResponse) {
-        return Integer.parseInt(httpResponse[0]);
-    }
+    private String[] copyWorkRole() {
 
-    private String logIn() {
-        //header
-        HashMap<String, String> loginHeader = new HashMap<String, String>();
         //body
-        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+58@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
-        //post request
-        String[] postResponse = HttpUtil.httpPost(Constants.loginUrlRC, loginHeader, loginString);
-        Assert.assertEquals(getHttpStatusCode(postResponse), 200, "Failed to login!");
-        String sessionId = postResponse[1];
-        return sessionId;
-    }
-
-    private String[] copyWorkRole(String sessionId) {
+        String payLoad = "{\"enterpriseName\":\"opauto\",\"userName\":\"stoneman@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
+        String sessionId = TestBase.getSessionId(payLoad);
         //set headers
         HashMap<String, String> header = new HashMap<String, String>();
         header.put("sessionId", sessionId);
-
-        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+58@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
 
         return HttpUtil.httpPost0(Constants.copyWorkRole,header);
     }
@@ -145,9 +131,8 @@ public class WorkRoleTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCopyWorkRoleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            String sessionId = logIn();
-            String[] response = copyWorkRole(sessionId);
-            Assert.assertEquals(getHttpStatusCode(response), 200, "Failed to copy work role");
+            String[] response = copyWorkRole();
+            Assert.assertEquals(response[0], "200", "Failed to copy work role");
             if(!response[2].contains("workerRoles are copied from controls to OP")){
                 SimpleUtils.fail("Failed to copy work role",false);
             }

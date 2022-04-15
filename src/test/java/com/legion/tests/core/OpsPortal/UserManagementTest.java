@@ -422,22 +422,6 @@ public class UserManagementTest extends TestBase {
         }
     }
 
-    public int getHttpStatusCode(String[] httpResponse) {
-        return Integer.parseInt(httpResponse[0]);
-    }
-
-    private String logIn() {
-        //header
-        HashMap<String, String> loginHeader = new HashMap<String, String>();
-        //body
-        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+58@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
-        //post request
-        String[] postResponse = HttpUtil.httpPost(Constants.loginUrlRC, loginHeader, loginString);
-        Assert.assertEquals(getHttpStatusCode(postResponse), 200, "Failed to login!");
-        String sessionId = postResponse[1];
-        return sessionId;
-    }
-
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
@@ -447,7 +431,8 @@ public class UserManagementTest extends TestBase {
         try{
             String storeManager = "Queen Stehr";
             //get session id via login
-            String sessionId = logIn();
+            String payLoad = "{\"enterpriseName\":\"opauto\",\"userName\":\"stoneman@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
+            String sessionId = TestBase.getSessionId(payLoad);
             //go to User Management tab
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.clickOnUserManagementTab();
