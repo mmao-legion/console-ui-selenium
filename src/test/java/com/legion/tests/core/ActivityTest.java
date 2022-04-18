@@ -2040,4 +2040,67 @@ public class ActivityTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the time off balance hrs in activity")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+    public void verifyTheTimeOffBalanceHrsInActivityAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try {
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            controlsPage.gotoControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+            int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+
+            // Login as Team Member to create time off
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String requestUserName = profileNewUIPage.getNickNameFromProfile();
+            String myTimeOffLabel = "My Time Off";
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
+            profileNewUIPage.cancelAllTimeOff();
+            profileNewUIPage.clickOnCreateTimeOffBtn();
+            SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
+            // select time off reason
+            if (profileNewUIPage.isReasonLoad(timeOffReasonType.FamilyEmergency.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.FamilyEmergency.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.PersonalEmergency.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.PersonalEmergency.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.JuryDuty.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.JuryDuty.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Sick.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Sick.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
+            }
+            profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 6);
+            profileNewUIPage.clickOnSaveTimeOffRequestBtn();
+            HashMap<String, String> balanceHrsOnTimeOffPage = profileNewUIPage.getTimeOffBalanceHrs();
+            loginPage.logOut();
+
+            // Login as Store Manager again to check balance hrs
+            String RequstTimeOff = "requested";
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+            activityPage.verifyActivityBellIconLoaded();
+            activityPage.verifyClickOnActivityIcon();
+            activityPage.clickActivityFilterByIndex(indexOfActivityType.TimeOff.getValue(),indexOfActivityType.TimeOff.name());
+            activityPage.clickDetailLinksInActivitiesByIndex(0);
+            HashMap<String, String> balanceHrsInActivity = activityPage.getBalanceHrsFromActivity();
+            SimpleUtils.assertOnFail("The balance should display consistently on time off page and in activity! ",
+                    balanceHrsInActivity.equals(balanceHrsOnTimeOffPage), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

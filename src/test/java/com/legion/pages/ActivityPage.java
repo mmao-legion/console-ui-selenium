@@ -37,4 +37,6 @@ public interface ActivityPage{
     public void verifyNotificationForUpdateAvailability(String requestName,String isApprovalRequired,String requestOrCancelLabel,String weekInfo,String repeatChange) throws Exception;
     public List<String> getShiftSwapDataFromActivity(String requestUserName, String respondUserName) throws Exception;
     public void approveOrRejectMultipleShiftOfferRequestOnActivity(String requestUserName, String action, int count) throws Exception;
+    public HashMap<String, String> getBalanceHrsFromActivity() throws Exception;
+    public void clickDetailLinksInActivitiesByIndex(int index) throws Exception;
 }
