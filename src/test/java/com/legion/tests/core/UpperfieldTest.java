@@ -4069,7 +4069,7 @@ public class UpperfieldTest extends TestBase {
                         (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             } else {
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) + (budgetHourOnSummaryCard - projectedHours)) == 0, false);
 
             }
             //Verify past week Clocked Hours displays.
@@ -4203,7 +4203,7 @@ public class UpperfieldTest extends TestBase {
                         (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             } else {
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) + (budgetHourOnSummaryCard - projectedHours)) == 0, false);
 
             }
             //Verify past week Clocked Hours displays.
