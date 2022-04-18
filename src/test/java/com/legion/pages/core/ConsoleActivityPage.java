@@ -5,6 +5,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
 import com.legion.tests.core.ActivityTest;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.hu.Ha;
 import org.junit.rules.ExpectedException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -820,5 +821,38 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 				}
 			}
 		}
+	}
+
+
+
+	@FindBy (css = "[ng-repeat=\"a in notification.details.data.timeoff.accrued.accrued\"]")
+	private List<WebElement> balanceHrsInActivity;
+	@Override
+	public HashMap<String, String> getBalanceHrsFromActivity() throws Exception {
+		HashMap<String, String> balanceHrs = new HashMap<>();
+		if (areListElementVisible(balanceHrsInActivity, 10)
+				&& balanceHrsInActivity.size()>0) {
+			for (int i = 0; i < balanceHrsInActivity.size(); i++) {
+				String hrs = balanceHrsInActivity.get(i).getText().split(":")[1].replace("Hrs", "").trim();
+				String timeOffType = balanceHrsInActivity.get(i).getText().split(":")[0];
+				balanceHrs.put(timeOffType, hrs);
+			}
+		}
+		return balanceHrs;
+	}
+
+
+
+	@FindBy (css = "div[ng-if=\"canShowDetails()\"]")
+	private List<WebElement> detailLinksInActivities;
+	@Override
+	public void clickDetailLinksInActivitiesByIndex(int index) throws Exception {
+		HashMap<String, String> balanceHrs = new HashMap<>();
+		if (areListElementVisible(detailLinksInActivities, 5)
+				&& detailLinksInActivities.size()>index) {
+			clickTheElement(detailLinksInActivities.get(index));
+			SimpleUtils.pass("Click the detail link successfully! ");
+		} else
+			SimpleUtils.fail("The detail links fail to load in activities! ", false);
 	}
 }
