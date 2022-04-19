@@ -298,4 +298,5 @@ public interface ProfileNewUIPage {
 	public List<String> getAvailableShiftsOnAvailabilityTable ();
 	public List<String> getTimeOffsLengthOnAvailabilityTable ();
 	public HashMap<String, String> getTimeOffBalanceHrs ();
+	public boolean checkIfReviewPreferencesInnerBoxDisplay () throws Exception;
 }
