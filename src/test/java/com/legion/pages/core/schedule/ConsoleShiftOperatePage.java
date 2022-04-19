@@ -2891,11 +2891,15 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.report("The new edit shift time page display correctly! ");
             shiftStartInput.clear();
             waitForSeconds(1);
+            moveToElementAndClick(shiftEndInput);
+            waitForSeconds(2);
             moveToElementAndClick(shiftStartInput);
             shiftStartInput.sendKeys(startTime);
             shiftEndInput.clear();
             waitForSeconds(1);
             moveToElementAndClick(shiftStartInput);
+            waitForSeconds(2);
+            moveToElementAndClick(shiftEndInput);
             shiftEndInput.sendKeys(endTime);
             if (checkTheNextDay) {
                 checkOrUnCheckNextDayOnEditShiftTimePage(true);

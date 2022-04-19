@@ -1821,6 +1821,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         if (scheduleCommonPage.isScheduleDayViewActive()) {
             if(areListElementVisible(shiftsInDayView, 15) && index < shiftsInDayView.size()){
+                scrollToElement(shiftsInDayView.get(index));
+                waitForSeconds(1);
                 clickTheElement(shiftsInDayView.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-detail")));
                 SimpleUtils.pass("clicked shift icon!");
             } else {
@@ -1828,6 +1830,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             }
         } else {
             if(areListElementVisible(weekShifts, 15) && index < weekShifts.size()){
+                scrollToElement(weekShifts.get(index));
+                waitForSeconds(1);
                 clickTheElement(weekShifts.get(index).findElement(By.cssSelector(".worker-image-optimized img")));
                 SimpleUtils.pass("clicked shift icon!");
             } else {

@@ -1125,22 +1125,22 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         if (org.length() > 1)
             org = org.substring(0, org.length()-1);
 
-        if(areListElementVisible(schedulesTableHeaders, 10) && schedulesTableHeaders.size() == 7){
+        if(areListElementVisible(schedulesTableHeaders, 10) && schedulesTableHeaders.size() == 8){
             String[] schedulesTableHeaderNames;
             if(isApplyBudget){
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance"};
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", "ReadyToRelease"};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance"};
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", "ReadyToRelease"};
             } else {
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance"};
+                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", "ReadyToRelease"};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance"};
+                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", "ReadyToRelease"};
             }
             for(int i= 0;i<schedulesTableHeaders.size(); i++){
                 if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){
@@ -1354,17 +1354,17 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             if (locationSummary.findElements(By.cssSelector("text")).size()==8
                     && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",",""))
                     && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","").replace(",",""))){
-                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",","")));
                 result.put(locationSummary.findElements(By.cssSelector("text")).get(7).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","").replace(",","")));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",","")));
 
-                if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▼")){
-                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#50b83c")){
+                if (locationSummary.findElements(By.cssSelector("text")).get(7).getText().contains("▼")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(7).getAttribute("fill").contains("#50b83c")){
                         SimpleUtils.pass("The color of the value is correct! -> green");
                     } else {
                         SimpleUtils.fail("The color of the value is incorrect! ->not green", false);
                     }
-                } else if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▲")){
-                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#ff0000")){
+                } else if (locationSummary.findElements(By.cssSelector("text")).get(7).getText().contains("▲")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(7).getAttribute("fill").contains("#ff0000")){
                         SimpleUtils.pass("The color of the value is correct! -> red");
                     } else {
                         SimpleUtils.fail("The color of the value is incorrect! ->not red", false);

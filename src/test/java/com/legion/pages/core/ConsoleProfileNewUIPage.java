@@ -3197,6 +3197,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return isLoaded;
 	}
 
+	@FindBy(css = "[label=\"Activate\"] button")
+	private WebElement activateBtn;
 	public void verifyContentsInActionsSection() throws Exception {
 		if (isElementLoaded(inviteToLegionButton, 5)){
 			String inviteButtonMessage = inviteToLegionButton.getText();
@@ -3217,7 +3219,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				}
 			}
 
-		} else{
+		} else if (checkIfReviewPreferencesInnerBoxDisplay()) {
+			if (isElementLoaded(activateBtn, 5)) {
+				SimpleUtils.pass("User Profile page: The activate button in Actions section display correctly! ");
+			} else{
+				SimpleUtils.fail("User Profile page: The activate button in Action section failed to display! ", false);
+			}
+		}else{
 			scrollToBottom();
 			if (isElementLoaded(sendUsernameInActionsSection, 5) && isElementLoaded(resetPasswordInActionsSection, 5)){
 				SimpleUtils.pass("User Profile page: The Send Username and Reset Password buttons in Actions section display correctly! ");
@@ -4208,4 +4216,37 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		return timeOffs;
 	}
 
+
+	@FindBy(css = "[ng-repeat=\"timeOffType in accruedHoursBalance\"]")
+	private List<WebElement> balanceHrs;
+	public HashMap<String, String> getTimeOffBalanceHrs (){
+		HashMap<String, String> timeOffBalanceHrs = new HashMap<>();
+		if (areListElementVisible(balanceHrs, 10)
+				&& balanceHrs.size()>0) {
+			for (WebElement balanceHr: balanceHrs) {
+				String hour = balanceHr.findElement(By.cssSelector("span.count-block-counter-hours")).getText();
+				String timeOffType = balanceHr.findElement(By.cssSelector("span.count-block-label")).getText();
+				if (timeOffType.equalsIgnoreCase("Floating Holiday")) {
+					timeOffType = "FH";
+				}
+				timeOffBalanceHrs.put(timeOffType, hour);
+				SimpleUtils.report("Get the balance hrs of "+timeOffType+" successfully! ");
+			}
+		} else
+			SimpleUtils.fail("Time off balance hrs fail to load! ", false);
+		return timeOffBalanceHrs;
+	}
+
+
+	@FindBy(css = "div.inner")
+	private WebElement reviewPreferencesInnerBox;
+	public boolean checkIfReviewPreferencesInnerBoxDisplay () throws Exception {
+		boolean isReviewPreferencesInnerBoxDisplay = false;
+		if (isElementLoaded(reviewPreferencesInnerBox, 5)) {
+			isReviewPreferencesInnerBoxDisplay = true;
+			SimpleUtils.pass("User profile page: The review preferences inner box display correctly! ");
+		} else
+			SimpleUtils.fail("User profile page: The review preferences inner box fail to load! ", false);
+		return isReviewPreferencesInnerBoxDisplay;
+	}
 }

@@ -1088,9 +1088,8 @@ public class OfferTMTest extends TestBase {
             activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
             activityPage.verifyActivityOfShiftOffer(firstNameOfTM2, location);
             activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM1, ActivityTest.approveRejectAction.Approve.getValue());
-            activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(firstNameOfTM1);
             String expectedTopMessage = "Error! Failed to Approve";
-            mySchedulePage.verifyThePopupMessageOnTop(expectedTopMessage);
+            activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(firstNameOfTM1, expectedTopMessage);
             activityPage.closeActivityWindow();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
