@@ -155,7 +155,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (assignmentOptionsInDropDownList.size() > 0) {
                 for (WebElement assignmentOptions : assignmentOptionsInDropDownList) {
                     String option = assignmentOptions.getText().toLowerCase();
-                    if (staffingOption.toLowerCase().contains("Assign")) {
+                    if (staffingOption.toLowerCase().contains("assign")) {
                         MyThreadLocal.setAssignTMStatus(true);
                     } else
                         MyThreadLocal.setAssignTMStatus(false);
@@ -491,7 +491,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().toUpperCase().equals("ASSIGN ANYWAY")) {
                 clickTheElement(btnAssignAnyway);
             }
-        }if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
+        }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
             scrollToElement(btnSaveOnNewCreateShiftPage);
             waitForSeconds(3);
             clickTheElement(btnSaveOnNewCreateShiftPage);
@@ -505,7 +505,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     }
 
 
-    @FindBy(className = "[id=\"workRole\"] div.react-select__placeholder")
+    @FindBy(css = "[id=\"workRole\"] div.react-select__placeholder")
     private WebElement workRoleOnNewShiftPage;
 
     @FindBy(className = "react-select__option")
@@ -801,8 +801,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         for(int i = 0; i < names.size(); i++) {
             clickOnDayViewAddNewShiftButton();
             customizeNewShiftPage();
-            if(areListElementVisible(listLocationGroup, 10)
-                    || isElementLoaded(btnChildLocationOnNewCreateShiftPage)){
+            if(areListElementVisible(listLocationGroup, 5)
+                    || isElementLoaded(btnChildLocationOnNewCreateShiftPage, 5)){
                 List<String> locations = getAllLocationGroupLocationsFromCreateShiftWindow();
                 selectChildLocInCreateShiftWindow(locations.get((new Random()).nextInt(locations.size()-1)+1));
                 moveSliderAtSomePoint("40", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
@@ -834,9 +834,6 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             searchTeamMemberByName(names.get(i));
             if(isElementLoaded(btnAssignAnyway,5))
                 click(btnAssignAnyway);
-            if (areListElementVisible(buttonsOnWarningMode, 5)) {
-                click(buttonsOnWarningMode.get(1));
-            }
             clickOnOfferOrAssignBtn();
         }
     }
@@ -1416,7 +1413,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @Override
     public void searchTeamMemberByNameNLocation(String name, String location) throws Exception {
-        if(areListElementVisible(btnSearchteamMember,5)) {
+        if(areListElementVisible(btnSearchteamMember,15)) {
             if (btnSearchteamMember.size() == 2) {
                 //click(btnSearchteamMember.get(1));
                 if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 15)) {
@@ -1663,7 +1660,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
             for (int i = 0; i < dayCountInOneWeek; i++) {
                 if (!weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("checked")) {
-                    click(weekDays.get(i).findElement(By.cssSelector(".MuiButtonBase-root")));
+                    click(weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")));
                 }
             }
         }else
@@ -1696,6 +1693,41 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                             if (!weekDays.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
                                 click(weekDays.get(i));
                                 SimpleUtils.report("Select day: " + weekDays.get(i).getText() + " Successfully!");
+                            }
+                            selectedCount++;
+                            indexes.add(i);
+                        }
+                    }
+                    if (selectedCount == count) {
+                        SimpleUtils.pass("Create New Shift: Select " + count + " days Successfully!");
+                        break;
+                    }
+                }
+            }
+            if (selectedCount != count) {
+                SimpleUtils.fail("Create New Shift: Failed to select " + count + " days! Actual is: " + selectedCount + " days!", false);
+            }
+        }else if (areListElementVisible(weekDaysInNewCreateShiftPage, 15) && weekDaysInNewCreateShiftPage.size() == 7) {
+            for (int i = 0; i < 7; i++) {
+                if (weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector("span.MuiButtonBase-root"))
+                        .getAttribute("class").contains("Mui-disabled")) {
+                    SimpleUtils.report("Day: " + weekDaysInNewCreateShiftPage.get(i).getText() + " is disabled!");
+                } else {
+                    if (cannotSelectedDate == null || cannotSelectedDate.equals("")) {
+                        if (!weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector("span.MuiButtonBase-root"))
+                                .getAttribute("class").contains("Mui-checked")) {
+                            click(weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector("span.MuiButtonBase-root")));
+                            SimpleUtils.report("Select day: " + weekDaysInNewCreateShiftPage.get(i).getText() + " Successfully!");
+                        }
+                        selectedCount++;
+                        indexes.add(i);
+                    } else {
+                        int date = Integer.parseInt(weekDaysInNewCreateShiftPage.get(i).getText().substring(weekDaysInNewCreateShiftPage.get(i).getText().length() - 2).trim());
+                        int cannotDate = Integer.parseInt(cannotSelectedDate.substring(cannotSelectedDate.length() - 2).trim());
+                        if (date != cannotDate) {
+                            if (!weekDaysInNewCreateShiftPage.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                                click(weekDaysInNewCreateShiftPage.get(i));
+                                SimpleUtils.report("Select day: " + weekDaysInNewCreateShiftPage.get(i).getText() + " Successfully!");
                             }
                             selectedCount++;
                             indexes.add(i);
