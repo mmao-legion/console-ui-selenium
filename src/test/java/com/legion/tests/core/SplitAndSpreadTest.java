@@ -451,7 +451,6 @@ public class SplitAndSpreadTest extends TestBase {
 
         //Drag the third one and drop it the second one to change assignment.
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        scheduleShiftTablePage.dragOneShiftToAnotherDay(1, firstNameOfTM1, 0);
         String weekday = scheduleShiftTablePage.getWeekDayTextByIndex(0);
         String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday.split(" ")[0]);
         String expectedViolationMessage = firstNameOfTM1 + " is scheduled 8am - 10am on "+fullWeekDay+". This will trigger a split shift.";
