@@ -388,7 +388,6 @@ public class SplitAndSpreadTest extends TestBase {
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-        MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -454,7 +453,7 @@ public class SplitAndSpreadTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String weekday = scheduleShiftTablePage.getWeekDayTextByIndex(0);
         scheduleShiftTablePage.dragOneShiftToAnotherDay(1, firstNameOfTM1, 0);
-        String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday.split(" ")[0]).split(" ")[0];
+        String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday.split(" ")[0]);
         String expectedViolationMessage = firstNameOfTM1 + " is scheduled 8am - 10am on "+fullWeekDay+". This will trigger a split shift.";
         scheduleShiftTablePage.verifyMessageOnCopyMoveConfirmPage(expectedViolationMessage,expectedViolationMessage);
         scheduleShiftTablePage.selectCopyOrMoveByOptionName("Move");
