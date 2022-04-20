@@ -296,6 +296,27 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     searchText(propertySearchTeamMember.get("TeamLCMember"));
                 }
             }
+        } else if (areListElementVisible(searchAndRecommendedTMTabs, 20)) {
+            clickTheElement(searchAndRecommendedTMTabs.get(1));
+            waitForSeconds(3);
+            if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
+                List<WebElement> assignAndOfferButtons = searchResultsOnNewCreateShiftPage.get(0).findElements(By.tagName("button"));
+                    if (MyThreadLocal.getAssignTMStatus()) {
+                        clickTheElement(assignAndOfferButtons.get(0));
+                    } else
+                        clickTheElement(assignAndOfferButtons.get(1));
+                    if (isElementEnabled(btnAssignAnyway, 5)) {
+                        click(btnAssignAnyway);
+                    }
+            } else if (areListElementVisible(searchAndRecommendedTMTabs,5)) {
+                click(searchAndRecommendedTMTabs.get(0));
+                if (getDriver().getCurrentUrl().contains(parameterMap.get("KendraScott2_Enterprise"))) {
+                    searchText(propertySearchTeamMember.get("AssignTeamMember"));
+                } else if (getDriver().getCurrentUrl().contains(parameterMap.get("Coffee_Enterprise"))) {
+                    searchText(propertySearchTeamMember.get("TeamLCMember"));
+                } else
+                    searchText("a");
+            }
         } else {
             SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
         }

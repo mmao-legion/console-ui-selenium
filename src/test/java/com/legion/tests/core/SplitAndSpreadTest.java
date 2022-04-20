@@ -23,6 +23,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static com.legion.utils.MyThreadLocal.firstName;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import java.util.ArrayList;
 import java.util.List;
@@ -696,8 +697,7 @@ public class SplitAndSpreadTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(tmFirstName+ " "+tmLastName);
-            Thread.sleep(5);
+            newShiftPage.searchText(tmFirstName+ " "+tmLastName);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(tmFirstName);
             //check the message in warning mode
             if(newShiftPage.ifWarningModeDisplay()){

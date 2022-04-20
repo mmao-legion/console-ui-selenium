@@ -753,7 +753,8 @@ public class DragAndDropTest extends TestBase {
             // Delete all the shifts that are assigned to the team member
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
-
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Create new shift for TM1 on Monday and Wednesday
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
