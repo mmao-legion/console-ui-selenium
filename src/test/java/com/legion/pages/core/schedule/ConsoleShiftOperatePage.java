@@ -2281,6 +2281,20 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 } else
                     SimpleUtils.fail("Search Team Members tab fail been selected", false);
             }
+        } else if (areListElementVisible(searchAndRecommendedTMTabs, 10)) {
+            if (searchAndRecommendedTMTabs.get(0).getAttribute("class").contains("selected")) {
+                click(searchAndRecommendedTMTabs.get(1));
+                if (searchAndRecommendedTMTabs.get(1).getAttribute("class").contains("select")) {
+                    SimpleUtils.pass("Recommended TMs tab been selected");
+                } else
+                    SimpleUtils.fail("Recommended TMs tab fail been selected", false);
+            } else {
+                click(searchAndRecommendedTMTabs.get(0));
+                if (searchAndRecommendedTMTabs.get(0).getAttribute("class").contains("select")) {
+                    SimpleUtils.pass("Search Team Members tab been selected");
+                } else
+                    SimpleUtils.fail("Search Team Members tab fail been selected", false);
+            }
         } else {
             SimpleUtils.fail("Select Team Member options are not available", false);
         }
@@ -2322,12 +2336,16 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @Override
     public String getTheMessageOfTMScheduledStatus() throws Exception {
         String messageOfTMScheduledStatus = "";
-        if (areListElementVisible(tmScheduledStatus,5)){
-            for (WebElement status : tmScheduledStatus) {
-                messageOfTMScheduledStatus = messageOfTMScheduledStatus + status.getText() + "\n";
+        if (MyThreadLocal.getMessageOfTMScheduledStatus().equals("") || MyThreadLocal.getMessageOfTMScheduledStatus()==null) {
+            if (areListElementVisible(tmScheduledStatus,5)){
+                for (WebElement status : tmScheduledStatus) {
+                    messageOfTMScheduledStatus = messageOfTMScheduledStatus + status.getText() + "\n";
+                }
+            } else {
+                SimpleUtils.fail("TM scheduled status is not loaded!", false);
             }
         } else {
-            SimpleUtils.fail("TM scheduled status is not loaded!", false);
+            messageOfTMScheduledStatus = MyThreadLocal.getMessageOfTMScheduledStatus();
         }
         return messageOfTMScheduledStatus;
     }

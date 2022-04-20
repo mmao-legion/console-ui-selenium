@@ -98,6 +98,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<String> consoleHandle = new ThreadLocal<>();
 	public static final ThreadLocal<Boolean> isWFSEnabled = new ThreadLocal<>();
 	public static final ThreadLocal<Boolean> isAssignTM = new ThreadLocal<>();
+	public static final ThreadLocal<String> messageOfTMScheduledStatus = new ThreadLocal<>();
 
 	public static void setIsNeedEditingOperatingHours(Boolean value) { isNeedUpdateOperatingHours.set(value); }
 
@@ -543,4 +544,6 @@ public class MyThreadLocal {
 	public static Boolean getWFSStatus() { return  isWFSEnabled.get();}
 	public static void setAssignTMStatus(Boolean value) { isAssignTM.set(value);}
 	public static Boolean getAssignTMStatus() { return  isAssignTM.get();}
+	public static void setMessageOfTMScheduledStatus(String value) { messageOfTMScheduledStatus.set(value);}
+	public static String getMessageOfTMScheduledStatus() { return messageOfTMScheduledStatus.get();}
 }

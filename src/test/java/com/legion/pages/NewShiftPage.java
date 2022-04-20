@@ -25,7 +25,7 @@ public interface NewShiftPage {
     public void selectDaysByIndex(int index1, int index2, int index3) throws Exception;
     public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
     public void searchTeamMemberByName(String name) throws Exception;
-    public WebElement selectAndGetTheSelectedTM() throws Exception;
+    public String selectAndGetTheSelectedTM() throws Exception;
     public String selectTeamMembers() throws Exception;
     public void selectSpecificTMWhileCreateNewShift(String teamMemberName) throws Exception;
     public void addOpenShiftWithLastDay(String workRole) throws Exception;

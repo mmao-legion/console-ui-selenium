@@ -853,6 +853,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = ".MuiDialogContent-root button")
     private List<WebElement> buttonsOnWarningMode;
+
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-3')]/div[1]/p")
+    private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
     @Override
     public void searchTeamMemberByName(String name) throws Exception {
         if(areListElementVisible(btnSearchteamMember,15)) {
@@ -899,6 +902,13 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     waitForSeconds(3);
                     if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
                         for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                            if (areListElementVisible(tmScheduledStatusOnNewCreateShiftPage, 5)) {
+                                String statusMessage = "";
+                                for (WebElement status: tmScheduledStatusOnNewCreateShiftPage) {
+                                    statusMessage = statusMessage + status.getText() + "\n";
+                                }
+                                MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
+                            }
                             List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
                             String tmName = tmInfo.get(0).getText();
                             List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
@@ -1107,8 +1117,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement okBtnOnConfirm;
     @FindBy(css="[ng-show=\"hasSearchResults()\"] tr.table-row.ng-scope")
     private List<WebElement> searchTMRows;
-    public WebElement selectAndGetTheSelectedTM() throws Exception {
+    public String selectAndGetTheSelectedTM() throws Exception {
         WebElement selectedTM = null;
+        String selectedTMName = "";
 //		waitForSeconds(5);
         if(areListElementVisible(scheduleSearchTeamMemberStatus,5)
                 || isElementLoaded(scheduleNoAvailableMatchStatus,5)){
@@ -1120,6 +1131,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         click(okBtnOnConfirm);
                     }
                     selectedTM = searchTMRows.get(i);
+                    selectedTMName = selectedTM.findElement(By.className("worker-edit-search-worker-display-name")).getText();
                     break;
                 }
             }
@@ -1134,6 +1146,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     tmAllStatus.append(" ").append(status.getText());
                 }
                 if((tmAllStatus.toString().contains("Available") || tmAllStatus.toString().contains("Unknown")) && !tmAllStatus.toString().contains("Assigned to this shift")){
+                    selectedTMName = searchResult.findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
                     List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
                     if (MyThreadLocal.getAssignTMStatus()) {
                         clickTheElement(assignAndOfferButtons.get(0));
@@ -1142,15 +1155,14 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     if (isElementEnabled(btnAssignAnyway, 5)) {
                         click(btnAssignAnyway);
                     }
-                    selectedTM = searchResult.findElements(By.cssSelector("p.MuiTypography-body1")).get(0);
                     break;
                 }
             }
         }else{
-            SimpleUtils.fail("Not able to found Available status in SearchResult", true);
+            SimpleUtils.report("Not able to found Available status in SearchResult");
         }
 
-        return selectedTM;
+        return selectedTMName;
     }
 
     @FindBy(css = "tr.table-row.ng-scope:nth-child(1)")
@@ -1246,9 +1258,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 textSearch.sendKeys(searchTM[0]);
                 click(searchIcon);
                 waitForSeconds(5);
-                WebElement selectedTM = newShiftPage.selectAndGetTheSelectedTM();
-                if (selectedTM != null) {
-                    selectedTMName = selectedTM.findElement(By.className("worker-edit-search-worker-display-name")).getText();
+                selectedTMName = newShiftPage.selectAndGetTheSelectedTM();
+                if (!selectedTMName.equals("")) {
                     break;
                 } else {
                     textSearch.clear();
@@ -1262,14 +1273,16 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         } else if (isElementLoaded(textSearchOnNewCreateShiftPage, 10)) {
             for (int i = 0; i < searchAssignTeamMember.length; i++) {
                 String[] searchTM = searchAssignTeamMember[i].split("\\.");
-                textSearchOnNewCreateShiftPage.sendKeys(searchTM[0]);
+                String searchText = searchTM[0];
+//                textSearchOnNewCreateShiftPage.clear();
+                textSearchOnNewCreateShiftPage.sendKeys(searchText);
                 waitForSeconds(3);
-                WebElement selectedTM = newShiftPage.selectAndGetTheSelectedTM();
-                if (selectedTM != null) {
-                    selectedTMName = selectedTM.getText();
+                selectedTMName = newShiftPage.selectAndGetTheSelectedTM();
+                if (!selectedTMName.equals("")) {
                     break;
                 } else {
-                    textSearchOnNewCreateShiftPage.clear();
+                    clickTheElement(searchAndRecommendedTMTabs.get(1));
+                    clickTheElement(searchAndRecommendedTMTabs.get(0));
                 }
             }
 
