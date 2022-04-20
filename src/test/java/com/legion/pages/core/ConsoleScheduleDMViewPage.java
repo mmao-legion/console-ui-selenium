@@ -338,7 +338,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         return scheduleStatus;
     }
 
-    @FindBy(css = "span.analytics-new-table-published-status")
+    @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row-open')]/div[2]")
     private List<WebElement>  scheduleStatusOnScheduleDMViewPage;
 
     @FindBy(css = ".analytics-new-table-group-row-open [text-anchor=\"start\"]")
@@ -359,6 +359,9 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                 for (int i = 0; i< scheduleStatusOnScheduleDMViewPage.size(); i++){
                     switch(scheduleStatusOnScheduleDMViewPage.get(i).getText()){
                         case "Not Started" :
+                            notStartedScheduleAccount= notStartedScheduleAccount+1;
+                            break;
+                        case "Schedule is not released to managers" :
                             notStartedScheduleAccount= notStartedScheduleAccount+1;
                             break;
                         case "In Progress" :
@@ -1130,17 +1133,17 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             if(isApplyBudget){
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", "ReadyToRelease"};
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", "ReadyToRelease"};
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
             } else {
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", "ReadyToRelease"};
+                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", "ReadyToRelease"};
+                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
             }
             for(int i= 0;i<schedulesTableHeaders.size(); i++){
                 if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){
