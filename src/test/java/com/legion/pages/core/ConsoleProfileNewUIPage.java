@@ -4246,7 +4246,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			isReviewPreferencesInnerBoxDisplay = true;
 			SimpleUtils.pass("User profile page: The review preferences inner box display correctly! ");
 		} else
-			SimpleUtils.fail("User profile page: The review preferences inner box fail to load! ", false);
+			SimpleUtils.report("User profile page: The review preferences inner box fail to load! ");
 		return isReviewPreferencesInnerBoxDisplay;
 	}
 }
