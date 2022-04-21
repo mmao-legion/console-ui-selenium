@@ -843,6 +843,7 @@ public class ScheduleCoverageTest extends TestBase {
                         SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
                 }
                 //The down arrow in yellow shows in edit mode
+                Thread.sleep(5000);
                 img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
                 SimpleUtils.assertOnFail("The img should be yellow down, actual is: "+img,
                         img.contains("yellow down"), false);
