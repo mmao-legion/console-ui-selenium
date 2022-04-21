@@ -183,7 +183,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         if (isElementLoaded(btnSave, 10)) {
             click(btnSave);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
-        } if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
+        }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
             click(btnSaveOnNewCreateShiftPage);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else {
@@ -754,7 +754,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         && scheduleOperatingHrsOnEditPage.size() >0){
                     for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
                         if (scheduleOperatingHour.getAttribute("class").contains(shiftTime.substring(shiftTime.length() - 2))) {
-                            if(scheduleOperatingHour.getText().equals(shiftTime.substring(0, shiftTime.length() - 2))){
+                            if(scheduleOperatingHour.getText().equals(shiftTime.split(":")[0])){
                                 element = scheduleOperatingHour;
                                 break;
                             }
