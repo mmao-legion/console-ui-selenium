@@ -424,6 +424,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 for (WebElement status: allStatus) {
                     tmAllStatus = tmAllStatus + " "+status.getText();
                 }
+                MyThreadLocal.setMessageOfTMScheduledStatus(tmAllStatus);
                 if(tmAllStatus.contains("Available")
                         || tmAllStatus.contains("Unknown")){
                     List<WebElement> assignAndOfferButtons = searchResultsOnNewCreateShiftPage.get(i).findElements(By.tagName("button"));
@@ -458,8 +459,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                             clickTheElement(assignAndOfferButtons.get(0));
                         } else
                             clickTheElement(assignAndOfferButtons.get(1));
-                        if (isElementEnabled(btnAssignAnyway, 5)) {
-                            click(btnAssignAnyway);
+                        if (areListElementVisible(buttonsOnWarningMode, 5)) {
+                            click(buttonsOnWarningMode.get(1));
                         }
                         ScheduleStatus = true;
                         break;
@@ -669,12 +670,15 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(className = "lgn-action-button-success")
     private WebElement okBtnInWarningMode;
 
+    @FindBy(css = ".MuiDialogContent-root")
+    private WebElement warningModeOnNewCreateShiftModal;
+
     @Override
     public boolean ifWarningModeDisplay() throws Exception {
         if(isElementLoaded(warningMode, 5)) {
             SimpleUtils.pass("Warning mode is loaded successfully");
             return true;
-        } else if (isElementLoaded(newCreateShiftModal, 5)) {
+        } else if (isElementLoaded(warningModeOnNewCreateShiftModal, 5)) {
             SimpleUtils.pass("Warning mode is loaded successfully");
             return true;
         }else {
@@ -1339,6 +1343,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 if (!weekDays.get(6).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
                     click(weekDays.get(6));
                 }
+            } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+                if (!weekDaysInNewCreateShiftPage.get(6).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("Mui-checked")) {
+                    clickTheElement(weekDaysInNewCreateShiftPage.get(6).findElement(By.cssSelector(".MuiButtonBase-root")).findElement(By.tagName("input")));
+                    SimpleUtils.report("Select day: " + 6 + " Successfully!");
+                }
             }
             clickOnCreateOrNextBtn();
         } else
@@ -1922,5 +1931,21 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.report("The new create shift modal is not display! ");
             return false;
         }
+    }
+
+    public void searchWithOutSelectTM(String tmName) throws Exception {
+        if (isElementLoaded(textSearch, 10) && isElementLoaded(searchIcon, 10)) {
+            textSearch.clear();
+            textSearch.sendKeys(tmName);
+            click(searchIcon);
+            MyThreadLocal.setMessageOfTMScheduledStatus("");
+        } else if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+            textSearchOnNewCreateShiftPage.sendKeys(tmName);
+            waitForSeconds(3);
+            MyThreadLocal.setMessageOfTMScheduledStatus("");
+        }else {
+            SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+        }
+
     }
 }

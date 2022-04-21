@@ -2332,16 +2332,24 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = "[search-results=\"workerSearchResult\"] [ng-class=\"swapStatusClass(worker)\"]")
     private List<WebElement> tmScheduledStatus;
-
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-3')]/div[1]/p")
+    private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
     @Override
     public String getTheMessageOfTMScheduledStatus() throws Exception {
         String messageOfTMScheduledStatus = "";
-        if (MyThreadLocal.getMessageOfTMScheduledStatus().equals("") || MyThreadLocal.getMessageOfTMScheduledStatus()==null) {
+        if (MyThreadLocal.getMessageOfTMScheduledStatus()==null || MyThreadLocal.getMessageOfTMScheduledStatus().equals("")) {
             if (areListElementVisible(tmScheduledStatus,5)){
                 for (WebElement status : tmScheduledStatus) {
                     messageOfTMScheduledStatus = messageOfTMScheduledStatus + status.getText() + "\n";
                 }
-            } else {
+            } else if (areListElementVisible(tmScheduledStatusOnNewCreateShiftPage, 5)) {
+                String statusMessage = "";
+                for (WebElement status: tmScheduledStatusOnNewCreateShiftPage) {
+                    statusMessage = statusMessage + status.getText() + "\n";
+                }
+                messageOfTMScheduledStatus = statusMessage;
+                MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
+            }else {
                 SimpleUtils.fail("TM scheduled status is not loaded!", false);
             }
         } else {
