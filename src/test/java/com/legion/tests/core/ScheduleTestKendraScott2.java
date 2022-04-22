@@ -5015,9 +5015,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

@@ -2856,13 +2856,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 && isElementLoaded(shiftEndInput, 10)) {
             SimpleUtils.report("The new edit shift time page display correctly! ");
             shiftStartInput.clear();
-            waitForSeconds(1);
+            waitForSeconds(2);
             moveToElementAndClick(shiftEndInput);
             waitForSeconds(2);
             moveToElementAndClick(shiftStartInput);
             shiftStartInput.sendKeys(startTime);
             shiftEndInput.clear();
-            waitForSeconds(1);
+            waitForSeconds(2);
             moveToElementAndClick(shiftStartInput);
             waitForSeconds(2);
             moveToElementAndClick(shiftEndInput);
