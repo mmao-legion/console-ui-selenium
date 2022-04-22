@@ -1948,4 +1948,43 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }
 
     }
+
+
+    @FindBy(css = ".MuiInputAdornment-positionEnd svg")
+    private WebElement nextDayIcon;
+    @FindBy(css = "[role=\"tooltip\"]")
+    private WebElement nextDayTooltip;
+    public void checkOrUnCheckNextDayOnCreateShiftModal(boolean toCheck) throws Exception {
+        if (isElementLoaded(nextDayIcon, 10)) {
+            moveToElementAndClick(nextDayIcon);
+            if (isElementLoaded(nextDayTooltip, 5)){
+                if (toCheck) {
+                    if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
+                        SimpleUtils.pass("Next day checkbox has already been checked! ");
+                    } else {
+                        clickTheElement(nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root input")));
+                        waitForSeconds(2);
+                        if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
+                            SimpleUtils.pass("Check Next day checkbox successfully! ");
+                        } else
+                            SimpleUtils.fail("Fail to check Next day checkbox! ", false);
+                    }
+                } else {
+                    if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
+                        clickTheElement(nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root input")));
+                        waitForSeconds(2);
+                        if (!nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
+                            SimpleUtils.pass("Uncheck Next day checkbox successfully! ");
+                        } else
+                            SimpleUtils.fail("Fail to uncheck Next day checkbox! ", false);
+                    } else {
+                        SimpleUtils.pass("Next day checkbox has already been unchecked! ");
+                    }
+                }
+            }
+        }else {
+            SimpleUtils.fail("Next day icon fail to load! ", false);
+        }
+
+    }
 }

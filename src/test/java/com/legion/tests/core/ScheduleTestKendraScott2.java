@@ -4534,8 +4534,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		newShiftPage.clickOnDayViewAddNewShiftButton();
 		newShiftPage.selectWorkRole(workRoleOfTM);
-		newShiftPage.moveSliderAtCertainPoint("5",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-		newShiftPage.moveSliderAtCertainPoint("7",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.moveSliderAtCertainPoint("5:00am",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtCertainPoint("7:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
 		newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 		newShiftPage.clickOnCreateOrNextBtn();
 		newShiftPage.searchTeamMemberByName(firstNameOfTM);
@@ -4653,8 +4654,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		newShiftPage.clickOnDayViewAddNewShiftButton();
 		newShiftPage.selectWorkRole(workRoleOfTM);
-		newShiftPage.moveSliderAtCertainPoint("5",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-		newShiftPage.moveSliderAtCertainPoint("6",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.moveSliderAtCertainPoint("5:00am",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtCertainPoint("6:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
 		newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 		newShiftPage.clickOnCreateOrNextBtn();
 		newShiftPage.searchTeamMemberByName(firstNameOfTM);
@@ -4675,6 +4677,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyExcessOf12HrsInA24HrsPeriodAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 		// set configuration in controls
 		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -4688,7 +4691,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-		NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
 				scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -4728,6 +4731,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		newShiftPage.clickOnDayViewAddNewShiftButton();
 		newShiftPage.selectWorkRole(workRoleOfTM);
 		newShiftPage.moveSliderAtCertainPoint("8:00am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
 		newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 		newShiftPage.clickOnCreateOrNextBtn();
 		newShiftPage.searchTeamMemberByName(firstNameOfTM);
