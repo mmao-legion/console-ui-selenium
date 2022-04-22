@@ -2058,6 +2058,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					WebElement firstRow = locationRowsInSelectLocation.get(i).findElement(By.cssSelector("input[type=\"checkbox\"]"));
 					clickTheElement(firstRow);
 				}
+				scrollToElement(okBtnInSelectLocation);
 				click(okBtnInSelectLocation);
 			} else
 				SimpleUtils.fail("Select a upperfield window load failed", true);
@@ -2130,6 +2131,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						WebElement firstRow = locationRowsInSelectLocation.get(i).findElement(By.cssSelector("input[type=\"radio\"]"));
 						click(firstRow);
 					}
+					scrollToElement(okBtnInSelectLocation);
 					click(okBtnInSelectLocation);
 				}
 			} else
