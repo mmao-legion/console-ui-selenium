@@ -1048,7 +1048,7 @@ public class ConfigurationTest extends TestBase {
             TimeOffPage timeOffPage = new TimeOffPage();
             timeOffPage.switchToTimeOffTab();
             OpsCommonComponents commonComponents = new OpsCommonComponents();
-            timeOffPage.createTimeOff("Sick", false, 10, 10);
+            timeOffPage.createTimeOff("Annual Leave", false, 10, 10);
             String Month = timeOffPage.getMonth();
             commonComponents.okToActionInModal(true);
             timeOffPage.cancelTimeOffRequest();
@@ -1057,7 +1057,7 @@ public class ConfigurationTest extends TestBase {
             teamPage.searchAndSelectTeamMemberByName("Allene Mante");
             timeOffPage.switchToTimeOffTab();
 
-            timeOffPage.createTimeOff("Sick", false, 10, 10);
+            timeOffPage.createTimeOff("Annual Leave", false, 10, 10);
             commonComponents.okToActionInModal(true);
             Assert.assertEquals(timeOffPage.getRequestErrorMessage(), "Maximum numbers of workers on time off exceeded on day " + Month + " 11");
             commonComponents.okToActionInModal(false);
