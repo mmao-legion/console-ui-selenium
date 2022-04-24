@@ -13,7 +13,7 @@
             <class name="com.legion.tests.core.PrepareSettingsTest">
                 <methods>
                     <include name="prepareSettingsInOPTemplateAsInternalAdmin"/>
-                    <include name="verifyCanPrepareDynamicEmployeeGroupsNTemplatesAsInternalAdmin" />
+<!--                    <include name="verifyCanPrepareDynamicEmployeeGroupsNTemplatesAsInternalAdmin" Blocked by new feature/>-->
                 </methods>
             </class>
         </classes>
@@ -359,13 +359,13 @@
                     <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
                     <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
 <!--                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" /> -->
-                    <include name="verifySettingsAreAppliedAsInternalAdmin" />
-                    <include name="verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin" />
-                    <include name="verifyMealDurationWhenUsingTemplateAsInternalAdmin" />
-                    <include name="verifyMealPlacementWhenUsingTemplateAsInternalAdmin" />
-                    <include name="verifyMissedRestBreakWhenUsingTemplateAsInternalAdmin" />
-                    <include name="verifyShortRestBreakWhenUsingTemplateAsInternalAdmin" />
-                    <include name="verifyRestTimeNotIdealWhenUsingTemplateAsInternalAdmin" />
+<!--                    <include name="verifySettingsAreAppliedAsInternalAdmin" Blocked by new feature/>-->
+<!--                    <include name="verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin" />-->
+<!--                    <include name="verifyMealDurationWhenUsingTemplateAsInternalAdmin" />-->
+<!--                    <include name="verifyMealPlacementWhenUsingTemplateAsInternalAdmin" />-->
+<!--                    <include name="verifyMissedRestBreakWhenUsingTemplateAsInternalAdmin" />-->
+<!--                    <include name="verifyShortRestBreakWhenUsingTemplateAsInternalAdmin" />-->
+<!--                    <include name="verifyRestTimeNotIdealWhenUsingTemplateAsInternalAdmin" />-->
                 </methods>
             </class>
         </classes>
