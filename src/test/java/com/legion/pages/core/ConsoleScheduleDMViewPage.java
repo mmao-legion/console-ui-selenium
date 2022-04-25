@@ -1133,17 +1133,17 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             if(isApplyBudget){
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", "ReadyToRelease"};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", "ReadyToRelease"};
             } else {
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
+                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", "ReadyToRelease"};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
+                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", "ReadyToRelease"};
             }
             for(int i= 0;i<schedulesTableHeaders.size(); i++){
                 if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){

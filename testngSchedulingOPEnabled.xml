@@ -36,7 +36,7 @@
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView" />-->
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsStoreManager" />
  <!--                   <include name="verifySchedulesWidgetsAsStoreManager" />-->
-                    <include name="verifyCommonUIOfWidgetsAsStoreManager" />
+<!--                    <include name="verifyCommonUIOfWidgetsAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-6542-->
 <!--                    <include name="verifyScheduleFunctionalityForecastAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-6396-->
 <!--                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin" Blocked by bug: SCH-5896/>-->
                     <include name="validateWeatherSmartCardOnForecastPage" />
@@ -305,8 +305,8 @@
                     <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6131-->
                     <!--                    <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
                     <!--                    <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
-                    <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
-                    <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
+ <!--                   <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
+                    <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6541 -->
                     <include name="verifyScheduleStatusOnScheduleInBUViewAsInternalAdmin" />
                     <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
                     <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInBUViewAsInternalAdmin" />

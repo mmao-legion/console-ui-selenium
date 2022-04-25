@@ -313,12 +313,13 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @FindBy(css = "div.sub-navigation-view-link")
     private List<WebElement> ScheduleSubTabsElement;
-    @FindBy(css = "div.sub-navigation-view-link.active")
+    @FindBy(css = "[slider-settings=\"schedulingSettings\"] div.sub-navigation-view-link.active")
     private WebElement activatedSubTabElement;
 
     @Override
     public void clickOnScheduleSubTab(String subTabString) throws Exception {
-        if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+        waitForSeconds(5);
+        if (areListElementVisible(ScheduleSubTabsElement, 10) && ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
             for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
                 if (ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString)) {
                     waitForSeconds(5);

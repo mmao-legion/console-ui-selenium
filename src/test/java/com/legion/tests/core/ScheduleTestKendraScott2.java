@@ -5760,9 +5760,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!isActiveWeekGenerated) {
-				createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00PM");
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00PM");
 			String workRole = shiftOperatePage.getRandomWorkRole();
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
