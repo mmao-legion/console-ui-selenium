@@ -464,7 +464,7 @@
                 <methods>
                     <include name="verifyTheResultingSchedulesShouldAllBeCreatedAsOpenShiftsAsInternalAdmin" />
                     <include name="verifyTheResultingSchedulesWhenSettingIsKeepAsUnassignedAsInternalAdmin" />
-<!--                    <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" />
+                    <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
