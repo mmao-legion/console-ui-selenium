@@ -340,6 +340,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @Override
     public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
+        waitForSeconds(2);
         if (isElementLoaded(activatedSubTabElement,15)) {
             if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText.toUpperCase())) {
                 return true;
