@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,7 +123,6 @@ public class TimeOffPage extends BasePage {
     //cancel button
     @FindBy(css = "lg-button[label=Cancel]" )
     private WebElement cancelButton;
-
 
     public void goToTeamMemberDetail(String memberName) {
         String teamMemCssLocator = "span[title=' " + memberName + "']";
@@ -306,5 +306,32 @@ public class TimeOffPage extends BasePage {
         if(isElementLoaded(cancelButton,5)){
             click(cancelButton);
         }
+    }
+
+    @FindBy( css = "div.timeoff-requests-request.row-fx.cursor-pointer")
+    private List<WebElement> timeOffList;
+
+    public Integer getTimeOffSize() throws Exception{
+        return timeOffList.size();
+    }
+
+    @FindBy( css = "span[data-tootik='Cancel']")
+    private WebElement cancelCreatedTimeOff;
+
+    public void cancelCreatedTimeOffRequest() throws Exception{
+        waitForSeconds(5);
+        scrollToElement(timeOffList.get(0));
+        clickTheElement(timeOffList.get(0));
+        clickTheElement(cancelCreatedTimeOff);
+    }
+
+    @FindBy(xpath = "//span[contains(@class,'request-status')]")
+    private  List<WebElement> timeOffStatus;
+
+    public void verifyTimeOffStatus() throws Exception{
+        waitForSeconds(5);
+        Assert.assertEquals(timeOffStatus.get(1).getAttribute("innerText").toUpperCase(),"CANCELLED");
+        Assert.assertEquals(timeOffStatus.get(2).getAttribute("innerText").toUpperCase(),"REJECTED");
+        Assert.assertEquals(timeOffStatus.get(3).getAttribute("innerText").toUpperCase(),"APPROVED");
     }
 }
