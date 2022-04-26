@@ -372,23 +372,32 @@ public class TimeOffRequestTest extends TestBase {
         // Verify activity doesn't display for admin
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         ActivityPage activityPage = new ActivityPage();
-        Assert.assertEquals(activityPage.verifyActivityDisplay(), false);
         activityPage.switchToNewWindow();
+        Assert.assertEquals(activityPage.verifyActivityDisplay(), false);
+
+        //create approved time off for tm
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("verifyMock");
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        timeOffPage.switchToTimeOffTab();
+        OpsCommonComponents commonComponents = new OpsCommonComponents();
+        timeOffPage.createTimeOff("Annual Leave",false,27,27);
+        commonComponents.okToActionInModal(true);
+
         navigationPage.logout();
         // Verify activity doesn't display for team member
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+tm@legion.co", "admin11.a","verifyMock");
         OpsPortalNavigationPage navigationPage1 = new OpsPortalNavigationPage();
         Assert.assertEquals(activityPage.verifyActivityDisplay(), false);
-        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
         consoleNavigationPage.searchLocation("verifyMock");
 
-        TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
         teamPage.searchAndSelectTeamMemberByName("Nancy TM");
 
-        TimeOffPage timeOffPage = new TimeOffPage();
         timeOffPage.switchToTimeOffTab();
-        OpsCommonComponents commonComponents = new OpsCommonComponents();
         timeOffPage.createTimeOff("Annual Leave",false,28,28);
         commonComponents.okToActionInModal(true);
         timeOffPage.createTimeOff("Annual Leave",false,29,29);
@@ -423,16 +432,21 @@ public class TimeOffRequestTest extends TestBase {
         //verify time off status
         activityPage.verifyActivityTimeOffStatus();
 
+        //verify first activity is cancelled
         activityPage.verifyCancel();
 
+        //approve second activity and verify it's approved
         activityPage.approveActivityTimeOff();
         activityPage.verifyApprove();
 
+        //reject third activity and verify it's rejected
         activityPage.rejectActivityTimeOff();
         activityPage.verifyReject();
-        activityPage.verifyActivityBoxDisplay();
+
         OpsPortalNavigationPage navigationPage2 = new OpsPortalNavigationPage();
         navigationPage2.logout();
+
+        //tm login to check its time off status have changed
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+tm@legion.co", "admin11.a","verifyMock");
         consoleNavigationPage.searchLocation("verifyMock");
         rightHeaderBarPage.navigateToTimeOff();

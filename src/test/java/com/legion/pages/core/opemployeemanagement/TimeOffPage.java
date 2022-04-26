@@ -320,8 +320,8 @@ public class TimeOffPage extends BasePage {
 
     public void cancelCreatedTimeOffRequest() throws Exception{
         waitForSeconds(5);
-        scrollToElement(timeOffList.get(0));
-        clickTheElement(timeOffList.get(0));
+        scrollToElement(timeOffList.get(1));
+        clickTheElement(timeOffList.get(1));
         clickTheElement(cancelCreatedTimeOff);
     }
 
@@ -330,8 +330,8 @@ public class TimeOffPage extends BasePage {
 
     public void verifyTimeOffStatus() throws Exception{
         waitForSeconds(5);
-        Assert.assertEquals(timeOffStatus.get(1).getAttribute("innerText").toUpperCase(),"CANCELLED");
-        Assert.assertEquals(timeOffStatus.get(2).getAttribute("innerText").toUpperCase(),"REJECTED");
-        Assert.assertEquals(timeOffStatus.get(3).getAttribute("innerText").toUpperCase(),"APPROVED");
+        Assert.assertEquals(timeOffStatus.get(2).getAttribute("innerText").toUpperCase(),"CANCELLED");
+        Assert.assertEquals(timeOffStatus.get(3).getAttribute("innerText").toUpperCase(),"REJECTED");
+        Assert.assertEquals(timeOffStatus.get(4).getAttribute("innerText").toUpperCase(),"APPROVED");
     }
 }
