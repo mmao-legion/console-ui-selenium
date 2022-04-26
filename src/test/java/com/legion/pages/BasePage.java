@@ -958,6 +958,17 @@ public class BasePage {
             System.out.println("element" +element+ "is not found");
         }
     }
+
+    public static boolean isExist(WebElement element)
+    {
+        try {
+            element.isDisplayed();
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){

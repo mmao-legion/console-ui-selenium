@@ -1407,7 +1407,8 @@ public class LocationsTest extends TestBase {
 
             //reset
             locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Reset");
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Edit");
+            locationsPage.resetLaborModel();
             List<HashMap<String, String>> templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftReset.get(7).get("Overridden").equalsIgnoreCase("No")) {
                 SimpleUtils.pass("Reset Labor Model successfully");

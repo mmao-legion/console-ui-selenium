@@ -3552,6 +3552,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "tr[ng-repeat=\"(key,value) in $ctrl.templates\"]")
 	private List<WebElement> templateRows;
 
+	@FindBy(css = "i.fa.fa-check")
+	private WebElement overRiddenIcon;
+
 	@Override
 	public List<HashMap<String, String>> getLocationTemplateInfoInLocationLevel() {
 		List<HashMap<String, String>> templateInfo = new ArrayList<>();
@@ -3561,7 +3564,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				templateInfoInEachRow.put("Template Type", s.findElement(By.cssSelector("td:nth-child(1)")).getText());
 				templateInfoInEachRow.put("Template Name", s.findElement(By.cssSelector("td:nth-child(2)")).getText());
 				String actions = s.findElement(By.cssSelector("td:nth-child(6)")).getText();
-				if (!actions.contains("Reset")) {
+				if (!actions.contains("Reset") && !isExist(overRiddenIcon)) {
 					templateInfoInEachRow.put("Overridden", "No");
 				} else
 					templateInfoInEachRow.put("Overridden", "Yes");
@@ -4067,6 +4070,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}else {
 			SimpleUtils.fail("Upload Translations button loaded failed", false);
 		}
+	}
+
+	@FindBy(css = "lg-button[label = 'Reset']>button")
+	private WebElement resetLaborModel;
+
+	public void resetLaborModel() throws Exception{
+		if(isElementLoaded(resetLaborModel,5)){
+			click(resetLaborModel);
+			click(okBtnInSelectLocation);
+			SimpleUtils.pass("Labor model reset button is clickable");
+		}else
+			SimpleUtils.fail("Labor model reset button loaded failed",false);
 	}
 }
 
