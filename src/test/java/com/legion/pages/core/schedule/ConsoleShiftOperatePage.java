@@ -485,9 +485,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             //check the shift role
             if (!isElementEnabled(changeRole, 5)) {
                 if (scheduleCommonPage.isScheduleDayViewActive()) {
-                    moveToElementAndClick(clickedShift.findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
+                    click(clickedShift.findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
                 } else
-                    moveToElementAndClick(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+                    click(clickedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
             }
             clickOnChangeRole();
             if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >1) {
@@ -1655,12 +1655,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         WebElement shiftPlusBtn = shift.findElement(isUnAssignedShift);
         if (isElementLoaded(shiftPlusBtn)) {
             click(shiftPlusBtn);
-            if (isElementLoaded(shiftPopover)) {
+            if (isElementLoaded(shiftPopover, 10)) {
                 WebElement editShiftTimeOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canEditShiftTime && !isTmView()\"]"));
-                if (isElementLoaded(editShiftTimeOption)) {
+                if (isElementLoaded(editShiftTimeOption, 20)) {
                     scrollToElement(editShiftTimeOption);
                     click(editShiftTimeOption);
-                    if (isElementEnabled(editShiftTimePopUp, 5)) {
+                    if (isElementEnabled(editShiftTimePopUp, 15)) {
                         if (isElementLoaded(sliderContainer, 10)) {
                             moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
                             moveSliderAtCertainPointOnEditShiftTimePage(startTime, "Start");
@@ -2916,16 +2916,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 && isElementLoaded(shiftEndInput, 10)) {
             SimpleUtils.report("The new edit shift time page display correctly! ");
             shiftStartInput.clear();
-            waitForSeconds(1);
-            moveToElementAndClick(shiftEndInput);
-            waitForSeconds(2);
-            moveToElementAndClick(shiftStartInput);
-            shiftStartInput.sendKeys(startTime);
             shiftEndInput.clear();
-            waitForSeconds(1);
-            moveToElementAndClick(shiftStartInput);
             waitForSeconds(2);
-            moveToElementAndClick(shiftEndInput);
+            click(shiftStartInput);
+            shiftStartInput.sendKeys(startTime);
+            waitForSeconds(2);
+            click(shiftEndInput);
             shiftEndInput.sendKeys(endTime);
             if (checkTheNextDay) {
                 checkOrUnCheckNextDayOnEditShiftTimePage(true);

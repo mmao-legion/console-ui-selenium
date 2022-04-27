@@ -313,12 +313,13 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @FindBy(css = "div.sub-navigation-view-link")
     private List<WebElement> ScheduleSubTabsElement;
-    @FindBy(css = "div.sub-navigation-view-link.active")
+    @FindBy(css = "[slider-settings=\"schedulingSettings\"] div.sub-navigation-view-link.active")
     private WebElement activatedSubTabElement;
 
     @Override
     public void clickOnScheduleSubTab(String subTabString) throws Exception {
-        if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+        waitForSeconds(5);
+        if (areListElementVisible(ScheduleSubTabsElement, 10) && ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
             for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
                 if (ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString)) {
                     waitForSeconds(5);
@@ -339,6 +340,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @Override
     public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
+        waitForSeconds(2);
         if (isElementLoaded(activatedSubTabElement,15)) {
             if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText.toUpperCase())) {
                 return true;
@@ -418,8 +420,9 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @Override
     public String getActiveWeekText() throws Exception {
-        if (isElementLoaded(MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")),15))
-            return MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")).getText().replace("\n", " ");
+        if (isElementLoaded(daypicker, 15)) {
+            return daypicker.getText().replace("\n", " ");
+        }
         return "";
     }
 

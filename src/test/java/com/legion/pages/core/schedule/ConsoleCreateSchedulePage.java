@@ -416,11 +416,13 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     }
 
 
+    @FindBy (css = "[on-select=\"selectSchedule(suggestedSchedule)\"] .generate-modal-week")
+    private WebElement suggestScheduleModalWeek;
     @Override
     public void selectWhichWeekToCopyFrom(String weekInfo) throws Exception {
         boolean selectOtherWeek = false;
         try{
-            if (areListElementVisible(createModalWeeks, 10)) {
+            if (isElementLoaded(suggestScheduleModalWeek, 25) && areListElementVisible(createModalWeeks, 10)) {
                 SimpleUtils.pass("Copy Schedule page loaded Successfully!");
                 waitForSeconds(5);
                 for (WebElement createModalWeek : createModalWeeks) {

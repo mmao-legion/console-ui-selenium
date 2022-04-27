@@ -2027,4 +2027,73 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
+
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the approved or rejected availabilities request should not be able to operate")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTheApprovedOrRejectedAvailabilitiesRequestShouldNotBeAbleToOperateAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			String firstNameOfTM = tmFullName.split(" ")[0];
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			String preferencesLabel = "My Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(preferencesLabel);
+			profileNewUIPage.cancelAllPendingAvailabilityRequest();
+			while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+				profileNewUIPage.clickNextWeek();
+			}
+			String firstWeek = profileNewUIPage.getAvailabilityWeek();
+			String repeatChanges = "This week only";
+			String leftOrRightDuration = "Right";
+			String hoursType = "Preferred";
+			HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
+			if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+				int sliderIndex = 1;
+				double hours = -0.5;//move 1 metric 0.5h left
+				profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+						hours, repeatChanges);
+			} else {
+				profileNewUIPage.clickAvailabilityEditButton();
+				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+				profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+			}
+
+			profileNewUIPage.clickNextWeek();
+			String secondWeek = profileNewUIPage.getAvailabilityWeek();
+			myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
+			if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+				int sliderIndex = 1;
+				double hours = -0.5;//move 1 metric 0.5h left
+				profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+						hours, repeatChanges);
+			} else {
+				profileNewUIPage.clickAvailabilityEditButton();
+				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+				profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+			}
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
+					dashboardPage.isDashboardPageLoaded() , false);
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(firstNameOfTM);
+			profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
+			profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(firstWeek, "approve");
+			profileNewUIPage.verifyTheApprovedOrRejectedAvailabilityRequestCannotBeOperated(firstWeek);
+			profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(secondWeek, "reject");
+			profileNewUIPage.verifyTheApprovedOrRejectedAvailabilityRequestCannotBeOperated(secondWeek);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 }

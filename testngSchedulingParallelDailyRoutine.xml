@@ -94,7 +94,7 @@
                     <include name="verifyDeleteShiftInDayViewAsInternalAdmin" />
                     <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />
                     <include name="verifyShiftsCanBeDraggedInDayViewAsInternalAdmin" />
-                    <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" />
+           <!--         <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" /> vailqacn enterprise is not enable 24hrs-->
                     <include name="verifySettingsExcessOf8HrsInA24HrsPeriodAsInternalAdmin" />
                     <include name="verifyExcessOf8HrsInA24HrsPeriodAsInternalAdmin" />
                     <include name="verifyExcessOf10HrsInA24HrsPeriodAsInternalAdmin" />
@@ -172,6 +172,7 @@
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWithScheduledShiftAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember" />
+                    <include name="validateTheApprovedOrRejectedAvailabilitiesRequestShouldNotBeAbleToOperateAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -412,8 +413,8 @@
                     <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" />
 <!--                    <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
 <!--                    <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
-                                        <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
-                                        <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
+<!--                                        <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
+                                        <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" /> SCH-6541 -->
                                         <include name="verifyScheduleStatusOnScheduleInBUViewAsInternalAdmin" />
                                         <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
                                         <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInBUViewAsInternalAdmin" />
@@ -458,18 +459,18 @@
         </classes>
     </test>
 
-    <test name="Copy Schedule Without Assignments Test">
+<!--    <test name="Copy Schedule Without Assignments Test">
         <classes>
             <class name="com.legion.tests.core.CopyScheduleWithoutAssignmentsTest">
                 <methods>
                     <include name="verifyTheResultingSchedulesShouldAllBeCreatedAsOpenShiftsAsInternalAdmin" />
                     <include name="verifyTheResultingSchedulesWhenSettingIsKeepAsUnassignedAsInternalAdmin" />
-<!--                    <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" /> SCH-5863-->
+                    <include name="verifyTheResultingSchedulesWhenDayIsClosedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
-
+SCH-5863, SCH-6536-->
     <test name="Controls New UI Test">
         <classes>
             <class name="com.legion.tests.core.ControlsNewUITest">

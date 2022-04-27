@@ -5021,9 +5021,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-
 		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -5769,9 +5766,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!isActiveWeekGenerated) {
-				createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00PM");
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00PM");
 			String workRole = shiftOperatePage.getRandomWorkRole();
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

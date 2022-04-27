@@ -132,6 +132,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
     public void verifyViolationWhenSetConsecutiveOTSettingAsAlwaysAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             setConsecutiveOTAndDTSettings(consecutiveOTDaysCount.Seventh.getValue(), consecutiveOTOptions.Always.getValue(), location);
@@ -144,6 +145,11 @@ public class SeventhConsecutiveDayTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             String startTime = "11am";
             String endTime = "2pm";
             String consecutiveOTViolation = "3 hrs daily overtime";
@@ -1354,7 +1360,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
                     dashboardPage.isDashboardPageLoaded(), false);
-
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
@@ -1399,6 +1405,11 @@ public class SeventhConsecutiveDayTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             String startTime = "9am";
             String endTime = "4pm";
             String consecutiveOTViolation = "";
@@ -1422,6 +1433,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
     public void verifyViolationWhen7thConsecutiveDayShiftHourExceedDTPayHrsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
                     dashboardPage.isDashboardPageLoaded(), false);
 
@@ -1478,6 +1490,11 @@ public class SeventhConsecutiveDayTest extends TestBase {
             List<String> consecutiveOTViolations = new ArrayList<>();
             consecutiveOTViolations.add(consecutiveOTViolation1);
             consecutiveOTViolations.add(consecutiveOTViolation2);
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             createShiftsForConsecutiveOTAndDT(firstSixDaysTime, seventhConsecutiveDayTime, consecutiveOTViolations);
 
         } catch (Exception e) {

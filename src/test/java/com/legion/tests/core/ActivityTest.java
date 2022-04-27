@@ -1995,6 +1995,7 @@ public class ActivityTest extends TestBase {
                 scheduleCommonPage.navigateToNextWeek();
                 i++;
             }
+            Thread.sleep(5000);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
