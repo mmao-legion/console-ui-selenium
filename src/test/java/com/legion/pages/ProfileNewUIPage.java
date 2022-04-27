@@ -283,7 +283,7 @@ public interface ProfileNewUIPage {
 
 	public String getAvailableHoursForSpecificWeek() throws Exception;
 
-	public void rejectSpecificApprovedAvailabilityRequest(String availabilityWeek) throws Exception;
+	public void verifyTheApprovedOrRejectedAvailabilityRequestCannotBeOperated(String availabilityWeek) throws Exception;
 
 	public void approveSpecificRejectedAvailabilityRequest(String availabilityWeek) throws Exception;
 

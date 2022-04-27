@@ -3822,6 +3822,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		scrollToBottom();
 		if (isElementLoaded(editBtn,10)){
 			moveToElementAndClick(editBtn);
+			SimpleUtils.pass("Click Edit button successfully!");
 		}else{
 			SimpleUtils.fail("Edit button is not loaded!", false);
 		}
@@ -4056,20 +4057,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	@Override
-	public void rejectSpecificApprovedAvailabilityRequest(String availabilityWeek) throws Exception {
+	public void verifyTheApprovedOrRejectedAvailabilityRequestCannotBeOperated(String availabilityWeek) throws Exception {
 		if (areListElementVisible(allAvailabilityChangeRequests, 10)) {
 			for (WebElement availabilityChangeRequest : allAvailabilityChangeRequests) {
 				if (isElementLoaded(availabilityChangeRequest, 5)
 						&& availabilityChangeRequest.findElement(By.cssSelector("div.request-date")).
-						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)
-						&& availabilityChangeRequest.findElement(By.cssSelector("span.request-status")).
-						getText().equalsIgnoreCase("approved")) {
+						getText().replace("\n", "").equalsIgnoreCase(availabilityWeek)) {
 					clickTheElement(availabilityChangeRequest);
-					if (isElementLoaded(rejectAvailabilityButton, 10)) {
-						clickTheElement(rejectAvailabilityButton);
-						SimpleUtils.pass("Reject the pending availability request successfully!");
+					if (!isElementLoaded(rejectAvailabilityButton, 3)
+							&& !isElementLoaded(approveAvailabilityButton, 3)) {
+						SimpleUtils.pass("Approve or Reject button not loaded!");
 					} else {
-						SimpleUtils.fail("Reject button fail to load!", false);
+						SimpleUtils.fail("Approve or Reject button should not loaded!", false);
 					}
 					break;
 				}
