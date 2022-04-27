@@ -921,7 +921,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             }else {
                 SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
             }
-        } else if (areListElementVisible(searchAndRecommendedTMTabs, 5)) {
+        } else if (areListElementVisible(searchAndRecommendedTMTabs, 10)) {
             if (searchAndRecommendedTMTabs.size() == 2) {
                 //click(btnSearchteamMember.get(1));
                 if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
@@ -1905,7 +1905,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         String warningMesssage ="";
         if (isElementLoaded(warningMessagesInWarningMode, 5)) {
             warningMesssage= warningMessagesInWarningMode.getText();
-        } if (areListElementVisible(warningMessagesInWarningModeOnNewCreaeShiftPage, 5)) {
+        }else if (areListElementVisible(warningMessagesInWarningModeOnNewCreaeShiftPage, 5)) {
             for (WebElement message: warningMessagesInWarningModeOnNewCreaeShiftPage) {
                 warningMesssage = warningMesssage + " " + message.getText();
             }

@@ -1242,6 +1242,9 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchText(firstNameOfTM1);
 
+        //check the violation message in Status column
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+" should be scheduled from "+ scheduleFromToTime;
@@ -1255,11 +1258,6 @@ public class CinemarkMinorTest extends TestBase {
             shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
-
-
-        //check the violation message in Status column
-        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
-                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
 
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
@@ -1596,11 +1594,13 @@ public class CinemarkMinorTest extends TestBase {
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s weekly schedule should not exceed "+ maxOfDays +" days";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+            String actualMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+            if (actualMessage.contains(warningMessage1)
+                    && actualMessage.contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else
-                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+                SimpleUtils.fail("The message in warning mode display incorrectly! "+ "the expect is:" +warningMessage1 +" and "+ warningMessage2
+                        + " the actual is: "+ actualMessage, false);
             shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
