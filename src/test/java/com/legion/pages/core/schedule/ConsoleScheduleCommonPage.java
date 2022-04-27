@@ -420,8 +420,9 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @Override
     public String getActiveWeekText() throws Exception {
-        if (isElementLoaded(MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")),15))
-            return MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")).getText().replace("\n", " ");
+        if (isElementLoaded(daypicker, 15)) {
+            return daypicker.getText().replace("\n", " ");
+        }
         return "";
     }
 
