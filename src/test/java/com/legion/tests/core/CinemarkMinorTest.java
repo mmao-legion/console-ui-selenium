@@ -1240,11 +1240,12 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchText(firstNameOfTM1);
+        newShiftPage.searchWithOutSelectTM(firstNameOfTM1);
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
                 shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
+        shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+" should be scheduled from "+ scheduleFromToTime;
@@ -1352,7 +1353,7 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchText(firstNameOfTM1);
+        newShiftPage.searchWithOutSelectTM(firstNameOfTM1);
         SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
                 !shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
@@ -2216,7 +2217,6 @@ public class CinemarkMinorTest extends TestBase {
             newShiftPage.clickOnBackButton();
             newShiftPage.moveSliderAtCertainPoint("7am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             for (String minorName: minorNames) {

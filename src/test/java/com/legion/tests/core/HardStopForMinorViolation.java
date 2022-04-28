@@ -141,7 +141,7 @@ public class HardStopForMinorViolation extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(minorName);
-            shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(minorName);
+//            shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(minorName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
 

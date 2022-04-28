@@ -950,9 +950,13 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                         clickTheElement(offerButton);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
                                     waitForSeconds(2);
-                                    if (areListElementVisible(buttonsOnWarningMode, 5) && buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("assign anyway")) {
-                                        clickTheElement(buttonsOnWarningMode.get(1));
-                                        SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                    if (areListElementVisible(buttonsOnWarningMode, 5)) {
+                                        if (buttonsOnWarningMode.size()==2) {
+                                            if (buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("assign anyway")){
+                                                clickTheElement(buttonsOnWarningMode.get(1));
+                                                SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                            }
+                                        }
                                     }
                                     break;
                                 }
@@ -1876,7 +1880,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = "[ng-click=\"prevAction()\"]")
     private WebElement backButton;
-    @FindBy(css = "ng-click=\"back()\"")
+    @FindBy(css = "[ng-click=\"back()\"]")
     private WebElement backButtonOnNewCreateShiftPage;
 
     @Override
@@ -1923,7 +1927,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.fail("The OK button fail to load! ", false);
     }
 
-    @FindBy(className = "div.react-create-shift-modal")
+    @FindBy(css = "div.react-create-shift-modal")
     private WebElement newCreateShiftModal;
 
     public boolean checkIfNewCreateShiftPageDisplay() throws Exception {

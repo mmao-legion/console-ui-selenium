@@ -2332,7 +2332,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = "[search-results=\"workerSearchResult\"] [ng-class=\"swapStatusClass(worker)\"]")
     private List<WebElement> tmScheduledStatus;
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-3')]/div[1]/p")
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[3]/div")
     private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
     @Override
     public String getTheMessageOfTMScheduledStatus() throws Exception {
@@ -2347,13 +2347,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 for (WebElement status: tmScheduledStatusOnNewCreateShiftPage) {
                     statusMessage = statusMessage + status.getText() + "\n";
                 }
-                messageOfTMScheduledStatus = statusMessage;
+                messageOfTMScheduledStatus = statusMessage.replace(" AM", "am").replace(" PM", "pm").replace(":00", "");
                 MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
             }else {
-                SimpleUtils.fail("TM scheduled status is not loaded!", false);
+                SimpleUtils.report("TM scheduled status is not loaded!");
             }
         } else {
-            messageOfTMScheduledStatus = MyThreadLocal.getMessageOfTMScheduledStatus();
+            messageOfTMScheduledStatus = MyThreadLocal.getMessageOfTMScheduledStatus().replace(" AM", "am").replace(" PM", "pm").replace(":00", "");
         }
         return messageOfTMScheduledStatus;
     }
@@ -2794,25 +2794,39 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = "[ng-if=\"hasBestWorkers()\"] [ng-repeat=\"worker in searchResults\"]")
     private List<WebElement> recommendedTMs;
+    @FindBy(xpath = "//div[contains(@class,'MuiBox-root')]/div[2]/div/div[2]/div/div/div[2]/div")
+    private List<WebElement> recommendedTMsOnNewCreateShiftPage;
 
     public List<WebElement> getAllRecommendedTMs () {
         List<WebElement> tmsInRecommendedTab = new ArrayList<>();
         if (areListElementVisible(recommendedTMs, 10)) {
             tmsInRecommendedTab = recommendedTMs;
-        } else
+        } else if (areListElementVisible(recommendedTMsOnNewCreateShiftPage, 5)) {
+            tmsInRecommendedTab = recommendedTMsOnNewCreateShiftPage;
+        }else
             SimpleUtils.report("There is no TMs in recommended tab! ");
 
         return tmsInRecommendedTab;
     }
 
-    public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM) {
+    public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM) throws Exception {
+        NewShiftPage newShiftPage = new ConsoleNewShiftPage();
         boolean isTMExist = false;
         for (WebElement tm: getAllRecommendedTMs()) {
-            String tmFullName = tm.findElement(By.cssSelector(".worker-edit-search-worker-display-name")).getText();
-            if (tmFullName.equalsIgnoreCase(fullNameOfTM)) {
-                isTMExist = true;
-                SimpleUtils.pass("TM: "+ fullNameOfTM+" exists in recommended tab! ");
-                break;
+            if (newShiftPage.checkIfNewCreateShiftPageDisplay()) {
+                String tmFullName = tm.findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
+                if (tmFullName.equalsIgnoreCase(fullNameOfTM)) {
+                    isTMExist = true;
+                    SimpleUtils.pass("TM: "+ fullNameOfTM+" exists in recommended tab! ");
+                    break;
+                }
+            } else {
+                String tmFullName = tm.findElement(By.cssSelector(".worker-edit-search-worker-display-name")).getText();
+                if (tmFullName.equalsIgnoreCase(fullNameOfTM)) {
+                    isTMExist = true;
+                    SimpleUtils.pass("TM: "+ fullNameOfTM+" exists in recommended tab! ");
+                    break;
+                }
             }
         }
         return isTMExist;

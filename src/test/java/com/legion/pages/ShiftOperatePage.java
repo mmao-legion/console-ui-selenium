@@ -103,7 +103,7 @@ public interface ShiftOperatePage {
     public void addShiftNotesToTextarea(String notes) throws Exception;
     public String getShiftInfoInEditShiftDialog() throws Exception;
     public void clickOnEditShiftNotesOption() throws Exception;
-    public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM);
+    public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM) throws Exception;
     public void moveMealAndRestBreaksOnEditBreaksPage(String breakTime, int index, boolean isMealBreak) throws Exception;
     public void moveSliderAtCertainPointOnEditShiftTimePage(String shiftTime, String startingPoint) throws Exception;
     public String getOfferStatusFromOpenShiftStatusList (String tmName);
