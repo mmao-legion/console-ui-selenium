@@ -4,7 +4,11 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
+import com.legion.pages.core.ConsoleControlsPage;
+import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
+import com.legion.pages.core.OpCommons.OpsCommonComponents;
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
+import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.OpsPortal.OpsPortalUserManagementPage;
 import com.legion.pages.core.opusermanagement.*;
 import com.legion.tests.TestBase;
@@ -474,6 +478,111 @@ public class UserManagementTest extends TestBase {
                 }
             }
         }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Work Role - Assignment Rule - Job Title")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyManageJobTitleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            //go to User Management tab
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+
+            //go to job title page
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleAccess();
+
+            //Add job title
+            userManagementPage.clickAddJobTitle();
+            userManagementPage.inputJobTitleName("op auto add");
+            userManagementPage.selectAccessRole();
+            userManagementPage.saveJobTitle();
+
+            //Search job title
+            userManagementPage.searchJobTitle("op auto add");
+
+            //go back
+            OpsPortalWorkRolesPage opsPortalWorkRolesPage = new OpsPortalWorkRolesPage();
+            opsPortalWorkRolesPage.goBack();
+
+            //go to work role
+            OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
+            panelPage.goToWorkRolesPage();
+
+            opsPortalWorkRolesPage.addNewWorkRole();
+            // verify new added job title is display in op assignment rule list
+            WorkRoleDetailsPage workRoleDetailsPage = new WorkRoleDetailsPage();
+            workRoleDetailsPage.goToTeamMemberSearchBox();
+            workRoleDetailsPage.searchTeamMember("op auto add");
+            //logout
+            OpsPortalNavigationPage opsPortalNavigationPage = new OpsPortalNavigationPage();
+            opsPortalNavigationPage.logout();
+
+            //log in with user has contorl manage job title permission
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+admin@legion.co", "admin11.a","verifyMock");
+            RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
+            rightHeaderBarPage.switchToConsole();
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("ClearDistrict");
+            consoleNavigationPage.navigateTo("Controls");
+
+            //go to job title page
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleAccess();
+
+            //Add job title
+            userManagementPage.clickAddJobTitle();
+            userManagementPage.inputJobTitleName("control auto add");
+            userManagementPage.selectAccessRole();
+            userManagementPage.saveJobTitle();
+
+            //Search job title
+            userManagementPage.searchJobTitle("control auto add");
+
+            opsPortalWorkRolesPage.goBack();
+
+            ConsoleControlsPage consoleControlsPage = new ConsoleControlsPage();
+            consoleControlsPage.goToTaskAndWorkRolePage();
+            //go to work role detail
+            consoleControlsPage.goToWorkRolePage();
+            consoleControlsPage.goToFirstWorkRoleDetail();
+            // verify op and control added job title is display in control assignment rule list
+            consoleControlsPage.goToTeamMemberSearchBox();
+            workRoleDetailsPage.searchTeamMember("op auto add");
+            workRoleDetailsPage.searchTeamMember("control auto add");
+
+            //go to control center
+            rightHeaderBarPage.switchToOpsPortal();
+            //go to usermanagement
+            userManagementPage.clickOnUserManagementTab();
+            //go to work role
+            panelPage.goToWorkRolesPage();
+            opsPortalWorkRolesPage.addNewWorkRole();
+            //verify control added job title diaplay in op assignment rule
+            workRoleDetailsPage.goToTeamMemberSearchBox();
+            workRoleDetailsPage.searchTeamMember("control auto add");
+            //go back
+            opsPortalWorkRolesPage.goBack();
+            OpsCommonComponents opsCommonComponents = new OpsCommonComponents();
+            opsCommonComponents.leaveThisPage();
+            opsPortalWorkRolesPage.goBack();
+            //go to job title page
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleAccess();
+            //remove job title added in control
+            userManagementPage.searchJobTitle("control auto add");
+            userManagementPage.removeJobTitle();
+            opsCommonComponents.deleteConfirm();
+            //remove job title added in op
+            userManagementPage.searchJobTitle("op auto add");
+            userManagementPage.removeJobTitle();
+            opsCommonComponents.deleteConfirm();
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
