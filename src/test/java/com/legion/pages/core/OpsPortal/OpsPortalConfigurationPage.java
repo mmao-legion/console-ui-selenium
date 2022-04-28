@@ -3392,8 +3392,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 								SimpleUtils.pass("The IN and NOt IN relation are supported for Criteria relationship.");
 							//set up criteria value
 							clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
-							//input search key words
-							dynamicGroupCriteriaSearchInput.sendKeys("United States");
+							//choose the last value from drop down
+							clickTheElement(dynamicGroupCriteriaValueInputs.get(0));
+							clickTheElement(dynamicGroupCriteriaResults.get(dynamicGroupCriteriaResults.size() - 1));
 							waitForSeconds(2);
 							clickTheElement(dynamicGroupCriteriaResults.get(0));
 							waitForSeconds(2);
