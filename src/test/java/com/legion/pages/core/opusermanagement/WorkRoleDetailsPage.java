@@ -1,6 +1,7 @@
 package com.legion.pages.core.opusermanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -142,5 +143,23 @@ public class WorkRoleDetailsPage extends BasePage {
         cancelButton.click();
     }
 
+    //check jon title in work role assignment rule
+    @FindBy(css = "input[placeholder = 'Please enter characters to filter']")
+    private WebElement teamMemberSearchBox;
+    @FindBy(css = "a.ng-binding")
+    private WebElement teamMemberSearchResult;
 
+    public void goToTeamMemberSearchBox() throws Exception{
+        assignmentRuleAddButton.click();
+        teamMemberTitleButton.click();
+    }
+
+    public void searchTeamMember(String jobTitleName) throws Exception{
+        teamMemberSearchBox.clear();
+        teamMemberSearchBox.sendKeys(jobTitleName);
+        if(isElementLoaded(teamMemberSearchResult,5)){
+            SimpleUtils.pass("Job title search result successfully");
+        }else
+            SimpleUtils.fail("Job title loaded failed",false);
+    }
 }

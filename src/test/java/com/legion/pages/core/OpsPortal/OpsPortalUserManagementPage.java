@@ -3,6 +3,7 @@ package com.legion.pages.core.OpsPortal;
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -1096,5 +1097,98 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.fail("user time off tab loaded failed",false);
 	}
 
+	@FindBy(xpath = "//nav[@class='lg-tabs__nav']/div[3]")
+	private WebElement jobTitleAccess;
+
+	public void goToJobTitleAccess() throws Exception{
+		if(isElementEnabled(jobTitleAccess,5)){
+			click(jobTitleAccess);
+			SimpleUtils.pass("Job Title Access is clickable");
+		}else
+			SimpleUtils.fail("Job Title Access loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='Add Job Title']>button")
+	private WebElement addJobTitle;
+
+	public void clickAddJobTitle() throws Exception{
+		if(isElementEnabled(addJobTitle,5)){
+			click(addJobTitle);
+			SimpleUtils.pass("Add job title is clickable");
+		}else
+			SimpleUtils.fail("Add job title loaded failed",false);
+	}
+
+	@FindBy(css = "input[placeholder='Name of Job Title']")
+	private WebElement jobTitleName;
+
+	public void inputJobTitleName(String name) throws Exception{
+		if(isElementLoaded(jobTitleName,5)){
+			jobTitleName.sendKeys(name);
+			SimpleUtils.pass("Input job title name successfully");
+		}else
+			SimpleUtils.fail("Job title name input box loaded failed",false);
+	}
+
+	@FindBy(css = "input[aria-label='Admin']")
+	private WebElement accessRole;
+
+	public void selectAccessRole() throws Exception{
+		if(isElementLoaded(accessRole,5)){
+			click(accessRole);
+			SimpleUtils.pass("Select access role successfully");
+		}else
+			SimpleUtils.fail("Access role loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='Save']>button")
+	private WebElement saveJobTitleButton;
+
+	public void saveJobTitle() throws Exception{
+		if(isElementLoaded(saveJobTitleButton,5)){
+			click(saveJobTitleButton);
+			SimpleUtils.pass("Save job title successfully");
+		}else
+			SimpleUtils.fail("Job title save button loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='cancel']>button")
+	private WebElement cancelJobTitleButton;
+
+	public void cancelJobTitle() throws Exception{
+		if(isElementLoaded(cancelJobTitleButton,5)){
+			click(cancelJobTitleButton);
+			SimpleUtils.pass("Cancel job title successfully");
+		}else
+			SimpleUtils.fail("Cancel title save button loaded failed",false);
+	}
+
+	@FindBy(css = "input[placeholder='You can search by employee job title.']")
+	private WebElement searchJobTitleInputBox;
+	@FindBy(css ="td.ng-binding")
+	private WebElement searchJobTitleResult;
+
+	public void searchJobTitle(String name) throws Exception{
+		if(isElementLoaded(searchJobTitleInputBox,5)){
+			searchJobTitleInputBox.clear();
+			searchJobTitleInputBox.sendKeys(name);
+			if(isElementLoaded(searchJobTitleResult,5)){
+				SimpleUtils.pass("Search job title " + name + " successfully");
+			}else
+				SimpleUtils.fail("Job title is not match with searched",false);
+		}else
+			SimpleUtils.fail("Job title search input box loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label = 'Remove']>button")
+	private WebElement removeJobTitleButton;
+
+	public void removeJobTitle() throws Exception{
+		if(isElementLoaded(removeJobTitleButton,5)){
+			click(removeJobTitleButton);
+			SimpleUtils.pass("Remove job title successfully");
+		}else
+			SimpleUtils.fail("Remove job title button loaded failed",false);
+	}
 }
 
