@@ -1946,7 +1946,7 @@ public class ActivityTest extends TestBase {
             shiftOperatePage.verifyTMInTheOfferList(teamMemberName2, "offered");
             shiftOperatePage.closeViewStatusContainer();
             //wait for the offer to send to TMs
-            Thread.sleep(10000);
+            Thread.sleep(60000);
             loginPage.logOut();
 
             // Login as two or more TMs and claim the offers
@@ -1990,13 +1990,13 @@ public class ActivityTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             i=0;
             while (i<5 && !smartCardPage.isViewShiftsBtnPresent()) {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 scheduleCommonPage.navigateToNextWeek();
                 i++;
             }
-            Thread.sleep(5000);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(10000);
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             cardName = "WANT MORE HOURS?";

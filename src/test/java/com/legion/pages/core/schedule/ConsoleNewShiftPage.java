@@ -469,10 +469,6 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                             clickTheElement(assignAndOfferButtons.get(0));
                         } else
                             clickTheElement(assignAndOfferButtons.get(1));
-                        setWorkerRole(tmInfo.get(1).getText());
-                        setWorkerLocation(tmInfo.get(2).getText());
-//					setWorkerShiftTime(searchWorkerSchShiftTime.getText());
-//					setWorkerShiftDuration(searchWorkerSchShiftDuration.getText());
                         ScheduleStatus = true;
                         break;
                     }
@@ -1913,6 +1909,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             for (WebElement message: warningMessagesInWarningModeOnNewCreaeShiftPage) {
                 warningMesssage = warningMesssage + " " + message.getText();
             }
+            warningMesssage = warningMesssage.replace(" AM", "am").replace(" PM", "pm").replace(":00", "");
         }else
             SimpleUtils.fail("The warning message fail to load! ", false);
         return warningMesssage;
@@ -1992,6 +1989,20 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }else {
             SimpleUtils.fail("Next day icon fail to load! ", false);
         }
+    }
 
+
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[2]/button")
+    private WebElement clearAssignmentsLink;
+
+    public void clickClearAssignmentsLink() throws Exception {
+        if (isElementLoaded(clearAssignmentsLink, 5)) {
+            clickTheElement(clearAssignmentsLink);
+            if (!isElementLoaded(clearAssignmentsLink, 3)) {
+                SimpleUtils.pass("Click clear assignments link successfully! ");
+            } else
+                SimpleUtils.fail("Fail to click clear assignments link! ", false);
+        } else
+            SimpleUtils.report("The clear assignments link fail to load! ");
     }
 }

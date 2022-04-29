@@ -53,4 +53,5 @@ public interface NewShiftPage {
     public boolean checkIfNewCreateShiftPageDisplay() throws Exception;
     public void searchWithOutSelectTM(String tmName) throws Exception;
     public void checkOrUnCheckNextDayOnCreateShiftModal(boolean toCheck) throws Exception;
+    public void clickClearAssignmentsLink() throws Exception;
 }

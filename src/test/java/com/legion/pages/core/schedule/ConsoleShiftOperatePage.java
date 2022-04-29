@@ -1674,14 +1674,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                                 endTime = endTime.replace("am", ":00am").replace("pm", ":00pm");
                             }
                             shiftStartInput.clear();
-                            moveToElementAndClick(shiftStartInput);
-                            waitForSeconds(2);
-                            shiftStartInput.sendKeys(startTime);
                             shiftEndInput.clear();
-                            moveToElementAndClick(shiftEndInput);
                             waitForSeconds(2);
+                            click(shiftStartInput);
+                            shiftStartInput.sendKeys(startTime);
+                            waitForSeconds(2);
+                            click(shiftEndInput);
                             shiftEndInput.sendKeys(endTime);
-                            waitForSeconds(2);
                             clickOnUpdateEditShiftTimeButton();
                         }
 

@@ -1590,7 +1590,9 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.clickClearAssignmentsLink();
         newShiftPage.searchText(firstNameOfTM1);
+
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s weekly schedule should not exceed "+ maxOfDays +" days";
