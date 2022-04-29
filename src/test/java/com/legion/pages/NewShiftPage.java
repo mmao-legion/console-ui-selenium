@@ -25,7 +25,7 @@ public interface NewShiftPage {
     public void selectDaysByIndex(int index1, int index2, int index3) throws Exception;
     public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
     public void searchTeamMemberByName(String name) throws Exception;
-    public WebElement selectAndGetTheSelectedTM() throws Exception;
+    public String selectAndGetTheSelectedTM() throws Exception;
     public String selectTeamMembers() throws Exception;
     public void selectSpecificTMWhileCreateNewShift(String teamMemberName) throws Exception;
     public void addOpenShiftWithLastDay(String workRole) throws Exception;
@@ -44,11 +44,13 @@ public interface NewShiftPage {
     public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
     public void selectWeekDaysByDayName(String dayName) throws Exception;
     public List<String> getAllOperatingHrsOnCreateShiftPage() throws Exception;
-    public void clickOnCloseButtonOnCustomizeShiftPage() throws Exception;
     public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception;
     public void closeCustomizeNewShiftWindow() throws Exception;
     public void clickOnBackButton () throws Exception;
     public boolean checkIfWarningModalDisplay () throws Exception;
     public String getWarningMessageFromWarningModal () throws Exception;
     public void clickOnOkButtonOnWarningModal () throws Exception;
+    public boolean checkIfNewCreateShiftPageDisplay() throws Exception;
+    public void searchWithOutSelectTM(String tmName) throws Exception;
+    public void checkOrUnCheckNextDayOnCreateShiftModal(boolean toCheck) throws Exception;
 }

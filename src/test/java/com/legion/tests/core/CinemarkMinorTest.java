@@ -788,7 +788,8 @@ public class CinemarkMinorTest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(0,0,0);
             newShiftPage.selectWorkRole(workRole);
-            newShiftPage.moveSliderAtSomePoint("8", 20, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("5:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchText(cinemarkMinors.get("Minor17"));
@@ -1239,8 +1240,12 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchText(firstNameOfTM1);
+        newShiftPage.searchWithOutSelectTM(firstNameOfTM1);
 
+        //check the violation message in Status column
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
+        shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+" should be scheduled from "+ scheduleFromToTime;
@@ -1254,11 +1259,6 @@ public class CinemarkMinorTest extends TestBase {
             shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
-
-
-        //check the violation message in Status column
-        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
-                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
 
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
@@ -1353,7 +1353,7 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchText(firstNameOfTM1);
+        newShiftPage.searchWithOutSelectTM(firstNameOfTM1);
         SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
                 !shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
@@ -1595,11 +1595,13 @@ public class CinemarkMinorTest extends TestBase {
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s weekly schedule should not exceed "+ maxOfDays +" days";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+            String actualMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+            if (actualMessage.contains(warningMessage1)
+                    && actualMessage.contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else
-                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+                SimpleUtils.fail("The message in warning mode display incorrectly! "+ "the expect is:" +warningMessage1 +" and "+ warningMessage2
+                        + " the actual is: "+ actualMessage, false);
             shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
@@ -2215,7 +2217,6 @@ public class CinemarkMinorTest extends TestBase {
             newShiftPage.clickOnBackButton();
             newShiftPage.moveSliderAtCertainPoint("7am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             for (String minorName: minorNames) {

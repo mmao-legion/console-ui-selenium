@@ -2362,7 +2362,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @FindBy(className = "lgn-action-button-success")
     private WebElement okBtnOnConfirm;
-
+    @FindBy(css = ".MuiDialogContent-root p")
+    private List<WebElement> warningMessagesInWarningModeOnNewCreaeShiftPage;
     @Override
     public String getWarningMessageInDragShiftWarningMode() throws Exception {
         String warningMessage = "";
@@ -2370,7 +2371,12 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement warningMessageInWarningMode: warningMessagesInWarningMode){
                 warningMessage = warningMessage + warningMessageInWarningMode.getText()+"\n";
             }
-        } else {
+        } else if (areListElementVisible(warningMessagesInWarningModeOnNewCreaeShiftPage, 5)) {
+            for (WebElement message: warningMessagesInWarningModeOnNewCreaeShiftPage) {
+                warningMessage = warningMessage + " " + message.getText();
+            }
+            warningMessage = warningMessage.replace(" AM", "am").replace(" PM", "pm").replace(":00", "");
+        }else {
             SimpleUtils.fail("Warning message fail to load", false);
         }
         return warningMessage;

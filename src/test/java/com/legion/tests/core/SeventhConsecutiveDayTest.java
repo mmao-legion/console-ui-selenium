@@ -1433,6 +1433,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
     public void verifyViolationWhen7thConsecutiveDayShiftHourExceedDTPayHrsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
                     dashboardPage.isDashboardPageLoaded(), false);
 
@@ -1489,6 +1490,11 @@ public class SeventhConsecutiveDayTest extends TestBase {
             List<String> consecutiveOTViolations = new ArrayList<>();
             consecutiveOTViolations.add(consecutiveOTViolation1);
             consecutiveOTViolations.add(consecutiveOTViolation2);
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             createShiftsForConsecutiveOTAndDT(firstSixDaysTime, seventhConsecutiveDayTime, consecutiveOTViolations);
 
         } catch (Exception e) {

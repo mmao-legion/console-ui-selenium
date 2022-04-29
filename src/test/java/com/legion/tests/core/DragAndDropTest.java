@@ -470,7 +470,6 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(2);
-            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(TM1);
@@ -481,8 +480,8 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);
-            newShiftPage.moveSliderAtSomePoint("8", 10, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(TM2);
@@ -527,7 +526,6 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             //newShiftPage.selectDaysByIndex(0, 0, 2);
             newShiftPage.selectSpecificWorkDay(1);
-            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(TM1);
@@ -539,8 +537,8 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(1, 1, 1);
             //newShiftPage.selectSpecificWorkDay(1);
-            newShiftPage.moveSliderAtSomePoint("8", 10, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("11:00am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(TM1);
@@ -755,7 +753,8 @@ public class DragAndDropTest extends TestBase {
             // Delete all the shifts that are assigned to the team member
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
-
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Create new shift for TM1 on Monday and Wednesday
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -770,8 +769,8 @@ public class DragAndDropTest extends TestBase {
             //Create new shift for TM2 on Tuesday
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
-            newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME_2"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount3.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME_2"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8:30pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("11:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(1, 1, 1);
             newShiftPage.selectWorkRole(workRoleOfTM2);
@@ -1085,7 +1084,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.selectWorkRole(workRoleOfTM2);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(1, 1, 1);
-            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+//            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(firstNameOfTM2);
@@ -1111,7 +1110,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.selectWorkRole(workRoleOfTM1);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(0, 0, 0);
-            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+//            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(firstNameOfTM1);
@@ -1120,7 +1119,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.selectWorkRole(workRoleOfTM2);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(1, 1, 1);
-            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+//            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(firstNameOfTM2);
@@ -1213,7 +1212,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.selectWorkRole(workRoleOfTM2);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(1, 1, 1);
-            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+//            newShiftPage.moveSliderAtSomePoint("8", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(firstNameOfTM2);

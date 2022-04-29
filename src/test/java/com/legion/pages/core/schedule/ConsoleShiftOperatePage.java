@@ -1171,6 +1171,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if(isAssignTMEnable())
         {
             clickTheElement(assignTM);
+            MyThreadLocal.setAssignTMStatus(true);
             SimpleUtils.pass("Clicked on Assign TM ");
         }
         else
@@ -2280,6 +2281,20 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 } else
                     SimpleUtils.fail("Search Team Members tab fail been selected", false);
             }
+        } else if (areListElementVisible(searchAndRecommendedTMTabs, 10)) {
+            if (searchAndRecommendedTMTabs.get(0).getAttribute("class").contains("selected")) {
+                click(searchAndRecommendedTMTabs.get(1));
+                if (searchAndRecommendedTMTabs.get(1).getAttribute("class").contains("select")) {
+                    SimpleUtils.pass("Recommended TMs tab been selected");
+                } else
+                    SimpleUtils.fail("Recommended TMs tab fail been selected", false);
+            } else {
+                click(searchAndRecommendedTMTabs.get(0));
+                if (searchAndRecommendedTMTabs.get(0).getAttribute("class").contains("select")) {
+                    SimpleUtils.pass("Search Team Members tab been selected");
+                } else
+                    SimpleUtils.fail("Search Team Members tab fail been selected", false);
+            }
         } else {
             SimpleUtils.fail("Select Team Member options are not available", false);
         }
@@ -2317,16 +2332,28 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = "[search-results=\"workerSearchResult\"] [ng-class=\"swapStatusClass(worker)\"]")
     private List<WebElement> tmScheduledStatus;
-
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[3]/div")
+    private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
     @Override
     public String getTheMessageOfTMScheduledStatus() throws Exception {
         String messageOfTMScheduledStatus = "";
-        if (areListElementVisible(tmScheduledStatus,5)){
-            for (WebElement status : tmScheduledStatus) {
-                messageOfTMScheduledStatus = messageOfTMScheduledStatus + status.getText() + "\n";
+        if (MyThreadLocal.getMessageOfTMScheduledStatus()==null || MyThreadLocal.getMessageOfTMScheduledStatus().equals("")) {
+            if (areListElementVisible(tmScheduledStatus,5)){
+                for (WebElement status : tmScheduledStatus) {
+                    messageOfTMScheduledStatus = messageOfTMScheduledStatus + status.getText() + "\n";
+                }
+            } else if (areListElementVisible(tmScheduledStatusOnNewCreateShiftPage, 5)) {
+                String statusMessage = "";
+                for (WebElement status: tmScheduledStatusOnNewCreateShiftPage) {
+                    statusMessage = statusMessage + status.getText() + "\n";
+                }
+                messageOfTMScheduledStatus = statusMessage.replace(" AM", "am").replace(" PM", "pm").replace(":00", "");
+                MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
+            }else {
+                SimpleUtils.report("TM scheduled status is not loaded!");
             }
         } else {
-            SimpleUtils.fail("TM scheduled status is not loaded!", false);
+            messageOfTMScheduledStatus = MyThreadLocal.getMessageOfTMScheduledStatus().replace(" AM", "am").replace(" PM", "pm").replace(":00", "");
         }
         return messageOfTMScheduledStatus;
     }
@@ -2363,7 +2390,17 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             }
         }
     }
+    @FindBy(css = "button.MuiButtonBase-root")
+    private List<WebElement> searchAndRecommendedTMTabs;
 
+    @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")
+    private WebElement textSearchOnNewCreateShiftPage;
+
+    @FindBy(css = "div.MuiBox-root div.MuiBox-root div.MuiBox-root div div div div div div.MuiGrid-root.MuiGrid-container")
+    private List<WebElement> searchResultsOnNewCreateShiftPage;
+
+    @FindBy(css = ".MuiDialogContent-root button")
+    private List<WebElement> buttonsOnWarningMode;
     @Override
     public void clickOnRadioButtonOfSearchedTeamMemberByName(String name) throws Exception {
         if (areListElementVisible(searchResults, 15)) {
@@ -2379,7 +2416,28 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     SimpleUtils.fail("Worker name or option circle not loaded Successfully!", false);
                 }
             }
-        }else {
+        }else if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
+            for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                String tmName = tmInfo.get(0).getText();
+                List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                WebElement assignButton = assignAndOfferButtons.get(0);
+                WebElement offerButton = assignAndOfferButtons.get(1);
+                if (tmName != null && assignButton != null && offerButton != null) {
+                    if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                        if (MyThreadLocal.getAssignTMStatus()) {
+                            clickTheElement(assignButton);
+                        } else
+                            clickTheElement(offerButton);
+                        SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                        waitForSeconds(2);
+                        break;
+                    }
+                }else {
+                    SimpleUtils.fail("Worker name or buttons not loaded Successfully!", false);
+                }
+            }
+        } else {
             SimpleUtils.fail("Failed to find the team member!", false);
         }
 
@@ -2395,7 +2453,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().equalsIgnoreCase("ASSIGN ANYWAY")) {
             click(btnAssignAnyway);
             SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
-        } else{
+        } else if (areListElementVisible(buttonsOnWarningMode, 10)) {
+            click(buttonsOnWarningMode.get(1));
+        }else{
             SimpleUtils.fail("Assign Team Member: 'ASSIGN ANYWAY' button fail to load!", false);
         }
     }
@@ -2734,25 +2794,39 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = "[ng-if=\"hasBestWorkers()\"] [ng-repeat=\"worker in searchResults\"]")
     private List<WebElement> recommendedTMs;
+    @FindBy(xpath = "//div[contains(@class,'MuiBox-root')]/div[2]/div/div[2]/div/div/div[2]/div")
+    private List<WebElement> recommendedTMsOnNewCreateShiftPage;
 
     public List<WebElement> getAllRecommendedTMs () {
         List<WebElement> tmsInRecommendedTab = new ArrayList<>();
         if (areListElementVisible(recommendedTMs, 10)) {
             tmsInRecommendedTab = recommendedTMs;
-        } else
+        } else if (areListElementVisible(recommendedTMsOnNewCreateShiftPage, 5)) {
+            tmsInRecommendedTab = recommendedTMsOnNewCreateShiftPage;
+        }else
             SimpleUtils.report("There is no TMs in recommended tab! ");
 
         return tmsInRecommendedTab;
     }
 
-    public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM) {
+    public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM) throws Exception {
+        NewShiftPage newShiftPage = new ConsoleNewShiftPage();
         boolean isTMExist = false;
         for (WebElement tm: getAllRecommendedTMs()) {
-            String tmFullName = tm.findElement(By.cssSelector(".worker-edit-search-worker-display-name")).getText();
-            if (tmFullName.equalsIgnoreCase(fullNameOfTM)) {
-                isTMExist = true;
-                SimpleUtils.pass("TM: "+ fullNameOfTM+" exists in recommended tab! ");
-                break;
+            if (newShiftPage.checkIfNewCreateShiftPageDisplay()) {
+                String tmFullName = tm.findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
+                if (tmFullName.equalsIgnoreCase(fullNameOfTM)) {
+                    isTMExist = true;
+                    SimpleUtils.pass("TM: "+ fullNameOfTM+" exists in recommended tab! ");
+                    break;
+                }
+            } else {
+                String tmFullName = tm.findElement(By.cssSelector(".worker-edit-search-worker-display-name")).getText();
+                if (tmFullName.equalsIgnoreCase(fullNameOfTM)) {
+                    isTMExist = true;
+                    SimpleUtils.pass("TM: "+ fullNameOfTM+" exists in recommended tab! ");
+                    break;
+                }
             }
         }
         return isTMExist;
@@ -2856,16 +2930,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 && isElementLoaded(shiftEndInput, 10)) {
             SimpleUtils.report("The new edit shift time page display correctly! ");
             shiftStartInput.clear();
-            waitForSeconds(2);
-            moveToElementAndClick(shiftEndInput);
-            waitForSeconds(2);
-            moveToElementAndClick(shiftStartInput);
-            shiftStartInput.sendKeys(startTime);
             shiftEndInput.clear();
             waitForSeconds(2);
-            moveToElementAndClick(shiftStartInput);
+            click(shiftStartInput);
+            shiftStartInput.sendKeys(startTime);
             waitForSeconds(2);
-            moveToElementAndClick(shiftEndInput);
+            click(shiftEndInput);
             shiftEndInput.sendKeys(endTime);
             if (checkTheNextDay) {
                 checkOrUnCheckNextDayOnEditShiftTimePage(true);
