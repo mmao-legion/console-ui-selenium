@@ -1631,7 +1631,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @Override
     public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception {
         HashMap<String, Integer> result = new HashMap<String, Integer>();
-        if (isElementLoaded(cardContainerInDMView,10) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div[class*=\"card-carousel-card-analytics-card-color-\"]")),10)){
+        if (isElementLoaded(cardContainerInDMView,20) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div[class*=\"card-carousel-card-analytics-card-color-\"]")),20)){
             List<String> strList = Arrays.asList(cardContainerInDMView.findElement(By.cssSelector("div[class*=\"card-carousel-card-analytics-card-color-\"]")).getText().split("\n"));
             if (strList.size()==4 && strList.get(1).toLowerCase().contains("unplanned") && strList.get(2).toLowerCase().contains("clocks") && SimpleUtils.isNumeric(strList.get(0)) && SimpleUtils.isNumeric(strList.get(3).replace(" total timesheets", ""))){
                 result.put("unplanned clocks", Integer.parseInt(strList.get(0)));
@@ -1651,6 +1651,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @Override
     public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception {
         HashMap<String, Integer> result = new HashMap<String, Integer>();
+        waitForSeconds(3);
         if (isElementLoaded(cardContainerInDMView,20) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div.card-carousel-card-card-carousel-card-yellow-top")),20)){
             String info = cardContainerInDMView.findElement(By.cssSelector("div.card-carousel-card-card-carousel-card-yellow-top")).getText();
             List<String> strList = Arrays.asList(info.split("\n"));
