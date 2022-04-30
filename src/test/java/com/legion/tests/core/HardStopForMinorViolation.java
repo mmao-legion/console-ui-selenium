@@ -256,7 +256,7 @@ public class HardStopForMinorViolation extends TestBase {
                     newShiftPage.ifWarningModeDisplay(), false);
 
             //Related minor warning message will show.
-            String messageFromWarningModal = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+            String messageFromWarningModal = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
             String expectedMessage = "As a minor, "+minorName.split(" ")[0]+" should be scheduled from 8am - 4pm";
             SimpleUtils.assertOnFail("The message display incorrectly, the expected is : "+expectedMessage + " The actual is: "+messageFromWarningModal,
                     messageFromWarningModal.equalsIgnoreCase(expectedMessage), false);

@@ -338,8 +338,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            
             setConsecutiveOTAndDTSettings(consecutiveOTDaysCount.Seventh.getValue(), consecutiveOTOptions.Always.getValue(), location);
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();

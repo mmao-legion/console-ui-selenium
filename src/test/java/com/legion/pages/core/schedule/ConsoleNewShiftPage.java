@@ -882,7 +882,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
     @Override
     public void searchTeamMemberByName(String name) throws Exception {
-        if(areListElementVisible(btnSearchteamMember,15)) {
+        if(areListElementVisible(btnSearchteamMember,10)) {
             if (btnSearchteamMember.size() == 2) {
                 //click(btnSearchteamMember.get(1));
                 if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {

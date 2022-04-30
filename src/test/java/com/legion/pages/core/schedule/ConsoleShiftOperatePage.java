@@ -2883,7 +2883,6 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return status;
     }
 
-
     @FindBy(css = "div.worker-shift-container")
     private WebElement shiftCardOnEditShiftTimePage;
 
@@ -2930,6 +2929,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.report("The new edit shift time page display correctly! ");
             shiftStartInput.clear();
             shiftEndInput.clear();
+            clickTheElement(shiftCardOnEditShiftTimePage);
             waitForSeconds(2);
             click(shiftStartInput);
             shiftStartInput.sendKeys(startTime);
