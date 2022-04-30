@@ -421,8 +421,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css = "div[ng-class*='ChangeRole'] span")
     private WebElement changeRole;
     public void changeWorkRoleInPrompt(boolean isApplyChange) throws Exception {
-        int index = getTheIndexWhenClickingOnProfileIcon();
-        WebElement clickedShift = getShiftElementByIndex(index);
+        ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
+        scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+        WebElement clickedShift = getShiftElementByIndex(0);
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         clickOnChangeRole();
         if(isElementEnabled(schWorkerInfoPrompt,5)) {
@@ -468,7 +469,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                         clickTheElement(clickedShift);
                     }
 
-                    clickedShift = getShiftElementByIndex(index);
+                    clickedShift = getShiftElementByIndex(0);
                     if (scheduleCommonPage.isScheduleDayViewActive()) {
                         clickTheElement(clickedShift.findElement(By.cssSelector(".sch-shift-worker-img-cursor")));
                     } else
@@ -2931,7 +2932,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             shiftEndInput.clear();
             clickTheElement(shiftCardOnEditShiftTimePage);
             waitForSeconds(2);
-            click(shiftStartInput);
+            clickTheElement(shiftStartInput);
             shiftStartInput.sendKeys(startTime);
             waitForSeconds(2);
             click(shiftEndInput);
