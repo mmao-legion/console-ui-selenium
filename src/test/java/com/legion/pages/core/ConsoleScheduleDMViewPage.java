@@ -338,7 +338,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         return scheduleStatus;
     }
 
-    @FindBy(css = "span.analytics-new-table-published-status")
+    @FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row-open')]/div[2]")
     private List<WebElement>  scheduleStatusOnScheduleDMViewPage;
 
     @FindBy(css = ".analytics-new-table-group-row-open [text-anchor=\"start\"]")
@@ -359,6 +359,9 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
                 for (int i = 0; i< scheduleStatusOnScheduleDMViewPage.size(); i++){
                     switch(scheduleStatusOnScheduleDMViewPage.get(i).getText()){
                         case "Not Started" :
+                            notStartedScheduleAccount= notStartedScheduleAccount+1;
+                            break;
+                        case "Schedule is not released to managers" :
                             notStartedScheduleAccount= notStartedScheduleAccount+1;
                             break;
                         case "In Progress" :
@@ -1125,22 +1128,22 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         if (org.length() > 1)
             org = org.substring(0, org.length()-1);
 
-        if(areListElementVisible(schedulesTableHeaders, 10) && schedulesTableHeaders.size() == 7){
+        if(areListElementVisible(schedulesTableHeaders, 10) && schedulesTableHeaders.size() == 8){
             String[] schedulesTableHeaderNames;
             if(isApplyBudget){
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance"};
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance"};
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
             } else {
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance"};
+                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance"};
+                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
             }
             for(int i= 0;i<schedulesTableHeaders.size(); i++){
                 if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){
@@ -1354,17 +1357,17 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             if (locationSummary.findElements(By.cssSelector("text")).size()==8
                     && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",",""))
                     && SimpleUtils.isNumeric(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","").replace(",",""))){
-                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",","")));
                 result.put(locationSummary.findElements(By.cssSelector("text")).get(7).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(6).getText().replace(" Hrs","").replace(",","")));
+                result.put(locationSummary.findElements(By.cssSelector("text")).get(5).getText(), Float.valueOf(locationSummary.findElements(By.cssSelector("text")).get(4).getText().replace(" Hrs","").replace(",","")));
 
-                if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▼")){
-                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#50b83c")){
+                if (locationSummary.findElements(By.cssSelector("text")).get(7).getText().contains("▼")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(7).getAttribute("fill").contains("#50b83c")){
                         SimpleUtils.pass("The color of the value is correct! -> green");
                     } else {
                         SimpleUtils.fail("The color of the value is incorrect! ->not green", false);
                     }
-                } else if (locationSummary.findElements(By.cssSelector("text")).get(5).getText().contains("▲")){
-                    if (locationSummary.findElements(By.cssSelector("text")).get(5).getAttribute("fill").contains("#ff0000")){
+                } else if (locationSummary.findElements(By.cssSelector("text")).get(7).getText().contains("▲")){
+                    if (locationSummary.findElements(By.cssSelector("text")).get(7).getAttribute("fill").contains("#ff0000")){
                         SimpleUtils.pass("The color of the value is correct! -> red");
                     } else {
                         SimpleUtils.fail("The color of the value is incorrect! ->not red", false);
@@ -1628,7 +1631,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @Override
     public HashMap<String, Integer> getValueOnUnplannedClocksSummaryCardAndVerifyInfo() throws Exception {
         HashMap<String, Integer> result = new HashMap<String, Integer>();
-        if (isElementLoaded(cardContainerInDMView,10) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div[class*=\"card-carousel-card-analytics-card-color-\"]")),10)){
+        if (isElementLoaded(cardContainerInDMView,20) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div[class*=\"card-carousel-card-analytics-card-color-\"]")),20)){
             List<String> strList = Arrays.asList(cardContainerInDMView.findElement(By.cssSelector("div[class*=\"card-carousel-card-analytics-card-color-\"]")).getText().split("\n"));
             if (strList.size()==4 && strList.get(1).toLowerCase().contains("unplanned") && strList.get(2).toLowerCase().contains("clocks") && SimpleUtils.isNumeric(strList.get(0)) && SimpleUtils.isNumeric(strList.get(3).replace(" total timesheets", ""))){
                 result.put("unplanned clocks", Integer.parseInt(strList.get(0)));
@@ -1648,6 +1651,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @Override
     public HashMap<String, Integer> getValueOnUnplannedClocksSmartCardAndVerifyInfo() throws Exception {
         HashMap<String, Integer> result = new HashMap<String, Integer>();
+        waitForSeconds(3);
         if (isElementLoaded(cardContainerInDMView,20) && isElementLoaded(cardContainerInDMView.findElement(By.cssSelector("div.card-carousel-card-card-carousel-card-yellow-top")),20)){
             String info = cardContainerInDMView.findElement(By.cssSelector("div.card-carousel-card-card-carousel-card-yellow-top")).getText();
             List<String> strList = Arrays.asList(info.split("\n"));

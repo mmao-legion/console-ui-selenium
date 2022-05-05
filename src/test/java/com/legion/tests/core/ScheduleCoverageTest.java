@@ -769,12 +769,20 @@ public class ScheduleCoverageTest extends TestBase {
                 String workRole = shiftOperatePage.getRandomWorkRole();
                 //go to day view
                 scheduleCommonPage.clickOnDayView();
+                //Go to forecast page and get the first labor time
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+                ForecastPage forecastPage = pageFactory.createForecastPage();
+                forecastPage.clickOnLabor();
+                List<String> timesInLaborForecastChart = (List<String>) forecastPage.getLaborChartCoordinateAxisData().get("dateOrTime");
+                String firstTime = timesInLaborForecastChart.get(0);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+
                 //Get the index of the first grid that has budget hrs
                 ArrayList<String> timeDurations = scheduleShiftTablePage.getScheduleDayViewGridTimeDuration();
                 int index = -1;
                 for (int i=0; i<timeDurations.size(); i++) {
                     if (timeDurations.get(i).replace(" ", "").
-                            toLowerCase().equalsIgnoreCase("8am")) {
+                            toLowerCase().equalsIgnoreCase(firstTime)) {
                         index = i;
                         break;
                     }
@@ -843,6 +851,7 @@ public class ScheduleCoverageTest extends TestBase {
                         SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
                 }
                 //The down arrow in yellow shows in edit mode
+                Thread.sleep(5000);
                 img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
                 SimpleUtils.assertOnFail("The img should be yellow down, actual is: "+img,
                         img.contains("yellow down"), false);

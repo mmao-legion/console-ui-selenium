@@ -283,7 +283,7 @@ public interface ProfileNewUIPage {
 
 	public String getAvailableHoursForSpecificWeek() throws Exception;
 
-	public void rejectSpecificApprovedAvailabilityRequest(String availabilityWeek) throws Exception;
+	public void verifyTheApprovedOrRejectedAvailabilityRequestCannotBeOperated(String availabilityWeek) throws Exception;
 
 	public void approveSpecificRejectedAvailabilityRequest(String availabilityWeek) throws Exception;
 
@@ -297,4 +297,6 @@ public interface ProfileNewUIPage {
 	public String getJobTitleFromProfilePage() throws Exception;
 	public List<String> getAvailableShiftsOnAvailabilityTable ();
 	public List<String> getTimeOffsLengthOnAvailabilityTable ();
+	public HashMap<String, String> getTimeOffBalanceHrs ();
+	public boolean checkIfReviewPreferencesInnerBoxDisplay () throws Exception;
 }

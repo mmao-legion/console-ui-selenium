@@ -411,7 +411,125 @@ public class OvernightTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage("Error! We are sorry. You are not eligible to claim this shift, as the Team Member Corporate-Theatre shift can only be claimed by team member with the badge IMAX.");
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage("Error!We are sorry. You are not eligible to claim this shift, as the Team Member Corporate-Theatre shift can only be claimed by team member with the badge IMAX.");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the shift that overlapping with previous week's shift cannot be created")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheShiftThatOverlappingWithPreviousWeekShiftCannotBeCreatedAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+            //Go to one schedule page day view
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("6:00AM", "6:00AM");
+            int i = 0;
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            String firstNameOfTM1 = shiftInfo.get(0);
+            while (i< 50 && (firstNameOfTM1.equalsIgnoreCase("open") || firstNameOfTM1.equalsIgnoreCase("Unassigned"))) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM1  = shiftInfo.get(0);
+                i++;
+            }
+            String workRole = shiftInfo.get(4);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(6,6,6);
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("6pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+            Thread.sleep(5000);
+            String shiftId = scheduleShiftTablePage.getAllShiftsOfOneTM(firstNameOfTM1).get(0).getAttribute("id");
+            scheduleCommonPage.clickOnDayView();
+            scheduleCommonPage.navigateDayViewWithIndex(6);
+            //Verify overnight shift can be created
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            int index = scheduleShiftTablePage.
+                    getTheIndexOfShift(scheduleShiftTablePage.getShiftById(shiftId));
+            scheduleShiftTablePage.moveShiftByIndexInDayView(index, false);
+            scheduleMainPage.saveSchedule();
+            String weekDay = scheduleCommonPage.getActiveDayInfo().get("weekDay");
+            String month = scheduleCommonPage.getActiveDayInfo().get("month");
+            String day = scheduleCommonPage.getActiveDayInfo().get("day");
+            if (day.length()==1) {
+                day = "0"+day;
+            }
+            scheduleCommonPage.clickOnWeekView();
+            String shiftTime = scheduleShiftTablePage.getTheShiftInfoByIndex
+                    (scheduleShiftTablePage.getShiftIndexById(shiftId)).get(2);
+
+            scheduleCommonPage.navigateToNextWeek();
+
+            //Create the overlapping shift
+            isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("6:00AM", "6:00AM");
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            scheduleMainPage.saveSchedule();
+            scheduleCommonPage.clickOnDayView();
+            //Verify the overnight shift can display on next week
+            scheduleCommonPage.navigateDayViewWithIndex(0);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("6am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchText(firstNameOfTM1);
+            String actualStatus = shiftOperatePage.getTheMessageOfTMScheduledStatus().trim();
+            String expectStatus = shiftTime;
+            SimpleUtils.assertOnFail("The schedule status display incorrectly, the expected is:"
+                    + expectStatus+" actual is:"+ actualStatus, expectStatus.equals(actualStatus), false);
+            shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
+            String expectedWarningMessage = firstNameOfTM1+ " is scheduled to work at "
+                    +shiftTime.split("-")[0]+ " - "+shiftTime.split("-")[1]
+                    + " "+ weekDay + ", " + month + " " + day + ". Please change other week's schedule.";
+            String actualWarningMessage = newShiftPage.getWarningMessageFromWarningModal();
+
+            SimpleUtils.assertOnFail("The schedule status display incorrectly, the expected is:"
+                    + expectedWarningMessage+" actual is:"+ actualWarningMessage,
+                    expectedWarningMessage.equalsIgnoreCase(actualWarningMessage), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

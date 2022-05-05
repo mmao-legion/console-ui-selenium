@@ -3554,7 +3554,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void archiveOrDeleteAllTemplates() throws Exception {
-		if(isTemplateListPageShow()){
+		if(isElementLoaded(newTemplateBTN, 15) && isElementLoaded(searchTemplateInputBox, 10)){
 			SimpleUtils.pass("Labor model template list is showing now");
 			if (areListElementVisible(templateNameList, 20) && templatesList.size()>0) {
 				int j = 0;
@@ -3565,9 +3565,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}
 
 			}else
-				SimpleUtils.fail("There are no template in the list",false);
+				SimpleUtils.report("There are no template in the list");
 		}else {
-			SimpleUtils.fail("Labor model template list is not loaded well",false);
+			SimpleUtils.fail("Template list page is not loaded well",false);
 		}
 	}
 

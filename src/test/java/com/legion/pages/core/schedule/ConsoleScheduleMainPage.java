@@ -509,11 +509,12 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             clickTheElement(saveOnSaveConfirmationPopup);
 //            waitForSeconds(3);
             try{
-                if (isElementLoaded(msgOnTop, 20)) {
-                    if (msgOnTop.getText().contains("Success")){
-                        SimpleUtils.pass("Save the Schedule Successfully!");
-                    }
-                } else if (isElementLoaded(editScheduleButton, 10)) {
+//                if (isElementLoaded(msgOnTop, 20)) {
+//                    if (msgOnTop.getText().contains("Success")){
+//                        SimpleUtils.pass("Save the Schedule Successfully!");
+//                    }
+//                } else
+                if (isElementLoaded(editScheduleButton, 10)) {
                     SimpleUtils.pass("Save the Schedule Successfully!");
                 } else {
                     SimpleUtils.fail("Save Schedule Failed!", false);

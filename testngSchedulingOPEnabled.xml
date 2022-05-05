@@ -13,7 +13,7 @@
             <class name="com.legion.tests.core.PrepareSettingsTest">
                 <methods>
                     <include name="prepareSettingsInOPTemplateAsInternalAdmin"/>
-                    <include name="verifyCanPrepareDynamicEmployeeGroupsNTemplatesAsInternalAdmin" />
+<!--                    <include name="verifyCanPrepareDynamicEmployeeGroupsNTemplatesAsInternalAdmin" Blocked by new feature/>-->
                 </methods>
             </class>
         </classes>
@@ -36,7 +36,7 @@
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView" />-->
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsStoreManager" />
  <!--                   <include name="verifySchedulesWidgetsAsStoreManager" />-->
-                    <include name="verifyCommonUIOfWidgetsAsStoreManager" />
+<!--                    <include name="verifyCommonUIOfWidgetsAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-6542-->
 <!--                    <include name="verifyScheduleFunctionalityForecastAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-6396-->
 <!--                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin" Blocked by bug: SCH-5896/>-->
                     <include name="validateWeatherSmartCardOnForecastPage" />
@@ -222,6 +222,7 @@
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWithScheduledShiftAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember" />
+                    <include name="validateTheApprovedOrRejectedAvailabilitiesRequestShouldNotBeAbleToOperateAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -305,8 +306,8 @@
                     <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6131-->
                     <!--                    <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
                     <!--                    <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
-                    <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
-                    <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" />
+ <!--                   <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
+                    <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6541 -->
                     <include name="verifyScheduleStatusOnScheduleInBUViewAsInternalAdmin" />
                     <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
                     <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInBUViewAsInternalAdmin" />
@@ -359,13 +360,13 @@
                     <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
                     <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
 <!--                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" /> -->
-                    <include name="verifySettingsAreAppliedAsInternalAdmin" />
-                    <include name="verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin" />
-                    <include name="verifyMealDurationWhenUsingTemplateAsInternalAdmin" />
-                    <include name="verifyMealPlacementWhenUsingTemplateAsInternalAdmin" />
-                    <include name="verifyMissedRestBreakWhenUsingTemplateAsInternalAdmin" />
-                    <include name="verifyShortRestBreakWhenUsingTemplateAsInternalAdmin" />
-                    <include name="verifyRestTimeNotIdealWhenUsingTemplateAsInternalAdmin" />
+<!--                    <include name="verifySettingsAreAppliedAsInternalAdmin" Blocked by new feature/>-->
+<!--                    <include name="verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin" />-->
+<!--                    <include name="verifyMealDurationWhenUsingTemplateAsInternalAdmin" />-->
+<!--                    <include name="verifyMealPlacementWhenUsingTemplateAsInternalAdmin" />-->
+<!--                    <include name="verifyMissedRestBreakWhenUsingTemplateAsInternalAdmin" />-->
+<!--                    <include name="verifyShortRestBreakWhenUsingTemplateAsInternalAdmin" />-->
+<!--                    <include name="verifyRestTimeNotIdealWhenUsingTemplateAsInternalAdmin" />-->
                 </methods>
             </class>
         </classes>
@@ -455,7 +456,7 @@ SCH-5862-->
                     <!-- select Continuous Operation -->
                     <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" />
                     <include name="verifyShiftWhenEnableContinuousOperationOptionAsInternalAdmin" />
-
+                    <include name="verifyTheShiftThatOverlappingWithPreviousWeekShiftCannotBeCreatedAsInternalAdmin" />
                     <!-- unselect Continuous Operation -->
                     <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
                     <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" />
