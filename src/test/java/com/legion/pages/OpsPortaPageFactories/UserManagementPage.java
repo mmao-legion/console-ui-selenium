@@ -93,4 +93,20 @@ public interface UserManagementPage {
     public int verifyAccessRoleSelected() throws Exception;
 
     public void verifyHistoryDeductType() throws Exception;
+
+    public void goToJobTitleAccess() throws Exception;
+
+    public void clickAddJobTitle() throws Exception;
+
+    public void inputJobTitleName(String name) throws Exception;
+
+    public void selectAccessRole() throws Exception;
+
+    public void saveJobTitle() throws Exception;
+
+    public void cancelJobTitle() throws Exception;
+
+    public void searchJobTitle(String name) throws Exception;
+
+    public void removeJobTitle() throws Exception;
 }

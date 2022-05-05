@@ -116,4 +116,17 @@ public class OpsCommonComponents extends BasePage {
         searchIcon.click();
     }
 
+    @FindBy(css = "lg-button[label= 'Leave this page']>button")
+    private WebElement leaveThisPageButton;
+
+    public void leaveThisPage(){
+        leaveThisPageButton.click();
+    }
+
+    @FindBy(css = "lg-button[label='Delete']>button")
+    private WebElement deleteButton;
+
+    public void deleteConfirm(){
+        deleteButton.click();
+    }
 }
