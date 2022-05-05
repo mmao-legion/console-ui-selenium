@@ -465,4 +465,15 @@ SCH-5862-->
             </class>
         </classes>
     </test>
-    </suite> <!-- Suite -->
+
+    <test name="Bulk Delete Test">
+        <classes>
+            <class name="com.legion.tests.core.BulkDeleteTest">
+                <methods>
+                    <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
+                    <include name="verifyDeleteMultipleShiftsInDayViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite> <!-- Suite -->

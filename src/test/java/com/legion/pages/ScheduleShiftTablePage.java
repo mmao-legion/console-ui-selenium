@@ -2,10 +2,7 @@ package com.legion.pages;
 
 import org.openqa.selenium.WebElement;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public interface ScheduleShiftTablePage {
     public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception;
@@ -128,4 +125,9 @@ public interface ScheduleShiftTablePage {
     public float calcTotalScheduledHourForOneDayInWeekView(int indexOfDay) throws Exception;
     public List<String> getAllDifferenceHrsArrowImg ();
     public HashMap<String, String> getHrsOnTooltipOfScheduleSummaryHoursByIndex (int index) throws Exception;
+    public HashSet<Integer> verifyCanSelectMultipleShifts(int shiftCount) throws Exception;
+    public void rightClickOnSelectedShifts(HashSet<Integer> selectedIndex) throws Exception;
+    public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception;
+    public void clickOnBtnOnBulkActionMenuByText(String action) throws Exception;
+    public void verifySelectedShiftsAreMarkedWithX(HashSet<Integer> selectedIndexes) throws Exception;
 }
