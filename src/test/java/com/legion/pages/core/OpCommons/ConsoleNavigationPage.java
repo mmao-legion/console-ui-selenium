@@ -40,7 +40,7 @@ public class ConsoleNavigationPage extends BasePage {
     private WebElement inbox;
     @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(8)")
     private WebElement news;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(9)")
+    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(11)")
     private WebElement controls;
     @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(10)")
     private WebElement logout;

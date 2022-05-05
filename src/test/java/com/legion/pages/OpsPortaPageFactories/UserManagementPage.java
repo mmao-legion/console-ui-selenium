@@ -109,4 +109,10 @@ public interface UserManagementPage {
     public void searchJobTitle(String name) throws Exception;
 
     public void removeJobTitle() throws Exception;
+
+    public void clickShowRate() throws Exception;
+
+    public void clickHideShowRate() throws Exception;
+
+    public String getHourlyRateValue() throws Exception;
 }

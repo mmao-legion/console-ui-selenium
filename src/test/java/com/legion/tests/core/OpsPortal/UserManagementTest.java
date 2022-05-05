@@ -4,7 +4,10 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
+import com.legion.pages.TeamPage;
+import com.legion.pages.core.ConsoleControlsNewUIPage;
 import com.legion.pages.core.ConsoleControlsPage;
+import com.legion.pages.core.ConsoleTeamPage;
 import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
 import com.legion.pages.core.OpCommons.OpsCommonComponents;
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
@@ -583,6 +586,110 @@ public class UserManagementTest extends TestBase {
             userManagementPage.removeJobTitle();
             opsCommonComponents.deleteConfirm();
         } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Hourly Rate Show Hide Logic")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyHourlyRateShowHideAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try{
+            String users = "Nancy TM";
+            //go to User Management tab
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            //go to user detail page
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToUserDetailPage(users);
+
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate initial value is hide");
+            }else
+                SimpleUtils.fail("Hourly rate initial value is show",false);
+
+            userManagementPage.clickShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("$15")){
+                SimpleUtils.pass("Hourly rate value show successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value show failed",false);
+
+            userManagementPage.clickHideShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate value hide successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value hide failed",false);
+
+            // go to control user management
+            RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
+            rightHeaderBarPage.switchToConsole();
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("verifyMock");
+            consoleNavigationPage.navigateTo("Controls");
+            ConsoleControlsNewUIPage consoleControlsNewUIPage = new ConsoleControlsNewUIPage();
+            consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            consoleControlsNewUIPage.searchAndSelectTeamMemberByName(users);
+
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate initial value is hide");
+            }else
+                SimpleUtils.fail("Hourly rate initial value is show",false);
+
+            userManagementPage.clickShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("$15")){
+                SimpleUtils.pass("Hourly rate value show successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value show failed",false);
+
+            userManagementPage.clickHideShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate value hide successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value hide failed",false);
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate initial value is hide");
+            }else
+                SimpleUtils.fail("Hourly rate initial value is show",false);
+
+            userManagementPage.clickShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("$15")){
+                SimpleUtils.pass("Hourly rate value show successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value show failed",false);
+
+            userManagementPage.clickHideShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate value hide successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value hide failed",false);
+
+            //go to my profile
+            rightHeaderBarPage.switchToMyProfile();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate initial value is hide");
+            }else
+                SimpleUtils.fail("Hourly rate initial value is show",false);
+
+            userManagementPage.clickShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("$0")){
+                SimpleUtils.pass("Hourly rate value show successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value show failed",false);
+
+            userManagementPage.clickHideShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate value hide successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value hide failed",false);
+
+        }catch(Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
