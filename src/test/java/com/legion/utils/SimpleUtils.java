@@ -2015,6 +2015,20 @@ public class SimpleUtils {
 		}
 	}
 
+	public static void randomSet(int min, int max, int n, HashSet<Integer> set) {
+		if (n > (max - min + 1) || max < min) {
+			return;
+		}
+		for (int i = 0; i < n; i++) {
+			int num = (int) (Math.random() * (max - min)) + min;
+			set.add(num);
+		}
+		int setSize = set.size();
+		if (setSize < n) {
+			randomSet(min, max, n - setSize, set);
+		}
+	}
+
 	public static boolean compareHashMapByEntrySet(HashMap<String, List<String>> map1, HashMap<String, List<String>> map2){
 		if(map1.size()!=map2.size()){
 			return false;

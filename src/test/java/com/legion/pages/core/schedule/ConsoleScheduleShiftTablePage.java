@@ -6,6 +6,7 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -472,6 +473,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @FindBy(className = "week-schedule-shift-wrapper")
     private List<WebElement> shiftsWeekView;
+    @FindBy(css = ".week-schedule-worker-name")
+    private List<WebElement> namesWeekView;
+    @FindBy(css = ".sch-day-view-shift-worker-name")
+    private List<WebElement> namesDayView;
 
     @Override
     public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
@@ -3292,5 +3297,124 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else
             SimpleUtils.report("There is no difference hrs arrow img display on schedule table! ");
         return arrowStatus;
+    }
+
+    // Added by Nora: about bulk delete
+    @FindBy (className = "bulk-action-wrapper-inner")
+    private WebElement bulkActionMenu;
+    @FindBy (css = ".bulk-action-wrapper-element-button")
+    private List<WebElement> bulkActionBtns;
+
+    @Override
+    public HashSet<Integer> verifyCanSelectMultipleShifts(int shiftCount) throws Exception {
+        HashSet<Integer> set = new HashSet<>();
+        List<WebElement> names = null;
+        if (areListElementVisible(namesWeekView, 10)) {
+            names = namesWeekView;
+        } else if (areListElementVisible(namesDayView, 10)) {
+            names = namesDayView;
+        }
+        if (names.size() >= shiftCount) {
+            SimpleUtils.randomSet(0, names.size(), shiftCount, set);
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (int i : set) {
+                action.click(names.get(i));
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
+        return set;
+    }
+
+    @Override
+    public void rightClickOnSelectedShifts(HashSet<Integer> selectedIndex) throws Exception {
+        if (selectedIndex.size() > 0) {
+            List<WebElement> names = null;
+            if (areListElementVisible(namesWeekView, 10)) {
+                names = namesWeekView;
+            } else if (areListElementVisible(namesDayView, 10)) {
+                names = namesDayView;
+            }
+            Actions action = new Actions(getDriver());
+            for (int i : selectedIndex) {
+                action.contextClick(names.get(i)).build().perform();
+                if (isBulkActionMenuPopup()) {
+                    SimpleUtils.pass("Right Click on the Selected Shifts successfully!");
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("There is no selected shifts' index!", false);
+        }
+    }
+
+    @Override
+    public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception {
+        if (isElementLoaded(bulkActionMenu, 5) && bulkActionMenu.getText().contains(String.valueOf(selectedShiftCount))
+        && bulkActionMenu.getText().contains("Shifts Selected") && bulkActionMenu.getText().contains("Delete")) {
+            SimpleUtils.pass("The content on bulk action menu is correct!");
+        } else {
+            SimpleUtils.fail("The content on bulk action menu is incorrect!", false);
+        }
+    }
+
+    @Override
+    public void clickOnBtnOnBulkActionMenuByText(String action) throws Exception {
+        if (areListElementVisible(bulkActionBtns, 5)) {
+            for (WebElement button : bulkActionBtns) {
+                if (button.getText().trim().equalsIgnoreCase(action)) {
+                    clickTheElement(button);
+                    SimpleUtils.pass("Click on " + action + " button successfully on Bulk Action Menu!");
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Buttons failed to load on Bulk Action Menu!", false);
+        }
+    }
+
+    @Override
+    public void verifySelectedShiftsAreMarkedWithX(HashSet<Integer> selectedIndexes) throws Exception {
+        boolean isMarkedX = true;
+        if (selectedIndexes.size() > 0) {
+            List<WebElement> currentShifts = null;
+            if (areListElementVisible(dayViewShiftGroups, 10)) {
+                currentShifts = dayViewShiftGroups;
+            } else if (areListElementVisible(shiftsWeekView, 10)) {
+                currentShifts = shiftsWeekView;
+            }
+            for (int i : selectedIndexes) {
+                try {
+                    if (!isElementLoaded(currentShifts.get(i).findElement(By.cssSelector("[src*=\"deleted-shift\"]")), 5)) {
+                        isMarkedX = false;
+                        break;
+                    }
+                } catch (Exception e) {
+                    isMarkedX = false;
+                    break;
+                }
+            }
+            if (!isMarkedX) {
+                SimpleUtils.fail("Some shifts are not marked as X!", false);
+            }
+        } else {
+            SimpleUtils.fail("There is no selected shifts' index!", false);
+        }
+    }
+
+    private boolean isBulkActionMenuPopup() throws Exception {
+        if (isElementLoaded(bulkActionMenu, 5)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
