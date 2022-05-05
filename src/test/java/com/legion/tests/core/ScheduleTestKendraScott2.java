@@ -6327,7 +6327,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			loginPage.logOut();
 			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 			//Go to one schedule page day view
 			i = 0;
 			while (i< 5) {

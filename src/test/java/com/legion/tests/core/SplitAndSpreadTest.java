@@ -712,7 +712,7 @@ public class SplitAndSpreadTest extends TestBase {
                     SimpleUtils.pass("The message in warning mode display correctly! ");
                 } else
                     SimpleUtils.fail("The message in warning mode display incorrectly! the expected is: "
-                            + warningMessage+ "The actual is: " + warningMessage1, false);
+                            + warningMessage1+ "The actual is: " + warningMessage, false);
                 shiftOperatePage.clickOnAssignAnywayButton();
             } else
                 SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);

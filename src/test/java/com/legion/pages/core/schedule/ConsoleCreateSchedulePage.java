@@ -434,7 +434,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                                 WebElement scheduledHours = weekContainer.findElement(By.cssSelector("svg > g > g:nth-child(2) > text"));
                                 if (scheduledHours != null && !scheduledHours.getText().equals("0")) {
                                     int i = 0;
-                                    while (isElementLoaded(loadingIcon)&& i<20){
+                                    while (isElementLoaded(loadingIcon, 5)&& i<20){
                                         waitForSeconds(3);
                                         i = i+1;
                                     }
@@ -662,7 +662,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 } catch (Exception e) {
                     // Nothing
                 }
-                waitForSeconds(5);
+                waitForSeconds(10);
                 clickTheElement(nextButtonOnCreateSchedule);
             }
             if (isElementEnabled(checkOutTheScheduleButton, 20)) {
