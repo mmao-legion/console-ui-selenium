@@ -1198,6 +1198,13 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	@FindBy(css = "div[ng-if='canViewHourlyRate']>div.value.ng-binding")
 	private WebElement hourlyRate;
 
+	public boolean isHourlyRateExist() throws Exception{
+		if(!isExist(showRate)&&!isExist(hideRate)&&!isExist(hourlyRate))
+			return false;
+		else
+			return true;
+	}
+
 	public void clickShowRate() throws Exception{
 		if(isElementLoaded(showRate,5)){
 			click(showRate);
@@ -1221,7 +1228,6 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			hourly = hourlyRate.getAttribute("innerText");
 		}else
 			SimpleUtils.fail("Hide rate value loaded failed",false);
-		System.out.println(hourly);
 		return hourly;
 	}
 
@@ -1230,12 +1236,37 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 
 	public void verifyViewHourlyRate() throws Exception{
 		if(isElementLoaded(viewHourlyRate,5)){
-			if(viewHourlyRate.getText().equals(" View Hourly Rate"))
+			System.out.println(viewHourlyRate.getText());
+			if(viewHourlyRate.getText().equals("View Hourly Rate"))
 				SimpleUtils.pass("View hourly rate permission text is correct");
 			else
 				SimpleUtils.fail("View hourly rate permission text is wrong",false);
 		}else{
 			SimpleUtils.fail("View hourly rate display failed",false);
+		}
+	}
+
+	@FindBy(css = "div.group.ng-scope:nth-child(6)")
+	private WebElement profile;
+
+	public void clickProfile() throws Exception{
+		if(isElementLoaded(profile,5)){
+			click(profile);
+			SimpleUtils.pass("Click profile successfully");
+		}else{
+			SimpleUtils.fail("profile loaded failed",false);
+		}
+	}
+
+	@FindBy(css = "span[ng-click= 'back()']")
+	private WebElement backButton;
+
+	public void goBack() throws Exception{
+		if(isElementLoaded(backButton,5)){
+			click(backButton);
+			SimpleUtils.pass("Click back button successfully");
+		}else{
+			SimpleUtils.fail("Back button loaded failed",false);
 		}
 	}
 }

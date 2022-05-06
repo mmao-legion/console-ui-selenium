@@ -622,6 +622,14 @@ public class UserManagementTest extends TestBase {
             }else
                 SimpleUtils.fail("Hourly rate value hide failed",false);
 
+            //go to access role
+            userManagementPage.goBack();
+            userManagementPage.goToAccessRolesTab();
+
+            //check view hourly rate permission
+            userManagementPage.clickProfile();
+            userManagementPage.verifyViewHourlyRate();
+
             // go to control user management
             RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
             rightHeaderBarPage.switchToConsole();
@@ -689,6 +697,73 @@ public class UserManagementTest extends TestBase {
             }else
                 SimpleUtils.fail("Hourly rate value hide failed",false);
 
+            //logout
+            OpsPortalNavigationPage opsPortalNavigationPage = new OpsPortalNavigationPage();
+            opsPortalNavigationPage.logout();
+
+            //log in with user has no view hourly rate job title permission
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+customer@legion.co", "admin11.a","verifyMock");
+            //go to team
+            consoleNavigationPage.searchLocation("verifyMock");
+            consoleNavigationPage.navigateTo("Team");
+
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+
+            boolean isHourlyRateDisplay;
+            isHourlyRateDisplay = userManagementPage.isHourlyRateExist();
+
+            if(isHourlyRateDisplay == false)
+                SimpleUtils.pass("Hourly rate doesn't display");
+            else
+                SimpleUtils.fail("Hourly rate display",false);
+
+            //go to controls
+            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            consoleControlsNewUIPage.searchAndSelectTeamMemberByName(users);
+
+            isHourlyRateDisplay = userManagementPage.isHourlyRateExist();
+
+            if(isHourlyRateDisplay == false)
+                SimpleUtils.pass("Hourly rate doesn't display");
+            else
+                SimpleUtils.fail("Hourly rate display",false);
+
+            //go to my profile
+            rightHeaderBarPage.switchToMyProfile();
+
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate initial value is hide");
+            }else
+                SimpleUtils.fail("Hourly rate initial value is show",false);
+
+            userManagementPage.clickShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("$15")){
+                SimpleUtils.pass("Hourly rate value show successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value show failed",false);
+
+            userManagementPage.clickHideShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate value hide successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value hide failed",false);
+
+            //go to control center
+            rightHeaderBarPage.switchToOpsPortal();
+            //go to user management
+            userManagementPage.clickOnUserManagementTab();
+            //go to user detail page
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToUserDetailPage(users);
+
+            isHourlyRateDisplay = userManagementPage.isHourlyRateExist();
+
+            if(isHourlyRateDisplay == false)
+                SimpleUtils.pass("Hourly rate doesn't display");
+            else
+                SimpleUtils.fail("Hourly rate display",false);
         }catch(Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

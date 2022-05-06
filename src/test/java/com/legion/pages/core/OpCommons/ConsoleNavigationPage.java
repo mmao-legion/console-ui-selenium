@@ -42,6 +42,8 @@ public class ConsoleNavigationPage extends BasePage {
     private WebElement news;
     @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(11)")
     private WebElement controls;
+    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(9)")
+    private WebElement controlsCustomer;
     @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(10)")
     private WebElement logout;
 
@@ -79,7 +81,9 @@ public class ConsoleNavigationPage extends BasePage {
             element = news;
         } else if (module.equalsIgnoreCase("Controls")) {
             element = controls;
-        } else if (module.equalsIgnoreCase("Logout")) {
+        }else if (module.equalsIgnoreCase("ControlsCustomer")) {
+            element = controlsCustomer;
+        }else if (module.equalsIgnoreCase("Logout")) {
             element = logout;
         } else {
             System.out.println("No such Module!");
