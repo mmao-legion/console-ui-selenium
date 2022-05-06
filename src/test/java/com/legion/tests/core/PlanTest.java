@@ -308,10 +308,12 @@ public class PlanTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyScenarioPlanCreateLandingDetailAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            SimpleDateFormat dfs = new SimpleDateFormat("MMddHH");
+            String currentDate =  dfs.format(new Date()).trim();
             String planName = "testPlan-Not Delete";
             String scPlanName = "Scenario Plan Not Delete";
             String regionName="RegionForPlan_Auto";
-            String copiedPlanName="Test Copy Generate Plan";
+            String copiedPlanName="Test Copy Generate Plan" + currentDate;
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
