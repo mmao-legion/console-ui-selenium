@@ -1946,7 +1946,7 @@ public class ActivityTest extends TestBase {
             shiftOperatePage.verifyTMInTheOfferList(teamMemberName2, "offered");
             shiftOperatePage.closeViewStatusContainer();
             //wait for the offer to send to TMs
-            Thread.sleep(60000);
+            Thread.sleep(120000);
             loginPage.logOut();
 
             // Login as two or more TMs and claim the offers

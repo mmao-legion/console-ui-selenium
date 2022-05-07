@@ -1676,8 +1676,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                             }
                             shiftStartInput.clear();
                             shiftEndInput.clear();
+                            clickTheElement(shiftCardOnEditShiftTimePage);
                             waitForSeconds(2);
-                            click(shiftStartInput);
+                            clickTheElement(shiftStartInput);
                             shiftStartInput.sendKeys(startTime);
                             waitForSeconds(2);
                             click(shiftEndInput);
@@ -2052,7 +2053,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                             if (isElementLoaded(deleteShift, 10)) {
                                 clickTheElement(deleteShift);
                                 waitForSeconds(4);
-                                if (isElementLoaded(deleteBtnInDeleteWindows, 30)) {
+                                if (isElementLoaded(deleteBtnInDeleteWindows, 40)) {
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
                                     waitForSeconds(1);

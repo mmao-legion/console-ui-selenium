@@ -711,11 +711,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		//click on the context of any TM, 1. View profile 2. Change shift role  3.Assign TM 4.  Convert to open shift is enabled for current and future week day 5.Edit meal break time 6. Delete shift
 		scheduleCommonPage.navigateToNextWeek();
-		scheduleCommonPage.navigateToNextWeek();
-		boolean isActiveWeekGenerated2 = createSchedulePage.isWeekGenerated();
-		if(!isActiveWeekGenerated2){
-			createSchedulePage.createScheduleForNonDGFlowNewUI();
+		isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+		if(isActiveWeekGenerated){
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
+		Thread.sleep(5000);
+		createSchedulePage.createScheduleForNonDGFlowNewUI();
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
 		scheduleMainPage.saveSchedule();
@@ -735,15 +736,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		shiftOperatePage.verifyWorkPreferenceDisplayed();
 		shiftOperatePage.verifyAvailabilityDisplayed();
 		shiftOperatePage.closeViewProfileContainer();
-
-		//"After Click on the Change shift role, one prompt is enabled:various work role any one of them can be selected"
-		shiftOperatePage.clickOnProfileIcon();
-		shiftOperatePage.clickOnChangeRole();
-		shiftOperatePage.verifyChangeRoleFunctionality();
-		//check the work role by click Apply button
-		shiftOperatePage.changeWorkRoleInPrompt(true);
-		//check the work role by click Cancel button
-		shiftOperatePage.changeWorkRoleInPrompt(false);
 
 		//After Click on Assign TM-Select TMs window is opened,Recommended and search TM tab is enabled
 		shiftOperatePage.clickOnProfileIcon();
@@ -828,6 +820,15 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		//verify delete shift
 		shiftOperatePage.verifyDeleteShift();
+
+		//"After Click on the Change shift role, one prompt is enabled:various work role any one of them can be selected"
+		shiftOperatePage.clickOnProfileIcon();
+		shiftOperatePage.clickOnChangeRole();
+		shiftOperatePage.verifyChangeRoleFunctionality();
+		//check the work role by click Apply button
+		shiftOperatePage.changeWorkRoleInPrompt(true);
+		//check the work role by click Cancel button
+		shiftOperatePage.changeWorkRoleInPrompt(false);
 	}
 
 //	@Automated(automated = "Automated")
