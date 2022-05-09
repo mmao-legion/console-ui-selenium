@@ -532,7 +532,7 @@ public class UserManagementTest extends TestBase {
             rightHeaderBarPage.switchToConsole();
             ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
             consoleNavigationPage.searchLocation("ClearDistrict");
-            consoleNavigationPage.navigateTo("Controls");
+            consoleNavigationPage.navigateTo("ControlsCustomer");
 
             //go to job title page
             userManagementPage.goToUserAndRoles();
