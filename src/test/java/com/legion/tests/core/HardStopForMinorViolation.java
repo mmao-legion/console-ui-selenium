@@ -644,7 +644,6 @@ public class HardStopForMinorViolation extends TestBase {
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Control Center -> Configuration tab ,click on Compliance title
             setStrictlyEnforceMinorViolationSetting("Yes");

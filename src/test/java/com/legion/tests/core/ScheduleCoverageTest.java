@@ -837,15 +837,15 @@ public class ScheduleCoverageTest extends TestBase {
                 switch (budgetOrGuidanceHrs) {
                     case 3:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:30am", "10:30am");
                         break;
                     case 2:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:15am", "10:15am");
                         break;
                     case 1:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:15am", "10:15am");
                         break;
                     default:
                         SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
@@ -866,15 +866,15 @@ public class ScheduleCoverageTest extends TestBase {
                 switch (budgetOrGuidanceHrs) {
                     case 3:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:45am", "10:45am");
                         break;
                     case 2:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:30am", "10:30am");
                         break;
                     case 1:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:15am", "10:15am");
                         break;
                     default:
                         SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
@@ -895,15 +895,15 @@ public class ScheduleCoverageTest extends TestBase {
                 switch (budgetOrGuidanceHrs) {
                     case 3:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"9:00am", "11:00am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"09:00am", "11:00am");
                         break;
                     case 2:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"9:00am", "11:00am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"09:00am", "11:00am");
                         break;
                     case 1:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"9:00am", "11:00am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"09:00am", "11:00am");
                         break;
                     default:
                         SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
@@ -922,7 +922,7 @@ public class ScheduleCoverageTest extends TestBase {
                 //Move the shift back
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 shiftOperatePage.editTheShiftTimeForSpecificShift(
-                        scheduleShiftTablePage.getShiftById(shiftId),"8:00am", "10:00am");
+                        scheduleShiftTablePage.getShiftById(shiftId),"08:00am", "10:00am");
                 scheduleMainPage.saveSchedule();
                 img = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().get(index);
                 SimpleUtils.assertOnFail("The img should be green, actual is: "+img,
@@ -954,15 +954,15 @@ public class ScheduleCoverageTest extends TestBase {
                 switch (budgetOrGuidanceHrs) {
                     case 3:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:30am", "10:30am");
                         break;
                     case 2:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:45am", "10:45am");
                         break;
                     case 1:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:45am", "10:45am");
                         break;
                     default:
                         SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);
@@ -982,15 +982,15 @@ public class ScheduleCoverageTest extends TestBase {
                 switch (budgetOrGuidanceHrs) {
                     case 3:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:15am", "10:15am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:15am", "10:15am");
                         break;
                     case 2:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:30am", "10:30am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:30am", "10:30am");
                         break;
                     case 1:
                         shiftOperatePage.editTheShiftTimeForSpecificShift(
-                                scheduleShiftTablePage.getShiftById(shiftId),"8:45am", "10:45am");
+                                scheduleShiftTablePage.getShiftById(shiftId),"08:45am", "10:45am");
                         break;
                     default:
                         SimpleUtils.fail("Please add the coverage = "+coverage +" case! ", false);

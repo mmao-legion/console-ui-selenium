@@ -4526,9 +4526,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		newShiftPage.clickOnDayViewAddNewShiftButton();
 		newShiftPage.selectWorkRole(workRoleOfTM);
-		newShiftPage.moveSliderAtCertainPoint("5:00am",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-		newShiftPage.moveSliderAtCertainPoint("7:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
-		newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
+		if (newShiftPage.checkIfNewCreateShiftPageDisplay()){
+			newShiftPage.moveSliderAtCertainPoint("5:00am",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("7:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
+		} else {
+			newShiftPage.moveSliderAtCertainPoint("5",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("7",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+		}
 		newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 		newShiftPage.clickOnCreateOrNextBtn();
 		newShiftPage.searchTeamMemberByName(firstNameOfTM);
@@ -4646,9 +4651,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		newShiftPage.clickOnDayViewAddNewShiftButton();
 		newShiftPage.selectWorkRole(workRoleOfTM);
-		newShiftPage.moveSliderAtCertainPoint("5:00am",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-		newShiftPage.moveSliderAtCertainPoint("6:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
-		newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
+		if (newShiftPage.checkIfNewCreateShiftPageDisplay()) {
+			newShiftPage.moveSliderAtCertainPoint("5:00am",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("6:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
+		} else {
+			newShiftPage.moveSliderAtCertainPoint("5",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("6",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+		}
 		newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 		newShiftPage.clickOnCreateOrNextBtn();
 		newShiftPage.searchTeamMemberByName(firstNameOfTM);
@@ -4723,7 +4733,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		newShiftPage.clickOnDayViewAddNewShiftButton();
 		newShiftPage.selectWorkRole(workRoleOfTM);
 		newShiftPage.moveSliderAtCertainPoint("8:00am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-		newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
+		if (newShiftPage.checkIfNewCreateShiftPageDisplay()) {
+			newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
+		}
 		newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 		newShiftPage.clickOnCreateOrNextBtn();
 		newShiftPage.searchTeamMemberByName(firstNameOfTM);
