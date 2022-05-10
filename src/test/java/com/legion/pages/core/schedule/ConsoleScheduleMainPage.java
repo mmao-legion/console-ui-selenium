@@ -270,7 +270,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @Override
     public boolean checkEditButton() throws Exception {
-        if(isElementLoaded(editScheduleButton,10))
+        if(isElementLoaded(editScheduleButton,15))
         {
 
             SimpleUtils.pass("Edit button is Editable");
