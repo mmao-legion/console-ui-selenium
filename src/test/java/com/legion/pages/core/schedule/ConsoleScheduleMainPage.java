@@ -419,6 +419,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
     public void selectShiftTypeFilterByText(String filterText) throws Exception {
+        waitForSeconds(3);
         String shiftTypeFilterKey = "shifttype";
         ArrayList<WebElement> shiftTypeFilters = getAvailableFilters().get(shiftTypeFilterKey);
         unCheckFilters(shiftTypeFilters);
@@ -1975,7 +1976,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         // handle If the shift info pop covered the shift filter input box
         closeShiftInfoPopup();
         if (isElementLoaded(filterButton,30)) {
-            click(filterButton);
+            clickTheElement(filterButton);
             SimpleUtils.pass("filter button is clickable");
         } else {
             SimpleUtils.fail("filter button is not Loaded Successfully!", true);

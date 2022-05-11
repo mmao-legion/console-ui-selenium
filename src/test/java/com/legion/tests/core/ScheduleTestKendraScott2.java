@@ -5892,7 +5892,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
 			//Go to one schedule page day view
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -6533,7 +6532,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			shiftOperatePage.clickOnProfileIcon();
 			shiftOperatePage.clickOnEditShiftTime();
-			String shiftTime = "3:00am-9:00am";
+			String shiftTime = "03:00am-9:00am";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
 			HashMap<String, String> shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			String shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
@@ -6548,7 +6547,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					!shiftOperatePage.checkIfUpdateButtonEnabled(),false);
 
 
-			shiftTime = "8:00am-11:00pm";
+			shiftTime = "08:00am-11:00pm";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");

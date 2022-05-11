@@ -117,10 +117,10 @@ public class HardStopForMinorViolation extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
 
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated){
-                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             if (smartCardPage.isRequiredActionSmartCardLoaded()) {
                 shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             }
@@ -780,7 +780,7 @@ public class HardStopForMinorViolation extends TestBase {
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         if (statusAfterEdit != statusBeforeEdit) {
             int i = 0;
-            while (i< 10) {
+            while (i< 15) {
                 //Wait for the timed cache
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 Thread.sleep(60000);
