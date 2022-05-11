@@ -270,7 +270,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @Override
     public boolean checkEditButton() throws Exception {
-        if(isElementLoaded(editScheduleButton,10))
+        if(isElementLoaded(editScheduleButton,15))
         {
 
             SimpleUtils.pass("Edit button is Editable");
@@ -1955,10 +1955,25 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         return false;
     }
 
+    @FindBy(css = ".popover-content")
+    private WebElement shiftInfoPopup;
+
+    @FindBy(css = "[src=\"img/legion/schedule/shift-info-danger.png\"]")
+    private WebElement shiftInfoIcon;
+
+    @Override
+    public void closeShiftInfoPopup() throws Exception {
+        if (isElementLoaded(shiftInfoPopup, 10)) {
+            click(shiftInfoIcon);
+            waitForSeconds(5);
+        }
+    }
 
     @Override
     public void clickOnFilterBtn() throws Exception {
         waitForSeconds(10);
+        // handle If the shift info pop covered the shift filter input box
+        closeShiftInfoPopup();
         if (isElementLoaded(filterButton,30)) {
             click(filterButton);
             SimpleUtils.pass("filter button is clickable");
