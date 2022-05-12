@@ -980,7 +980,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String option = "No, keep as unassigned";
             changeConvertToOpenShiftsSettings(option, location);

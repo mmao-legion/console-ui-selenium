@@ -780,7 +780,7 @@ public class HardStopForMinorViolation extends TestBase {
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         if (statusAfterEdit != statusBeforeEdit) {
             int i = 0;
-            while (i< 15) {
+            while (i< 20) {
                 //Wait for the timed cache
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 Thread.sleep(60000);
