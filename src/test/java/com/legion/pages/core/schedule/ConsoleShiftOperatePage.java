@@ -1238,6 +1238,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             int i;
             for (i=0; i<profileIcons.size(); i++){
                 if (profileIcons.get(i).getAttribute("src").contains("openShiftImage")){
+                    if (isElementLoaded(profileIcons.get(i), 5)) {
+                        scrollToElement(profileIcons.get(i));
+                    }
                     break;
                 }
             }

@@ -1648,9 +1648,13 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             if(clearFilterOnFilterDropdownPopup.getAttribute("class").contains("active")){
                 scrollToElement(clearFilterOnFilterDropdownPopup);
                 click(clearFilterOnFilterDropdownPopup);
+                waitForSeconds(2);
                 SimpleUtils.pass("Click Clear Filter button on Filter dropdown popup successfully! ");
-            } else
+            } else if (!clearFilterOnFilterDropdownPopup.getAttribute("class").contains("active")) {
+                click(filterButton);
+                waitForSeconds(2);
                 SimpleUtils.report("Clear filter button is disabled because there is no filters been selected! ");
+            }
         } else
             SimpleUtils.fail("Clear Filter button loaded fail! ", false);
     }
@@ -1977,6 +1981,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         closeShiftInfoPopup();
         if (isElementLoaded(filterButton,30)) {
             clickTheElement(filterButton);
+            waitForSeconds(2);
             SimpleUtils.pass("filter button is clickable");
         } else {
             SimpleUtils.fail("filter button is not Loaded Successfully!", true);
