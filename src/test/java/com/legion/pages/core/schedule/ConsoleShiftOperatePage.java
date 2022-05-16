@@ -2912,7 +2912,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     public boolean isEditShiftTimeNewUIDisplay () throws Exception {
         boolean isNewUIDisplay = false;
-        if (isElementLoaded(editShiftTimePopUp, 5)
+        if (isElementLoaded(editShiftTimePopUp, 15)
                 &&isElementLoaded(shiftStartInput, 10)
                 && isElementLoaded(shiftEndInput, 10)
                 && !isElementLoaded(shiftEndTimeButton, 5)

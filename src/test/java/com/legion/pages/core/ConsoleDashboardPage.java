@@ -203,6 +203,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
     public Boolean isDashboardPageLoaded() throws Exception
     {
+    	waitForSeconds(1);
     	if(isElementLoaded(dashboardSection, 20) || isElementEnabled(tmDashboradSection, 20))
     	{
     		SimpleUtils.pass("Dashboard loaded successfully");
