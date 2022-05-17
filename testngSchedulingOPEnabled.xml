@@ -199,6 +199,7 @@
                     <!--                    <include name="verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6247-->
                     <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" />
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
+                    <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

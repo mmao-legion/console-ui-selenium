@@ -105,6 +105,7 @@
                     <include name="verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin" />
                     <!--                    <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" /> need disable Continuous Operation-->
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
+                    <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
                                    </methods>
                                </class>
                            </classes>
