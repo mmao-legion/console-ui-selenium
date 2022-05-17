@@ -765,7 +765,7 @@ public class ScheduleCoverageTest extends TestBase {
                 if (isWeekGenerated) {
                     createSchedulePage.unGenerateActiveScheduleScheduleWeek();
                 }
-                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00am", "8:00pm");
+                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "08:00pm");
                 String workRole = shiftOperatePage.getRandomWorkRole();
                 //go to day view
                 scheduleCommonPage.clickOnDayView();
