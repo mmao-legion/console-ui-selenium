@@ -2015,6 +2015,7 @@ public class ActivityTest extends TestBase {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
             getDriver().navigate().refresh();
+            loginPage.verifyNewTermsOfServicePopUp();
             activityPage.verifyActivityBellIconLoaded();
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftOffer.getValue(), indexOfActivityType.ShiftOffer.name());
@@ -2024,6 +2025,7 @@ public class ActivityTest extends TestBase {
 
             //To close activity window
             getDriver().navigate().refresh();
+            loginPage.verifyNewTermsOfServicePopUp();
             //Go to schedule and check the TM1 been assign to the shift and TM2 is not
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
