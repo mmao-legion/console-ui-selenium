@@ -503,7 +503,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                             planSearchedResults.get(0).findElement(By.cssSelector("lg-button[label=\"Edit\"]")).click();
                             waitForSeconds(2);
                             editParentPlanName.clear();
-                            editParentPlanName.sendKeys(planName);
+                            editParentPlanName.sendKeys(planName + currentDate + "updated");
                             planCreateOKBTN.click();
                         }
                     }
