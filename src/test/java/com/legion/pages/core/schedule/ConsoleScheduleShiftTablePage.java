@@ -2812,23 +2812,23 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")),10)){
             for (int i=0; i< getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).size(); i++){
                 clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
-                if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("week-schedule-ribbon-group-toggle-closed")){
                     clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
-                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("open")){
+                    if (!getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("week-schedule-ribbon-group-toggle-closed")){
                         SimpleUtils.pass("Group can be expanded!!");
                     } else {
                         SimpleUtils.fail("Group is not expanded!", false);
                     }
                     clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
-                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("week-schedule-ribbon-group-toggle-closed")){
                         SimpleUtils.pass("Group can be collapsed!");
                     } else {
                         SimpleUtils.fail("Group is not collapsed!", false);
                     }
                 }
-                if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("open")){
+                if (!getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("week-schedule-ribbon-group-toggle-closed")){
                     clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
-                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("week-schedule-ribbon-group-toggle-closed")){
                         SimpleUtils.pass("Group can be collapsed!");
                     } else {
                         SimpleUtils.fail("Group is not collapsed!", false);
