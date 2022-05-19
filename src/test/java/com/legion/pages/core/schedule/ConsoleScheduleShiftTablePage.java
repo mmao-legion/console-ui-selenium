@@ -3194,13 +3194,13 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public HashMap<String, String> getHrsOnTooltipOfScheduleSummaryHoursByIndex (int index) throws Exception {
         scrollToBottom();
         HashMap<String, String> tooltip = new HashMap<>();
-        if (areListElementVisible(daySummaries, 10)
+        if (areListElementVisible(daySummaries, 5)
                 && daySummaries.size()> 0
                 && index<daySummaries.size()) {
             scrollToElement(daySummaries.get(index));
             moveToElementAndClick(daySummaries.get(index));
             tooltip = getHrsOnTooltip();
-        } else if (areListElementVisible(daySummariesInDayView, 10)
+        } else if (areListElementVisible(daySummariesInDayView, 5)
                 && daySummariesInDayView.size()> 0
                 && index<daySummariesInDayView.size()) {
             moveToElementAndClick(daySummariesInDayView.get(index));

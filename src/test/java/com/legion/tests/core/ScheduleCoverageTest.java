@@ -1030,16 +1030,7 @@ public class ScheduleCoverageTest extends TestBase {
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
-            ForecastPage forecastPage = pageFactory.createForecastPage();
-            forecastPage.clickOnLabor();
-            forecastPage.clickOnDayView();
-           List<String> hoursInLaborForecastChart = (List<String>) forecastPage.getLaborChartCoordinateAxisData().get("hours");
-            //Get budget hrs on labor forecast
-            float budgetHrsOnLaborForecast = 0;
-            for (int i=0; i< hoursInLaborForecastChart.size(); i++) {
-                budgetHrsOnLaborForecast += Float.parseFloat(hoursInLaborForecastChart.get(i));
-            }
+
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
@@ -1054,6 +1045,18 @@ public class ScheduleCoverageTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectWorkRoleFilterByText(workRole, true);
 
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            forecastPage.clickOnLabor();
+            forecastPage.clickOnDayView();
+            forecastPage.selectWorkRoleFilterByText(workRole);
+            List<String> hoursInLaborForecastChart = (List<String>) forecastPage.getLaborChartCoordinateAxisData().get("hours");
+            //Get budget hrs on labor forecast
+            float budgetHrsOnLaborForecast = 0;
+            for (int i=0; i< hoursInLaborForecastChart.size(); i++) {
+                budgetHrsOnLaborForecast += Float.parseFloat(hoursInLaborForecastChart.get(i));
+            }
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //Get budget and scheduled hrs on schedule page
             float budgetHrsOnSchedulePage = 0;
             float scheduledHrsOnSchedulePage = 0;

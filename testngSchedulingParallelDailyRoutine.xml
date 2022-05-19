@@ -565,9 +565,10 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                     <include name="validateTheContentInThePopupWhenMouseHoveringTheClockIconAsInternalAdmin" />
                     <include name="validateTheFunctionalityOfCoverageInsightsInWeekViewAsInternalAdmin" />
                     <include name="validateTheFunctionalityOfCoverageInsightsInDayViewAsInternalAdmin" />
+                    <include name="validateTheGuidanceBudgetHrsWhenFilteringInDayViewAsInternalAdmin" />
                     <include name="validateTheUpAndDownArrowsInWeekViewAsInternalAdmin" />
                     <include name="validateUpAndDownArrowsCheckMarkInDayViewAsInternalAdmin" />
-<!--                    <include name="validateTheGuidanceBudgetHrsWhenFilteringInDayViewAsInternalAdmin" />SCH-6046 -->
+
                 </methods>
             </class>
         </classes>

@@ -147,7 +147,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(css = "//div[contains(text(),'Work role')]")
 	private WebElement workRoleFilterTitle;
 
-	@FindBy(xpath = "//input-field[@label-unsafe=\"opt.labelUnsafe\"]")
+	@FindBy(css = "[label=\"Work Role\"] div.lg-filter__category-items input-field.ng-isolate-scope")
 	private List<WebElement> workRoleList;
 
 	@FindBy(css = "span.forecast-prediction-top-legend-entry.ng-binding.ng-scope")
@@ -165,7 +165,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(css = "a.lg-filter__clear.ng-scope.lg-filter__clear-active")
 	private WebElement clearFilterBtn;
 
-	@FindBy(css = "div.lg-filter__wrapper")
+	@FindBy(css = "[label=\"Work Role\"] div.lg-filter__wrapper")
 	private WebElement filterPopup;
 
 	@FindBy(css = "[label=\"Refresh\"]")
@@ -2287,5 +2287,22 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		} else
 			SimpleUtils.fail("The attendees and hours in Labor Forecast chart fail to load! ", false);
 		return attendeesAndHoursOfLaborForecast;
+	}
+
+
+
+	@Override
+	public void selectWorkRoleFilterByText(String workRoleLabel) throws Exception {
+		verifyWorkRoleSelection();
+		String filterType = "workrole";
+		for (WebElement availableWorkRoleFilter : workRoleList) {
+			if (availableWorkRoleFilter.getText().equalsIgnoreCase(workRoleLabel)) {
+				click(availableWorkRoleFilter);
+				SimpleUtils.pass("Schedule Work Role:'" + availableWorkRoleFilter.getText() + "' Filter selected Successfully!");
+				break;
+			}
+		}
+		if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+			click(filterButton);
 	}
 }
