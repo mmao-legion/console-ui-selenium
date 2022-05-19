@@ -4581,8 +4581,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		newShiftPage.clickOnDayViewAddNewShiftButton();
 		newShiftPage.selectWorkRole(workRoleOfTM);
-		newShiftPage.moveSliderAtCertainPoint("5",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-		newShiftPage.moveSliderAtCertainPoint("7",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+		newShiftPage.moveSliderAtCertainPoint("5pm",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+		newShiftPage.moveSliderAtCertainPoint("7am",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 		newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 		newShiftPage.clickOnCreateOrNextBtn();
 		newShiftPage.searchTeamMemberByName(firstNameOfTM);
