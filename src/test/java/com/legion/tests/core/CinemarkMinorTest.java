@@ -1892,7 +1892,7 @@ public class CinemarkMinorTest extends TestBase {
             loginPage.verifyNewTermsOfServicePopUp();
             //wait for 5 mins for catch
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            for (int i = 0; i< 5; i++) {
+            for (int i = 0; i< 10; i++) {
                 teamPage.goToTeam();
                 teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
                 Thread.sleep(60000);
