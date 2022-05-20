@@ -138,7 +138,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
         if (isElementLoaded(scheduleDayViewButton)) {
             if (!scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
-                click(scheduleDayViewButton);
+                clickTheElement(scheduleDayViewButton);
             }
             SimpleUtils.pass("Schedule Page day view loaded successfully!");
         } else {

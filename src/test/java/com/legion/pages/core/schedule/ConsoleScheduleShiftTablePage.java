@@ -981,6 +981,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.fail("Selected shift is null!",true);
         }
         if (isElementEnabled(popOverContent, 5)) {
+            String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
+            shiftInfo.put("shiftName", shiftName);
             String[] jobTitleAndWorkRole = popOverContent.findElement(By.cssSelector(".shift-hover-subheading.ng-binding")).getText().split("as");
             if (jobTitleAndWorkRole.length==1){
                 //add job title
@@ -2576,8 +2578,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> shiftsOfOneTM = new ArrayList<>();
         if (areListElementVisible(dayViewAvailableShifts, 5) && dayViewAvailableShifts != null && dayViewAvailableShifts.size() > 0) {
             for (WebElement shift : dayViewAvailableShifts) {
-                WebElement name1 = shift.findElement(By.className("sch-day-view-shift-worker-name"));
-                if (name1 != null && name1.getText().contains(name)) {
+                String shiftName = getShiftInfoFromInfoPopUp(shift).get("shiftName");
+                if (shiftName.contains(name)) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
                     count++;
