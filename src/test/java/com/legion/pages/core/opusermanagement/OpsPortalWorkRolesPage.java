@@ -26,7 +26,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
     private WebElement searchButton;
     @FindBy(css = "table.lg-table.ng-scope>tbody>tr>td:first-child>lg-button")
     private List<WebElement> workRoleList;
-    @FindBy(css = "table.lg-table.ng-scope>tbody>tr:first-child>td:first-child>lg-button")
+    @FindBy(css = "table.lg-table.ng-scope>tbody>tr>td:first-child>lg-button")
     private WebElement theFirstWorkRoleInTheList;
     @FindBy(css = "div.lg-work-roles__placeholder-content.ng-binding")
     private WebElement noResultNotice;
