@@ -648,12 +648,10 @@ public class BasePage {
         }
         if (numClicks >0){
             try{
-                btnNextMonth = getDriver().findElement(By.cssSelector("span.fa.fa-chevron-right"));
-                List<WebElement> textMonthVal = getDriver().findElements(By.cssSelector("div.ranged-calendar__month-name"));
-                for(int i =0;i<textMonthVal.size();i++){
-                    String[] textMonthArr = textMonthVal.get(i).getText().split(" ");
-                    listMonthText.add(textMonthArr[0]);
-                }
+                btnNextMonth = getDriver().findElements(By.cssSelector("lg-single-calendar div a")).get(1);
+                WebElement textMonthVal = getDriver().findElement(By.cssSelector("span.lg-single-calendar-month"));
+                String[] textMonthArr = textMonthVal.getText().split(" ");
+                listMonthText.add(textMonthArr[0]);
             }catch(Exception e){
                 SimpleUtils.fail("Not able to click Next month arrow",false);
             }
