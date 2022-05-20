@@ -1236,7 +1236,6 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 
 	public void verifyViewHourlyRate() throws Exception{
 		if(isElementLoaded(viewHourlyRate,5)){
-			System.out.println(viewHourlyRate.getText());
 			if(viewHourlyRate.getText().equals("View Hourly Rate"))
 				SimpleUtils.pass("View hourly rate permission text is correct");
 			else
@@ -1269,5 +1268,63 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.fail("Back button loaded failed",false);
 		}
 	}
+
+	@FindBy(css = "div[title = ' View Employee Phone']")
+	private WebElement viewEmployeePhone;
+	@FindBy(css = "div[title = ' View Employee Email']")
+	private WebElement viewEmployeeEmail;
+	@FindBy(css = "div[title = ' View Employee Address']")
+	private WebElement viewEmployeeAddress;
+	@FindBy(css = "div[title = ' View Employee Work Preferences']")
+	private WebElement viewEmployeeWorkPreferences;
+	@FindBy(css = "div[title = ' View Employee Work Preferences Requests']")
+	private WebElement viewEmployeeWorkPreferencesRequests;
+	@FindBy(css = "div[title = ' View Employee Time Off']")
+	private WebElement viewEmployeeTimeOff;
+	@FindBy(css = "div[title = ' View Employee Time Off Requests']")
+	private WebElement viewEmployeeTimeOffRequests;
+
+	public boolean profileViewPermissionExist() throws Exception{
+		if(isElementDisplayed(viewHourlyRate) && isElementDisplayed(viewEmployeePhone) && isElementDisplayed(viewEmployeeEmail) && isElementDisplayed(viewEmployeeAddress) && isElementDisplayed(viewEmployeeTimeOffRequests)
+				&& isElementDisplayed(viewEmployeeWorkPreferences) && isElementDisplayed(viewEmployeeWorkPreferencesRequests) && isElementDisplayed(viewEmployeeTimeOff))
+			return true;
+		else
+			return false;
+	}
+
+	@FindBy(css = "div[ng-if = '(isViewMode() || (!isMe && !tm.worker.requiresOnboarding)) && canViewEmployeeAddress']")
+	private WebElement profileAddress;
+	@FindBy(css = "span.email.ng-binding")
+	private WebElement profileEmail;
+	@FindBy(css = "span.phone.ng-binding")
+	private WebElement profilePhone;
+	@FindBy(css = "div:nth-child(2) > collapsible > collapsible-base > div > div.collapsible-title > div.collapsible-title-text")
+	private WebElement workPreferences;
+	@FindBy(css = "lg-button[label = 'Edit']>button")
+	private WebElement createWorkPreferences;
+	@FindBy(css = "timeoff-management div.collapsible-title")
+	private WebElement timeOff;
+	@FindBy(css = "lg-button[label = 'Create time off']>button")
+	private WebElement createTimeOff;
+
+	public boolean verifyProfilePermission() throws Exception {
+		waitForSeconds(3);
+		if (isElementDisplayed(profileAddress) && isElementDisplayed(profileEmail) && isElementDisplayed(profilePhone) && isElementDisplayed(workPreferences) && isElementDisplayed(timeOff)) {
+			click(workPreferences);
+			if (isExist(createWorkPreferences)) {
+				click(timeOff);
+				if (isExist(createTimeOff)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}
+
 }
 

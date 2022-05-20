@@ -123,4 +123,8 @@ public interface UserManagementPage {
     public void clickProfile() throws Exception;
 
     public void goBack() throws Exception;
+
+    public boolean profileViewPermissionExist() throws Exception;
+
+    public boolean verifyProfilePermission() throws Exception;
 }
