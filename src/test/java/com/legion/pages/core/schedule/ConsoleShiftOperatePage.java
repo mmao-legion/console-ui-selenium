@@ -926,7 +926,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css="[ng-click=\"closeModal()\"]")
     private WebElement cancelButtonInEditShiftTimeWindow;
 
-    @FindBy(css=".modal-instance-button.confirm.ng-binding")
+    @FindBy(css="[ng-click='confirm()']")
     private WebElement updateButtonInEditShiftTimeWindow;
 
     @FindBy(css="div.noUi-handle.noUi-handle-lower")
