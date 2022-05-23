@@ -4,6 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
+import com.legion.tests.TestBase;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
@@ -3391,8 +3392,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 								SimpleUtils.pass("The IN and NOt IN relation are supported for Criteria relationship.");
 							//set up criteria value
 							clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
-							//input search key words
-							dynamicGroupCriteriaSearchInput.sendKeys("United States");
+							//choose the last value from drop down
+							clickTheElement(dynamicGroupCriteriaValueInputs.get(0));
+							clickTheElement(dynamicGroupCriteriaResults.get(dynamicGroupCriteriaResults.size() - 1));
 							waitForSeconds(2);
 							clickTheElement(dynamicGroupCriteriaResults.get(0));
 							waitForSeconds(2);
@@ -3430,7 +3432,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 
 	@Override
-	public void publishNewTemplate(String templateName,String name,String criteria,String formula) throws Exception{
+	public void publishNewTemplate(String templateName,String dynamicGName,String criteria,String formula) throws Exception{
 		LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
 		if(isTemplateListPageShow()){
 			//check if template existing or not
@@ -3458,12 +3460,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				//change to association tan
 				clickTheElement(templateAssociationBTN);
 				waitForSeconds(3);
-				if(searchOneDynamicGroup(name)){
-					selectOneDynamicGroup(name);
+				if(searchOneDynamicGroup(dynamicGName)){
+					selectOneDynamicGroup(dynamicGName);
 				}
 				else{
-					createDynamicGroup(name,criteria,formula);
-				    selectOneDynamicGroup(name);}
+					createDynamicGroup(dynamicGName,criteria,formula);
+				    selectOneDynamicGroup(dynamicGName);}
 				waitForSeconds(4);
 				if(isElementEnabled(taTemplateSpecialField,20)){
 					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
@@ -4056,6 +4058,73 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css = "lg-button[label=\"Edit\"]")
+	private WebElement editBtn;
+	@Override
+	public void clickEdit() throws Exception {
+		if (isElementLoaded(editBtn,3)) {
+			click(editBtn);
+			SimpleUtils.pass("Edit button is clicked");
+		}else
+			SimpleUtils.fail("Edit button load failed ",false);
+	}
+
+	@FindBy(css = "lg-button[label=\"OK\"]")
+	private WebElement OKBtn;
+	@Override
+	public void clickOK() throws Exception {
+		if (isElementLoaded(OKBtn,3)) {
+			click(OKBtn);
+			SimpleUtils.pass("OK button is clicked");
+		}else
+			SimpleUtils.fail("OKBtn button load failed ",false);
+	}
+
+	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/div/h2")
+	private WebElement timeOffText;
+	@FindBy(css = "div.lg-question-input__wrapper h3")
+	private WebElement maxNumEmployeesText;
+	public void verifyTimeOff() throws Exception {
+		scrollToElement(timeOffText);
+		if(isElementLoaded(timeOffText,5) && isElementLoaded(maxNumEmployeesText,5)){
+			SimpleUtils.pass("Time off loaded successfully");
+			if(timeOffText.getText().equals("Time Off") && maxNumEmployeesText.getText().equals("Max number employees can request time off on the same day.")){
+				SimpleUtils.pass("Time off text is correct");
+			}
+		}else{
+			SimpleUtils.fail("Time off loaded failed",false);
+		}
+	}
+
+//	@FindBy(css = "ng-transclude.lg-question-input__input input-field ng-form input")
+	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/ng-transclude/content-box/ng-transclude/div/div/div/question-input/div/div[1]/ng-transclude/input-field/ng-form/input")
+	private WebElement maxNumEmployeesInput;
+	public void verifymaxNumEmployeesInput(String num) throws Exception {
+		if(isElementLoaded(maxNumEmployeesInput,5)){
+			maxNumEmployeesInput.clear();
+			maxNumEmployeesInput.sendKeys(num);
+			if(!num.contains("-") && !num.contains(".")){
+				if(isClickable(saveAsDraftButton,5)){
+					SimpleUtils.pass("Positive integer is valid");
+				}else{
+					SimpleUtils.fail("Positive integer should be valid",false);
+				}
+			}else{
+				if(!isClickable(saveAsDraftButton,5)){
+					SimpleUtils.pass("Negative interger or decimal is invalid");
+				}else{
+					SimpleUtils.fail("Negative interger or decimal should be invalid",false);
+				}
+			}
+		}else{
+			SimpleUtils.fail("maxNumEmployeesInput loaded failed",false);
+		}
+	}
+	
+	public void switchToControlWindow() throws Exception{
+		TestBase.switchToNewWindow();
+	}
+
 	//Added by Fiona
 	@FindBy(tagName="lg-eg-status")
 	private List<WebElement> templateStatus;
@@ -4105,7 +4174,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 							SimpleUtils.fail("Template can't show well in template list page",false);
 						}
 						//get all effectiveDate
-						if(effectiveDate.getText().trim()!=null || effectiveDate.getText().trim()!=""){
+						if(effectiveDate.getText().trim()!=null && effectiveDate.getText().trim()!="" && !effectiveDate.getText().trim().isEmpty()){
 							effectiveDates.add(effectiveDate.getText().trim());
 						}
 					}
@@ -4132,6 +4201,68 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 
+	@FindBy(css="modal[modal-title=\"Date of Publish\"]")
+	private WebElement dateOfPublishPopup;
+	@FindBy(css="input-field[placeholder=\"Select...\"]")
+	private WebElement effectiveDate;
+	@FindBy(css="lg-button[label=\"OK\"] button")
+	private WebElement okButtonOnFuturePublishConfirmDialog;
 
+	private void  setEffectiveDate(int effectiveDate) throws Exception {
+		selectDateInTemplate(effectiveDate);
+	}
 
+	@Override
+	public void publishAtDifferentTimeTemplate(String templateName,String dynamicGName,String criteria,String formula,String button,int date) throws Exception{
+		waitForSeconds(2);
+		if(isElementLoaded(newTemplateBTN,2)){
+			clickTheElement(newTemplateBTN);
+			waitForSeconds(1);
+			if(isElementEnabled(createNewTemplatePopupWindow)){
+				SimpleUtils.pass("User can click new template button successfully!");
+				clickTheElement(newTemplateName);
+				newTemplateName.sendKeys(templateName);
+				clickTheElement(newTemplateDescription);
+				newTemplateDescription.sendKeys(templateName);
+				clickTheElement(continueBTN);
+				waitForSeconds(4);
+				if(isElementEnabled(welcomeCloseButton, 5)){
+					clickTheElement(welcomeCloseButton);
+				}
+				//change to association tan
+				clickTheElement(templateAssociationBTN);
+				waitForSeconds(3);
+				if(searchOneDynamicGroup(dynamicGName)){
+					selectOneDynamicGroup(dynamicGName);
+				}
+				else{
+					createDynamicGroup(dynamicGName,criteria,formula);
+					selectOneDynamicGroup(dynamicGName);}
+				waitForSeconds(4);
+				if(isElementEnabled(taTemplateSpecialField,20)){
+					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+				}
+				clickOnTemplateDetailTab();
+				chooseSaveOrPublishBtnAndClickOnTheBtn(button);
+				if(isElementLoaded(dateOfPublishPopup,2)){
+					clickTheElement(effectiveDate);
+					setEffectiveDate(date);
+					clickTheElement(okButtonOnFuturePublishConfirmDialog);
+				}else {
+					SimpleUtils.fail("The future publish template confirm dialog is not displayed.",false);
+				}
+			}else {
+				SimpleUtils.fail("User can't click new template button successfully!",false);
+			}
+		}
+		searchTemplate(templateName);
+		String newTemplateName = templateNameList.get(0).getText().trim();
+		if(newTemplateName.contains(templateName)){
+			SimpleUtils.pass("User can add new template successfully!");
+		}else {
+			SimpleUtils.fail("User can't add new template successfully",false);
+		}
+	}
 }

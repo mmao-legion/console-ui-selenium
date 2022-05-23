@@ -13,9 +13,7 @@ import com.legion.test.testrail.APIException;
 import com.legion.test.testrail.TestRailOperation;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.testframework.*;
-import com.legion.utils.JsonUtil;
-import com.legion.utils.MyThreadLocal;
-import com.legion.utils.SimpleUtils;
+import com.legion.utils.*;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
@@ -635,5 +633,15 @@ public abstract class TestBase {
 
     public static String getUrl() {
       return getDriver().getCurrentUrl();
+    }
+
+    public static String getSessionId(String payLoad){
+        //header
+        HashMap<String, String> loginHeader = new HashMap<String, String>();
+        //post request
+        String[] postResponse = HttpUtil.httpPost(Constants.loginUrlRC, loginHeader, payLoad);
+        Assert.assertEquals(postResponse[0], "200", "Failed to login!");
+        String sessionId = postResponse[1];
+        return sessionId;
     }
 }

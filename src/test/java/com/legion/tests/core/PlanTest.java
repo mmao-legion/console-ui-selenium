@@ -133,10 +133,10 @@ public class PlanTest extends TestBase {
             String regionName="RegionForPlan_Auto";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -164,10 +164,11 @@ public class PlanTest extends TestBase {
             String regionName="RegionForPlan_Auto";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -196,10 +197,10 @@ public class PlanTest extends TestBase {
             String HQName="HQ";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(regionName);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -254,10 +255,10 @@ public class PlanTest extends TestBase {
             String regionName="RegionForPlan_Auto";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -280,10 +281,10 @@ public class PlanTest extends TestBase {
             String regionName="RegionForPlan_Auto";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -307,15 +308,17 @@ public class PlanTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyScenarioPlanCreateLandingDetailAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            SimpleDateFormat dfs = new SimpleDateFormat("MMddHH");
+            String currentDate =  dfs.format(new Date()).trim();
             String planName = "testPlan-Not Delete";
             String scPlanName = "Scenario Plan Not Delete";
             String regionName="RegionForPlan_Auto";
-            String copiedPlanName="Test Copy Generate Plan";
+            String copiedPlanName="Test Copy Generate Plan" + currentDate;
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -338,10 +341,10 @@ public class PlanTest extends TestBase {
             String regionName="RegionForPlan_Auto";
             String scToTestArchiveInprogress="check archive-not delete";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -373,10 +376,10 @@ public class PlanTest extends TestBase {
             String regionName="RegionForPlan_Auto";
             String compleleForecastPlan="CompleteForecastPlan";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -402,10 +405,10 @@ public class PlanTest extends TestBase {
             String scPlanName = "TestScenarioPlanEdit";
             String regionName="RegionForPlan_Auto";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -515,7 +518,7 @@ public class PlanTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify new customer access role that assigned view plan permission can see plan tab")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
     public void verifyNewCustomerRoleThatAssignedViewPlanPermissionCanSeePlanTabAsDMWithPlanPermissionPlanner (String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);

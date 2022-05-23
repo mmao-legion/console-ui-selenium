@@ -69,6 +69,7 @@ public class OpsPortalNavigationPage extends BasePage {
     }
 
     public void logout() {
+        scrollToElement(logout);
         logout.click();
     }
 

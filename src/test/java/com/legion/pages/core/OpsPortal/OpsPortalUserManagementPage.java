@@ -3,6 +3,7 @@ package com.legion.pages.core.OpsPortal;
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -801,7 +802,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	public void goToUserAndRoles() {
 		if (isElementEnabled(usersAndRolesCard,5)) {
 			click(usersAndRolesCard);
-			waitForSeconds(15);
+		//	waitForSeconds(15);
 			if (isElementEnabled(addNewUserBtn,5)) {
 				SimpleUtils.pass("Can go to Users and Roles page successfully");
 			}else
@@ -1094,6 +1095,235 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 				SimpleUtils.fail("user history loaded failed",false);
 		}else
 			SimpleUtils.fail("user time off tab loaded failed",false);
+	}
+
+	@FindBy(xpath = "//nav[@class='lg-tabs__nav']/div[3]")
+	private WebElement jobTitleAccess;
+
+	public void goToJobTitleAccess() throws Exception{
+		if(isElementEnabled(jobTitleAccess,5)){
+			click(jobTitleAccess);
+			SimpleUtils.pass("Job Title Access is clickable");
+		}else
+			SimpleUtils.fail("Job Title Access loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='Add Job Title']>button")
+	private WebElement addJobTitle;
+
+	public void clickAddJobTitle() throws Exception{
+		if(isElementEnabled(addJobTitle,5)){
+			click(addJobTitle);
+			SimpleUtils.pass("Add job title is clickable");
+		}else
+			SimpleUtils.fail("Add job title loaded failed",false);
+	}
+
+	@FindBy(css = "input[placeholder='Name of Job Title']")
+	private WebElement jobTitleName;
+
+	public void inputJobTitleName(String name) throws Exception{
+		if(isElementLoaded(jobTitleName,5)){
+			jobTitleName.sendKeys(name);
+			SimpleUtils.pass("Input job title name successfully");
+		}else
+			SimpleUtils.fail("Job title name input box loaded failed",false);
+	}
+
+	@FindBy(css = "input[aria-label='Admin']")
+	private WebElement accessRole;
+
+	public void selectAccessRole() throws Exception{
+		if(isElementLoaded(accessRole,5)){
+			click(accessRole);
+			SimpleUtils.pass("Select access role successfully");
+		}else
+			SimpleUtils.fail("Access role loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='Save']>button")
+	private WebElement saveJobTitleButton;
+
+	public void saveJobTitle() throws Exception{
+		if(isElementLoaded(saveJobTitleButton,5)){
+			click(saveJobTitleButton);
+			SimpleUtils.pass("Save job title successfully");
+		}else
+			SimpleUtils.fail("Job title save button loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='cancel']>button")
+	private WebElement cancelJobTitleButton;
+
+	public void cancelJobTitle() throws Exception{
+		if(isElementLoaded(cancelJobTitleButton,5)){
+			click(cancelJobTitleButton);
+			SimpleUtils.pass("Cancel job title successfully");
+		}else
+			SimpleUtils.fail("Cancel title save button loaded failed",false);
+	}
+
+	@FindBy(css = "input[placeholder='You can search by employee job title.']")
+	private WebElement searchJobTitleInputBox;
+	@FindBy(css ="td.ng-binding")
+	private WebElement searchJobTitleResult;
+
+	public void searchJobTitle(String name) throws Exception{
+		if(isElementLoaded(searchJobTitleInputBox,5)){
+			searchJobTitleInputBox.clear();
+			searchJobTitleInputBox.sendKeys(name);
+			if(isElementLoaded(searchJobTitleResult,5)){
+				SimpleUtils.pass("Search job title " + name + " successfully");
+			}else
+				SimpleUtils.fail("Job title is not match with searched",false);
+		}else
+			SimpleUtils.fail("Job title search input box loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label = 'Remove']>button")
+	private WebElement removeJobTitleButton;
+
+	public void removeJobTitle() throws Exception{
+		if(isElementLoaded(removeJobTitleButton,5)){
+			click(removeJobTitleButton);
+			SimpleUtils.pass("Remove job title successfully");
+		}else
+			SimpleUtils.fail("Remove job title button loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label = 'Show Rate']>button")
+	private WebElement showRate;
+	@FindBy(css = "lg-button[label = 'Hide Rate']>button")
+	private WebElement hideRate;
+	@FindBy(css = "div[ng-if='canViewHourlyRate']>div.value.ng-binding")
+	private WebElement hourlyRate;
+
+	public boolean isHourlyRateExist() throws Exception{
+		if(!isExist(showRate)&&!isExist(hideRate)&&!isExist(hourlyRate))
+			return false;
+		else
+			return true;
+	}
+
+	public void clickShowRate() throws Exception{
+		if(isElementLoaded(showRate,5)){
+			click(showRate);
+			SimpleUtils.pass("Click show rate button successfully");
+		}else
+			SimpleUtils.fail("Show rate button loaded failed",false);
+	}
+
+	public void clickHideShowRate() throws Exception{
+		if(isElementLoaded(hideRate,5)){
+			click(hideRate);
+			SimpleUtils.pass("Click hide rate button successfully");
+		}else
+			SimpleUtils.fail("Hide rate button loaded failed",false);
+	}
+
+	public String getHourlyRateValue() throws Exception{
+		String hourly = "";
+		if(isElementLoaded(hourlyRate,5)){
+			scrollToElement(hourlyRate);
+			hourly = hourlyRate.getAttribute("innerText");
+		}else
+			SimpleUtils.fail("Hide rate value loaded failed",false);
+		return hourly;
+	}
+
+	@FindBy(css = "div[title = ' View Hourly Rate']")
+	private WebElement viewHourlyRate;
+
+	public void verifyViewHourlyRate() throws Exception{
+		if(isElementLoaded(viewHourlyRate,5)){
+			if(viewHourlyRate.getText().equals("View Hourly Rate"))
+				SimpleUtils.pass("View hourly rate permission text is correct");
+			else
+				SimpleUtils.fail("View hourly rate permission text is wrong",false);
+		}else{
+			SimpleUtils.fail("View hourly rate display failed",false);
+		}
+	}
+
+	@FindBy(css = "div.group.ng-scope:nth-child(6)")
+	private WebElement profile;
+
+	public void clickProfile() throws Exception{
+		if(isElementLoaded(profile,5)){
+			click(profile);
+			SimpleUtils.pass("Click profile successfully");
+		}else{
+			SimpleUtils.fail("profile loaded failed",false);
+		}
+	}
+
+	@FindBy(css = "span[ng-click= 'back()']")
+	private WebElement backButton;
+
+	public void goBack() throws Exception{
+		if(isElementLoaded(backButton,5)){
+			click(backButton);
+			SimpleUtils.pass("Click back button successfully");
+		}else{
+			SimpleUtils.fail("Back button loaded failed",false);
+		}
+	}
+
+	@FindBy(css = "div[title = ' View Employee Phone']")
+	private WebElement viewEmployeePhone;
+	@FindBy(css = "div[title = ' View Employee Email']")
+	private WebElement viewEmployeeEmail;
+	@FindBy(css = "div[title = ' View Employee Address']")
+	private WebElement viewEmployeeAddress;
+	@FindBy(css = "div[title = ' View Employee Work Preferences']")
+	private WebElement viewEmployeeWorkPreferences;
+	@FindBy(css = "div[title = ' View Employee Work Preferences Requests']")
+	private WebElement viewEmployeeWorkPreferencesRequests;
+	@FindBy(css = "div[title = ' View Employee Time Off']")
+	private WebElement viewEmployeeTimeOff;
+	@FindBy(css = "div[title = ' View Employee Time Off Requests']")
+	private WebElement viewEmployeeTimeOffRequests;
+
+	public boolean profileViewPermissionExist() throws Exception{
+		if(isElementDisplayed(viewHourlyRate) && isElementDisplayed(viewEmployeePhone) && isElementDisplayed(viewEmployeeEmail) && isElementDisplayed(viewEmployeeAddress) && isElementDisplayed(viewEmployeeTimeOffRequests)
+				&& isElementDisplayed(viewEmployeeWorkPreferences) && isElementDisplayed(viewEmployeeWorkPreferencesRequests) && isElementDisplayed(viewEmployeeTimeOff))
+			return true;
+		else
+			return false;
+	}
+
+	@FindBy(css = "div[ng-if = '(isViewMode() || (!isMe && !tm.worker.requiresOnboarding)) && canViewEmployeeAddress']")
+	private WebElement profileAddress;
+	@FindBy(css = "span.email.ng-binding")
+	private WebElement profileEmail;
+	@FindBy(css = "span.phone.ng-binding")
+	private WebElement profilePhone;
+	@FindBy(css = "div:nth-child(2) > collapsible > collapsible-base > div > div.collapsible-title > div.collapsible-title-text")
+	private WebElement workPreferences;
+	@FindBy(css = "lg-button[label = 'Edit']>button")
+	private WebElement createWorkPreferences;
+	@FindBy(css = "timeoff-management div.collapsible-title")
+	private WebElement timeOff;
+	@FindBy(css = "lg-button[label = 'Create time off']>button")
+	private WebElement createTimeOff;
+
+	public boolean verifyProfilePermission() throws Exception {
+		waitForSeconds(3);
+		if (isElementDisplayed(profileAddress) && isElementDisplayed(profileEmail) && isElementDisplayed(profilePhone) && isElementDisplayed(workPreferences) && isElementDisplayed(timeOff)) {
+			click(workPreferences);
+			if (isExist(createWorkPreferences)) {
+				click(timeOff);
+				if (isExist(createTimeOff)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}else{
+			return false;
+		}
 	}
 
 }

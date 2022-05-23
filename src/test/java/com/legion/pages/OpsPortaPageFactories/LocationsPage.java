@@ -272,4 +272,6 @@ public interface LocationsPage {
 
     public void verifyDownloadTransaltionsButtonisClicked() throws Exception;
     public void verifyUploadTransaltionsButtonisClicked() throws Exception;
+
+    public void resetLaborModel() throws Exception;
 }

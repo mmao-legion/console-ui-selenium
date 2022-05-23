@@ -11,6 +11,7 @@ import org.openqa.selenium.remote.server.handler.DeleteSession;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.*;
@@ -457,6 +458,9 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
 
     @Override
     public void verifyCreatePlanLandingPage(String planName) throws Exception {
+
+        SimpleDateFormat dfs = new SimpleDateFormat("MMddHH");
+        String currentDate =  dfs.format(new Date()).trim();
         //check the data in list
         if (areListElementVisible(planSearchedResults)) {
             SimpleUtils.report("There are data show in plan landing page!");
@@ -477,26 +481,29 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                 if (isElementLoaded(editParentPlanDialog, 5)) {
                     SimpleUtils.pass("Edit parent plan dialog pops up successfully");
                     editParentPlanName.clear();
-                    editParentPlanName.sendKeys(planName + "-Updated");
+                    editParentPlanName.sendKeys(planName + currentDate);
                     //click ok
                     planCreateOKBTN.click();
                     waitForSeconds(3);
                     //check edit successfully
-                    if (searchAPlan(planName + "-Updated")) {
+                    if (searchAPlan(planName + currentDate)) {
                         SimpleUtils.pass("Parent plan edit successfully");
                         //check the first record of data is the one edited
                         planSearchInputField.clear();
                         planSearchInputField.sendKeys(Keys.ENTER);
                         //get the title of the first data
                         String planTitle = planSearchedResults.get(0).findElement(By.cssSelector(".lg-scenario-table-improved__plan-name")).getText().trim();
-                        if (planTitle.equals(planName + "Updated"))
+                        System.out.println("planTitle:" + planTitle);
+                        System.out.println("planName:" + planName);
+                        if (planTitle.equals(planName + currentDate)){
                             SimpleUtils.pass("The latest updated data show as the first of record successfully!");
+                        }
                         //recover the data
-                        if (searchAPlan(planName + "-Updated")) {
+                        if (searchAPlan(planName + currentDate)) {
                             planSearchedResults.get(0).findElement(By.cssSelector("lg-button[label=\"Edit\"]")).click();
                             waitForSeconds(2);
                             editParentPlanName.clear();
-                            editParentPlanName.sendKeys(planName);
+                            editParentPlanName.sendKeys(planName + currentDate + "updated");
                             planCreateOKBTN.click();
                         }
                     }

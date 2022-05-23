@@ -89,7 +89,7 @@ public interface ConfigurationPage {
                                                                   String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
                                                                   List<String> days,String shiftsNumber) throws Exception;
     public void selectOneDynamicGroup(String dynamicGroupName) throws Exception;
-    public void publishNewTemplate(String templateName,String name,String criteria,String formula) throws Exception;
+    public void publishNewTemplate(String templateName,String dynamicGName,String criteria,String formula) throws Exception;
     public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
     public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) throws Exception;
     public void createDynamicGroup(String name,String criteria,String formula) throws Exception;
@@ -119,5 +119,11 @@ public interface ConfigurationPage {
     public void deleteSpecifyDynamicEmployeeGroupsInList(String groupName) throws Exception;
     public void clickOnBackBtnOnTheTemplateDetailAndListPage() throws Exception;
     public void chooseSaveOrPublishBtnAndClickOnTheBtn(String button) throws Exception;
+    public void clickEdit() throws Exception;
+    public void clickOK() throws Exception;
+    public void verifyTimeOff() throws Exception;
+    public void verifymaxNumEmployeesInput(String num) throws Exception;
+    public void switchToControlWindow() throws Exception;
     public void verifyMultipleTemplateListUI(String templateName) throws Exception;
+    public void publishAtDifferentTimeTemplate(String templateName,String dynamicGName,String criteria,String formula,String button,int effectiveDate) throws Exception;
 }

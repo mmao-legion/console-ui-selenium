@@ -1,11 +1,9 @@
 package com.legion.tests.core.opEmployeeManagement;
 
-import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
-import com.legion.pages.core.OpCommons.OpsCommonComponents;
+import com.legion.pages.TeamPage;
+import com.legion.pages.core.OpCommons.*;
 import com.legion.pages.core.opemployeemanagement.AbsentManagePage;
 import com.legion.pages.core.opemployeemanagement.EmployeeManagementPanelPage;
-import com.legion.pages.core.OpCommons.RightHeaderBarPage;
-import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffReasonConfigurationPage;
 import com.legion.tests.TestBase;
@@ -355,4 +353,103 @@ public class TimeOffRequestTest extends TestBase {
         Assert.assertEquals(queryResult3, "No item returned!", "Failed to clear the data just generated in DB!");
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Time off activity")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimeOffActivityAsInternalAdminOfTimeOffRequestTest(String browser, String username, String password, String location) throws Exception {
+        // delete created time off
+        deleteRequestedTimeOffDateByWorkerId("648acc0c-64e7-4458-ad95-4a72057cb17b");
+
+        // delete activity
+        String sql = "delete from legionrc.Activity where createdBy = 'e335a98b-c0fb-42b0-ba2f-d9b24ea346d3' and enterpriseId = 'aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        DBConnection.updateDB(sql);
+
+        String queryResult = DBConnection.queryDB("legionrc.Activity", "objectId", "createdBy = 'e335a98b-c0fb-42b0-ba2f-d9b24ea346d3' and enterpriseId = 'aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'");
+        Assert.assertEquals(queryResult, "No item returned!", "Failed to clear the data just generated in DB!");
+
+        // Verify activity doesn't display for admin
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        ActivityPage activityPage = new ActivityPage();
+        activityPage.switchToNewWindow();
+        Assert.assertEquals(activityPage.verifyActivityDisplay(), false);
+
+        //create approved time off for tm
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("verifyMock");
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        timeOffPage.switchToTimeOffTab();
+        OpsCommonComponents commonComponents = new OpsCommonComponents();
+        timeOffPage.createTimeOff("Annual Leave",false,27,27);
+        commonComponents.okToActionInModal(true);
+
+        navigationPage.logout();
+        // Verify activity doesn't display for team member
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+tm@legion.co", "admin11.a","verifyMock");
+        OpsPortalNavigationPage navigationPage1 = new OpsPortalNavigationPage();
+        Assert.assertEquals(activityPage.verifyActivityDisplay(), false);
+        consoleNavigationPage.searchLocation("verifyMock");
+
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+
+        timeOffPage.switchToTimeOffTab();
+        timeOffPage.createTimeOff("Annual Leave",false,28,28);
+        commonComponents.okToActionInModal(true);
+        timeOffPage.createTimeOff("Annual Leave",false,29,29);
+        commonComponents.okToActionInModal(true);
+        timeOffPage.createTimeOff("Annual Leave",false,30,30);
+        commonComponents.okToActionInModal(true);
+        RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
+        rightHeaderBarPage.navigateToTimeOff();
+        timeOffPage.cancelCreatedTimeOffRequest();
+        navigationPage1.logout();
+        // Verify activity  display for store member
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+sm@legion.co", "admin11.a","verifyMock");
+        Assert.assertEquals(activityPage.verifyActivityDisplay(), true);
+
+        //search and go to the target location
+        consoleNavigationPage.searchLocation("verifyMock");
+
+        // click activity
+        Assert.assertEquals(activityPage.verifyActivityBoxDisplay(), true);
+        activityPage.clickTimeOff();
+        activityPage.clickTimeOffDetail();
+
+        //verify approve is clickable
+        activityPage.verifyApproveIsClickable();
+
+        //verify reject is clickable
+        activityPage.verifyRejectIsClickable();
+
+        //verify activity title
+        activityPage.verifyActivityTitle();
+
+        //verify time off status
+        activityPage.verifyActivityTimeOffStatus();
+
+        //verify first activity is cancelled
+        activityPage.verifyCancel();
+
+        //approve second activity and verify it's approved
+        activityPage.approveActivityTimeOff();
+        activityPage.verifyApprove();
+
+        //reject third activity and verify it's rejected
+        activityPage.rejectActivityTimeOff();
+        activityPage.verifyReject();
+
+        OpsPortalNavigationPage navigationPage2 = new OpsPortalNavigationPage();
+        navigationPage2.logout();
+
+        //tm login to check its time off status have changed
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+tm@legion.co", "admin11.a","verifyMock");
+        consoleNavigationPage.searchLocation("verifyMock");
+        rightHeaderBarPage.navigateToTimeOff();
+        timeOffPage.verifyTimeOffStatus();
+    }
 }

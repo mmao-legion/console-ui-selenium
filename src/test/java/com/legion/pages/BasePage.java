@@ -632,6 +632,49 @@ public class BasePage {
         }
     }
 
+    public void selectDateInTemplate(int daysFromToday) {
+        int numClicks = -1;
+        LocalDate now = LocalDate.now();
+        LocalDate wanted = LocalDate.now().plusDays(daysFromToday);
+        WebElement btnNextMonth = null;
+        List<String> listMonthText = new ArrayList<>();
+        if (wanted.getYear() == now.getYear()) {
+            numClicks = wanted.getMonthValue() - now.getMonthValue();
+        } else {
+            numClicks = 12 + wanted.getMonthValue() - now.getMonthValue();
+        }
+        if (numClicks < 0) {
+            numClicks = daysFromToday / 30;
+        }
+        if (numClicks >0){
+            try{
+                btnNextMonth = getDriver().findElements(By.cssSelector("lg-single-calendar div a")).get(1);
+                WebElement textMonthVal = getDriver().findElement(By.cssSelector("span.lg-single-calendar-month"));
+                String[] textMonthArr = textMonthVal.getText().split(" ");
+                listMonthText.add(textMonthArr[0]);
+            }catch(Exception e){
+                SimpleUtils.fail("Not able to click Next month arrow",false);
+            }
+        }
+
+        for (int i = 0; i < numClicks; i++) {
+            if(!listMonthText.get(0).equalsIgnoreCase(wanted.getMonth().toString())){
+                clickTheElement(btnNextMonth);
+            }
+        }
+
+        List<WebElement> mCalendarDates = getDriver().findElements(By.cssSelector("div.lg-single-calendar-date.ng-scope span"));
+        for (WebElement mDate : mCalendarDates) {
+            if(mDate.getText()==null || mDate.getText().isEmpty()){
+                continue;
+            }else if(Integer.parseInt(mDate.getText()) == wanted.getDayOfMonth()){
+                    clickTheElement(mDate);
+//                    return;
+                    break;
+            }
+        }
+    }
+
     public String selectDateForTimesheet(int daysFromToday) {
         LocalDate now = LocalDate.now();
         LocalDate wanted = LocalDate.now().minusDays(daysFromToday);
@@ -913,6 +956,17 @@ public class BasePage {
             System.out.println("element" +element+ "is not found");
         }
     }
+
+    public static boolean isExist(WebElement element)
+    {
+        try {
+            element.isDisplayed();
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){

@@ -4,7 +4,14 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
+import com.legion.pages.TeamPage;
+import com.legion.pages.core.ConsoleControlsNewUIPage;
+import com.legion.pages.core.ConsoleControlsPage;
+import com.legion.pages.core.ConsoleTeamPage;
+import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
+import com.legion.pages.core.OpCommons.OpsCommonComponents;
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
+import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.OpsPortal.OpsPortalUserManagementPage;
 import com.legion.pages.core.opusermanagement.*;
 import com.legion.tests.TestBase;
@@ -405,7 +412,7 @@ public class UserManagementTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "History deduct type validation")
+    @TestName(description = "OPS-3980 Show Accrual history for Limit type with Max Carryover/ Annual Earn/Max Available type")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyHistoryDeductTypeAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
@@ -422,79 +429,17 @@ public class UserManagementTest extends TestBase {
         }
     }
 
-    public int getHttpStatusCode(String[] httpResponse) {
-        return Integer.parseInt(httpResponse[0]);
-    }
-
-    private String logIn() {
-        //header
-        HashMap<String, String> loginHeader = new HashMap<String, String>();
-        //body
-        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+58@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
-        //post request
-        String[] postResponse = HttpUtil.httpPost(Constants.loginUrlRC, loginHeader, loginString);
-        Assert.assertEquals(getHttpStatusCode(postResponse), 200, "Failed to login!");
-        String sessionId = postResponse[1];
-        return sessionId;
-    }
-
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Addition Access Role add by API")
+    @TestName(description = "Upload custom access role api")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
-    public void verifyAddAdditionalAccessRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+    public void verifyUploadCustomAccessRoleApiAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try{
             String storeManager = "Queen Stehr";
             //get session id via login
-            String sessionId = logIn();
-            //go to User Management tab
-            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
-            userManagementPage.clickOnUserManagementTab();
-            //go to user profile
-            userManagementPage.goToUserAndRoles();
-            userManagementPage.goToUserDetailPage(storeManager);
-            //check whether additional access roles are added, if added, delete them
-            int flag;
-            String reponse;
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            flag = userManagementPage.verifyAccessRoleSelected();
-            if (flag != 2){
-                //upload blank access role file
-                reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleBlank.csv");
-                System.out.println("uploadBalankFileReponse:  " + reponse);
-                refreshPage();
-                loginPage.verifyNewTermsOfServicePopUp();
-            }
-            //upload user access role file
-            reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRole.csv");
-            System.out.println("uploadAccessRoleReponse:  " + reponse);
-            refreshPage();
-            loginPage.verifyNewTermsOfServicePopUp();
-            //verify whether access role is added successfully
-            flag = userManagementPage.verifyAccessRoleSelected();
-            if(flag == 1){
-                SimpleUtils.pass("Additional access role added successfully");
-                //delete added additional access role
-                HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleBlank.csv");
-            }else {
-                SimpleUtils.fail("Additional access role added failed", false);
-            }
-        }catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Nancy")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Addition Access Role delete by API")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
-    public void verifyDeleteAdditionalAccessRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
-        try{
-            String storeManager = "Queen Stehr";
-            //get session id via login
-            String sessionId = logIn();
+            String payLoad = "{\"enterpriseName\":\"opauto\",\"userName\":\"stoneman@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
+            String sessionId = TestBase.getSessionId(payLoad);
             //go to User Management tab
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.clickOnUserManagementTab();
@@ -505,26 +450,35 @@ public class UserManagementTest extends TestBase {
             int flag;
             String reponse;
             flag = userManagementPage.verifyAccessRoleSelected();
-            if (flag != 1){
-                //upload blank access role file
+
+            reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleNotExist.csv");
+            System.out.println("uploadAccessRoleFileReponse" + reponse);
+            if (reponse.contains("Employee Id not exists") && reponse.contains("User Access Role not exists")){
+                SimpleUtils.pass("upload not exist employee and access role response is as expected");
+            }
+            //Add additional access role
+            if(flag != 1){
                 reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRole.csv");
                 System.out.println("uploadAccessRoleReponse:  " + reponse);
                 refreshPage();
                 LoginPage loginPage = pageFactory.createConsoleLoginPage();
                 loginPage.verifyNewTermsOfServicePopUp();
+
+                flag = userManagementPage.verifyAccessRoleSelected();
+                if(flag != 1){
+                    SimpleUtils.fail("Add additional access role failed",false);
+                }
             }
-            //upload user access role file
-            reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleBlank.csv");
-            System.out.println("uploadBlankFileReponse:  " + reponse);
-            refreshPage();
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            loginPage.verifyNewTermsOfServicePopUp();
-            //verify whether access role is added successfully
-            flag = userManagementPage.verifyAccessRoleSelected();
-            if(flag == 2){
-                SimpleUtils.pass("Additional access role deleted successfully");
-            }else {
-                SimpleUtils.fail("Additional access role deleted failed", false);
+            //Delete additional access role
+            if(flag != 2){
+                reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleBlank.csv");
+                System.out.println("uploadBlankFileReponse:  " + reponse);
+                refreshPage();
+                LoginPage loginPage = pageFactory.createConsoleLoginPage();
+                loginPage.verifyNewTermsOfServicePopUp();
+                if(flag != 2){
+                    SimpleUtils.fail("Delete additional access role failed",false);
+                }
             }
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
@@ -534,16 +488,400 @@ public class UserManagementTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Addition Access Role add by API")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
-    public void verifyUploadNotExistEmployeeAndAccessRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+    @TestName(description = "Work Role - Assignment Rule - Job Title")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyManageJobTitleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            //go to User Management tab
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+
+            //go to job title page
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleAccess();
+
+            //Add job title
+            userManagementPage.clickAddJobTitle();
+            userManagementPage.inputJobTitleName("op auto add");
+            userManagementPage.selectAccessRole();
+            userManagementPage.saveJobTitle();
+
+            //Search job title
+            userManagementPage.searchJobTitle("op auto add");
+
+            //go back
+            OpsPortalWorkRolesPage opsPortalWorkRolesPage = new OpsPortalWorkRolesPage();
+            opsPortalWorkRolesPage.goBack();
+
+            //go to work role
+            OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
+            panelPage.goToWorkRolesPage();
+
+            opsPortalWorkRolesPage.addNewWorkRole();
+            // verify new added job title is display in op assignment rule list
+            WorkRoleDetailsPage workRoleDetailsPage = new WorkRoleDetailsPage();
+            workRoleDetailsPage.goToTeamMemberSearchBox();
+            workRoleDetailsPage.searchTeamMember("op auto add");
+            //logout
+            OpsPortalNavigationPage opsPortalNavigationPage = new OpsPortalNavigationPage();
+            opsPortalNavigationPage.logout();
+
+            //log in with user has contorl manage job title permission
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+admin@legion.co", "admin11.a","verifyMock");
+            RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
+            rightHeaderBarPage.switchToConsole();
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("ClearDistrict");
+            consoleNavigationPage.navigateTo("ControlsCustomer");
+
+            //go to job title page
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleAccess();
+
+            //Add job title
+            userManagementPage.clickAddJobTitle();
+            userManagementPage.inputJobTitleName("control auto add");
+            userManagementPage.selectAccessRole();
+            userManagementPage.saveJobTitle();
+
+            //Search job title
+            userManagementPage.searchJobTitle("control auto add");
+
+            opsPortalWorkRolesPage.goBack();
+
+            ConsoleControlsPage consoleControlsPage = new ConsoleControlsPage();
+            consoleControlsPage.goToTaskAndWorkRolePage();
+            //go to work role detail
+            consoleControlsPage.goToWorkRolePage();
+            consoleControlsPage.goToFirstWorkRoleDetail();
+            // verify op and control added job title is display in control assignment rule list
+            consoleControlsPage.goToTeamMemberSearchBox();
+            workRoleDetailsPage.searchTeamMember("op auto add");
+            workRoleDetailsPage.searchTeamMember("control auto add");
+
+            //go to control center
+            rightHeaderBarPage.switchToOpsPortal();
+            //go to usermanagement
+            userManagementPage.clickOnUserManagementTab();
+            //go to work role
+            panelPage.goToWorkRolesPage();
+            opsPortalWorkRolesPage.addNewWorkRole();
+            //verify control added job title diaplay in op assignment rule
+            workRoleDetailsPage.goToTeamMemberSearchBox();
+            workRoleDetailsPage.searchTeamMember("control auto add");
+            //go back
+            opsPortalWorkRolesPage.goBack();
+            OpsCommonComponents opsCommonComponents = new OpsCommonComponents();
+            opsCommonComponents.leaveThisPage();
+            opsPortalWorkRolesPage.goBack();
+            //go to job title page
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleAccess();
+            //remove job title added in control
+            userManagementPage.searchJobTitle("control auto add");
+            userManagementPage.removeJobTitle();
+            opsCommonComponents.deleteConfirm();
+            //remove job title added in op
+            userManagementPage.searchJobTitle("op auto add");
+            userManagementPage.removeJobTitle();
+            opsCommonComponents.deleteConfirm();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Hourly Rate Show Hide Logic")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyHourlyRateShowHideAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try{
-            String sessionId = logIn();
-            String reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadUserAccessRole+"?isImport=true&isAsync=false&encrypted=false",sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\userAccessRoleNotExist.csv");
-            System.out.println("uploadAccessRoleFileReponse" + reponse);
-            if (reponse.contains("Employee Id not exists") && reponse.contains("User Access Role not exists")){
-                SimpleUtils.pass("upload not exist employee and access role response is as expected");
-            }
+            String users = "Nancy TM";
+            //go to User Management tab
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            //go to user detail page
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToUserDetailPage(users);
+
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate initial value is hide");
+            }else
+                SimpleUtils.fail("Hourly rate initial value is show",false);
+
+            userManagementPage.clickShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("$15")){
+                SimpleUtils.pass("Hourly rate value show successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value show failed",false);
+
+            userManagementPage.clickHideShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate value hide successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value hide failed",false);
+
+            //go to access role
+            userManagementPage.goBack();
+            userManagementPage.goToAccessRolesTab();
+
+            //check view hourly rate permission
+            userManagementPage.clickProfile();
+            userManagementPage.verifyViewHourlyRate();
+
+            // go to control user management
+            RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
+            rightHeaderBarPage.switchToConsole();
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("verifyMock");
+            consoleNavigationPage.navigateTo("Controls");
+            ConsoleControlsNewUIPage consoleControlsNewUIPage = new ConsoleControlsNewUIPage();
+            consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            consoleControlsNewUIPage.searchAndSelectTeamMemberByName(users);
+
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate initial value is hide");
+            }else
+                SimpleUtils.fail("Hourly rate initial value is show",false);
+
+            userManagementPage.clickShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("$15")){
+                SimpleUtils.pass("Hourly rate value show successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value show failed",false);
+
+            userManagementPage.clickHideShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate value hide successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value hide failed",false);
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate initial value is hide");
+            }else
+                SimpleUtils.fail("Hourly rate initial value is show",false);
+
+            userManagementPage.clickShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("$15")){
+                SimpleUtils.pass("Hourly rate value show successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value show failed",false);
+
+            userManagementPage.clickHideShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate value hide successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value hide failed",false);
+
+            //go to my profile
+            rightHeaderBarPage.switchToMyProfile();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate initial value is hide");
+            }else
+                SimpleUtils.fail("Hourly rate initial value is show",false);
+
+            userManagementPage.clickShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("$0")){
+                SimpleUtils.pass("Hourly rate value show successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value show failed",false);
+
+            userManagementPage.clickHideShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate value hide successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value hide failed",false);
+
+            //logout
+            OpsPortalNavigationPage opsPortalNavigationPage = new OpsPortalNavigationPage();
+            opsPortalNavigationPage.logout();
+
+            //log in with user has no view hourly rate job title permission
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+customer@legion.co", "admin11.a","verifyMock");
+            //go to team
+            consoleNavigationPage.searchLocation("verifyMock");
+            consoleNavigationPage.navigateTo("Team");
+
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+
+            boolean isHourlyRateDisplay;
+            isHourlyRateDisplay = userManagementPage.isHourlyRateExist();
+
+            if(isHourlyRateDisplay == false)
+                SimpleUtils.pass("Hourly rate doesn't display");
+            else
+                SimpleUtils.fail("Hourly rate display",false);
+
+            //go to controls
+            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            consoleControlsNewUIPage.searchAndSelectTeamMemberByName(users);
+
+            isHourlyRateDisplay = userManagementPage.isHourlyRateExist();
+
+            if(isHourlyRateDisplay == false)
+                SimpleUtils.pass("Hourly rate doesn't display");
+            else
+                SimpleUtils.fail("Hourly rate display",false);
+
+            //go to my profile
+            rightHeaderBarPage.switchToMyProfile();
+
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate initial value is hide");
+            }else
+                SimpleUtils.fail("Hourly rate initial value is show",false);
+
+            userManagementPage.clickShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("$15")){
+                SimpleUtils.pass("Hourly rate value show successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value show failed",false);
+
+            userManagementPage.clickHideShowRate();
+            if(userManagementPage.getHourlyRateValue().contains("***")){
+                SimpleUtils.pass("Hourly rate value hide successfully");
+            }else
+                SimpleUtils.fail("Hourly rate value hide failed",false);
+
+            //go to control center
+            rightHeaderBarPage.switchToOpsPortal();
+            //go to user management
+            userManagementPage.clickOnUserManagementTab();
+            //go to user detail page
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToUserDetailPage(users);
+
+            isHourlyRateDisplay = userManagementPage.isHourlyRateExist();
+
+            if(isHourlyRateDisplay == false)
+                SimpleUtils.pass("Hourly rate doesn't display");
+            else
+                SimpleUtils.fail("Hourly rate display",false);
+        }catch(Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Permission to view employee contact info in profile")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyViewEmployeeContactInfoPermissionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try{
+            //go to User Management Access Role table
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+
+            boolean profilePermission, profileViewPermision;
+            String user1 = "Nancy Profile";
+            String user2 = "Test ProfilePermission";
+            userManagementPage.goToUserDetailPage(user1);
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == true){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            userManagementPage.goBack();
+            userManagementPage.goToAccessRolesTab();
+
+            //check view contact permission
+            userManagementPage.clickProfile();
+            profileViewPermision = userManagementPage.profileViewPermissionExist();
+
+            if(profileViewPermision == true){
+                SimpleUtils.pass("View profile permission is exist");
+            }else
+                SimpleUtils.fail("View profile permission is not exist",false);
+
+            switchToNewWindow();
+
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("verifyMock");
+            consoleNavigationPage.navigateTo("Team");
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(user1);
+
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == true){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            ConsoleControlsNewUIPage consoleControlsNewUIPage = new ConsoleControlsNewUIPage();
+
+            consoleNavigationPage.navigateTo("Controls");
+            consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            consoleControlsNewUIPage.searchAndSelectTeamMemberByName(user1);
+
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == true){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            //logout
+            OpsPortalNavigationPage opsPortalNavigationPage = new OpsPortalNavigationPage();
+            opsPortalNavigationPage.logout();
+
+            //log in with user has no view hourly rate job title permission
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+nocontact@legion.co", "admin11.a","verifyMock");
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.verifyNewTermsOfServicePopUp();
+            //go to team
+            consoleNavigationPage.searchLocation("FionaUsingLocation");
+            consoleNavigationPage.navigateTo("Team");
+
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(user2);
+
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == false){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            consoleControlsNewUIPage.searchAndSelectTeamMemberByName(user2);
+
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == false){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
+            rightHeaderBarPage.switchToOpsPortal();
+            loginPage.verifyNewTermsOfServicePopUp();
+
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+
+            userManagementPage.goToUserDetailPage(user2);
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == false){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

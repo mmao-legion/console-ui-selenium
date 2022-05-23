@@ -196,6 +196,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			if (locationRowsInSelectLocation.size()>0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
 				click(firstRow);
+				scrollToElement(addBtn);
 				click(addBtn);
 				click(okBtnInCreateNewJobPage);
 			}else
