@@ -103,7 +103,7 @@ public class AccessRoleTest extends TestBase {
         Assert.assertEquals(accessRolePage.getRolePermissionTitle(), "Role Permissions", "Failed to open 'New Access Role' page!");
 
         //10.Verify the permission list
-        Assert.assertTrue(accessRolePage.getAllRolePermission().equals(collapsibleTitle()), "Incorrect collapsible titles on 'role permission' page!");
+        Assert.assertTrue( accessRolePage.getAllRolePermission().size()==collapsibleTitle().size()&&accessRolePage.getAllRolePermission().containsAll(collapsibleTitle())&&collapsibleTitle().containsAll( accessRolePage.getAllRolePermission()));
 
         //11.click back button on role permission page to back to role details page
         accessRolePage.back();
