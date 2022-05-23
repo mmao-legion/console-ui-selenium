@@ -2962,14 +2962,21 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		String fullName = "";
 		String nickName = "";
 		if (isElementLoaded(nameOfProfile, 15)) {
-			String[] allNames = nameOfProfile.getText().replaceAll("\"", "").trim().split("\n");
-			fullName = allNames[0];
-			if(allNames.length ==2){
-				nickName = allNames[1];
+			waitForSeconds(3);
+			String names = nameOfProfile.getText().trim();
+			if (names.contains("\"")) {
+				String[] allNames = nameOfProfile.getText().replaceAll("\"", "").trim().split("\n");
+				fullName = allNames[0];
+				if(allNames.length == 2){
+					nickName = allNames[1];
+				}
+				userProfileNames.put("fullName", fullName);
+				userProfileNames.put("nickName", nickName);
+				SimpleUtils.pass("Get user profile names successfully! ");
+			} else {
+				userProfileNames.put("fullName", names);
+				SimpleUtils.pass("Get user profile names successfully! ");
 			}
-			userProfileNames.put("fullName", fullName);
-			userProfileNames.put("nickName", nickName);
-			SimpleUtils.pass("Get user profile names successfully! ");
 		} else
 			SimpleUtils.fail("Names on user profile failed to load! ", false);
 		return userProfileNames;
