@@ -926,7 +926,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css="[ng-click=\"closeModal()\"]")
     private WebElement cancelButtonInEditShiftTimeWindow;
 
-    @FindBy(css=".modal-instance-button.confirm.ng-binding")
+    @FindBy(css=".modal-instance-button.confirm")
     private WebElement updateButtonInEditShiftTimeWindow;
 
     @FindBy(css="div.noUi-handle.noUi-handle-lower")
@@ -2900,7 +2900,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             shiftInfo.put("workRole",
                     workNameAndWorkRole.getText().split("\\(")[1].replace("(","").replace(")",""));
             shiftInfo.put("shiftTime",
-                    shiftCardOnEditShiftTimePage.findElement(By.cssSelector(".sch-day-view-shift-time [ng-if=\"isLongShift(shift)\"]")).getText());
+                    shiftCardOnEditShiftTimePage.findElement(By.cssSelector(".sch-day-view-shift-time span")).getText());
             List<WebElement> shiftHrs = shiftCardOnEditShiftTimePage.findElements(By.cssSelector(".sch-day-view-worker-time span"));
             shiftInfo.put("workCurrentShiftHrs", shiftHrs.get(0).getText());
             shiftInfo.put("workWeekShiftsHrs", shiftHrs.get(1).getText().replace("| ",""));

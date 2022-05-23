@@ -442,7 +442,7 @@ public class ScheduleCoverageTest extends TestBase {
             if (isWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00am", "8:00pm");
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "08:00pm");
             HashMap<String, String> scheduleHrs = scheduleShiftTablePage.getHrsOnTooltipOfScheduleSummaryHoursByIndex(0);
             float differenceHrs = Float.parseFloat(scheduleHrs.get("differenceHrs"));
             boolean hasArrowImgBeforeChange = differenceHrs != 0;
