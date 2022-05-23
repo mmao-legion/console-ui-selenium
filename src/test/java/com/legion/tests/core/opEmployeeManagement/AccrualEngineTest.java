@@ -43,7 +43,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualEngineWorksAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
@@ -198,6 +198,8 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance0907 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory0907 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance0907);
+        System.out.println(expectedTOBalance);
         String verification4 = validateTheAccrualResults(accrualBalance0907, expectedTOBalance);
         Assert.assertTrue(verification4.contains("Succeeded in validating"), verification4);
 
@@ -215,6 +217,8 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance1230 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory1230 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance1230);
+        System.out.println(expectedTOBalance);
         String verification5 = validateTheAccrualResults(accrualBalance1230, expectedTOBalance);
         Assert.assertTrue(verification5.contains("Succeeded in validating"), verification5);
 
@@ -228,15 +232,17 @@ public class AccrualEngineTest extends TestBase {
         //expected accrual
         expectedTOBalance.put("Annual Leave3", "2");// balance 7  max carryover: 2
         expectedTOBalance.put("Bereavement3", "3");// balance 33  max carryover: 2   +1hour accrued
-        //expectedTOBalance.put("Grandparents Day Off3", "2");//balance 8  max carryover: 2  //HireDate~Specified/lump-sum
+        expectedTOBalance.put("Grandparents Day Off3", "2");//balance 8  max carryover: 2  //HireDate~Specified/lump-sum
         expectedTOBalance.put("Pandemic1", "2");//7 hours  max carryover: 2  //Specified~Specified/Monthly /calendar month/begin /allowance in days 126(out of)
         expectedTOBalance.put("Pandemic2", "2");//52 hours  max carryover: 2 //Specified~Specified/weekly /allowance in days 127(in)
-        //expectedTOBalance.put("Pandemic4", "2");//8 hours  max carryover: 2  //Specified~Specified/lump-sum /allowance in days 127(in)
+        expectedTOBalance.put("Pandemic4", "2");//8 hours  max carryover: 2  //Specified~Specified/lump-sum /allowance in days 127(in)
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance1231 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory1231 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance1231);
+        System.out.println(expectedTOBalance);
         String verification6 = validateTheAccrualResults(accrualBalance1231, expectedTOBalance);
         Assert.assertTrue(verification6.contains("Succeeded in validating"), verification6);
 
@@ -246,8 +252,7 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertEquals(getHttpStatusCode(accrualResponse7), 200, "Failed to run accrual job!");
         //expected accrual
         expectedTOBalance.put("Annual Leave2", "8");//5 +3hours(newly accrued)
-        //expectedTOBalance.put("Grandparents Day Off3", "10");//2(max carryover)+8(newly accrued)//HireDate~Specified/lump-sum
-        //not granted 8 hours on Jan-1st
+        expectedTOBalance.put("Grandparents Day Off3", "10");//2(max carryover)+8(newly accrued)//HireDate~Specified/lump-sum
         expectedTOBalance.put("Pandemic1", "3");//2(max carryover)+1(newly accrued) //Specified~Specified/Monthly /calendar month/begin /allowance in days 126(out of)
         expectedTOBalance.put("Pandemic4", "10");//2(max carryover)+8(newly accrued) //Specified~Specified/lump-sum /allowance in days 127(in)
         //and verify the result in UI
@@ -255,6 +260,8 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance0101 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory0101 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance0101);
+        System.out.println(expectedTOBalance);
         String verification7 = validateTheAccrualResults(accrualBalance0101, expectedTOBalance);
         Assert.assertTrue(verification7.contains("Succeeded in validating"), verification7);
 
@@ -262,9 +269,10 @@ public class AccrualEngineTest extends TestBase {
         String[] accrualResponse8 = runAccrualJobToSimulateDate(workerId, date8, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse8), 200, "Failed to run accrual job!");
         //expected accrual
-        expectedTOBalance.put("Annual Leave3", "3");//2 +1hours(newly accrued)
+        expectedTOBalance.put("Annual Leave3", "3");//2 +1=3hours(newly accrued)
         expectedTOBalance.put("Bereavement3", "7");//3 +4hours(newly accrued)
-        expectedTOBalance.put("Pandemic2", "6");//2 +4hours
+        expectedTOBalance.put("Pandemic2", "6");//2 +4=6 hours
+
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -280,15 +288,17 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertEquals(getHttpStatusCode(accrualResponse9), 200, "Failed to run accrual job!");
         //expected accrual
         expectedTOBalance.put("Annual Leave2", "12");//8 +4hours(newly accrued)
-        expectedTOBalance.put("Annual Leave3", "7");//3 +4hours(newly accrued)
+        expectedTOBalance.put("Annual Leave3", "7");//3 +4=7hours(newly accrued)
         expectedTOBalance.put("Bereavement3", "21");//7+14hours(newly accrued)
         expectedTOBalance.put("Pandemic1", "7");//3 +4hours
-        expectedTOBalance.put("Pandemic2", "20");//6 +14hours
+        expectedTOBalance.put("Pandemic2", "20");//6 +14=20hours
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance050722 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory050722 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance050722);
+        System.out.println(expectedTOBalance);
         String verification9 = validateTheAccrualResults(accrualBalance050722, expectedTOBalance);
         Assert.assertTrue(verification9.contains("Succeeded in validating"), verification9);
 
@@ -300,12 +310,14 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertEquals(getHttpStatusCode(accrualResponse10), 200, "Failed to run accrual job!");
         //expected accrual
         expectedTOBalance.put("Annual Leave2", "2");//max carryover
-        expectedTOBalance.put("Grandparents Day Off2", "10");//2 max carryover+ 8 new accrual
+        expectedTOBalance.put("Grandparents Day Off2", "10");//2 max carryover+ 8 new accrual=10 hours
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance050822 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory050822 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance050822);
+        System.out.println(expectedTOBalance);
         String verification10 = validateTheAccrualResults(accrualBalance050822, expectedTOBalance);
         Assert.assertTrue(verification10.contains("Succeeded in validating"), verification10);
 
@@ -317,12 +329,14 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Annual Leave3", "12");//7 +5hours(newly accrued)
         expectedTOBalance.put("Bereavement3", "46");//21+25
         expectedTOBalance.put("Pandemic1", "12");//7 +5hours
-        expectedTOBalance.put("Pandemic2", "45");//20 +25hours
+        expectedTOBalance.put("Pandemic2", "45");//20 +25=45hours
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance103122 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory103122 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance103122);
+        System.out.println(expectedTOBalance);
         String verification11 = validateTheAccrualResults(accrualBalance103122, expectedTOBalance);
         Assert.assertTrue(verification11.contains("Succeeded in validating"), verification11);
     }
@@ -696,6 +710,7 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertTrue(verification2.contains("Succeeded in validating"), verification2);
 
     }
+
 
     public void resetTheTimeClocksDataForLookBack() {
         String sql130R="update legionrc.TimeSheet set status='Pending' where dayOfTheYear='30' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
