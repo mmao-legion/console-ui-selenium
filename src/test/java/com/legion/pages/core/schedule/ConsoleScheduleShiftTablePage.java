@@ -2276,8 +2276,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> shiftsOfOneTM = new ArrayList<>();;
         List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
         if (areListElementVisible(shifts, 5) && shifts != null && shifts.size() > 0) {
+            WebElement name1 = null;
             for (WebElement shift : shifts) {
-                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
+                name1 = shift.findElement(By.className("week-schedule-worker-name"));
                 if (name1 != null && name1.getText().split(" ")[0].equalsIgnoreCase(name)) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
@@ -2286,6 +2287,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             }
             if(count==0){
                 SimpleUtils.report("No shifts on the day for the TM: " + name);
+            }
+            if (!name1.getText().equalsIgnoreCase(name)) {
+                SimpleUtils.fail("No assigned shift found for the target TM: " + name, false);
             }
         } else {
             SimpleUtils.fail("No shifts on the day",false);
