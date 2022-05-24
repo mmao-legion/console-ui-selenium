@@ -444,7 +444,7 @@ public class OvernightTest extends TestBase {
             if (isActiveWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("6:00AM", "6:00AM");
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00AM");
             int i = 0;
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
             String firstNameOfTM1 = shiftInfo.get(0);
@@ -501,7 +501,7 @@ public class OvernightTest extends TestBase {
             if (isActiveWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("6:00AM", "6:00AM");
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00AM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
             scheduleMainPage.saveSchedule();
