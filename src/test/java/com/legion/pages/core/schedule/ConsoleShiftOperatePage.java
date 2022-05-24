@@ -575,7 +575,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
             int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
             int i = 0;
-            String dayViewShiftNames = dayViewAvailableShifts.get(randomIndex).findElement(By.className("sch-day-view-shift-worker-name")).getText();
+            ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
+            String dayViewShiftNames = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(randomIndex).get(0);;
             while (i < 100 && (dayViewShiftNames.contains("Open") || dayViewShiftNames.contains("Unassigned"))){
                 randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
                 i++;
@@ -926,7 +927,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css="[ng-click=\"closeModal()\"]")
     private WebElement cancelButtonInEditShiftTimeWindow;
 
-    @FindBy(css="[ng-click='confirm()']")
+    @FindBy(css=".modal-instance-button.confirm")
     private WebElement updateButtonInEditShiftTimeWindow;
 
     @FindBy(css="div.noUi-handle.noUi-handle-lower")

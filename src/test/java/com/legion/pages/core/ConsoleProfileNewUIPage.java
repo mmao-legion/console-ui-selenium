@@ -1741,7 +1741,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				}
 			}
 			waitForSeconds(3);
-			if(!isElementLoaded(myAvailabilityEditModeHeader, 5))
+			if(!isElementLoaded(myAvailabilityEditModeHeader, 15))
 				SimpleUtils.pass("Profile Page: 'My Availability section' edit mode Saved successfully.");
 			else
 				SimpleUtils.fail("Profile Page: 'My Availability section' edit mode not Saved.", false);
@@ -1785,7 +1785,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void selectMyAvaliabilityEditHoursTabByLabel(String tabLabel) throws Exception
 	{
 		boolean isTabFound = false;
-		if(isElementLoaded(myAvailabilityEditModeHeader, 10)) {
+		if(isElementLoaded(myAvailabilityEditModeHeader, 15)) {
 			List<WebElement> myAvailabilityHoursTabs = myAvailabilityEditModeHeader.findElements(
 					By.cssSelector("div[ng-click=\"selectTab($event, t)\"]"));
 			if(myAvailabilityHoursTabs.size() > 0) {

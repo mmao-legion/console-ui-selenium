@@ -820,12 +820,15 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
-            String firstName = dayViewAvailableShifts.get(index).
-                    findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
+            WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
+            clickTheElement(infoIcon);
+            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
+//            String firstName = dayViewAvailableShifts.get(index).
+//                    findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
             if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned") ) {
                 String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(dayViewAvailableShifts.get(index)).split(" ")[1].trim();
                 String shiftTimeWeekView = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-time")).getText();
-                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
+//                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
                 clickTheElement(infoIcon);
                 String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
                 String jobTitle = shiftJobTitleAsWorkRole.getText().split("as")[0].trim();
@@ -858,7 +861,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     lastName = "open";
                 String jobTitle = "";
                 String shiftTimeWeekView = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-time")).getText();
-                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
+//                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
                 clickTheElement(infoIcon);
                 String workRole = shiftJobTitleAsWorkRole.getText().trim();
                 if (isElementLoaded(shiftDuration, 10)) {
@@ -3190,8 +3193,12 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @FindBy(css = "div.tooltip-for-hours")
     private WebElement toolTipForScheduleHours;
+    @FindBy(css = "div.sch-navigation-container div.tooltip-for-hours")
+    private WebElement toolTipForScheduleHours2;
     @FindBy(css = "div.tooltip-for-hours img")
     private WebElement arrowInToolTip;
+    @FindBy(css = "div.sch-navigation-container div.tooltip-for-hours img")
+    private WebElement arrowInToolTip2;
 
     public HashMap<String, String> getHrsOnTooltipOfScheduleSummaryHoursByIndex (int index) throws Exception {
         scrollToBottom();
@@ -3214,7 +3221,27 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     private HashMap<String, String> getHrsOnTooltip() throws Exception {
         HashMap<String, String> tooltip = new HashMap<>();
-        if (isElementLoaded(toolTipForScheduleHours, 10)) {
+        if (isElementLoaded(toolTipForScheduleHours2, 10)) {
+            tooltip.put("date", toolTipForScheduleHours2.findElement(By.tagName("b")).getText());
+            tooltip.put("budgetHrs", toolTipForScheduleHours2
+                    .findElements(By.cssSelector("span.pull-right")).get(0).getText());
+            tooltip.put("scheduledHrs", toolTipForScheduleHours2
+                    .findElements(By.cssSelector("span.pull-right")).get(1).getText());
+            tooltip.put("differenceHrs", toolTipForScheduleHours2
+                    .findElements(By.cssSelector("span.pull-right")).get(2).getText());
+            String arrowStatus = "";
+            if (isElementLoaded(arrowInToolTip2, 5)) {
+                if (arrowInToolTip2.getAttribute("src").contains("yellow")) {
+                    arrowStatus= "yellow ";
+                } else
+                    arrowStatus = "red ";
+                if (arrowInToolTip2.getAttribute("class").contains("rotate-90deg")) {
+                    arrowStatus = arrowStatus + "up";
+                } else
+                    arrowStatus = arrowStatus + "down";
+            }
+            tooltip.put("differenceArrow", arrowStatus);
+        } else if (isElementLoaded(toolTipForScheduleHours, 5)) {
             tooltip.put("date", toolTipForScheduleHours.findElement(By.tagName("b")).getText());
             tooltip.put("budgetHrs", toolTipForScheduleHours
                     .findElements(By.cssSelector("span.pull-right")).get(0).getText());
