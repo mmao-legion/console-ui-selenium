@@ -1245,7 +1245,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 	}
 
-	@FindBy(css = "div.group.ng-scope:nth-child(6)")
+	@FindBy(css = "div.group.ng-scope:nth-child(8)")
 	private WebElement profile;
 
 	public void clickProfile() throws Exception{
@@ -1306,10 +1306,12 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	private WebElement timeOff;
 	@FindBy(css = "lg-button[label = 'Create time off']>button")
 	private WebElement createTimeOff;
+	@FindBy(css = "div[ng-if = 'canViewEmployeeAddress']>div.value.ng-binding")
+	private WebElement HRFileAddress;
 
 	public boolean verifyProfilePermission() throws Exception {
 		waitForSeconds(3);
-		if (isElementDisplayed(profileAddress) && isElementDisplayed(profileEmail) && isElementDisplayed(profilePhone) && isElementDisplayed(workPreferences) && isElementDisplayed(timeOff)) {
+		if (isElementDisplayed(HRFileAddress) && isElementDisplayed(profileAddress) && isElementDisplayed(profileEmail) && isElementDisplayed(profilePhone) && isElementDisplayed(workPreferences) && isElementDisplayed(timeOff)) {
 			click(workPreferences);
 			if (isExist(createWorkPreferences)) {
 				click(timeOff);
