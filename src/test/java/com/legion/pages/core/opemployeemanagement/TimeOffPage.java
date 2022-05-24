@@ -1,16 +1,15 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
-import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.testng.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.testng.Assert;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static java.lang.Integer.parseInt;
@@ -23,6 +22,8 @@ public class TimeOffPage extends BasePage {
     // Added by Sophia
     @FindBy(css = "timeoff-management div.collapsible-title")
     private WebElement timeOffTab;
+    @FindBy(css = "div.lg-toast")
+    private WebElement toastMessage;
     //
     @FindBy(css = "lg-button[label='Create time off']>button")
     private WebElement createTimeOff;//New Time Off Request
@@ -49,8 +50,12 @@ public class TimeOffPage extends BasePage {
     private WebElement nextMonth;
     @FindBy(css = "div.ranged-calendar__day.ng-binding.ng-scope.real-day")
     private List<WebElement> daysOnCalendar;
-    @FindBy(css = "div.real-day.is-today")
-    private WebElement today;
+    @FindBy(css = "div.ranged-calendar__day.ng-binding.ng-scope.real-day.is-today.in-range")
+    private WebElement currentDay;
+    @FindBy(css = "div.ranged-calendar__month-name")
+    private WebElement targetMonth;
+    @FindBy(css = "a.calendar-nav-left")
+    private WebElement calendarNavArrow;
     @FindBy(css = "div.ranged-calendar__day.ng-binding.ng-scope.real-day")
     private WebElement timeOffEndDay;
     @FindBy(css = "all-day-control[options='startOptions'] lgn-check-box[checked='options.fullDay']>div")
@@ -82,6 +87,8 @@ public class TimeOffPage extends BasePage {
     @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr:nth-child(3)>td:nth-child(3) input")
     private WebElement floatingHolidayInput;
     @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr:nth-child(4)>td:nth-child(3) input")
+    private WebElement ptoInput;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr:nth-child(5)>td:nth-child(3) input")
     private WebElement sickInput;
     @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tr:last-child>td:nth-child(3) input")
     private WebElement theLastTimeOffInputInEditModal;
@@ -108,7 +115,8 @@ public class TimeOffPage extends BasePage {
     private WebElement approveStatus;
     @FindBy(css = "span.request-buttons-reject")
     private WebElement rejectButton;
-
+    @FindBy(css = "div.timeoff-requests-request.row-fx")
+    private List<WebElement> timeOffRequests;
 
     //balance check
     @FindBy(css = "div.balance-wrapper Span.count-block-label.ng-binding")
@@ -116,13 +124,16 @@ public class TimeOffPage extends BasePage {
     @FindBy(css = "div.balance-wrapper Span.count-block-counter-hours")
     private List<WebElement> balances;
 
-    //month
-    @FindBy(css = "ranged-calendar.ng-isolate-scope")
-    private WebElement Month;
+    //TimeSheet
+    @FindBy(css = "lg-button[label='Add Timeclock']>button")
+    private WebElement addTimeClockBtn;
+    @FindBy(css = "modal[modal-title='Add Timeclock'] input-field[label='date'] ng-form")
+    private WebElement dateForm;
+    //
 
-    //cancel button
-    @FindBy(css = "lg-button[label=Cancel]" )
-    private WebElement cancelButton;
+    public String getToastMessage() {
+        return toastMessage.getText();
+    }
 
     public void goToTeamMemberDetail(String memberName) {
         String teamMemCssLocator = "span[title=' " + memberName + "']";
@@ -182,20 +193,14 @@ public class TimeOffPage extends BasePage {
 
     public void takePartialDay(int startDateIndex, int endDateIndex) {
         if (isPartialDayEnabled()) {
-            startDatePartialDayCheckBox.click();
-            endDatePartialDayCheckBox.click();
+            //endDatePartialDayCheckBox.click();
             daysOnCalendar.get(startDateIndex).click();
             daysOnCalendar.get(endDateIndex).click();
+            startDatePartialDayCheckBox.click();
             waitForSeconds(5);
         } else {
             System.out.println("This type of time off can't request partial day!");
         }
-    }
-
-    public void takeAllDayLeave(int startDateIndex, int endDateIndex) {
-        daysOnCalendar.get(startDateIndex).click();
-        daysOnCalendar.get(endDateIndex).click();
-        waitForSeconds(5);
     }
 
     public void createTimeOff(String timeOffReason, boolean takePartialDay, int startDateIndex, int endDateIndex) {
@@ -205,6 +210,28 @@ public class TimeOffPage extends BasePage {
         } else {
             takeAllDayLeave(startDateIndex, endDateIndex);
         }
+    }
+
+    public void takeAllDayLeave(int startDateIndex, int endDateIndex) {
+        daysOnCalendar.get(startDateIndex).click();
+        daysOnCalendar.get(endDateIndex).click();
+        waitForSeconds(5);
+    }
+
+    public void createOneDayTimeOff(String timeOffReason, String month, boolean takePartialDay, int startDateIndex, int endDateIndex) {
+        selectTimeOff(timeOffReason);
+        goToTargetMonth(month);
+        if (takePartialDay) {
+            takePartialDay(startDateIndex, endDateIndex);
+        } else {
+            takeAllDayLeave(startDateIndex, endDateIndex);
+        }
+    }
+
+    public void createManyDaysTimeOff(String timeOffReason, String month, int startDateIndex, int endDateIndex) {
+        selectTimeOff(timeOffReason);
+        goToTargetMonth(month);
+        takeAllDayLeave(startDateIndex, endDateIndex);
     }
 
     public String getRequestErrorMessage() {
@@ -219,7 +246,10 @@ public class TimeOffPage extends BasePage {
         } else if (timeOffName.equalsIgnoreCase("Floating holiday")) {
             floatingHolidayInput.clear();
             floatingHolidayInput.sendKeys(bal);
-        } else {
+        } else if (timeOffName.equalsIgnoreCase("PTO")) {
+            ptoInput.clear();
+            ptoInput.sendKeys(bal);
+        }else {
             System.out.println("No this type of time off!");
         }
     }
@@ -250,8 +280,8 @@ public class TimeOffPage extends BasePage {
         }
     }
 
-    public int getToday() {
-        String day = today.getText();
+    public int getCurrentDay() {
+        String day = currentDay.getText();
         return parseInt(day);
     }
 
@@ -298,6 +328,14 @@ public class TimeOffPage extends BasePage {
         return historyItems.size();
     }
 
+    //month
+    @FindBy(css = "ranged-calendar.ng-isolate-scope")
+    private WebElement Month;
+
+    //cancel button
+    @FindBy(css = "lg-button[label=Cancel]" )
+    private WebElement cancelButton;
+
     public String getMonth(){
         return Month.getText().substring(0,3);
     }
@@ -334,4 +372,33 @@ public class TimeOffPage extends BasePage {
         Assert.assertEquals(timeOffStatus.get(3).getAttribute("innerText").toUpperCase(),"REJECTED");
         Assert.assertEquals(timeOffStatus.get(4).getAttribute("innerText").toUpperCase(),"APPROVED");
     }
+
+    public String getWorkerId() {
+        String url = getDriver().getCurrentUrl();
+        return url.substring(url.lastIndexOf('/') + 1);
+    }
+
+    public int getTimeOffRequestNum() {
+        return timeOffRequests.size();
+    }
+
+    public String getTimeOffRequestDate(int index) {
+        return timeOffRequests.get(index).findElement(By.cssSelector("div.request-date")).getText();
+    }
+
+    public String getTimeOffRequestType(int index) {
+        return timeOffRequests.get(index).findElement(By.cssSelector("div.request-body")).getText();
+    }
+
+    public String getTimeOffRequestStatus(int index) {
+        return timeOffRequests.get(index).findElement(By.cssSelector("div.request-stat.text-right.col-fx-1")).getText();
+    }
+
+    public void goToTargetMonth(String month){
+        while(!targetMonth.getText().equals(month)){//"March 2022"
+            calendarNavArrow.click();
+        }
+    }
+
 }
+
