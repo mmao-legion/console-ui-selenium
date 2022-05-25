@@ -862,7 +862,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 String jobTitle = "";
                 String shiftTimeWeekView = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-time")).getText();
 //                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
-                clickTheElement(infoIcon);
                 String workRole = shiftJobTitleAsWorkRole.getText().trim();
                 if (isElementLoaded(shiftDuration, 10)) {
                     String shiftTime = shiftDuration.getText();

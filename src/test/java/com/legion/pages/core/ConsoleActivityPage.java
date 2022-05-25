@@ -296,8 +296,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 			List<WebElement> actionButtons = shiftSwapCard.findElements(By.className("notification-buttons-button"));
 			if (actionButtons != null && actionButtons.size() == 2) {
 				for (WebElement button : actionButtons) {
-					if (action.equalsIgnoreCase(button.getText())) {
-						click(button);
+					if (action.equalsIgnoreCase(button.getText().trim())) {
+						clickTheElement(button);
 						break;
 					}
 				}
