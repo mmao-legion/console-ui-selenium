@@ -1815,7 +1815,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
 			SimpleUtils.assertOnFail("The scheduled hrs should be 38.5 in availability table, but actual is: "+scheduleHoursValue,
-					scheduleHoursValue.equals("39.08"), false);
+					scheduleHoursValue.equals("38.5"), false);
 
 			//Login as TM1
 			loginPage.logOut();
@@ -1927,7 +1927,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
 			SimpleUtils.assertOnFail("The scheduled hrs should be 44.5 in availability table, but actual is: "+scheduleHoursValue,
-					scheduleHoursValue.equals("45.5"), false);
+					scheduleHoursValue.equals("44.5"), false);
 
 			//Login as TM1
 			loginPage.logOut();

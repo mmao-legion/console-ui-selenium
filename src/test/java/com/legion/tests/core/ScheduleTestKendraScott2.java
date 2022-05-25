@@ -1670,6 +1670,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 		//make edits
 		newShiftPage.clickOnDayViewAddNewShiftButton();
+		Thread.sleep(5000);
 		newShiftPage.customizeNewShiftPage();
 		newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 		newShiftPage.selectWorkRole("");
@@ -1727,7 +1728,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.clickOnFilterBtn();
 			scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 			//make edits and publish
+			Thread.sleep(3000);
 			newShiftPage.clickOnDayViewAddNewShiftButton();
+			Thread.sleep(3000);
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.selectWorkRole("");
@@ -6014,9 +6017,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!isActiveWeekGenerated) {
-				createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00PM");
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00PM");
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 

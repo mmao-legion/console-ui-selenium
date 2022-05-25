@@ -872,7 +872,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
         if (isElementLoaded(consecutiveOTEditBtn, 5)){
             String contentBefore = getConsecutiveOTSettingContent();
             clickTheElement(consecutiveOTEditBtn);
-            if (isElementLoaded(moodalDialog, 10)){
+            if (isElementLoaded(moodalDialog, 20)){
                 //check the title.
                 if (moodalDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit overtime settings")){
                     SimpleUtils.pass("Dialog title is expected!");

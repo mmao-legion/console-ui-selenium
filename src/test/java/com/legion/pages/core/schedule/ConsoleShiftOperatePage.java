@@ -2884,7 +2884,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 }
             }
         } else {
-            SimpleUtils.fail("The offer list is null!",false);
+            SimpleUtils.report("The offer list is null!");
         }
         return status;
     }

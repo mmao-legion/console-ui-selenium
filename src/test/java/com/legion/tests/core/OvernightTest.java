@@ -85,6 +85,7 @@ public class OvernightTest extends TestBase {
             if (isActiveWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
             int i = 0;
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());

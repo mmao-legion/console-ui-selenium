@@ -132,7 +132,9 @@ public class ConsolidatingFiltersTest extends TestBase {
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
 
             // Create new shift for TM1 on first and second day for Clopening violation
+            Thread.sleep(3000);
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            Thread.sleep(3000);
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);

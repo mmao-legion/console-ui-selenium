@@ -141,6 +141,7 @@ public class HardStopForMinorViolation extends TestBase {
             newShiftPage.selectWorkRole(minorWorkRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
+            MyThreadLocal.setAssignTMStatus(true);
             newShiftPage.searchTeamMemberByName(minorName);
 //            shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(minorName);
             newShiftPage.clickOnOfferOrAssignBtn();
@@ -148,6 +149,7 @@ public class HardStopForMinorViolation extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<WebElement> minorShifts = scheduleShiftTablePage.getAllShiftsOfOneTM(minorName.split(" ")[0]);
+            SimpleUtils.assertOnFail("The minor shift fail to created! ", minorShifts.size()>0, false);
             shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0),
                     "8am", "8pm");
             scheduleMainPage.saveSchedule();
@@ -418,6 +420,7 @@ public class HardStopForMinorViolation extends TestBase {
             newShiftPage.selectWorkRole(minorWorkRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
+            MyThreadLocal.setAssignTMStatus(true);
             newShiftPage.searchTeamMemberByName(minorName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
@@ -425,6 +428,8 @@ public class HardStopForMinorViolation extends TestBase {
             //Edit the open shift to has minor violation
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<WebElement> minorShifts = scheduleShiftTablePage.getAllShiftsOfOneTM(minorName.split(" ")[0]);
+            SimpleUtils.assertOnFail("The minor shift fail to created! ",
+                    minorShifts.size()>0, false);
             shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0), "8am", "8pm");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
