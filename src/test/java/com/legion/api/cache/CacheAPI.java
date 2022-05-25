@@ -1,11 +1,7 @@
 package com.legion.api.cache;
 
-import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import com.legion.api.common.EnterpriseId;
 import com.legion.utils.SimpleUtils;
-
-import java.util.HashMap;
 
 import static com.jayway.restassured.RestAssured.given;
 
