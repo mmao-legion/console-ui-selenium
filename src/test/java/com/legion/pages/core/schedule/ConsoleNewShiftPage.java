@@ -62,7 +62,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     public void customizeNewShiftPage() throws Exception
     {
-        if(isElementLoaded(customizeNewShift,25))
+        if(isElementLoaded(customizeNewShift,35))
         {
             SimpleUtils.pass("Customize New Shift Page loaded Successfully!");
         }

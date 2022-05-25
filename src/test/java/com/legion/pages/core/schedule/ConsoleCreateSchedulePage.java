@@ -31,7 +31,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private static HashMap<String, String> propertyOperatingHoursLG = JsonUtil.getPropertiesFromJsonFile("src/test/resources/operatingHoursLG.json");
     private static HashMap<String, String> propertyOperatingHours = JsonUtil.getPropertiesFromJsonFile("src/test/resources/operatingHours.json");
 
-    @FindBy(css = "[ng-click=\"regenerateFromOverview()\"] button")
+    @FindBy(css = "[label=\"Create schedule\"] button")
     private WebElement generateSheduleButton;
     @FindBy(css = "lg-button[label=\"Generate schedule\"]")
     private WebElement generateScheduleBtn;

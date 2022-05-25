@@ -3191,13 +3191,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
 
     @FindBy(css = "div.tooltip-for-hours")
-    private WebElement toolTipForScheduleHours;
-    @FindBy(css = "div.sch-navigation-container div.tooltip-for-hours")
-    private WebElement toolTipForScheduleHours2;
+    private List<WebElement> toolTipForScheduleHours;
     @FindBy(css = "div.tooltip-for-hours img")
-    private WebElement arrowInToolTip;
-    @FindBy(css = "div.sch-navigation-container div.tooltip-for-hours img")
-    private WebElement arrowInToolTip2;
+    private List<WebElement> arrowInToolTip;
 
     public HashMap<String, String> getHrsOnTooltipOfScheduleSummaryHoursByIndex (int index) throws Exception {
         scrollToBottom();
@@ -3220,41 +3216,23 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     private HashMap<String, String> getHrsOnTooltip() throws Exception {
         HashMap<String, String> tooltip = new HashMap<>();
-        if (isElementLoaded(toolTipForScheduleHours2, 10)) {
-            tooltip.put("date", toolTipForScheduleHours2.findElement(By.tagName("b")).getText());
-            tooltip.put("budgetHrs", toolTipForScheduleHours2
+        if (areListElementVisible(toolTipForScheduleHours, 5)) {
+            WebElement toolTip = toolTipForScheduleHours.get(toolTipForScheduleHours.size()-1);
+            tooltip.put("date", toolTip.findElement(By.tagName("b")).getText());
+            tooltip.put("budgetHrs", toolTip
                     .findElements(By.cssSelector("span.pull-right")).get(0).getText());
-            tooltip.put("scheduledHrs", toolTipForScheduleHours2
+            tooltip.put("scheduledHrs", toolTip
                     .findElements(By.cssSelector("span.pull-right")).get(1).getText());
-            tooltip.put("differenceHrs", toolTipForScheduleHours2
+            tooltip.put("differenceHrs", toolTip
                     .findElements(By.cssSelector("span.pull-right")).get(2).getText());
             String arrowStatus = "";
-            if (isElementLoaded(arrowInToolTip2, 5)) {
-                if (arrowInToolTip2.getAttribute("src").contains("yellow")) {
+            if (areListElementVisible(arrowInToolTip, 5)) {
+                WebElement arrow = arrowInToolTip.get(arrowInToolTip.size()-1);
+                if (arrow.getAttribute("src").contains("yellow")) {
                     arrowStatus= "yellow ";
                 } else
                     arrowStatus = "red ";
-                if (arrowInToolTip2.getAttribute("class").contains("rotate-90deg")) {
-                    arrowStatus = arrowStatus + "up";
-                } else
-                    arrowStatus = arrowStatus + "down";
-            }
-            tooltip.put("differenceArrow", arrowStatus);
-        } else if (isElementLoaded(toolTipForScheduleHours, 5)) {
-            tooltip.put("date", toolTipForScheduleHours.findElement(By.tagName("b")).getText());
-            tooltip.put("budgetHrs", toolTipForScheduleHours
-                    .findElements(By.cssSelector("span.pull-right")).get(0).getText());
-            tooltip.put("scheduledHrs", toolTipForScheduleHours
-                    .findElements(By.cssSelector("span.pull-right")).get(1).getText());
-            tooltip.put("differenceHrs", toolTipForScheduleHours
-                    .findElements(By.cssSelector("span.pull-right")).get(2).getText());
-            String arrowStatus = "";
-            if (isElementLoaded(arrowInToolTip, 5)) {
-                if (arrowInToolTip.getAttribute("src").contains("yellow")) {
-                    arrowStatus= "yellow ";
-                } else
-                    arrowStatus = "red ";
-                if (arrowInToolTip.getAttribute("class").contains("rotate-90deg")) {
+                if (arrow.getAttribute("class").contains("rotate-90deg")) {
                     arrowStatus = arrowStatus + "up";
                 } else
                     arrowStatus = arrowStatus + "down";
