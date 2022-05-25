@@ -1,5 +1,6 @@
 package com.legion.tests.core;
 
+import com.legion.api.cache.CacheAPI;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
@@ -784,6 +785,7 @@ public class HardStopForMinorViolation extends TestBase {
                 //Wait for the timed cache
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 Thread.sleep(60000);
+                CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
                 i++;
             }
         }

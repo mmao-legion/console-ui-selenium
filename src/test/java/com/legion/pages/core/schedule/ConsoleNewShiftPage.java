@@ -671,7 +671,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @Override
     public boolean ifWarningModeDisplay() throws Exception {
-        if(isElementLoaded(warningMode, 5)) {
+        if(isElementLoaded(warningMode, 15)) {
             SimpleUtils.pass("Warning mode is loaded successfully");
             return true;
         } else if (isElementLoaded(warningModeOnNewCreateShiftModal, 5)) {

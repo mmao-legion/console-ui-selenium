@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 
+import com.legion.api.cache.CacheAPI;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.DashboardPage;
@@ -42,6 +43,7 @@ public class CinemarkMinorTest extends TestBase {
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception {
         try {
+            CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
@@ -1897,7 +1899,8 @@ public class CinemarkMinorTest extends TestBase {
                 teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
                 Thread.sleep(60000);
             }
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            //refresh cache
+            CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
             String minor13Name = cinemarkMinors.get("Minor13");
             String minor14Name = cinemarkMinors.get("Minor14");
             String minor15Name = cinemarkMinors.get("Minor15");
