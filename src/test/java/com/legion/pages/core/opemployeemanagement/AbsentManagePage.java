@@ -223,8 +223,12 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "input-field[label='Promotion Name'] input")
     private WebElement promotionNameInput;
     @FindBy(css = "lg-select[label='Criteria'] ng-form")
-    private WebElement promotionCriteriaTypeSelect;
-    @FindBy(css = "lg-multiple-select[label='Before'] input-field[label='Before']>ng-form>input")
+    private WebElement promotionCriteriaType;
+    @FindBy(css = "lg-picker-input[label='Criteria'] div[title='Job Title']")
+    private WebElement criteriaByJobTitle;
+    @FindBy(css = "lg-picker-input[label='Criteria'] div[title='Engagement Status']")
+    private WebElement criteriaByEngagementStatus;
+    @FindBy(css = "lg-multiple-select[label='Before'] lg-picker-input")
     private WebElement criteriaBefore;
     @FindBy(css = "lg-multiple-select lg-search input")
     private WebElement criteriaBeforeSearchInput;
@@ -234,10 +238,10 @@ public class AbsentManagePage extends BasePage {
     private WebElement jobTitleAsSeniorAmbassador;
     @FindBy(css = "div.select-list-item input-field[label='WA Ambassador']>ng-form")
     private WebElement jobTitleAsWAAmbassador;
-    @FindBy(css = "lg-select[label='After'] input-field[label='After']>ng-form")
+    @FindBy(css = "lg-select[label='After'] lg-picker-input")
     private WebElement criteriaAfter;
     @FindBy(css = "lg-picker-input[label='After'] div.lg-search-options__scroller>div:nth-child(1)>div")
-    private WebElement jobTitleSelectedBefore;
+    private WebElement jobTitleAfterPromotion;
     @FindBy(css = "inline-input+div>lg-button[label='Add More']>button")
     private WebElement criteriaAddMoreButton;
     @FindBy(css = "input-field[label='Balance before promotion'] input")
@@ -254,6 +258,8 @@ public class AbsentManagePage extends BasePage {
     private WebElement balanceBeforePromotion;
     @FindBy(css = "input-field[label='After'] input")
     private WebElement balanceAfterPromotion;
+    @FindBy(css = "div.promotion-setting table.lg-table tr>td:nth-child(1)")
+    private List<WebElement> promotionRuleNames;
 
     //home page methods
     public void back() {
@@ -742,6 +748,19 @@ public class AbsentManagePage extends BasePage {
     }
 
     //promotion part
+    public String getPromotionSettingTitle(){
+        scrollToBottom();
+        return promotionTitle.getText();
+    }
+
+    public boolean isAddButtonDisplayedAndClickable() {
+        return isElementDisplayed(promotionRuleAddButton) && isButtonClickable(promotionRuleAddButton);
+    }
+
+    public void addPromotionRule() {
+        promotionRuleAddButton.click();
+    }
+
     public String getPromotionModalTitle() {
         return promotionModalTitle.getText();
     }
@@ -752,47 +771,51 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void addCriteriaByJobTitle() {//Job Title & Engagement Status
-        Select promotionType = new Select(promotionCriteriaTypeSelect);
-        promotionType.selectByVisibleText("Job Title");
+        promotionCriteriaType.click();
+        criteriaByJobTitle.click();
         criteriaBefore.click();
         criteriaBeforeSearchInput.clear();
         criteriaBeforeSearchInput.sendKeys("Senior Ambassador");
         jobTitleAsSeniorAmbassador.click();
+        criteriaBeforeSearchInput.clear();
         criteriaBeforeSearchInput.sendKeys("WA Ambassador");
+        waitForSeconds(3);
         jobTitleAsWAAmbassador.click();
         criteriaAfter.click();
         criteriaAfterSearchInput.clear();
         criteriaAfterSearchInput.sendKeys("General Manager");
+        jobTitleAfterPromotion.click();
     }
 
     public void addCriteriaByEngagementStatus() {
-        Select promotionType = new Select(promotionCriteriaTypeSelect);
-        promotionType.selectByVisibleText("Engagement Status");
+        promotionCriteriaType.click();
+        criteriaByEngagementStatus.click();
         Select before = new Select(engagementBefore);
         before.selectByVisibleText("PartTime");
         Select after = new Select(engagementAfter);
         after.selectByVisibleText("FullTime");
     }
 
-    public String getPlaceholder() {
-        return criteriaBefore.getAttribute("ng-attr-placeholder");
+    public String getJobTitleSelectedBeforePromotion() {
+        //return criteriaBefore.getAttribute("ng-attr-placeholder");
+        return criteriaBefore.getText();
     }
 
     public boolean verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion(String jobTitleSelectBefore) {
         criteriaAfter.click();
         criteriaAfterSearchInput.clear();
         criteriaAfterSearchInput.sendKeys(jobTitleSelectBefore);
-        return jobTitleSelectedBefore.isEnabled();
+        return jobTitleAfterPromotion.isEnabled();
     }
 
-    public void setPromotionAction() {
+    public void setPromotionAction(String balanceB, String BalanceA) {
         Select balanceBefore = new Select(balanceBeforePromotion);
-        balanceBefore.selectByVisibleText("Annual Leave");
+        balanceBefore.selectByVisibleText(balanceB);
         Select balanceAfter = new Select(balanceAfterPromotion);
-        balanceAfter.selectByVisibleText("Floating Holiday");
+        balanceAfter.selectByVisibleText(BalanceA);
     }
 
-    public void addPromotionRule() {
-        promotionRuleAddButton.click();
+    public ArrayList getPromotionRuleName(){
+       return getWebElementsLabels(promotionRuleNames);
     }
 }

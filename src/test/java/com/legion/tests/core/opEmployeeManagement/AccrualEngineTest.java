@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AccrualEngineTest extends TestBase {
@@ -961,7 +962,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyAccrualPromotionWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
@@ -973,13 +974,44 @@ public class AccrualEngineTest extends TestBase {
         //go to setting page
         AbsentManagePage absentManagePage = new AbsentManagePage();
         absentManagePage.switchToSettings();
-        //verify Promotion global settings
+        //1: verify Promotion was added in global settings
+        String settingTitle = absentManagePage.getPromotionSettingTitle();
+        Assert.assertEquals("Accrual Promotions", settingTitle, "Failed to get the Promotion setting title!");
+        SimpleUtils.pass("Succeeded in getting the Promotion setting title!");
+        //2: There is an add button in this page and it's clickable
+        Assert.assertTrue(absentManagePage.isAddButtonDisplayedAndClickable(), "Failed to assert the promotion rule add button displayed and clickable!");
+        SimpleUtils.pass("Succeeded in validating the promotion rule add button was displayed and clickable!");
+        //3: "Create new promotion" modal will be popup when clicking add button.
+        absentManagePage.addPromotionRule();
+        Assert.assertEquals("Create New Accrual Promotion", absentManagePage.getPromotionModalTitle(), "Failed to popup create new promotion modal!");
+        SimpleUtils.pass("Succeeded in popping up the create new accrual promotion modal!");
+        //4: add a promotion rule--JOb title
+        absentManagePage.setPromotionName("AmbassadorToManager");
+        absentManagePage.addCriteriaByJobTitle();
+        //4.1 verify the job title before promotion is muti-select
+        Assert.assertEquals("2 Job Title Selected", absentManagePage.getJobTitleSelectedBeforePromotion(), "Failed to select 2 job titles!");
+        SimpleUtils.pass("Succeeded in Validating job title before promotion is muti-select!");
+        //4.2 job title selected before promotion should be disabled in after promotion.
+        Assert.assertFalse(absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("Senior Ambassador") && absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("WA Ambassador"), "Failed to assert job title selected before promotion are disabled in after promotion!");
+        SimpleUtils.pass("Succeeded in Validating job title selected before promotion are disabled in after promotion!");
+        //5: Add promotion actions
+        absentManagePage.setPromotionAction("Annual Leave", "Floating Holiday");
+        OpsCommonComponents commonComponents = new OpsCommonComponents();
+        commonComponents.okToActionInModal(true);
 
-        //title
-        //add promotions
-        //save successfully
+        //6: add another promotion rule--Engagement status.
+        absentManagePage.addPromotionRule();
+        absentManagePage.setPromotionName("PartTimeToFullTime");
+        absentManagePage.addCriteriaByEngagementStatus();
+        absentManagePage.setPromotionAction("Sick", "PTO");
+        commonComponents.okToActionInModal(true);
 
+        List<String> promotionRN = absentManagePage.getPromotionRuleName();
+        Assert.assertTrue(promotionRN.size() == 2 && promotionRN.get(0).equals("AmbassadorToManager") && promotionRN.get(1).equals("PartTimeToFullTime"), "Failed to assert adding promotion rule successfully!");
+        SimpleUtils.pass("Succeeded in adding promotion rules!");
 
+        //Edit
+        //Remove
     }
 
 
