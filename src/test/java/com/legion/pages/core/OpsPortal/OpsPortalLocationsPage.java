@@ -3293,7 +3293,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+	@FindBy(css = "div:nth-child(9) > ng-include > lg-dynamic-table > div > table")
 	private List<WebElement> workRolesInSchedulingRulesInLocationLevel;
 
 	@FindBy(css = "input[placeholder=\"Search by Work Role\"]")
@@ -3336,7 +3336,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return null;
 	}
 
-	@FindBy(css = "div.collapse-container")
+	@FindBy(css = "div.center.ng-scope")
 	private WebElement opContainer;
 
 	//	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
@@ -3369,7 +3369,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void canGoToSchedulingRulesViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
 		if (areListElementVisible(templateNameLinks, 5)) {
-			click(templateNameLinks.get(2));
+			click(templateNameLinks.get(1));
 			if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel, 5)) {
 				SimpleUtils.pass("Go to Scheduling Rules in locations level successfully");
 			} else
@@ -3661,7 +3661,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					}
 					break;
 				case "Operating Hours":
-					List<WebElement> actionsForOH = templateRows.get(1).findElements(By.cssSelector(" td:nth-child(6)>span"));
+					List<WebElement> actionsForOH = templateRows.get(8).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForOH) {
 						if (s.getText().contains(action)&& action.equals("View")) {
 							clickTheElement(s);
@@ -3741,7 +3741,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					}
 					break;
 				case "Scheduling Policies":
-					List<WebElement> actionsForSchPolicy = templateRows.get(5).findElements(By.cssSelector(" td:nth-child(6)>span"));
+					List<WebElement> actionsForSchPolicy = templateRows.get(1).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForSchPolicy) {
 						if (s.getText().contains(action)&& action.equals("View")) {
 							clickTheElement(s);
@@ -3761,7 +3761,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					}
 					break;
 				case "Compliance":
-					List<WebElement> actionsForCompliance = templateRows.get(6).findElements(By.cssSelector(" td:nth-child(6)>span"));
+					List<WebElement> actionsForCompliance = templateRows.get(2).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForCompliance) {
 						if (s.getText().contains(action)&& action.equals("View")) {
 							clickTheElement(s);
@@ -3863,8 +3863,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Search Work Role Input box failed to load!", false);
 		}
 	}
-
-	@FindBy(css = "span[ng-if = '$ctrl.showActionButton(value)']")
+	
+	@FindBy(css = "lg-button[label = 'Edit']>button")
 	private List<WebElement> editBtnsInOH;
 	@FindBy(css = "table.lg-table.ng-scope")
 	private WebElement workingHoursModalBody;
