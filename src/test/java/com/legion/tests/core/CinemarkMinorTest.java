@@ -1846,7 +1846,7 @@ public class CinemarkMinorTest extends TestBase {
             String minor13GroupDescription = "Minor13-Description-ForAuto";
             configurationPage.createNewDynamicEmployeeGroup(minor13GroupTitle, minor13GroupDescription,
                     OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             String minor14GroupTitle = "Minor14Group-ForAuto";
             String minor14GroupDescription = "Minor14-Description-ForAuto";
             groupCriteriaList.clear();
@@ -1854,7 +1854,7 @@ public class CinemarkMinorTest extends TestBase {
                     +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals14.getValue());
             configurationPage.createNewDynamicEmployeeGroup(minor14GroupTitle, minor14GroupDescription,
                     OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             String minor15GroupTitle = "Minor15Group-ForAuto";
             String minor15GroupDescription = "Minor15-Description-ForAuto";
             groupCriteriaList.clear();
@@ -1862,7 +1862,7 @@ public class CinemarkMinorTest extends TestBase {
                     +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals15.getValue());
             configurationPage.createNewDynamicEmployeeGroup(minor15GroupTitle, minor15GroupDescription,
                     OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             String minor16GroupTitle = "Minor16Group-ForAuto";
             String minor16GroupDescription = "Minor16-Description-ForAuto";
             groupCriteriaList.clear();
@@ -1870,7 +1870,7 @@ public class CinemarkMinorTest extends TestBase {
                     +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals16.getValue());
             configurationPage.createNewDynamicEmployeeGroup(minor16GroupTitle, minor16GroupDescription,
                     OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             String minor17GroupTitle = "Minor17Group-ForAuto";
             String minor17GroupDescription = "Minor17-Description-ForAuto";
             groupCriteriaList.clear();
@@ -1878,7 +1878,7 @@ public class CinemarkMinorTest extends TestBase {
                     +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals17.getValue());
             configurationPage.createNewDynamicEmployeeGroup(minor17GroupTitle, minor17GroupDescription,
                     OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
             configurationPage.archiveOrDeleteAllTemplates();

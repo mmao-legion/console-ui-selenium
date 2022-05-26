@@ -161,7 +161,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
 
     @FindBy(css = ".saveas-drop")
     private WebElement saveDrop;
-    @FindBy(css = ".ng-scope.pre-saveas")
+    @FindBy(css = ".pre-saveas")
     private WebElement doActionBtn;
     @FindBy(css = "lg-button[label=\"Cancel\"]")
     private WebElement cancelBtnForTemplate;
@@ -173,7 +173,8 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
             if (isElementLoaded(getDriver().findElement(By.cssSelector("h3[ng-click*=\""+action+"\"]")),5)){
                 WebElement actionOption = getDriver().findElement(By.cssSelector("h3[ng-click*=\""+action+"\"]"));
                 click(actionOption);
-                click(doActionBtn);
+                waitForSeconds(2);
+                clickTheElement(doActionBtn);
             } else {
                 SimpleUtils.fail("Option is not loaded!", false);
             }
