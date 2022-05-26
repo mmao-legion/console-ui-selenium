@@ -682,6 +682,7 @@ public class SplitAndSpreadTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
+            MyThreadLocal.setAssignTMStatus(true);
             newShiftPage.searchTeamMemberByName(tmFirstName);
             newShiftPage.clickOnOfferOrAssignBtn();
             Thread.sleep(3000);
