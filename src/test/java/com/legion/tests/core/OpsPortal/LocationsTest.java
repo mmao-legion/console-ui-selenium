@@ -1061,8 +1061,8 @@ public class LocationsTest extends TestBase {
             String specificOHInTemplateLevel = locationsPage.getOHTemplateValueInLocationLevel();
             //get template level info of Scheduling rules
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(2).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(2).get("Template Name"), "view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get(1).get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(1).get("Template Name"), "view");
             List<HashMap<String, String>> specificSchRolesInTemplateLevel = locationsPage.getScheRulesTemplateValueInLocationLevel();
 
             //get template level info of Scheduling collaboration
@@ -1193,7 +1193,7 @@ public class LocationsTest extends TestBase {
             locationsPage.backToConfigurationTabInLocationLevel();
 
             //get template level info of Schedule policy
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(5).get("Template Type"), "View");
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(1).get("Template Type"), "View");
             String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
             if (!(contextInSchedulingPoliciesTemplate == null)) {
                 SimpleUtils.pass("Can view Scheduling Policies successfully via view button in location level");
@@ -1288,10 +1288,10 @@ public class LocationsTest extends TestBase {
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
             List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(1).get("Template Type"), "View");
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(8).get("Template Type"), "View");
             locationsPage.backToConfigurationTabInLocationLevel();
             locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(1).get("Template Type"), "Edit");
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(8).get("Template Type"), "Edit");
             locationsPage.editBtnIsClickableInBusinessHours();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.moveSliderAtSomePoint(moveCount, ohSliderDroppable.EndPoint.getValue());
@@ -1306,7 +1306,7 @@ public class LocationsTest extends TestBase {
 
             //reset
             locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(1).get("Template Type"), "Reset");
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(8).get("Template Type"), "Reset");
             List<HashMap<String, String>> templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfoAftReset.get(1).get("Overridden").equalsIgnoreCase("No")) {
                 SimpleUtils.pass("Reset Operating Hours successfully");
