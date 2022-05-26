@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,6 +213,47 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "lg-search[placeholder='You can search by name, label and description']>input-field input")
     private WebElement associateSearch;
 
+    //Promotion part
+    @FindBy(css = "div.promotion-setting h1")
+    private WebElement promotionTitle;
+    @FindBy(css = "div.promotion-setting lg-button>button")
+    private WebElement promotionRuleAddButton;
+    @FindBy(css = "modal[modal-title='Create New Accrual Promotion'] h1")
+    private WebElement promotionModalTitle;
+    @FindBy(css = "input-field[label='Promotion Name'] input")
+    private WebElement promotionNameInput;
+    @FindBy(css = "lg-select[label='Criteria'] ng-form")
+    private WebElement promotionCriteriaTypeSelect;
+    @FindBy(css = "lg-multiple-select[label='Before'] input-field[label='Before']>ng-form>input")
+    private WebElement criteriaBefore;
+    @FindBy(css = "lg-multiple-select lg-search input")
+    private WebElement criteriaBeforeSearchInput;
+    @FindBy(css = "lg-select[label='After'] lg-search input")
+    private WebElement criteriaAfterSearchInput;
+    @FindBy(css = "div.select-list-item input-field[label='Senior Ambassador']>ng-form")
+    private WebElement jobTitleAsSeniorAmbassador;
+    @FindBy(css = "div.select-list-item input-field[label='WA Ambassador']>ng-form")
+    private WebElement jobTitleAsWAAmbassador;
+    @FindBy(css = "lg-select[label='After'] input-field[label='After']>ng-form")
+    private WebElement criteriaAfter;
+    @FindBy(css = "lg-picker-input[label='After'] div.lg-search-options__scroller>div:nth-child(1)>div")
+    private WebElement jobTitleSelectedBefore;
+    @FindBy(css = "inline-input+div>lg-button[label='Add More']>button")
+    private WebElement criteriaAddMoreButton;
+    @FindBy(css = "input-field[label='Balance before promotion'] input")
+    private WebElement timeOffBeforePromotion;
+    @FindBy(css = "input-field[label='Balance after promotion'] input")
+    private WebElement timeOffAfterPromotion;
+    @FindBy(css = "div.promotion-action+div>lg-button[label='Add More']>button")
+    private WebElement transferAddMoreButton;
+    @FindBy(css = "input-field[label='Before'] input")
+    private WebElement engagementBefore;
+    @FindBy(css = "input-field[label='After'] input")
+    private WebElement engagementAfter;
+    @FindBy(css = "input-field[label='Before'] input")
+    private WebElement balanceBeforePromotion;
+    @FindBy(css = "input-field[label='After'] input")
+    private WebElement balanceAfterPromotion;
 
     //home page methods
     public void back() {
@@ -265,11 +307,13 @@ public class AbsentManagePage extends BasePage {
     public void cancel() {
         cancelCreatingTemp.click();
     }
+
     @FindBy(css = ".walkme-action-destroy-1.wm-close-link")
     private WebElement closeWakeme;
+
     public void submit() throws Exception {
         continueCreatingTemp.click();
-        if (isElementLoaded(closeWakeme,10)){
+        if (isElementLoaded(closeWakeme, 10)) {
             click(closeWakeme);
         }
     }
@@ -286,22 +330,22 @@ public class AbsentManagePage extends BasePage {
         return getWebElementsLabels(templateTableHeaders);
     }
 
-    public void search(String searchText){
-            templateSearchBox.clear();
-            templateSearchBox.sendKeys(searchText);
-            //searchIcon.click();
-            waitForSeconds(3);
+    public void search(String searchText) {
+        templateSearchBox.clear();
+        templateSearchBox.sendKeys(searchText);
+        //searchIcon.click();
+        waitForSeconds(3);
     }
 
     public String noMatch() {
         return noMatchMessage.getText();
     }
 
-    public boolean isNoMatchMessageDisplayed(){
+    public boolean isNoMatchMessageDisplayed() {
         return isElementDisplayed(noMatchMessage);
     }
 
-    public int templateNumber(){
+    public int templateNumber() {
         return templateNameOfSearchResult.size();
     }
 
@@ -682,10 +726,11 @@ public class AbsentManagePage extends BasePage {
 
     @FindBy(css = ".time-off-reason-setting tr.ng-scope")
     private List<WebElement> timeOffReasons;
+
     public void removeTimeOffReasons(String timeOffReasonName) {
-        if (areListElementVisible(timeOffReasons, 10) && timeOffReasons.size()>0) {
-            for (WebElement reason: timeOffReasons) {
-                if (reason.findElement(By.cssSelector(".one-line-overflow")).getText().equalsIgnoreCase(timeOffReasonName)){
+        if (areListElementVisible(timeOffReasons, 10) && timeOffReasons.size() > 0) {
+            for (WebElement reason : timeOffReasons) {
+                if (reason.findElement(By.cssSelector(".one-line-overflow")).getText().equalsIgnoreCase(timeOffReasonName)) {
                     clickTheElement(reason.findElement(By.cssSelector("[label=\"Remove\"]")));
                     okCreatingTimeOff();
                     System.out.println("Delete the time off reason successfull!");
@@ -694,5 +739,60 @@ public class AbsentManagePage extends BasePage {
             }
         } else
             System.out.println("There is no time off reason been listed!");
+    }
+
+    //promotion part
+    public String getPromotionModalTitle() {
+        return promotionModalTitle.getText();
+    }
+
+    public void setPromotionName(String promotionName) {
+        promotionNameInput.clear();
+        promotionNameInput.sendKeys(promotionName);
+    }
+
+    public void addCriteriaByJobTitle() {//Job Title & Engagement Status
+        Select promotionType = new Select(promotionCriteriaTypeSelect);
+        promotionType.selectByVisibleText("Job Title");
+        criteriaBefore.click();
+        criteriaBeforeSearchInput.clear();
+        criteriaBeforeSearchInput.sendKeys("Senior Ambassador");
+        jobTitleAsSeniorAmbassador.click();
+        criteriaBeforeSearchInput.sendKeys("WA Ambassador");
+        jobTitleAsWAAmbassador.click();
+        criteriaAfter.click();
+        criteriaAfterSearchInput.clear();
+        criteriaAfterSearchInput.sendKeys("General Manager");
+    }
+
+    public void addCriteriaByEngagementStatus() {
+        Select promotionType = new Select(promotionCriteriaTypeSelect);
+        promotionType.selectByVisibleText("Engagement Status");
+        Select before = new Select(engagementBefore);
+        before.selectByVisibleText("PartTime");
+        Select after = new Select(engagementAfter);
+        after.selectByVisibleText("FullTime");
+    }
+
+    public String getPlaceholder() {
+        return criteriaBefore.getAttribute("ng-attr-placeholder");
+    }
+
+    public boolean verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion(String jobTitleSelectBefore) {
+        criteriaAfter.click();
+        criteriaAfterSearchInput.clear();
+        criteriaAfterSearchInput.sendKeys(jobTitleSelectBefore);
+        return jobTitleSelectedBefore.isEnabled();
+    }
+
+    public void setPromotionAction() {
+        Select balanceBefore = new Select(balanceBeforePromotion);
+        balanceBefore.selectByVisibleText("Annual Leave");
+        Select balanceAfter = new Select(balanceAfterPromotion);
+        balanceAfter.selectByVisibleText("Floating Holiday");
+    }
+
+    public void addPromotionRule() {
+        promotionRuleAddButton.click();
     }
 }

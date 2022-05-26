@@ -678,10 +678,10 @@ public class AccrualEngineTest extends TestBase {
         //1-31  -4hours  edit from 840 to 600
         //2-1 approved
         //2-4   +5 hours (13+5)*60=1080  edit from 780 to 1080
-        String sql130Approved="update legionrc.TimeSheet set status='Approved' where dayOfTheYear='30' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql131Minus4Hrs="update legionrc.TimeSheet set totalMinutes='600' where dayOfTheYear='31' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql201Approved="update legionrc.TimeSheet set status='Approved' where dayOfTheYear='32' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql204Add5Hrs="update legionrc.TimeSheet set totalMinutes='1080' where dayOfTheYear='35' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql130Approved = "update legionrc.TimeSheet set status='Approved' where dayOfTheYear='30' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql131Minus4Hrs = "update legionrc.TimeSheet set totalMinutes='600' where dayOfTheYear='31' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql201Approved = "update legionrc.TimeSheet set status='Approved' where dayOfTheYear='32' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql204Add5Hrs = "update legionrc.TimeSheet set totalMinutes='1080' where dayOfTheYear='35' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
         DBConnection.updateDB(sql130Approved);
         DBConnection.updateDB(sql131Minus4Hrs);
         DBConnection.updateDB(sql201Approved);
@@ -713,10 +713,10 @@ public class AccrualEngineTest extends TestBase {
 
 
     public void resetTheTimeClocksDataForLookBack() {
-        String sql130R="update legionrc.TimeSheet set status='Pending' where dayOfTheYear='30' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql131Minus4HrsR="update legionrc.TimeSheet set totalMinutes='840' where dayOfTheYear='31' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql201AR="update legionrc.TimeSheet set status='Pending' where dayOfTheYear='32' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql204Add5HrsR="update legionrc.TimeSheet set totalMinutes='780' where dayOfTheYear='35' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql130R = "update legionrc.TimeSheet set status='Pending' where dayOfTheYear='30' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql131Minus4HrsR = "update legionrc.TimeSheet set totalMinutes='840' where dayOfTheYear='31' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql201AR = "update legionrc.TimeSheet set status='Pending' where dayOfTheYear='32' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql204Add5HrsR = "update legionrc.TimeSheet set totalMinutes='780' where dayOfTheYear='35' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
         DBConnection.updateDB(sql130R);
         DBConnection.updateDB(sql131Minus4HrsR);
         DBConnection.updateDB(sql201AR);
@@ -827,8 +827,8 @@ public class AccrualEngineTest extends TestBase {
         expectedAccrualHistory.put("Bereavement3 Accrued + 20 hours", "Accrued hours on Sep 24, 2021");
         expectedAccrualHistory.put("Annual Leave3 Accrued + 4 hours", "Accrued hours on Sep 7, 2021");
 
-        HashMap<String, String>actualHistory=timeOffPage.getAccrualHistory();
-        Assert.assertEquals(actualHistory,expectedAccrualHistory, "Something wrong with the accrual history!");
+        HashMap<String, String> actualHistory = timeOffPage.getAccrualHistory();
+        Assert.assertEquals(actualHistory, expectedAccrualHistory, "Something wrong with the accrual history!");
     }
 
     @Automated(automated = "Automated")
@@ -957,9 +957,35 @@ public class AccrualEngineTest extends TestBase {
 
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Accrual Engine Distribution Types")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAccrualPromotionWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        //verify that employee management is enabled.
+        navigationPage.navigateToEmployeeManagement();
+        SimpleUtils.pass("EmployeeManagement Module is enabled!");
+        //go to the time off management page
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        //go to setting page
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        absentManagePage.switchToSettings();
+        //verify Promotion global settings
+
+        //title
+        //add promotions
+        //save successfully
+
+
+    }
+
+
     public void importAccrualBalance(String sessionId) {
-        String url="https://rc-enterprise.dev.legion.work/legion/integration/testUploadAccrualLedgerData?isTest=false&fileName=/Users/sophiazhang/Desktop/AccrualLedger_auto.csv&encrypted=false";
-        String filePath = "/Users/sophiazhang/Desktop/AccrualLedger_auto.csv";
+        String url = "https://rc-enterprise.dev.legion.work/legion/integration/testUploadAccrualLedgerData?isTest=false&fileName=src/test/resources/uploadFile/AccrualLedger_auto.csv&encrypted=false";
+        String filePath = "src/test/resources/uploadFile/AccrualLedger_auto.csv";
         String responseInfo = HttpUtil.fileUploadByHttpPost(url, sessionId, filePath);
         if (StringUtils.isNotBlank(responseInfo)) {
             //转json数据
