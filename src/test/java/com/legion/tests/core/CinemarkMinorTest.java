@@ -1993,6 +1993,7 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.goToTeam();
             teamPage.searchAndSelectTeamMemberByName(minorName);
             name = profileNewUIPage.getMinorRuleTemplateName();
+            CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
             i++;
         }
         SimpleUtils.assertOnFail("The minor rule template name of "+templateName+" display incorrectly! ",
