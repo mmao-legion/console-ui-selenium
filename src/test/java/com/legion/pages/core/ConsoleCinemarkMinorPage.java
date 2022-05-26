@@ -383,6 +383,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
                 selectOptionForMinorRule(minorDataFields.get(6), from);
                 //selectByVisibleText(dataFields.get(7),to);
                 selectOptionForMinorRule(minorDataFields.get(7), to);
+                scrollToElement(minorDataFields.get(8));
                 minorDataFields.get(8).clear();
                 minorDataFields.get(8).sendKeys(maxOfHrs);
                 SimpleUtils.pass(type+" set");
