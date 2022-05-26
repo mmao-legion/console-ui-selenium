@@ -3507,7 +3507,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 				//Click on OK button
 				clickTheElement(okButton);
-				waitForSeconds(2);
+				waitForSeconds(8);
 				displaySuccessMessage();
 				if (isManagerDGpopShowWell()) {
 					SimpleUtils.fail("Fail to save the Dynamic Employee Group! ", false);
