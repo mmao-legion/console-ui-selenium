@@ -84,7 +84,7 @@
 <!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" Blocked by queue/>-->
 <!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />-->
 <!--                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5369/>-->
-                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
+<!--                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-6807 />-->
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
 <!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
 <!--                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />Blocked by SCH-5419/>-->
