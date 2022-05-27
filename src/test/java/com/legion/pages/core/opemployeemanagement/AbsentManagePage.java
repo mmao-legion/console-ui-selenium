@@ -230,6 +230,8 @@ public class AbsentManagePage extends BasePage {
     private WebElement criteriaByEngagementStatus;
     @FindBy(css = "lg-multiple-select[label='Before'] lg-picker-input")
     private WebElement criteriaBefore;
+    @FindBy(css = "input[aria-label='Before']+label+div.input-faked")
+    private WebElement multiSelectPlaceHolder;
     @FindBy(css = "lg-multiple-select lg-search input")
     private WebElement criteriaBeforeSearchInput;
     @FindBy(css = "lg-select[label='After'] lg-search input")
@@ -244,22 +246,38 @@ public class AbsentManagePage extends BasePage {
     private WebElement jobTitleAfterPromotion;
     @FindBy(css = "inline-input+div>lg-button[label='Add More']>button")
     private WebElement criteriaAddMoreButton;
-    @FindBy(css = "input-field[label='Balance before promotion'] input")
-    private WebElement timeOffBeforePromotion;
-    @FindBy(css = "input-field[label='Balance after promotion'] input")
-    private WebElement timeOffAfterPromotion;
     @FindBy(css = "div.promotion-action+div>lg-button[label='Add More']>button")
     private WebElement transferAddMoreButton;
-    @FindBy(css = "input-field[label='Before'] input")
+    @FindBy(css = "lg-picker-input [label='Before']")
     private WebElement engagementBefore;
-    @FindBy(css = "input-field[label='After'] input")
+    @FindBy(css = "lg-picker-input[label='Before'] div[title='PartTime']")
+    private WebElement partTimeBefore;
+    @FindBy(css = "lg-picker-input [label='After']")
     private WebElement engagementAfter;
-    @FindBy(css = "input-field[label='Before'] input")
+    @FindBy(css = "lg-picker-input[label='After'] div[title='FullTime']")
+    private WebElement fullTimeAfter;
+    @FindBy(css = "input-field[label='Balance before promotion']")
     private WebElement balanceBeforePromotion;
-    @FindBy(css = "input-field[label='After'] input")
+    @FindBy(css = "input-field[label='Balance after promotion']")
     private WebElement balanceAfterPromotion;
+    @FindBy(css = "lg-select[label='Balance before promotion'] lg-search input")
+    private WebElement balanceSearchInputB;
+    @FindBy(css = "lg-select[label='Balance before promotion'] div.lg-search-options__scroller>div>div")
+    private WebElement balanceSearchResultB;
+    @FindBy(css = "lg-select[label='Balance after promotion'] lg-search input")
+    private WebElement balanceSearchInputA;
+    @FindBy(css = "lg-select[label='Balance after promotion'] div.lg-search-options__scroller>div>div")
+    private WebElement balanceSearchResultA;
     @FindBy(css = "div.promotion-setting table.lg-table tr>td:nth-child(1)")
     private List<WebElement> promotionRuleNames;
+    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Edit']")
+    private WebElement promotionEditButton;
+    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Remove']")
+    private WebElement promotionRemoveButton;
+    @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] h1.lg-modal__title")
+    private WebElement removeModalTitle;
+    @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] general-form p")
+    private WebElement removeModalContent;
 
     //home page methods
     public void back() {
@@ -748,7 +766,7 @@ public class AbsentManagePage extends BasePage {
     }
 
     //promotion part
-    public String getPromotionSettingTitle(){
+    public String getPromotionSettingTitle() {
         scrollToBottom();
         return promotionTitle.getText();
     }
@@ -759,6 +777,7 @@ public class AbsentManagePage extends BasePage {
 
     public void addPromotionRule() {
         promotionRuleAddButton.click();
+        waitForSeconds(3);
     }
 
     public String getPromotionModalTitle() {
@@ -790,15 +809,14 @@ public class AbsentManagePage extends BasePage {
     public void addCriteriaByEngagementStatus() {
         promotionCriteriaType.click();
         criteriaByEngagementStatus.click();
-        Select before = new Select(engagementBefore);
-        before.selectByVisibleText("PartTime");
-        Select after = new Select(engagementAfter);
-        after.selectByVisibleText("FullTime");
+        engagementBefore.click();
+        partTimeBefore.click();
+        engagementAfter.click();
+        fullTimeAfter.click();
     }
 
     public String getJobTitleSelectedBeforePromotion() {
-        //return criteriaBefore.getAttribute("ng-attr-placeholder");
-        return criteriaBefore.getText();
+        return multiSelectPlaceHolder.getText();
     }
 
     public boolean verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion(String jobTitleSelectBefore) {
@@ -808,14 +826,45 @@ public class AbsentManagePage extends BasePage {
         return jobTitleAfterPromotion.isEnabled();
     }
 
-    public void setPromotionAction(String balanceB, String BalanceA) {
-        Select balanceBefore = new Select(balanceBeforePromotion);
-        balanceBefore.selectByVisibleText(balanceB);
-        Select balanceAfter = new Select(balanceAfterPromotion);
-        balanceAfter.selectByVisibleText(BalanceA);
+    public void setPromotionAction(String balanceB, String balanceA) {
+        //before
+        balanceBeforePromotion.click();
+        balanceSearchInputB.clear();
+        balanceSearchInputB.sendKeys(balanceB);
+        balanceSearchResultB.click();
+        //after
+        balanceAfterPromotion.click();
+        balanceSearchInputA.clear();
+        balanceSearchInputA.sendKeys(balanceA);
+        balanceSearchResultA.click();
     }
 
-    public ArrayList getPromotionRuleName(){
-       return getWebElementsLabels(promotionRuleNames);
+    public ArrayList getPromotionRuleName() {
+        return getWebElementsLabels(promotionRuleNames);
     }
+
+    public void EditPromotionRule() {
+        promotionEditButton.click();
+    }
+
+    public void removePromotionRule() {
+        promotionRemoveButton.click();
+    }
+
+    public String getRemovePromotionRuleModalTitle() {
+        return removeModalTitle.getText();
+    }
+
+    public String getRemovePromotionRuleModalContent() {
+        return removeModalContent.getText();
+    }
+
+    public boolean isTherePromotionRule(){
+        Boolean hasPromotionRule=true;
+        if(!isElementDisplayed(promotionEditButton)){
+            hasPromotionRule=false;
+        }
+     return hasPromotionRule;
+    }
+
 }
