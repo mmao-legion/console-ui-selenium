@@ -1675,8 +1675,14 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                             if (!startTime.contains(":")) {
                                 startTime = startTime.replace("am", ":00am").replace("pm", ":00pm");
                             }
+                            if (startTime.split(":")[0].replace("am", "").replace("pm", "").length()==1) {
+                                startTime = "0"+startTime;
+                            }
                             if (!endTime.contains(":")){
                                 endTime = endTime.replace("am", ":00am").replace("pm", ":00pm");
+                            }
+                            if (endTime.split(":")[0].replace("am", "").replace("pm", "").length()==1) {
+                                endTime = "0"+endTime;
                             }
                             shiftStartInput.clear();
                             shiftEndInput.clear();

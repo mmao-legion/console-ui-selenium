@@ -6303,18 +6303,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
 		try {
 			//Disable the ScheduleEditShiftTimeNew
-			ABSwitchAPI.disableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
+			ToggleAPI.disableToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			//Go to one schedule page day view
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			int i = 0;
-			while (i< 5) {
-				scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-				Thread.sleep(60000);
-				i++;
-			}
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
 					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
@@ -6339,17 +6338,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("The new edit shift time page should not display! ",
 					!shiftOperatePage.isEditShiftTimeNewUIDisplay(), false);
 			shiftOperatePage.clickOnCancelEditShiftTimeButton();
-			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			ToggleAPI.enableToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
 			loginPage.logOut();
-			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), "stoneman@legion.co", "admin11.a");
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			//Go to one schedule page day view
-			i = 0;
-			while (i< 5) {
-				scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-				Thread.sleep(60000);
-				i++;
-			}
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
 					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);

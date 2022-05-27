@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.firstName;
@@ -824,8 +825,9 @@ public class SplitAndSpreadTest extends TestBase {
             scheduleMainPage.saveSchedule();
 
             if (newAddedShift != null) {
-                SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! ",
-                        scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Spread of hours"), false);
+                String warningMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
+                SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! The actual is:"+ warningMessage,
+                        warningMessage.contains("Spread of hours"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed! ", false);
 

@@ -701,7 +701,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         waitForSeconds(3);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
-            String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText().split(" ")[0];
+            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover")));
+            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
+//            String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText().split(" ")[0];
             if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned")) {
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
                 String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
@@ -1131,6 +1133,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (isElementLoaded(shift, 5)){
             waitForSeconds(3);
             scrollToElement(shift);
+            if (isElementLoaded(popOverContent, 5)) {
+                //To close the i icon popup
+                clickTheElement(shift);
+            }
             if(scheduleCommonPage.isScheduleDayViewActive()){
                 click(shift.findElement(By.cssSelector(".day-view-shift-hover-info-icon img")));
                 waitForSeconds(2);
@@ -2279,8 +2285,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
         if (areListElementVisible(shifts, 5) && shifts != null && shifts.size() > 0) {
             for (WebElement shift : shifts) {
-                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
-                if (name1 != null && name1.getText().split(" ")[0].equalsIgnoreCase(name)) {
+                clickTheElement(shift.findElement(By.className("week-schedule-shit-open-popover")));
+                String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
+//                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
+                if (shiftName != "" && shiftName.split(" ")[0].equalsIgnoreCase(name)) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
                     count++;
@@ -2581,7 +2589,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(dayViewAvailableShifts, 5) && dayViewAvailableShifts != null && dayViewAvailableShifts.size() > 0) {
             for (WebElement shift : dayViewAvailableShifts) {
                 String shiftName = getShiftInfoFromInfoPopUp(shift).get("shiftName");
-                if (shiftName.contains(name)) {
+                if (shiftName.toLowerCase().contains(name.toLowerCase())) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
                     count++;

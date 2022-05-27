@@ -1371,7 +1371,7 @@ public class CinemarkMinorTest extends TestBase {
 
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
-
+        Thread.sleep(5000);
         //check the violation in i icon popup of new create shift
         newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
         if (newAddedShift != null) {
@@ -1882,16 +1882,17 @@ public class CinemarkMinorTest extends TestBase {
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
             configurationPage.archiveOrDeleteAllTemplates();
-            String minor13TemplateName = "Minor13Template-ForAuto";
-            createMinor13N14N15TemplateAndSetMinorSettings(minor13TemplateName, minor13GroupTitle);
+            String minor17TemplateName = "Minor17Template-ForAuto";
+            createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
             String minor14TemplateName = "Minor14Template-ForAuto";
             createMinor13N14N15TemplateAndSetMinorSettings(minor14TemplateName, minor14GroupTitle);
+            String minor13TemplateName = "Minor13Template-ForAuto";
+            createMinor13N14N15TemplateAndSetMinorSettings(minor13TemplateName, minor13GroupTitle);
             String minor15TemplateName = "Minor15Template-ForAuto";
             createMinor13N14N15TemplateAndSetMinorSettings(minor15TemplateName, minor15GroupTitle);
             String minor16TemplateName = "Minor16Template-ForAuto";
             createMinor16N17TemplateAndSetMinorSettings(minor16TemplateName, minor16GroupTitle);
-            String minor17TemplateName = "Minor17Template-ForAuto";
-            createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
+
             Thread.sleep(3000);
             switchToConsoleWindow();
             LoginPage loginPage = new ConsoleLoginPage();

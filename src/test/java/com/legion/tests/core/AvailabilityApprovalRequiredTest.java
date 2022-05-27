@@ -280,6 +280,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
         while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
             profileNewUIPage.clickNextWeek();
+            Thread.sleep(2);
         }
         profileNewUIPage.clickAvailabilityEditButton();
         profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
